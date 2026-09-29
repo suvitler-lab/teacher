@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+*.local
+.DS_Store
+npm-debug.log*
+
+.claude/
+.env
+.env.*
+!.env.example

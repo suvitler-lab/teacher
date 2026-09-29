@@ -1,0 +1,49 @@
+/* งานครบ · gradebook grid */
+.gb-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.gb-toolbar select { width: auto; height: 32px; }
+
+.gb-summary { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 13px; margin-bottom: 8px; }
+.gb-summary b { font-weight: 500; }
+
+.gb-actionbar {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  background: var(--bg-accent); color: var(--text-accent);
+  border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 10px; font-size: 13px;
+}
+.gb-actionbar button { height: 30px; font-size: 12px; padding: 0 10px; background: var(--surface-2); }
+
+.gb-scroll { overflow-x: auto; border: 0.5px solid var(--border); border-radius: var(--radius); }
+table.gb { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 13px; }
+table.gb th, table.gb td { border-bottom: 0.5px solid var(--border); padding: 0; height: 34px; text-align: center; font-weight: 400; }
+table.gb thead th { position: sticky; top: 0; background: var(--surface-1); z-index: 2; cursor: pointer; padding: 5px 4px; vertical-align: top; border-top: 3px solid var(--border); }
+table.gb thead th.sel, table.gb td.sel { background: var(--bg-accent-muted); }
+table.gb thead th .ht { font-size: 11px; line-height: 1.25; max-width: 84px; margin: 0 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+table.gb thead th .hs { font-size: 10px; color: var(--text-secondary); }
+table.gb thead th .hbar { height: 4px; border-radius: 2px; background: var(--border); margin: 3px auto 0; max-width: 84px; }
+table.gb thead th .hbar > div { height: 100%; border-radius: 2px; background: var(--fill-success); }
+table.gb .name-col { text-align: left; padding-left: 10px; white-space: nowrap; position: sticky; left: 0; background: var(--surface-2); z-index: 1; }
+table.gb thead .name-col { z-index: 3; background: var(--surface-1); border-top-color: transparent; }
+table.gb td.cell { cursor: pointer; }
+table.gb td.cell:hover { background: var(--surface-1); }
+table.gb tr.avg td { background: var(--surface-1); font-size: 12px; color: var(--text-secondary); }
+table.gb input.cell-input { width: 46px; height: 26px; text-align: center; font-size: 13px; padding: 0; }
+.gb-reddot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--fill-danger); margin-right: 5px; vertical-align: middle; }
+
+.gb-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); align-items: center; margin-top: 8px; }
+
+.gb-menu-sep { height: 0.5px; background: var(--border); margin: 4px 0; }
+.gb-menu {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 40;
+  background: var(--surface-2); border: 0.5px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-pop); padding: 4px; min-width: 160px; display: flex; flex-direction: column; gap: 2px;
+}
+.gb-menu button { justify-content: flex-start; border: none; background: transparent; height: 34px; font-size: 13px; }
+.gb-menu button:hover { background: var(--surface-1); }
+
+/* mobile one-assignment list */
+.gb-mchips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px; }
+.gb-mchips .pill { flex: none; }
+.gb-mrow { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-top: 0.5px solid var(--border); }
+.gb-mrow:first-of-type { border-top: none; }
+.gb-mrow .no { width: 22px; text-align: right; color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
+.gb-mrow input.cell-input { width: 56px; height: 34px; text-align: center; }

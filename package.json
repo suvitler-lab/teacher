@@ -1,0 +1,46 @@
+{
+  "name": "ngankrob",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "งานครบ — ระบบสแกนส่งงานและเช็คชื่อออนไลน์ (Cloudflare Workers + D1 + PWA)",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && wrangler deploy -c dist/client/ngankrob/wrangler.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:migrate:local": "wrangler d1 migrations apply kru-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply kru-db --remote",
+    "db:seed:local": "wrangler d1 execute kru-db --local --file=./scripts/seed-demo.sql"
+  },
+  "dependencies": {
+    "@tabler/icons-webfont": "^3.48.0",
+    "hono": "^4.6.14",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@cloudflare/vite-plugin": "^1.61.0",
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@cloudflare/workers-types": "^5.20260928.1",
+    "@fontsource/ibm-plex-sans-thai": "^5.1.0",
+    "@preact/preset-vite": "^2.10.6",
+    "@preact/signals": "^2.0.1",
+    "@testing-library/preact": "^3.2.4",
+    "@types/qrcode": "^1.5.5",
+    "barcode-detector": "^2.3.1",
+    "exceljs": "^4.4.0",
+    "fake-indexeddb": "^6.2.5",
+    "idb": "^8.0.1",
+    "jsdom": "^25.0.1",
+    "preact": "^10.25.4",
+    "qrcode": "^1.5.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.142.0"
+  }
+}

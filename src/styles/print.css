@@ -1,0 +1,43 @@
+/* งานครบ · student list + printable QR cards */
+.stu-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stu-tab { height: 32px; padding: 0 14px; border-radius: 999px; font-size: 13px; }
+.stu-tab.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
+
+.stu-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 0.5px solid var(--border); }
+.stu-row .no { width: 28px; text-align: center; color: var(--text-secondary); font-size: 13px; }
+.stu-row .code { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); }
+
+.print-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+
+/* sticker sheet (screen preview + print) */
+.sheet { background: #fff; color: #1f2328; }
+.sticker-grid { display: grid; gap: 8px; }
+.sticker-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.sticker-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.sticker-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.qr-card {
+  border: 1px dashed #b6bdc6; border-radius: 10px; padding: 8px 10px;
+  display: flex; gap: 8px; align-items: center; break-inside: avoid;
+}
+.qr-card .info { flex: 1; min-width: 0; }
+.qr-card .school { font-size: 9px; color: #57606a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qr-card .sname { font-size: 13px; font-weight: 500; margin-top: 2px; line-height: 1.25; }
+.qr-card .meta { font-size: 10px; color: #57606a; }
+.qr-card .code { font-size: 13px; font-weight: 500; letter-spacing: 1px; }
+.qr-card img { flex: none; }
+.sticker-grid.cols-4 .qr-card .sname { font-size: 11px; }
+.sticker-grid.cols-4 .qr-card .school { display: none; }
+
+@media screen {
+  .sheet { max-width: 760px; margin: 0 auto; padding: 16px; border-radius: var(--radius); border: 0.5px solid var(--border); }
+}
+@media print {
+  /* only the QR-card sheet blanks the rest of the page (set via body.print-cards) */
+  body.print-cards * { visibility: hidden; }
+  body.print-cards .sheet, body.print-cards .sheet * { visibility: visible; }
+  body.print-cards .sheet { position: absolute; inset: 0; margin: 0; padding: 6mm; }
+  .no-print { display: none !important; }
+  .sticker-grid { gap: 4mm; }
+  .qr-card { border-color: #ccc; }
+  @page { size: A4; margin: 8mm; }
+}

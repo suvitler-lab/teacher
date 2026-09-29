@@ -1,0 +1,93 @@
+/* งานครบ · shared UI kit — one visual language across every page */
+
+/* page header: icon tile + title + subline + actions */
+.uh { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.uh-l { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.uh-ic {
+  width: 38px; height: 38px; border-radius: 11px; flex: none;
+  background: var(--bg-accent); color: var(--text-accent);
+  display: flex; align-items: center; justify-content: center;
+}
+.uh-title { font-size: 19px; font-weight: 500; line-height: 1.25; }
+.uh-sub { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.uh-act { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+/* class chips + generic pill chips row */
+.chips-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px;
+  border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--surface-2);
+  color: var(--text-secondary); font-size: 13px; white-space: nowrap; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.pill:hover { background: var(--surface-1); }
+.pill.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
+.pill .n { opacity: 0.75; font-variant-numeric: tabular-nums; }
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* segmented control */
+.seg { display: inline-flex; padding: 2px; gap: 2px; border-radius: var(--radius-sm); background: var(--surface-1); border: 0.5px solid var(--border); }
+.seg button {
+  height: 28px; padding: 0 12px; border-radius: 6px; font-size: 13px; border: 0.5px solid transparent;
+  background: transparent; color: var(--text-secondary);
+}
+.seg button.on { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-strong); }
+.seg button:hover:not(.on) { color: var(--text-primary); }
+
+/* stat cards */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.uc-stat { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 10px 12px; text-align: left; }
+button.uc-stat { cursor: pointer; width: 100%; height: auto; display: block; }
+button.uc-stat:hover { background: var(--surface-1); }
+.uc-stat .top { display: flex; align-items: center; justify-content: space-between; }
+.uc-stat .lbl { font-size: 12px; color: var(--text-secondary); }
+.uc-stat .val { font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.3; }
+.uc-stat .val small { font-size: 12px; font-weight: 400; color: var(--text-secondary); }
+.uc-stat .hint { font-size: 11px; color: var(--text-secondary); }
+.uc-stat .ic { width: 24px; height: 24px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+
+/* progress bar + ring */
+.pbar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.pbar > div { height: 100%; border-radius: 3px; background: var(--fill-success); }
+.pring { position: relative; flex: none; }
+.pring .cap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* stacked bar (attendance mix) */
+.stack { display: flex; gap: 2px; height: 8px; }
+.stack > i { display: block; border-radius: 2px; }
+
+/* avatar */
+.uc-av { border-radius: 50%; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-weight: 500; flex: none; }
+
+/* work-state cell (gradebook / scan grid / student list) */
+.wcell { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 24px; border-radius: 6px; padding: 0 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.wcell.scored { color: var(--text-primary); }
+.wcell.late { background: var(--bg-warning); color: var(--text-warning); }
+.wcell.awaiting { background: var(--bg-accent); color: var(--text-accent); }
+.wcell.missing { background: var(--bg-danger); color: var(--text-danger); }
+.wcell.pending { color: var(--text-muted); }
+.wcell.excused { background: var(--surface-1); color: var(--text-secondary); }
+.wcell { position: relative; }
+.wcell.pend::after, .wcell.fail::after { content: ""; position: absolute; top: -2px; right: -2px; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--surface-2); }
+.wcell.pend::after { background: var(--fill-warning); }
+.wcell.unsaved { outline: 1.5px solid var(--fill-danger); outline-offset: 1px; }
+.wcell.fail::after { background: var(--fill-danger); }
+
+/* empty state */
+.uc-empty { text-align: center; color: var(--text-secondary); padding: 32px 16px; }
+.uc-empty .ei { font-size: 30px; color: var(--text-muted); margin-bottom: 6px; }
+
+/* drawer: right panel on desktop, full-height sheet on phone */
+.drawer-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(10,14,22,0.4); display: flex; justify-content: flex-end; }
+.drawer {
+  width: min(420px, 100%); background: var(--surface-2); height: 100%; overflow-y: auto;
+  border-left: 0.5px solid var(--border); padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+}
+.drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+@media (max-width: 560px) { .drawer { width: 100%; border-left: none; } }
+
+/* sync badge */
+.sync { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.sync.online { background: var(--bg-success); color: var(--text-success); }
+.sync.offline { background: var(--bg-warning); color: var(--text-warning); }
+.sync.saving { background: var(--surface-1); color: var(--text-secondary); }

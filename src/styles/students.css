@@ -1,0 +1,41 @@
+/* งานครบ · students list */
+.stu-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stu-tab { height: 32px; padding: 0 14px; border-radius: 999px; font-size: 13px; }
+.stu-tab.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
+
+.stu-search { display: flex; align-items: center; gap: 8px; height: 34px; border: 0.5px solid var(--border-strong); border-radius: 8px; padding: 0 10px; background: var(--surface-2); flex: 1; min-width: 200px; }
+.stu-search input { border: none; box-shadow: none; height: 32px; padding: 0; background: transparent; }
+.stu-search input:focus { box-shadow: none; }
+
+.stu-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin-bottom: 8px; }
+.stu-summary b { font-weight: 500; }
+
+.stu-list-head, .stu-lrow {
+  display: grid; grid-template-columns: 32px minmax(0,1fr) 62px 110px 50px 44px 16px; gap: 8px; align-items: center;
+}
+.stu-list-head { padding: 8px 10px; background: var(--surface-1); font-size: 11px; color: var(--text-secondary); }
+.stu-lrow { padding: 7px 10px; border-top: 0.5px solid var(--border); cursor: pointer; }
+.stu-lrow:hover { background: var(--surface-1); }
+.stu-lrow.sel { background: var(--bg-accent-muted); }
+.stu-lrow .code { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.stu-lrow .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stu-mini { display: inline-block; width: 44px; height: 5px; border-radius: 3px; background: var(--border); vertical-align: middle; margin-right: 4px; overflow: hidden; }
+.stu-mini > i { display: block; height: 100%; border-radius: 3px; background: var(--fill-success); }
+.stu-qrnew { font-size: 10px; padding: 0 6px; height: 16px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; gap: 3px; }
+
+@media (max-width: 640px) {
+  .stu-list-head { display: none; }
+  .stu-lrow { grid-template-columns: 30px minmax(0,1fr) auto 16px; }
+  .stu-lrow .code, .stu-lrow .sc, .stu-lrow .att { display: none; }
+}
+
+/* print toolbar (sticker sheet) */
+.print-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+
+/* import preview */
+.imp-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; }
+.imp-warn { display: flex; align-items: flex-start; gap: 6px; margin-top: 6px; padding: 6px 10px; border-radius: 8px; font-size: 12px; background: var(--bg-warning); color: var(--text-warning); }
+.imp-warn.danger { background: var(--bg-danger); color: var(--text-danger); }
+.imp-warn > i { margin-top: 1px; flex: none; }
+.imp-confirm { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--border-warning); background: var(--bg-warning); color: var(--text-warning); font-size: 13px; cursor: pointer; }
+.imp-confirm input { width: auto; height: auto; margin-top: 2px; }

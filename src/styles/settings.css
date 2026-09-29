@@ -1,0 +1,28 @@
+/* งานครบ · settings */
+.set-cols { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 12px; align-items: start; }
+.set-nav { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 6px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 12px; }
+.set-nav button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 13px; color: var(--text-secondary); background: transparent; border: none; cursor: pointer; text-align: left; width: 100%; }
+.set-nav button i { font-size: 16px; }
+.set-nav button.on { background: var(--bg-accent); color: var(--text-accent); font-weight: 500; }
+.set-nav button:hover:not(.on) { background: var(--surface-1); }
+.set-nav button .warndot { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--fill-warning); }
+
+.set-body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.set-section-title { display: flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 8px; }
+.set-section-title i { color: var(--text-accent); font-size: 17px; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 0.5px solid var(--border); }
+.set-row:first-of-type { border-top: none; }
+
+.set-periods { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+@media (max-width: 560px) { .set-periods { grid-template-columns: repeat(2, 1fr); } }
+.set-periods label { display: flex; align-items: center; gap: 6px; font-size: 13px; border: 0.5px solid var(--border); border-radius: 8px; padding: 4px 8px; background: var(--surface-1); }
+.set-periods label input { height: 28px; width: auto; flex: 1; }
+
+.set-nav-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; }
+
+.set-savebar {
+  position: sticky; bottom: 12px; z-index: 10; display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 12px; background: var(--surface-2); border: 0.5px solid var(--border-accent);
+  box-shadow: var(--shadow-pop); margin-top: 12px;
+}
+@media (max-width: 720px) { .set-cols { grid-template-columns: 1fr; } .set-nav { display: none; } .set-savebar { bottom: calc(76px + env(safe-area-inset-bottom)); } }

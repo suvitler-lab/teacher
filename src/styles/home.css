@@ -1,0 +1,35 @@
+/* งานครบ · home dashboard */
+.hm-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+@media (max-width: 720px) { .hm-actions { grid-template-columns: repeat(2, 1fr); } }
+.hm-action {
+  display: flex; gap: 9px; align-items: center; padding: 10px 12px; border-radius: 12px;
+  background: var(--surface-2); border: 0.5px solid var(--border); cursor: pointer; text-align: left; text-decoration: none; color: inherit;
+}
+.hm-action:hover { background: var(--surface-1); }
+.hm-action > i { font-size: 20px; color: var(--text-accent); flex: none; }
+.hm-action.primary { background: var(--accent); border-color: transparent; color: var(--on-accent); }
+.hm-action.primary > i { color: var(--on-accent); }
+.hm-action .t { font-weight: 500; font-size: 14px; }
+.hm-action .s { font-size: 11px; opacity: 0.85; }
+
+.hm-cols { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 860px) { .hm-cols { grid-template-columns: 1fr; } }
+.hm-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+.hm-cardhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-weight: 500; }
+.hm-cardhead .lk { font-size: 12px; font-weight: 400; color: var(--text-accent); background: none; border: none; cursor: pointer; }
+
+.hm-asg { padding: 9px 0; border-top: 0.5px solid var(--border); }
+.hm-asg:first-of-type { border-top: none; }
+.hm-asg .ttl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.hm-prog { display: grid; grid-template-columns: 46px minmax(0,1fr) 52px auto; gap: 8px; align-items: center; font-size: 11px; margin-top: 5px; }
+.hm-prog .num { font-variant-numeric: tabular-nums; color: var(--text-secondary); text-align: right; }
+
+.hm-att { padding: 7px 0; border-top: 0.5px solid var(--border); }
+.hm-att:first-of-type { border-top: none; }
+
+.hm-follow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; cursor: pointer; text-align: left; }
+.hm-follow:first-of-type { border-top: none; }
+.hm-follow:hover { background: var(--surface-1); }
+
+.hm-backup { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 9px 12px; border-radius: 12px; border: 0.5px solid var(--border-warning); background: var(--bg-warning); color: var(--text-warning); }

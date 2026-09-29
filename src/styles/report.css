@@ -1,0 +1,35 @@
+/* งานครบ · reports */
+.rp-range { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
+
+.rp-cols { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
+@media (max-width: 860px) { .rp-cols { grid-template-columns: 1fr; } }
+
+.rp-bars > div { display: grid; grid-template-columns: 118px minmax(0,1fr) 44px 34px; gap: 6px; align-items: center; font-size: 11px; margin: 5px 0; }
+.rp-bars .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rp-bars .track { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.rp-bars .track > div { height: 100%; border-radius: 4px; }
+.rp-bars .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.rp-bars .pct { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.rp-legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
+.rp-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+.rp-hist { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; align-items: end; height: 70px; }
+.rp-hist .col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.rp-hist .col .n { font-size: 11px; font-variant-numeric: tabular-nums; }
+.rp-hist .col .bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 3px; }
+.rp-histx { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; text-align: center; border-top: 0.5px solid var(--border); padding-top: 3px; font-size: 11px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+.rp-follow { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; border-bottom: none; cursor: pointer; text-align: left; }
+.rp-follow:hover { background: var(--surface-1); }
+
+table.rp-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+table.rp-table th { font-weight: 400; font-size: 11px; color: var(--text-secondary); text-align: left; padding: 6px 6px; border-bottom: 0.5px solid var(--border); cursor: pointer; white-space: nowrap; }
+table.rp-table th.on { color: var(--text-accent); }
+table.rp-table td { padding: 6px 6px; border-bottom: 0.5px solid var(--border); }
+table.rp-table tr { cursor: pointer; }
+table.rp-table tr:hover td { background: var(--surface-1); }
+table.rp-table .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+table.rp-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.rp-mini { display: inline-block; width: 40px; height: 5px; border-radius: 3px; background: var(--border); vertical-align: middle; margin-right: 5px; overflow: hidden; }
+.rp-mini > i { display: block; height: 100%; border-radius: 3px; }
