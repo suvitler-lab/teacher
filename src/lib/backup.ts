@@ -18,11 +18,22 @@ export interface BackupFile {
   exported_at: number;
   counts: Record<string, number>;
   sha256: string;
+  /** what the server's data looked like when this was read — the same before and after, or the file would not exist */
+  fingerprint?: string;
   data: Record<string, any[]>;
 }
 
-/** Download all data as one JSON file (paginated reads to respect CPU limits). */
-export async function runBackup(): Promise<BackupFile> {
+/** The data kept changing while it was being read (another device was saving), on every attempt. */
+export class BackupInconsistentError extends Error {
+  constructor() {
+    super("ข้อมูลมีการเปลี่ยนแปลงตลอดระหว่างสำรอง (มีเครื่องอื่นกำลังบันทึกอยู่) — รอสักครู่ให้หยุดสแกน/เช็คชื่อ แล้วลองใหม่");
+  }
+}
+
+const ATTEMPTS = 3;
+const fingerprint = async () => (await api.get<{ fingerprint: string }>("/api/backup/fingerprint")).fingerprint;
+
+async function readAll() {
   const data: Record<string, any[]> = {};
   const counts: Record<string, number> = {};
   let schemaVersion = 1;
@@ -39,14 +50,34 @@ export async function runBackup(): Promise<BackupFile> {
     data[table] = rows;
     counts[table] = rows.length;
   }
-  const sha = await sha256Hex(JSON.stringify(data));
+  return { data, counts, schemaVersion };
+}
+
+/**
+ * Download all data as one JSON file (paginated reads to respect CPU limits).
+ * The read is repeated if the data changed while it was going on: a file that is half before and half after another
+ * device's save is worse than no file, because it looks fine.
+ */
+export async function runBackup(opts: { onRetry?: (attempt: number) => void } = {}): Promise<BackupFile> {
+  let taken: (Awaited<ReturnType<typeof readAll>> & { fingerprint: string }) | null = null;
+  for (let attempt = 1; attempt <= ATTEMPTS && !taken; attempt++) {
+    const before = await fingerprint();
+    const read = await readAll();
+    const after = await fingerprint();
+    if (before === after) taken = { ...read, fingerprint: after };
+    else if (attempt < ATTEMPTS) opts.onRetry?.(attempt);
+  }
+  if (!taken) throw new BackupInconsistentError();
+
+  const sha = await sha256Hex(JSON.stringify(taken.data));
   const file: BackupFile = {
     app: "ngankrob",
-    schema_version: schemaVersion,
+    schema_version: taken.schemaVersion,
     exported_at: Date.now(),
-    counts,
+    counts: taken.counts,
     sha256: sha,
-    data,
+    fingerprint: taken.fingerprint,
+    data: taken.data,
   };
   // trigger download
   const blob = new Blob([JSON.stringify(file)], { type: "application/json" });

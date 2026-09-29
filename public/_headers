@@ -4,3 +4,11 @@
   Referrer-Policy: same-origin
   Permissions-Policy: camera=(self), microphone=(), geolocation=()
   Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+
+# The service worker must be re-checked every time a page opens, or a new release waits up to a day to be noticed.
+/sw.js
+  Cache-Control: no-cache
+
+# Files under /assets are named by their content (index-CLZ3UQkT.css): a name never changes what is inside it.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

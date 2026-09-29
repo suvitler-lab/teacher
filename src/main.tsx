@@ -1,13 +1,10 @@
 import { render } from "preact";
 import "./styles/base.css";
 import { App } from "./app";
+import { initOffline } from "./lib/offline";
 
 const root = document.getElementById("app");
 if (root) render(<App />, root);
 
-// register the service worker for offline app-shell (production build only)
-if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
-  });
-}
+// keep the app on the device for offline use (production build only) — and show whether it worked
+initOffline();

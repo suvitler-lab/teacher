@@ -165,7 +165,7 @@ catalogRoutes.post("/api/terms/start", async (c) => {
     const idOf = new Map(opened.map((o) => [o.from, o.id]));
 
     const cnt = await db.prepare(
-      "SELECT COUNT(*) AS n FROM students s JOIN json_each(?1) j ON j.value = s.class_id WHERE s.status = 'active'",
+      "SELECT COUNT(*) AS n FROM students s WHERE s.class_id IN (SELECT value FROM json_each(?1)) AND s.status = 'active'",
     ).bind(JSON.stringify([...oldIds])).first<{ n: number }>();
     finished = cnt?.n ?? 0;
 

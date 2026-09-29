@@ -89,8 +89,7 @@ export async function existingOpIds(env: Env, opIds: string[]): Promise<Set<stri
   if (opIds.length === 0) return set;
   const payload = JSON.stringify(opIds);
   const res = await env.DB.prepare(
-    `SELECT a.op_id AS op_id FROM audit_logs a
-     JOIN json_each(?1) j ON j.value = a.op_id`,
+    `SELECT a.op_id AS op_id FROM audit_logs a WHERE a.op_id IN (SELECT value FROM json_each(?1))`,
   )
     .bind(payload)
     .all<{ op_id: string }>();

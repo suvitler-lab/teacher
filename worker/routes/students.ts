@@ -153,7 +153,7 @@ studentRoutes.post("/api/students/import/preview", async (c) => {
   const codes = b.students.map((s) => s.code);
   const exRes = await c.env.DB.prepare(
     `SELECT s.id, s.code, s.class_id, s.number, s.status, s.prefix, s.first_name, s.last_name
-     FROM students s JOIN json_each(?1) j ON j.value = s.code`,
+     FROM students s WHERE s.code IN (SELECT value FROM json_each(?1))`,
   ).bind(JSON.stringify(codes)).all<any>();
   const byCode = new Map<string, any>((exRes.results ?? []).map((r) => [r.code, r]));
 
@@ -201,7 +201,7 @@ studentRoutes.post("/api/students/import", async (c) => {
   // existing codes -> id (so re-import updates instead of duplicating)
   const codes = b.students.map((s) => s.code);
   const exRes = await c.env.DB.prepare(
-    `SELECT s.id, s.code FROM students s JOIN json_each(?1) j ON j.value = s.code`,
+    `SELECT s.id, s.code FROM students s WHERE s.code IN (SELECT value FROM json_each(?1))`,
   )
     .bind(JSON.stringify(codes))
     .all<{ id: string; code: string }>();

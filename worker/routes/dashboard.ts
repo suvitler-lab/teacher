@@ -38,16 +38,18 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
   const [linkRes, stuRes, subRes] = await Promise.all([
     aids.length
       ? c.env.DB.prepare(
-          `SELECT assignment_id, class_id FROM assignment_classes JOIN json_each(?1) j ON j.value = assignment_id`,
+          `SELECT assignment_id, class_id FROM assignment_classes WHERE assignment_id IN (SELECT value FROM json_each(?1))`,
         ).bind(JSON.stringify(aids)).all<{ assignment_id: string; class_id: string }>()
       : Promise.resolve({ results: [] as any[] }),
     c.env.DB.prepare(`SELECT s.id, s.class_id FROM students s ${yearJoin} WHERE ${member.sql}`)
       .bind(...yearBinds, ...member.binds).all<{ id: string; class_id: string | null }>(),
     aids.length
       ? c.env.DB.prepare(
-          `SELECT sub.assignment_id, sub.student_id, sub.status, sub.score, sub.late, s.class_id
-           FROM submissions sub JOIN json_each(?1) j ON j.value = sub.assignment_id
-           JOIN students s ON s.id = sub.student_id ${yearJoin} WHERE ${member.sql}`,
+          `WITH ids AS (SELECT value AS v FROM json_each(?1))
+           SELECT sub.assignment_id, sub.student_id, sub.status, sub.score, sub.late, s.class_id
+           FROM submissions sub
+           JOIN students s ON s.id = sub.student_id ${yearJoin}
+           WHERE sub.assignment_id IN (SELECT v FROM ids) AND ${member.sql}`,
         ).bind(JSON.stringify(aids), ...yearBinds, ...member.binds).all<any>()
       : Promise.resolve({ results: [] as any[] }),
   ]);

@@ -60,9 +60,10 @@ reportRoutes.get("/api/reports/summary", async (c) => {
 
   const subRes = aids.length
     ? await c.env.DB.prepare(
-        `SELECT sub.* FROM submissions sub
-         JOIN json_each(?1) j ON j.value = sub.assignment_id
-         JOIN students s ON s.id = sub.student_id WHERE s.class_id = ? AND ${member.sql}`,
+        `WITH ids AS (SELECT value AS v FROM json_each(?1))
+         SELECT sub.* FROM submissions sub
+         JOIN students s ON s.id = sub.student_id
+         WHERE sub.assignment_id IN (SELECT v FROM ids) AND s.class_id = ? AND ${member.sql}`,
       ).bind(JSON.stringify(aids), classId, ...member.binds).all()
     : { results: [] as any[] };
 
@@ -81,7 +82,7 @@ reportRoutes.get("/api/reports/summary", async (c) => {
   const sessionIds = (attSessions.results ?? []).map((s: any) => s.id);
   const attRows = sessionIds.length
     ? await c.env.DB.prepare(
-        `SELECT at.* FROM attendance at JOIN json_each(?1) j ON j.value = at.session_id`,
+        `SELECT at.* FROM attendance at WHERE at.session_id IN (SELECT value FROM json_each(?1))`,
       ).bind(JSON.stringify(sessionIds)).all()
     : { results: [] as any[] };
 

@@ -45,7 +45,7 @@ gradebookRoutes.get("/api/gradebook", async (c) => {
   const linkRes = aids.length
     ? await c.env.DB.prepare(
         `SELECT assignment_id, class_id FROM assignment_classes
-         JOIN json_each(?1) j ON j.value = assignment_id`,
+         WHERE assignment_id IN (SELECT value FROM json_each(?1))`,
       ).bind(JSON.stringify(aids)).all<{ assignment_id: string; class_id: string }>()
     : { results: [] as any[] };
   const linkMap = new Map<string, string[]>();
@@ -57,10 +57,10 @@ gradebookRoutes.get("/api/gradebook", async (c) => {
 
   const subRes = aids.length
     ? await c.env.DB.prepare(
-        `SELECT sub.* FROM submissions sub
-         JOIN json_each(?1) j ON j.value = sub.assignment_id
+        `WITH ids AS (SELECT value AS v FROM json_each(?1))
+         SELECT sub.* FROM submissions sub
          JOIN students s ON s.id = sub.student_id
-         WHERE s.class_id = ? AND ${member.sql}`,
+         WHERE sub.assignment_id IN (SELECT v FROM ids) AND s.class_id = ? AND ${member.sql}`,
       ).bind(JSON.stringify(aids), classId, ...member.binds).all()
     : { results: [] as any[] };
 

@@ -1,0 +1,4 @@
+# Copy to `.dev.vars` for `npm run dev` (that file is never committed). Development values only —
+# a real deploy sets these with `npx wrangler secret put …` (README, step 4).
+SETUP_CODE=dev-setup-code
+SESSION_PEPPER=dev-only-pepper-not-for-production

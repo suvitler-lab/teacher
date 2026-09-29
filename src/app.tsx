@@ -5,7 +5,9 @@ import { kvGet } from "./lib/idb";
 import { pauseSync } from "./lib/outbox";
 import { requestPersist } from "./lib/storage";
 import { route, routeName } from "./router";
-import { api } from "./lib/api";
+import { api, withTimeout } from "./lib/api";
+import { authRequired } from "./lib/session";
+import { retryUntilReachable } from "./lib/reconnect";
 import { Setup } from "./pages/Setup";
 import { Shell } from "./components/Shell";
 import { Home } from "./pages/Home";
@@ -26,13 +28,24 @@ interface Me {
   device?: { id: string; name: string } | null;
 }
 
+// A connected-but-dead network (stalling classroom wifi) would keep the spinner up for minutes: after this long the
+// server counts as unreachable and the app starts from what this device saved.
+const REACH_TIMEOUT_MS = 8000;
+
+/** Ask the server who we are; while it can't be reached this throws. Live data replaces the saved copy on success. */
+async function goLive() {
+  const me = await withTimeout(api.get<Me>("/api/auth/me"), REACH_TIMEOUT_MS);
+  if (me.authenticated) await loadBootstrap();
+  else authRequired.value = true; // the session ended while we were away: sign in again (unsent work is kept)
+}
+
 export function App() {
   const state = authState.value;
 
   useEffect(() => {
     (async () => {
       try {
-        const me = await api.get<Me>("/api/auth/me");
+        const me = await withTimeout(api.get<Me>("/api/auth/me"), REACH_TIMEOUT_MS);
         if (me.authenticated && (await kvGet<boolean>("loggedOut"))) {
           // The teacher signed out on this device (perhaps offline, so the server session
           // survived). Coming back online must not quietly sign them back in: finish it.
@@ -58,6 +71,8 @@ export function App() {
           startOutbox();
           void requestPersist();
           authState.value = "ready";
+          // working from saved data: keep asking, and the moment the server answers show its data instead
+          retryUntilReachable(goLive);
         } else {
           authState.value = "login";
         }

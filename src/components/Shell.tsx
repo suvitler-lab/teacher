@@ -2,7 +2,7 @@ import type { ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
 import { route, routeName } from "../router";
 import { Icon } from "./Icon";
-import { Toasts, ReloginOverlay, FailedPanel, EpochBanner, StartTermHost } from "./Overlays";
+import { Toasts, ReloginOverlay, FailedPanel, EpochBanner, UpdateBanner, StartTermHost } from "./Overlays";
 import { SyncBadge, TermPicker } from "./ui";
 import { logout } from "../store";
 import { pendingCount, failedCount } from "../lib/outbox";
@@ -59,7 +59,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
         <button class="rail-item" onClick={doLogout}><Icon name="logout" size={20} /> ออกระบบ</button>
       </nav>
 
-      <main class="main"><EpochBanner />{children}</main>
+      <main class="main"><UpdateBanner /><EpochBanner />{children}</main>
 
       <nav class="bottom-tabs" aria-label="เมนู">
         {TABS.map((t) => {

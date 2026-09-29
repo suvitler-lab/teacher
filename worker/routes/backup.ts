@@ -10,6 +10,7 @@ import { SCHEMA_VERSION } from "@shared/types";
 
 export const backupRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 backupRoutes.use("/api/backup", requireAuth);
+backupRoutes.use("/api/backup/*", requireAuth);
 backupRoutes.use("/api/restore/*", requireAuth);
 
 // Tables included in a backup, in FK-safe (parents-first) restore order.
@@ -48,19 +49,61 @@ const COLUMNS: Record<string, string[]> = {
 const PAGE = 500;
 
 // ---- backup (paginated per table) ---------------------------------------
+// Pages are cut by rowid ("the next 500 after this one"), not by OFFSET: OFFSET n reads and throws away n rows first, so a
+// whole table cost the square of its size (12,000 attendance marks → ~150,000 rows read, against a Free allowance of
+// 5 million a day), and rows added or removed between two pages made it skip or repeat some. `cursor` is the rowid of the
+// last row already sent; the app treats it as an opaque number.
 backupRoutes.get("/api/backup", async (c) => {
   const table = c.req.query("table");
   const cursor = Number(c.req.query("cursor") ?? "0") || 0;
   if (!table || !BACKUP_TABLES.includes(table as any)) throw bad("bad_table");
   const res = await c.env.DB.prepare(
-    `SELECT * FROM ${table} ORDER BY rowid LIMIT ? OFFSET ?`,
+    `SELECT rowid AS _rid, * FROM ${table} WHERE rowid > ? ORDER BY rowid LIMIT ?`,
   )
-    .bind(PAGE, cursor)
-    .all();
+    .bind(cursor, PAGE)
+    .all<any>();
   const rows = res.results ?? [];
-  const nextCursor = rows.length === PAGE ? cursor + PAGE : null;
+  const nextCursor = rows.length === PAGE ? (rows[rows.length - 1]._rid as number) : null;
+  for (const r of rows) delete r._rid; // the row as stored — the marker was only for paging
   return c.json({ table, rows, nextCursor, schema_version: SCHEMA_VERSION });
 });
+
+/**
+ * A short summary of everything a backup reads — and of the writes that happen around it. A backup is read in
+ * many requests (a page of one table at a time, to stay inside a Worker's CPU limit), so another device that saves
+ * a score halfway through would leave a file that is half before and half after. The app takes this summary before
+ * and after reading: if the two differ, something changed in between and the read starts over.
+ *
+ * Every write to the data leaves a mark here: rows carry `updated_at`, every audited write adds an audit row, and a
+ * restore bumps the epoch. (The app writes `last_backup_at` only AFTER its second reading, so its own bookkeeping
+ * never counts as "something changed".)
+ */
+export async function dataFingerprint(env: Env): Promise<string> {
+  const stamped = (table: string, col: string) =>
+    `(SELECT COUNT(*) || ':' || COALESCE(MAX(${col}), 0) || ':' || COALESCE(CAST(SUM(${col}) AS TEXT), '0') FROM ${table})`;
+  const parts = [
+    stamped("terms", "updated_at"),
+    stamped("classes", "updated_at"),
+    stamped("subjects", "updated_at"),
+    stamped("work_types", "updated_at"),
+    stamped("students", "updated_at"),
+    stamped("assignments", "updated_at"),
+    stamped("submissions", "updated_at"),
+    stamped("attendance_sessions", "updated_at"),
+    stamped("attendance", "updated_at"),
+    stamped("revoked_qr_tokens", "revoked_at"),
+    // links and scan sessions have no update stamp of their own: count + the newest row (+ what a finished round adds)
+    "(SELECT COUNT(*) || ':' || COALESCE(MAX(rowid), 0) FROM assignment_classes)",
+    "(SELECT COUNT(*) || ':' || COALESCE(MAX(started_at), 0) || ':' || COALESCE(MAX(ended_at), 0) || ':' || COALESCE(SUM(scan_count), 0) FROM scan_sessions)",
+    "(SELECT COALESCE(group_concat(key || '=' || value, '|'), '') FROM (SELECT key, value FROM settings ORDER BY key))",
+    "(SELECT COALESCE(MAX(id), 0) FROM audit_logs)",
+    "COALESCE((SELECT value FROM meta WHERE key = 'data_epoch'), '')",
+  ];
+  const row = await env.DB.prepare(`SELECT ${parts.join(" || '#' || ")} AS fp`).first<{ fp: string }>();
+  return row?.fp ?? "";
+}
+
+backupRoutes.get("/api/backup/fingerprint", async (c) => c.json({ fingerprint: await dataFingerprint(c.env) }));
 
 // ---- restore -------------------------------------------------------------
 // A restore is STAGED, then swapped in ONE transaction:

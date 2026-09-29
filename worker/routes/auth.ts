@@ -14,12 +14,13 @@ import {
   clientKey,
 } from "../lib/auth";
 import { teacherExists } from "../lib/db";
+import { pepperOf } from "../lib/config";
 import { writeAudit } from "../lib/audit";
 import { id } from "@shared/ids";
 
 export const authRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 
-const pepper = (env: Env) => env.SESSION_PEPPER ?? "dev-pepper";
+const pepper = pepperOf;
 
 async function upsertDevice(env: Env, deviceId: string, name: string, ua: string, now: number) {
   await env.DB.prepare(

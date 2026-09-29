@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { toasts, dismiss, err } from "../lib/notify";
 import { epochStale } from "../lib/session";
+import { offlineState, applyUpdate } from "../lib/offline";
 import { loadBootstrap, startTermOpen } from "../store";
 import { authRequired, resumeAfterAuth, pendingCount, failedCount, listFailed, retryFailed, discardFailed } from "../lib/outbox";
 import { api } from "../lib/api";
@@ -43,6 +44,18 @@ export function StartTermHost() {
   }, [startTermOpen.value]);
   if (!startTermOpen.value || !Comp) return null;
   return <Comp onClose={() => { startTermOpen.value = false; }} />;
+}
+
+/** A newer version of the app is downloaded and waiting. Never swapped in under the teacher's hands. */
+export function UpdateBanner() {
+  if (offlineState.value !== "update") return null;
+  return (
+    <div class="epoch-banner" role="status">
+      <Icon name="download" size={18} />
+      <span class="grow">มีเวอร์ชันใหม่ของแอปพร้อมใช้ — งานที่ค้างส่งในเครื่องนี้ไม่หาย กดเมื่อสะดวก (ไม่ต้องรีบระหว่างสแกน)</span>
+      <button class="primary" style="height:30px" onClick={applyUpdate}><Icon name="refresh" size={15} /> อัปเดตเลย</button>
+    </div>
+  );
 }
 
 export function EpochBanner() {

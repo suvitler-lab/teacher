@@ -159,21 +159,24 @@ interface World {
 async function loadWorld(env: Env, ops: OpIn[]): Promise<World> {
   const assignmentIds = JSON.stringify([...new Set(ops.map((o) => o.assignmentId))]);
   const studentIds = JSON.stringify([...new Set(ops.map((o) => o.studentId))]);
-  const pairs = JSON.stringify([...new Set(ops.map((o) => `${o.assignmentId}\u0000${o.studentId}`))]);
+  const pairs = JSON.stringify([...new Set(ops.map((o) => `${o.assignmentId}\u0000${o.studentId}`))].map((k) => k.split("\u0000")));
   const [aRes, linkRes, sRes, exRes] = await Promise.all([
     env.DB.prepare(
       `SELECT a.id, a.full_score, a.due_date, a.status, a.deleted_at FROM assignments a
-       JOIN json_each(?1) j ON j.value = a.id`,
+       WHERE a.id IN (SELECT value FROM json_each(?1))`,
     ).bind(assignmentIds).all<AsgRow>(),
     env.DB.prepare(
       `SELECT ac.assignment_id, ac.class_id FROM assignment_classes ac
-       JOIN json_each(?1) j ON j.value = ac.assignment_id`,
+       WHERE ac.assignment_id IN (SELECT value FROM json_each(?1))`,
     ).bind(assignmentIds).all<{ assignment_id: string; class_id: string }>(),
-    env.DB.prepare(`SELECT s.id, s.class_id FROM students s JOIN json_each(?1) j ON j.value = s.id`)
+    env.DB.prepare(`SELECT s.id, s.class_id FROM students s WHERE s.id IN (SELECT value FROM json_each(?1))`)
       .bind(studentIds).all<{ id: string; class_id: string | null }>(),
+    // one point lookup per (assignment, student) pair, by the primary key. CROSS JOIN pins the list as the outer loop:
+    // matching an expression of both columns instead (or letting the planner pick) reads the WHOLE table per scan
     env.DB.prepare(
-      `SELECT sub.* FROM submissions sub
-       JOIN json_each(?1) j ON j.value = (sub.assignment_id || char(0) || sub.student_id)`,
+      `SELECT sub.* FROM json_each(?1) j
+       CROSS JOIN submissions sub
+         ON sub.assignment_id = json_extract(j.value, '$[0]') AND sub.student_id = json_extract(j.value, '$[1]')`,
     ).bind(pairs).all(),
   ]);
   const classesOf = new Map<string, Set<string>>();
@@ -479,7 +482,7 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
 
   const sids = rows.map((r) => r.student_id);
   const curRes = await c.env.DB.prepare(
-    `SELECT sub.* FROM submissions sub JOIN json_each(?1) j ON j.value = sub.student_id WHERE sub.assignment_id = ?`,
+    `SELECT sub.* FROM submissions sub WHERE sub.assignment_id = ?2 AND sub.student_id IN (SELECT value FROM json_each(?1))`,
   )
     .bind(JSON.stringify(sids), aid)
     .all();
@@ -527,7 +530,7 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
       abortIf(c.env, "EXISTS (SELECT 1 FROM audit_logs WHERE batch_id = ?1 AND action = 'restore')", batchId),
       abortIf(
         c.env,
-        `EXISTS (SELECT 1 FROM json_each(?1) j JOIN submissions s
+        `EXISTS (SELECT 1 FROM json_each(?1) j CROSS JOIN submissions s
                    ON s.assignment_id = ?2 AND s.student_id = json_extract(j.value, '$.student_id')
                  WHERE json_extract(j.value, '$.after_updated_at') IS NOT NULL
                    AND s.updated_at > json_extract(j.value, '$.after_updated_at'))`,
@@ -540,7 +543,7 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
     if (e instanceof ApiError) throw e; // epoch_changed
     if (await undone()) return c.json({ ok: true, changed: 0, alreadyUndone: true });
     const again = await c.env.DB.prepare(
-      `SELECT sub.updated_at, sub.student_id FROM submissions sub JOIN json_each(?1) j ON j.value = sub.student_id WHERE sub.assignment_id = ?`,
+      `SELECT sub.updated_at, sub.student_id FROM submissions sub WHERE sub.assignment_id = ?2 AND sub.student_id IN (SELECT value FROM json_each(?1))`,
     ).bind(JSON.stringify(sids), aid).all<{ updated_at: number; student_id: string }>();
     const afterOf = new Map(wrote.map((w) => [w.student_id, w.after_updated_at]));
     if ((again.results ?? []).some((r) => afterOf.get(r.student_id) != null && r.updated_at > afterOf.get(r.student_id)!)) return modified();

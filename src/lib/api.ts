@@ -44,6 +44,17 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return payload as T;
 }
 
+/**
+ * A network that is "connected" but dead (a classroom wifi that stalls) never fails on its own — the request just
+ * hangs. Give up after `ms` and let the caller treat it as offline.
+ */
+export function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const t = setTimeout(() => reject(new ApiError(0, "timeout", "เครือข่ายตอบช้าเกินไป")), ms);
+    p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+  });
+}
+
 export const api = {
   get: <T>(path: string) => request<T>("GET", path),
   post: <T>(path: string, body?: unknown) => request<T>("POST", path, body),

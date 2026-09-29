@@ -6,7 +6,7 @@ import { settings, applyTheme, loadBootstrap, revokedTokens, students as allStud
 import type { Settings, DeviceInfo } from "@shared/types";
 import { api } from "../lib/api";
 import { setSoundEnabled } from "../lib/sound";
-import { runBackup } from "../lib/backup";
+import { runBackup, BackupInconsistentError } from "../lib/backup";
 import { err, ok, withToast } from "../lib/notify";
 import { AuditHistory } from "../components/AuditHistory";
 import { RestoreModal } from "../components/RestoreModal";
@@ -16,6 +16,7 @@ import { buildIndex, resolveScan } from "@shared/scan";
 import { fullName } from "../lib/names";
 import { routeParams, setNavGuard } from "../router";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
+import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -40,13 +41,38 @@ function StorageRow() {
         <div style="font-weight:500;font-size:14px">ที่เก็บข้อมูลในเครื่องนี้</div>
         <div class="page-sub">
           {safe
-            ? "งานที่ยังไม่ได้ส่งและร่างเช็คชื่อจะไม่ถูกเบราว์เซอร์ลบเอง"
-            : "ถ้าไม่ได้เปิดเว็บนี้นานราว 7 วัน (เช่นช่วงปิดเทอม) Safari บน iPad อาจลบงานที่ยังไม่ได้ส่ง — แนะนำให้เพิ่มไว้ที่หน้าจอโฮม"}
+            ? "เบราว์เซอร์มีโอกาสลบข้อมูลของเว็บนี้น้อยลง แต่ไม่ใช่การรับประกัน — งานที่ยังรอส่งควรถูกส่งขึ้นระบบให้เร็วที่สุด (ดูตัวเลข \"รอส่ง\" แล้วต่อเน็ต)"
+            : "ถ้าไม่ได้เปิดเว็บนี้นานราว 7 วัน (เช่นช่วงปิดเทอม) Safari บน iPad อาจลบงานที่ยังไม่ได้ส่ง — แนะนำให้เพิ่มไว้ที่หน้าจอโฮม และอย่าปล่อยงานค้างส่งข้ามช่วงปิดเทอม"}
         </div>
       </div>
       {safe
-        ? <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="shield-check" size={13} /> {installed ? "ติดตั้งแล้ว" : "ถาวร"}</span>
+        ? <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="shield-check" size={13} /> {installed ? "ติดตั้งแล้ว" : "ขอเก็บถาวรแล้ว"}</span>
         : <button style="height:30px;font-size:12px;white-space:nowrap;flex:none" onClick={async () => { const okk = await requestPersist(); setPersisted(okk); if (!okk) err("เบราว์เซอร์ไม่อนุญาต — ลองเพิ่มไว้ที่หน้าจอโฮม"); }}>ขอเก็บถาวร</button>}
+    </div>
+  );
+}
+
+// Can this device open the app and keep scanning with no network at all?
+function OfflineRow() {
+  const st = offlineState.value;
+  const text: Record<OfflineState, string> = {
+    unsupported: "เบราว์เซอร์หรือที่อยู่นี้ใช้ออฟไลน์ไม่ได้ (ต้องเปิดผ่านลิงก์ https:// ของระบบ และเป็นแอปที่ deploy แล้ว ไม่ใช่โหมดพัฒนา)",
+    preparing: "กำลังดาวน์โหลดไฟล์ของแอปไว้ในเครื่อง — รอให้เสร็จก่อนพาไปห้องที่สัญญาณไม่ดี",
+    ready: "เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต — งานที่สแกนจะเข้าคิวในเครื่อง แล้วส่งเองเมื่อกลับมาออนไลน์",
+    update: "มีเวอร์ชันใหม่ดาวน์โหลดไว้แล้ว — กดอัปเดตเมื่อสะดวก (งานที่ค้างส่งไม่หาย)",
+    error: offlineNote.value || "เตรียมไฟล์สำหรับใช้ออฟไลน์ไม่สำเร็จ — ต่อเน็ตแล้วเปิดแอปใหม่อีกครั้ง",
+  };
+  return (
+    <div class="set-row" style="align-items:flex-start">
+      <div>
+        <div style="font-weight:500;font-size:14px">ใช้ออฟไลน์</div>
+        <div class="page-sub">{text[st]}{st === "ready" && offlineNote.value ? " · " + offlineNote.value : ""}</div>
+      </div>
+      {st === "ready" && <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="circle-check" size={13} /> พร้อม</span>}
+      {st === "preparing" && <span class="chip" style="background:var(--bg-accent);color:var(--text-accent)"><Icon name="loader-2" size={13} class="spin" /> กำลังเตรียม</span>}
+      {st === "update" && <button class="primary" style="height:30px;font-size:12px;white-space:nowrap;flex:none" onClick={applyUpdate}>อัปเดตเลย</button>}
+      {st === "error" && <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)"><Icon name="alert-triangle" size={13} /> ไม่พร้อม</span>}
+      {st === "unsupported" && <span class="chip" style="background:var(--surface-1);color:var(--text-secondary)">ไม่รองรับ</span>}
     </div>
   );
 }
@@ -109,7 +135,8 @@ export function SettingsPage() {
 
   async function backup() {
     setBusy("backup");
-    try { await runBackup(); ok("ดาวน์โหลดไฟล์สำรองแล้ว"); } catch { err("สำรองข้อมูลไม่สำเร็จ"); }
+    try { await runBackup({ onRetry: () => ok("มีการบันทึกจากเครื่องอื่นระหว่างสำรอง — กำลังอ่านใหม่") }); ok("ดาวน์โหลดไฟล์สำรองแล้ว"); }
+    catch (e) { err(e instanceof BackupInconsistentError ? e.message : "สำรองข้อมูลไม่สำเร็จ"); }
     setBusy("");
   }
 
@@ -152,6 +179,7 @@ export function SettingsPage() {
               <div class="set-row"><span>ธีม</span>
                 <Segmented value={draft.theme} onChange={(v) => { set("theme", v as Settings["theme"]); applyTheme(v as Settings["theme"]); }} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
               </div>
+              <OfflineRow />
               <StorageRow />
             </div>
           )}

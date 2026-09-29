@@ -60,7 +60,22 @@ export function createApp() {
     await next();
   });
 
-  api.get("/api/health", (c) => c.json({ ok: true, schema: SCHEMA_VERSION }));
+  // What a deploy check (scripts/preflight, `curl …/api/health`) needs to know: is the database there, is it on
+  // the schema this build expects, and were the secrets set. Says whether — never the values.
+  api.get("/api/health", async (c) => {
+    let db = false;
+    let dbSchema: number | null = null;
+    try {
+      const v = await getMeta(c.env, "schema_version");
+      db = true;
+      dbSchema = v === null ? null : Number(v);
+    } catch { /* db stays false */ }
+    const config = { pepper: !!c.env.SESSION_PEPPER, setupCode: !!c.env.SETUP_CODE };
+    // a brand-new database has no schema_version yet (null): the app tells the teacher to migrate
+    const schemaOk = dbSchema === null || dbSchema === SCHEMA_VERSION;
+    const ok = db && schemaOk && config.pepper;
+    return c.json({ ok, schema: SCHEMA_VERSION, db: { reachable: db, schema: dbSchema, schemaOk }, config }, ok ? 200 : 503);
+  });
 
   api.route("/", authRoutes);
   api.route("/", bootstrapRoutes);

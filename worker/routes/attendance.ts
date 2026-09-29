@@ -138,8 +138,7 @@ async function currentRows(env: Env, sessionId: string, sids: string[]): Promise
   const res = await env.DB.prepare(
     `SELECT a.student_id, a.status, a.time, a.updated_at, a.device_id, d.name AS device_name
      FROM attendance a LEFT JOIN devices d ON d.id = a.device_id
-     JOIN json_each(?1) j ON j.value = a.student_id
-     WHERE a.session_id = ?2`,
+     WHERE a.session_id = ?2 AND a.student_id IN (SELECT value FROM json_each(?1))`,
   ).bind(JSON.stringify(sids), sessionId).all<CurRow>();
   return new Map((res.results ?? []).map((r) => [r.student_id, r]));
 }
@@ -192,8 +191,8 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
   // names — a stale client must not write one room's kids into another room
   const sids = [...new Set(b.rows.map((r) => r.studentId))];
   const memberRes = await c.env.DB.prepare(
-    `SELECT s.id FROM students s JOIN json_each(?1) j ON j.value = s.id
-     WHERE s.class_id = ?2 AND s.status = 'active'`,
+    `SELECT s.id FROM students s
+     WHERE s.id IN (SELECT value FROM json_each(?1)) AND s.class_id = ?2 AND s.status = 'active'`,
   )
     .bind(JSON.stringify(sids), b.classId)
     .all<{ id: string }>();

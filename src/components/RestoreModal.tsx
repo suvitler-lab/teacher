@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { api, ApiError } from "../lib/api";
-import { runBackup, type BackupFile } from "../lib/backup";
+import { runBackup, BackupInconsistentError, type BackupFile } from "../lib/backup";
 import { loadBootstrap } from "../store";
 
 const TABLES = [
@@ -18,6 +18,8 @@ async function sha256Hex(s: string): Promise<string> {
 
 // what went wrong, in words — and whether the teacher can just try again
 function explain(e: unknown): { text: string; retry: boolean } {
+  // the safety copy of today's data could not be taken cleanly — and nothing has been touched yet
+  if (e instanceof BackupInconsistentError) return { text: e.message + " (ยังไม่ได้เริ่มกู้คืน ข้อมูลเดิมไม่ถูกเปลี่ยน)", retry: true };
   if (e instanceof ApiError) {
     const code = e.data?.error ?? e.code;
     if (code === "restore_failed") return { text: "ไฟล์สำรองมีข้อมูลที่ไม่สอดคล้องกัน (เช่น อ้างถึงห้องหรือนักเรียนที่ไม่มีในไฟล์) — ไม่มีอะไรถูกเปลี่ยน ข้อมูลเดิมยังอยู่ครบ", retry: false };
