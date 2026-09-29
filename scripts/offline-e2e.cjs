@@ -97,6 +97,18 @@ async function until(fn, timeout = 30000, step = 250) {
     await go(page, "#/settings");
     check("Settings says the device is ready for offline use", await until(async () => /เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต/.test(await page.locator("body").innerText()), 15000));
 
+    // Settings ▸ Devices ▸ "check this device" — on a device that is fine
+    const runDeviceCheck = async () => {
+      await go(page, "#/settings");
+      await page.locator("button.pill", { hasText: "อุปกรณ์และรหัสผ่าน" }).click(); // the tab, as a teacher would
+      await page.getByRole("button", { name: /ตรวจเครื่องนี้|ตรวจอีกครั้ง/ }).first().click();
+      await until(async () => /พร้อมใช้งาน|ใช้ได้ แต่มีข้อควรดู|ยังไม่พร้อม/.test(await page.locator("body").innerText()), 20000);
+      return (await page.locator("body").innerText()).replace(/\s+/g, " ");
+    };
+    let checked = await runDeviceCheck();
+    check("device check (online): not 'not ready', the server and the offline files are reported fine", !/ยังไม่พร้อม — แก้/.test(checked) && /เซิร์ฟเวอร์พร้อม/.test(checked) && /เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต/.test(checked), checked.slice(checked.indexOf("ตรวจเครื่องนี้"), checked.indexOf("ตรวจเครื่องนี้") + 500));
+    check("device check: the clock of this device matches the server's (measured from the HTTP Date header)", /ตรงกับเซิร์ฟเวอร์/.test(checked));
+
     // 2 ─ cut the network, reload: the app must open, with its data
     await goDark();
     await page.reload({ waitUntil: "domcontentloaded" });
@@ -107,6 +119,8 @@ async function until(fn, timeout = 30000, step = 250) {
     // (a moment of "saving" right after a reload is fine; stuck there with the network dead would not be)
     check("the sync badge says offline", await until(async () => /ออฟไลน์/.test(await badge(page)), 10000), await badge(page));
     check("…and no static file was fetched from the network — everything came from the device", staticLeaks().length === 0, staticLeaks().join(", "));
+    checked = await runDeviceCheck();
+    check("device check (network dead): says it is offline but that scanning still works, and the offline files are still 'ready'", /ออฟไลน์อยู่/.test(checked) && /สแกนและเช็คชื่อต่อได้/.test(checked) && /เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต/.test(checked) && !/ยังไม่พร้อม — แก้/.test(checked), checked.slice(checked.indexOf("ตรวจเครื่องนี้"), checked.indexOf("ตรวจเครื่องนี้") + 400));
 
     // 3 ─ scan offline: it goes into the queue
     await go(page, "#/scan");

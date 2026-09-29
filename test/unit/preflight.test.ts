@@ -101,6 +101,14 @@ describe("preflight: build output", () => {
     expect(pre.checkBuilt(dir).join()).toMatch(/placeholder database_id/);
   });
 
+  it("a font pasted into the CSS as a data: URL is caught — the site's CSP would refuse it", () => {
+    built();
+    put("dist/client/client/assets/index-AAAAAAAA.css", "@font-face{font-family:X;src:url(data:font/woff2;base64,d09GMgAB) format(\"woff2\")}");
+    expect(pre.checkBuilt(dir).join()).toMatch(/font inlined as a data: URL/);
+    put("dist/client/client/assets/index-AAAAAAAA.css", "@font-face{font-family:X;src:url(/assets/x-BBBBBBBB.woff2)} .i{background:url(data:image/svg+xml;base64,PHN2Zz4=)}");
+    expect(pre.checkBuilt(dir)).toEqual([]); // an inlined IMAGE is allowed by the policy (img-src data:)
+  });
+
   it("an empty folder reports everything that is missing rather than crashing", () => {
     expect(pre.checkBuilt(dir).length).toBeGreaterThanOrEqual(3);
   });

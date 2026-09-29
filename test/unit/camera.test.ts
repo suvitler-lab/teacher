@@ -37,6 +37,23 @@ describe("startCamera refuses early, with a reason, when it can't possibly work"
   });
 });
 
+describe("diagnoseCamera — a device without its own reader is not a broken device", () => {
+  // a fresh copy of the module each time: it remembers which reader it loaded, and that must not leak into the other tests
+  const fresh = async () => { vi.resetModules(); return (await import("../../src/lib/camera")).diagnoseCamera; };
+
+  it("reports a missing or QR-less BarcodeDetector as information (ok), because the fallback reader does the job", async () => {
+    vi.stubGlobal("BarcodeDetector", undefined);
+    const none = (await (await fresh())()).find((r) => r.label.includes("BarcodeDetector"))!;
+    expect(none.ok).toBe(true);
+    expect(none.detail).toMatch(/ตัวอ่านสำรอง/);
+
+    vi.stubGlobal("BarcodeDetector", class { static async getSupportedFormats() { return ["ean_13"]; } });
+    const noQr = (await (await fresh())()).find((r) => r.label.includes("BarcodeDetector"))!;
+    expect(noQr.ok).toBe(true);
+    expect(noQr.detail).toMatch(/ไม่รองรับ QR/);
+  });
+});
+
 describe("diagnoseCamera — what the Settings test button shows", () => {
   const row = (rows: { label: string; ok: boolean; detail: string }[], part: string) => rows.find((r) => r.label.includes(part))!;
 

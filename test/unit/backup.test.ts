@@ -10,7 +10,7 @@ vi.mock("@client/lib/api", async (orig) => {
 });
 
 import { webcrypto } from "node:crypto";
-import { runBackup, BackupInconsistentError } from "@client/lib/backup";
+import { runBackup, BackupInconsistentError, backupFileName } from "@client/lib/backup";
 
 const TABLES = 13;
 
@@ -38,6 +38,14 @@ beforeEach(() => {
   URL.createObjectURL = vi.fn(() => "blob:x");
   URL.revokeObjectURL = vi.fn();
   vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(click);
+});
+
+describe("the backup file's name", () => {
+  it("is dated in Bangkok: a backup at 06:00 there is that day, not the day before (which is what UTC would say)", () => {
+    expect(backupFileName(Date.parse("2026-09-29T23:00:00Z"))).toBe("ngankrob-backup-2026-09-30.json"); // 06:00 on the 30th in Bangkok
+    expect(backupFileName(Date.parse("2026-09-30T16:59:00Z"))).toBe("ngankrob-backup-2026-09-30.json"); // 23:59 on the 30th
+    expect(backupFileName(Date.parse("2026-09-30T17:00:00Z"))).toBe("ngankrob-backup-2026-10-01.json"); // just after midnight
+  });
 });
 
 describe("runBackup", () => {

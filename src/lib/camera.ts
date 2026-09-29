@@ -220,16 +220,18 @@ export async function diagnoseCamera(): Promise<CameraCheck[]> {
     if (st) add("สิทธิ์ใช้กล้อง", st.state !== "denied", st.state === "granted" ? "อนุญาตแล้ว" : st.state === "prompt" ? "ยังไม่ได้ถาม (จะถามตอนเปิดกล้อง)" : "ถูกปฏิเสธ — ต้องอนุญาตในตั้งค่าเครื่อง");
   } catch { /* Safari does not expose this: the open-camera step below tells the truth */ }
 
+  // The device's own reader is a bonus, never a requirement: iPad/iPhone Safari does not have one and everything works through
+  // the fallback below. So its absence is reported as information, not as a failed step (a red ✘ here made a working iPad look broken).
   const native = (globalThis as any).BarcodeDetector;
   let nativeOk = false;
   if (native) {
     try {
       const f: string[] = await native.getSupportedFormats();
       nativeOk = f.includes("qr_code");
-      add("ตัวอ่านของเครื่อง (BarcodeDetector)", nativeOk, nativeOk ? "ใช้ได้ — อ่าน QR: " + f.filter((x) => (FORMATS as readonly string[]).includes(x)).join(", ") : "มี แต่ไม่รองรับ QR");
-    } catch (e) { add("ตัวอ่านของเครื่อง (BarcodeDetector)", false, (e as Error).message); }
+      add("ตัวอ่านของเครื่อง (BarcodeDetector)", true, nativeOk ? "ใช้ได้ — อ่าน QR: " + f.filter((x) => (FORMATS as readonly string[]).includes(x)).join(", ") : "มี แต่ไม่รองรับ QR — ใช้ตัวอ่านสำรอง (WASM) แทน (ไม่ใช่ปัญหา)");
+    } catch (e) { add("ตัวอ่านของเครื่อง (BarcodeDetector)", true, "ตรวจไม่ได้ (" + (e as Error).message + ") — ใช้ตัวอ่านสำรอง (WASM) แทน (ไม่ใช่ปัญหา)"); }
   } else {
-    add("ตัวอ่านของเครื่อง (BarcodeDetector)", false, "เครื่องนี้ไม่มี (Safari/iPad ปกติไม่มี) — จะใช้ตัวอ่านสำรอง (WASM) แทน");
+    add("ตัวอ่านของเครื่อง (BarcodeDetector)", true, "เครื่องนี้ไม่มี (Safari/iPad ปกติไม่มี) — ใช้ตัวอ่านสำรอง (WASM) แทน ซึ่งเป็นเรื่องปกติ");
   }
 
   // the fallback reader is what iPad depends on: prove each part of it

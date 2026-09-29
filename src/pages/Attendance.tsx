@@ -390,7 +390,7 @@ export function AttendancePage() {
           <button class={"bopt" + (brush === "cycle" ? " on" : "")} onClick={() => setBrush("cycle")}><Icon name="refresh" size={14} /> วนสถานะ</button>
           {STATUSES.map((s) => <button class={"bopt" + (brush === s ? " on" : "")} onClick={() => setBrush(s)}><span class="dot" style={`background:${DOT[s]}`} />{LABELS[s]}</button>)}
           <span class="grow" />
-          <button onClick={markAllPresent}><Icon name="checks" size={15} /> มาทั้งหมด</button>
+          <button onClick={markAllPresent} disabled={!loaded} title={loaded ? undefined : "กำลังโหลดรายชื่อ…"}><Icon name="checks" size={15} /> มาทั้งหมด</button>
         </div>
       )}
 

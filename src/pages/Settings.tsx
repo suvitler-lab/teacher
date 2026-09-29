@@ -17,6 +17,7 @@ import { fullName } from "../lib/names";
 import { routeParams, setNavGuard } from "../router";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
 import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
+import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -217,6 +218,7 @@ export function SettingsPage() {
           )}
 
           {section === "devices" && (<>
+            <DeviceCheck />
             <DeviceList />
             <div class="card">
               <div class="set-section-title"><Icon name="key" /> รหัสผ่าน</div>
@@ -330,6 +332,59 @@ function CameraTest() {
               <div style="min-width:0"><div style="font-weight:500">{r.label}</div><div class="page-sub" style="word-break:break-word">{r.detail}</div></div>
             </div>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Everything worth knowing about THIS device before class, in one tap — readable aloud, or copied into the trial log. */
+function DeviceCheck() {
+  const [state, setState] = useState<{ checks: Check[]; facts: DeviceFacts } | null>(null);
+  const [busy, setBusy] = useState(false);
+  async function run() {
+    setBusy(true);
+    try {
+      const facts = await collectDeviceFacts();
+      setState({ facts, checks: judgeDevice(facts) });
+    } catch (e) {
+      err("ตรวจเครื่องไม่สำเร็จ: " + ((e as Error)?.message || "ไม่ทราบสาเหตุ"));
+    } finally { setBusy(false); }
+  }
+  async function copy() {
+    if (!state) return;
+    const text = deviceReportText(state.checks, state.facts);
+    try { await navigator.clipboard.writeText(text); ok("คัดลอกผลตรวจแล้ว"); }
+    catch {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      const done = document.execCommand?.("copy"); ta.remove();
+      done ? ok("คัดลอกผลตรวจแล้ว") : err("คัดลอกไม่ได้ — ถ่ายหน้าจอแทน");
+    }
+  }
+  const verdict = state ? worst(state.checks) : null;
+  const tone = { ok: "var(--bg-success);color:var(--text-success)", warn: "var(--bg-warning);color:var(--text-warning)", fail: "var(--bg-danger);color:var(--text-danger)" };
+  const icon = { ok: ["circle-check", "var(--text-success)"], warn: ["alert-triangle", "var(--text-warning)"], fail: ["circle-x", "var(--text-danger)"] } as const;
+  return (
+    <div class="card">
+      <div class="set-section-title"><Icon name="device-mobile-check" /> ตรวจเครื่องนี้</div>
+      <div class="page-sub" style="margin-bottom:8px">รันก่อนเข้าห้องทุกครั้งที่เปลี่ยนเครื่อง — ตรวจ HTTPS, เซิร์ฟเวอร์, การใช้ออฟไลน์, ที่เก็บข้อมูล, นาฬิกา และงานค้าง (ตรวจกล้องแบบละเอียดที่ การสแกน › ทดสอบกล้อง)</div>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <button class="primary" onClick={run} disabled={busy}>{busy ? <Icon name="loader-2" size={16} class="spin" /> : <Icon name="stethoscope" size={16} />} {state ? "ตรวจอีกครั้ง" : "ตรวจเครื่องนี้"}</button>
+        {state && <button onClick={copy}><Icon name="copy" size={16} /> คัดลอกผลตรวจ</button>}
+      </div>
+      {state && verdict && (
+        <div style="margin-top:8px">
+          <div class="imp-warn" style={`margin:0 0 6px;background:${tone[verdict]}`} role="status">
+            <Icon name={icon[verdict][0]} size={15} /> <span>{VERDICT[verdict]}</span>
+          </div>
+          {state.checks.map((c) => (
+            <div class="row" style="gap:8px;align-items:flex-start;padding:5px 0;border-top:0.5px solid var(--border);font-size:13px">
+              <Icon name={icon[c.level][0]} size={16} style={`color:${icon[c.level][1]};margin-top:2px`} />
+              <div style="min-width:0"><div style="font-weight:500">{c.label}</div><div class="page-sub" style="word-break:break-word">{c.detail}</div></div>
+            </div>
+          ))}
+          <div class="page-sub" style="margin-top:6px">{describeAgent(state.facts.userAgent)} · จอ {state.facts.screen}{state.facts.touch ? " · จอสัมผัส" : ""}</div>
         </div>
       )}
     </div>

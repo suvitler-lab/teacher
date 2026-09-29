@@ -30,6 +30,11 @@ export class BackupInconsistentError extends Error {
   }
 }
 
+/** The file's name carries the date in Bangkok — a backup taken at 06:00 there is still that day (UTC would call it yesterday). */
+export function backupFileName(at: number = Date.now()): string {
+  return `ngankrob-backup-${new Date(at + 7 * 3600_000).toISOString().slice(0, 10)}.json`;
+}
+
 const ATTEMPTS = 3;
 const fingerprint = async () => (await api.get<{ fingerprint: string }>("/api/backup/fingerprint")).fingerprint;
 
@@ -83,9 +88,8 @@ export async function runBackup(opts: { onRetry?: (attempt: number) => void } = 
   const blob = new Blob([JSON.stringify(file)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  const d = new Date().toISOString().slice(0, 10);
   a.href = url;
-  a.download = `ngankrob-backup-${d}.json`;
+  a.download = backupFileName();
   document.body.appendChild(a);
   a.click();
   a.remove();

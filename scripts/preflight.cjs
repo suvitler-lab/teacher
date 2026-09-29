@@ -73,6 +73,15 @@ function checkBuilt(root) {
     const files = /const FILES = (\[.*\]);/.exec(text);
     if (files) { try { if (JSON.parse(files[1]).length === 0) problems.push(`${sw} lists no files to keep offline`); } catch { problems.push(`${sw}: the file list is not valid`); } }
   }
+  // the site's Content-Security-Policy has no font-src, so a font pasted into the CSS as a data: URL is refused (a console error on every load)
+  const assets = path.join(root, "dist/client/client/assets");
+  if (fs.existsSync(assets)) {
+    for (const f of fs.readdirSync(assets).filter((n) => n.endsWith(".css"))) {
+      if (/url\(\s*["']?data:(font|application\/(x-)?font)/i.test(fs.readFileSync(path.join(assets, f), "utf8"))) {
+        problems.push(`assets/${f} has a font inlined as a data: URL — the Content-Security-Policy refuses it (vite.config.ts assetsInlineLimit must keep fonts as files)`);
+      }
+    }
+  }
   for (const f of ["dist/client/client/index.html", "dist/client/client/_headers"]) {
     if (!exists(root, f)) problems.push(`${f} is missing from the build`);
   }

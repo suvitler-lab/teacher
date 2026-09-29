@@ -35,7 +35,9 @@ npm run dev                   # เปิด http://localhost:5173
 ตั้งค่าลับสำหรับ dev ในไฟล์ `.dev.vars` (คัดลอกจาก `.dev.vars.example`): `SETUP_CODE`, `SESSION_PEPPER` — ไม่มีค่าเริ่มต้น ถ้าไม่ตั้ง ระบบจะปฏิเสธการตั้ง/เข้าสู่ระบบและบอกสาเหตุ
 เปิดครั้งแรกไปที่ `/` แล้วตั้งรหัสผ่านครูด้วย `SETUP_CODE`
 
-คำสั่งอื่น: `npm run typecheck` · `npm test` · `npm run build` · `npm run e2e:offline` (ทดสอบการใช้ออฟไลน์ในเบราว์เซอร์จริง ดู `docs/OPERATIONS.md`)
+คำสั่งอื่น: `npm run typecheck` · `npm test` · `npm run build` · `npm run e2e:offline` (ออฟไลน์) · `npm run e2e:camera` (กล้อง/เครื่องยิง) ·
+`npm run e2e:rehearsal` (ซ้อมวันทดลอง) ในเบราว์เซอร์จริง ดู `docs/OPERATIONS.md` §8 · ทดลองในห้องเรียนจริง 1 ห้อง: [`docs/TRIAL.md`](docs/TRIAL.md)
+(เทียบกระดาษกับแอปด้วย `npm run trial:reconcile`)
 
 ## นำขึ้นใช้งานจริงบน Cloudflare (0 บาท)
 > ทำครั้งเดียว ครูต้องมีบัญชี Cloudflare (สมัครฟรี ไม่ต้องผูกบัตร)
