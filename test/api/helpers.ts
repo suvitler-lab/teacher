@@ -62,3 +62,32 @@ export async function seed() {
     env.DB.prepare("INSERT INTO assignment_classes (assignment_id,class_id) VALUES ('a1','c1')"),
   ]);
 }
+
+/**
+ * Hold ONE request just before its D1 write, so a test can decide what happens in the gap between "the
+ * request checked the data" and "the request wrote it" (another device, a restore, a settings change).
+ * Pass `gate.env` as the third argument of `app.request` for the request to hold; everything else uses
+ * the normal env. `await gate.ready` = the held request has reached its write; `gate.release()` lets it go.
+ */
+export function gateBatch() {
+  let release!: () => void;
+  let reached!: () => void;
+  const ready = new Promise<void>((r) => (reached = r));
+  const wait = new Promise<void>((r) => (release = r));
+  const DB = new Proxy(env.DB, {
+    get(target, prop) {
+      if (prop === "batch") return async (stmts: D1PreparedStatement[]) => { reached(); await wait; return target.batch(stmts); };
+      const v = Reflect.get(target, prop);
+      return typeof v === "function" ? v.bind(target) : v;
+    },
+  });
+  return { env: { ...env, DB } as typeof env, ready, release };
+}
+
+/** Like `call`, but against another env (see gateBatch). */
+export function callIn(e: typeof env, path: string, init: RequestInit = {}, cookie?: string) {
+  const headers = new Headers(init.headers);
+  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (cookie) headers.set("Cookie", cookie);
+  return app.request(path, { ...init, headers }, e as any);
+}

@@ -91,3 +91,13 @@ button.uc-stat:hover { background: var(--surface-1); }
 .sync.online { background: var(--bg-success); color: var(--text-success); }
 .sync.offline { background: var(--bg-warning); color: var(--text-warning); }
 .sync.saving { background: var(--surface-1); color: var(--text-secondary); }
+
+/* Touch screens: the compact desktop controls are too small for a thumb. Same look, a bigger hit area —
+   only where the pointer is coarse, so desktop keeps its density. min-height wins over the inline
+   `height:26px` some buttons carry. Inline chips and text-link headers ("สมุดคะแนน ›") stay as they are. */
+@media (pointer: coarse) {
+  button:not(.chip):not(.lk) { min-height: 40px; }
+  button.icon { min-width: 40px; }
+  /* the score in a one-assignment row: a transparent button around a number — give the number a real target */
+  .gb-mrow > button { min-width: 44px; min-height: 44px; }
+}

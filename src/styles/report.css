@@ -20,7 +20,7 @@
 .rp-hist .col .bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 3px; }
 .rp-histx { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; text-align: center; border-top: 0.5px solid var(--border); padding-top: 3px; font-size: 11px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 
-.rp-follow { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; border-bottom: none; cursor: pointer; text-align: left; }
+.rp-follow { height: auto; min-height: 44px; display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; border-bottom: none; cursor: pointer; text-align: left; }
 .rp-follow:hover { background: var(--surface-1); }
 
 table.rp-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }

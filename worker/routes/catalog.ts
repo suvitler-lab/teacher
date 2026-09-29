@@ -3,7 +3,8 @@ import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, bad, conflict, ApiError } from "../lib/http";
-import { setSetting, boolKey } from "../lib/db";
+import { setSetting, boolKey, getEpoch } from "../lib/db";
+import { batchAtEpoch, epochChanged, epochGuard, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 import { writeAudit, auditInsertStmt } from "../lib/audit";
 import { currentYear } from "../lib/roster";
@@ -85,7 +86,7 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (b.is_current) {
     stmts.push(c.env.DB.prepare("UPDATE terms SET is_current = 0 WHERE id != ?").bind(tid));
   }
-  await c.env.DB.batch(stmts);
+  await batchAtEpoch(c.env, await requestEpoch(c), stmts);
   return c.json({ ok: true, id: tid });
 });
 
@@ -107,6 +108,7 @@ const startTermSchema = z.object({
 catalogRoutes.post("/api/terms/start", async (c) => {
   const b = startTermSchema.parse(await readJson(c));
   const db = c.env.DB;
+  const epoch = await requestEpoch(c);
   if (b.end_date && b.end_date < b.start_date) throw bad("bad_range", "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม");
 
   const cur = await db.prepare("SELECT id, year, term FROM terms WHERE is_current = 1 LIMIT 1")
@@ -135,6 +137,7 @@ catalogRoutes.post("/api/terms/start", async (c) => {
   const now = Date.now();
   const tid = id("term");
   const stmts: D1PreparedStatement[] = [
+    epochGuard(c.env, epoch), // a restore since this request began: the term list it saw is gone
     // the guard INSIDE the batch: if another request moved "current" since the check above, json() raises
     // and the whole batch rolls back — two starts can never both apply
     db.prepare("SELECT CASE WHEN COALESCE((SELECT id FROM terms WHERE is_current = 1 LIMIT 1), '') = ?1 THEN 1 ELSE json('term_changed') END")
@@ -196,7 +199,8 @@ catalogRoutes.post("/api/terms/start", async (c) => {
   try {
     await db.batch(stmts);
   } catch (e) {
-    // the in-batch guard fired: someone else started a term between our check and the write
+    // an in-batch guard fired: a restore landed, or someone else started a term between our check and the write
+    if ((await getEpoch(c.env)) !== epoch) throw epochChanged();
     const after = await db.prepare("SELECT id FROM terms WHERE is_current = 1 LIMIT 1").first<{ id: string }>();
     if ((after?.id ?? null) !== curId) throw changed();
     throw e;
@@ -223,12 +227,11 @@ catalogRoutes.post("/api/classes", async (c) => {
   if (existing && existing.year != null && cur != null && existing.year !== cur && !b.archived) {
     throw conflict("class_of_past_year", "ห้องนี้เป็นของปีการศึกษาที่ผ่านมา นำกลับมาใช้ไม่ได้ — เพิ่มห้องใหม่ในปีนี้แทน");
   }
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO classes (id, name, grade, sort, archived, year, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name=excluded.name, grade=excluded.grade, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
   )
-    .bind(cid, b.name, b.grade ?? null, b.sort ?? 0, b.archived ? 1 : 0, existing ? existing.year : cur, now)
-    .run();
+    .bind(cid, b.name, b.grade ?? null, b.sort ?? 0, b.archived ? 1 : 0, existing ? existing.year : cur, now)]);
   return c.json({ ok: true, id: cid });
 });
 
@@ -246,12 +249,11 @@ catalogRoutes.post("/api/subjects", async (c) => {
   const b = subjectSchema.parse(await readJson(c));
   const now = Date.now();
   const sid = b.id ?? id("sub");
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO subjects (id, code, name, color, sort, archived, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, name=excluded.name, color=excluded.color, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
   )
-    .bind(sid, b.code ?? null, b.name, b.color ?? "blue", b.sort ?? 0, b.archived ? 1 : 0, now)
-    .run();
+    .bind(sid, b.code ?? null, b.name, b.color ?? "blue", b.sort ?? 0, b.archived ? 1 : 0, now)]);
   return c.json({ ok: true, id: sid });
 });
 
@@ -271,7 +273,7 @@ catalogRoutes.post("/api/work-types", async (c) => {
   const b = workTypeSchema.parse(await readJson(c));
   const now = Date.now();
   const wid = b.id ?? id("wt");
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO work_types (id, name, icon, color, is_exam, default_full, sort, archived, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name=excluded.name, icon=excluded.icon, color=excluded.color, is_exam=excluded.is_exam, default_full=excluded.default_full, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
@@ -286,7 +288,6 @@ catalogRoutes.post("/api/work-types", async (c) => {
       b.sort ?? 0,
       b.archived ? 1 : 0,
       now,
-    )
-    .run();
+    )]);
   return c.json({ ok: true, id: wid });
 });

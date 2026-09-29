@@ -8,4 +8,6 @@ export interface Env {
 // Hono context variables
 export interface Vars {
   deviceId?: string;
+  /** the data epoch when this write request started; a restore that lands later must not be written into */
+  epoch?: number;
 }

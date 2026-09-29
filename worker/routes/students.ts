@@ -7,6 +7,7 @@ import { writeAudit, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { id, qrToken } from "@shared/ids";
 import { mapStudent } from "../lib/rows";
 import { bkkToday } from "../lib/time";
+import { batchAtEpoch, requestEpoch } from "../lib/guard";
 
 export const studentRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 studentRoutes.use("/api/students", requireAuth);
@@ -77,7 +78,7 @@ studentRoutes.post("/api/students", async (c) => {
   const leftAt = gone(nextStatus)
     ? (b.left_at ?? (gone((existing as any)?.status ?? null) ? (existing as any)?.left_at : null) ?? bkkToday())
     : null;
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO students (id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, prefix=excluded.prefix, first_name=excluded.first_name,
@@ -87,8 +88,7 @@ studentRoutes.post("/api/students", async (c) => {
     .bind(
       sid, b.code, token, b.prefix ?? null, b.first_name, b.last_name, b.nickname ?? null,
       b.class_id ?? null, b.number ?? null, nextStatus, leftAt, now,
-    )
-    .run();
+    )]);
   await writeAudit(c.env, [
     {
       entity: "student", entity_id: sid, student_id: sid,
@@ -241,17 +241,17 @@ studentRoutes.post("/api/students/import", async (c) => {
     after: { code: r.code, class_id: r.class_id, number: r.number },
   }));
 
-  await c.env.DB.batch([upsertStmt, auditInsertStmt(c.env, audits, now)]);
+  await batchAtEpoch(c.env, await requestEpoch(c), [upsertStmt, auditInsertStmt(c.env, audits, now)]);
   return c.json({ ok: true, imported: rows.length, created: rows.filter((r) => r._isNew).length });
 });
 
-async function rotateOne(env: Env, studentId: string, deviceId: string | null, now: number) {
+async function rotateOne(env: Env, studentId: string, deviceId: string | null, now: number, epoch: number) {
   const s = await env.DB.prepare("SELECT id, qr_token FROM students WHERE id = ?")
     .bind(studentId)
     .first<{ id: string; qr_token: string }>();
   if (!s) return null;
   const newToken = qrToken();
-  await env.DB.batch([
+  await batchAtEpoch(env, epoch, [
     env.DB.prepare(
       "INSERT OR IGNORE INTO revoked_qr_tokens (token, student_id, revoked_at) VALUES (?, ?, ?)",
     ).bind(s.qr_token, studentId, now),
@@ -273,7 +273,7 @@ async function rotateOne(env: Env, studentId: string, deviceId: string | null, n
 
 studentRoutes.post("/api/students/:id/qr/rotate", async (c) => {
   const sid = c.req.param("id");
-  const token = await rotateOne(c.env, sid, c.get("deviceId") ?? null, Date.now());
+  const token = await rotateOne(c.env, sid, c.get("deviceId") ?? null, Date.now(), await requestEpoch(c));
   if (!token) throw notFound("student");
   return c.json({ ok: true, qr_token: token });
 });
@@ -286,9 +286,10 @@ studentRoutes.post("/api/classes/:id/qr/rotate", async (c) => {
     .bind(classId)
     .all<{ id: string }>();
   const now = Date.now();
+  const epoch = await requestEpoch(c);
   let n = 0;
   for (const s of res.results ?? []) {
-    await rotateOne(c.env, s.id, c.get("deviceId") ?? null, now);
+    await rotateOne(c.env, s.id, c.get("deviceId") ?? null, now, epoch);
     n++;
   }
   return c.json({ ok: true, rotated: n });
@@ -299,9 +300,9 @@ studentRoutes.post("/api/students/:id/pin", async (c) => {
   const sid = c.req.param("id");
   const { pin } = pinSchema.parse(await readJson(c));
   const now = Date.now();
-  const r = await c.env.DB.prepare("UPDATE students SET pin = ?, updated_at = ? WHERE id = ?")
-    .bind(pin, now, sid)
-    .run();
+  const [r] = await batchAtEpoch(c.env, await requestEpoch(c), [
+    c.env.DB.prepare("UPDATE students SET pin = ?, updated_at = ? WHERE id = ?").bind(pin, now, sid),
+  ]);
   if (r.meta.changes === 0) throw notFound("student");
   return c.json({ ok: true });
 });

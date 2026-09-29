@@ -491,6 +491,8 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
           <button class={"pill" + (a.id === selAsg.id ? " on" : "")} onClick={() => setSelCol(a.id)}>{a.title.length > 12 ? a.title.slice(0, 12) + "…" : a.title}</button>
         ))}
       </div>
+      {/* the tabs above cut long titles short: the work picked is always named in full here */}
+      <div style="font-weight:500;overflow-wrap:anywhere;margin-bottom:2px">{selAsg.title}</div>
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {submitted}/{students.length}</span>
         <div style="position:relative">

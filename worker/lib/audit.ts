@@ -61,16 +61,20 @@ function normalize(r: AuditRow, now: number): Record<string, unknown> {
  * A single INSERT-OR-IGNORE that writes every audit row from a JSON array via
  * json_each — one statement regardless of batch size. OR IGNORE + the op_id
  * UNIQUE index makes repeated deliveries idempotent.
+ *
+ * `only` keeps an audit row only if its condition holds at the moment the batch runs — so the trail can
+ * say "written" only for rows the same batch really wrote. `sql` sees each audit row as `j` and may use
+ * the numbered parameters ?2.. that `binds` supplies.
  */
-export function auditInsertStmt(env: Env, rows: AuditRow[], now = Date.now()) {
+export function auditInsertStmt(env: Env, rows: AuditRow[], now = Date.now(), only?: { sql: string; binds: unknown[] }) {
   const payload = JSON.stringify(rows.map((r) => normalize(r, now)));
   const select = COLS.map((c) => {
     // JSON extract yields proper types; numeric 'at'/'client_at' stay numbers
     return `json_extract(j.value, '$.${c}')`;
   }).join(", ");
   const sql = `INSERT OR IGNORE INTO audit_logs (${COLS.join(", ")})
-    SELECT ${select} FROM json_each(?1) AS j`;
-  return env.DB.prepare(sql).bind(payload);
+    SELECT ${select} FROM json_each(?1) AS j${only ? ` WHERE ${only.sql}` : ""}`;
+  return env.DB.prepare(sql).bind(payload, ...(only?.binds ?? []));
 }
 
 /** Convenience: write one or more audit rows immediately (own transaction). */

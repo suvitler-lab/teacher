@@ -46,7 +46,7 @@ function StorageRow() {
       </div>
       {safe
         ? <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="shield-check" size={13} /> {installed ? "ติดตั้งแล้ว" : "ถาวร"}</span>
-        : <button style="height:30px;font-size:12px" onClick={async () => { const okk = await requestPersist(); setPersisted(okk); if (!okk) err("เบราว์เซอร์ไม่อนุญาต — ลองเพิ่มไว้ที่หน้าจอโฮม"); }}>ขอเก็บถาวร</button>}
+        : <button style="height:30px;font-size:12px;white-space:nowrap;flex:none" onClick={async () => { const okk = await requestPersist(); setPersisted(okk); if (!okk) err("เบราว์เซอร์ไม่อนุญาต — ลองเพิ่มไว้ที่หน้าจอโฮม"); }}>ขอเก็บถาวร</button>}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 .hm-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
 @media (max-width: 720px) { .hm-actions { grid-template-columns: repeat(2, 1fr); } }
 .hm-action {
+  height: auto; min-height: 48px;
   display: flex; gap: 9px; align-items: center; padding: 10px 12px; border-radius: 12px;
   background: var(--surface-2); border: 0.5px solid var(--border); cursor: pointer; text-align: left; text-decoration: none; color: inherit;
 }
@@ -28,7 +29,7 @@
 .hm-att { padding: 7px 0; border-top: 0.5px solid var(--border); }
 .hm-att:first-of-type { border-top: none; }
 
-.hm-follow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; cursor: pointer; text-align: left; }
+.hm-follow { height: auto; min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; cursor: pointer; text-align: left; }
 .hm-follow:first-of-type { border-top: none; }
 .hm-follow:hover { background: var(--surface-1); }
 

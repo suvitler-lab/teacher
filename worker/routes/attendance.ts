@@ -7,6 +7,7 @@ import { schoolYearStart } from "../lib/roster";
 import { auditInsertStmt, existingOpIds, type AuditRow } from "../lib/audit";
 import { clampClientTs } from "../lib/time";
 import { getEpoch } from "../lib/db";
+import { epochGuard, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 
 export const attendanceRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -170,7 +171,7 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
   const deviceId = c.get("deviceId") ?? null;
 
   // taps made before the data was restored are held for the teacher — never applied to the new data
-  const epoch = await getEpoch(c.env);
+  const epoch = await requestEpoch(c);
   const stale = b.rows.filter((r) => r.dataEpoch != null && r.dataEpoch !== epoch).map((r) => r.studentId);
   if (stale.length > 0) {
     return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — ตรวจสอบรายการนี้ก่อนส่งใหม่", studentIds: stale }, 409);
@@ -276,12 +277,16 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     }));
 
     try {
-      const stmts = [upsertStmt, auditInsertStmt(c.env, audits, now)];
+      // a restore since this request began rolls the batch back too: these taps were made on the old data
+      const stmts = [epochGuard(c.env, epoch), upsertStmt, auditInsertStmt(c.env, audits, now)];
       if (!b.force) stmts.unshift(guard.bind(JSON.stringify(upserts), sessionId));
       await c.env.DB.batch(stmts);
       return c.json({ ok: true, sessionId, updatedAt: now, changed: upserts.length, ...(await confirmed()) });
     } catch (e) {
       // the guard fired (or something else went wrong): look again at what is there NOW
+      if ((await getEpoch(c.env)) !== epoch) {
+        return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — ตรวจสอบรายการนี้ก่อนส่งใหม่", studentIds: todo.map((r) => r.studentId) }, 409);
+      }
       const again = await currentRows(c.env, sessionId, sids);
       const conflicts = b.force ? [] : findConflicts(todo, again);
       if (conflicts.length > 0) return c.json({ error: "conflict", sessionId, conflicts }, 409);

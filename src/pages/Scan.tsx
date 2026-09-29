@@ -473,6 +473,12 @@ function SessionSetup() {
             ))}
           </div>
 
+          {asg && (
+            <div class="sc-picked page-sub">
+              รอบนี้: <b>{asg.title}</b> · {subjectById(asg.subject_id)?.name} · เต็ม {asg.full_score}
+              {classesForAsg.find((c) => c.id === classId) && <> · ห้อง <b>{classesForAsg.find((c) => c.id === classId)!.name}</b></>}
+            </div>
+          )}
           <div class="row" style="justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px">
             <div class="row page-sub" style="gap:6px">รับได้จาก
               <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="barcode" size={13} /> เครื่องยิง QR</span>

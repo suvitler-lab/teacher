@@ -6,6 +6,9 @@
 .sc-step .sn { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .sc-asg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 @media (max-width: 640px) { .sc-asg-grid { grid-template-columns: 1fr; } }
+/* .sc-asg and .sc-mode are <button>s holding several lines: block, full width, natural height — as
+   inline-flex/38px (base.css) the cards grew wider than the phone and clipped their own text (audit B10) */
+.sc-asg, .sc-mode { display: block; width: 100%; height: auto; min-width: 0; }
 .sc-asg {
   text-align: left; background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px;
   padding: 10px 12px; cursor: pointer; transition: border-color 0.12s, background 0.12s;
@@ -19,6 +22,9 @@
 .sc-mode:hover { background: var(--surface-1); }
 .sc-mode.on { border: 2px solid var(--border-accent); padding: 8px 10px; }
 .sc-mode .mt { font-weight: 500; display: flex; align-items: center; gap: 6px; }
+/* the work picked in step 1, in full — the card above may have cut a long title short */
+.sc-picked { margin-top: 12px; padding: 8px 10px; border-radius: 10px; background: var(--surface-1); overflow-wrap: anywhere; }
+.sc-picked b { font-weight: 500; color: var(--text-primary); }
 
 /* ---- number grid ---- */
 .sc-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 5px; }

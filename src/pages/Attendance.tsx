@@ -398,7 +398,7 @@ export function AttendancePage() {
         {students.map((st) => {
           const s = statusOf(st.id);
           return (
-            <button class={"att-tile " + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)} aria-label={`เลขที่ ${st.number} ${fullName(st)} ${s ? LABELS[s] : "ยังไม่เช็ค"}`}>
+            <button class={"att-tile " + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)} title={fullName(st)} aria-label={`เลขที่ ${st.number} ${fullName(st)} ${s ? LABELS[s] : "ยังไม่เช็ค"}`}>
               <span class="no muted">เลขที่ {st.number ?? "-"}</span>
               <span class="nm">{shortName(st)}</span>
               <span class="stt">{s ? LABELS[s] : "แตะเพื่อเช็ค"}</span>

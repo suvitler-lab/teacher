@@ -32,6 +32,7 @@ async function main() {
       return { submissions: mode === 'a' ? [{ student_id: 'st1', status: 'submitted', score: 8, updated_at: 100 }] : [], serverTime: 100 };
     } } },
     '../lib/idb': { kvGet: async () => undefined, kvSet: async () => {} },
+    '../lib/clock': { actionTime: () => Date.now(), serverNow: () => Date.now() },
     '../lib/outbox': { onResult: () => {}, pendingOps: signal(new Map()), pairKey: op => op.assignmentId + ':' + op.studentId, enqueueSubmission: async op => queued.push(op) },
     '../lib/sound': { beep: { err() {}, dup() {}, ok() {} }, vibrate() {} },
     '../lib/names': { fullName: () => 'Test student' },
@@ -55,7 +56,8 @@ async function main() {
   const sync = compile('src/lib/attSync.ts', {
     './idb': { draftAll: async () => draft ? [draft] : [], draftGet: async () => draft, draftUpdate: async (_key, fn) => (draft = fn(draft)) },
     './session': { authRequired: signal(false), syncPaused: signal(false), dataEpoch: signal(1) },
-    './api': { api: { post: async () => ({ ok: true, changed: 0, updatedAt: 30, rows: { st1: 20 } }) } },
+    // `state` = what the server holds after the write (another device made it "absent"); an older server sends only `rows`
+    './api': { api: { post: async () => ({ ok: true, changed: 0, updatedAt: 30, rows: { st1: 20 }, ...(process.env.OLD_SERVER ? {} : { state: { st1: { status: 'absent', updatedAt: 20 } } }) }) } },
   });
   const events = [];
   sync.onAttEvent(e => events.push(e));

@@ -44,15 +44,18 @@ export function createApp() {
 
   // A write made by a screen that hasn't heard about a restore yet (another device restored the
   // data) is refused: it was made against data that no longer exists. The client reloads and retries.
+  // The epoch read here is also what the write's own transaction re-checks (worker/lib/guard.ts), so a
+  // restore that commits while the request is in flight cannot be written into either.
   api.use("*", async (c, next) => {
     const sent = c.req.header("X-Data-Epoch");
     const method = c.req.method;
     const path = c.req.path;
-    if (sent && method !== "GET" && method !== "HEAD" && !path.startsWith("/api/restore/") && !path.startsWith("/api/auth/") && path !== "/api/setup") {
+    if (method !== "GET" && method !== "HEAD" && !path.startsWith("/api/restore/") && !path.startsWith("/api/auth/") && path !== "/api/setup") {
       const cur = await getEpoch(c.env);
-      if (Number(sent) !== cur) {
+      if (sent && Number(sent) !== cur) {
         return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — โหลดข้อมูลใหม่ก่อนทำต่อ", epoch: cur }, 409);
       }
+      c.set("epoch", cur);
     }
     await next();
   });
