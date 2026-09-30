@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { Assignment, Student } from "@shared/types";
 
 // B02: switching to another work while the network is slow or down must never leave the previous
@@ -189,5 +189,106 @@ describe("the scan round belongs to ONE assignment", () => {
     await expect(__scan.loadSubs("A")).rejects.toBeTruthy();
     expect(__scan.subsBox.value.status).toBe("ready");
     expect(__scan.effSub("st1")).toMatchObject({ score: 8 });
+  });
+});
+
+// Each read of the work's hand-ins costs about one row per child (the free database plan counts them), so the screen
+// reads every minute, only while it is seen — and at once when it comes back, so a locked tablet or a dropped
+// wifi never leaves it showing old data for long.
+describe("keeping the screen's copy fresh", () => {
+  let stop: () => void;
+  let visible = true;
+  const setVisible = (v: boolean) => { visible = v; document.dispatchEvent(new Event("visibilitychange")); };
+  const setOnline = (v: boolean) => {
+    Object.defineProperty(navigator, "onLine", { value: v, configurable: true });
+    if (v) window.dispatchEvent(new Event("online"));
+  };
+  const reads = () => get.mock.calls.length;
+  const settle = () => vi.advanceTimersByTimeAsync(0);
+
+  beforeEach(async () => {
+    visible = true;
+    Object.defineProperty(document, "visibilityState", { configurable: true, get: () => (visible ? "visible" : "hidden") });
+    setOnline(true);
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full"); // saves the round to IndexedDB, which needs real timers
+    vi.useFakeTimers();
+    stop = __scan.startPolling();
+    get.mockClear();
+  });
+  afterEach(() => {
+    stop?.();
+    delete (document as { visibilityState?: unknown }).visibilityState;
+    vi.useRealTimers();
+  });
+
+  it("asks once a minute for everything — not sooner, and never 'changes since'", async () => {
+    expect(__scan.POLL_MS).toBe(60_000);
+    await vi.advanceTimersByTimeAsync(59_999);
+    expect(reads()).toBe(0);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(reads()).toBe(1);
+    expect(urls()[0]).toBe("/api/assignments/A/submissions");
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(reads()).toBe(2);
+  });
+
+  it("does not ask while the page is hidden, and does not owe a burst of catch-up reads afterwards", async () => {
+    setVisible(false);
+    await vi.advanceTimersByTimeAsync(10 * 60_000);
+    expect(reads()).toBe(0);
+  });
+
+  it("coming back to the front after a long rest asks at once and shows what other devices saved meanwhile", async () => {
+    setVisible(false);
+    await vi.advanceTimersByTimeAsync(5 * 60_000);
+    get.mockResolvedValue(handedIn(7)); // another device recorded this child while the screen was locked
+    expect(__scan.effSub("st1")).toBeUndefined();
+    setVisible(true);
+    await settle();
+    expect(reads()).toBe(1);
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 7 });
+  });
+
+  it("five minutes without network: nothing is asked while offline, and the moment it returns the missed hand-in appears", async () => {
+    setOnline(false);
+    await vi.advanceTimersByTimeAsync(5 * 60_000);
+    expect(reads()).toBe(0);
+    get.mockResolvedValue(handedIn(9));
+    setOnline(true);
+    await settle();
+    expect(reads()).toBe(1);
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 9 });
+  });
+
+  it("flipping in and out of the page does not turn into a stream of reads", async () => {
+    await vi.advanceTimersByTimeAsync(30_000);
+    setVisible(false); setVisible(true); // a read happened 30 s ago: fine, ask once
+    await settle();
+    expect(reads()).toBe(1);
+    for (let i = 0; i < 5; i++) { setVisible(false); setVisible(true); await vi.advanceTimersByTimeAsync(1_000); }
+    setOnline(true);
+    expect(reads()).toBe(1); // all within the last few seconds of that read
+    await vi.advanceTimersByTimeAsync(__scan.RESUME_GAP_MS);
+    setVisible(false); setVisible(true);
+    await settle();
+    expect(reads()).toBe(2); // enough time has passed
+  });
+
+  it("a read made just now (say by the round starting) counts: coming back does not repeat it", async () => {
+    await vi.advanceTimersByTimeAsync(30_000);
+    await __scan.loadSubs("A");
+    get.mockClear();
+    setVisible(false); setVisible(true);
+    await settle();
+    expect(reads()).toBe(0);
+  });
+
+  it("stopping (leaving the scan screen) ends the timer and the listeners", async () => {
+    stop();
+    await vi.advanceTimersByTimeAsync(5 * 60_000);
+    setVisible(false); setVisible(true); setOnline(true);
+    await settle();
+    expect(reads()).toBe(0);
   });
 });

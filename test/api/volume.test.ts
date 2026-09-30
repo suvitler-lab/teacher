@@ -67,7 +67,8 @@ describe("reading at school size", () => {
       for (const p of a.perClass) expect(p).toMatchObject({ total: VOLUME.perClass, submitted: VOLUME.perClass });
     }
 
-    const subs = (await (await cost(cookie, "one assignment's hand-ins", { read: 1_000 }, "/api/assignments/a1/submissions")).json()) as any;
+    // the scan screen reads this every minute it is open (docs: ~205 rows measured) — keep it near that, not 5x over
+    const subs = (await (await cost(cookie, "one assignment's hand-ins", { read: 500 }, "/api/assignments/a1/submissions")).json()) as any;
     expect(subs.submissions).toHaveLength(VOLUME.classes * VOLUME.perClass);
     await cost(cookie, "attendance overview", { read: 6_000 }, "/api/attendance/days?from=2026-05-15&to=2026-05-20");
     await cost(cookie, "student list", { read: 1_000 }, "/api/students");

@@ -1,7 +1,7 @@
 // scripts/preflight.cjs — the checks that stop a deploy before it goes wrong. Each is run against a small copy of the
 // files it reads, so a broken example is really broken.
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { cpSync, mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -9,13 +9,13 @@ const require = createRequire(import.meta.url);
 const pre = require("../../scripts/preflight.cjs");
 
 const REPO = path.resolve(__dirname, "../..");
-const dir = path.join(REPO, "node_modules", ".preflight-test");
+// a folder of its own per test: two runs at once (a watcher and a `npm test`) must not share one
+let dir = "";
 const put = (rel: string, body: string) => { const p = path.join(dir, rel); mkdirSync(path.dirname(p), { recursive: true }); writeFileSync(p, body); };
 const GOOD_ID = "1b2c3d4e-5f60-4718-8a9b-0c1d2e3f4a5b";
 
 beforeEach(() => {
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(dir, { recursive: true });
+  dir = mkdtempSync(path.join(REPO, "node_modules", ".preflight-test-"));
   cpSync(path.join(REPO, "migrations"), path.join(dir, "migrations"), { recursive: true });
   mkdirSync(path.join(dir, "shared"));
   cpSync(path.join(REPO, "shared/types.ts"), path.join(dir, "shared/types.ts"));
