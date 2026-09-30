@@ -255,6 +255,9 @@ export function GradebookPage() {
     if (done) { dropAssignment(selAsg.id); setSelCol(null); await load(true); ok("ลบงานแล้ว"); }
   }
 
+  // a column with its scores hidden also hides the running total (it would give them away)
+  const anyHidden = assignments.some((a) => !a.publish_scores);
+
   // summary metrics for the toolbar
   let totSubmitted = 0, totApplic = 0, totAwaiting = 0, totMissing = 0;
   for (const st of students) for (const a of assignments) {
@@ -317,8 +320,9 @@ export function GradebookPage() {
           <button onClick={() => bulk("all-submitted")}><Icon name="checks" size={14} /> ทั้งห้องส่งแล้ว</button>
           <button onClick={() => bulk("full-score")}>ให้เต็มคนที่ส่ง</button>
           <button onClick={() => bulk("clear")}>ล้าง</button>
-          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว")}>
-            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ประกาศแล้ว" : "ยังไม่ประกาศ"}
+          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว")}
+            title={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้ (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)" : "แสดงคะแนนของงานนี้"}>
+            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน"}
           </button>
           <div style="position:relative">
             <button aria-label="จัดการงาน" onClick={() => setMenuOpen((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
@@ -352,7 +356,7 @@ export function GradebookPage() {
             edit: () => setEditAsg(selAsg!),
             copy: () => setCopyAsg(selAsg!),
             toggleStatus: () => saveAsgPatch({ status: selAsg!.status === "open" ? "closed" : "open" }, selAsg!.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว"),
-            togglePublish: () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }, selAsg!.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว"),
+            togglePublish: () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }, selAsg!.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว"),
             remove: removeAssignment,
           }} />
       ) : (
@@ -367,9 +371,9 @@ export function GradebookPage() {
                   return (
                     <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-label={a.publish_scores ? "ผู้ปกครองเห็นคะแนน (กดเพื่อซ่อน)" : "ซ่อนคะแนนจากผู้ปกครอง (กดเพื่อประกาศ)"}
-                          title={a.publish_scores ? "ผู้ปกครองเห็นคะแนน — กดเพื่อซ่อน" : "ยังไม่ประกาศ (ผู้ปกครองไม่เห็นคะแนน) — กดเพื่อประกาศ"}
-                          onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว", a); }}>
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                          title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
+                          onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
                           <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
                         </button></div>
                       <div class="hbar"><div style={`width:${pct}%`} /></div>
@@ -398,12 +402,12 @@ export function GradebookPage() {
                               onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
                               onCancel={() => setEditing(null)} />
                           ) : (
-                            <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} />
+                            <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} hidden={!a.publish_scores} />
                           )}
                         </td>
                       );
                     })}
-                    <td style="font-size:12px">{sum.score}<span class="muted">/{sum.fullScore}</span></td>
+                    <td style="font-size:12px" title={anyHidden ? "ซ่อนอยู่ เพราะมีงานที่ซ่อนคะแนน" : undefined}>{anyHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
                   </tr>
                 );
               })}
@@ -413,7 +417,7 @@ export function GradebookPage() {
                   const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(a.id, st.id, a))).length;
                   const scored = students.map((st) => subOf(a.id, st.id)).filter((s) => s && s.score != null) as Sub[];
                   const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
-                  return <td>{avg ?? "–"}<br /><span class="muted">{submitted}/{students.length}</span></td>;
+                  return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{submitted}/{students.length}</span></td>;
                 })}
                 <td />
               </tr>
@@ -509,7 +513,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
               <button onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
               <button onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
               <button onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
-              {manage.togglePublish && <button onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ประกาศแล้ว (กดเพื่อซ่อน)" : "ประกาศคะแนน"}</button>}
+              {manage.togglePublish && <button onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน (ซ่อนอยู่)"}</button>}
               <button onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
             </div>
           </>)}
@@ -527,7 +531,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
                 onCommit={(initial, v) => { commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
             ) : (
               <button style="background:transparent;border:none;padding:0" onClick={() => setEditing({ aid: selAsg.id, sid: st.id })}>
-                <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} />
+                <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} hidden={!selAsg.publish_scores} />
               </button>
             )}
           </div>

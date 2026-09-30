@@ -188,10 +188,11 @@ export function Avatar({ student, text, size = 28, tone }: { student?: Student; 
 // ---- work-state cell -----------------------------------------------------
 // `mark`: "unsaved" = NOT even saved on this device (storage refused) · "pend" = saved on this device, not on the
 // server yet · "fail" = the server refused it
-export function WorkCell({ state, score, mark }: { state: WorkState; score?: number | null; mark?: "pend" | "fail" | "unsaved" | null }) {
+export function WorkCell({ state, score, mark, hidden }: { state: WorkState; score?: number | null; mark?: "pend" | "fail" | "unsaved" | null; hidden?: boolean }) {
   const m = mark ? " " + mark : "";
   const tip = mark === "pend" ? "รอส่งขึ้นระบบ" : mark === "fail" ? "ส่งไม่สำเร็จ" : mark === "unsaved" ? "ยังไม่ได้บันทึกลงเครื่อง — ลองใหม่" : undefined;
-  if (state === "scored" || state === "late") return <span class={"wcell " + state + m} title={tip}>{score}</span>;
+  // a hidden column keeps who-handed-in visible but not the marks themselves
+  if (state === "scored" || state === "late") return <span class={"wcell " + state + m} title={hidden ? "ซ่อนคะแนนอยู่" : tip}>{hidden ? "•••" : score}</span>;
   if (state === "awaiting") return <span class={"wcell awaiting" + m} title={tip}><Icon name="check" size={14} /></span>;
   if (state === "missing") return <span class={"wcell missing" + m} title={tip}>–</span>;
   if (state === "excused") return <span class={"wcell excused" + m} title={tip}>ยกเว้น</span>;
