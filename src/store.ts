@@ -18,6 +18,8 @@ import { stopAttSync } from "./lib/attSync";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
 /** false only for an account made before e-mail sign-in: its next sign-in attaches the e-mail typed. */
+/** The first-run welcome guide is showing (latched, so it stays while its own steps fill in the data it checks). */
+export const onboardingOn = signal(false);
 export const accountEmailSet = signal(true);
 export const deviceLabel = signal<string>("");
 

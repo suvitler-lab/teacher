@@ -1,6 +1,6 @@
 import { useEffect } from "preact/hooks";
 import "./styles/shell.css";
-import { accountEmailSet, authState, loadBootstrap, loadBootstrapCached, loadSelectedTerm, settings } from "./store";
+import { accountEmailSet, authState, classes, onboardingOn, terms, loadBootstrap, loadBootstrapCached, loadSelectedTerm, settings } from "./store";
 import { kvGet } from "./lib/idb";
 import { pauseSync } from "./lib/outbox";
 import { requestPersist } from "./lib/storage";
@@ -9,6 +9,7 @@ import { api, withTimeout } from "./lib/api";
 import { authRequired } from "./lib/session";
 import { retryUntilReachable } from "./lib/reconnect";
 import { Setup } from "./pages/Setup";
+import { Onboarding } from "./pages/Onboarding";
 import { Shell } from "./components/Shell";
 import { Home } from "./pages/Home";
 import { ScanPage } from "./pages/Scan";
@@ -82,6 +83,10 @@ export function App() {
     })();
   }, []);
 
+  // first run: an empty account (no term or no class yet) gets the welcome guide once
+  const firstRun = state === "ready" && !!settings.value && !settings.value.onboarding_done && (terms.value.length === 0 || classes.value.length === 0);
+  useEffect(() => { if (firstRun) onboardingOn.value = true; }, [firstRun]); // latched: stays while its own steps fill in the data checked above
+
   if (state === "loading") {
     return (
       <div class="auth-wrap">
@@ -91,6 +96,8 @@ export function App() {
   }
   if (state === "setup") return <Setup mode="setup" />;
   if (state === "login") return <Setup mode="login" />;
+
+  if (onboardingOn.value || firstRun) return <Onboarding />;
 
   return (
     <Shell>

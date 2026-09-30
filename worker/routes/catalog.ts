@@ -32,6 +32,7 @@ const ALLOWED_SETTINGS = new Set([
   "sound_enabled",
   "accept_student_code_scan",
   "parent_portal_enabled",
+  "onboarding_done",
   "last_backup_at",
   "period_times",
 ]);

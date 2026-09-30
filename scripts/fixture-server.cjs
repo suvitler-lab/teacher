@@ -53,6 +53,7 @@ async function startFixtureServer({
   port = 5194,
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
+  seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
     modules: true,
@@ -63,7 +64,7 @@ async function startFixtureServer({
   const env = { DB, SETUP_CODE: "fixture-setup", SESSION_PEPPER: "fixture-pepper-not-secret" };
   const files = [
     ...fs.readdirSync(path.join(root, "migrations")).filter((f) => f.endsWith(".sql")).sort().map((f) => path.join(root, "migrations", f)),
-    path.join(root, "scripts/seed-demo.sql"),
+    ...(seed ? [path.join(root, "scripts/seed-demo.sql")] : []),
   ];
   for (const file of files) {
     const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");

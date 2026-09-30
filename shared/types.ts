@@ -21,6 +21,7 @@ export interface Settings {
   sound_enabled: boolean;
   accept_student_code_scan: boolean;
   parent_portal_enabled: boolean;
+  onboarding_done: boolean; // the first-run welcome guide was finished or skipped
   last_backup_at: string;
   period_times: string; // JSON: {"1":"08:30",...}
 }

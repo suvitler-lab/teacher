@@ -159,4 +159,26 @@ describe("auth & setup", () => {
     expect(res.status).toBe(200);
     expect((await env.DB.prepare("SELECT name FROM devices WHERE id = 'd8'").first<any>()).name).toBe("Chrome · Windows");
   });
+
+  it("first-run guide: an empty school can be set up end to end, and 'onboarding_done' is remembered", async () => {
+    const cookie = await login();
+    const boot0 = (await (await call("/api/bootstrap", {}, cookie)).json()) as any;
+    expect(boot0.settings.onboarding_done).toBe(false);
+    expect(boot0.terms).toHaveLength(0);
+
+    expect((await call("/api/settings", { method: "PUT", body: JSON.stringify({ school_name: "รร.ทดสอบ", teacher_name: "ครูใจดี" }) }, cookie)).status).toBe(200);
+    const start = await call("/api/terms/start", json({ expectedCurrentTermId: null, year: 2569, term: 1, name: "1/2569", start_date: "2026-05-15" }), cookie);
+    expect(start.status).toBe(200);
+    expect((await call("/api/classes", json({ name: "ป.6/1", grade: "ป.6", sort: 1 }), cookie)).status).toBe(200);
+    expect((await call("/api/subjects", json({ name: "คณิตศาสตร์", color: "blue", sort: 1 }), cookie)).status).toBe(200);
+    expect((await call("/api/settings", { method: "PUT", body: JSON.stringify({ onboarding_done: true }) }, cookie)).status).toBe(200);
+
+    const boot = (await (await call("/api/bootstrap", {}, cookie)).json()) as any;
+    expect(boot.settings).toMatchObject({ school_name: "รร.ทดสอบ", teacher_name: "ครูใจดี", onboarding_done: true });
+    expect(boot.terms).toHaveLength(1);
+    expect(boot.terms[0]).toMatchObject({ name: "1/2569", is_current: true });
+    expect(boot.classes.map((c: any) => c.name)).toEqual(["ป.6/1"]);
+    expect(boot.classes[0].year).toBe(2569); // filed under the year the guide just opened
+    expect(boot.subjects.map((c: any) => c.name)).toEqual(["คณิตศาสตร์"]);
+  });
 });
