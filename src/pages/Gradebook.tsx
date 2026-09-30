@@ -229,15 +229,15 @@ export function GradebookPage() {
     }
   }
 
-  async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string) {
-    if (!selAsg) return;
+  async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string, target: Assignment | null = selAsg) {
+    if (!target) return;
     let saved: Assignment | null = null;
     try {
       const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
-        id: selAsg.id, subject_id: selAsg.subject_id, type_id: selAsg.type_id, title: selAsg.title,
-        unit: selAsg.unit, full_score: selAsg.full_score, assigned_date: selAsg.assigned_date,
-        due_date: selAsg.due_date, note: selAsg.note, publish_scores: selAsg.publish_scores, status: selAsg.status,
-        class_ids: selAsg.class_ids, term_id: selAsg.term_id, ...patch,
+        id: target.id, subject_id: target.subject_id, type_id: target.type_id, title: target.title,
+        unit: target.unit, full_score: target.full_score, assigned_date: target.assigned_date,
+        due_date: target.due_date, note: target.note, publish_scores: target.publish_scores, status: target.status,
+        class_ids: target.class_ids, term_id: target.term_id, ...patch,
       });
       saved = res.assignment;
     } catch (e) { err((e as Error).message || "บันทึกไม่สำเร็จ"); return; }
@@ -317,11 +317,9 @@ export function GradebookPage() {
           <button onClick={() => bulk("all-submitted")}><Icon name="checks" size={14} /> ทั้งห้องส่งแล้ว</button>
           <button onClick={() => bulk("full-score")}>ให้เต็มคนที่ส่ง</button>
           <button onClick={() => bulk("clear")}>ล้าง</button>
-          {workTypeById(selAsg.type_id)?.is_exam && (
-            <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores })}>
-              <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ประกาศแล้ว" : "ยังไม่ประกาศ"}
-            </button>
-          )}
+          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว")}>
+            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ประกาศแล้ว" : "ยังไม่ประกาศ"}
+          </button>
           <div style="position:relative">
             <button aria-label="จัดการงาน" onClick={() => setMenuOpen((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
             {menuOpen && (
@@ -354,7 +352,7 @@ export function GradebookPage() {
             edit: () => setEditAsg(selAsg!),
             copy: () => setCopyAsg(selAsg!),
             toggleStatus: () => saveAsgPatch({ status: selAsg!.status === "open" ? "closed" : "open" }, selAsg!.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว"),
-            togglePublish: workTypeById(selAsg!.type_id)?.is_exam ? () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }) : null,
+            togglePublish: () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }, selAsg!.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว"),
             remove: removeAssignment,
           }} />
       ) : (
@@ -369,7 +367,11 @@ export function GradebookPage() {
                   return (
                     <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</div>
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-label={a.publish_scores ? "ผู้ปกครองเห็นคะแนน (กดเพื่อซ่อน)" : "ซ่อนคะแนนจากผู้ปกครอง (กดเพื่อประกาศ)"}
+                          title={a.publish_scores ? "ผู้ปกครองเห็นคะแนน — กดเพื่อซ่อน" : "ยังไม่ประกาศ (ผู้ปกครองไม่เห็นคะแนน) — กดเพื่อประกาศ"}
+                          onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนจากผู้ปกครองแล้ว" : "ประกาศคะแนนแล้ว", a); }}>
+                          <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
+                        </button></div>
                       <div class="hbar"><div style={`width:${pct}%`} /></div>
                     </th>
                   );

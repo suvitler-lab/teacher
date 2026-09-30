@@ -47,3 +47,7 @@ table.gb input.cell-input { width: 46px; height: 26px; text-align: center; font-
 .gb-mrow:first-of-type { border-top: none; }
 .gb-mrow .no { width: 22px; text-align: right; color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; }
 .gb-mrow input.cell-input { width: 56px; height: 34px; text-align: center; }
+/* the eye in a column header: scores shown to parents (eye) or not announced yet (eye-off, in warning colour) */
+table.gb thead th .hs-eye { display: inline-flex; align-items: center; justify-content: center; height: 18px; width: 18px; min-width: 0; padding: 0; margin-left: 2px; vertical-align: middle; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; }
+table.gb thead th .hs-eye.off { color: var(--text-warning); }
+table.gb thead th .hs-eye:hover { background: var(--surface-2); }
