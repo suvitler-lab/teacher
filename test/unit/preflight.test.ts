@@ -38,7 +38,7 @@ describe("preflight: source", () => {
   });
 
   it("wrangler config: the placeholder id stops the deploy and says what to run", () => {
-    put("wrangler.jsonc", readFileSync(path.join(REPO, "wrangler.jsonc"), "utf8"));
+    put("wrangler.jsonc", `{ "d1_databases": [{ "binding": "DB", "database_name": "kru-db", "database_id": "REPLACE_WITH_DATABASE_ID_FROM_wrangler_d1_create", "migrations_dir": "migrations" }] }`);
     const [p] = pre.checkWranglerConfig(dir);
     expect(p).toMatch(/placeholder database_id/);
     expect(p).toMatch(/wrangler d1 create kru-db/);

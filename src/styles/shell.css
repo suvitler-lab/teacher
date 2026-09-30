@@ -46,7 +46,7 @@
 .rail-sync { display: flex; justify-content: center; padding: 4px 0 6px; }
 .rail-sync .sync { font-size: 10px; padding: 2px 6px; }
 
-.main { min-width: 0; padding: 20px 24px 40px; max-width: 1100px; }
+.main { min-width: 0; padding: 20px 24px 40px; }
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .page-title { font-size: 20px; font-weight: 500; }
 .page-sub { font-size: 13px; color: var(--text-secondary); }
