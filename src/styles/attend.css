@@ -41,8 +41,7 @@
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
 }
 .att-tile .stt { font-size: 11px; }
-.att-tile.present { background: var(--surface-1); }
-.att-tile.present .stt { color: var(--text-success); }
+.att-tile.present { background: var(--bg-success); border-color: var(--border-success); color: var(--text-success); }
 .att-tile.late { background: var(--bg-warning); border-color: var(--border-warning); color: var(--text-warning); }
 .att-tile.leave { background: var(--bg-accent); border-color: var(--border-accent); color: var(--text-accent); }
 .att-tile.sick { background: var(--bg-purple); border-color: var(--border-purple); color: var(--text-purple); }
