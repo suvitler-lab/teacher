@@ -15,6 +15,7 @@ import { kvGet, kvSet } from "./lib/idb";
 import { serverSkewMs, dataEpoch, epochStale } from "./lib/session";
 import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
+import { setThemeAttr, saveThemeLocal } from "./lib/theme";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
 export const deviceLabel = signal<string>("");
@@ -173,9 +174,8 @@ export async function clearLoggedOut() {
 }
 
 export function applyTheme(theme: Settings["theme"]) {
-  const root = document.documentElement;
-  if (theme === "system") root.removeAttribute("data-theme");
-  else root.setAttribute("data-theme", theme);
+  setThemeAttr(theme);
+  saveThemeLocal(theme);
 }
 
 export function upsertAssignment(a: Assignment) {

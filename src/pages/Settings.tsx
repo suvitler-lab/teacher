@@ -120,6 +120,16 @@ export function SettingsPage() {
 
   function set<K extends keyof Settings>(k: K, v: Settings[K]) { setDraft((d) => (d ? { ...d, [k]: v } : d)); }
 
+  // the theme is applied AND saved the moment it is picked (no separate save): otherwise a reload brings the old one back
+  async function chooseTheme(theme: Settings["theme"]) {
+    set("theme", theme);
+    applyTheme(theme);
+    try {
+      await api.put("/api/settings", { theme });
+      if (settings.value) settings.value = { ...settings.value, theme };
+    } catch { err("บันทึกธีมไม่สำเร็จ"); }
+  }
+
   async function save() {
     setBusy("save");
     const body: Record<string, unknown> = {};
@@ -179,7 +189,7 @@ export function SettingsPage() {
                 <label class="field"><span>ชื่อครู</span><input value={draft.teacher_name} onInput={(e) => set("teacher_name", (e.target as HTMLInputElement).value)} /></label>
               </div>
               <div class="set-row"><span>ธีม</span>
-                <Segmented value={draft.theme} onChange={(v) => { set("theme", v as Settings["theme"]); applyTheme(v as Settings["theme"]); }} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
+                <Segmented value={draft.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
               </div>
               <OfflineRow />
               <StorageRow />
