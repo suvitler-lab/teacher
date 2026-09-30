@@ -369,7 +369,7 @@ export function GradebookPage() {
                   return (
                     <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs">{a.full_score} · {a.due_date ? formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</div>
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</div>
                       <div class="hbar"><div style={`width:${pct}%`} /></div>
                     </th>
                   );

@@ -143,7 +143,7 @@ export function ReportsPage() {
         </div>
       )}
       {payload?.range.from && (
-        <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {formatThaiDate(payload.range.to)} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
+        <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {payload.range.to ? formatThaiDate(payload.range.to) : "ปัจจุบัน"} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
       )}
 
       {status === "error" ? (
