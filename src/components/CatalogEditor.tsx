@@ -261,29 +261,47 @@ function TypeEditor() {
 function TermRow({ t, save }: { t: Term; save: (body: unknown) => Promise<void> }) {
   const [start, setStart] = useState(t.start_date ?? "");
   const [end, setEnd] = useState(t.end_date ?? "");
+  const [editing, setEditing] = useState(false);
+  const [termNo, setTermNo] = useState(t.term);
+  const [name, setName] = useState(t.name);
   const cur = currentTerm.value;
   // switching between the terms of the SAME academic year is one tap; another year needs "เริ่มภาคเรียนใหม่"
   // (it also opens that year's classes), and going back to an earlier year is done with the term picker instead
   const canSwitch = !t.is_current && !!cur && t.year === cur.year;
-  const changed = start !== (t.start_date ?? "") || end !== (t.end_date ?? "");
+  const changed = start !== (t.start_date ?? "") || end !== (t.end_date ?? "") || termNo !== t.term || name.trim() !== t.name;
+  // the school year can't change here (classes are filed under it); the term number and name can
+  function pickTerm(n: number) {
+    // keep an automatic name ("2/2569") in step with the number; a name the teacher typed is left alone
+    if (name === `${termNo}/${t.year}`) setName(`${n}/${t.year}`);
+    setTermNo(n);
+  }
   return (
     <div style="padding:8px 0;border-top:0.5px solid var(--border)">
       <div class="row" style="gap:8px">
         <div class="grow">{t.name}{t.is_current ? " · ปัจจุบัน" : ""}</div>
+        <button style="height:30px;font-size:12px" onClick={() => setEditing((v) => !v)}><Icon name="edit" size={14} /> {editing ? "ซ่อน" : "แก้ไข"}</button>
         {canSwitch && (
           <button style="height:30px;font-size:12px" onClick={() => save({ id: t.id, year: t.year, term: t.term, name: t.name, start_date: t.start_date, end_date: t.end_date, is_current: true })}>
             ตั้งเป็นปัจจุบัน
           </button>
         )}
       </div>
+      {editing && (
+        <div class="modal-grid2" style="margin-top:6px">
+          <label class="field"><span>ภาคเรียน</span>
+            <select value={termNo} onInput={(e) => pickTerm(Number((e.target as HTMLSelectElement).value))}><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option></select>
+          </label>
+          <label class="field"><span>ชื่อที่แสดง (ปีการศึกษา {t.year} แก้ไม่ได้)</span><input value={name} onInput={(e) => setName((e.target as HTMLInputElement).value)} /></label>
+        </div>
+      )}
       <div class="row" style="gap:6px;margin-top:4px;flex-wrap:wrap">
         <DateField value={start} onChange={setStart} label={`วันเริ่ม ${t.name}`} />
         <span class="page-sub">–</span>
         <DateField value={end} onChange={setEnd} label={`วันสิ้นสุด ${t.name}`} />
         {changed && (
-          <button class="primary" style="height:30px;font-size:12px"
-            onClick={() => save({ id: t.id, year: t.year, term: t.term, name: t.name, start_date: start || null, end_date: end || null, is_current: t.is_current })}>
-            บันทึกวันที่
+          <button class="primary" style="height:30px;font-size:12px" disabled={!name.trim()}
+            onClick={() => save({ id: t.id, year: t.year, term: termNo, name: name.trim(), start_date: start || null, end_date: end || null, is_current: t.is_current })}>
+            บันทึก
           </button>
         )}
       </div>

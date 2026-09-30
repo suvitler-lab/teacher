@@ -70,6 +70,9 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (existing && existing.year !== b.year) {
     throw conflict("term_year_locked", "เปลี่ยนปีการศึกษาของภาคเรียนที่มีอยู่ไม่ได้ — สร้างภาคเรียนใหม่ด้วย “เริ่มภาคเรียนใหม่” แทน");
   }
+  // editing a term's number must not collide with another term of the same school year
+  const same = existing && await c.env.DB.prepare("SELECT id FROM terms WHERE year = ? AND term = ? AND id != ?").bind(b.year, b.term, tid).first();
+  if (same) throw conflict("term_exists", `มีภาคเรียน ${b.term}/${b.year} อยู่แล้ว`);
   if (b.is_current) {
     const cur = await c.env.DB.prepare("SELECT id, year FROM terms WHERE is_current = 1 AND id != ?").bind(tid).first<{ id: string; year: number }>();
     if (cur && cur.year !== b.year) {
