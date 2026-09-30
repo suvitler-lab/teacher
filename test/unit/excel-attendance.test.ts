@@ -37,7 +37,7 @@ describe("Excel attendance sheet matches the Reports page", () => {
       [["s1", "st1", "present"], ["s2", "st1", "absent"], ["s3", "st1", "late"], ["s1", "st2", "present"]]);
 
     const rows = await sheet(p, "เช็คชื่อรายคาบ");
-    expect(rows[0]).toEqual(["เลขที่", "ชื่อ - สกุล", "09-10 ค1", "09-10 ค2", "09-11 ค1", "มา", "สาย", "ลา", "ป่วย", "ขาด", "% มา"]);
+    expect(rows[0]).toEqual(["เลขที่", "ชื่อ - สกุล", "10/9 ค1", "10/9 ค2", "11/9 ค1", "มา", "สาย", "ลา", "ป่วย", "ขาด", "% มา"]);
     // st1: ม ข ส → present 1, late 1, absent 1 → (1+1)/3
     expect(rows[1]).toEqual([1, "ก", "ม", "ข", "ส", 1, 1, 0, 0, 1, "67%"]);
     // st2: only period 1 was checked for them
@@ -54,7 +54,7 @@ describe("Excel attendance sheet matches the Reports page", () => {
   it("daily: one column per day", async () => {
     const p = payload("daily", [{ id: "d1", date: "2026-09-10" }, { id: "d2", date: "2026-09-11" }], [["d1", "st1", "present"], ["d2", "st1", "sick"]]);
     const rows = await sheet(p, "เช็คชื่อรายวัน");
-    expect(rows[0].slice(0, 4)).toEqual(["เลขที่", "ชื่อ - สกุล", "09-10", "09-11"]);
+    expect(rows[0].slice(0, 4)).toEqual(["เลขที่", "ชื่อ - สกุล", "10/9", "11/9"]);
     expect(rows[1].slice(2, 4)).toEqual(["ม", "ป"]);
     expect(computeReport(p).attendance.unit).toBe("day");
   });

@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { api } from "../lib/api";
 import { studentsById, assignments } from "../store";
 import { fullName } from "../lib/names";
+import { formatThaiTimeMs } from "../lib/dates";
 
 interface AuditRow {
   id: number;
@@ -74,7 +75,7 @@ export function AuditHistory({ entity }: { entity?: string }) {
               </div>
             </div>
             <div class="page-sub" style="text-align:right;white-space:nowrap">
-              <div>{new Date(r.at).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</div>
+              <div>{formatThaiTimeMs(r.at)}</div>
               {r.device_name && <div>{r.device_name}</div>}
             </div>
           </div>

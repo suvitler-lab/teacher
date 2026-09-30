@@ -6,6 +6,7 @@ import { formatThaiDate } from "../lib/dates";
 import { ok } from "../lib/notify";
 import { pendingCount } from "../lib/outbox";
 import { attDraftCount } from "../lib/attSync";
+import { DateField } from "./ui";
 
 function todayBkk(): string {
   return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
@@ -101,8 +102,8 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           </label>
         </div>
         <div class="modal-grid2">
-          <label class="field"><span>วันเริ่ม</span><input type="date" value={start} onInput={(e) => setStart((e.target as HTMLInputElement).value)} /></label>
-          <label class="field"><span>วันสิ้นสุด (ใส่ทีหลังได้)</span><input type="date" value={end} onInput={(e) => setEnd((e.target as HTMLInputElement).value)} /></label>
+          <label class="field"><span>วันเริ่ม</span><DateField value={start} onChange={setStart} /></label>
+          <label class="field"><span>วันสิ้นสุด (ใส่ทีหลังได้)</span><DateField value={end} onChange={setEnd} /></label>
         </div>
         {problem && <div class="imp-warn danger" role="alert"><Icon name="alert-triangle" size={15} /> {problem}</div>}
 

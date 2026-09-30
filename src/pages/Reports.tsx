@@ -8,7 +8,7 @@ import { api } from "../lib/api";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { computeReport, type ReportModel, type ReportPayload } from "../lib/report";
 import { fullName } from "../lib/names";
-import { formatThaiDate, currentMonthIso, monthOptions } from "../lib/dates";
+import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs } from "../lib/dates";
 import { StudentModal } from "./Students";
 import type { Student } from "@shared/types";
 
@@ -73,7 +73,7 @@ export function ReportsPage() {
   }
   function copyLine() {
     if (!model) return;
-    const lines = [`รายชื่อนักเรียนค้างส่งงาน ${cls?.name} ${subj?.name ?? ""}`, `(ข้อมูล ณ ${new Date().toLocaleDateString("th-TH")})`,
+    const lines = [`รายชื่อนักเรียนค้างส่งงาน ${cls?.name} ${subj?.name ?? ""}`, `(ข้อมูล ณ ${formatThaiDateMs(Date.now())})`,
       ...model.followUp.map((f) => `${f.student.number ?? "-"}. ${f.student.first_name}: ค้าง ${f.missing.length} งาน`)].join("\n");
     navigator.clipboard?.writeText(lines).then(() => { setMsg("คัดลอกไปวางใน LINE ได้เลย"); setTimeout(() => setMsg(""), 2500); }, () => setMsg("คัดลอกไม่สำเร็จ"));
   }

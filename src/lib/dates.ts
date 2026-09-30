@@ -11,6 +11,35 @@ export function formatThaiDate(iso: string | null | undefined): string {
   return `${Number(d)} ${THAI_MONTHS[Number(mo)]} ${Number(y) + 543}`;
 }
 
+const THAI_MONTHS_FULL = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+export const thaiMonthsFull = THAI_MONTHS_FULL;
+
+/** A moment (ms) as Bangkok wall-clock parts, whatever the device's own time zone. */
+function bkkParts(ms: number) {
+  const d = new Date(ms + 7 * 3600 * 1000);
+  return { y: d.getUTCFullYear(), mo: d.getUTCMonth() + 1, d: d.getUTCDate(), h: d.getUTCHours(), mi: d.getUTCMinutes() };
+}
+const hhmm = (p: { h: number; mi: number }) => `${String(p.h).padStart(2, "0")}:${String(p.mi).padStart(2, "0")}`;
+
+/** "30 ก.ย. 2569" from a timestamp. */
+export function formatThaiDateMs(ms: number): string {
+  const p = bkkParts(ms);
+  return `${p.d} ${THAI_MONTHS[p.mo]} ${p.y + 543}`;
+}
+/** "30 ก.ย." (no year) from a timestamp. */
+export function formatThaiDayMonthMs(ms: number): string {
+  const p = bkkParts(ms);
+  return `${p.d} ${THAI_MONTHS[p.mo]}`;
+}
+/** "30 ก.ย. 2569 14:05" from a timestamp. */
+export function formatThaiDateTimeMs(ms: number): string {
+  return `${formatThaiDateMs(ms)} ${hhmm(bkkParts(ms))}`;
+}
+/** "14:05" from a timestamp. */
+export function formatThaiTimeMs(ms: number): string {
+  return hhmm(bkkParts(ms));
+}
+
 export function currentMonthIso(): string {
   const d = new Date(Date.now() + 7 * 3600 * 1000);
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;

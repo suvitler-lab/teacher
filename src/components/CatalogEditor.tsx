@@ -4,6 +4,7 @@ import { classes, subjects, workTypes, terms, currentTerm, startTermOpen, loadBo
 import type { Class, Subject, Term, WorkType } from "@shared/types";
 import { api } from "../lib/api";
 import { ok, err, withToast } from "../lib/notify";
+import { DateField } from "./ui";
 
 type Tab = "classes" | "subjects" | "types" | "terms";
 const TABS: { key: Tab; label: string }[] = [
@@ -276,9 +277,9 @@ function TermRow({ t, save }: { t: Term; save: (body: unknown) => Promise<void> 
         )}
       </div>
       <div class="row" style="gap:6px;margin-top:4px;flex-wrap:wrap">
-        <input type="date" aria-label={`วันเริ่ม ${t.name}`} value={start} onInput={(e) => setStart((e.target as HTMLInputElement).value)} style="width:auto;height:30px" />
+        <DateField value={start} onChange={setStart} label={`วันเริ่ม ${t.name}`} />
         <span class="page-sub">–</span>
-        <input type="date" aria-label={`วันสิ้นสุด ${t.name}`} value={end} onInput={(e) => setEnd((e.target as HTMLInputElement).value)} style="width:auto;height:30px" />
+        <DateField value={end} onChange={setEnd} label={`วันสิ้นสุด ${t.name}`} />
         {changed && (
           <button class="primary" style="height:30px;font-size:12px"
             onClick={() => save({ id: t.id, year: t.year, term: t.term, name: t.name, start_date: start || null, end_date: end || null, is_current: t.is_current })}>
@@ -311,8 +312,8 @@ function TermEditor() {
         <label class="field"><span>ภาคเรียน</span><select value={term} onInput={(e) => setTerm(Number((e.target as HTMLSelectElement).value))}><option value={1}>1</option><option value={2}>2</option></select></label>
       </div>
       <div class="modal-grid2">
-        <label class="field"><span>วันเริ่ม</span><input type="date" value={start} onInput={(e) => setStart((e.target as HTMLInputElement).value)} /></label>
-        <label class="field"><span>วันสิ้นสุด</span><input type="date" value={end} onInput={(e) => setEnd((e.target as HTMLInputElement).value)} /></label>
+        <label class="field"><span>วันเริ่ม</span><DateField value={start} onChange={setStart} /></label>
+        <label class="field"><span>วันสิ้นสุด</span><DateField value={end} onChange={setEnd} /></label>
       </div>
       <button class="primary" style="margin-top:6px" onClick={() => save({ year, term, name: `${term}/${year}`, start_date: start || null, end_date: end || null })}>
         <Icon name="plus" size={16} /> เพิ่มภาคเรียน (ไม่เปลี่ยนภาคเรียนปัจจุบัน)

@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import "../styles/students.css";
 import "../styles/print.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Avatar, EmptyState, YearBanner, TermPicker } from "../components/ui";
+import { PageHeader, ClassChips, Avatar, EmptyState, YearBanner, TermPicker, DateField } from "../components/ui";
 import { StudentDrawer } from "../components/StudentDrawer";
 import { StickerSheet } from "../components/StickerSheet";
 import { activeClasses, viewClasses, rosterCount, classById, viewTerm, viewingPastYear, studentsByClass, students as allStudents, qrRotatedAt, loadBootstrap } from "../store";
@@ -247,7 +247,7 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
         </div>
         {(status === "moved" || status === "inactive") && (
           <label class="field"><span>ออกเมื่อ (เว้นว่าง = วันนี้)</span>
-            <input type="date" value={leftAt} onInput={(e) => setLeftAt((e.target as HTMLInputElement).value)} />
+            <DateField value={leftAt} onChange={setLeftAt} />
           </label>
         )}
         {student && <div class="page-sub" style="margin:6px 0">QR ปัจจุบัน: <span style="font-family:var(--font-mono)">{student.qr_token}</span></div>}

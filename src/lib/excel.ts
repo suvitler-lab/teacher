@@ -1,5 +1,8 @@
 import type { ReportModel, ReportPayload } from "./report";
 
+// "2026-09-30" -> "30/9" (day/month, the order Thai readers expect)
+const dayMonth = (iso: string) => `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}`;
+
 const SHORT: Record<string, string> = { present: "ม", late: "ส", leave: "ล", sick: "ป", absent: "ข" };
 
 export interface ExcelOpts {
@@ -79,7 +82,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   s3.columns = [
     { header: "เลขที่", width: 8 },
     { header: "ชื่อ - สกุล", width: 26 },
-    ...sessions.map((x) => ({ header: bySubject ? `${x.date.slice(5)} ค${x.period ?? "-"}` : x.date.slice(5), width: bySubject ? 9 : 6 })),
+    ...sessions.map((x) => ({ header: bySubject ? `${dayMonth(x.date)} ค${x.period ?? "-"}` : dayMonth(x.date), width: bySubject ? 9 : 6 })),
     { header: "มา", width: 6 }, { header: "สาย", width: 6 }, { header: "ลา", width: 6 }, { header: "ป่วย", width: 6 }, { header: "ขาด", width: 6 },
     { header: "% มา", width: 8 },
   ] as any;

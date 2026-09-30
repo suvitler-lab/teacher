@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { activeSubjects, activeWorkTypes, classesForTerm, classById, currentTermId, currentTerm, selectedTermId, viewingPastYear, terms, UNASSIGNED, upsertAssignment } from "../store";
 import { api } from "../lib/api";
 import type { Assignment } from "@shared/types";
+import { DateField } from "./ui";
 
 function todayBkk(): string {
   return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
@@ -147,11 +148,11 @@ export function AssignmentModal({
         <div class="modal-grid2">
           <label class="field">
             <span>วันที่สั่งงาน</span>
-            <input type="date" value={assignedDate} onInput={(e) => setAssignedDate((e.target as HTMLInputElement).value)} />
+            <DateField value={assignedDate} onChange={setAssignedDate} />
           </label>
           <label class="field">
             <span>กำหนดส่ง</span>
-            <input type="date" value={dueDate} onInput={(e) => setDueDate((e.target as HTMLInputElement).value)} />
+            <DateField value={dueDate} onChange={setDueDate} />
           </label>
         </div>
 

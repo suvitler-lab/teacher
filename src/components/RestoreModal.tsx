@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { api, ApiError } from "../lib/api";
 import { runBackup, BackupInconsistentError, type BackupFile } from "../lib/backup";
 import { loadBootstrap } from "../store";
+import { formatThaiDateTimeMs } from "../lib/dates";
 
 const TABLES = [
   "settings", "terms", "classes", "subjects", "work_types", "students",
@@ -168,7 +169,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
         {(stage === "validated" || stage === "running") && file && (
           <>
             <div class="card" style="background:var(--surface-1);margin-bottom:10px">
-              <div class="page-sub">ไฟล์สำรองเมื่อ {new Date(file.exported_at).toLocaleString("th-TH")}</div>
+              <div class="page-sub">ไฟล์สำรองเมื่อ {formatThaiDateTimeMs(new Date(file.exported_at).getTime())}</div>
               <div style="font-size:14px;margin-top:4px">นักเรียน {file.counts.students ?? 0} · งาน {file.counts.assignments ?? 0} · ส่งงาน {file.counts.submissions ?? 0} · เช็คชื่อ {file.counts.attendance ?? 0}</div>
               <div class="page-sub" style="margin-top:4px">รวม {totalRows} แถว</div>
             </div>

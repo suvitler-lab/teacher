@@ -6,7 +6,7 @@ import {
   settings, selectedTermId, currentTerm, startTermOpen, viewingPastYear, classById, subjectById, workTypeById, studentsById,
 } from "../store";
 import { navigate } from "../router";
-import { formatThaiDate } from "../lib/dates";
+import { formatThaiDate, formatThaiTimeMs } from "../lib/dates";
 import { fullName } from "../lib/names";
 import { dashboard, dashboardStale, dashboardAt, dashboardStatus, loadDashboard } from "../lib/dashboard";
 import { attendanceProgress } from "@shared/metrics";
@@ -96,7 +96,7 @@ export function Home() {
           <span>{s?.school_name}</span>
           <span>· {formatThaiDate(today)}</span>
           {dashboardStale.value && dashboardAt.value && (
-            <span class="chip" style={CHIP.warning}><Icon name="cloud-off" size={13} /> ข้อมูล ณ {new Date(dashboardAt.value).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</span>
+            <span class="chip" style={CHIP.warning}><Icon name="cloud-off" size={13} /> ข้อมูล ณ {formatThaiTimeMs(dashboardAt.value)}</span>
           )}
         </>}
         actions={<TermPicker />}

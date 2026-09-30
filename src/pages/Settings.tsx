@@ -18,6 +18,7 @@ import { routeParams, setNavGuard } from "../router";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
 import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
 import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
+import { formatThaiDateTimeMs, formatThaiDayMonthMs } from "../lib/dates";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -237,7 +238,7 @@ export function SettingsPage() {
                 </div>
               )}
               {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:13px"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? new Date(lastBackup).toLocaleString("th-TH") : "ยังไม่เคย"}</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
                 <button onClick={backup} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
               <div class="set-row"><div><div style="font-weight:500;font-size:14px">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
                 <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
@@ -406,7 +407,7 @@ function DeviceList() {
       {devices.map((d) => (
         <div class="set-row">
           <div class="row" style="gap:8px;min-width:0"><Icon name="device-mobile" size={18} class="muted" /><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</span></div>
-          <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{new Date(d.last_seen).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}</span>
+          <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{formatThaiDayMonthMs(d.last_seen)}</span>
             {!d.current && <button style="height:28px;font-size:12px" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}</div>
         </div>
       ))}
