@@ -19,6 +19,7 @@ import {
 } from "../lib/attSync";
 import { err, notify } from "../lib/notify";
 import { beep } from "../lib/sound";
+import { routeParams } from "../router";
 
 const STATUSES: AttendanceStatus[] = ["present", "late", "leave", "sick", "absent"];
 const LABELS: Record<AttendanceStatus, string> = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
@@ -50,7 +51,8 @@ function weekDays(date: string): string[] {
 }
 
 export function AttendancePage() {
-  const [classId, setClassId] = useState(activeClasses.value[0]?.id ?? "");
+  const linked = routeParams().class; // e.g. from a class row on Home
+  const [classId, setClassId] = useState(linked && activeClasses.value.some((c) => c.id === linked) ? linked : activeClasses.value[0]?.id ?? "");
   const [date, setDate] = useState(todayBkk());
   // last year's attendance can be read (reports, Excel) but not written once a new school year has started
   const yearStart = schoolYearStart.value;

@@ -101,3 +101,13 @@ button.uc-stat:hover { background: var(--surface-1); }
   /* the score in a one-assignment row: a transparent button around a number — give the number a real target */
   .gb-mrow > button { min-width: 44px; min-height: 44px; }
 }
+
+/* Thai date field: day · month · year on ONE line at any width (a modal column is only ~270px wide) */
+.datefield { display: grid; grid-template-columns: 3.4em minmax(0, 1fr) 4.6em; gap: 4px; flex: 1 1 230px; min-width: 0; max-width: 340px; }
+.datefield select { width: 100%; min-width: 0; padding: 0 4px 0 8px; }
+
+/* fingers: chips, tabs and segmented buttons are at least 36px tall on a phone (they were 26–30px) */
+@media (max-width: 720px) {
+  .pill { height: 36px; }
+  .seg button { height: 34px; }
+}

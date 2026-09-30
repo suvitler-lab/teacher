@@ -176,9 +176,24 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — ตรวจสอบรายการนี้ก่อนส่งใหม่", studentIds: stale }, 409);
   }
 
+  // Three independent questions, asked together (the database is far away: round trips are what a teacher waits for):
+  // when this school year started, who in this batch really belongs to the named class, and which taps already landed
+  const sids = [...new Set(b.rows.map((r) => r.studentId))];
+  const [yearStart, memberRes, applied] = await Promise.all([
+    schoolYearStart(c.env),
+    // every student in the batch must be an active member of the class the batch
+    // names — a stale client must not write one room's kids into another room
+    c.env.DB.prepare(
+      `SELECT s.id FROM students s
+       WHERE s.id IN (SELECT value FROM json_each(?1)) AND s.class_id = ?2 AND s.status = 'active'`,
+    ).bind(JSON.stringify(sids), b.classId).all<{ id: string }>(),
+    // A retry of something that already landed (the reply was lost) is NOT applied a second time:
+    // no double write, no second audit row — and it must not clobber what happened since.
+    existingOpIds(c.env, b.rows.map((r) => r.opId).filter((x): x is string => !!x)),
+  ]);
+
   // last year's attendance can be read (reports, Excel) but not written once a new year has started —
   // its classes are archived and its children have finished
-  const yearStart = await schoolYearStart(c.env);
   if (yearStart && b.date < yearStart) {
     return c.json({
       error: "before_school_year",
@@ -186,16 +201,6 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
       yearStart,
     }, 422);
   }
-
-  // every student in the batch must be an active member of the class the batch
-  // names — a stale client must not write one room's kids into another room
-  const sids = [...new Set(b.rows.map((r) => r.studentId))];
-  const memberRes = await c.env.DB.prepare(
-    `SELECT s.id FROM students s
-     WHERE s.id IN (SELECT value FROM json_each(?1)) AND s.class_id = ?2 AND s.status = 'active'`,
-  )
-    .bind(JSON.stringify(sids), b.classId)
-    .all<{ id: string }>();
   const members = new Set((memberRes.results ?? []).map((r) => r.id));
   const strangers = sids.filter((s) => !members.has(s));
   if (strangers.length > 0) {
@@ -206,9 +211,6 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     c.env, b.date, b.classId, b.subjectId ?? null, b.period ?? null, now,
   );
 
-  // A retry of something that already landed (the reply was lost) is NOT applied a second time:
-  // no double write, no second audit row — and it must not clobber what happened since.
-  const applied = await existingOpIds(c.env, b.rows.map((r) => r.opId).filter((x): x is string => !!x));
   const todo = b.rows.filter((r) => !(r.opId && applied.has(r.opId)));
 
   // What the server holds for these students NOW, read after the write: `rows` = version (kept for older

@@ -51,3 +51,4 @@ table.gb input.cell-input { width: 46px; height: 26px; text-align: center; font-
 table.gb thead th .hs-eye { display: inline-flex; align-items: center; justify-content: center; height: 18px; width: 18px; min-width: 0; padding: 0; margin-left: 2px; vertical-align: middle; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; }
 table.gb thead th .hs-eye.off { color: var(--text-warning); }
 table.gb thead th .hs-eye:hover { background: var(--surface-2); }
+table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }

@@ -66,4 +66,24 @@ describe("import preview (dry run)", () => {
     expect(st2).toMatchObject({ status: "active", class_id: "c1" });
     expect(st9).toMatchObject({ status: "active", class_id: "c1" }); // moved out of c2
   });
+
+  it("a list WITHOUT class numbers leaves every child's existing number alone (and is not counted as a change)", async () => {
+    const pv = (await (await preview(cookie, [row("101", "ก", "ข", null), row("102", "ค", "ง", null, "ด.ญ.")])).json()) as any;
+    expect(pv.rows.map((r: any) => r.action)).toEqual(["same", "same"]);
+    const res = await call("/api/students/import", json({ class_id: "c1", students: [row("101", "ก", "ข", null), row("102", "ค", "ง", null, "ด.ญ.")] }), cookie);
+    expect(res.status).toBe(200);
+    const rows = (await env.DB.prepare("SELECT code, number FROM students WHERE code IN ('101','102') ORDER BY code").all<any>()).results;
+    expect(rows).toEqual([{ code: "101", number: 1 }, { code: "102", number: 2 }]);
+  });
+
+  it("a number-less row for a child who moves in from another class does not carry the old class's number", async () => {
+    const res = await call("/api/students/import", json({ class_id: "c1", students: [row("201", "จ", "ฉ", null)] }), cookie); // st9 is number 1 in c2
+    expect(res.status).toBe(200);
+    expect((await env.DB.prepare("SELECT class_id, number FROM students WHERE code='201'").first<any>())).toEqual({ class_id: "c1", number: null });
+  });
+
+  it("a number kept by a number-less row still counts as taken: a new row cannot claim it", async () => {
+    const body = (await (await preview(cookie, [row("101", "ก", "ข", null), row("777", "ใหม่", "มา", 1)])).json()) as any;
+    expect(body.dupNumbers.length + body.numberClashes.length).toBeGreaterThan(0);
+  });
 });

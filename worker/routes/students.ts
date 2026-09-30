@@ -30,7 +30,7 @@ studentRoutes.get("/api/students", async (c) => {
   binds.push(...allowed);
   const res = await c.env.DB.prepare(
     `SELECT id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at
-     FROM students WHERE ${clauses.join(" AND ")} ORDER BY class_id, number`,
+     FROM students WHERE ${clauses.join(" AND ")} ORDER BY class_id, number IS NULL, number`,
   ).bind(...binds).all();
   return c.json({ students: (res.results ?? []).map(mapStudent) });
 });
@@ -136,7 +136,8 @@ async function numberProblems(env: Env, classId: string, students: { code: strin
   const held = await env.DB.prepare(
     "SELECT code, number, first_name, last_name FROM students WHERE class_id = ? AND status = 'active' AND number IS NOT NULL",
   ).bind(classId).all<any>();
-  const importedCodes = new Set(students.map((s) => s.code));
+  // a pasted row WITH a number replaces the child's number; one without keeps it (so that number is still taken)
+  const importedCodes = new Set(students.filter((s) => s.number != null).map((s) => s.code));
   const numberClashes = (held.results ?? [])
     .filter((r) => !importedCodes.has(r.code) && nums.includes(r.number))
     .map((r) => ({ number: r.number as number, code: r.code as string, name: `${r.first_name} ${r.last_name}`.trim() }));
@@ -163,8 +164,9 @@ studentRoutes.post("/api/students/import/preview", async (c) => {
     const from = { class_id: ex.class_id as string | null, status: ex.status as string, number: ex.number as number | null, name: `${ex.first_name} ${ex.last_name}`.trim() };
     if (ex.class_id !== b.class_id) return { code: s.code, action: "move" as const, reactivates: ex.status !== "active", from };
     if (ex.status !== "active") return { code: s.code, action: "reactivate" as const, from };
+    // no number in the paste (an Excel list often has none) means "leave the number alone", not "clear it"
     const changed = (s.prefix ?? "") !== (ex.prefix ?? "") || s.first_name !== ex.first_name
-      || (s.last_name ?? "") !== ex.last_name || (s.number ?? null) !== (ex.number ?? null);
+      || (s.last_name ?? "") !== ex.last_name || (s.number != null && s.number !== ex.number);
     return { code: s.code, action: changed ? ("update" as const) : ("same" as const), from };
   });
 
@@ -232,7 +234,8 @@ studentRoutes.post("/api/students/import", async (c) => {
      FROM json_each(?1) j WHERE true
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, prefix=excluded.prefix, first_name=excluded.first_name,
        last_name=excluded.last_name, nickname=excluded.nickname, class_id=excluded.class_id,
-       number=excluded.number, status='active', left_at=NULL, updated_at=excluded.updated_at`,
+       number=CASE WHEN excluded.number IS NOT NULL THEN excluded.number WHEN students.class_id = excluded.class_id THEN students.number ELSE NULL END,
+       status='active', left_at=NULL, updated_at=excluded.updated_at`,
   ).bind(JSON.stringify(rows));
 
   const audits: AuditRow[] = rows.map((r) => ({

@@ -98,7 +98,7 @@ export const studentsByClass = computed(() => {
     arr.push(s);
     m.set(s.class_id, arr);
   }
-  for (const arr of m.values()) arr.sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
+  for (const arr of m.values()) arr.sort((a, b) => (a.number ?? Infinity) - (b.number ?? Infinity)); // children without a class number go last, not first
   return m;
 });
 

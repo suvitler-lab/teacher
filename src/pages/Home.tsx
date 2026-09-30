@@ -253,10 +253,10 @@ function AttRow({ a }: { a: AttendanceDay }) {
   const p = attendanceProgress(a.marked, a.total);
   if (p === "none") {
     return (
-      <div class="hm-att row" style="justify-content:space-between">
+      <button class="hm-att hm-att-link row" style="justify-content:space-between" onClick={() => navigate("/attendance", { class: a.classId })}>
         <span style="font-weight:500">{cls?.name}</span>
         <span class="chip" style={CHIP.warning}><Icon name="clock" size={13} /> ยังไม่เช็ค · {a.total} คน</span>
-      </div>
+      </button>
     );
   }
   const parts = [
@@ -264,7 +264,7 @@ function AttRow({ a }: { a: AttendanceDay }) {
     a.sick && `ป่วย ${a.sick}`, a.absent && `ขาด ${a.absent}`,
   ].filter(Boolean).join(" · ");
   return (
-    <div class="hm-att">
+    <button class="hm-att hm-att-link" onClick={() => navigate("/attendance", { class: a.classId })}>
       <div class="row" style="justify-content:space-between;gap:6px">
         <span style="font-weight:500">{cls?.name}</span>
         {p === "partial"
@@ -281,6 +281,6 @@ function AttRow({ a }: { a: AttendanceDay }) {
         // the unchecked remainder, so a half-done room looks half done
         { value: p === "partial" ? a.total - a.marked : 0, color: "var(--border-strong)" },
       ]} /></div>
-    </div>
+    </button>
   );
 }

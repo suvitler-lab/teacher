@@ -1,0 +1,276 @@
+{
+  "label": "flows-before",
+  "at": "2026-09-30T20:16:31.782Z",
+  "passed": 33,
+  "total": 43,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 659
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 1018
+    },
+    {
+      "id": "A03",
+      "name": "reload keeps the teacher signed in",
+      "pass": true,
+      "ms": 868
+    },
+    {
+      "id": "H01",
+      "name": "home: the four big buttons go where they say",
+      "pass": true,
+      "ms": 3729
+    },
+    {
+      "id": "H02",
+      "name": "home: a class row under “เช็คชื่อวันนี้” opens THAT class's attendance",
+      "pass": false,
+      "error": "page.waitForSelector: Timeout 4000ms exceeded.",
+      "ms": 4328
+    },
+    {
+      "id": "S01",
+      "name": "students: adding with nothing filled in says what is missing (and saves nothing)",
+      "pass": true,
+      "ms": 474
+    },
+    {
+      "id": "S02",
+      "name": "students: add a student; appears in the list; count goes up",
+      "pass": true,
+      "ms": 923
+    },
+    {
+      "id": "S03",
+      "name": "students: the same student code twice is refused with a readable message",
+      "pass": true,
+      "ms": 1130
+    },
+    {
+      "id": "S04",
+      "name": "students: search narrows the list",
+      "pass": true,
+      "ms": 420
+    },
+    {
+      "id": "S05",
+      "name": "students: open a student, edit the nickname, it is saved",
+      "pass": true,
+      "ms": 1163
+    },
+    {
+      "id": "S06",
+      "name": "students: Excel paste with a repeated-ID column previews and imports (new children + an update)",
+      "pass": true,
+      "ms": 1792
+    },
+    {
+      "id": "S06b",
+      "name": "students: re-importing a list that has NO class-number column keeps everyone's existing class numbers",
+      "pass": false,
+      "error": "class numbers wiped by the import: [{\"code\":\"10501\",\"number\":null},{\"code\":\"10502\",\"number\":null}]",
+      "ms": 1435
+    },
+    {
+      "id": "S07",
+      "name": "students: Excel paste with a clashing class number is blocked with a clear warning",
+      "pass": false,
+      "error": "locator.waitFor: Timeout 6000ms exceeded.",
+      "ms": 6042
+    },
+    {
+      "id": "S08",
+      "name": "students: print-stickers page opens and closes",
+      "pass": true,
+      "ms": 818
+    },
+    {
+      "id": "G01",
+      "name": "gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column",
+      "pass": true,
+      "ms": 1373
+    },
+    {
+      "id": "G02",
+      "name": "gradebook: a score typed into a cell is saved, and the running total follows",
+      "pass": true,
+      "ms": 865
+    },
+    {
+      "id": "G03",
+      "name": "gradebook: a score above the full mark is refused, not saved",
+      "pass": true,
+      "ms": 688
+    },
+    {
+      "id": "G04",
+      "name": "gradebook: hiding scores masks the column and the total; showing brings them back",
+      "pass": true,
+      "ms": 1459
+    },
+    {
+      "id": "G05",
+      "name": "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it",
+      "pass": true,
+      "ms": 2566
+    },
+    {
+      "id": "G06",
+      "name": "gradebook: edit the work (rename) and the column follows",
+      "pass": true,
+      "ms": 2632
+    },
+    {
+      "id": "G07",
+      "name": "gradebook: delete the work; the column is gone",
+      "pass": true,
+      "ms": 1340
+    },
+    {
+      "id": "T01",
+      "name": "attendance: tapping cycles the status and the summary counts follow; reload keeps it",
+      "pass": true,
+      "ms": 4366
+    },
+    {
+      "id": "T02",
+      "name": "attendance: choose a status, then tap students to set it; “มาทั้งหมด” fills everyone",
+      "pass": true,
+      "ms": 795
+    },
+    {
+      "id": "T03",
+      "name": "attendance: yesterday and back to today",
+      "pass": true,
+      "ms": 654
+    },
+    {
+      "id": "N01",
+      "name": "scan: pick work + room + mode, start, scan a QR with the keyboard scanner → the score lands",
+      "pass": true,
+      "ms": 2964
+    },
+    {
+      "id": "N02",
+      "name": "scan: the same child twice does not double-count; an unknown code is called out",
+      "pass": true,
+      "ms": 1860
+    },
+    {
+      "id": "R01",
+      "name": "reports: “คัดลอกไป LINE” puts who-owes-what on the clipboard",
+      "pass": true,
+      "ms": 1030
+    },
+    {
+      "id": "R02",
+      "name": "reports: “ส่งออก Excel” downloads a real .xlsx",
+      "pass": true,
+      "ms": 297
+    },
+    {
+      "id": "R03",
+      "name": "reports: switching room / month / subject keeps the page working",
+      "pass": true,
+      "ms": 1659
+    },
+    {
+      "id": "D01",
+      "name": "random: “ใช้ทั้งห้อง” then “สุ่มเลย” shows a name; group mode makes groups",
+      "pass": true,
+      "ms": 34314
+    },
+    {
+      "id": "D02",
+      "name": "random: clicking an option (เฉพาะคนที่มา / ไม่ซ้ำจนครบ) flips it exactly once, and the boxes are normal-sized",
+      "pass": false,
+      "error": "checkbox is 62×38px",
+      "ms": 182
+    },
+    {
+      "id": "E01",
+      "name": "settings: change the school name → save bar → saved → header follows → survives reload",
+      "pass": true,
+      "ms": 2965
+    },
+    {
+      "id": "E02",
+      "name": "settings: the theme chosen stays after a reload",
+      "pass": true,
+      "ms": 2945
+    },
+    {
+      "id": "E03",
+      "name": "settings: leaving with unsaved changes asks first",
+      "pass": true,
+      "ms": 1215
+    },
+    {
+      "id": "E04",
+      "name": "settings: edit a term's number, name and dates (Thai date fields) and save",
+      "pass": true,
+      "ms": 1449
+    },
+    {
+      "id": "E05",
+      "name": "settings: devices list shows this device",
+      "pass": true,
+      "ms": 518
+    },
+    {
+      "id": "E06",
+      "name": "settings: wrong current password is refused; the right one changes it and says so",
+      "pass": false,
+      "error": "locator.click: Timeout 30000ms exceeded.",
+      "ms": 30888
+    },
+    {
+      "id": "E07",
+      "name": "settings: “ดาวน์โหลดไฟล์สำรอง” gives a valid backup file",
+      "pass": false,
+      "error": "page.waitForEvent: Timeout 20000ms exceeded while waiting for event \"download\"",
+      "ms": 20553
+    },
+    {
+      "id": "E09",
+      "name": "settings: a link to another section (#/settings?section=backup) works even while already on settings",
+      "pass": false,
+      "error": "still showing the old section",
+      "ms": 878
+    },
+    {
+      "id": "E10",
+      "name": "settings: side menu OR pills, not both, on a wide screen",
+      "pass": false,
+      "error": "side menu visible: true, pills visible: true",
+      "ms": 475
+    },
+    {
+      "id": "E08",
+      "name": "settings: history lists what was just done",
+      "pass": true,
+      "ms": 1358
+    },
+    {
+      "id": "A04",
+      "name": "sign out lands on the sign-in page; the new password works",
+      "pass": false,
+      "error": "locator.click: Timeout 30000ms exceeded.",
+      "ms": 30008
+    },
+    {
+      "id": "X01",
+      "name": "start over (data): needs the password + words; afterwards the welcome guide appears",
+      "pass": false,
+      "error": "locator.click: Timeout 30000ms exceeded.",
+      "ms": 30586
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { signal, computed } from "@preact/signals";
 import "../styles/scan.css";
 import { Icon } from "../components/Icon";
-import { ProgressRing, TermPicker } from "../components/ui";
+import { PageHeader, ProgressRing, TermPicker } from "../components/ui";
 import {
   activeClasses,
   activeSubjects,
@@ -454,10 +454,7 @@ function SessionSetup() {
 
   return (
     <div>
-      <div class="page-head">
-        <div class="page-title">สแกนส่งงาน</div>
-        <TermPicker />
-      </div>
+      <PageHeader icon="scan" title="สแกนส่งงาน" sub="เลือกงาน ห้อง และวิธีให้คะแนน" actions={<TermPicker />} />
       {open.length === 0 ? (
         <div class="card empty">
           {past ? (<>

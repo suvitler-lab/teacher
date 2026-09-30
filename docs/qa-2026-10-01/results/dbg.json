@@ -1,0 +1,198 @@
+{
+  "label": "dbg",
+  "latencyMs": 200,
+  "at": "2026-09-30T20:00:04.385Z",
+  "counts": {
+    "P0": 0,
+    "P1": 1,
+    "P2": 0,
+    "P3": 0
+  },
+  "pageInfo": [],
+  "timings": [
+    {
+      "action": "open สมุดคะแนน",
+      "feedbackMs": 850,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 800,
+      "calls": [
+        "GET /api/gradebook 800ms/8db"
+      ]
+    },
+    {
+      "action": "open รายงาน",
+      "feedbackMs": 861,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 811,
+      "calls": [
+        "GET /api/reports/summary 811ms/9db"
+      ]
+    },
+    {
+      "action": "open เช็คชื่อ",
+      "feedbackMs": 29,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 12,
+      "serverMs": 1189,
+      "calls": [
+        "GET /api/attendance 485ms/5db",
+        "GET /api/attendance/days 704ms/7db"
+      ]
+    },
+    {
+      "action": "open นักเรียน",
+      "feedbackMs": 32,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 804,
+      "calls": [
+        "GET /api/reports/summary 804ms/9db"
+      ]
+    },
+    {
+      "action": "open หน้าหลัก",
+      "feedbackMs": 17,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 10,
+      "serverMs": 805,
+      "calls": [
+        "GET /api/dashboard 805ms/10db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye (toggle)",
+      "feedbackMs": 1708,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 15,
+      "serverMs": 1651,
+      "calls": [
+        "POST /api/assignments 836ms/7db",
+        "GET /api/gradebook 815ms/8db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye again (toggle back)",
+      "feedbackMs": 1697,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 15,
+      "serverMs": 1639,
+      "calls": [
+        "POST /api/assignments 851ms/7db",
+        "GET /api/gradebook 788ms/8db"
+      ]
+    },
+    {
+      "action": "gradebook: click a column header (select)",
+      "feedbackMs": 47,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "gradebook: “ทั้งห้องส่งแล้ว” (whole class)",
+      "feedbackMs": 2997,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 18,
+      "serverMs": 2934,
+      "calls": [
+        "POST /api/assignments/asg_ex3/bulk 2153ms/10db",
+        "GET /api/gradebook 781ms/8db"
+      ]
+    },
+    {
+      "action": "attendance: tap one student",
+      "feedbackMs": 53,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 11,
+      "serverMs": 2391,
+      "calls": [
+        "POST /api/attendance/batch 2391ms/11db"
+      ]
+    },
+    {
+      "action": "attendance: “มาทั้งหมด”",
+      "feedbackMs": 53,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 1898,
+      "calls": [
+        "POST /api/attendance/batch 1898ms/9db"
+      ]
+    },
+    {
+      "action": "students: open a student's drawer",
+      "feedbackMs": 97,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 23,
+      "serverMs": 1411,
+      "calls": [
+        "GET /api/audit 599ms/11db",
+        "GET /api/reports/summary 812ms/12db"
+      ]
+    },
+    {
+      "action": "students: open นำเข้า Excel",
+      "feedbackMs": 38,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "settings: pick the dark theme",
+      "feedbackMs": 75,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 496,
+      "calls": [
+        "PUT /api/settings 496ms/3db"
+      ]
+    },
+    {
+      "action": "settings: pick the light theme",
+      "feedbackMs": 56,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 485,
+      "calls": [
+        "PUT /api/settings 485ms/3db"
+      ]
+    },
+    {
+      "action": "reports: switch to รายเดือน",
+      "feedbackMs": 37,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 780,
+      "calls": [
+        "GET /api/reports/summary 780ms/8db"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "sev": "P1",
+      "where": "gradebook: eye tapped twice quickly",
+      "what": "two quick taps should end where they began, but the scores came back (hidden columns 1 → 0)"
+    }
+  ]
+}

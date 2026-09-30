@@ -28,6 +28,11 @@
 
 .hm-att { padding: 7px 0; border-top: 0.5px solid var(--border); }
 .hm-att:first-of-type { border-top: none; }
+/* a class row is a link to that class's roll-call (as every other row on this page is) */
+button.hm-att-link { display: block; width: 100%; height: auto; text-align: left; background: none; border: none; border-top: 0.5px solid var(--border); border-radius: 0; cursor: pointer; }
+button.hm-att-link:first-of-type { border-top: none; }
+button.hm-att-link:hover { background: var(--surface-1); }
+button.hm-att-link.row { display: flex; }
 
 .hm-follow { height: auto; min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); width: 100%; background: none; border-left: none; border-right: none; cursor: pointer; text-align: left; }
 .hm-follow:first-of-type { border-top: none; }

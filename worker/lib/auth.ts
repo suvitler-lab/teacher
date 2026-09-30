@@ -44,8 +44,19 @@ export async function clearSession(c: Ctx) {
   deleteCookie(c, SESSION_COOKIE, { path: "/" });
 }
 
-/** Returns device_id when a valid session cookie is present, else null. */
+/**
+ * Returns device_id when a valid session cookie is present, else null. Looked up once per request: the app's
+ * preamble asks first (in the same round trip as the meta flags), and every later caller gets that answer.
+ */
 export async function resolveSession(c: Ctx, now = Date.now()): Promise<string | null> {
+  const cached = c.get("sessionDevice");
+  if (cached !== undefined) return cached;
+  const device = await lookupSession(c, now);
+  c.set("sessionDevice", device);
+  return device;
+}
+
+async function lookupSession(c: Ctx, now: number): Promise<string | null> {
   const token = getCookie(c, SESSION_COOKIE);
   if (!token) return null;
   const h = await sha256Hex(token);

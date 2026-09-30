@@ -2,7 +2,7 @@
 .rp-range { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
 
 .rp-cols { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
-@media (max-width: 860px) { .rp-cols { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .rp-cols { grid-template-columns: minmax(0, 1fr); } } /* minmax(0,…): plain 1fr cannot shrink below its content, so one long work name made the whole page wider than a phone */
 
 .rp-bars > div { display: grid; grid-template-columns: 118px minmax(0,1fr) 44px 34px; gap: 6px; align-items: center; font-size: 11px; margin: 5px 0; }
 .rp-bars .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

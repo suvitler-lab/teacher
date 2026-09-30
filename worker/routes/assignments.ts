@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, notFound, ApiError } from "../lib/http";
-import { writeAudit } from "../lib/audit";
+import { writeAudit, auditInsertStmt } from "../lib/audit";
 import { abortIf, batchAtEpoch, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 import { mapAssignment } from "../lib/rows";
@@ -35,9 +35,17 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   const now = Date.now();
   const epoch = await requestEpoch(c);
   const aid = b.id ?? id("asg");
-  const existing = await c.env.DB.prepare("SELECT * FROM assignments WHERE id = ?")
-    .bind(aid)
-    .first<any>();
+  const db = c.env.DB;
+  // One round of reads — everything the checks below need that doesn't depend on anything else (the database is
+  // far away, so the number of round trips is what a teacher waits for): the work as it is now, the term, the
+  // classes it already had, and the classes it is being given to.
+  const [existing, term, prevRows, classRows] = await Promise.all([
+    db.prepare("SELECT * FROM assignments WHERE id = ?").bind(aid).first<any>(),
+    b.term_id ? db.prepare("SELECT year FROM terms WHERE id = ?").bind(b.term_id).first<{ year: number }>() : Promise.resolve(null),
+    db.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>(),
+    db.prepare("SELECT id, name, year FROM classes WHERE id IN (SELECT value FROM json_each(?1))")
+      .bind(JSON.stringify(b.class_ids)).all<{ id: string; name: string; year: number | null }>(),
+  ]);
 
   // refuse to lower full_score below scores already recorded (checked again inside the write below —
   // a score can land between this look and that write)
@@ -57,25 +65,16 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   // must be of the term's year; and when the work MOVES to another term, every class it keeps must be of the
   // new year too (moving only the term would leave last year's class holding this year's work). Classes it
   // already had, under an unchanged term, are left alone — older data may predate the year model.
-  if (b.term_id) {
-    const term = await c.env.DB.prepare("SELECT year FROM terms WHERE id = ?").bind(b.term_id).first<{ year: number }>();
-    if (term) {
-      const termMoved = !existing || (existing.term_id ?? null) !== b.term_id;
-      const prev = new Set(existing
-        ? ((await c.env.DB.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>()).results ?? []).map((r) => r.class_id)
-        : []);
-      const toCheck = termMoved ? b.class_ids : b.class_ids.filter((cid) => !prev.has(cid));
-      if (toCheck.length > 0) {
-        const rows = await c.env.DB.prepare("SELECT name, year FROM classes WHERE id IN (SELECT value FROM json_each(?1))")
-          .bind(JSON.stringify(toCheck)).all<{ name: string; year: number | null }>();
-        const off = (rows.results ?? []).filter((r) => r.year != null && r.year !== term.year);
-        if (off.length > 0) {
-          return c.json({
-            error: "class_year_mismatch",
-            message: `ห้อง ${off.map((r) => r.name).join(", ")} เป็นของปีการศึกษาอื่น ไม่ตรงกับภาคเรียนของงานนี้`,
-          }, 422);
-        }
-      }
+  if (term) {
+    const termMoved = !existing || (existing.term_id ?? null) !== b.term_id;
+    const prev = new Set((prevRows.results ?? []).map((r) => r.class_id));
+    const toCheck = new Set(termMoved ? b.class_ids : b.class_ids.filter((cid) => !prev.has(cid)));
+    const off = (classRows.results ?? []).filter((r) => toCheck.has(r.id) && r.year != null && r.year !== term.year);
+    if (off.length > 0) {
+      return c.json({
+        error: "class_year_mismatch",
+        message: `ห้อง ${off.map((r) => r.name).join(", ")} เป็นของปีการศึกษาอื่น ไม่ตรงกับภาคเรียนของงานนี้`,
+      }, 422);
     }
   }
 
@@ -99,17 +98,7 @@ assignmentRoutes.post("/api/assignments", async (c) => {
       ).bind(aid, cid),
     ),
   ];
-  try {
-    // both guards first: a restore since this request began, or scores that now sit above the new full
-    // score, roll the whole batch back — nothing of it (title, full score, class links) is half-applied
-    await batchAtEpoch(c.env, epoch, [abortIf(c.env, lowersBelowScores, aid, b.full_score), ...stmts]);
-  } catch (e) {
-    if (e instanceof ApiError) throw e; // epoch_changed
-    const over = await scoreOverFull();
-    if (over > 0 && existing && b.full_score < existing.full_score) return c.json({ error: "score_over_full", over }, 409);
-    throw e;
-  }
-  await writeAudit(c.env, [
+  const audit = auditInsertStmt(c.env, [
     {
       entity: "assignment", entity_id: aid, assignment_id: aid,
       action: existing ? "update" : "create", device_id: c.get("deviceId"),
@@ -117,7 +106,17 @@ assignmentRoutes.post("/api/assignments", async (c) => {
       after: { title: b.title, full_score: b.full_score, class_ids: b.class_ids },
       method: "manual",
     },
-  ]);
+  ], now);
+  try {
+    // both guards first: a restore since this request began, or scores that now sit above the new full
+    // score, roll the whole batch back — nothing of it (title, full score, class links, the audit line) is half-applied
+    await batchAtEpoch(c.env, epoch, [abortIf(c.env, lowersBelowScores, aid, b.full_score), ...stmts, audit]);
+  } catch (e) {
+    if (e instanceof ApiError) throw e; // epoch_changed
+    const over = await scoreOverFull();
+    if (over > 0 && existing && b.full_score < existing.full_score) return c.json({ error: "score_over_full", over }, 409);
+    throw e;
+  }
   return c.json({ ok: true, assignment: mapAssignment({ ...b, id: aid, created_at: (existing as any)?.created_at ?? now, updated_at: now, publish_scores: b.publish_scores === false ? 0 : 1, status: b.status ?? "open", deleted_at: null }, b.class_ids) });
 });
 

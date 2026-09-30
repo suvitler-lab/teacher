@@ -88,6 +88,8 @@ export function SettingsPage() {
   const s = settings.value;
   const params = routeParams();
   const [section, setSection] = useState<Section>((params.section as Section) || "general");
+  // a link to another section (#/settings?section=backup) while this page is already open must switch to it
+  useEffect(() => { if (params.section && SECTIONS.some((x) => x.key === params.section)) setSection(params.section as Section); }, [params.section]);
   const [draft, setDraft] = useState<Settings | null>(s ? { ...s } : null);
   const [busy, setBusy] = useState("");
   const [showRestore, setShowRestore] = useState(false);
@@ -202,7 +204,7 @@ export function SettingsPage() {
             <div class="card">
               <div class="set-section-title"><Icon name="clock" /> เวลาเรียน</div>
               <div class="set-row"><div><div style="font-weight:500;font-size:14px">เริ่มนับสาย (เช็คชื่อรายวัน)</div><div class="page-sub">สแกนหลังเวลานี้ = สาย</div></div>
-                <input type="time" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
+                <input type="time" aria-label="เวลาเริ่มนับสาย" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
               <div style="padding-top:10px;border-top:0.5px solid var(--border)">
                 <div style="font-weight:500;font-size:14px">เวลาเริ่มคาบ (สำหรับเช็คชื่อรายคาบ)</div>
                 <div class="page-sub" style="margin-bottom:8px">สแกนหลังเวลาเริ่มคาบจะนับเป็นสาย · เว้นว่างได้ถ้าไม่ใช้คาบนั้น</div>
@@ -288,7 +290,7 @@ function PeriodTimes({ value, onChange }: { value: string; onChange: (v: string)
   return (
     <div class="set-periods">
       {[1, 2, 3, 4, 5, 6, 7, 8].map((p) => (
-        <label><span class="muted">คาบ {p}</span><input type="time" value={times[String(p)] ?? ""} onInput={(e) => setPeriod(p, (e.target as HTMLInputElement).value)} /></label>
+        <label><span class="muted">คาบ {p}</span><input type="time" aria-label={`เวลาเริ่มคาบ ${p}`} value={times[String(p)] ?? ""} onInput={(e) => setPeriod(p, (e.target as HTMLInputElement).value)} /></label>
       ))}
     </div>
   );
@@ -444,13 +446,18 @@ function ChangePassword() {
     try { await api.post("/api/auth/change-password", { current: cur, next }); setMsg("เปลี่ยนรหัสผ่านแล้ว"); setCur(""); setNext(""); setOpen(false); }
     catch (e: any) { setMsg(e.message || "ไม่สำเร็จ"); }
   }
-  if (!open) return <button onClick={() => setOpen(true)}><Icon name="key" size={15} /> เปลี่ยนรหัสผ่าน</button>;
+  if (!open) return (
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <button onClick={() => { setMsg(""); setOpen(true); }}><Icon name="key" size={15} /> เปลี่ยนรหัสผ่าน</button>
+      {msg && <span style="font-size:13px;color:var(--text-success)"><Icon name="circle-check" size={14} /> {msg}</span>}
+    </div>
+  );
   return (
     <div class="row" style="gap:6px;flex-wrap:wrap">
       <input type="password" placeholder="รหัสเดิม" value={cur} onInput={(e) => setCur((e.target as HTMLInputElement).value)} style="width:140px" />
       <input type="password" placeholder="รหัสใหม่" value={next} onInput={(e) => setNext((e.target as HTMLInputElement).value)} style="width:140px" />
       <button class="primary" onClick={submit}>บันทึก</button>
-      <button onClick={() => setOpen(false)}>ยกเลิก</button>
+      <button onClick={() => { setMsg(""); setOpen(false); }}>ยกเลิก</button>
       {msg && <div style="font-size:12px;color:var(--text-secondary);width:100%">{msg}</div>}
     </div>
   );

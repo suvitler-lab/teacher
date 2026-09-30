@@ -276,9 +276,9 @@ export function DateField({ value, onChange, label, style }: { value: string; on
   const years: number[] = [];
   for (let i = thisYear - 3; i <= thisYear + 3; i++) years.push(i);
   if (y && !years.includes(Number(y))) years.push(Number(y)), years.sort((a, b) => a - b);
-  const sel = "width:auto;height:auto;min-width:0";
+  const sel = "";
   return (
-    <span class="row" style={`gap:4px;flex-wrap:nowrap;${style ?? ""}`} role="group" aria-label={label}>
+    <span class="datefield" style={style} role="group" aria-label={label}>
       <select aria-label="วัน" style={sel} value={d} onInput={(e) => commit((e.target as HTMLSelectElement).value, mo, y)}>
         <option value="">วัน</option>
         {Array.from({ length: 31 }, (_, i) => <option value={String(i + 1)}>{i + 1}</option>)}

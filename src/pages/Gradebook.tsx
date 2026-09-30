@@ -19,6 +19,7 @@ import { formatThaiDate, monthOptions, currentMonthIso } from "../lib/dates";
 import { notify, ok, err, withToast } from "../lib/notify";
 import { AssignmentModal } from "../components/AssignmentModal";
 import { routeParams, navigate, setNavGuard } from "../router";
+import { useAction } from "../lib/useAction";
 
 interface Sub { status: string; score: number | null; late: boolean }
 type SubKey = string; // `${assignmentId}:${studentId}`
@@ -52,6 +53,7 @@ export function GradebookPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
+  const act = useAction();
   const [msg, setMsg] = useState("");
   // Scores the device could not even store. They stay on screen (red-outlined) and are NOT treated as
   // saved; the teacher can retry, and leaving the page asks first.
@@ -215,7 +217,7 @@ export function GradebookPage() {
       err(`ยังมีคะแนน ${waiting} รายการของงานนี้ที่ยังไม่ได้ส่งขึ้นระบบ — รอให้ส่งเสร็จก่อนแล้วค่อยทำทั้งห้อง`);
       return;
     }
-    try {
+    await act.run("bulk", async () => { try {
       const res = await api.post<{ changed: number; batchId: string }>(`/api/assignments/${selAsg.id}/bulk`, { action, classId });
       await load(true);
       if (action === "clear" && res.changed > 0) {
@@ -226,25 +228,38 @@ export function GradebookPage() {
       }
     } catch (e) {
       err(e instanceof ApiError && e.code === "assignment_closed" ? e.message : "ทำรายการทั้งห้องไม่สำเร็จ");
-    }
+    } });
   }
 
+  /**
+   * Save a change to ONE piece of work (hide/show its scores, open/close it). The screen changes at once and the
+   * server is told in the background; if the server refuses, the screen goes back and says so. A second tap on the
+   * same work while the first is still on its way is ignored. Nothing else on the page depends on these fields, so
+   * there is no reload afterwards.
+   */
   async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string, target: Assignment | null = selAsg) {
     if (!target) return;
-    let saved: Assignment | null = null;
-    try {
-      const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
-        id: target.id, subject_id: target.subject_id, type_id: target.type_id, title: target.title,
-        unit: target.unit, full_score: target.full_score, assigned_date: target.assigned_date,
-        due_date: target.due_date, note: target.note, publish_scores: target.publish_scores, status: target.status,
-        class_ids: target.class_ids, term_id: target.term_id, ...patch,
-      });
-      saved = res.assignment;
-    } catch (e) { err((e as Error).message || "บันทึกไม่สำเร็จ"); return; }
-    // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
-    if (saved) upsertAssignment(saved);
-    await load(true);
-    if (okMsg) ok(okMsg);
+    await act.run(`asg:${target.id}`, async () => {
+      const before = target;
+      setAssignments((list) => list.map((x) => (x.id === before.id ? ({ ...x, ...patch } as Assignment) : x)));
+      let saved: Assignment | null = null;
+      try {
+        const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
+          id: before.id, subject_id: before.subject_id, type_id: before.type_id, title: before.title,
+          unit: before.unit, full_score: before.full_score, assigned_date: before.assigned_date,
+          due_date: before.due_date, note: before.note, publish_scores: before.publish_scores, status: before.status,
+          class_ids: before.class_ids, term_id: before.term_id, ...patch,
+        });
+        saved = res.assignment;
+      } catch (e) {
+        setAssignments((list) => list.map((x) => (x.id === before.id ? before : x))); // the server said no: back to what it holds
+        err((e as Error).message || "บันทึกไม่สำเร็จ");
+        return;
+      }
+      // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
+      if (saved) { upsertAssignment(saved); setAssignments((list) => list.map((x) => (x.id === saved!.id ? { ...x, ...saved! } : x))); }
+      if (okMsg) ok(okMsg);
+    });
   }
 
   async function removeAssignment() {
@@ -317,10 +332,11 @@ export function GradebookPage() {
           <span>· เต็ม {selAsg.full_score}</span>
           {selAsg.status === "closed" && <span class="chip" style="background:var(--surface-2);color:var(--text-secondary)">ปิดรับ</span>}
           <span class="grow" />
-          <button onClick={() => bulk("all-submitted")}><Icon name="checks" size={14} /> ทั้งห้องส่งแล้ว</button>
-          <button onClick={() => bulk("full-score")}>ให้เต็มคนที่ส่ง</button>
-          <button onClick={() => bulk("clear")}>ล้าง</button>
+          <button onClick={() => bulk("all-submitted")} disabled={act.isBusy("bulk")}>{act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทั้งห้องส่งแล้ว</button>
+          <button onClick={() => bulk("full-score")} disabled={act.isBusy("bulk")}>ให้เต็มคนที่ส่ง</button>
+          <button onClick={() => bulk("clear")} disabled={act.isBusy("bulk")}>ล้าง</button>
           <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว")}
+            disabled={act.isBusy(`asg:${selAsg.id}`)}
             title={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้ (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)" : "แสดงคะแนนของงานนี้"}>
             <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน"}
           </button>
@@ -371,7 +387,7 @@ export function GradebookPage() {
                   return (
                     <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
                           title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
                           onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
                           <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />

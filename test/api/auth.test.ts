@@ -181,4 +181,12 @@ describe("auth & setup", () => {
     expect(boot.classes[0].year).toBe(2569); // filed under the year the guide just opened
     expect(boot.subjects.map((c: any) => c.name)).toEqual(["คณิตศาสตร์"]);
   });
+
+  it("a wrong current password on change-password is 403 (not 401), and the session stays valid", async () => {
+    const cookie = await login();
+    const res = await call("/api/auth/change-password", json({ current: "nope-nope", next: "another1" }), cookie);
+    expect(res.status).toBe(403);
+    expect(await res.json()).toMatchObject({ error: "wrong_password" });
+    expect((await call("/api/bootstrap", {}, cookie)).status).toBe(200);
+  });
 });

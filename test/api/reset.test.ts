@@ -13,7 +13,7 @@ describe("start over", () => {
     const noWords = await reset(cookie, { mode: "data", password: "pw123456", confirm: "ok" });
     expect(noWords.status).toBe(400);
     const badPw = await reset(cookie, { mode: "data", password: "wrong", confirm: "ล้างข้อมูล" });
-    expect(badPw.status).toBe(401);
+    expect(badPw.status).toBe(403); // not 401: the teacher is signed in, the app must not pop its sign-in box
     expect(await count("students")).toBe(3);
     expect((await call("/api/admin/reset", json({ mode: "data", password: "pw123456", confirm: "ล้างข้อมูล" }))).status).toBe(401); // not signed in
   });

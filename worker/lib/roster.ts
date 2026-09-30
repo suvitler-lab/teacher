@@ -36,7 +36,7 @@ export async function rosterRows(env: Env, classId: string, term: TermInfo | nul
   if (!(await classInTermYear(env, classId, term))) return [] as any[];
   const m = memberClause("s", term);
   const res = await env.DB.prepare(
-    `SELECT ${columns} FROM students s WHERE s.class_id = ? AND ${m.sql} ORDER BY s.number`,
+    `SELECT ${columns} FROM students s WHERE s.class_id = ? AND ${m.sql} ORDER BY s.number IS NULL, s.number`,
   ).bind(classId, ...m.binds).all<any>();
   return res.results ?? [];
 }

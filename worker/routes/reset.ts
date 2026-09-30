@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth, clearSession, checkLoginRate, recordLoginFailure, clearLoginFailures, clientKey } from "../lib/auth";
-import { readJson, unauthorized, tooMany, bad } from "../lib/http";
+import { readJson, tooMany, bad, ApiError } from "../lib/http";
 import { verifyPassword } from "../lib/crypto";
 import { pepperOf } from "../lib/config";
 
@@ -53,7 +53,7 @@ resetRoutes.post("/api/admin/reset", async (c) => {
     .first<{ id: string; hash: string; salt: string; iterations: number }>();
   if (!row || !(await verifyPassword(b.password, pepperOf(c.env), row))) {
     await recordLoginFailure(c.env, key);
-    throw unauthorized("รหัสผ่านไม่ถูกต้อง");
+    throw new ApiError(403, "wrong_password", "รหัสผ่านไม่ถูกต้อง"); // 403: still signed in (a 401 would pop the sign-in box)
   }
   await clearLoginFailures(c.env, key);
 

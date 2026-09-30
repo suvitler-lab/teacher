@@ -128,15 +128,18 @@ authRoutes.post("/api/auth/logout", requireAuth, async (c) => {
 
 authRoutes.get("/api/auth/me", async (c) => {
   const { resolveSession } = await import("../lib/auth");
-  const deviceId = await resolveSession(c);
-  const isSetup = await teacherExists(c.env);
-  const t = await c.env.DB.prepare("SELECT email FROM teacher LIMIT 1").first<{ email: string | null }>();
+  const deviceId = await resolveSession(c); // already looked up by the app's preamble
+  // asked together: is there a teacher (and with what e-mail), and — if signed in — which device is this
+  const [t, dev] = await Promise.all([
+    c.env.DB.prepare("SELECT email FROM teacher LIMIT 1").first<{ email: string | null }>(),
+    deviceId
+      ? c.env.DB.prepare("SELECT id, name FROM devices WHERE id = ?").bind(deviceId).first<{ id: string; name: string }>()
+      : Promise.resolve(null),
+  ]);
+  const isSetup = !!t;
   // emailSet: false only for an account made before e-mail sign-in (its next sign-in attaches one)
   const emailSet = !!t?.email;
   if (!deviceId) return c.json({ authenticated: false, isSetup, emailSet });
-  const dev = await c.env.DB.prepare("SELECT id, name FROM devices WHERE id = ?")
-    .bind(deviceId)
-    .first<{ id: string; name: string }>();
   return c.json({ authenticated: true, isSetup, emailSet, email: t?.email ?? null, device: dev });
 });
 
@@ -167,8 +170,9 @@ authRoutes.post("/api/auth/change-password", requireAuth, async (c) => {
     "SELECT id, password_hash AS hash, salt, iterations FROM teacher LIMIT 1",
   ).first<{ id: string; hash: string; salt: string; iterations: number }>();
   if (!row) throw bad("not_setup");
+  // 403, not 401: the teacher IS signed in — a 401 makes the app think the session ended and pop the sign-in box
   if (!(await verifyPassword(body.current, pepper(c.env), row)))
-    throw unauthorized("รหัสผ่านเดิมไม่ถูกต้อง");
+    throw new ApiError(403, "wrong_password", "รหัสผ่านเดิมไม่ถูกต้อง");
   const now = Date.now();
   const h = await hashPassword(body.next, pepper(c.env));
   await c.env.DB.prepare(

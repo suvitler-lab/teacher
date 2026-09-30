@@ -70,6 +70,8 @@ input, select, textarea {
   width: 100%;
 }
 textarea { height: auto; padding: 8px 12px; line-height: 1.5; }
+/* a checkbox or radio is not a text field: the field rule above (full width, 38px tall) made them huge and squeezed their labels */
+input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; padding: 0; flex: none; accent-color: var(--accent); }
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--bg-accent-muted);
@@ -156,4 +158,11 @@ label { font-size: 13px; color: var(--text-secondary); }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@media (max-width: 720px), (pointer: coarse) {
+  .type-chip, .cls-chip { height: 38px; }
+  /* a finger needs ~36px: buttons that were 26–30px tall (inline heights) get a floor; the little eye in a gradebook column is exempt */
+  button:not(.hs-eye):not(.lk) { min-height: 36px; }
+  .rnd-count .step { width: 36px; height: 36px; }
 }

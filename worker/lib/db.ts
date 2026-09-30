@@ -47,13 +47,16 @@ export async function getSettings(env: Env): Promise<Settings> {
   };
 }
 
-export async function setSetting(env: Env, key: string, value: string | boolean): Promise<void> {
+/** The statement that saves one setting (so several can go in one batch — one round trip instead of one each). */
+export function setSettingStmt(env: Env, key: string, value: string | boolean): D1PreparedStatement {
   const v = typeof value === "boolean" ? (value ? "1" : "0") : value;
-  await env.DB.prepare(
+  return env.DB.prepare(
     "INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-  )
-    .bind(key, v)
-    .run();
+  ).bind(key, v);
+}
+
+export async function setSetting(env: Env, key: string, value: string | boolean): Promise<void> {
+  await setSettingStmt(env, key, value).run();
 }
 
 export function boolKey(key: string): boolean {

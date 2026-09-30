@@ -127,13 +127,20 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   return wb.xlsx.writeBuffer();
 }
 
+/** The download's file name: no spaces, and no characters a file name cannot hold (“/” in ป.6/1 and 1/2569 most of all). */
+export function excelFileName(opts: { className: string; subjectName: string; periodLabel: string }): string {
+  const name = `สรุปงาน_${opts.className}_${opts.subjectName}_${opts.periodLabel}`.replace(/\s+/g, "").replace(/[\\/:*?"<>|]+/g, "-");
+  return name + ".xlsx";
+}
+
 export async function exportExcel(model: ReportModel, payload: ReportPayload, opts: ExcelOpts) {
   const buf = await buildWorkbookBuffer(model, payload, opts);
   const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `สรุปงาน_${opts.className}_${opts.subjectName}_${opts.periodLabel}.xlsx`.replace(/\s+/g, "");
+  // a class like ป.6/1 or a term like 1/2569 has a "/" in it, which a file name cannot have (the browser dropped the whole name)
+  a.download = excelFileName(opts);
   document.body.appendChild(a);
   a.click();
   a.remove();

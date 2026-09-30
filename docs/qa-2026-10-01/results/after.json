@@ -1,0 +1,677 @@
+{
+  "label": "after",
+  "latencyMs": 200,
+  "at": "2026-09-30T20:20:02.798Z",
+  "counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 2,
+    "P3": 30
+  },
+  "pageInfo": [
+    {
+      "page": "home",
+      "title": "สวัสดี ครูผู้สอน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": -47,
+      "settleMs": 819
+    },
+    {
+      "page": "scan",
+      "title": "สแกนส่งงาน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 10,
+      "settleMs": 579
+    },
+    {
+      "page": "attendance",
+      "title": "เช็คชื่อ",
+      "hasHeader": true,
+      "calls": 2,
+      "dbTrips": 12,
+      "settleMs": 512
+    },
+    {
+      "page": "gradebook",
+      "title": "สมุดคะแนน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 8,
+      "settleMs": 549
+    },
+    {
+      "page": "random",
+      "title": "สุ่มชื่อ",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 463
+    },
+    {
+      "page": "reports",
+      "title": "รายงานสรุป",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 9,
+      "settleMs": 590
+    },
+    {
+      "page": "students",
+      "title": "นักเรียน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 9,
+      "settleMs": 595
+    },
+    {
+      "page": "settings-general",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 468
+    },
+    {
+      "page": "settings-time",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 464
+    },
+    {
+      "page": "settings-scan",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 462
+    },
+    {
+      "page": "settings-catalog",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 460
+    },
+    {
+      "page": "settings-devices",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 462
+    },
+    {
+      "page": "settings-backup",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 5,
+      "settleMs": 475
+    },
+    {
+      "page": "settings-history",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 461
+    }
+  ],
+  "timings": [
+    {
+      "action": "open สมุดคะแนน",
+      "feedbackMs": 855,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 805,
+      "calls": [
+        "GET /api/gradebook 805ms/8db"
+      ]
+    },
+    {
+      "action": "open รายงาน",
+      "feedbackMs": 868,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 814,
+      "calls": [
+        "GET /api/reports/summary 814ms/9db"
+      ]
+    },
+    {
+      "action": "open เช็คชื่อ",
+      "feedbackMs": 21,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 12,
+      "serverMs": 1248,
+      "calls": [
+        "GET /api/attendance 537ms/5db",
+        "GET /api/attendance/days 711ms/7db"
+      ]
+    },
+    {
+      "action": "open นักเรียน",
+      "feedbackMs": 31,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 827,
+      "calls": [
+        "GET /api/reports/summary 827ms/9db"
+      ]
+    },
+    {
+      "action": "open หน้าหลัก",
+      "feedbackMs": 16,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 10,
+      "serverMs": 798,
+      "calls": [
+        "GET /api/dashboard 798ms/10db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye (toggle)",
+      "feedbackMs": 72,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 7,
+      "serverMs": 814,
+      "calls": [
+        "POST /api/assignments 814ms/7db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye again (toggle back)",
+      "feedbackMs": 63,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 7,
+      "serverMs": 833,
+      "calls": [
+        "POST /api/assignments 833ms/7db"
+      ]
+    },
+    {
+      "action": "gradebook: click a column header (select)",
+      "feedbackMs": 37,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "gradebook: “ทั้งห้องส่งแล้ว” (whole class)",
+      "feedbackMs": 2979,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 18,
+      "serverMs": 2913,
+      "calls": [
+        "POST /api/assignments/asg_ex3/bulk 2137ms/10db",
+        "GET /api/gradebook 776ms/8db"
+      ]
+    },
+    {
+      "action": "attendance: tap one student",
+      "feedbackMs": 55,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 11,
+      "serverMs": 1980,
+      "calls": [
+        "POST /api/attendance/batch 1980ms/11db"
+      ]
+    },
+    {
+      "action": "attendance: “มาทั้งหมด”",
+      "feedbackMs": 61,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 13,
+      "serverMs": 2173,
+      "calls": [
+        "POST /api/attendance/batch 1485ms/9db",
+        "GET /api/attendance/days 688ms/4db"
+      ]
+    },
+    {
+      "action": "students: open a student's drawer",
+      "feedbackMs": 110,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 19,
+      "serverMs": 1302,
+      "calls": [
+        "GET /api/audit 483ms/8db",
+        "GET /api/reports/summary 819ms/11db"
+      ]
+    },
+    {
+      "action": "students: open นำเข้า Excel",
+      "feedbackMs": 43,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "settings: pick the dark theme",
+      "feedbackMs": 67,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 482,
+      "calls": [
+        "PUT /api/settings 482ms/3db"
+      ]
+    },
+    {
+      "action": "settings: pick the light theme",
+      "feedbackMs": 69,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 484,
+      "calls": [
+        "PUT /api/settings 484ms/3db"
+      ]
+    },
+    {
+      "action": "reports: switch to รายเดือน",
+      "feedbackMs": 47,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 797,
+      "calls": [
+        "GET /api/reports/summary 797ms/8db"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "sev": "P3",
+      "where": "settings-time @desktop/light",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "settings-time @tablet/light",
+      "what": "page scrolls sideways (14px wider than the screen)",
+      "wide": [
+        "input. → 782px",
+        "input. → 782px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @tablet/light",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "attendance @phone/light",
+      "what": "9+ tap targets smaller than 32px",
+      "examples": [
+        "วันก่อน  38×30",
+        "วันนี้  75×30",
+        "วันถัดไป  38×30",
+        "วนสถานะ  90×30",
+        "มา  51×30",
+        "สาย  58×30"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/light",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "จัดการงาน  114×28",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "random @phone/light",
+      "what": "4+ tap targets smaller than 32px",
+      "examples": [
+        "ไปเช็คชื่อ  74×30",
+        "ใช้ทั้งห้อง (32)  101×30",
+        "ลด  28×28",
+        "เพิ่ม  28×28"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-general @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @phone/light",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-scan @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 418px",
+        "button.pill → 579px",
+        "i.ti ti-shield-lock → 451px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill on → 418px",
+        "button.pill → 579px",
+        "i.ti ti-shield-lock → 451px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/light",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×30",
+        "เลื่อน ป.6/1 ลง  30×30",
+        "แก้ไข  56×30",
+        "เก็บ  48×30",
+        "เลื่อน ป.6/2 ขึ้น  30×30",
+        "เลื่อน ป.6/2 ลง  30×30"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-devices @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill on → 579px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-backup @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill on → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-history @phone/light",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-history @phone/light",
+      "what": "5+ tap targets smaller than 32px",
+      "examples": [
+        "ทั้งหมด  65×26",
+        "ส่งงาน  62×26",
+        "เช็คชื่อ  60×26",
+        "นักเรียน  69×26",
+        "บัตร QR  70×26"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @desktop/dark",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "settings-time @tablet/dark",
+      "what": "page scrolls sideways (14px wider than the screen)",
+      "wide": [
+        "input. → 782px",
+        "input. → 782px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @tablet/dark",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "attendance @phone/dark",
+      "what": "9+ tap targets smaller than 32px",
+      "examples": [
+        "วันก่อน  38×30",
+        "วันนี้  75×30",
+        "วันถัดไป  38×30",
+        "วนสถานะ  90×30",
+        "มา  51×30",
+        "สาย  58×30"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/dark",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "จัดการงาน  114×28",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "random @phone/dark",
+      "what": "4+ tap targets smaller than 32px",
+      "examples": [
+        "ไปเช็คชื่อ  74×30",
+        "ใช้ทั้งห้อง (32)  101×30",
+        "ลด  28×28",
+        "เพิ่ม  28×28"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-general @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-time @phone/dark",
+      "what": "1 control(s) without a name for screen readers",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-scan @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 418px",
+        "button.pill → 579px",
+        "i.ti ti-shield-lock → 451px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill on → 418px",
+        "button.pill → 579px",
+        "i.ti ti-shield-lock → 451px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/dark",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×30",
+        "เลื่อน ป.6/1 ลง  30×30",
+        "แก้ไข  56×30",
+        "เก็บ  48×30",
+        "เลื่อน ป.6/2 ขึ้น  30×30",
+        "เลื่อน ป.6/2 ลง  30×30"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-devices @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill on → 579px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 710px",
+        "i.ti ti-database-export → 612px",
+        "span. → 697px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-backup @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill on → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-history @phone/dark",
+      "what": "element sticks out past the right edge",
+      "wide": [
+        "button.pill → 417px",
+        "button.pill → 578px",
+        "i.ti ti-shield-lock → 450px",
+        "button.pill → 709px",
+        "i.ti ti-database-export → 611px",
+        "span. → 696px"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-history @phone/dark",
+      "what": "5+ tap targets smaller than 32px",
+      "examples": [
+        "ทั้งหมด  65×26",
+        "ส่งงาน  62×26",
+        "เช็คชื่อ  60×26",
+        "นักเรียน  69×26",
+        "บัตร QR  70×26"
+      ]
+    }
+  ]
+}
