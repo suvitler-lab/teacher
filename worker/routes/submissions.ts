@@ -4,7 +4,8 @@ import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { getEpoch } from "../lib/db";
 import { EPOCH_SQL, abortIf, batchAtEpoch, epochChanged, requestEpoch } from "../lib/guard";
-import { loadTerm, rosterRows } from "../lib/roster";
+import { memberClause } from "../lib/roster";
+import { classInYear } from "@shared/roster";
 import { readJson, bad, notFound, conflict, ApiError } from "../lib/http";
 import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { isLateSubmission, clampClientTs } from "../lib/time";
@@ -406,11 +407,20 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   const aid = c.req.param("id");
   const { action, classId } = bulkSchema.parse(await readJson(c));
   const epoch = await requestEpoch(c);
-  const a = await c.env.DB.prepare(
-    "SELECT id, term_id, full_score, due_date, deleted_at, status FROM assignments WHERE id = ?",
-  )
-    .bind(aid)
-    .first<{ id: string; term_id: string | null; full_score: number; due_date: string | null; deleted_at: number | null; status: string }>();
+  // Round 1 — everything that depends only on the work and the class, asked at once (the database is far away: round
+  // trips are what a teacher waits for): the work, who it was given to, its term, the class's year, and the current scores
+  const [a, linkRes, termRow, classRow, cur] = await Promise.all([
+    c.env.DB.prepare("SELECT id, term_id, full_score, due_date, deleted_at, status FROM assignments WHERE id = ?")
+      .bind(aid)
+      .first<{ id: string; term_id: string | null; full_score: number; due_date: string | null; deleted_at: number | null; status: string }>(),
+    c.env.DB.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>(),
+    c.env.DB.prepare("SELECT id, year, end_date FROM terms WHERE id = (SELECT term_id FROM assignments WHERE id = ?)")
+      .bind(aid).first<{ id: string; year: number; end_date: string | null }>(),
+    c.env.DB.prepare("SELECT year FROM classes WHERE id = ?").bind(classId).first<{ year: number | null }>(),
+    // current state for these students on this assignment
+    c.env.DB.prepare("SELECT * FROM submissions WHERE assignment_id = ? AND student_id IN (SELECT id FROM students WHERE class_id = ?)")
+      .bind(aid, classId).all(),
+  ]);
   if (!a || a.deleted_at) throw notFound("assignment");
   // "everyone handed it in" is ACCEPTING hand-ins; scoring/clearing stays possible on closed work
   if (a.status === "closed" && action === "all-submitted") {
@@ -418,14 +428,19 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   }
   // only a class the work was given to: the screen filters this already, but the API keeps the relation itself
   // (older work with no class links at all stays open to any class)
-  const links = (await c.env.DB.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>()).results ?? [];
+  const links = linkRes.results ?? [];
   if (links.length > 0 && !links.some((l) => l.class_id === classId)) {
     throw bad("class_not_assigned", "งานนี้ไม่ได้มอบหมายให้ห้องนี้");
   }
 
-  // the class as it was for THIS assignment's term: grading last year's work must reach last year's
+  // Round 2 — the class as it was for THIS assignment's term: grading last year's work must reach last year's
   // children (finished), and must not touch this year's newcomers in the same-named class
-  const list: { id: string }[] = await rosterRows(c.env, classId, await loadTerm(c.env, a.term_id), "s.id");
+  const term = termRow ?? null;
+  const m = memberClause("s", term);
+  const list: { id: string }[] = (!term || classInYear(classRow?.year, term.year))
+    ? ((await c.env.DB.prepare(`SELECT s.id FROM students s WHERE s.class_id = ? AND ${m.sql} ORDER BY s.number IS NULL, s.number`)
+        .bind(classId, ...m.binds).all<{ id: string }>()).results ?? [])
+    : [];
   if (list.length === 0) throw bad("no_students");
 
   const now = Date.now();
@@ -433,12 +448,6 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   const batchId = ulid();
   const deviceId = c.get("deviceId") ?? null;
 
-  // current state for these students on this assignment
-  const cur = await c.env.DB.prepare(
-    "SELECT * FROM submissions WHERE assignment_id = ? AND student_id IN (SELECT id FROM students WHERE class_id = ?)",
-  )
-    .bind(aid, classId)
-    .all();
   const curMap = new Map<string, any>();
   for (const r of (cur.results ?? []) as any[]) curMap.set(r.student_id, r);
 

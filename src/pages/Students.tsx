@@ -27,6 +27,7 @@ export function StudentsPage() {
   const [printing, setPrinting] = useState(false);
   const [showFormer, setShowFormer] = useState(false);
   const [former, setFormer] = useState<Student[]>([]);
+  const [formerFailed, setFormerFailed] = useState(false);
   const [drawer, setDrawer] = useState<string | null>(params.student || null);
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
@@ -68,8 +69,9 @@ export function StudentsPage() {
   }
   useEffect(() => { loadStats(); }, [classId, selectedTermId.value]);
   useEffect(() => {
-    if (!showFormer) { setFormer([]); return; }
-    api.get<{ students: Student[] }>(`/api/students?class=${classId}&status=moved,inactive`).then((r) => setFormer(r.students)).catch(() => setFormer([]));
+    if (!showFormer) { setFormer([]); setFormerFailed(false); return; }
+    setFormerFailed(false);
+    api.get<{ students: Student[] }>(`/api/students?class=${classId}&status=moved,inactive`).then((r) => setFormer(r.students)).catch(() => { setFormer([]); setFormerFailed(true); });
   }, [showFormer, classId]);
 
   async function rotateClass() {
@@ -176,7 +178,7 @@ export function StudentsPage() {
       {showFormer && (
         <div class="card" style="margin-top:12px">
           <div style="font-weight:500;margin-bottom:6px">ย้ายออก / ไม่ใช้งาน ({former.length})</div>
-          {former.length === 0 ? <div class="page-sub">ไม่มี</div> : former.map((st) => (
+          {formerFailed ? <div class="page-sub" style="color:var(--text-warning)"><Icon name="cloud-off" size={14} /> โหลดรายชื่อไม่สำเร็จ — ปิดแล้วเปิดใหม่อีกครั้ง</div> : former.length === 0 ? <div class="page-sub">ไม่มี</div> : former.map((st) => (
             <div class="row" style="gap:10px;padding:6px 0;border-top:0.5px solid var(--border)">
               <Avatar student={st} />
               <span class="grow">{fullName(st)} <span class="page-sub">· {st.status === "moved" ? "ย้ายออก" : "ไม่ใช้งาน"}</span></span>
@@ -219,7 +221,13 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
       onSaved();
     } catch (e: any) { setErr(e.message || "บันทึกไม่สำเร็จ"); } finally { setBusy(false); }
   }
-  async function rotate() { if (!student) return; await api.post(`/api/students/${student.id}/qr/rotate`).catch(() => {}); onSaved(); }
+  // a refused or failed rotate must NOT look done: the old card would still be valid while the teacher believes it is revoked
+  async function rotate() {
+    if (!student) return;
+    setErr("");
+    try { await api.post(`/api/students/${student.id}/qr/rotate`); onSaved(); }
+    catch (e: any) { setErr(e.message || "ออก QR ใหม่ไม่สำเร็จ — บัตรเดิมยังใช้ได้อยู่"); }
+  }
 
   return (
     <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>

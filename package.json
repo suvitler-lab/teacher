@@ -18,6 +18,8 @@
     "e2e:onboarding": "node scripts/onboarding-e2e.cjs",
     "e2e:camera": "node scripts/camera-e2e.cjs",
     "e2e:rehearsal": "node scripts/trial-rehearsal.cjs",
+    "qa:sweep": "node scripts/qa-sweep.cjs",
+    "qa:flows": "node scripts/qa-flows.cjs",
     "trial:reconcile": "node scripts/trial-reconcile.cjs",
     "db:migrate:local": "wrangler d1 migrations apply kru-db --local",
     "db:migrate:remote": "wrangler d1 migrations apply kru-db --remote",

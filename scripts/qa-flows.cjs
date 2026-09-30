@@ -170,6 +170,16 @@ async function login(email, password) {
     await page.locator(".modal").waitFor({ state: "detached", timeout: 5000 });
     ok((await sql("SELECT nickname FROM students WHERE code='99001'"))[0].nickname === "เทส", "nickname not saved");
   });
+  await step("S05b", "students: “ออก QR ใหม่” really changes the child's QR", async () => {
+    await go("/students", ".stu-lrow");
+    const before = (await sql("SELECT qr_token FROM students WHERE code='99001'"))[0].qr_token;
+    await page.locator(".stu-lrow", { hasText: "ทดสอบ" }).first().click();
+    await page.locator(".drawer").getByRole("button", { name: /แก้ไข/ }).first().click();
+    await page.locator(".modal").waitFor();
+    await page.locator(".modal").getByRole("button", { name: /ออก QR ใหม่/ }).click();
+    await page.locator(".modal").waitFor({ state: "detached", timeout: 5000 });
+    ok((await sql("SELECT qr_token FROM students WHERE code='99001'"))[0].qr_token !== before, "QR did not change");
+  });
   await step("S06", "students: Excel paste with a repeated-ID column previews and imports (new children + an update)", async () => {
     await go("/students", ".stu-lrow");
     await page.getByRole("button", { name: /นำเข้า Excel/ }).click();
@@ -478,6 +488,18 @@ async function login(email, password) {
     const chips = await page.locator(".set-nav-chips").isVisible();
     ok(nav !== chips, `side menu visible: ${nav}, pills visible: ${chips}`);
   });
+  await step("K01", "history: when the server cannot be reached it says so (and offers a retry), not “no history yet”", async () => {
+    await openSettings("history");
+    await page.getByText("ทั้งหมด").first().waitFor();
+    server.setDown(true);
+    try {
+      await page.locator(".set-body .pill", { hasText: "ส่งงาน" }).click();
+      await page.getByText(/โหลดประวัติไม่สำเร็จ/).waitFor({ timeout: 6000 });
+    } finally { server.setDown(false); }
+    await page.getByRole("button", { name: "ลองอีกครั้ง" }).click();
+    await page.waitForTimeout(800);
+    ok(await page.getByText(/โหลดประวัติไม่สำเร็จ/).count() === 0, "still failing after the server came back");
+  });
   await step("E08", "settings: history lists what was just done", async () => {
     await openSettings("history");
     await page.waitForTimeout(800);
@@ -491,6 +513,73 @@ async function login(email, password) {
     await page.waitForSelector("input[type=email]", { timeout: 8000 });
     await login(server.email, "NewPassword2026");
     await page.waitForSelector(".rail", { timeout: 15000 });
+  });
+
+  // ------------------------------------------------------------------ start a new term / a new school year
+  await step("Y01", "start the next term of the same year: current term moves on, classes and children stay", async () => {
+    await openSettings("catalog");
+    await page.getByRole("button", { name: "ภาคเรียน", exact: true }).click();
+    await page.getByRole("button", { name: /เริ่มภาคเรียนใหม่/ }).first().click();
+    await page.locator(".modal").waitFor();
+    await page.getByRole("button", { name: /เริ่มภาคเรียน 2\/2569/ }).click();
+    await page.locator(".modal").waitFor({ state: "detached", timeout: 8000 });
+    const cur = await sql("SELECT name, year, term FROM terms WHERE is_current=1");
+    ok(cur.length === 1 && cur[0].year === 2569 && cur[0].term === 2, "current term: " + JSON.stringify(cur));
+    ok((await sql("SELECT COUNT(*) n FROM classes WHERE archived=0"))[0].n === 3, "classes changed");
+  });
+  await step("Y02", "start a new school year: empty same-named rooms open, last year's children become 'finished', nothing is deleted", async () => {
+    const before = (await sql("SELECT COUNT(*) n FROM students"))[0].n;
+    await page.getByRole("button", { name: /เริ่มภาคเรียนใหม่/ }).first().click();
+    await page.locator(".modal").waitFor();
+    // the new year starts in May 2570 (16 พฤษภาคม 2570) — after every term that exists (today is 1 ต.ค. 2569)
+    const startField = page.locator(".modal .modal-grid2 .datefield").first();
+    await startField.getByLabel("วัน").selectOption("16");
+    await startField.getByLabel("เดือน").selectOption("5");
+    await startField.getByLabel("ปี พ.ศ.").selectOption({ label: "2570" });
+    // the three selects of a date field sit on ONE line
+    const boxes = await startField.locator("select").evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+    ok(new Set(boxes).size === 1, "date field selects are on different lines: " + boxes.join(","));
+    await page.locator(".modal .imp-confirm input[type=checkbox]").check();
+    await page.getByRole("button", { name: /เริ่มภาคเรียน 1\/2570/ }).click();
+    await page.locator(".modal").waitFor({ state: "detached", timeout: 8000 });
+    const cur = await sql("SELECT year, term FROM terms WHERE is_current=1");
+    ok(cur[0].year === 2570 && cur[0].term === 1, "current term: " + JSON.stringify(cur));
+    const open = await sql("SELECT name FROM classes WHERE archived=0 AND year=2570 ORDER BY name");
+    ok(open.length === 3, "new year's classes: " + JSON.stringify(open));
+    ok((await sql("SELECT COUNT(*) n FROM students"))[0].n === before, "children were deleted");
+    ok((await sql("SELECT COUNT(*) n FROM students WHERE status='finished'"))[0].n >= 30, "last year's children not finished");
+    await go("/students", ".uh");
+    ok((await page.locator(".stu-lrow").count()) === 0, "the new year's room should start empty");
+  });
+
+  // ------------------------------------------------------------------ on a phone
+  await step("M01", "phone: bottom tabs and the menu sheet reach every page; the sheet signs out", async () => {
+    const pctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, locale: "th-TH" });
+    const ppage = await pctx.newPage();
+    const main = page; page = ppage;
+    try {
+      ppage.on("pageerror", (e) => errors.push(e.message));
+      await ppage.goto(server.url);
+      await login(server.email, server.password);
+      await ppage.waitForSelector(".bottom-tabs", { timeout: 15000 });
+      for (const [label, hash] of [["เช็คชื่อ", "attendance"], ["คะแนน", "gradebook"], ["หน้าหลัก", "home"], ["สแกน", "scan"]]) {
+        await ppage.locator(".bottom-tabs .tab-item", { hasText: label }).click();
+        await ppage.waitForTimeout(300);
+        ok(ppage.url().includes("#/" + hash), `“${label}” went to ${ppage.url().split("#")[1]}`);
+      }
+      for (const [label, hash] of [["รายงาน", "reports"], ["นักเรียน", "students"], ["สุ่มชื่อ", "random"], ["ตั้งค่า", "settings"]]) {
+        await ppage.locator(".bottom-tabs .tab-item", { hasText: "เมนู" }).click();
+        await ppage.locator(".menu-sheet .sheet-item", { hasText: label }).click();
+        await ppage.waitForTimeout(300);
+        ok(ppage.url().includes("#/" + hash), `menu “${label}” went to ${ppage.url().split("#")[1]}`);
+        ok((await ppage.locator(".menu-sheet").count()) === 0, "the menu sheet stayed open after choosing");
+        const sw = await ppage.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        ok(sw <= 2, `${label}: page is ${sw}px wider than the phone`);
+      }
+      await ppage.locator(".bottom-tabs .tab-item", { hasText: "เมนู" }).click();
+      await ppage.locator(".menu-sheet .sheet-item", { hasText: "ออกจากระบบ" }).click();
+      await ppage.waitForSelector("input[type=email]", { timeout: 8000 });
+    } finally { page = main; await pctx.close(); }
   });
 
   // ------------------------------------------------------------------ start over

@@ -43,17 +43,26 @@ function describe(r: AuditRow): string {
 export function AuditHistory({ entity }: { entity?: string }) {
   const [rows, setRows] = useState<AuditRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [tries, setTries] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
+    let current = true; // a slower answer for an earlier filter must not replace the one the teacher is looking at now
+    setLoading(true); setFailed(false);
     const q = "/api/audit?limit=40" + (entity ? `&entity=${entity}` : "");
     api.get<{ rows: AuditRow[] }>(q)
-      .then((r) => setRows(r.rows))
-      .catch(() => setRows([]))
-      .finally(() => setLoading(false));
-  }, [entity]);
+      .then((r) => { if (current) setRows(r.rows); })
+      .catch(() => { if (current) { setRows([]); setFailed(true); } }) // "couldn't load" is not "nothing happened yet"
+      .finally(() => { if (current) setLoading(false); });
+    return () => { current = false; };
+  }, [entity, tries]);
 
   if (loading) return <div class="page-sub" style="padding:8px 0">กำลังโหลด…</div>;
+  if (failed) return (
+    <div class="page-sub" style="padding:8px 0;color:var(--text-warning)">
+      <Icon name="cloud-off" size={14} /> โหลดประวัติไม่สำเร็จ · <button class="lk" style="background:none;border:none;color:var(--text-accent);cursor:pointer;padding:0;font:inherit" onClick={() => setTries((n) => n + 1)}>ลองอีกครั้ง</button>
+    </div>
+  );
   if (rows.length === 0) return <div class="page-sub" style="padding:8px 0">ยังไม่มีประวัติการแก้ไข</div>;
 
   return (
