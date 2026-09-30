@@ -19,6 +19,7 @@ export interface StudentReport {
   student: Student;
   submitted: number;
   applicable: number;
+  pending: number; // work not yet due and not handed in: left out of the rate until its due date passes
   missing: number;
   percent: number;
   score: number;
@@ -73,6 +74,7 @@ export function computeReport(p: ReportPayload): ReportModel {
       student,
       submitted: sum.submitted,
       applicable: sum.submitted + sum.missing,
+      pending: sum.pending,
       missing: sum.missing,
       percent: sum.submitRate,
       score: sum.score,

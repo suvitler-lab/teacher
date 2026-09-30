@@ -156,7 +156,7 @@ export function ReportsPage() {
       ) : (
         <>
           <div class="stat-row" style="margin-bottom:12px">
-            <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)}`} />
+            <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)} ที่ถึงกำหนด` + (model.students.reduce((n, s) => n + s.pending, 0) > 0 ? ` · ยังไม่ถึงกำหนด ${model.students.reduce((n, s) => n + s.pending, 0)}` : "")} />
             <StatCard label="งานค้าง" value={model.metrics.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint={`นักเรียน ${model.followUp.length} คน`} />
             <StatCard label="คะแนนเฉลี่ย" value={`${model.metrics.avgScorePercent}%`} icon="star" hint="เฉพาะงานที่ตรวจแล้ว" />
             <StatCard label="มาเรียน" value={model.metrics.attendanceRate == null ? "—" : `${model.metrics.attendanceRate}%`} tone="success" icon="user-check"
