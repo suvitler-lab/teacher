@@ -10,6 +10,7 @@ import { runBackup, BackupInconsistentError } from "../lib/backup";
 import { err, ok, withToast } from "../lib/notify";
 import { AuditHistory } from "../components/AuditHistory";
 import { RestoreModal } from "../components/RestoreModal";
+import { ResetModal, type ResetMode } from "../components/ResetModal";
 import { CatalogEditor } from "../components/CatalogEditor";
 import { installHidScanner } from "../lib/hid";
 import { buildIndex, resolveScan } from "@shared/scan";
@@ -90,6 +91,7 @@ export function SettingsPage() {
   const [draft, setDraft] = useState<Settings | null>(s ? { ...s } : null);
   const [busy, setBusy] = useState("");
   const [showRestore, setShowRestore] = useState(false);
+  const [resetMode, setResetMode] = useState<ResetMode | null>(null);
   const [restoreInfo, setRestoreInfo] = useState<{ pending: boolean; maintenance: boolean } | null>(null);
 
   // keys the teacher edits here — last_backup_at is written by the backup button, not by this form
@@ -252,6 +254,11 @@ export function SettingsPage() {
                 <button onClick={backup} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
               <div class="set-row"><div><div style="font-weight:500;font-size:14px">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
                 <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
+              <div class="set-section-title" style="margin-top:16px;color:var(--text-danger)"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างข้อมูลทดลอง</div><div class="page-sub">ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก</div></div>
+                <button onClick={() => setResetMode("data")}><Icon name="trash" size={16} /> ล้างข้อมูล</button></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น</div><div class="page-sub">ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก</div></div>
+                <button onClick={() => setResetMode("all")}><Icon name="trash-x" size={16} /> ล้างทั้งหมด</button></div>
             </div>
           )}
 
@@ -268,6 +275,7 @@ export function SettingsPage() {
         </div>
       )}
 
+      {resetMode && <ResetModal mode={resetMode} onClose={() => setResetMode(null)} />}
       {showRestore && <RestoreModal onClose={() => setShowRestore(false)} onDone={() => { setShowRestore(false); loadBootstrap(); }} />}
     </div>
   );

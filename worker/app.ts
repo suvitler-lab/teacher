@@ -16,6 +16,7 @@ import { dashboardRoutes } from "./routes/dashboard";
 import { reportRoutes } from "./routes/reports";
 import { auditRoutes } from "./routes/audit";
 import { backupRoutes } from "./routes/backup";
+import { resetRoutes } from "./routes/reset";
 
 export function createApp() {
   const api = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -89,6 +90,7 @@ export function createApp() {
   api.route("/", reportRoutes);
   api.route("/", auditRoutes);
   api.route("/", backupRoutes);
+  api.route("/", resetRoutes);
 
   api.onError((err, c) => {
     if (err instanceof ApiError) {

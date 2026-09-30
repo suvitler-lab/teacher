@@ -57,7 +57,14 @@ authRoutes.post("/api/setup", async (c) => {
   if (await teacherExists(c.env)) throw new ApiError(403, "already_setup", "ตั้งค่าระบบไปแล้ว");
   const expected = c.env.SETUP_CODE;
   if (!expected) throw bad("setup_code_unset", "ยังไม่ได้ตั้งค่า SETUP_CODE บนเซิร์ฟเวอร์");
-  if (body.setupCode !== expected) throw new ApiError(403, "bad_setup_code", "รหัสติดตั้งไม่ถูกต้อง");
+  // the code is the only thing between a stranger and a fresh install: limit guesses like a password
+  const key = "setup:" + clientKey(c);
+  if (!(await checkLoginRate(c.env, key))) throw tooMany("ลองรหัสผิดหลายครั้ง รอสักครู่แล้วลองใหม่");
+  if (body.setupCode !== expected) {
+    await recordLoginFailure(c.env, key);
+    throw new ApiError(403, "bad_setup_code", "รหัสติดตั้งไม่ถูกต้อง");
+  }
+  await clearLoginFailures(c.env, key);
 
   const now = Date.now();
   const { hash, salt, iterations } = await hashPassword(body.password, pepper(c.env));
