@@ -16,6 +16,11 @@ describe("parseImport", () => {
     expect(rows[0]).toEqual({ code: "10503", prefix: "เด็กชาย", first_name: "สมชาย", last_name: "รักเรียน", number: 3 });
   });
 
+  it("ignores a trailing column that repeats the student ID", () => {
+    const { rows } = parseImport("13451\tเด็กชาย\tธนพัชญ์\tสมศรีแสง\t13451");
+    expect(rows[0]).toEqual({ code: "13451", prefix: "เด็กชาย", first_name: "ธนพัชญ์", last_name: "สมศรีแสง", number: null });
+  });
+
   it("reads commas, and a row with no number", () => {
     const { rows } = parseImport("10504,ด.ช.,สมศักดิ์,ดีมาก");
     expect(rows[0]).toMatchObject({ code: "10504", first_name: "สมศักดิ์", last_name: "ดีมาก", number: null });

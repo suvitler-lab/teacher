@@ -13,7 +13,7 @@ import type { Student } from "@shared/types";
 import { api } from "../lib/api";
 import { fullName } from "../lib/names";
 import { ok, withToast } from "../lib/notify";
-import { routeParams } from "../router";
+import { routeParams, navigate } from "../router";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { parseImport } from "../lib/importParse";
 
@@ -50,7 +50,7 @@ export function StudentsPage() {
 
   // per-student stats for this class (submit rate, attendance)
   async function loadStats() {
-    if (!classId) return;
+    if (!classId) { setStatsStatus("ready"); return; } // no class yet: nothing to load (don't spin forever)
     const fresh = begin();
     // the previous class's numbers must not sit under this class's names while loading or after a failure
     setReports(new Map()); setStatsStatus("loading");
@@ -105,7 +105,7 @@ export function StudentsPage() {
       <PageHeader icon="id-badge-2" title="นักเรียน" sub={<span>{cls?.name} · {active.length} คน</span>}
         actions={<>
           <TermPicker />
-          {!past && <>
+          {!past && cls && <>
           <button onClick={() => setImporting(true)}><Icon name="table-import" size={16} /> นำเข้า Excel</button>
           <button class="primary" onClick={() => setEdit("new")}><Icon name="user-plus" size={16} /> เพิ่มนักเรียน</button>
           </>}
@@ -151,7 +151,9 @@ export function StudentsPage() {
 
       <div class="card" style="padding:0;overflow:hidden">
         <div class="stu-list-head"><span>เลขที่</span><span>ชื่อ - สกุล</span><span>รหัส</span><span>ส่งงาน</span><span class="num" style="text-align:right">ค้าง</span><span>มา</span><span /></div>
-        {shown.length === 0 ? (
+        {!cls ? (
+          <EmptyState icon="school" text="ยังไม่มีห้องเรียน — สร้างห้องก่อน แล้วค่อยนำเข้านักเรียน" action={<button class="primary" onClick={() => navigate("/settings")}><Icon name="settings" size={16} /> ไปที่ตั้งค่า › ห้องเรียน</button>} />
+        ) : shown.length === 0 ? (
           <EmptyState icon="user-question" text={q ? "ไม่พบนักเรียนที่ค้นหา" : "ยังไม่มีนักเรียนในห้องนี้"} action={!q && !past && <button class="primary" onClick={() => setEdit("new")}><Icon name="plus" size={16} /> เพิ่มนักเรียน</button>} />
         ) : shown.map((st, i) => {
           const r = reports.get(st.id);
