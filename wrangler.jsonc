@@ -17,7 +17,7 @@
     {
       "binding": "DB",
       "database_name": "kru-db",
-      "database_id": "REPLACE_WITH_DATABASE_ID_FROM_wrangler_d1_create",
+      "database_id": "20bdc9f8-7eed-4f44-bc45-d59a8e2de144",
       "migrations_dir": "migrations"
     }
   ]
