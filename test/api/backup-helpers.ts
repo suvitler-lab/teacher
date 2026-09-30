@@ -26,7 +26,7 @@ export async function takeBackup(cookie: string, via?: typeof env): Promise<Back
 
 /** validate → upload in chunks → commit, through the real endpoints. `commitEnv` runs only the commit (e.g. a metered database). */
 export async function restoreFrom(cookie: string, b: Backup, opts: { commitEnv?: typeof env } = {}) {
-  const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 5, counts: b.counts } }), cookie)).json()) as any;
+  const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 6, counts: b.counts } }), cookie)).json()) as any;
   expect(v.ok).toBe(true);
   for (const t of BACKUP_TABLES) {
     const rows = b.data[t];

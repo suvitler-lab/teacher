@@ -12,6 +12,7 @@ const { Miniflare, convertV4MiniflareOptions } = require("miniflare");
 
 const root = path.resolve(__dirname, "..");
 const PASSWORD = "FixturePassword2026";
+const EMAIL = "fixture@example.com";
 
 // run the worker's TypeScript directly (it imports "@shared/…")
 const resolveFilename = Module._resolveFilename;
@@ -52,6 +53,7 @@ async function startFixtureServer({
   port = 5194,
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
+  seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
     modules: true,
@@ -62,7 +64,7 @@ async function startFixtureServer({
   const env = { DB, SETUP_CODE: "fixture-setup", SESSION_PEPPER: "fixture-pepper-not-secret" };
   const files = [
     ...fs.readdirSync(path.join(root, "migrations")).filter((f) => f.endsWith(".sql")).sort().map((f) => path.join(root, "migrations", f)),
-    path.join(root, "scripts/seed-demo.sql"),
+    ...(seed ? [path.join(root, "scripts/seed-demo.sql")] : []),
   ];
   for (const file of files) {
     const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");
@@ -71,7 +73,7 @@ async function startFixtureServer({
   const { app } = require(path.join(root, "worker/app.ts"));
   const setup = await app.request("/api/setup", {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ setupCode: "fixture-setup", password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
+    body: JSON.stringify({ setupCode: "fixture-setup", email: EMAIL, password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
   }, env);
   if (setup.status !== 200) throw new Error("fixture setup failed: " + setup.status);
 
@@ -120,6 +122,7 @@ async function startFixtureServer({
     url: `http://127.0.0.1:${port}`,
     DB,
     hits,
+    email: EMAIL,
     password: PASSWORD,
     /** cut (true) or restore (false) the network for everyone */
     setDown(value) { down = !!value; },
@@ -129,7 +132,7 @@ async function startFixtureServer({
   };
 }
 
-module.exports = { startFixtureServer, PASSWORD };
+module.exports = { startFixtureServer, PASSWORD, EMAIL };
 
 if (require.main === module) {
   startFixtureServer().then((s) => {

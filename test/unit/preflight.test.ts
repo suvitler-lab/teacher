@@ -1,7 +1,7 @@
 // scripts/preflight.cjs — the checks that stop a deploy before it goes wrong. Each is run against a small copy of the
 // files it reads, so a broken example is really broken.
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { cpSync, mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -9,13 +9,13 @@ const require = createRequire(import.meta.url);
 const pre = require("../../scripts/preflight.cjs");
 
 const REPO = path.resolve(__dirname, "../..");
-const dir = path.join(REPO, "node_modules", ".preflight-test");
+// a folder of its own per test: two runs at once (a watcher and a `npm test`) must not share one
+let dir = "";
 const put = (rel: string, body: string) => { const p = path.join(dir, rel); mkdirSync(path.dirname(p), { recursive: true }); writeFileSync(p, body); };
 const GOOD_ID = "1b2c3d4e-5f60-4718-8a9b-0c1d2e3f4a5b";
 
 beforeEach(() => {
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(dir, { recursive: true });
+  dir = mkdtempSync(path.join(REPO, "node_modules", ".preflight-test-"));
   cpSync(path.join(REPO, "migrations"), path.join(dir, "migrations"), { recursive: true });
   mkdirSync(path.join(dir, "shared"));
   cpSync(path.join(REPO, "shared/types.ts"), path.join(dir, "shared/types.ts"));
@@ -38,7 +38,7 @@ describe("preflight: source", () => {
   });
 
   it("wrangler config: the placeholder id stops the deploy and says what to run", () => {
-    put("wrangler.jsonc", readFileSync(path.join(REPO, "wrangler.jsonc"), "utf8"));
+    put("wrangler.jsonc", `{ "d1_databases": [{ "binding": "DB", "database_name": "kru-db", "database_id": "REPLACE_WITH_DATABASE_ID_FROM_wrangler_d1_create", "migrations_dir": "migrations" }] }`);
     const [p] = pre.checkWranglerConfig(dir);
     expect(p).toMatch(/placeholder database_id/);
     expect(p).toMatch(/wrangler d1 create kru-db/);
@@ -66,8 +66,8 @@ describe("preflight: source", () => {
   });
 
   it("migrations: a migration that forgets to set the schema version is caught", () => {
-    put("migrations/0007_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
-    expect(pre.checkMigrations(dir).join()).toMatch(/0007_forgot\.sql does not set meta\.schema_version/);
+    put("migrations/0008_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
+    expect(pre.checkMigrations(dir).join()).toMatch(/0008_forgot\.sql does not set meta\.schema_version/);
   });
 });
 
@@ -116,7 +116,7 @@ describe("preflight: build output", () => {
 
 describe("preflight: a running deploy", () => {
   const answer = (body: unknown, status = 200) => vi.fn(async () => new Response(JSON.stringify(body), { status }));
-  const healthy = { ok: true, schema: 5, db: { reachable: true, schema: 5, schemaOk: true }, config: { pepper: true, setupCode: true } };
+  const healthy = { ok: true, schema: 6, db: { reachable: true, schema: 6, schemaOk: true }, config: { pepper: true, setupCode: true } };
 
   it("a healthy deploy passes", async () => {
     expect(await pre.checkHealth("https://x.test/", answer(healthy))).toEqual([]);
@@ -129,7 +129,7 @@ describe("preflight: a running deploy", () => {
 
   it("says an empty or old database in words, and what to run", async () => {
     expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: null, schemaOk: true } }, 503))).join()).toMatch(/database is empty.*db:migrate:remote/);
-    expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: 4, schemaOk: false } }, 503))).join()).toMatch(/schema 4 but this build expects 5/);
+    expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: 4, schemaOk: false } }, 503))).join()).toMatch(/schema 4 but this build expects 6/);
   });
 
   it("says an unreachable database, an unreachable host and a wrong address plainly", async () => {

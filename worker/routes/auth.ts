@@ -32,11 +32,23 @@ async function upsertDevice(env: Env, deviceId: string, name: string, ua: string
     .run();
 }
 
+const email = z.string().trim().toLowerCase().max(120).email("อีเมลไม่ถูกต้อง");
+// the app sends a name like "Chrome · Windows"; anything else gets one made from the browser's own User-Agent
+const deviceName = z.string().trim().max(60).optional();
+
+/** "Chrome · Windows" from a User-Agent, for a device the teacher did not name. */
+export function deviceNameFrom(ua: string): string {
+  const os = /Android/i.test(ua) ? "Android" : /iPhone|iPad|iPod/i.test(ua) ? "iOS" : /Windows/i.test(ua) ? "Windows" : /Mac OS X|Macintosh/i.test(ua) ? "macOS" : /Linux|CrOS/i.test(ua) ? "Linux" : "";
+  const browser = /Edg\//i.test(ua) ? "Edge" : /OPR\/|Opera/i.test(ua) ? "Opera" : /Chrome|CriOS/i.test(ua) ? "Chrome" : /Firefox|FxiOS/i.test(ua) ? "Firefox" : /Safari/i.test(ua) ? "Safari" : "";
+  return [browser, os].filter(Boolean).join(" · ") || "อุปกรณ์นี้";
+}
+
 const setupSchema = z.object({
   setupCode: z.string().min(1),
+  email,
   password: z.string().min(6),
   deviceId: z.string().min(1),
-  deviceName: z.string().min(1).max(60),
+  deviceName,
 });
 
 // First-run: create the teacher account. Refuses once a teacher exists.
@@ -50,11 +62,12 @@ authRoutes.post("/api/setup", async (c) => {
   const now = Date.now();
   const { hash, salt, iterations } = await hashPassword(body.password, pepper(c.env));
   await c.env.DB.prepare(
-    "INSERT INTO teacher (id, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO teacher (id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
   )
-    .bind(id("tch"), hash, salt, iterations, now, now)
+    .bind(id("tch"), body.email, hash, salt, iterations, now, now)
     .run();
-  await upsertDevice(c.env, body.deviceId, body.deviceName, c.req.header("User-Agent") ?? "", now);
+  const ua = c.req.header("User-Agent") ?? "";
+  await upsertDevice(c.env, body.deviceId, body.deviceName || deviceNameFrom(ua), ua, now);
   await writeAudit(c.env, [
     { entity: "auth", action: "create", device_id: body.deviceId, method: "manual" },
   ]);
@@ -64,9 +77,10 @@ authRoutes.post("/api/setup", async (c) => {
 });
 
 const loginSchema = z.object({
+  email,
   password: z.string().min(1),
   deviceId: z.string().min(1),
-  deviceName: z.string().min(1).max(60),
+  deviceName,
 });
 
 authRoutes.post("/api/auth/login", async (c) => {
@@ -75,18 +89,26 @@ authRoutes.post("/api/auth/login", async (c) => {
   if (!(await checkLoginRate(c.env, key))) throw tooMany("ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่");
 
   const row = await c.env.DB.prepare(
-    "SELECT password_hash AS hash, salt, iterations FROM teacher LIMIT 1",
-  ).first<{ hash: string; salt: string; iterations: number }>();
+    "SELECT id, email, password_hash AS hash, salt, iterations FROM teacher LIMIT 1",
+  ).first<{ id: string; email: string | null; hash: string; salt: string; iterations: number }>();
   if (!row) throw bad("not_setup", "ยังไม่ได้ตั้งค่าระบบ");
 
+  // The password is always checked, so a wrong e-mail and a wrong password look and cost the same.
   const good = await verifyPassword(body.password, pepper(c.env), row);
-  if (!good) {
+  if (!good || (row.email !== null && row.email !== body.email)) {
     await recordLoginFailure(c.env, key);
-    throw unauthorized("รหัสผ่านไม่ถูกต้อง");
+    throw unauthorized("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
   }
   await clearLoginFailures(c.env, key);
   const now = Date.now();
-  await upsertDevice(c.env, body.deviceId, body.deviceName, c.req.header("User-Agent") ?? "", now);
+  if (row.email === null) {
+    // account from before e-mail sign-in: the right password attaches the e-mail typed now
+    await c.env.DB.prepare("UPDATE teacher SET email = ?, updated_at = ? WHERE id = ? AND email IS NULL")
+      .bind(body.email, now, row.id)
+      .run();
+  }
+  const ua = c.req.header("User-Agent") ?? "";
+  await upsertDevice(c.env, body.deviceId, body.deviceName || deviceNameFrom(ua), ua, now);
   const token = await createSession(c.env, body.deviceId, now);
   setSessionCookie(c, token);
   return c.json({ ok: true });
@@ -101,11 +123,14 @@ authRoutes.get("/api/auth/me", async (c) => {
   const { resolveSession } = await import("../lib/auth");
   const deviceId = await resolveSession(c);
   const isSetup = await teacherExists(c.env);
-  if (!deviceId) return c.json({ authenticated: false, isSetup });
+  const t = await c.env.DB.prepare("SELECT email FROM teacher LIMIT 1").first<{ email: string | null }>();
+  // emailSet: false only for an account made before e-mail sign-in (its next sign-in attaches one)
+  const emailSet = !!t?.email;
+  if (!deviceId) return c.json({ authenticated: false, isSetup, emailSet });
   const dev = await c.env.DB.prepare("SELECT id, name FROM devices WHERE id = ?")
     .bind(deviceId)
     .first<{ id: string; name: string }>();
-  return c.json({ authenticated: true, isSetup, device: dev });
+  return c.json({ authenticated: true, isSetup, emailSet, email: t?.email ?? null, device: dev });
 });
 
 authRoutes.get("/api/devices", requireAuth, async (c) => {

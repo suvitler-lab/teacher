@@ -85,6 +85,7 @@ async function until(fn, timeout = 30000, step = 250) {
   try {
     // 1 ─ first visit: the app prepares itself for offline use
     await page.goto(server.url);
+    await page.fill("input[type=email]", server.email);
     await page.fill("input[type=password]", server.password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
     check("signs in", await shellUp(page));

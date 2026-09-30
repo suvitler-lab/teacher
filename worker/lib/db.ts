@@ -21,7 +21,7 @@ export async function setMeta(env: Env, key: string, value: string): Promise<voi
     .run();
 }
 
-const BOOL_KEYS = new Set(["sound_enabled", "accept_student_code_scan", "parent_portal_enabled"]);
+const BOOL_KEYS = new Set(["sound_enabled", "accept_student_code_scan", "parent_portal_enabled", "onboarding_done"]);
 
 export async function getSettings(env: Env): Promise<Settings> {
   const rows = await env.DB.prepare("SELECT key, value FROM settings").all<{
@@ -41,6 +41,7 @@ export async function getSettings(env: Env): Promise<Settings> {
     sound_enabled: b("sound_enabled"),
     accept_student_code_scan: b("accept_student_code_scan"),
     parent_portal_enabled: b("parent_portal_enabled"),
+    onboarding_done: b("onboarding_done"),
     last_backup_at: map.last_backup_at ?? "",
     period_times: map.period_times ?? "",
   };

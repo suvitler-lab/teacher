@@ -1,7 +1,7 @@
 // Round 3 — the app must open and keep working with no network after the first visit, and must never
 // serve half a release. The real public/sw.js is run here against a small in-memory Cache/fetch.
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fillServiceWorker, precacheOf } from "../../scripts/sw-precache";
 import { readFileSync } from "node:fs";
@@ -284,10 +284,10 @@ describe("retryUntilReachable", () => {
 });
 
 describe("build step: what goes into the offline list", () => {
-  const dir = path.resolve(__dirname, "../../node_modules/.sw-precache-test");
+  let dir = ""; // its own folder per test, so two runs at once cannot collide
   const put = (rel: string, body: string) => { const p = path.join(dir, rel); mkdirSync(path.dirname(p), { recursive: true }); writeFileSync(p, body); };
   beforeEach(() => {
-    rmSync(dir, { recursive: true, force: true });
+    dir = mkdtempSync(path.resolve(__dirname, "../../node_modules/.sw-precache-test-"));
     put("index.html", "<html>");
     put("sw.js", TEMPLATE);
     put("_headers", "/*");

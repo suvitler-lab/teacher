@@ -15,6 +15,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e:offline": "node scripts/offline-e2e.cjs",
+    "e2e:onboarding": "node scripts/onboarding-e2e.cjs",
     "e2e:camera": "node scripts/camera-e2e.cjs",
     "e2e:rehearsal": "node scripts/trial-rehearsal.cjs",
     "trial:reconcile": "node scripts/trial-reconcile.cjs",

@@ -7,7 +7,7 @@ import { loadBootstrap, startTermOpen } from "../store";
 import { authRequired, resumeAfterAuth, pendingCount, failedCount, listFailed, retryFailed, discardFailed } from "../lib/outbox";
 import { api } from "../lib/api";
 import { attDraftCount } from "../lib/attSync";
-import { deviceId, deviceName } from "../lib/device";
+import { deviceId, deviceName, savedEmail, saveEmail } from "../lib/device";
 import { studentsById } from "../store";
 import { fullName } from "../lib/names";
 import type { FailedItem } from "../lib/idb";
@@ -133,6 +133,7 @@ export function FailedPanel() {
 }
 
 function ReloginForm() {
+  const [email, setEmail] = useState(savedEmail());
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
@@ -140,10 +141,12 @@ function ReloginForm() {
   async function submit(e: Event) {
     e.preventDefault();
     setErr("");
+    if (!email.trim()) return setErr("กรอกอีเมล");
     if (!password) return setErr("กรอกรหัสผ่าน");
     setBusy(true);
     try {
-      await api.post("/api/auth/login", { password, deviceId: deviceId(), deviceName: deviceName() });
+      await api.post("/api/auth/login", { email: email.trim(), password, deviceId: deviceId(), deviceName: deviceName() });
+      saveEmail(email.trim().toLowerCase());
       resumeAfterAuth();
     } catch (e: any) {
       setErr(e.message || "เข้าสู่ระบบไม่สำเร็จ");
@@ -163,8 +166,12 @@ function ReloginForm() {
           เซสชันหมดอายุ{pendingCount.value + attDraftCount.value > 0 ? ` — มีข้อมูลรอส่ง ${pendingCount.value + attDraftCount.value} รายการ (เก็บไว้ในเครื่องแล้ว)` : ""} เข้าสู่ระบบเพื่อส่งต่อ
         </p>
         <label class="field">
+          <span>อีเมล</span>
+          <input type="email" autocomplete="username" value={email} onInput={(e) => setEmail((e.target as HTMLInputElement).value)} />
+        </label>
+        <label class="field">
           <span>รหัสผ่าน</span>
-          <input type="password" autofocus value={password} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} />
+          <input type="password" autocomplete="current-password" autofocus={!!email} value={password} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} />
         </label>
         {err && <div class="auth-err" role="alert">{err}</div>}
         <button class="primary" style="width:100%;height:42px;margin-top:6px" disabled={busy}>

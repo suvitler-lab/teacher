@@ -72,6 +72,7 @@ function qrVideo(file, text, { pixelsPerModule = 10, tilt = false } = {}) {
     page.on("pageerror", (e) => problems.push("pageerror: " + String(e.message || e).slice(0, 160)));
     page.on("console", (m) => { if (/Content Security Policy|Refused to/i.test(m.text())) problems.push("CSP: " + m.text().slice(0, 200)); });
     await page.goto(server.url);
+    await page.fill("input[type=email]", server.email);
     await page.fill("input[type=password]", server.password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
     await page.waitForFunction(() => /หน้าหลัก/.test(document.body.innerText), null, { timeout: 20000 });
