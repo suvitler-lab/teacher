@@ -48,7 +48,8 @@ describe("Excel attendance sheet matches the Reports page", () => {
     const a1 = model.students[0].attendance;
     expect([a1.present, a1.late, a1.leave, a1.sick, a1.absent]).toEqual(rows[1].slice(5, 10));
     expect(model.attendance).toEqual({ unit: "period", sessions: 3, marks: 4 });
-  });
+    // Includes the cold ExcelJS import and a real XLSX write/read under parallel test load.
+  }, 15_000);
 
   it("daily: one column per day", async () => {
     const p = payload("daily", [{ id: "d1", date: "2026-09-10" }, { id: "d2", date: "2026-09-11" }], [["d1", "st1", "present"], ["d2", "st1", "sick"]]);

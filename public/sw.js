@@ -28,7 +28,7 @@ const isHtml = (res) => (res.headers.get("content-type") || "").includes("text/h
 /** A response that is safe to keep and to hand to a navigation: a redirected one is not allowed there. */
 async function plain(res) {
   if (!res.redirected) return res;
-  return new Response(await res.blob(), { status: res.status, statusText: res.statusText, headers: res.headers });
+  return new Response(await res.arrayBuffer(), { status: res.status, statusText: res.statusText, headers: res.headers });
 }
 
 async function download(url) {

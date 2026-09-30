@@ -39,6 +39,21 @@ describe("outbox ordering & durability", () => {
     await flush(); // settle counters
   });
 
+  it("a busy write leaves its original op queued and delivers it after backoff", async () => {
+    post.mockRejectedValueOnce(new ApiError(503, "write_busy", "busy"));
+    const pending = op(8);
+    await enqueueSubmission(pending);
+    await flush();
+    expect((await outboxAll()).map((r) => r.opId)).toEqual([pending.opId]);
+    expect(await failedAll()).toEqual([]);
+    expect(pendingCount.value).toBe(1);
+    post.mockImplementation(async (_p: string, body: { ops: SubmissionOp[] }) => ok(body.ops));
+    for (const item of await outboxAll()) await outboxUpdate({ ...item, nextAt: 0 });
+    await flush();
+    expect(await outboxAll()).toEqual([]);
+    expect(pendingCount.value).toBe(0);
+  });
+
   it("3 → network hiccup → 9: the older score is never sent after the newer one", async () => {
     const sent: (number | null)[] = [];
     post.mockImplementationOnce(async () => { throw networkDown(); });

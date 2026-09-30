@@ -32,18 +32,19 @@ function mapSubmission(r: any): Submission {
   };
 }
 
-// GET current submissions for an assignment (optionally only changes since ts)
+// Return a full snapshot, including for cached clients still sending `since`.
+// updated_at is set when a write starts, so a response-time cursor can skip a later commit forever.
 submissionRoutes.get("/api/assignments/:id/submissions", async (c) => {
   const aid = c.req.param("id");
-  const since = Number(c.req.query("since") ?? "0") || 0;
   const [res, asg] = await Promise.all([
-    c.env.DB.prepare("SELECT * FROM submissions WHERE assignment_id = ? AND updated_at > ? ORDER BY updated_at")
-      .bind(aid, since).all(),
+    c.env.DB.prepare("SELECT * FROM submissions WHERE assignment_id = ? ORDER BY updated_at")
+      .bind(aid).all(),
     c.env.DB.prepare("SELECT status, full_score, deleted_at FROM assignments WHERE id = ?")
       .bind(aid).first<{ status: string; full_score: number; deleted_at: number | null }>(),
   ]);
   return c.json({
     submissions: (res.results ?? []).map(mapSubmission),
+    snapshot: true,
     // the scan screen must not keep accepting hand-ins for work that was closed or deleted meanwhile
     assignment: asg ? { status: asg.status, full_score: asg.full_score, deleted: asg.deleted_at != null } : null,
     serverTime: Date.now(),
@@ -140,6 +141,37 @@ function guardedAuditStmt(env: Env, audits: AuditRow[], rows: GuardedRow[], epoc
   });
 }
 
+// Guard the exact cells read to calculate timestamps and audit.before. Checking only updated_at
+// misses two saves in the same millisecond; event_at alone misses changes to the other fields.
+const CELL_FIELDS = ["status", "score", "late", "submitted_at", "method", "device_id", "scan_session_id", "updated_at", "event_at"] as const;
+interface CellSnapshot { assignment_id: string; student_id: string; before: Record<string, unknown> | null }
+function cellSnapshots(rows: { assignment_id: string; student_id: string }[], before: Map<string, any>): CellSnapshot[] {
+  const unique = new Map<string, CellSnapshot>();
+  for (const row of rows) {
+    const key = `${row.assignment_id}\u0000${row.student_id}`;
+    const cur = before.get(key);
+    unique.set(key, { assignment_id: row.assignment_id, student_id: row.student_id,
+      before: cur ? Object.fromEntries(CELL_FIELDS.map((f) => [f, cur[f] ?? null])) : null });
+  }
+  return [...unique.values()];
+}
+const CHANGED_CELLS = `EXISTS (SELECT 1 FROM json_each(?1) p WHERE
+  (json_type(p.value, '$.before') = 'null' AND EXISTS
+    (SELECT 1 FROM submissions s WHERE s.assignment_id = json_extract(p.value, '$.assignment_id')
+      AND s.student_id = json_extract(p.value, '$.student_id')))
+  OR (json_type(p.value, '$.before') != 'null' AND NOT EXISTS
+    (SELECT 1 FROM submissions s WHERE s.assignment_id = json_extract(p.value, '$.assignment_id')
+      AND s.student_id = json_extract(p.value, '$.student_id')
+      AND ${CELL_FIELDS.map((f) => `s.${f} IS json_extract(p.value, '$.before.${f}')`).join(" AND ")})))`;
+function cellsGuard(env: Env, snapshots: CellSnapshot[], epoch?: number) {
+  return abortIf(env, epoch == null ? CHANGED_CELLS : `(${CHANGED_CELLS}) AND ${EPOCH_SQL} = ?2`,
+    JSON.stringify(snapshots), ...(epoch == null ? [] : [epoch]));
+}
+async function cellsChanged(env: Env, snapshots: CellSnapshot[]): Promise<boolean> {
+  const r = await env.DB.prepare(`SELECT ${CHANGED_CELLS} AS changed`).bind(JSON.stringify(snapshots)).first<{ changed: number }>();
+  return r?.changed === 1;
+}
+
 /** Does this op ACCEPT a hand-in (refused once the work is closed), or is it the teacher grading? */
 function opIntent(op: { intent?: "receive" | "grade"; method: string }): "receive" | "grade" {
   if (op.intent) return op.intent;
@@ -218,134 +250,150 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
   const deviceId = c.get("deviceId") ?? null;
   const epoch = await requestEpoch(c);
 
-  // 1. drop ops whose op_id already landed (idempotency)
-  const applied = await existingOpIds(
-    c.env,
-    ops.map((o) => o.opId),
-  );
+  const apply = async (attempt: number): Promise<SubmissionOpResult[]> => {
+    // 1. drop ops whose op_id already landed (idempotency)
+    const applied = await existingOpIds(
+      c.env,
+      ops.map((o) => o.opId),
+    );
 
-  // 2. what the ops are about: assignments + their class links, students, current cells
-  const world = await loadWorld(c.env, ops);
+    // 2. what the ops are about: assignments + their class links, students, current cells
+    const world = await loadWorld(c.env, ops);
 
-  const results: SubmissionOpResult[] = new Array(ops.length);
-  // ops that passed every check made HERE — whether each really landed is only known after the write
-  const pending: { index: number; op: OpIn; row: GuardedRow }[] = [];
-  const audits: AuditRow[] = [];
-  // effective prior state per pair, updated as we process ops so a "receive"
-  // and a later "score" for the same student in one batch keep the first
-  // receive time instead of resetting submitted_at.
-  const effective = new Map<string, any>(world.existing);
+    const results: SubmissionOpResult[] = new Array(ops.length);
+    // ops that passed every check made HERE — whether each really landed is only known after the write
+    const pending: { index: number; op: OpIn; row: GuardedRow }[] = [];
+    const audits: AuditRow[] = [];
+    // effective prior state per pair, updated as we process ops so a "receive"
+    // and a later "score" for the same student in one batch keep the first
+    // receive time instead of resetting submitted_at.
+    const effective = new Map<string, any>(world.existing);
 
-  for (const [index, op] of ops.entries()) {
-    if (applied.has(op.opId)) {
-      const ex = world.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
-      results[index] = {
-        opId: op.opId,
-        result: "duplicate",
-        submission: ex ? mapSubmission(ex) : (undefined as any),
-      };
-      continue;
-    }
-    // made before the data was restored: held for the teacher, never poured into the new data
-    if (op.dataEpoch != null && op.dataEpoch !== epoch) {
-      results[index] = { opId: op.opId, result: "epoch_changed" };
-      continue;
-    }
-    const refused = judge(op, world);
-    if (refused) {
-      results[index] = refused;
-      continue;
-    }
-    const a = world.assignments.get(op.assignmentId)!;
-
-    const pairKey = `${op.assignmentId}\u0000${op.studentId}`;
-    const before = effective.get(pairKey);
-    // when the teacher acted, never in the future and never older than a week
-    const eventAt = clampClientTs(op.clientTs, now);
-    if (before && before.event_at != null && before.event_at > eventAt) {
-      // the cell already holds something the teacher did LATER (e.g. a whole-class clear made
-      // from another screen while this op sat in an offline queue) — this one must not win
-      results[index] = { opId: op.opId, result: "superseded", submission: mapSubmission(before) };
-      continue;
-    }
-    const wasSubmitted = before && before.status === "submitted";
-    // submitted_at + late are decided only when a student first becomes
-    // "submitted"; later score edits keep the original submit time & lateness.
-    let submittedAt: number | null;
-    let late: number;
-    if (op.status === "void") {
-      submittedAt = null;
-      late = 0;
-    } else if (op.status === "submitted" && !wasSubmitted) {
-      submittedAt = clampClientTs(op.clientTs, now);
-      late = isLateSubmission(a.due_date, submittedAt) ? 1 : 0;
-    } else {
-      submittedAt = before?.submitted_at ?? clampClientTs(op.clientTs, now);
-      late = before?.late ?? 0;
-    }
-    const row: GuardedRow = {
-      assignment_id: op.assignmentId,
-      student_id: op.studentId,
-      status: op.status,
-      score: op.score,
-      late,
-      submitted_at: submittedAt,
-      method: op.method,
-      device_id: deviceId,
-      scan_session_id: op.scanSessionId,
-      updated_at: now,
-      event_at: eventAt,
-      op_id: op.opId,
-      expect_full: a.full_score,
-      receive: op.status === "submitted" && opIntent(op) === "receive" ? 1 : 0,
-    };
-    pending.push({ index, op, row });
-    effective.set(pairKey, row);
-    audits.push({
-      op_id: op.opId,
-      at: now,
-      client_at: op.clientTs,
-      device_id: deviceId,
-      scan_session_id: op.scanSessionId,
-      entity: "submission",
-      entity_id: `${op.assignmentId}:${op.studentId}`,
-      assignment_id: op.assignmentId,
-      student_id: op.studentId,
-      action: op.status === "void" ? "void" : before ? "update" : "create",
-      before: before ? mapSubmission(before) : null,
-      after: row,
-      method: op.method,
-    });
-  }
-
-  if (pending.length > 0) {
-    const rows = pending.map((p) => p.row);
-    // the audit goes FIRST: both statements judge the same "before" (the upsert is what changes it), and
-    // both re-check `stillValid` — so a row is audited if and only if it is written
-    await c.env.DB.batch([guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch)]);
-
-    // The reply must say what HAPPENED, not what was meant to: an op whose audit row is there landed;
-    // any other lost a race between the check above and the write, and is answered with the truth now.
-    const landed = await existingOpIds(c.env, pending.map((p) => p.op.opId));
-    const lost = pending.filter((p) => !landed.has(p.op.opId));
-    const fresh = lost.length > 0
-      ? { epoch: await getEpoch(c.env), world: await loadWorld(c.env, lost.map((p) => p.op)) }
-      : null;
-    for (const p of pending) {
-      if (landed.has(p.op.opId)) {
-        results[p.index] = { opId: p.op.opId, result: "ok", submission: mapSubmission(p.row) };
-      } else if (fresh!.epoch !== epoch) {
-        results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
-      } else {
-        const cur = fresh!.world.existing.get(`${p.op.assignmentId}\u0000${p.op.studentId}`);
-        results[p.index] = judge(p.op, fresh!.world) ?? {
-          opId: p.op.opId, result: "superseded", submission: cur ? mapSubmission(cur) : undefined,
+    for (const [index, op] of ops.entries()) {
+      if (applied.has(op.opId)) {
+        const ex = world.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
+        results[index] = {
+          opId: op.opId,
+          result: "duplicate",
+          submission: ex ? mapSubmission(ex) : (undefined as any),
         };
+        continue;
+      }
+      // made before the data was restored: held for the teacher, never poured into the new data
+      if (op.dataEpoch != null && op.dataEpoch !== epoch) {
+        results[index] = { opId: op.opId, result: "epoch_changed" };
+        continue;
+      }
+      const refused = judge(op, world);
+      if (refused) {
+        results[index] = refused;
+        continue;
+      }
+      const a = world.assignments.get(op.assignmentId)!;
+
+      const pairKey = `${op.assignmentId}\u0000${op.studentId}`;
+      const before = effective.get(pairKey);
+      // when the teacher acted, never in the future and never older than a week
+      const eventAt = clampClientTs(op.clientTs, now);
+      if (before && before.event_at != null && before.event_at > eventAt) {
+        // the cell already holds something the teacher did LATER (e.g. a whole-class clear made
+        // from another screen while this op sat in an offline queue) — this one must not win
+        results[index] = { opId: op.opId, result: "superseded", submission: mapSubmission(before) };
+        continue;
+      }
+      const wasSubmitted = before && before.status === "submitted";
+      // submitted_at + late are decided only when a student first becomes
+      // "submitted"; later score edits keep the original submit time & lateness.
+      let submittedAt: number | null;
+      let late: number;
+      if (op.status === "void") {
+        submittedAt = null;
+        late = 0;
+      } else if (op.status === "submitted" && !wasSubmitted) {
+        submittedAt = clampClientTs(op.clientTs, now);
+        late = isLateSubmission(a.due_date, submittedAt) ? 1 : 0;
+      } else {
+        submittedAt = before?.submitted_at ?? clampClientTs(op.clientTs, now);
+        late = before?.late ?? 0;
+      }
+      const row: GuardedRow = {
+        assignment_id: op.assignmentId,
+        student_id: op.studentId,
+        status: op.status,
+        score: op.score,
+        late,
+        submitted_at: submittedAt,
+        method: op.method,
+        device_id: deviceId,
+        scan_session_id: op.scanSessionId,
+        updated_at: now,
+        event_at: eventAt,
+        op_id: op.opId,
+        expect_full: a.full_score,
+        receive: op.status === "submitted" && opIntent(op) === "receive" ? 1 : 0,
+      };
+      pending.push({ index, op, row });
+      effective.set(pairKey, row);
+      audits.push({
+        op_id: op.opId,
+        at: now,
+        client_at: op.clientTs,
+        device_id: deviceId,
+        scan_session_id: op.scanSessionId,
+        entity: "submission",
+        entity_id: `${op.assignmentId}:${op.studentId}`,
+        assignment_id: op.assignmentId,
+        student_id: op.studentId,
+        action: op.status === "void" ? "void" : before ? "update" : "create",
+        before: before ? mapSubmission(before) : null,
+        after: row,
+        method: op.method,
+      });
+    }
+
+    if (pending.length > 0) {
+      const rows = pending.map((p) => p.row);
+      // the audit goes FIRST: both statements judge the same "before" (the upsert is what changes it), and
+      // both re-check `stillValid` — so a row is audited if and only if it is written
+      const snapshots = cellSnapshots(rows, world.existing);
+      try {
+        await c.env.DB.batch([cellsGuard(c.env, snapshots, epoch), guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch)]);
+      } catch (e) {
+        if ((await getEpoch(c.env)) !== epoch) {
+          for (const p of pending) results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
+          return results;
+        }
+        if (!(await cellsChanged(c.env, snapshots))) throw e;
+        // No write or audit landed: re-read and calculate the original decisions against the real
+        // before-state, including first hand-in time. Bound the work; a busy response keeps the outbox queued.
+        if (attempt < 2) return apply(attempt + 1);
+        throw new ApiError(503, "write_busy", "มีการบันทึกพร้อมกัน — รายการยังอยู่ในคิวและจะลองส่งใหม่");
+      }
+
+      // The reply must say what HAPPENED, not what was meant to: an op whose audit row is there landed;
+      // any other lost a race between the check above and the write, and is answered with the truth now.
+      const landed = await existingOpIds(c.env, pending.map((p) => p.op.opId));
+      const lost = pending.filter((p) => !landed.has(p.op.opId));
+      const fresh = lost.length > 0
+        ? { epoch: await getEpoch(c.env), world: await loadWorld(c.env, lost.map((p) => p.op)) }
+        : null;
+      for (const p of pending) {
+        if (landed.has(p.op.opId)) {
+          results[p.index] = { opId: p.op.opId, result: "ok", submission: mapSubmission(p.row) };
+        } else if (fresh!.epoch !== epoch) {
+          results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
+        } else {
+          const cur = fresh!.world.existing.get(`${p.op.assignmentId}\u0000${p.op.studentId}`);
+          results[p.index] = judge(p.op, fresh!.world) ?? {
+            opId: p.op.opId, result: "superseded", submission: cur ? mapSubmission(cur) : undefined,
+          };
+        }
       }
     }
-  }
 
-  return c.json({ results, serverTime: now });
+    return results;
+  };
+  return c.json({ results: await apply(0), serverTime: now });
 });
 
 // bulk: mark whole class submitted / full score / clear
@@ -438,7 +486,15 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
 
   let changed = 0;
   if (upserts.length > 0) {
-    await c.env.DB.batch([guardedAuditStmt(c.env, audits, upserts, epoch, now), submissionUpsertStmt(c.env, upserts, epoch)]);
+    const before = new Map([...curMap].map(([sid, row]) => [`${aid}\u0000${sid}`, row]));
+    const snapshots = cellSnapshots(upserts, before);
+    try {
+      await batchAtEpoch(c.env, epoch, [cellsGuard(c.env, snapshots), guardedAuditStmt(c.env, audits, upserts, epoch, now), submissionUpsertStmt(c.env, upserts, epoch)]);
+    } catch (e) {
+      if (e instanceof ApiError) throw e;
+      if (await cellsChanged(c.env, snapshots)) throw conflict("modified_since", "มีการบันทึกคะแนนระหว่างทำรายการ — โหลดข้อมูลใหม่แล้วลองอีกครั้ง");
+      throw e;
+    }
     // what really changed = the rows whose audit landed with this batch (the same guard let both through)
     changed = (await c.env.DB.prepare("SELECT COUNT(*) AS n FROM audit_logs WHERE batch_id = ? AND action = 'bulk'").bind(batchId).first<{ n: number }>())?.n ?? 0;
     if (changed === 0) {
@@ -489,20 +545,18 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
   const curMap = new Map<string, any>();
   for (const r of (curRes.results ?? []) as any[]) curMap.set(r.student_id, r);
 
-  // conflict: any row was changed after the bulk wrote it -> refuse entirely
+  // Compare the full saved state, including same-millisecond changes, before restoring anything.
   const modified = () => c.json({ error: "modified_since", message: "มีการแก้ไขหลังการล้าง" }, 409);
   for (const r of rows) {
     const after = r.after_json ? JSON.parse(r.after_json) : null;
     const cur = curMap.get(r.student_id);
-    if (cur && after && cur.updated_at > after.updated_at) return modified();
+    if (!cur || !after || Object.entries(mapSubmission(cur)).some(([key, value]) => value !== after[key])) return modified();
   }
 
   const upserts: any[] = [];
   const audits: AuditRow[] = [];
-  const wrote: { student_id: string; after_updated_at: number | null }[] = [];
   for (const r of rows) {
     const before = r.before_json ? JSON.parse(r.before_json) : null;
-    const after = r.after_json ? JSON.parse(r.after_json) : null;
     const restored = before
       ? {
           assignment_id: aid, student_id: r.student_id, status: before.status,
@@ -514,7 +568,6 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
           submitted_at: null, method: "manual", device_id: deviceId, scan_session_id: null, updated_at: now, event_at: now,
         };
     upserts.push(restored);
-    wrote.push({ student_id: r.student_id, after_updated_at: after?.updated_at ?? null });
     const cur = curMap.get(r.student_id);
     audits.push({
       op_id: id("op"), at: now, device_id: deviceId, batch_id: batchId,
@@ -523,30 +576,38 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
     });
   }
 
+  const snapshots = cellSnapshots(upserts, new Map([...curMap].map(([sid, row]) => [`${aid}\u0000${sid}`, row])));
+  const undoProblem = async () => {
+    const a = await c.env.DB.prepare("SELECT full_score, deleted_at FROM assignments WHERE id = ?").bind(aid)
+      .first<{ full_score: number; deleted_at: number | null }>();
+    if (!a || a.deleted_at != null) return notFound("assignment");
+    if (upserts.some((row) => row.score != null && (row.score < 0 || row.score > a.full_score))) {
+      return conflict("full_score_changed", "คะแนนเต็มของงานเปลี่ยนแล้ว — ย้อนกลับไม่ได้เพราะคะแนนเดิมเกินคะแนนเต็มปัจจุบัน");
+    }
+    return null;
+  };
+  const problem = await undoProblem();
+  if (problem) throw problem;
+
   // The two checks above are repeated INSIDE the transaction: a second "undo" of the same batch, or an edit
   // to one of these cells, that lands in the gap makes the whole undo roll back instead of being overwritten.
   try {
     await batchAtEpoch(c.env, epoch, [
       abortIf(c.env, "EXISTS (SELECT 1 FROM audit_logs WHERE batch_id = ?1 AND action = 'restore')", batchId),
-      abortIf(
-        c.env,
-        `EXISTS (SELECT 1 FROM json_each(?1) j CROSS JOIN submissions s
-                   ON s.assignment_id = ?2 AND s.student_id = json_extract(j.value, '$.student_id')
-                 WHERE json_extract(j.value, '$.after_updated_at') IS NOT NULL
-                   AND s.updated_at > json_extract(j.value, '$.after_updated_at'))`,
-        JSON.stringify(wrote), aid,
-      ),
+      cellsGuard(c.env, snapshots),
+      abortIf(c.env, `NOT EXISTS (SELECT 1 FROM assignments a WHERE a.id = ?2 AND a.deleted_at IS NULL)
+        OR EXISTS (SELECT 1 FROM json_each(?1) j CROSS JOIN assignments a ON a.id = ?2
+          WHERE json_extract(j.value, '$.score') < 0 OR json_extract(j.value, '$.score') > a.full_score)`,
+        JSON.stringify(upserts), aid),
       submissionUpsertStmt(c.env, upserts),
       auditInsertStmt(c.env, audits, now),
     ]);
   } catch (e) {
     if (e instanceof ApiError) throw e; // epoch_changed
     if (await undone()) return c.json({ ok: true, changed: 0, alreadyUndone: true });
-    const again = await c.env.DB.prepare(
-      `SELECT sub.updated_at, sub.student_id FROM submissions sub WHERE sub.assignment_id = ?2 AND sub.student_id IN (SELECT value FROM json_each(?1))`,
-    ).bind(JSON.stringify(sids), aid).all<{ updated_at: number; student_id: string }>();
-    const afterOf = new Map(wrote.map((w) => [w.student_id, w.after_updated_at]));
-    if ((again.results ?? []).some((r) => afterOf.get(r.student_id) != null && r.updated_at > afterOf.get(r.student_id)!)) return modified();
+    if (await cellsChanged(c.env, snapshots)) return modified();
+    const problem = await undoProblem();
+    if (problem) throw problem;
     throw e;
   }
   return c.json({ ok: true, changed: upserts.length });

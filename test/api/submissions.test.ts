@@ -71,10 +71,12 @@ describe("submissions batch", () => {
     expect(n.n).toBe(2);
   });
 
-  it("since filter returns only newer rows", async () => {
+  it("legacy since cursors cannot hide a committed row from cached clients", async () => {
     await call("/api/submissions/batch", json({ ops: [op()] }), cookie);
     const res = await call("/api/assignments/a1/submissions?since=9999999999999", {}, cookie);
     const body = (await res.json()) as any;
-    expect(body.submissions.length).toBe(0);
+    expect(body.snapshot).toBe(true);
+    expect(body.submissions).toHaveLength(1);
+    expect(body.submissions[0].score).toBe(10);
   });
 });

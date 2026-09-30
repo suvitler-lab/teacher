@@ -127,8 +127,24 @@ kvGet<Session>("scanSession").then((s) => {
 function setFeedback(f: Feedback) { feedback.value = f; }
 function big(score: number, full: number) { return `${score}/${full}`; }
 
+/** A response may predate a scan/ACK that changed this map while its request was in flight. */
+function reconcileSubs(rows: any[], beforeRequest: Map<string, SubState>): Map<string, SubState> {
+  const map = new Map<string, SubState>();
+  for (const row of rows) map.set(row.student_id, { status: row.status, score: row.score, at: row.updated_at });
+  const current = getSubs();
+  for (const sid of new Set([...beforeRequest.keys(), ...current.keys()])) {
+    const now = current.get(sid);
+    if (now !== beforeRequest.get(sid)) {
+      if (now) map.set(sid, now);
+      else map.delete(sid);
+    }
+  }
+  return map;
+}
+
 async function loadSubs(assignmentId: string) {
   const seq = ++loadSeq;
+  const beforeRequest = subsBox.value.aid === assignmentId ? subsBox.value.map : NO_SUBS;
   let res: { submissions: any[]; assignment?: { status: string; full_score: number; deleted: boolean } | null; serverTime: number };
   try {
     res = await api.get(`/api/assignments/${assignmentId}/submissions`);
@@ -141,8 +157,7 @@ async function loadSubs(assignmentId: string) {
   }
   applyAssignmentInfo(assignmentId, res.assignment); // true of that assignment whichever round is on screen
   if (seq !== loadSeq || roundAid() !== assignmentId) return; // a newer request or another round owns the screen now
-  const m = new Map<string, SubState>();
-  for (const s of res.submissions) m.set(s.student_id, { status: s.status, score: s.score, at: s.updated_at });
+  const m = reconcileSubs(res.submissions, beforeRequest);
   subsBox.value = { aid: assignmentId, map: m, status: "ready", serverTime: res.serverTime };
 }
 
@@ -152,16 +167,17 @@ async function pollSubs() {
   const box = subsBox.value;
   // never loaded for THIS round (first answer failed): ask for everything, not "changes since" some other work's clock
   if (box.aid !== s.assignmentId || box.status !== "ready") { loadSubs(s.assignmentId).catch(() => {}); return; }
-  const seq = loadSeq;
+  const seq = ++loadSeq;
   try {
     const res = await api.get<{ submissions: any[]; assignment?: { status: string; full_score: number; deleted: boolean } | null; serverTime: number }>(
-      `/api/assignments/${s.assignmentId}/submissions?since=${box.serverTime}`,
+      // Wall-clock cursors can miss writes that commit after a poll with an older updated_at.
+      // Reconcile the whole assignment; effSub keeps this device's unsent operations on top.
+      `/api/assignments/${s.assignmentId}/submissions`,
     );
     applyAssignmentInfo(s.assignmentId, res.assignment);
     // the round changed (or a full reload started) while this was in flight: this answer is about something else
     if (seq !== loadSeq || roundAid() !== s.assignmentId || subsBox.value.aid !== s.assignmentId) return;
-    const m = new Map(subsBox.value.map);
-    for (const r of res.submissions) m.set(r.student_id, { status: r.status, score: r.score, at: r.updated_at });
+    const m = reconcileSubs(res.submissions, box.map);
     subsBox.value = { ...subsBox.value, map: m, serverTime: res.serverTime };
   } catch { /* offline; ignore */ }
 }

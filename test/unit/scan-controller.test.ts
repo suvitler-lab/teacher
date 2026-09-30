@@ -15,6 +15,7 @@ vi.mock("@client/lib/sound", () => ({ beep: { ok() {}, err() {}, dup() {}, undo(
 
 import { ApiError } from "@client/lib/api";
 import { assignments, students, classes } from "@client/store";
+import { pendingOps, pairKey } from "@client/lib/outbox";
 import { __scan } from "@client/pages/Scan";
 
 const asg = (id: string): Assignment => ({
@@ -37,9 +38,60 @@ beforeEach(() => {
   classes.value = [];
   __scan.session.value = null;
   __scan.feedback.value = null;
+  pendingOps.value = new Map();
 });
 
 describe("the scan round belongs to ONE assignment", () => {
+  it("a snapshot started before a local scan cannot erase that scan when it arrives", async () => {
+    get.mockResolvedValueOnce({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    let release!: (r: unknown) => void;
+    get.mockImplementationOnce(() => new Promise((r) => { release = r; }));
+    Object.defineProperty(navigator, "onLine", { value: true, configurable: true });
+    const polling = __scan.pollSubs();
+    __scan.commitStudent(stu, "manual");
+    release({ submissions: [], serverTime: 200 });
+    await polling;
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 10 });
+  });
+
+  it("an older poll for the same work cannot replace a newer poll", async () => {
+    get.mockResolvedValueOnce({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    let release!: (r: unknown) => void;
+    get.mockImplementationOnce(() => new Promise((r) => { release = r; }));
+    Object.defineProperty(navigator, "onLine", { value: true, configurable: true });
+    const older = __scan.pollSubs();
+    get.mockResolvedValueOnce({ ...handedIn(9), serverTime: 300 });
+    await __scan.pollSubs();
+    release({ submissions: [], serverTime: 200 });
+    await older;
+    expect(__scan.effSub("st1")).toMatchObject({ score: 9 });
+    expect(__scan.subsBox.value.serverTime).toBe(300);
+  });
+  it("polls a full snapshot so writes committed behind the previous response's clock are not lost", async () => {
+    get.mockResolvedValueOnce({ submissions: [], serverTime: 500 });
+    await __scan.startSession("A", "c1", "full");
+    get.mockImplementationOnce(async (url) => String(url).includes("since=")
+      ? { submissions: [], serverTime: 600 }
+      : { ...handedIn(9), serverTime: 600 });
+    Object.defineProperty(navigator, "onLine", { value: true, configurable: true });
+    await __scan.pollSubs();
+    expect(urls().at(-1)).not.toContain("since=");
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 9 });
+  });
+
+  it("a full snapshot cannot overwrite a newer scan still in the local queue", async () => {
+    get.mockResolvedValueOnce(handedIn(4));
+    await __scan.startSession("A", "c1", "full");
+    const pending = { opId: "pending", scanSessionId: "s", assignmentId: "A", studentId: "st1", status: "submitted" as const, score: 8, fullScoreAtScan: 10, method: "manual" as const, clientTs: 700 };
+    pendingOps.value = new Map([[pairKey(pending), pending]]);
+    get.mockResolvedValueOnce(handedIn(4));
+    Object.defineProperty(navigator, "onLine", { value: true, configurable: true });
+    await __scan.pollSubs();
+    expect(__scan.effSub("st1")).toMatchObject({ score: 8 });
+    expect(pendingOps.value.get(pairKey(pending))).toEqual(pending);
+  });
   it("switching A→B again before A has finished saving doesn't leave B stuck 'loading' (A's late continuation must not steal the load)", async () => {
     get.mockResolvedValue({ submissions: [], serverTime: 700 });
     const a = __scan.startSession("A", "c1", "full");   // not awaited: A is still saving its round …
