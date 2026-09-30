@@ -12,6 +12,7 @@ const { Miniflare, convertV4MiniflareOptions } = require("miniflare");
 
 const root = path.resolve(__dirname, "..");
 const PASSWORD = "FixturePassword2026";
+const EMAIL = "fixture@example.com";
 
 // run the worker's TypeScript directly (it imports "@shared/…")
 const resolveFilename = Module._resolveFilename;
@@ -71,7 +72,7 @@ async function startFixtureServer({
   const { app } = require(path.join(root, "worker/app.ts"));
   const setup = await app.request("/api/setup", {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ setupCode: "fixture-setup", password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
+    body: JSON.stringify({ setupCode: "fixture-setup", email: EMAIL, password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
   }, env);
   if (setup.status !== 200) throw new Error("fixture setup failed: " + setup.status);
 
@@ -120,6 +121,7 @@ async function startFixtureServer({
     url: `http://127.0.0.1:${port}`,
     DB,
     hits,
+    email: EMAIL,
     password: PASSWORD,
     /** cut (true) or restore (false) the network for everyone */
     setDown(value) { down = !!value; },
@@ -129,7 +131,7 @@ async function startFixtureServer({
   };
 }
 
-module.exports = { startFixtureServer, PASSWORD };
+module.exports = { startFixtureServer, PASSWORD, EMAIL };
 
 if (require.main === module) {
   startFixtureServer().then((s) => {

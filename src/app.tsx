@@ -1,6 +1,6 @@
 import { useEffect } from "preact/hooks";
 import "./styles/shell.css";
-import { authState, loadBootstrap, loadBootstrapCached, loadSelectedTerm, settings } from "./store";
+import { accountEmailSet, authState, loadBootstrap, loadBootstrapCached, loadSelectedTerm, settings } from "./store";
 import { kvGet } from "./lib/idb";
 import { pauseSync } from "./lib/outbox";
 import { requestPersist } from "./lib/storage";
@@ -25,6 +25,7 @@ import { setSoundEnabled } from "./lib/sound";
 interface Me {
   authenticated: boolean;
   isSetup: boolean;
+  emailSet?: boolean;
   device?: { id: string; name: string } | null;
 }
 
@@ -46,6 +47,7 @@ export function App() {
     (async () => {
       try {
         const me = await withTimeout(api.get<Me>("/api/auth/me"), REACH_TIMEOUT_MS);
+        accountEmailSet.value = me.emailSet !== false;
         if (me.authenticated && (await kvGet<boolean>("loggedOut"))) {
           // The teacher signed out on this device (perhaps offline, so the server session
           // survived). Coming back online must not quietly sign them back in: finish it.

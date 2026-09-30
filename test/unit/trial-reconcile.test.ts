@@ -11,7 +11,7 @@ const rc = require("../../scripts/trial-reconcile.cjs");
 // a small class: two children in ป.6/1, one in ป.6/2, three assignments (one deleted, two sharing a title)
 const backup: any = {
   app: "ngankrob",
-  schema_version: 5,
+  schema_version: 6,
   exported_at: Date.parse("2026-10-05T10:00:00Z"),
   data: {
     classes: [{ id: "c1", name: "ป.6/1" }, { id: "c2", name: "ป.6/2" }],

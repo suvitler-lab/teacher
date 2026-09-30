@@ -1,6 +1,6 @@
 // Shared types between worker and client.
 
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 export type ID = string;
 

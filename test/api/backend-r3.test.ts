@@ -79,7 +79,7 @@ describe("device sign-out", () => {
   it("signs out another device without affecting the current one", async () => {
     const cookieA = await login();
     // a second device logs in
-    const resB = await call("/api/auth/login", json({ password: "pw123456", deviceId: "dev_b", deviceName: "เครื่อง B" }));
+    const resB = await call("/api/auth/login", json({ email: "teacher@example.com", password: "pw123456", deviceId: "dev_b", deviceName: "เครื่อง B" }));
     const cookieB = cookieFrom(resB);
     expect((await call("/api/bootstrap", {}, cookieB)).status).toBe(200);
 

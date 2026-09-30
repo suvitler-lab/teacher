@@ -42,6 +42,7 @@ async function until(fn, timeout = 30000, step = 250) { const end = Date.now() +
 
   try {
     await page.goto(server.url);
+    await page.fill("input[type=email]", server.email);
     await page.fill("input[type=password]", server.password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
     await page.waitForFunction(() => /หน้าหลัก/.test(document.body.innerText), null, { timeout: 20000 });

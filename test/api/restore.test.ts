@@ -17,7 +17,7 @@ async function takeBackup(cookie: string): Promise<Backup> {
   return { data, counts };
 }
 
-const validate = (cookie: string, counts: Record<string, number>, schema_version = 5) =>
+const validate = (cookie: string, counts: Record<string, number>, schema_version = 6) =>
   call("/api/restore/validate", json({ manifest: { schema_version, counts } }), cookie);
 const exec = (cookie: string, body: Record<string, unknown>) => call("/api/restore/execute", json(body), cookie);
 
@@ -41,7 +41,7 @@ describe("backup", () => {
   it("paginates a table and reports the schema version", async () => {
     const body = (await (await call("/api/backup?table=students", {}, cookie)).json()) as any;
     expect(body.rows.length).toBe(3);
-    expect(body.schema_version).toBe(5);
+    expect(body.schema_version).toBe(6);
   });
 
   it("rejects an unknown table", async () => {
@@ -57,7 +57,7 @@ describe("restore validation", () => {
   it("refuses a backup newer than the app", async () => {
     const res = await validate(cookie, zeros(), 999);
     expect(res.status).toBe(409);
-    expect(await res.json()).toMatchObject({ error: "schema_mismatch", file: 999, app: 5 });
+    expect(await res.json()).toMatchObject({ error: "schema_mismatch", file: 999, app: 6 });
   });
 
   it("accepts an older (v1) backup", async () => {

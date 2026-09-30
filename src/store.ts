@@ -17,6 +17,8 @@ import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
+/** false only for an account made before e-mail sign-in: its next sign-in attaches the e-mail typed. */
+export const accountEmailSet = signal(true);
 export const deviceLabel = signal<string>("");
 
 export const settings = signal<Settings | null>(null);

@@ -66,8 +66,8 @@ describe("preflight: source", () => {
   });
 
   it("migrations: a migration that forgets to set the schema version is caught", () => {
-    put("migrations/0007_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
-    expect(pre.checkMigrations(dir).join()).toMatch(/0007_forgot\.sql does not set meta\.schema_version/);
+    put("migrations/0008_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
+    expect(pre.checkMigrations(dir).join()).toMatch(/0008_forgot\.sql does not set meta\.schema_version/);
   });
 });
 
@@ -116,7 +116,7 @@ describe("preflight: build output", () => {
 
 describe("preflight: a running deploy", () => {
   const answer = (body: unknown, status = 200) => vi.fn(async () => new Response(JSON.stringify(body), { status }));
-  const healthy = { ok: true, schema: 5, db: { reachable: true, schema: 5, schemaOk: true }, config: { pepper: true, setupCode: true } };
+  const healthy = { ok: true, schema: 6, db: { reachable: true, schema: 6, schemaOk: true }, config: { pepper: true, setupCode: true } };
 
   it("a healthy deploy passes", async () => {
     expect(await pre.checkHealth("https://x.test/", answer(healthy))).toEqual([]);
@@ -129,7 +129,7 @@ describe("preflight: a running deploy", () => {
 
   it("says an empty or old database in words, and what to run", async () => {
     expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: null, schemaOk: true } }, 503))).join()).toMatch(/database is empty.*db:migrate:remote/);
-    expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: 4, schemaOk: false } }, 503))).join()).toMatch(/schema 4 but this build expects 5/);
+    expect((await pre.checkHealth("https://x.test", answer({ ...healthy, ok: false, db: { reachable: true, schema: 4, schemaOk: false } }, 503))).join()).toMatch(/schema 4 but this build expects 6/);
   });
 
   it("says an unreachable database, an unreachable host and a wrong address plainly", async () => {
