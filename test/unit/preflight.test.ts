@@ -19,11 +19,14 @@ beforeEach(() => {
   cpSync(path.join(REPO, "migrations"), path.join(dir, "migrations"), { recursive: true });
   mkdirSync(path.join(dir, "shared"));
   cpSync(path.join(REPO, "shared/types.ts"), path.join(dir, "shared/types.ts"));
-  put("package.json", readFileSync(path.join(REPO, "package.json"), "utf8"));
+  const pkg = readFileSync(path.join(REPO, "package.json"), "utf8");
+  put("package.json", pkg);
+  // the database the repo's own scripts migrate, whatever it is called (it was renamed when the data moved region)
+  const DB_NAME = /migrations apply (\S+)/.exec(pkg)![1];
   put("wrangler.jsonc", `{
     // comments and trailing commas are fine, as for wrangler itself
     "name": "ngankrob",
-    "d1_databases": [{ "binding": "DB", "database_name": "kru-db", "database_id": "${GOOD_ID}", "migrations_dir": "migrations", }],
+    "d1_databases": [{ "binding": "DB", "database_name": "${DB_NAME}", "database_id": "${GOOD_ID}", "migrations_dir": "migrations", }],
   }`);
 });
 afterEach(() => rmSync(dir, { recursive: true, force: true }));
