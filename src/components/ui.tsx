@@ -7,6 +7,7 @@ import type { Student } from "@shared/types";
 import { initials } from "../lib/names";
 import { terms, selectedTermId, setSelectedTerm, UNASSIGNED, viewingPastYear, viewTerm, currentTermId } from "../store";
 import { online, syncing, pendingCount } from "../lib/outbox";
+import { serverReachable } from "../lib/session";
 import { thaiMonthsFull } from "../lib/dates";
 
 // ---- viewport hook -------------------------------------------------------
@@ -238,11 +239,13 @@ export function Drawer({ title, onClose, children }: { title: ComponentChildren;
 
 // ---- sync badge ----------------------------------------------------------
 export function SyncBadge() {
-  const cls = syncing.value ? "saving" : online.value ? "online" : "offline";
-  const label = syncing.value ? "กำลังบันทึก" : online.value ? "ออนไลน์" : "ออฟไลน์";
+  // "online" means the server answered last time we asked, not just that the browser has a network
+  const up = online.value && serverReachable.value;
+  const cls = syncing.value ? "saving" : up ? "online" : "offline";
+  const label = syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์";
   return (
     <span class={"sync " + cls}>
-      <Icon name={syncing.value ? "loader-2" : online.value ? "cloud-check" : "cloud-off"} size={13} class={syncing.value ? "spin" : undefined} />
+      <Icon name={syncing.value ? "loader-2" : up ? "cloud-check" : "cloud-off"} size={13} class={syncing.value ? "spin" : undefined} />
       {label}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
     </span>
   );

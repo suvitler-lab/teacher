@@ -7,7 +7,7 @@ import {
 } from "./idb";
 import type { SubmissionOp, SubmissionOpResult } from "@shared/types";
 import { classifyFailure } from "@shared/failure";
-import { authRequired, syncPaused, dataEpoch } from "./session";
+import { authRequired, syncPaused, dataEpoch, serverReachable } from "./session";
 import { actionTime } from "./clock";
 import { flushAllDrafts, refreshAttDraftCount } from "./attSync";
 
@@ -251,6 +251,12 @@ export function startOutbox() {
   window.addEventListener("online", () => { online.value = true; void expedite(); });
   window.addEventListener("offline", () => { online.value = false; });
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") kick(); });
-  setInterval(() => { if (navigator.onLine) kick(); }, 15000);
+  setInterval(() => {
+    if (!navigator.onLine) return;
+    kick();
+    // the server could not be reached last time: ask it something tiny, so the badge goes green again by itself
+    // as soon as it answers (any answer counts, even an error status)
+    if (!serverReachable.value) fetch("/api/health", { cache: "no-store" }).then(() => { serverReachable.value = true; }, () => {});
+  }, 15000);
   kick();
 }

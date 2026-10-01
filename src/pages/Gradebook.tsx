@@ -270,8 +270,11 @@ export function GradebookPage() {
     if (done) { dropAssignment(selAsg.id); setSelCol(null); await load(true); ok("ลบงานแล้ว"); }
   }
 
-  // a column with its scores hidden also hides the running total (it would give them away)
-  const anyHidden = assignments.some((a) => !a.publish_scores);
+  // The running total counts only the work whose scores are showing, so it never gives a hidden score away
+  // (and stays useful while one is hidden). All work hidden: nothing to total, shown as •••.
+  const visibleWork = assignments.filter((a) => a.publish_scores);
+  const hiddenCount = assignments.length - visibleWork.length;
+  const allHidden = assignments.length > 0 && visibleWork.length === 0;
 
   // summary metrics for the toolbar
   let totSubmitted = 0, totApplic = 0, totAwaiting = 0, totMissing = 0;
@@ -396,12 +399,12 @@ export function GradebookPage() {
                     </th>
                   );
                 })}
-                <th>สะสม</th>
+                <th title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>
               </tr>
             </thead>
             <tbody>
               {shownStudents.map((st, i) => {
-                const sum = studentSummary(assignments, (idx) => { const s = subOf(assignments[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; }, today);
+                const sum = studentSummary(visibleWork, (idx) => { const s = subOf(visibleWork[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; }, today);
                 return (
                   <tr>
                     <td class="name-col">
@@ -423,7 +426,7 @@ export function GradebookPage() {
                         </td>
                       );
                     })}
-                    <td style="font-size:12px" title={anyHidden ? "ซ่อนอยู่ เพราะมีงานที่ซ่อนคะแนน" : undefined}>{anyHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
+                    <td style="font-size:12px" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
                   </tr>
                 );
               })}

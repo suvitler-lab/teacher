@@ -13,7 +13,7 @@ export class ApiError extends Error {
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   // Writes say which data epoch they were made against; after a restore elsewhere the server refuses them.
-  const { dataEpoch } = await import("./session");
+  const { dataEpoch, serverReachable } = await import("./session");
   if (method !== "GET" && dataEpoch.value != null) headers["X-Data-Epoch"] = String(dataEpoch.value);
   const init: RequestInit = {
     method,
@@ -25,8 +25,10 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   try {
     res = await fetch(path, init);
   } catch {
+    serverReachable.value = false;
     throw new ApiError(0, "network", "ต่ออินเทอร์เน็ตไม่ได้");
   }
+  serverReachable.value = true; // it answered (whatever it said)
   const isJson = (res.headers.get("Content-Type") || "").includes("application/json");
   const payload: any = isJson ? await res.json().catch(() => ({})) : {};
   if (!res.ok) {
@@ -50,7 +52,10 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
  */
 export function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    const t = setTimeout(() => reject(new ApiError(0, "timeout", "เครือข่ายตอบช้าเกินไป")), ms);
+    const t = setTimeout(() => {
+      void import("./session").then((m) => { m.serverReachable.value = false; });
+      reject(new ApiError(0, "timeout", "เครือข่ายตอบช้าเกินไป"));
+    }, ms);
     p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
   });
 }

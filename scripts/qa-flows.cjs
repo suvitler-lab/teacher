@@ -260,16 +260,30 @@ async function login(email, password) {
     ok(s.length === 0 || s[0].score <= 10, "score over full saved: " + JSON.stringify(s));
     await page.keyboard.press("Escape");
   });
-  await step("G04", "gradebook: hiding scores masks the column and the total; showing brings them back", async () => {
+  await step("G04", "gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total", async () => {
     const th = page.locator("table.gb thead th", { hasText: "งานทดสอบ QA" });
     const eye = th.locator(".hs-eye");
-    const wasVisible = !(await eye.evaluate((el) => el.classList.contains("off")));
-    if (wasVisible) { await eye.click(); await page.waitForTimeout(600); }
     const r1 = page.locator("table.gb tbody tr", { hasText: "ภูมิพัฒน์" }).first();
+    const total = async () => { const m = /(\d+)\s*\/\s*(\d+)/.exec(await r1.locator("td").last().innerText()); return m ? { score: +m[1], full: +m[2] } : null; };
+    const wasVisible = !(await eye.evaluate((el) => el.classList.contains("off")));
+    if (!wasVisible) { await eye.click(); await page.waitForTimeout(600); }
+    ok((await r1.locator("td.cell").last().innerText()).trim() === "7", "score should be showing at the start");
+    const before = await total();
+    ok(before && before.full > 10, "total before: " + JSON.stringify(before));
+    await eye.click(); await page.waitForTimeout(600);
     ok((await r1.locator("td.cell").last().innerText()).trim() !== "7", "score still visible after hiding");
-    ok(/•••/.test(await r1.locator("td").last().innerText()), "total still visible after hiding");
+    const after = await total();
+    ok(after && after.score === before.score - 7 && after.full === before.full - 10, `total should lose this work (7/10): ${JSON.stringify(before)} → ${JSON.stringify(after)}`);
+    ok(/\*/.test(await page.locator("table.gb thead th", { hasText: "สะสม" }).innerText()), "header should say the total leaves hidden work out");
     await eye.click(); await page.waitForTimeout(600);
     ok((await r1.locator("td.cell").last().innerText()).trim() === "7", "score did not come back");
+    ok(JSON.stringify(await total()) === JSON.stringify(before), "total did not come back");
+    // hide every piece of work: nothing left to total
+    const shown = page.locator("table.gb thead .hs-eye:not(.off)");
+    const n = await shown.count();
+    for (let i = 0; i < n; i++) { await page.locator("table.gb thead .hs-eye:not(.off)").first().click(); await page.waitForTimeout(500); }
+    ok(/•••/.test(await r1.locator("td").last().innerText()), "total should be ••• when all work is hidden");
+    for (let i = 0; i < n; i++) { await page.locator("table.gb thead .hs-eye.off").first().click(); await page.waitForTimeout(500); }
   });
   await step("G05", "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it", async () => {
     const aid = (await sql("SELECT id FROM assignments WHERE title='งานทดสอบ QA'"))[0].id;
@@ -499,6 +513,23 @@ async function login(email, password) {
     await page.getByRole("button", { name: "ลองอีกครั้ง" }).click();
     await page.waitForTimeout(800);
     ok(await page.getByText(/โหลดประวัติไม่สำเร็จ/).count() === 0, "still failing after the server came back");
+  });
+  await step("K02", "reports: when the server cannot be reached the page says so, print/export are off, the badge goes offline — and all recover", async () => {
+    await go("/reports", ".rp-range");
+    const badge = page.locator(".rail-sync .sync").first();
+    ok(/online/.test(await badge.getAttribute("class")), "badge should start online");
+    server.setDown(true);
+    try {
+      await page.locator("button", { hasText: "รายเดือน" }).click();
+      await page.getByText("โหลดข้อมูลไม่สำเร็จ").waitFor({ timeout: 8000 });
+      ok(await page.getByRole("button", { name: /พิมพ์/ }).isDisabled(), "print should be disabled with no data");
+      ok(await page.getByRole("button", { name: /ส่งออก Excel/ }).isDisabled(), "Excel export should be disabled with no data");
+      ok(/offline/.test(await badge.getAttribute("class")), "badge still says online while the server cannot be reached");
+    } finally { server.setDown(false); }
+    await page.getByRole("button", { name: "ลองอีกครั้ง" }).click();
+    await page.locator(".rp-range").waitFor({ timeout: 8000 });
+    ok(!(await page.getByRole("button", { name: /ส่งออก Excel/ }).isDisabled()), "export stays disabled after the data is back");
+    ok(/online/.test(await badge.getAttribute("class")), "badge did not come back");
   });
   await step("E08", "settings: history lists what was just done", async () => {
     await openSettings("history");

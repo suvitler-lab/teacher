@@ -18,3 +18,8 @@ export const serverSkewMs = signal(0);
 export const dataEpoch = signal<number | null>(null);
 // set when the server said "the data was restored — you are out of date"
 export const epochStale = signal(false);
+
+// Can this device actually reach the server right now? The browser's own "online" only says there is a network
+// (a classroom wifi can be up while the server cannot be reached). Set by every API call: a network failure or a
+// timeout means no, any answer at all (even an error) means yes.
+export const serverReachable = signal(true);

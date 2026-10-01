@@ -114,8 +114,8 @@ export function ReportsPage() {
         actions={<>
           <TermPicker />
           {msg && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">{msg}</span>}
-          <button onClick={() => window.print()}><Icon name="printer" size={16} /> พิมพ์</button>
-          <button class="primary" onClick={exportExcel}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
+          <button onClick={() => window.print()} disabled={status !== "ready" || !model}><Icon name="printer" size={16} /> พิมพ์</button>
+          <button class="primary" onClick={exportExcel} disabled={status !== "ready" || !model}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
         </>}
       />
 
