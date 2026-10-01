@@ -42,6 +42,7 @@ async function until(fn, timeout = 30000, step = 250) { const end = Date.now() +
 
   try {
     await page.goto(server.url);
+    await page.fill("input[type=email]", server.email);
     await page.fill("input[type=password]", server.password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
     await page.waitForFunction(() => /หน้าหลัก/.test(document.body.innerText), null, { timeout: 20000 });
@@ -74,7 +75,7 @@ async function until(fn, timeout = 30000, step = 250) { const end = Date.now() +
 
     // ── the backup, with the app's own button
     await page.evaluate(() => { location.hash = "#/settings"; });
-    await page.locator("button.pill", { hasText: "สำรองข้อมูล" }).click();
+    await page.locator(".set-nav button, .set-nav-chips button.pill", { hasText: "สำรองข้อมูล" }).locator("visible=true").first().click();
     const [download] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), page.getByRole("button", { name: /^ดาวน์โหลด$/ }).click()]);
     const backupFile = path.join(work, download.suggestedFilename());
     await download.saveAs(backupFile);

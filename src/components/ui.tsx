@@ -7,6 +7,8 @@ import type { Student } from "@shared/types";
 import { initials } from "../lib/names";
 import { terms, selectedTermId, setSelectedTerm, UNASSIGNED, viewingPastYear, viewTerm, currentTermId } from "../store";
 import { online, syncing, pendingCount } from "../lib/outbox";
+import { serverReachable } from "../lib/session";
+import { thaiMonthsFull } from "../lib/dates";
 
 // ---- viewport hook -------------------------------------------------------
 export function useIsPhone(bp = 720): boolean {
@@ -187,10 +189,11 @@ export function Avatar({ student, text, size = 28, tone }: { student?: Student; 
 // ---- work-state cell -----------------------------------------------------
 // `mark`: "unsaved" = NOT even saved on this device (storage refused) · "pend" = saved on this device, not on the
 // server yet · "fail" = the server refused it
-export function WorkCell({ state, score, mark }: { state: WorkState; score?: number | null; mark?: "pend" | "fail" | "unsaved" | null }) {
+export function WorkCell({ state, score, mark, hidden }: { state: WorkState; score?: number | null; mark?: "pend" | "fail" | "unsaved" | null; hidden?: boolean }) {
   const m = mark ? " " + mark : "";
   const tip = mark === "pend" ? "รอส่งขึ้นระบบ" : mark === "fail" ? "ส่งไม่สำเร็จ" : mark === "unsaved" ? "ยังไม่ได้บันทึกลงเครื่อง — ลองใหม่" : undefined;
-  if (state === "scored" || state === "late") return <span class={"wcell " + state + m} title={tip}>{score}</span>;
+  // a hidden column keeps who-handed-in visible but not the marks themselves
+  if (state === "scored" || state === "late") return <span class={"wcell " + state + m} title={hidden ? "ซ่อนคะแนนอยู่" : tip}>{hidden ? "•••" : score}</span>;
   if (state === "awaiting") return <span class={"wcell awaiting" + m} title={tip}><Icon name="check" size={14} /></span>;
   if (state === "missing") return <span class={"wcell missing" + m} title={tip}>–</span>;
   if (state === "excused") return <span class={"wcell excused" + m} title={tip}>ยกเว้น</span>;
@@ -236,12 +239,61 @@ export function Drawer({ title, onClose, children }: { title: ComponentChildren;
 
 // ---- sync badge ----------------------------------------------------------
 export function SyncBadge() {
-  const cls = syncing.value ? "saving" : online.value ? "online" : "offline";
-  const label = syncing.value ? "กำลังบันทึก" : online.value ? "ออนไลน์" : "ออฟไลน์";
+  // "online" means the server answered last time we asked, not just that the browser has a network
+  const up = online.value && serverReachable.value;
+  const cls = syncing.value ? "saving" : up ? "online" : "offline";
+  const label = syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์";
   return (
     <span class={"sync " + cls}>
-      <Icon name={syncing.value ? "loader-2" : online.value ? "cloud-check" : "cloud-off"} size={13} class={syncing.value ? "spin" : undefined} />
+      <Icon name={syncing.value ? "loader-2" : up ? "cloud-check" : "cloud-off"} size={13} class={syncing.value ? "spin" : undefined} />
       {label}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
     </span>
+  );
+}
+
+// ---- Thai date field -------------------------------------------------------
+// <input type="date"> shows the browser's own format (month/day/year on an English browser). This shows
+// day · month · Buddhist-era year, and still hands back the ISO date (YYYY-MM-DD) the rest of the app stores.
+export function DateField({ value, onChange, label, style }: { value: string; onChange: (iso: string) => void; label?: string; style?: string }) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  const [d, setD] = useState(m ? String(Number(m[3])) : "");
+  const [mo, setMo] = useState(m ? String(Number(m[2])) : "");
+  const [y, setY] = useState(m ? m[1] : "");
+  // the value changed from outside (form reset, term picked): follow it
+  useEffect(() => {
+    const mm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (mm) { setD(String(Number(mm[3]))); setMo(String(Number(mm[2]))); setY(mm[1]); }
+    else if (!value) { setD(""); setMo(""); setY(""); }
+  }, [value]);
+
+  function commit(nd: string, nm: string, ny: string) {
+    setD(nd); setMo(nm); setY(ny);
+    if (!nd && !nm && !ny) return onChange("");
+    if (!nd || !nm || !ny) return; // wait until all three are chosen
+    const last = new Date(Date.UTC(Number(ny), Number(nm), 0)).getUTCDate();
+    const day = Math.min(Number(nd), last);
+    if (day !== Number(nd)) setD(String(day));
+    onChange(`${ny}-${nm.padStart(2, "0")}-${String(day).padStart(2, "0")}`);
+  }
+  const thisYear = new Date(Date.now() + 7 * 3600 * 1000).getUTCFullYear();
+  const years: number[] = [];
+  for (let i = thisYear - 3; i <= thisYear + 3; i++) years.push(i);
+  if (y && !years.includes(Number(y))) years.push(Number(y)), years.sort((a, b) => a - b);
+  const sel = "";
+  return (
+    <div class="datefield" style={style} role="group" aria-label={label}>
+      <select aria-label="วัน" style={sel} value={d} onInput={(e) => commit((e.target as HTMLSelectElement).value, mo, y)}>
+        <option value="">วัน</option>
+        {Array.from({ length: 31 }, (_, i) => <option value={String(i + 1)}>{i + 1}</option>)}
+      </select>
+      <select aria-label="เดือน" style={sel} value={mo} onInput={(e) => commit(d, (e.target as HTMLSelectElement).value, y)}>
+        <option value="">เดือน</option>
+        {thaiMonthsFull.slice(1).map((n, i) => <option value={String(i + 1)}>{n}</option>)}
+      </select>
+      <select aria-label="ปี พ.ศ." style={sel} value={y} onInput={(e) => commit(d, mo, (e.target as HTMLSelectElement).value)}>
+        <option value="">ปี</option>
+        {years.map((yy) => <option value={String(yy)}>{yy + 543}</option>)}
+      </select>
+    </div>
   );
 }

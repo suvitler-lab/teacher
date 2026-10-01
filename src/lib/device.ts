@@ -35,8 +35,18 @@ export function setDeviceName(name: string) {
 
 function defaultDeviceName(): string {
   const ua = navigator.userAgent;
-  if (/Android/i.test(ua)) return "มือถือ Android";
-  if (/iPhone|iPad|iPod/i.test(ua)) return "มือถือ iOS";
-  if (/Windows/i.test(ua)) return "คอมพิวเตอร์";
-  return "อุปกรณ์นี้";
+  const os = /Android/i.test(ua) ? "Android" : /iPhone|iPad|iPod/i.test(ua) ? "iOS" : /Windows/i.test(ua) ? "Windows" : /Mac OS X|Macintosh/i.test(ua) ? "macOS" : /Linux|CrOS/i.test(ua) ? "Linux" : "";
+  const browser = /Edg\//i.test(ua) ? "Edge" : /OPR\/|Opera/i.test(ua) ? "Opera" : /Chrome|CriOS/i.test(ua) ? "Chrome" : /Firefox|FxiOS/i.test(ua) ? "Firefox" : /Safari/i.test(ua) ? "Safari" : "";
+  return [browser, os].filter(Boolean).join(" · ") || "อุปกรณ์นี้";
+}
+
+const EMAIL_KEY = "gk_email";
+
+/** The e-mail last used to sign in on this device, to prefill the form (not a secret). */
+export function savedEmail(): string {
+  try { return localStorage.getItem(EMAIL_KEY) ?? ""; } catch { return ""; }
+}
+
+export function saveEmail(email: string) {
+  try { localStorage.setItem(EMAIL_KEY, email); } catch { /* ignore */ }
 }

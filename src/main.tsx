@@ -2,6 +2,9 @@ import { render } from "preact";
 import "./styles/base.css";
 import { App } from "./app";
 import { initOffline } from "./lib/offline";
+import { applyStoredTheme } from "./lib/theme";
+
+applyStoredTheme(); // before the first paint
 
 const root = document.getElementById("app");
 if (root) render(<App />, root);

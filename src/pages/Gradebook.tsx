@@ -19,6 +19,7 @@ import { formatThaiDate, monthOptions, currentMonthIso } from "../lib/dates";
 import { notify, ok, err, withToast } from "../lib/notify";
 import { AssignmentModal } from "../components/AssignmentModal";
 import { routeParams, navigate, setNavGuard } from "../router";
+import { useAction } from "../lib/useAction";
 
 interface Sub { status: string; score: number | null; late: boolean }
 type SubKey = string; // `${assignmentId}:${studentId}`
@@ -52,6 +53,7 @@ export function GradebookPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
+  const act = useAction();
   const [msg, setMsg] = useState("");
   // Scores the device could not even store. They stay on screen (red-outlined) and are NOT treated as
   // saved; the teacher can retry, and leaving the page asks first.
@@ -215,7 +217,7 @@ export function GradebookPage() {
       err(`ยังมีคะแนน ${waiting} รายการของงานนี้ที่ยังไม่ได้ส่งขึ้นระบบ — รอให้ส่งเสร็จก่อนแล้วค่อยทำทั้งห้อง`);
       return;
     }
-    try {
+    await act.run("bulk", async () => { try {
       const res = await api.post<{ changed: number; batchId: string }>(`/api/assignments/${selAsg.id}/bulk`, { action, classId });
       await load(true);
       if (action === "clear" && res.changed > 0) {
@@ -226,25 +228,38 @@ export function GradebookPage() {
       }
     } catch (e) {
       err(e instanceof ApiError && e.code === "assignment_closed" ? e.message : "ทำรายการทั้งห้องไม่สำเร็จ");
-    }
+    } });
   }
 
-  async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string) {
-    if (!selAsg) return;
-    let saved: Assignment | null = null;
-    try {
-      const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
-        id: selAsg.id, subject_id: selAsg.subject_id, type_id: selAsg.type_id, title: selAsg.title,
-        unit: selAsg.unit, full_score: selAsg.full_score, assigned_date: selAsg.assigned_date,
-        due_date: selAsg.due_date, note: selAsg.note, publish_scores: selAsg.publish_scores, status: selAsg.status,
-        class_ids: selAsg.class_ids, term_id: selAsg.term_id, ...patch,
-      });
-      saved = res.assignment;
-    } catch (e) { err((e as Error).message || "บันทึกไม่สำเร็จ"); return; }
-    // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
-    if (saved) upsertAssignment(saved);
-    await load(true);
-    if (okMsg) ok(okMsg);
+  /**
+   * Save a change to ONE piece of work (hide/show its scores, open/close it). The screen changes at once and the
+   * server is told in the background; if the server refuses, the screen goes back and says so. A second tap on the
+   * same work while the first is still on its way is ignored. Nothing else on the page depends on these fields, so
+   * there is no reload afterwards.
+   */
+  async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string, target: Assignment | null = selAsg) {
+    if (!target) return;
+    await act.run(`asg:${target.id}`, async () => {
+      const before = target;
+      setAssignments((list) => list.map((x) => (x.id === before.id ? ({ ...x, ...patch } as Assignment) : x)));
+      let saved: Assignment | null = null;
+      try {
+        const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
+          id: before.id, subject_id: before.subject_id, type_id: before.type_id, title: before.title,
+          unit: before.unit, full_score: before.full_score, assigned_date: before.assigned_date,
+          due_date: before.due_date, note: before.note, publish_scores: before.publish_scores, status: before.status,
+          class_ids: before.class_ids, term_id: before.term_id, ...patch,
+        });
+        saved = res.assignment;
+      } catch (e) {
+        setAssignments((list) => list.map((x) => (x.id === before.id ? before : x))); // the server said no: back to what it holds
+        err((e as Error).message || "บันทึกไม่สำเร็จ");
+        return;
+      }
+      // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
+      if (saved) { upsertAssignment(saved); setAssignments((list) => list.map((x) => (x.id === saved!.id ? { ...x, ...saved! } : x))); }
+      if (okMsg) ok(okMsg);
+    });
   }
 
   async function removeAssignment() {
@@ -254,6 +269,12 @@ export function GradebookPage() {
     const done = await withToast(() => api.post(`/api/assignments/${selAsg.id}/delete`), "ลบงานไม่สำเร็จ");
     if (done) { dropAssignment(selAsg.id); setSelCol(null); await load(true); ok("ลบงานแล้ว"); }
   }
+
+  // The running total counts only the work whose scores are showing, so it never gives a hidden score away
+  // (and stays useful while one is hidden). All work hidden: nothing to total, shown as •••.
+  const visibleWork = assignments.filter((a) => a.publish_scores);
+  const hiddenCount = assignments.length - visibleWork.length;
+  const allHidden = assignments.length > 0 && visibleWork.length === 0;
 
   // summary metrics for the toolbar
   let totSubmitted = 0, totApplic = 0, totAwaiting = 0, totMissing = 0;
@@ -314,14 +335,14 @@ export function GradebookPage() {
           <span>· เต็ม {selAsg.full_score}</span>
           {selAsg.status === "closed" && <span class="chip" style="background:var(--surface-2);color:var(--text-secondary)">ปิดรับ</span>}
           <span class="grow" />
-          <button onClick={() => bulk("all-submitted")}><Icon name="checks" size={14} /> ทั้งห้องส่งแล้ว</button>
-          <button onClick={() => bulk("full-score")}>ให้เต็มคนที่ส่ง</button>
-          <button onClick={() => bulk("clear")}>ล้าง</button>
-          {workTypeById(selAsg.type_id)?.is_exam && (
-            <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores })}>
-              <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ประกาศแล้ว" : "ยังไม่ประกาศ"}
-            </button>
-          )}
+          <button onClick={() => bulk("all-submitted")} disabled={act.isBusy("bulk")}>{act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทั้งห้องส่งแล้ว</button>
+          <button onClick={() => bulk("full-score")} disabled={act.isBusy("bulk")}>ให้เต็มคนที่ส่ง</button>
+          <button onClick={() => bulk("clear")} disabled={act.isBusy("bulk")}>ล้าง</button>
+          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว")}
+            disabled={act.isBusy(`asg:${selAsg.id}`)}
+            title={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้ (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)" : "แสดงคะแนนของงานนี้"}>
+            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน"}
+          </button>
           <div style="position:relative">
             <button aria-label="จัดการงาน" onClick={() => setMenuOpen((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
             {menuOpen && (
@@ -354,7 +375,7 @@ export function GradebookPage() {
             edit: () => setEditAsg(selAsg!),
             copy: () => setCopyAsg(selAsg!),
             toggleStatus: () => saveAsgPatch({ status: selAsg!.status === "open" ? "closed" : "open" }, selAsg!.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว"),
-            togglePublish: workTypeById(selAsg!.type_id)?.is_exam ? () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }) : null,
+            togglePublish: () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }, selAsg!.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว"),
             remove: removeAssignment,
           }} />
       ) : (
@@ -369,17 +390,21 @@ export function GradebookPage() {
                   return (
                     <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs">{a.full_score} · {a.due_date ? formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</div>
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                          title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
+                          onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
+                          <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
+                        </button></div>
                       <div class="hbar"><div style={`width:${pct}%`} /></div>
                     </th>
                   );
                 })}
-                <th>สะสม</th>
+                <th title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>
               </tr>
             </thead>
             <tbody>
               {shownStudents.map((st, i) => {
-                const sum = studentSummary(assignments, (idx) => { const s = subOf(assignments[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; }, today);
+                const sum = studentSummary(visibleWork, (idx) => { const s = subOf(visibleWork[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; }, today);
                 return (
                   <tr>
                     <td class="name-col">
@@ -396,12 +421,12 @@ export function GradebookPage() {
                               onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
                               onCancel={() => setEditing(null)} />
                           ) : (
-                            <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} />
+                            <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} hidden={!a.publish_scores} />
                           )}
                         </td>
                       );
                     })}
-                    <td style="font-size:12px">{sum.score}<span class="muted">/{sum.fullScore}</span></td>
+                    <td style="font-size:12px" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
                   </tr>
                 );
               })}
@@ -411,7 +436,7 @@ export function GradebookPage() {
                   const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(a.id, st.id, a))).length;
                   const scored = students.map((st) => subOf(a.id, st.id)).filter((s) => s && s.score != null) as Sub[];
                   const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
-                  return <td>{avg ?? "–"}<br /><span class="muted">{submitted}/{students.length}</span></td>;
+                  return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{submitted}/{students.length}</span></td>;
                 })}
                 <td />
               </tr>
@@ -507,7 +532,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
               <button onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
               <button onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
               <button onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
-              {manage.togglePublish && <button onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ประกาศแล้ว (กดเพื่อซ่อน)" : "ประกาศคะแนน"}</button>}
+              {manage.togglePublish && <button onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน (ซ่อนอยู่)"}</button>}
               <button onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
             </div>
           </>)}
@@ -525,7 +550,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
                 onCommit={(initial, v) => { commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
             ) : (
               <button style="background:transparent;border:none;padding:0" onClick={() => setEditing({ aid: selAsg.id, sid: st.id })}>
-                <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} />
+                <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} hidden={!selAsg.publish_scores} />
               </button>
             )}
           </div>

@@ -166,8 +166,8 @@ export function RandomPage() {
       )}
 
       <div class="rnd-controls" style="margin-top:12px">
-        <label class="rnd-opt" onClick={() => setPresentOnly(!presentOnly)}><input type="checkbox" checked={presentOnly} readonly /> เฉพาะคนที่มา ({presentOnly ? pool.length : att.present.size})</label>
-        {mode === "pick" && <label class="rnd-opt" onClick={() => setNoRepeat(!noRepeat)}><input type="checkbox" checked={noRepeat} readonly /> ไม่ซ้ำจนครบ</label>}
+        <label class={"rnd-opt" + (presentOnly ? " on" : "")}><input type="checkbox" checked={presentOnly} onChange={(e) => setPresentOnly((e.target as HTMLInputElement).checked)} /> เฉพาะคนที่มา ({presentOnly ? pool.length : att.present.size})</label>
+        {mode === "pick" && <label class={"rnd-opt" + (noRepeat ? " on" : "")}><input type="checkbox" checked={noRepeat} onChange={(e) => setNoRepeat((e.target as HTMLInputElement).checked)} /> ไม่ซ้ำจนครบ</label>}
         <div class="rnd-count">
           <span style="font-size:13px">{mode === "group" ? "กลุ่มละ" : "จำนวน"}</span>
           <button class="icon step" onClick={() => setCount((c) => Math.max(mode === "group" ? 2 : 1, c - 1))} aria-label="ลด">−</button>

@@ -1,0 +1,357 @@
+{
+  "label": "after",
+  "latencyMs": 200,
+  "at": "2026-09-30T20:46:51.840Z",
+  "counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 4
+  },
+  "pageInfo": [
+    {
+      "page": "home",
+      "title": "สวัสดี ครูผู้สอน",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 808
+    },
+    {
+      "page": "scan",
+      "title": "สแกนส่งงาน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 10,
+      "settleMs": 565
+    },
+    {
+      "page": "attendance",
+      "title": "เช็คชื่อ",
+      "hasHeader": true,
+      "calls": 2,
+      "dbTrips": 12,
+      "settleMs": 528
+    },
+    {
+      "page": "gradebook",
+      "title": "สมุดคะแนน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 8,
+      "settleMs": 543
+    },
+    {
+      "page": "random",
+      "title": "สุ่มชื่อ",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 460
+    },
+    {
+      "page": "reports",
+      "title": "รายงานสรุป",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 9,
+      "settleMs": 558
+    },
+    {
+      "page": "students",
+      "title": "นักเรียน",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 9,
+      "settleMs": 589
+    },
+    {
+      "page": "settings-general",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 460
+    },
+    {
+      "page": "settings-time",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 462
+    },
+    {
+      "page": "settings-scan",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 462
+    },
+    {
+      "page": "settings-catalog",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 0,
+      "dbTrips": 0,
+      "settleMs": 459
+    },
+    {
+      "page": "settings-devices",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 459
+    },
+    {
+      "page": "settings-backup",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 5,
+      "settleMs": 463
+    },
+    {
+      "page": "settings-history",
+      "title": "ตั้งค่า",
+      "hasHeader": true,
+      "calls": 1,
+      "dbTrips": 3,
+      "settleMs": 462
+    }
+  ],
+  "timings": [
+    {
+      "action": "open สมุดคะแนน",
+      "feedbackMs": 849,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 797,
+      "calls": [
+        "GET /api/gradebook 797ms/8db"
+      ]
+    },
+    {
+      "action": "open รายงาน",
+      "feedbackMs": 831,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 778,
+      "calls": [
+        "GET /api/reports/summary 778ms/9db"
+      ]
+    },
+    {
+      "action": "open เช็คชื่อ",
+      "feedbackMs": 20,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 13,
+      "serverMs": 1202,
+      "calls": [
+        "GET /api/attendance 498ms/6db",
+        "GET /api/attendance/days 704ms/7db"
+      ]
+    },
+    {
+      "action": "open นักเรียน",
+      "feedbackMs": 22,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 9,
+      "serverMs": 801,
+      "calls": [
+        "GET /api/reports/summary 801ms/9db"
+      ]
+    },
+    {
+      "action": "open หน้าหลัก",
+      "feedbackMs": 20,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 10,
+      "serverMs": 777,
+      "calls": [
+        "GET /api/dashboard 777ms/10db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye (toggle)",
+      "feedbackMs": 68,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 7,
+      "serverMs": 818,
+      "calls": [
+        "POST /api/assignments 818ms/7db"
+      ]
+    },
+    {
+      "action": "gradebook: click the eye again (toggle back)",
+      "feedbackMs": 53,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 7,
+      "serverMs": 816,
+      "calls": [
+        "POST /api/assignments 816ms/7db"
+      ]
+    },
+    {
+      "action": "gradebook: click a column header (select)",
+      "feedbackMs": 37,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "gradebook: “ทั้งห้องส่งแล้ว” (whole class)",
+      "feedbackMs": 2095,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 18,
+      "serverMs": 2029,
+      "calls": [
+        "POST /api/assignments/asg_ex3/bulk 1266ms/10db",
+        "GET /api/gradebook 763ms/8db"
+      ]
+    },
+    {
+      "action": "attendance: tap one student",
+      "feedbackMs": 40,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 11,
+      "serverMs": 1938,
+      "calls": [
+        "POST /api/attendance/batch 1938ms/11db"
+      ]
+    },
+    {
+      "action": "attendance: “มาทั้งหมด”",
+      "feedbackMs": 68,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 13,
+      "serverMs": 2171,
+      "calls": [
+        "POST /api/attendance/batch 1480ms/9db",
+        "GET /api/attendance/days 691ms/4db"
+      ]
+    },
+    {
+      "action": "students: open a student's drawer",
+      "feedbackMs": 31,
+      "settledMs": null,
+      "apiCalls": 2,
+      "dbTrips": 19,
+      "serverMs": 1300,
+      "calls": [
+        "GET /api/audit 479ms/8db",
+        "GET /api/reports/summary 821ms/11db"
+      ]
+    },
+    {
+      "action": "students: open นำเข้า Excel",
+      "feedbackMs": 39,
+      "settledMs": null,
+      "apiCalls": 0,
+      "dbTrips": 0,
+      "serverMs": 0,
+      "calls": []
+    },
+    {
+      "action": "settings: pick the dark theme",
+      "feedbackMs": 68,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 493,
+      "calls": [
+        "PUT /api/settings 493ms/3db"
+      ]
+    },
+    {
+      "action": "settings: pick the light theme",
+      "feedbackMs": 64,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 3,
+      "serverMs": 484,
+      "calls": [
+        "PUT /api/settings 484ms/3db"
+      ]
+    },
+    {
+      "action": "reports: switch to รายเดือน",
+      "feedbackMs": 35,
+      "settledMs": null,
+      "apiCalls": 1,
+      "dbTrips": 8,
+      "serverMs": 777,
+      "calls": [
+        "GET /api/reports/summary 777ms/8db"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/light",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/light",
+      "what": "6+ tap targets smaller than 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/dark",
+      "what": "12+ tap targets smaller than 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog @phone/dark",
+      "what": "6+ tap targets smaller than 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    }
+  ]
+}

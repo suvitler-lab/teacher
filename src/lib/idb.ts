@@ -222,3 +222,12 @@ export async function kvSet(key: string, value: unknown) {
     /* ignore */
   }
 }
+
+/** After "start over": nothing made on this device belongs to the data that was wiped — drop the queue, drafts and cached copy. */
+export async function clearLocalWork() {
+  try {
+    const d = await db();
+    const tx = d.transaction(["outbox", "failed", "attDrafts", "kv"], "readwrite");
+    await Promise.all([tx.objectStore("outbox").clear(), tx.objectStore("failed").clear(), tx.objectStore("attDrafts").clear(), tx.objectStore("kv").delete("bootstrap"), tx.objectStore("kv").delete("termId"), tx.done]);
+  } catch { /* the reload that follows starts from the server anyway */ }
+}

@@ -85,6 +85,7 @@ async function until(fn, timeout = 30000, step = 250) {
   try {
     // 1 ─ first visit: the app prepares itself for offline use
     await page.goto(server.url);
+    await page.fill("input[type=email]", server.email);
     await page.fill("input[type=password]", server.password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
     check("signs in", await shellUp(page));
@@ -100,7 +101,7 @@ async function until(fn, timeout = 30000, step = 250) {
     // Settings ▸ Devices ▸ "check this device" — on a device that is fine
     const runDeviceCheck = async () => {
       await go(page, "#/settings");
-      await page.locator("button.pill", { hasText: "อุปกรณ์และรหัสผ่าน" }).click(); // the tab, as a teacher would
+      await page.locator(".set-nav button, .set-nav-chips button.pill", { hasText: "อุปกรณ์และรหัสผ่าน" }).locator("visible=true").first().click(); // the tab, as a teacher would
       await page.getByRole("button", { name: /ตรวจเครื่องนี้|ตรวจอีกครั้ง/ }).first().click();
       await until(async () => /พร้อมใช้งาน|ใช้ได้ แต่มีข้อควรดู|ยังไม่พร้อม/.test(await page.locator("body").innerText()), 20000);
       return (await page.locator("body").innerText()).replace(/\s+/g, " ");

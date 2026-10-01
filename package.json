@@ -15,12 +15,15 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e:offline": "node scripts/offline-e2e.cjs",
+    "e2e:onboarding": "node scripts/onboarding-e2e.cjs",
     "e2e:camera": "node scripts/camera-e2e.cjs",
     "e2e:rehearsal": "node scripts/trial-rehearsal.cjs",
+    "qa:sweep": "node scripts/qa-sweep.cjs",
+    "qa:flows": "node scripts/qa-flows.cjs",
     "trial:reconcile": "node scripts/trial-reconcile.cjs",
-    "db:migrate:local": "wrangler d1 migrations apply kru-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply kru-db --remote",
-    "db:seed:local": "wrangler d1 execute kru-db --local --file=./scripts/seed-demo.sql"
+    "db:migrate:local": "wrangler d1 migrations apply kru-db-apac --local",
+    "db:migrate:remote": "wrangler d1 migrations apply kru-db-apac --remote",
+    "db:seed:local": "wrangler d1 execute kru-db-apac --local --file=./scripts/seed-demo.sql"
   },
   "dependencies": {
     "@tabler/icons-webfont": "^3.48.0",

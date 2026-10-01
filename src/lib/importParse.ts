@@ -15,6 +15,8 @@ export function parseImport(text: string): { rows: ImportRow[]; skipped: string[
     const words: string[] = [];
     for (const c of cols) {
       if (!code && /^\d{3,}$/.test(c)) code = c;
+      // a second long number (Excel often repeats the student ID in another column) is not part of a name
+      else if (/^\d{3,}$/.test(c)) continue;
       else if (PREFIX.test(c)) prefix = c;
       else words.push(c);
     }

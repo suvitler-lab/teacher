@@ -15,8 +15,13 @@ import { kvGet, kvSet } from "./lib/idb";
 import { serverSkewMs, dataEpoch, epochStale } from "./lib/session";
 import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
+import { setThemeAttr, saveThemeLocal } from "./lib/theme";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
+/** false only for an account made before e-mail sign-in: its next sign-in attaches the e-mail typed. */
+/** The first-run welcome guide is showing (latched, so it stays while its own steps fill in the data it checks). */
+export const onboardingOn = signal(false);
+export const accountEmailSet = signal(true);
 export const deviceLabel = signal<string>("");
 
 export const settings = signal<Settings | null>(null);
@@ -93,7 +98,7 @@ export const studentsByClass = computed(() => {
     arr.push(s);
     m.set(s.class_id, arr);
   }
-  for (const arr of m.values()) arr.sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
+  for (const arr of m.values()) arr.sort((a, b) => (a.number ?? Infinity) - (b.number ?? Infinity)); // children without a class number go last, not first
   return m;
 });
 
@@ -173,9 +178,8 @@ export async function clearLoggedOut() {
 }
 
 export function applyTheme(theme: Settings["theme"]) {
-  const root = document.documentElement;
-  if (theme === "system") root.removeAttribute("data-theme");
-  else root.setAttribute("data-theme", theme);
+  setThemeAttr(theme);
+  saveThemeLocal(theme);
 }
 
 export function upsertAssignment(a: Assignment) {

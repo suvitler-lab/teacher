@@ -12,6 +12,7 @@ const { Miniflare, convertV4MiniflareOptions } = require("miniflare");
 
 const root = path.resolve(__dirname, "..");
 const PASSWORD = "FixturePassword2026";
+const EMAIL = "fixture@example.com";
 
 // run the worker's TypeScript directly (it imports "@shared/…")
 const resolveFilename = Module._resolveFilename;
@@ -48,10 +49,45 @@ function headerRules(file) {
 const matches = (pattern, pathname) =>
   pattern.endsWith("*") ? pathname.startsWith(pattern.slice(0, -1)) : pattern === pathname;
 
+/**
+ * Wrap a D1 binding so every round trip to it costs `latency.ms` (like a database on another continent) and is
+ * counted. A batch is ONE round trip, as on the real thing. Statements stay real objects; only the methods that
+ * actually go to the database (first / all / run / raw / batch) are delayed.
+ */
+function timedDb(DB, latency, stats) {
+  const real = new WeakMap(); // wrapper -> real statement (batch() needs the real ones)
+  const trip = async (label, fn) => {
+    stats.count++; stats.log.push(label);
+    if (latency.ms > 0) await new Promise((r) => setTimeout(r, latency.ms));
+    return fn();
+  };
+  const wrapStmt = (stmt, sql) => {
+    const w = new Proxy(stmt, {
+      get(t, prop) {
+        if (prop === "bind") return (...a) => wrapStmt(t.bind(...a), sql);
+        if (["first", "all", "run", "raw"].includes(prop)) return (...a) => trip(String(sql).replace(/\s+/g, " ").slice(0, 70), () => t[prop](...a));
+        const v = Reflect.get(t, prop);
+        return typeof v === "function" ? v.bind(t) : v;
+      },
+    });
+    real.set(w, stmt);
+    return w;
+  };
+  return new Proxy(DB, {
+    get(t, prop) {
+      if (prop === "prepare") return (sql) => wrapStmt(t.prepare(sql), sql);
+      if (prop === "batch") return (stmts) => trip(`batch(${stmts.length})`, () => t.batch(stmts.map((x) => real.get(x) ?? x)));
+      const v = Reflect.get(t, prop);
+      return typeof v === "function" ? v.bind(t) : v;
+    },
+  });
+}
+
 async function startFixtureServer({
   port = 5194,
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
+  seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
     modules: true,
@@ -59,10 +95,13 @@ async function startFixtureServer({
     compatibilityDate: "2025-09-01", d1Databases: ["DB"], d1Persist: false, cf: false,
   }));
   const DB = await mf.getD1Database("DB");
+  const latency = { ms: 0 };                 // per D1 round trip, settable at run time (setDbLatency)
+  const stats = { count: 0, log: [] };       // D1 round trips since resetDbStats()
   const env = { DB, SETUP_CODE: "fixture-setup", SESSION_PEPPER: "fixture-pepper-not-secret" };
+  const timedEnv = { ...env, DB: timedDb(DB, latency, stats) }; // what the app sees, from the browser
   const files = [
     ...fs.readdirSync(path.join(root, "migrations")).filter((f) => f.endsWith(".sql")).sort().map((f) => path.join(root, "migrations", f)),
-    path.join(root, "scripts/seed-demo.sql"),
+    ...(seed ? [path.join(root, "scripts/seed-demo.sql")] : []),
   ];
   for (const file of files) {
     const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");
@@ -71,12 +110,13 @@ async function startFixtureServer({
   const { app } = require(path.join(root, "worker/app.ts"));
   const setup = await app.request("/api/setup", {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ setupCode: "fixture-setup", password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
+    body: JSON.stringify({ setupCode: "fixture-setup", email: EMAIL, password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
   }, env);
   if (setup.status !== 200) throw new Error("fixture setup failed: " + setup.status);
 
   const rules = headerRules(headersFile);
   let dir = path.resolve(assetsDir);
+  const apiLog = []; // every API call: { method, path, status, ms, db } — db = round trips counted while it ran (exact when calls don't overlap)
   const hits = []; // every path the server was asked for — proof of what really reached the network
   let down = false; // "the network is dead": connections are cut, for the page AND the service worker (browser emulation of
                     // offline does not reliably cover requests the worker makes itself)
@@ -88,7 +128,9 @@ async function startFixtureServer({
       if (url.pathname.startsWith("/api/")) {
         const parts = [];
         for await (const part of req) parts.push(part);
-        const out = await app.request(url.href, { method: req.method, headers: req.headers, ...(parts.length ? { body: Buffer.concat(parts) } : {}) }, env);
+        const t0 = Date.now(), before = stats.count;
+        const out = await app.request(url.href, { method: req.method, headers: req.headers, ...(parts.length ? { body: Buffer.concat(parts) } : {}) }, timedEnv);
+        apiLog.push({ at: t0, method: req.method, path: url.pathname, status: out.status, ms: Date.now() - t0, db: stats.count - before });
         res.writeHead(out.status, Object.fromEntries(out.headers));
         res.end(Buffer.from(await out.arrayBuffer()));
         return;
@@ -120,6 +162,12 @@ async function startFixtureServer({
     url: `http://127.0.0.1:${port}`,
     DB,
     hits,
+    apiLog,
+    dbStats: stats,
+    /** every D1 round trip from now on costs this many ms (a database on another continent ≈ 200) */
+    setDbLatency(ms) { latency.ms = ms; },
+    resetDbStats() { stats.count = 0; stats.log.length = 0; apiLog.length = 0; },
+    email: EMAIL,
     password: PASSWORD,
     /** cut (true) or restore (false) the network for everyone */
     setDown(value) { down = !!value; },
@@ -129,7 +177,7 @@ async function startFixtureServer({
   };
 }
 
-module.exports = { startFixtureServer, PASSWORD };
+module.exports = { startFixtureServer, PASSWORD, EMAIL };
 
 if (require.main === module) {
   startFixtureServer().then((s) => {

@@ -19,6 +19,7 @@ export interface StudentReport {
   student: Student;
   submitted: number;
   applicable: number;
+  pending: number; // work not yet due and not handed in: left out of the rate until its due date passes
   missing: number;
   percent: number;
   score: number;
@@ -73,6 +74,7 @@ export function computeReport(p: ReportPayload): ReportModel {
       student,
       submitted: sum.submitted,
       applicable: sum.submitted + sum.missing,
+      pending: sum.pending,
       missing: sum.missing,
       percent: sum.submitRate,
       score: sum.score,
@@ -143,3 +145,16 @@ export function computeReport(p: ReportPayload): ReportModel {
 
 // re-export for pages that render per-work-state cells (gradebook, scan, students)
 export { workState, isSubmitted };
+
+/** The LINE message: who still owes work AND which work (a child can owe more than one piece). */
+export function followUpText(
+  followUp: { student: { number: number | null; first_name: string }; missing: string[] }[],
+  heading: string,
+  dateText: string,
+): string {
+  return [
+    `รายชื่อนักเรียนค้างส่งงาน ${heading}`.trim(),
+    `(ข้อมูล ณ ${dateText})`,
+    ...followUp.map((f) => `${f.student.number ?? "-"}. ${f.student.first_name}: ค้าง ${f.missing.length} งาน (${f.missing.join(", ")})`),
+  ].join("\n");
+}

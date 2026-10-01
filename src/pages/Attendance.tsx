@@ -10,7 +10,7 @@ import { nextStatus } from "@shared/attendance";
 import { attendanceProgress } from "@shared/metrics";
 import { installHidScanner } from "../lib/hid";
 import { fullName, shortName } from "../lib/names";
-import { formatThaiDate } from "../lib/dates";
+import { formatThaiDate, formatThaiTimeMs } from "../lib/dates";
 import { draftGet, type AttDraft, type AttConflict, type AttReviewRow } from "../lib/idb";
 import {
   draftEdit, resolveConflict, retryDraft, flushDraft, requestFlush, onAttEvent, attSync, ctxKey,
@@ -19,6 +19,7 @@ import {
 } from "../lib/attSync";
 import { err, notify } from "../lib/notify";
 import { beep } from "../lib/sound";
+import { routeParams } from "../router";
 
 const STATUSES: AttendanceStatus[] = ["present", "late", "leave", "sick", "absent"];
 const LABELS: Record<AttendanceStatus, string> = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
@@ -50,7 +51,8 @@ function weekDays(date: string): string[] {
 }
 
 export function AttendancePage() {
-  const [classId, setClassId] = useState(activeClasses.value[0]?.id ?? "");
+  const linked = routeParams().class; // e.g. from a class row on Home
+  const [classId, setClassId] = useState(linked && activeClasses.value.some((c) => c.id === linked) ? linked : activeClasses.value[0]?.id ?? "");
   const [date, setDate] = useState(todayBkk());
   // last year's attendance can be read (reports, Excel) but not written once a new school year has started
   const yearStart = schoolYearStart.value;
@@ -331,7 +333,7 @@ export function AttendancePage() {
           {scanLog.slice(0, 5).map((r) => { const st = studentsById.value.get(r.id); return (
             <div class="att-scanrow"><Icon name="circle-check" size={16} style={r.late ? "color:var(--text-warning)" : "color:var(--text-success)"} />
               <span class="grow" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{st ? fullName(st) : r.id}</span>
-              <span class="chip" style={r.late ? "background:var(--bg-warning);color:var(--text-warning)" : "background:var(--bg-success);color:var(--text-success)"}>{r.late ? "สาย" : "มา"} {new Date(r.at).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</span>
+              <span class="chip" style={r.late ? "background:var(--bg-warning);color:var(--text-warning)" : "background:var(--bg-success);color:var(--text-success)"}>{r.late ? "สาย" : "มา"} {formatThaiTimeMs(r.at)}</span>
             </div>
           ); })}
         </div>

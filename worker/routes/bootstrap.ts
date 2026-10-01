@@ -19,7 +19,7 @@ bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
       db.prepare("SELECT * FROM work_types ORDER BY archived, sort").all(),
       db
         .prepare(
-          "SELECT id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at FROM students WHERE status != 'inactive' ORDER BY class_id, number",
+          "SELECT id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at FROM students WHERE status != 'inactive' ORDER BY class_id, number IS NULL, number",
         )
         .all(),
       db.prepare("SELECT * FROM assignments WHERE deleted_at IS NULL ORDER BY updated_at DESC").all(),
@@ -43,7 +43,9 @@ bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
   const qrRotatedAt: Record<string, number> = {};
   for (const r of rotated.results ?? []) qrRotatedAt[r.student_id] = r.at;
 
-  const dataEpoch = await getEpoch(c.env);
+  // read BEFORE the data above (by the app's preamble): if a restore lands in between, the screen holds newer data under an
+  // older epoch and its next write is refused and reloaded — never the reverse
+  const dataEpoch = c.get("dataEpoch") ?? (await getEpoch(c.env));
   const termList = (terms.results ?? []).map(mapTerm);
   const currentTerm = termList.find((t) => t.is_current) ?? termList[0];
 

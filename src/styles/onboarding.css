@@ -1,0 +1,27 @@
+/* งานครบ · first-run welcome guide */
+.ob-wrap { min-height: 100%; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px 48px; background: var(--surface-1); }
+.ob-card { width: 100%; max-width: 620px; padding: 24px 24px 20px; }
+.ob-head { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
+.ob-steps { list-style: none; display: flex; margin: 0 0 20px; padding: 0; gap: 4px; }
+.ob-steps li { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); position: relative; }
+.ob-steps li::before { content: ""; position: absolute; top: 13px; left: -50%; width: 100%; height: 2px; background: var(--border); z-index: 0; }
+.ob-steps li:first-child::before { display: none; }
+.ob-steps li.done::before, .ob-steps li.on::before { background: var(--accent); }
+.ob-steps .dot { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; background: var(--surface-2); border: 1px solid var(--border-strong); }
+.ob-steps li.on .dot { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ob-steps li.done .dot { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
+.ob-steps li.on .lbl { color: var(--text-primary); font-weight: 500; }
+.ob-h { font-size: 18px; margin-bottom: 4px; }
+.ob-p { font-size: 13px; color: var(--text-secondary); margin: 0 0 14px; }
+.ob-gen { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.ob-gen select { width: auto; min-width: 84px; }
+.ob-add { display: flex; gap: 8px; }
+.ob-add input { flex: 1; min-width: 0; }
+.ob-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+.ob-chip { display: inline-flex; align-items: center; gap: 2px; padding: 4px 4px 4px 12px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); font-size: 13px; }
+.ob-x { height: 22px; width: 22px; padding: 0; border: none; background: transparent; color: inherit; border-radius: 50%; }
+.ob-nav { display: flex; gap: 8px; align-items: center; margin-top: 18px; flex-wrap: wrap; }
+.ob-done { text-align: center; color: var(--fill-success, #1a9d5a); margin: 6px 0 4px; }
+.ob-next { display: grid; gap: 8px; margin-top: 16px; }
+.ob-next button { height: 46px; }
+@media (max-width: 560px) { .ob-wrap { padding: 12px 0 32px; } .ob-card { border-radius: 0; border-left: none; border-right: none; padding: 18px 16px; } .ob-steps .lbl { font-size: 11px; } }

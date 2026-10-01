@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import "../styles/students.css";
 import "../styles/print.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Avatar, EmptyState, YearBanner, TermPicker } from "../components/ui";
+import { PageHeader, ClassChips, Avatar, EmptyState, YearBanner, TermPicker, DateField } from "../components/ui";
 import { StudentDrawer } from "../components/StudentDrawer";
 import { StickerSheet } from "../components/StickerSheet";
 import { activeClasses, viewClasses, rosterCount, classById, viewTerm, viewingPastYear, studentsByClass, students as allStudents, qrRotatedAt, loadBootstrap } from "../store";
@@ -13,7 +13,7 @@ import type { Student } from "@shared/types";
 import { api } from "../lib/api";
 import { fullName } from "../lib/names";
 import { ok, withToast } from "../lib/notify";
-import { routeParams } from "../router";
+import { routeParams, navigate } from "../router";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { parseImport } from "../lib/importParse";
 
@@ -27,6 +27,7 @@ export function StudentsPage() {
   const [printing, setPrinting] = useState(false);
   const [showFormer, setShowFormer] = useState(false);
   const [former, setFormer] = useState<Student[]>([]);
+  const [formerFailed, setFormerFailed] = useState(false);
   const [drawer, setDrawer] = useState<string | null>(params.student || null);
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
@@ -50,7 +51,7 @@ export function StudentsPage() {
 
   // per-student stats for this class (submit rate, attendance)
   async function loadStats() {
-    if (!classId) return;
+    if (!classId) { setStatsStatus("ready"); return; } // no class yet: nothing to load (don't spin forever)
     const fresh = begin();
     // the previous class's numbers must not sit under this class's names while loading or after a failure
     setReports(new Map()); setStatsStatus("loading");
@@ -68,8 +69,9 @@ export function StudentsPage() {
   }
   useEffect(() => { loadStats(); }, [classId, selectedTermId.value]);
   useEffect(() => {
-    if (!showFormer) { setFormer([]); return; }
-    api.get<{ students: Student[] }>(`/api/students?class=${classId}&status=moved,inactive`).then((r) => setFormer(r.students)).catch(() => setFormer([]));
+    if (!showFormer) { setFormer([]); setFormerFailed(false); return; }
+    setFormerFailed(false);
+    api.get<{ students: Student[] }>(`/api/students?class=${classId}&status=moved,inactive`).then((r) => setFormer(r.students)).catch(() => { setFormer([]); setFormerFailed(true); });
   }, [showFormer, classId]);
 
   async function rotateClass() {
@@ -105,7 +107,7 @@ export function StudentsPage() {
       <PageHeader icon="id-badge-2" title="นักเรียน" sub={<span>{cls?.name} · {active.length} คน</span>}
         actions={<>
           <TermPicker />
-          {!past && <>
+          {!past && cls && <>
           <button onClick={() => setImporting(true)}><Icon name="table-import" size={16} /> นำเข้า Excel</button>
           <button class="primary" onClick={() => setEdit("new")}><Icon name="user-plus" size={16} /> เพิ่มนักเรียน</button>
           </>}
@@ -151,7 +153,9 @@ export function StudentsPage() {
 
       <div class="card" style="padding:0;overflow:hidden">
         <div class="stu-list-head"><span>เลขที่</span><span>ชื่อ - สกุล</span><span>รหัส</span><span>ส่งงาน</span><span class="num" style="text-align:right">ค้าง</span><span>มา</span><span /></div>
-        {shown.length === 0 ? (
+        {!cls ? (
+          <EmptyState icon="school" text="ยังไม่มีห้องเรียน — สร้างห้องก่อน แล้วค่อยนำเข้านักเรียน" action={<button class="primary" onClick={() => navigate("/settings")}><Icon name="settings" size={16} /> ไปที่ตั้งค่า › ห้องเรียน</button>} />
+        ) : shown.length === 0 ? (
           <EmptyState icon="user-question" text={q ? "ไม่พบนักเรียนที่ค้นหา" : "ยังไม่มีนักเรียนในห้องนี้"} action={!q && !past && <button class="primary" onClick={() => setEdit("new")}><Icon name="plus" size={16} /> เพิ่มนักเรียน</button>} />
         ) : shown.map((st, i) => {
           const r = reports.get(st.id);
@@ -174,7 +178,7 @@ export function StudentsPage() {
       {showFormer && (
         <div class="card" style="margin-top:12px">
           <div style="font-weight:500;margin-bottom:6px">ย้ายออก / ไม่ใช้งาน ({former.length})</div>
-          {former.length === 0 ? <div class="page-sub">ไม่มี</div> : former.map((st) => (
+          {formerFailed ? <div class="page-sub" style="color:var(--text-warning)"><Icon name="cloud-off" size={14} /> โหลดรายชื่อไม่สำเร็จ — ปิดแล้วเปิดใหม่อีกครั้ง</div> : former.length === 0 ? <div class="page-sub">ไม่มี</div> : former.map((st) => (
             <div class="row" style="gap:10px;padding:6px 0;border-top:0.5px solid var(--border)">
               <Avatar student={st} />
               <span class="grow">{fullName(st)} <span class="page-sub">· {st.status === "moved" ? "ย้ายออก" : "ไม่ใช้งาน"}</span></span>
@@ -217,7 +221,13 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
       onSaved();
     } catch (e: any) { setErr(e.message || "บันทึกไม่สำเร็จ"); } finally { setBusy(false); }
   }
-  async function rotate() { if (!student) return; await api.post(`/api/students/${student.id}/qr/rotate`).catch(() => {}); onSaved(); }
+  // a refused or failed rotate must NOT look done: the old card would still be valid while the teacher believes it is revoked
+  async function rotate() {
+    if (!student) return;
+    setErr("");
+    try { await api.post(`/api/students/${student.id}/qr/rotate`); onSaved(); }
+    catch (e: any) { setErr(e.message || "ออก QR ใหม่ไม่สำเร็จ — บัตรเดิมยังใช้ได้อยู่"); }
+  }
 
   return (
     <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -245,7 +255,7 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
         </div>
         {(status === "moved" || status === "inactive") && (
           <label class="field"><span>ออกเมื่อ (เว้นว่าง = วันนี้)</span>
-            <input type="date" value={leftAt} onInput={(e) => setLeftAt((e.target as HTMLInputElement).value)} />
+            <DateField value={leftAt} onChange={setLeftAt} />
           </label>
         )}
         {student && <div class="page-sub" style="margin:6px 0">QR ปัจจุบัน: <span style="font-family:var(--font-mono)">{student.qr_token}</span></div>}

@@ -14,7 +14,7 @@ const ALL_TABLES = [
 export async function reset() {
   await env.DB.batch(ALL_TABLES.map((t) => env.DB.prepare(`DELETE FROM ${t}`)));
   await env.DB.batch([
-    env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('schema_version','5')"),
+    env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('schema_version','6')"),
     env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('maintenance','0')"),
     env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('data_epoch','1')"),
   ]);
@@ -41,7 +41,7 @@ export function cookieFrom(res: Response): string {
 export async function login(): Promise<string> {
   const res = await call(
     "/api/setup",
-    json({ setupCode: "test-code", password: "pw123456", deviceId: "dev_test", deviceName: "เครื่องทดสอบ" }),
+    json({ setupCode: "test-code", email: "teacher@example.com", password: "pw123456", deviceId: "dev_test", deviceName: "เครื่องทดสอบ" }),
   );
   if (res.status !== 200) throw new Error("setup failed " + res.status);
   return cookieFrom(res);

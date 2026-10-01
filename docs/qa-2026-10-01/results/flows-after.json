@@ -1,0 +1,80 @@
+{
+  "label": "flows-after",
+  "at": "2026-10-01T02:12:44.497Z",
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 581
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 950
+    },
+    {
+      "id": "G01",
+      "name": "gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column",
+      "pass": true,
+      "ms": 1718
+    },
+    {
+      "id": "G02",
+      "name": "gradebook: a score typed into a cell is saved, and the running total follows",
+      "pass": true,
+      "ms": 841
+    },
+    {
+      "id": "G03",
+      "name": "gradebook: a score above the full mark is refused, not saved",
+      "pass": true,
+      "ms": 729
+    },
+    {
+      "id": "G04",
+      "name": "gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total",
+      "pass": true,
+      "ms": 8471
+    },
+    {
+      "id": "G05",
+      "name": "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it",
+      "pass": true,
+      "ms": 2513
+    },
+    {
+      "id": "G06",
+      "name": "gradebook: edit the work (rename) and the column follows",
+      "pass": true,
+      "ms": 914
+    },
+    {
+      "id": "G07",
+      "name": "gradebook: delete the work; the column is gone",
+      "pass": true,
+      "ms": 1157
+    },
+    {
+      "id": "E10",
+      "name": "settings: side menu OR pills, not both, on a wide screen",
+      "pass": true,
+      "ms": 567
+    },
+    {
+      "id": "K01",
+      "name": "history: when the server cannot be reached it says so (and offers a retry), not “no history yet”",
+      "pass": true,
+      "ms": 1511
+    },
+    {
+      "id": "K02",
+      "name": "reports: when the server cannot be reached the page says so, print/export are off, the badge goes offline — and all recover",
+      "pass": true,
+      "ms": 695
+    }
+  ]
+}

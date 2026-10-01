@@ -1,7 +1,7 @@
 // scripts/trial-reconcile.cjs — the tool that says whether the classroom trial's results agree with the teacher's paper.
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { createRequire } from "node:module";
-import { mkdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
@@ -11,7 +11,7 @@ const rc = require("../../scripts/trial-reconcile.cjs");
 // a small class: two children in ป.6/1, one in ป.6/2, three assignments (one deleted, two sharing a title)
 const backup: any = {
   app: "ngankrob",
-  schema_version: 5,
+  schema_version: 6,
   exported_at: Date.parse("2026-10-05T10:00:00Z"),
   data: {
     classes: [{ id: "c1", name: "ป.6/1" }, { id: "c2", name: "ป.6/2" }],
@@ -198,9 +198,9 @@ describe("the report", () => {
 });
 
 describe("the command line", () => {
-  const dir = path.resolve(__dirname, "../../node_modules/.trial-reconcile-test");
+  let dir = ""; // its own folder per test, so two runs at once cannot collide
   const put = (name: string, body: string) => { const p = path.join(dir, name); writeFileSync(p, body); return p; };
-  beforeEach(() => { rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true }); });
+  beforeEach(() => { dir = mkdtempSync(path.resolve(__dirname, "../../node_modules/.trial-reconcile-test-")); });
   afterEach(() => rmSync(dir, { recursive: true, force: true }));
   const quiet = async <T,>(fn: () => T) => { const log = console.log, error = console.error; const out: string[] = []; console.log = (...a) => out.push(a.join(" ")); console.error = (...a) => out.push(a.join(" ")); try { return { code: fn(), out: out.join("\n") }; } finally { console.log = log; console.error = error; } };
 

@@ -10,6 +10,7 @@ import { runBackup, BackupInconsistentError } from "../lib/backup";
 import { err, ok, withToast } from "../lib/notify";
 import { AuditHistory } from "../components/AuditHistory";
 import { RestoreModal } from "../components/RestoreModal";
+import { ResetModal, type ResetMode } from "../components/ResetModal";
 import { CatalogEditor } from "../components/CatalogEditor";
 import { installHidScanner } from "../lib/hid";
 import { buildIndex, resolveScan } from "@shared/scan";
@@ -18,6 +19,7 @@ import { routeParams, setNavGuard } from "../router";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
 import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
 import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
+import { formatThaiDateTimeMs, formatThaiDayMonthMs } from "../lib/dates";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -86,9 +88,12 @@ export function SettingsPage() {
   const s = settings.value;
   const params = routeParams();
   const [section, setSection] = useState<Section>((params.section as Section) || "general");
+  // a link to another section (#/settings?section=backup) while this page is already open must switch to it
+  useEffect(() => { if (params.section && SECTIONS.some((x) => x.key === params.section)) setSection(params.section as Section); }, [params.section]);
   const [draft, setDraft] = useState<Settings | null>(s ? { ...s } : null);
   const [busy, setBusy] = useState("");
   const [showRestore, setShowRestore] = useState(false);
+  const [resetMode, setResetMode] = useState<ResetMode | null>(null);
   const [restoreInfo, setRestoreInfo] = useState<{ pending: boolean; maintenance: boolean } | null>(null);
 
   // keys the teacher edits here — last_backup_at is written by the backup button, not by this form
@@ -118,6 +123,16 @@ export function SettingsPage() {
   if (!draft) return <div class="empty">กำลังโหลด…</div>;
 
   function set<K extends keyof Settings>(k: K, v: Settings[K]) { setDraft((d) => (d ? { ...d, [k]: v } : d)); }
+
+  // the theme is applied AND saved the moment it is picked (no separate save): otherwise a reload brings the old one back
+  async function chooseTheme(theme: Settings["theme"]) {
+    set("theme", theme);
+    applyTheme(theme);
+    try {
+      await api.put("/api/settings", { theme });
+      if (settings.value) settings.value = { ...settings.value, theme };
+    } catch { err("บันทึกธีมไม่สำเร็จ"); }
+  }
 
   async function save() {
     setBusy("save");
@@ -178,7 +193,7 @@ export function SettingsPage() {
                 <label class="field"><span>ชื่อครู</span><input value={draft.teacher_name} onInput={(e) => set("teacher_name", (e.target as HTMLInputElement).value)} /></label>
               </div>
               <div class="set-row"><span>ธีม</span>
-                <Segmented value={draft.theme} onChange={(v) => { set("theme", v as Settings["theme"]); applyTheme(v as Settings["theme"]); }} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
+                <Segmented value={draft.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
               </div>
               <OfflineRow />
               <StorageRow />
@@ -189,7 +204,7 @@ export function SettingsPage() {
             <div class="card">
               <div class="set-section-title"><Icon name="clock" /> เวลาเรียน</div>
               <div class="set-row"><div><div style="font-weight:500;font-size:14px">เริ่มนับสาย (เช็คชื่อรายวัน)</div><div class="page-sub">สแกนหลังเวลานี้ = สาย</div></div>
-                <input type="time" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
+                <input type="time" aria-label="เวลาเริ่มนับสาย" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
               <div style="padding-top:10px;border-top:0.5px solid var(--border)">
                 <div style="font-weight:500;font-size:14px">เวลาเริ่มคาบ (สำหรับเช็คชื่อรายคาบ)</div>
                 <div class="page-sub" style="margin-bottom:8px">สแกนหลังเวลาเริ่มคาบจะนับเป็นสาย · เว้นว่างได้ถ้าไม่ใช้คาบนั้น</div>
@@ -237,10 +252,15 @@ export function SettingsPage() {
                 </div>
               )}
               {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:13px"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? new Date(lastBackup).toLocaleString("th-TH") : "ยังไม่เคย"}</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
                 <button onClick={backup} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
               <div class="set-row"><div><div style="font-weight:500;font-size:14px">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
                 <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
+              <div class="set-section-title" style="margin-top:16px;color:var(--text-danger)"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างข้อมูลทดลอง</div><div class="page-sub">ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก</div></div>
+                <button onClick={() => setResetMode("data")}><Icon name="trash" size={16} /> ล้างข้อมูล</button></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น</div><div class="page-sub">ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก</div></div>
+                <button onClick={() => setResetMode("all")}><Icon name="trash-x" size={16} /> ล้างทั้งหมด</button></div>
             </div>
           )}
 
@@ -257,6 +277,7 @@ export function SettingsPage() {
         </div>
       )}
 
+      {resetMode && <ResetModal mode={resetMode} onClose={() => setResetMode(null)} />}
       {showRestore && <RestoreModal onClose={() => setShowRestore(false)} onDone={() => { setShowRestore(false); loadBootstrap(); }} />}
     </div>
   );
@@ -269,7 +290,7 @@ function PeriodTimes({ value, onChange }: { value: string; onChange: (v: string)
   return (
     <div class="set-periods">
       {[1, 2, 3, 4, 5, 6, 7, 8].map((p) => (
-        <label><span class="muted">คาบ {p}</span><input type="time" value={times[String(p)] ?? ""} onInput={(e) => setPeriod(p, (e.target as HTMLInputElement).value)} /></label>
+        <label><span class="muted">คาบ {p}</span><input type="time" aria-label={`เวลาเริ่มคาบ ${p}`} value={times[String(p)] ?? ""} onInput={(e) => setPeriod(p, (e.target as HTMLInputElement).value)} /></label>
       ))}
     </div>
   );
@@ -406,7 +427,7 @@ function DeviceList() {
       {devices.map((d) => (
         <div class="set-row">
           <div class="row" style="gap:8px;min-width:0"><Icon name="device-mobile" size={18} class="muted" /><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</span></div>
-          <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{new Date(d.last_seen).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}</span>
+          <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{formatThaiDayMonthMs(d.last_seen)}</span>
             {!d.current && <button style="height:28px;font-size:12px" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}</div>
         </div>
       ))}
@@ -425,13 +446,18 @@ function ChangePassword() {
     try { await api.post("/api/auth/change-password", { current: cur, next }); setMsg("เปลี่ยนรหัสผ่านแล้ว"); setCur(""); setNext(""); setOpen(false); }
     catch (e: any) { setMsg(e.message || "ไม่สำเร็จ"); }
   }
-  if (!open) return <button onClick={() => setOpen(true)}><Icon name="key" size={15} /> เปลี่ยนรหัสผ่าน</button>;
+  if (!open) return (
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <button onClick={() => { setMsg(""); setOpen(true); }}><Icon name="key" size={15} /> เปลี่ยนรหัสผ่าน</button>
+      {msg && <span style="font-size:13px;color:var(--text-success)"><Icon name="circle-check" size={14} /> {msg}</span>}
+    </div>
+  );
   return (
     <div class="row" style="gap:6px;flex-wrap:wrap">
       <input type="password" placeholder="รหัสเดิม" value={cur} onInput={(e) => setCur((e.target as HTMLInputElement).value)} style="width:140px" />
       <input type="password" placeholder="รหัสใหม่" value={next} onInput={(e) => setNext((e.target as HTMLInputElement).value)} style="width:140px" />
       <button class="primary" onClick={submit}>บันทึก</button>
-      <button onClick={() => setOpen(false)}>ยกเลิก</button>
+      <button onClick={() => { setMsg(""); setOpen(false); }}>ยกเลิก</button>
       {msg && <div style="font-size:12px;color:var(--text-secondary);width:100%">{msg}</div>}
     </div>
   );

@@ -6,9 +6,9 @@ import { StudentDrawer } from "../components/StudentDrawer";
 import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED } from "../store";
 import { api } from "../lib/api";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
-import { computeReport, type ReportModel, type ReportPayload } from "../lib/report";
+import { computeReport, followUpText, type ReportModel, type ReportPayload } from "../lib/report";
 import { fullName } from "../lib/names";
-import { formatThaiDate, currentMonthIso, monthOptions } from "../lib/dates";
+import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs } from "../lib/dates";
 import { StudentModal } from "./Students";
 import type { Student } from "@shared/types";
 
@@ -73,8 +73,7 @@ export function ReportsPage() {
   }
   function copyLine() {
     if (!model) return;
-    const lines = [`รายชื่อนักเรียนค้างส่งงาน ${cls?.name} ${subj?.name ?? ""}`, `(ข้อมูล ณ ${new Date().toLocaleDateString("th-TH")})`,
-      ...model.followUp.map((f) => `${f.student.number ?? "-"}. ${f.student.first_name}: ค้าง ${f.missing.length} งาน`)].join("\n");
+    const lines = followUpText(model.followUp, `${cls?.name ?? ""} ${subj?.name ?? ""}`, formatThaiDateMs(Date.now()));
     navigator.clipboard?.writeText(lines).then(() => { setMsg("คัดลอกไปวางใน LINE ได้เลย"); setTimeout(() => setMsg(""), 2500); }, () => setMsg("คัดลอกไม่สำเร็จ"));
   }
 
@@ -115,8 +114,8 @@ export function ReportsPage() {
         actions={<>
           <TermPicker />
           {msg && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">{msg}</span>}
-          <button onClick={() => window.print()}><Icon name="printer" size={16} /> พิมพ์</button>
-          <button class="primary" onClick={exportExcel}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
+          <button onClick={() => window.print()} disabled={status !== "ready" || !model}><Icon name="printer" size={16} /> พิมพ์</button>
+          <button class="primary" onClick={exportExcel} disabled={status !== "ready" || !model}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
         </>}
       />
 
@@ -144,7 +143,7 @@ export function ReportsPage() {
         </div>
       )}
       {payload?.range.from && (
-        <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {formatThaiDate(payload.range.to)} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
+        <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {payload.range.to ? formatThaiDate(payload.range.to) : "ปัจจุบัน"} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
       )}
 
       {status === "error" ? (
@@ -156,7 +155,7 @@ export function ReportsPage() {
       ) : (
         <>
           <div class="stat-row" style="margin-bottom:12px">
-            <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)}`} />
+            <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)} ที่ถึงกำหนด` + (model.students.reduce((n, s) => n + s.pending, 0) > 0 ? ` · ยังไม่ถึงกำหนด ${model.students.reduce((n, s) => n + s.pending, 0)}` : "")} />
             <StatCard label="งานค้าง" value={model.metrics.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint={`นักเรียน ${model.followUp.length} คน`} />
             <StatCard label="คะแนนเฉลี่ย" value={`${model.metrics.avgScorePercent}%`} icon="star" hint="เฉพาะงานที่ตรวจแล้ว" />
             <StatCard label="มาเรียน" value={model.metrics.attendanceRate == null ? "—" : `${model.metrics.attendanceRate}%`} tone="success" icon="user-check"

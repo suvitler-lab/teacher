@@ -3,10 +3,10 @@ import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, bad, conflict, ApiError } from "../lib/http";
-import { setSetting, boolKey, getEpoch } from "../lib/db";
+import { setSettingStmt, boolKey, getEpoch } from "../lib/db";
 import { batchAtEpoch, epochChanged, epochGuard, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
-import { writeAudit, auditInsertStmt } from "../lib/audit";
+import { auditInsertStmt } from "../lib/audit";
 import { currentYear } from "../lib/roster";
 
 export const catalogRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -32,20 +32,21 @@ const ALLOWED_SETTINGS = new Set([
   "sound_enabled",
   "accept_student_code_scan",
   "parent_portal_enabled",
+  "onboarding_done",
   "last_backup_at",
   "period_times",
 ]);
 
 catalogRoutes.put("/api/settings", async (c) => {
   const body = (await readJson(c)) as Record<string, unknown>;
-  for (const [k, v] of Object.entries(body)) {
-    if (!ALLOWED_SETTINGS.has(k)) continue;
-    const value = boolKey(k) ? Boolean(v) : String(v ?? "");
-    await setSetting(c.env, k, value);
-  }
-  await writeAudit(c.env, [
+  // all the settings and the audit line in ONE batch: one round trip to the database, and all-or-nothing
+  const stmts = Object.entries(body)
+    .filter(([k]) => ALLOWED_SETTINGS.has(k))
+    .map(([k, v]) => setSettingStmt(c.env, k, boolKey(k) ? Boolean(v) : String(v ?? "")));
+  stmts.push(auditInsertStmt(c.env, [
     { entity: "settings", action: "update", device_id: c.get("deviceId"), after: body },
-  ]);
+  ]));
+  await c.env.DB.batch(stmts);
   return c.json({ ok: true });
 });
 
@@ -70,6 +71,9 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (existing && existing.year !== b.year) {
     throw conflict("term_year_locked", "เปลี่ยนปีการศึกษาของภาคเรียนที่มีอยู่ไม่ได้ — สร้างภาคเรียนใหม่ด้วย “เริ่มภาคเรียนใหม่” แทน");
   }
+  // editing a term's number must not collide with another term of the same school year
+  const same = existing && await c.env.DB.prepare("SELECT id FROM terms WHERE year = ? AND term = ? AND id != ?").bind(b.year, b.term, tid).first();
+  if (same) throw conflict("term_exists", `มีภาคเรียน ${b.term}/${b.year} อยู่แล้ว`);
   if (b.is_current) {
     const cur = await c.env.DB.prepare("SELECT id, year FROM terms WHERE is_current = 1 AND id != ?").bind(tid).first<{ id: string; year: number }>();
     if (cur && cur.year !== b.year) {

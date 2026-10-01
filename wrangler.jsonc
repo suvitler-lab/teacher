@@ -16,8 +16,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "kru-db",
-      "database_id": "REPLACE_WITH_DATABASE_ID_FROM_wrangler_d1_create",
+      "database_name": "kru-db-apac",
+      "database_id": "86cbb410-14a8-4d46-9b5f-89982e957815",
       "migrations_dir": "migrations"
     }
   ]

@@ -22,19 +22,37 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
   if (termId === "unassigned") clauses.push("a.term_id IS NULL");
   else if (termId) { clauses.push("a.term_id = ?"); binds.push(termId); }
 
-  // the class rosters of THIS term (a past year's classes hold that year's children)
-  const term = await loadTerm(c.env, termId);
+  // Two rounds of queries, each asking everything that doesn't depend on the others at once (the database is far away,
+  // so the number of round trips — not the number of queries — is what a teacher waits for).
+  // Round 1: the term, the work, and today's attendance (which doesn't depend on either).
+  const [term, aRes, classRes, attRes, activeRes] = await Promise.all([
+    // the class rosters of THIS term (a past year's classes hold that year's children)
+    loadTerm(c.env, termId),
+    c.env.DB.prepare(
+      `SELECT a.* FROM assignments a WHERE ${clauses.join(" AND ")} ORDER BY a.due_date IS NULL, a.due_date, a.created_at`,
+    ).bind(...binds).all(),
+    // Attendance for the day: EVERY active class (a room nobody has started yet must still show
+    // up as "not checked"), daily sessions only, counting only the active students of that class.
+    c.env.DB.prepare("SELECT id FROM classes WHERE archived = 0 ORDER BY sort, name").all<{ id: string }>(),
+    c.env.DB.prepare(
+      `SELECT s.class_id AS classId, at.status AS status, COUNT(*) AS n
+       FROM attendance_sessions s
+       JOIN attendance at ON at.session_id = s.id
+       JOIN students st ON st.id = at.student_id AND st.status = 'active' AND st.class_id = s.class_id
+       WHERE s.date = ? AND s.subject_id IS NULL AND s.period IS NULL
+       GROUP BY s.class_id, at.status`,
+    ).bind(date).all<{ classId: string; status: string; n: number }>(),
+    // "today" is about the children who are in the class today, whatever term is being viewed
+    c.env.DB.prepare("SELECT class_id, COUNT(*) AS n FROM students WHERE status = 'active' GROUP BY class_id")
+      .all<{ class_id: string | null; n: number }>(),
+  ]);
   const member = memberClause("s", term);
   const yearJoin = term ? "JOIN classes cl ON cl.id = s.class_id AND (cl.year IS NULL OR cl.year = ?)" : "";
   const yearBinds = term ? [term.year] : [];
-
-  const aRes = await c.env.DB.prepare(
-    `SELECT a.* FROM assignments a WHERE ${clauses.join(" AND ")} ORDER BY a.due_date IS NULL, a.due_date, a.created_at`,
-  ).bind(...binds).all();
   const assignments = aRes.results ?? [];
   const aids = assignments.map((a: any) => a.id);
 
-  // class links, active students (id+class), submissions for these assignments
+  // Round 2: class links, the children of each class in this term, and the scores for these assignments
   const [linkRes, stuRes, subRes] = await Promise.all([
     aids.length
       ? c.env.DB.prepare(
@@ -107,22 +125,6 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
     else if (perClass.some((p) => p.awaiting > 0)) gradingAssignments.push({ assignment: asg, perClass });
   }
 
-  // Attendance for the day: EVERY active class (a room nobody has started yet must still show
-  // up as "not checked"), daily sessions only, counting only the active students of that class.
-  const [classRes, attRes, activeRes] = await Promise.all([
-    c.env.DB.prepare("SELECT id FROM classes WHERE archived = 0 ORDER BY sort, name").all<{ id: string }>(),
-    c.env.DB.prepare(
-      `SELECT s.class_id AS classId, at.status AS status, COUNT(*) AS n
-       FROM attendance_sessions s
-       JOIN attendance at ON at.session_id = s.id
-       JOIN students st ON st.id = at.student_id AND st.status = 'active' AND st.class_id = s.class_id
-       WHERE s.date = ? AND s.subject_id IS NULL AND s.period IS NULL
-       GROUP BY s.class_id, at.status`,
-    ).bind(date).all<{ classId: string; status: string; n: number }>(),
-    // "today" is about the children who are in the class today, whatever term is being viewed
-    c.env.DB.prepare("SELECT class_id, COUNT(*) AS n FROM students WHERE status = 'active' GROUP BY class_id")
-      .all<{ class_id: string | null; n: number }>(),
-  ]);
   const activeCount = new Map<string, number>();
   for (const r of activeRes.results ?? []) if (r.class_id) activeCount.set(r.class_id, r.n);
   const tally = new Map<string, AttendanceDay>();

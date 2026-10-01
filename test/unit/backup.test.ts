@@ -23,9 +23,9 @@ function server(prints: string[]) {
     const m = /table=(\w+)&cursor=(\d+)/.exec(path)!;
     reads.push(`${m[1]}@${m[2]}`);
     if (m[1] === "students") return m[2] === "0"
-      ? { rows: [{ id: "s1" }, { id: "s2" }], nextCursor: 2, schema_version: 5 }
-      : { rows: [{ id: "s3" }], nextCursor: null, schema_version: 5 };
-    return { rows: [], nextCursor: null, schema_version: 5 };
+      ? { rows: [{ id: "s1" }, { id: "s2" }], nextCursor: 2, schema_version: 6 }
+      : { rows: [{ id: "s3" }], nextCursor: null, schema_version: 6 };
+    return { rows: [], nextCursor: null, schema_version: 6 };
   });
   return { reads };
 }

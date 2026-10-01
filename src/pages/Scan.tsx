@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { signal, computed } from "@preact/signals";
 import "../styles/scan.css";
 import { Icon } from "../components/Icon";
-import { ProgressRing, TermPicker } from "../components/ui";
+import { PageHeader, ProgressRing, TermPicker } from "../components/ui";
 import {
   activeClasses,
   activeSubjects,
@@ -142,8 +142,18 @@ function reconcileSubs(rows: any[], beforeRequest: Map<string, SubState>): Map<s
   return map;
 }
 
+/**
+ * How often the screen re-reads the work's hand-ins (every one of them: a cursor by time can skip a write that commits
+ * late). Each read costs about one row per child the work was given to, so it is slow and only while the page is seen.
+ */
+const POLL_MS = 60_000;
+/** Coming back to the page (or the network) asks again at once — unless something was read this recently. */
+const RESUME_GAP_MS = 10_000;
+let lastFetchAt = 0;
+
 async function loadSubs(assignmentId: string) {
   const seq = ++loadSeq;
+  lastFetchAt = Date.now();
   const beforeRequest = subsBox.value.aid === assignmentId ? subsBox.value.map : NO_SUBS;
   let res: { submissions: any[]; assignment?: { status: string; full_score: number; deleted: boolean } | null; serverTime: number };
   try {
@@ -168,6 +178,7 @@ async function pollSubs() {
   // never loaded for THIS round (first answer failed): ask for everything, not "changes since" some other work's clock
   if (box.aid !== s.assignmentId || box.status !== "ready") { loadSubs(s.assignmentId).catch(() => {}); return; }
   const seq = ++loadSeq;
+  lastFetchAt = Date.now();
   try {
     const res = await api.get<{ submissions: any[]; assignment?: { status: string; full_score: number; deleted: boolean } | null; serverTime: number }>(
       // Wall-clock cursors can miss writes that commit after a poll with an older updated_at.
@@ -180,6 +191,25 @@ async function pollSubs() {
     const m = reconcileSubs(res.submissions, box.map);
     subsBox.value = { ...subsBox.value, map: m, serverTime: res.serverTime };
   } catch { /* offline; ignore */ }
+}
+
+/**
+ * Keep the screen's copy of the hand-ins fresh: every POLL_MS while the page is visible, and at once when the page
+ * comes back to the front or the network returns (a locked tablet or a dropped wifi must not leave it stale for a
+ * whole interval). Scans and sends never wait for this — they go through the queue as before. Returns the stop function.
+ */
+function startPolling(): () => void {
+  const seen = () => document.visibilityState !== "hidden";
+  const tick = () => { if (seen()) pollSubs().catch(() => {}); };
+  const resume = () => { if (seen() && Date.now() - lastFetchAt >= RESUME_GAP_MS) pollSubs().catch(() => {}); };
+  const timer = setInterval(tick, POLL_MS);
+  document.addEventListener("visibilitychange", resume);
+  window.addEventListener("online", resume);
+  return () => {
+    clearInterval(timer);
+    document.removeEventListener("visibilitychange", resume);
+    window.removeEventListener("online", resume);
+  };
 }
 
 // A student's current state for the running round: what the server said, unless this
@@ -424,10 +454,7 @@ function SessionSetup() {
 
   return (
     <div>
-      <div class="page-head">
-        <div class="page-title">สแกนส่งงาน</div>
-        <TermPicker />
-      </div>
+      <PageHeader icon="scan" title="สแกนส่งงาน" sub="เลือกงาน ห้อง และวิธีให้คะแนน" actions={<TermPicker />} />
       {open.length === 0 ? (
         <div class="card empty">
           {past ? (<>
@@ -537,10 +564,7 @@ function ScanView() {
     window.addEventListener("blur", offf);
     return () => { window.removeEventListener("focus", on); window.removeEventListener("blur", offf); };
   }, []);
-  useEffect(() => {
-    const t = setInterval(pollSubs, 20000);
-    return () => clearInterval(t);
-  }, []);
+  useEffect(() => startPolling(), []);
   useEffect(() => {
     let ctl: any = null;
     if (useCamera.value && videoRef.current) {
@@ -863,4 +887,4 @@ function ScorePad() {
 }
 
 // Test seam: the round controller is plain functions over signals, so a test can drive it without rendering.
-export const __scan = { startSession, loadSubs, pollSubs, commitStudent, effSub, session, subsBox, feedback };
+export const __scan = { startSession, loadSubs, pollSubs, startPolling, POLL_MS, RESUME_GAP_MS, commitStudent, effSub, session, subsBox, feedback };

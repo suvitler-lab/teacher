@@ -6,6 +6,7 @@ import { computeReport, type ReportPayload, type StudentReport } from "../lib/re
 import { classById, selectedTermId, studentsById, subjectById } from "../store";
 import { fullName } from "../lib/names";
 import type { Student } from "@shared/types";
+import { formatThaiDayMonthMs } from "../lib/dates";
 
 const METHOD_LABEL: Record<string, string> = { camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน" };
 const ENTITY_LABEL: Record<string, string> = { submission: "ส่งงาน/คะแนน", attendance: "เช็คชื่อ", qr: "บัตร QR", assignment: "งาน", student: "นักเรียน" };
@@ -122,7 +123,7 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
             <div class="row" style="gap:8px;padding:5px 0;border-top:0.5px solid var(--border);font-size:12px">
               <Icon name="history" size={14} class="muted" />
               <span class="grow">{describeAudit(r)}</span>
-              <span class="page-sub" style="white-space:nowrap">{new Date(r.at).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}{r.method ? " · " + (METHOD_LABEL[r.method] ?? r.method) : ""}</span>
+              <span class="page-sub" style="white-space:nowrap">{formatThaiDayMonthMs(r.at)}{r.method ? " · " + (METHOD_LABEL[r.method] ?? r.method) : ""}</span>
             </div>
           ))}
         </div>
