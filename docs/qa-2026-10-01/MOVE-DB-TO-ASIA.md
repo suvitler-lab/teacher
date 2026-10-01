@@ -68,3 +68,14 @@ npx wrangler d1 execute $OLD_NAME --remote --command "UPDATE meta SET value='0' 
 
 ## 8. เก็บกวาด (หลังใช้งานใหม่ปกติสัก 1–2 วัน)
 ลบ DB เดิมได้เมื่อแน่ใจแล้วเท่านั้น: `npx wrangler d1 delete $OLD_NAME` (ย้อนกลับไม่ได้ — เก็บไฟล์ `kru-db-before-move.sql` ไว้)
+
+---
+
+## บันทึกการย้ายจริง (1 ต.ค. 2569)
+- ย้ายแล้ว: `kru-db` (`20bdc9f8-7eed-4f44-bc45-d59a8e2de144`, ENAM) → **`kru-db-apac` (`86cbb410-14a8-4d46-9b5f-89982e957815`, APAC)** ทำตามข้อ 1–6 ข้างบนทุกข้อ
+- เทียบแล้ว **ตรงกันทุกตาราง ทั้งจำนวนแถว (22 ตาราง) และเนื้อหา (md5 ของทุกแถวใน 16 ตารางข้อมูล)**: นักเรียน 44, คะแนน 4, เช็คชื่อ 44, ประวัติ 185, เซสชัน 2, `schema_version` 6, `data_epoch` 2
+- Worker ชี้ไป DB ใหม่แล้ว (version `0baa5139`) `/api/health` ปกติ; DB ใหม่รับเขียนได้ (ทดสอบเขียน/ลบแถวทดลองใน `meta`)
+- **DB เดิมยังอยู่ครบและถูกล็อก (`maintenance=1`)** เก็บไว้ย้อนกลับ ห้ามลบจนกว่าจะใช้งานใหม่ปกติสัก 1–2 วัน ไฟล์สำรองก่อนย้ายอยู่ในเครื่องที่ทำงาน (ไม่ได้เก็บใน repo เพราะมีข้อมูลนักเรียน): ถ้าต้องการ ส่งออกใหม่ได้จาก DB เดิมด้วย `npx wrangler d1 export kru-db --remote --output <ไฟล์>`
+- ผลข้างเคียงที่ปรับตาม: `package.json` สคริปต์ `db:migrate:*` / `db:seed:local` ชี้ `kru-db-apac` (preflight บังคับให้ตรงกับ `wrangler.jsonc`)
+- ย้อนกลับ (ถ้าจำเป็น): ปลดล็อก DB เดิม `UPDATE meta SET value='0' WHERE key='maintenance'` (ใน DB `20bdc9f8…`) แล้วแก้ `wrangler.jsonc` กลับเป็น `kru-db` / `20bdc9f8…` + `package.json` ตาม แล้ว `npm run deploy` — ข้อมูลที่บันทึกใน DB ใหม่หลังย้ายจะไม่ตามกลับไปเอง
+- หมายเหตุการวัด: จาก sandbox ที่ใช้ทำงาน (ออกอินเทอร์เน็ตทางอเมริกา) `Server-Timing` ของ `/api/auth/me` เปลี่ยนจาก ~36 ms เป็น ~370 ms เพราะ Worker อยู่ฝั่งอเมริกาแต่ DB อยู่เอเชีย ซึ่งตรงกันข้ามกับครูที่อยู่ไทย (Worker อยู่ใกล้ไทย → DB ใน APAC ใกล้กัน) ผลจริงต้องดูจากเครื่องของครู: DevTools → Network → คำขอ `/api/...` → Timing → `Server-Timing: app;dur=…` ควรลดลงมาก

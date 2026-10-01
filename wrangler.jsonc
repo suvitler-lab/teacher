@@ -16,8 +16,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "kru-db",
-      "database_id": "20bdc9f8-7eed-4f44-bc45-d59a8e2de144",
+      "database_name": "kru-db-apac",
+      "database_id": "86cbb410-14a8-4d46-9b5f-89982e957815",
       "migrations_dir": "migrations"
     }
   ]
