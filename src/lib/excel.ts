@@ -32,9 +32,10 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   }
 
   // ---- Sheet 1: สรุปรายคน ----
-  const s1 = wb.addWorksheet("สรุปรายคน", { views: [{ state: "frozen", ySplit: 1, xSplit: 2 }] });
+  const s1 = wb.addWorksheet("สรุปรายคน", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
   s1.columns = [
     { header: "เลขที่", width: 8 },
+    { header: "รหัสนักเรียน", width: 14 },
     { header: "ชื่อ - สกุล", width: 26 },
     { header: "ส่งแล้ว", width: 9 },
     { header: "ค้าง", width: 8 },
@@ -43,13 +44,14 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   ];
   styleHeader(s1.getRow(1));
   for (const r of model.students) {
-    s1.addRow([r.student.number ?? "", opts.fullName(r.student), r.submitted, r.missing, r.percent + "%", `${r.score}/${r.fullScore}`]);
+    s1.addRow([r.student.number ?? "", r.student.code ?? "", opts.fullName(r.student), r.submitted, r.missing, r.percent + "%", `${r.score}/${r.fullScore}`]);
   }
 
   // ---- Sheet 2: คะแนนรายงาน ----
-  const s2 = wb.addWorksheet("คะแนนรายงาน", { views: [{ state: "frozen", ySplit: 1, xSplit: 2 }] });
+  const s2 = wb.addWorksheet("คะแนนรายงาน", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
   const cols2 = [
     { header: "เลขที่", width: 8 },
+    { header: "รหัสนักเรียน", width: 14 },
     { header: "ชื่อ - สกุล", width: 26 },
     ...payload.assignments.map((a) => ({ header: `${a.title} /${a.full_score}`, width: 16 })),
   ];
@@ -57,7 +59,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   styleHeader(s2.getRow(1));
   const subMap = new Map(payload.submissions.map((s) => [`${s.assignment_id}:${s.student_id}`, s]));
   for (const st of payload.students) {
-    const row: any[] = [st.number ?? "", opts.fullName(st)];
+    const row: any[] = [st.number ?? "", st.code ?? "", opts.fullName(st)];
     for (const a of payload.assignments) {
       const sub = subMap.get(`${a.id}:${st.id}`);
       if (!sub || sub.status === "void") row.push(a.due_date && model.today > a.due_date ? "ไม่ส่ง" : "");
@@ -76,11 +78,12 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   const sessions = [...payload.attendanceSessions].sort(
     (x, y) => x.date.localeCompare(y.date) || (x.period ?? 0) - (y.period ?? 0),
   );
-  const s3 = wb.addWorksheet(bySubject ? "เช็คชื่อรายคาบ" : "เช็คชื่อรายวัน", { views: [{ state: "frozen", ySplit: 1, xSplit: 2 }] });
+  const s3 = wb.addWorksheet(bySubject ? "เช็คชื่อรายคาบ" : "เช็คชื่อรายวัน", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
   const attMap = new Map<string, string>(); // `${sessionId}:${studentId}` -> status
   for (const a of payload.attendance) attMap.set(`${a.session_id}:${a.student_id}`, a.status);
   s3.columns = [
     { header: "เลขที่", width: 8 },
+    { header: "รหัสนักเรียน", width: 14 },
     { header: "ชื่อ - สกุล", width: 26 },
     ...sessions.map((x) => ({ header: bySubject ? `${dayMonth(x.date)} ค${x.period ?? "-"}` : dayMonth(x.date), width: bySubject ? 9 : 6 })),
     { header: "มา", width: 6 }, { header: "สาย", width: 6 }, { header: "ลา", width: 6 }, { header: "ป่วย", width: 6 }, { header: "ขาด", width: 6 },
@@ -88,7 +91,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   ] as any;
   styleHeader(s3.getRow(1));
   for (const st of payload.students) {
-    const row: any[] = [st.number ?? "", opts.fullName(st)];
+    const row: any[] = [st.number ?? "", st.code ?? "", opts.fullName(st)];
     const tally: Record<string, number> = { present: 0, late: 0, leave: 0, sick: 0, absent: 0 };
     for (const x of sessions) {
       const status = attMap.get(`${x.id}:${st.id}`) ?? "";
