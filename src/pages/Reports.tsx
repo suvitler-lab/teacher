@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import "../styles/report.css";
 import { Icon } from "../components/Icon";
-import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState } from "../components/ui";
+import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState, NoClassState } from "../components/ui";
 import { StudentDrawer } from "../components/StudentDrawer";
 import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED } from "../store";
 import { api } from "../lib/api";
@@ -30,7 +30,7 @@ export function ReportsPage() {
   const [editStu, setEditStu] = useState<Student | null>(null);
 
   async function load() {
-    if (!classId) return;
+    if (!classId) { setStatus("ready"); return; }
     const fresh = begin();
     // never keep showing the previous class/term/month while the new one loads (or fails)
     setStatus("loading"); setPayload(null); setModel(null);
@@ -107,6 +107,8 @@ export function ReportsPage() {
   }) : [];
 
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
+
+  if (viewClasses.value.length === 0) return <div><PageHeader icon="chart-bar" title="รายงานสรุป" actions={<TermPicker />} /><NoClassState /></div>;
 
   return (
     <div>

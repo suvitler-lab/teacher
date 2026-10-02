@@ -173,7 +173,7 @@ export function AssignmentModal({
             <div style="font-weight:500;font-size:14px">ให้ผู้ปกครองเห็นคะแนน</div>
             <div class="page-sub">{publish ? "เห็นสถานะและคะแนนทันที" : "ซ่อนคะแนนไว้ก่อน"}</div>
           </div>
-          <button class={"switch " + (publish ? "on" : "")} role="switch" aria-checked={publish} onClick={() => setPublish(!publish)}>
+          <button class={"switch " + (publish ? "on" : "")} role="switch" aria-checked={publish} aria-label="แสดงคะแนนให้ผู้ปกครองเห็น" onClick={() => setPublish(!publish)}>
             <span class="knob" />
           </button>
         </div>

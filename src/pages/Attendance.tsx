@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/attend.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented, StackBar } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, StackBar, NoClassState } from "../components/ui";
 import { activeClasses, activeSubjects, studentsByClass, settings, studentsById, revokedTokens, schoolYearStart, students as allStudents } from "../store";
 import type { AttendanceStatus, AttendanceDay, Student } from "@shared/types";
 import { api } from "../lib/api";
@@ -245,6 +245,8 @@ export function AttendancePage() {
     const mark = total === 0 ? null : p === "complete" ? "ok" : p === "partial" ? "part" : "todo";
     return { id: c.id, name: c.name, count: total, mark } as const;
   });
+
+  if (activeClasses.value.length === 0) return <div><PageHeader icon="user-check" title="เช็คชื่อ" /><NoClassState /></div>;
 
   return (
     <div>

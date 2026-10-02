@@ -58,3 +58,5 @@ table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
 .gb-meye { flex: none; width: 40px; height: 40px; min-width: 40px; padding: 0; border: none; background: transparent; color: var(--text-secondary); border-radius: var(--radius-sm); }
 .gb-meye.off { color: var(--text-warning); background: var(--bg-warning); }
 .gb-meye[disabled] { opacity: 0.45; }
+/* phone: the score cell of a row is a button — keep it big enough for a finger even when it only says ••• */
+.gb-mrow > button { min-width: 44px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }

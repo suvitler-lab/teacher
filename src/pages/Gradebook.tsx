@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "preact/hooks";
 import "../styles/grade.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented, WorkCell, EmptyState, LoadError, TermPicker, YearBanner, useIsPhone } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, WorkCell, EmptyState, LoadError, NoClassState, TermPicker, YearBanner, useIsPhone } from "../components/ui";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import {
   viewClasses, rosterCount, classById, activeSubjects, activeWorkTypes, studentsByClass, workTypeById, selectedTermId,
@@ -74,7 +74,7 @@ export function GradebookPage() {
   // `keep` = a refresh after an action (keep what's on screen); otherwise the filters changed,
   // so the previous class/subject/term must not stay on screen while the new one loads (or fails)
   async function load(keep = false) {
-    if (!classId) return;
+    if (!classId) { setStatus("ready"); return; } // no class: nothing to load (the page says so)
     const fresh = begin();
     if (!keep) { setStatus("loading"); setAssignments([]); setSubs(new Map()); setRoster(null); }
     try {
@@ -317,6 +317,8 @@ export function GradebookPage() {
   const submitRate = totApplic ? Math.round((totSubmitted / totApplic) * 100) : 0;
 
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
+
+  if (viewClasses.value.length === 0) return <div><PageHeader icon="table" title="สมุดคะแนน" actions={<TermPicker />} /><NoClassState /></div>;
 
   return (
     <div>

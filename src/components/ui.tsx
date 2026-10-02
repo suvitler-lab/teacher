@@ -9,6 +9,7 @@ import { terms, selectedTermId, setSelectedTerm, UNASSIGNED, viewingPastYear, vi
 import { online, syncing, pendingCount } from "../lib/outbox";
 import { serverReachable } from "../lib/session";
 import { thaiMonthsFull } from "../lib/dates";
+import { navigate } from "../router";
 
 // ---- viewport hook -------------------------------------------------------
 export function useIsPhone(bp = 720): boolean {
@@ -207,6 +208,17 @@ export function EmptyState({ icon = "inbox", text, action }: { icon?: string; te
       <div class="ei"><Icon name={icon} size={30} /></div>
       <div>{text}</div>
       {action && <div style="margin-top:10px">{action}</div>}
+    </div>
+  );
+}
+
+// ---- no class yet -----------------------------------------------------------
+// Every page that works per class says the same thing, with the same way out, when the school has no class at all.
+export function NoClassState() {
+  return (
+    <div class="card">
+      <EmptyState icon="school" text="ยังไม่มีห้องเรียน — สร้างห้องก่อน แล้วค่อยนำเข้านักเรียน"
+        action={<button class="primary" onClick={() => navigate("/settings", { section: "catalog" })}><Icon name="settings" size={16} /> ไปที่ตั้งค่า › ห้องเรียน</button>} />
     </div>
   );
 }

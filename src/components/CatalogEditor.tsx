@@ -71,8 +71,8 @@ function ColorSelect({ value, onChange, label }: { value: string; onChange: (v: 
 function MoveButtons({ i, n, label, move }: { i: number; n: number; label: string; move: (dir: -1 | 1) => void }) {
   return (
     <span class="row" style="gap:2px;flex:none">
-      <button class="icon ghost" style="width:30px;height:30px" aria-label={`เลื่อน ${label} ขึ้น`} title="เลื่อนขึ้น" disabled={i === 0} onClick={() => move(-1)}><Icon name="chevron-up" size={16} /></button>
-      <button class="icon ghost" style="width:30px;height:30px" aria-label={`เลื่อน ${label} ลง`} title="เลื่อนลง" disabled={i === n - 1} onClick={() => move(1)}><Icon name="chevron-down" size={16} /></button>
+      <button class="icon ghost reorder" aria-label={`เลื่อน ${label} ขึ้น`} title="เลื่อนขึ้น" disabled={i === 0} onClick={() => move(-1)}><Icon name="chevron-up" size={16} /></button>
+      <button class="icon ghost reorder" aria-label={`เลื่อน ${label} ลง`} title="เลื่อนลง" disabled={i === n - 1} onClick={() => move(1)}><Icon name="chevron-down" size={16} /></button>
     </span>
   );
 }

@@ -1,0 +1,448 @@
+{
+  "label": "states2",
+  "at": "2026-10-02T18:23:09.659Z",
+  "scenes": 204,
+  "counts": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 26
+  },
+  "matrix": {
+    "home": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569"
+      ],
+      "termPicker": true,
+      "classChips": false,
+      "filterBar": false,
+      "statCards": 4,
+      "summaryLine": true,
+      "cards": 3,
+      "primaryButtons": 0,
+      "rowStyles": [
+        "hm-asg"
+      ],
+      "emptyOrLoading": 0
+    },
+    "scan-choose": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569"
+      ],
+      "termPicker": true,
+      "classChips": false,
+      "filterBar": false,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "gradebook": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "สร้างงาน"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 0,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "attendance": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "แตะเลือก",
+        "สแกน QR"
+      ],
+      "termPicker": false,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 0,
+      "rowStyles": [
+        "att-tile"
+      ],
+      "emptyOrLoading": 0
+    },
+    "random": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "สุ่มชื่อ",
+        "จับกลุ่ม",
+        "จอใหญ่"
+      ],
+      "termPicker": false,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "reports": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "พิมพ์",
+        "ส่งออก Excel"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 4,
+      "summaryLine": true,
+      "cards": 5,
+      "primaryButtons": 1,
+      "rowStyles": [
+        "rp-table"
+      ],
+      "emptyOrLoading": 0
+    },
+    "students": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "นำเข้า Excel",
+        "เพิ่มนักเรียน"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": false,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [
+        "stu-lrow"
+      ],
+      "emptyOrLoading": 0
+    }
+  },
+  "findings": [
+    {
+      "sev": "P3",
+      "where": "gradebook-create @desktop/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch on"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @desktop/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch "
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-menu @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-create @phone/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch on"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-create @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @phone/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch "
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-cell-edit @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-missing @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-rooms @phone/light",
+      "what": "6+ tap targets under 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-subjects @phone/light",
+      "what": "4+ tap targets under 32px",
+      "examples": [
+        "เลื่อน วิทยาศาสตร์ ขึ้น  30×36",
+        "เลื่อน วิทยาศาสตร์ ลง  30×36",
+        "เลื่อน คณิตศาสตร์ ขึ้น  30×36",
+        "เลื่อน คณิตศาสตร์ ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-types @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "เลื่อน แบบฝึกหัด ขึ้น  30×36",
+        "เลื่อน แบบฝึกหัด ลง  30×36",
+        "เลื่อน ใบงาน ขึ้น  30×36",
+        "เลื่อน ใบงาน ลง  30×36",
+        "เลื่อน ใบกิจกรรม ขึ้น  30×36",
+        "เลื่อน ใบกิจกรรม ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-create @desktop/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch on"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @desktop/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch "
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-menu @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-create @phone/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch on"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-create @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @phone/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "button.switch "
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-edit @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-cell-edit @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-missing @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-rooms @phone/dark",
+      "what": "6+ tap targets under 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-subjects @phone/dark",
+      "what": "4+ tap targets under 32px",
+      "examples": [
+        "เลื่อน วิทยาศาสตร์ ขึ้น  30×36",
+        "เลื่อน วิทยาศาสตร์ ลง  30×36",
+        "เลื่อน คณิตศาสตร์ ขึ้น  30×36",
+        "เลื่อน คณิตศาสตร์ ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-types @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "เลื่อน แบบฝึกหัด ขึ้น  30×36",
+        "เลื่อน แบบฝึกหัด ลง  30×36",
+        "เลื่อน ใบงาน ขึ้น  30×36",
+        "เลื่อน ใบงาน ลง  30×36",
+        "เลื่อน ใบกิจกรรม ขึ้น  30×36",
+        "เลื่อน ใบกิจกรรม ลง  30×36"
+      ]
+    }
+  ]
+}

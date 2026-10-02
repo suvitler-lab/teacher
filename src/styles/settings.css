@@ -27,3 +27,6 @@
   box-shadow: var(--shadow-pop); margin-top: 12px;
 }
 @media (max-width: 720px) { .set-cols { grid-template-columns: 1fr; } .set-nav { display: none; } .set-savebar { bottom: calc(76px + env(safe-area-inset-bottom)); } }
+/* reorder arrows: 30px with a mouse, a finger-sized 40px on a phone */
+button.reorder { width: 30px; height: 30px; }
+@media (max-width: 720px), (pointer: coarse) { button.reorder { width: 40px; height: 40px; } }
