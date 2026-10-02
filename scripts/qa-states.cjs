@@ -114,9 +114,9 @@ const traits = () => {
     { id: "attendance-qr", hash: "/attendance", ready: ".att-tile", act: async (p) => { await click(p, /สแกน QR/); await p.waitForTimeout(300); } },
     { id: "attendance-period", hash: "/attendance", ready: ".att-tile", act: async (p) => { await click(p, "รายคาบ"); await p.waitForTimeout(400); } },
     { id: "random", hash: "/random", ready: ".uh" },
-    { id: "random-whole-class", hash: "/random", ready: ".uh", act: async (p) => { await click(p, /ใช้ทั้งห้อง/); await p.waitForTimeout(300); } },
-    { id: "random-result", hash: "/random", ready: ".uh", act: async (p) => { await click(p, /ใช้ทั้งห้อง/); await click(p, /สุ่มเลย/); await p.waitForTimeout(2500); } },
-    { id: "random-groups", hash: "/random", ready: ".uh", act: async (p) => { await click(p, /ใช้ทั้งห้อง/); await click(p, /จับกลุ่ม/); await p.waitForTimeout(400); } },
+    { id: "random-whole-class", hash: "/random", ready: ".uh", act: async (p) => { await p.getByLabel(/เฉพาะคนที่มา/).uncheck(); await p.waitForTimeout(300); } },
+    { id: "random-result", hash: "/random", ready: ".uh", act: async (p) => { await p.getByLabel(/เฉพาะคนที่มา/).uncheck(); await click(p, /สุ่มเลย/); await p.waitForTimeout(2500); } },
+    { id: "random-groups", hash: "/random", ready: ".uh", act: async (p) => { await p.getByLabel(/เฉพาะคนที่มา/).uncheck(); await click(p, /จับกลุ่ม/); await p.waitForTimeout(400); } },
     { id: "reports", hash: "/reports", ready: ".rp-range" },
     { id: "reports-month", hash: "/reports", ready: ".rp-range", act: async (p) => { await click(p, "รายเดือน"); await p.waitForTimeout(900); } },
     { id: "reports-line-copy", hash: "/reports", ready: ".rp-range", act: async (p) => { await click(p, /คัดลอกไป LINE/); await p.waitForTimeout(400); } },
@@ -178,9 +178,8 @@ const traits = () => {
       if (theme === "light" && size.name === "desktop" && !sc.act && !sc.hash.includes("section=")) { matrix[sc.id] = await page.evaluate(traits); }
       await page.screenshot({ path: path.join(SHOTS, `${sc.id}__${size.name}__${theme}.jpg`), fullPage: !sc.modal, type: "jpeg", quality: 60 }).catch(() => {});
       scenesRun.push(where);
-      // leave menus, modals and drawers behind us
-      await page.keyboard.press("Escape").catch(() => {});
-      await page.locator(".modal-overlay, .drawer-scrim, .sheet-overlay").first().click({ position: { x: 3, y: 3 }, timeout: 300 }).catch(() => {});
+      // leave menus, modals and drawers behind us: a fresh page for the next scene (an open menu would block its clicks)
+      if (sc.act) { await page.goto(server.url + "/#/home"); await page.reload(); await page.waitForSelector(".rail, .bottom-tabs", { state: "attached", timeout: 20000 }); }
     }
     await ctx.close();
   }
@@ -203,8 +202,8 @@ const traits = () => {
       await page.waitForTimeout(3500);
       const a = await page.evaluate(audit);
       if (a.overflowX > 2) note("P2", where, `page scrolls sideways (${a.overflowX}px)`);
-      const t = await page.evaluate(() => ({ err: !!document.querySelector(".uc-empty"), spin: document.querySelectorAll(".spin").length, text: document.body.innerText.slice(0, 120).replace(/\s+/g, " ") }));
-      if (!t.err) note("P2", where, "server unreachable but the page shows neither data nor a 'could not load' message: " + t.text);
+      const t = await page.evaluate(() => ({ err: !!document.querySelector(".uc-empty, .stu-lrow, .att-tile"), spin: document.querySelectorAll(".spin").length, text: document.body.innerText.slice(0, 120).replace(/\s+/g, " ") }));
+      if (!t.err) note("P2", where, "server unreachable but the page shows neither the saved data nor a 'could not load' message: " + t.text);
       await page.screenshot({ path: path.join(SHOTS, `${id}-down__${size.name}__light.jpg`), fullPage: true, type: "jpeg", quality: 60 }).catch(() => {});
       scenesRun.push(where);
     }
@@ -215,8 +214,8 @@ const traits = () => {
 
   // ================================================================ an empty school: onboarding and every empty state
   console.log("\n== empty school");
-  const empty = await startFixtureServer({ port: 5331, seed: false });
   for (const size of SIZES) {
+    const empty = await startFixtureServer({ port: 5331, seed: false });
     const ctx = await browser.newContext({ viewport: { width: size.width, height: size.height }, locale: "th-TH", hasTouch: size.name === "phone" });
     const page = await ctx.newPage();
     const errs = [];
@@ -252,8 +251,8 @@ const traits = () => {
     }
     for (const e of errs) note("P1", `empty school @${size.name}`, e);
     await ctx.close();
+    await empty.close();
   }
-  await empty.close();
 
   // ================================================================ first use: no account yet
   console.log("\n== first use (no account)");

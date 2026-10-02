@@ -4,6 +4,7 @@ import { api } from "../lib/api";
 import { studentsById, assignments } from "../store";
 import { fullName } from "../lib/names";
 import { formatThaiTimeMs } from "../lib/dates";
+import { describeAudit, ENTITY_LABEL, METHOD_LABEL } from "../lib/auditText";
 
 interface AuditRow {
   id: number;
@@ -16,28 +17,6 @@ interface AuditRow {
   method: string | null;
   student_id: string | null;
   assignment_id: string | null;
-}
-
-const ENTITY_LABEL: Record<string, string> = {
-  submission: "ส่งงาน/คะแนน", attendance: "เช็คชื่อ", assignment: "งาน",
-  student: "นักเรียน", qr: "บัตร QR", settings: "ตั้งค่า", restore: "กู้คืน", auth: "บัญชี",
-};
-const METHOD_LABEL: Record<string, string> = {
-  camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน",
-};
-
-function describe(r: AuditRow): string {
-  if (r.entity === "submission") {
-    const b = r.before?.score, a = r.after?.score;
-    if (r.action === "void") return "ยกเลิกการส่ง";
-    if (b != null && a != null && b !== a) return `คะแนน ${b} → ${a}`;
-    if (a != null) return `ให้คะแนน ${a}`;
-    return "รับงาน";
-  }
-  if (r.entity === "attendance") return `สถานะ: ${r.after?.status ?? "-"}`;
-  if (r.entity === "qr") return "ออก QR ใหม่";
-  if (r.entity === "assignment") return r.action === "void" ? "ลบงาน" : r.action === "create" ? "สร้างงาน" : "แก้ไขงาน";
-  return r.action;
 }
 
 export function AuditHistory({ entity }: { entity?: string }) {
@@ -75,7 +54,7 @@ export function AuditHistory({ entity }: { entity?: string }) {
             <Icon name="history" size={16} class="muted" />
             <div class="grow" style="min-width:0">
               <div style="font-size:13px">
-                <span style="font-weight:500">{describe(r)}</span>
+                <span style="font-weight:500">{describeAudit(r, true)}</span>
                 {st && <span class="muted"> · {fullName(st)}</span>}
               </div>
               <div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">

@@ -519,7 +519,7 @@ function CellInput({ initial, onCommit, onCancel }: { initial: string; onCommit:
   }, []);
   function finish(next: boolean) { if (done.current) return; done.current = true; onCommit(initial, v, next); }
   return (
-    <input ref={ref} class="cell-input" inputMode="decimal" value={v}
+    <input ref={ref} class="cell-input" inputMode="decimal" aria-label="คะแนน" value={v}
       onInput={(e) => setV((e.target as HTMLInputElement).value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") { e.preventDefault(); finish(true); }
@@ -562,20 +562,22 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {submitted}/{students.length}</span>
         <div style="position:relative">
           <button style="height:28px" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
-          {menu && (<>
-            <div style="position:fixed;inset:0;z-index:39" onClick={() => setMenu(false)} />
-            <div class="gb-menu">
-              <button onClick={() => { setMenu(false); bulk("all-submitted"); }}><Icon name="checks" size={15} /> ทั้งห้องส่งแล้ว</button>
-              <button onClick={() => { setMenu(false); bulk("full-score"); }}><Icon name="star" size={15} /> ให้เต็มคนที่ส่ง</button>
-              <button onClick={() => { setMenu(false); bulk("clear"); }} style="color:var(--text-danger)"><Icon name="eraser" size={15} /> ล้าง</button>
-              <div class="gb-menu-sep" />
-              <button onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
-              <button onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
-              <button onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
-              <button onClick={() => { setMenu(false); manage.publishAll(); }}><Icon name={manage.allHidden ? "eye" : "eye-off"} size={15} /> {manage.allHidden ? "แสดงคะแนนทุกงาน" : "ซ่อนคะแนนทุกงาน"}</button>
-              <button onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
+          {menu && (
+            <div class="sheet-overlay" onClick={(e) => { if (e.target === e.currentTarget) setMenu(false); }}>
+              <div class="menu-sheet" role="dialog" aria-label="จัดการงาน">
+                <div class="sheet-grab" />
+                <div class="sheet-title">{selAsg.title}</div>
+                <button class="sheet-item" onClick={() => { setMenu(false); bulk("all-submitted"); }}><Icon name="checks" size={20} /> ทั้งห้องส่งแล้ว</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); bulk("full-score"); }}><Icon name="star" size={20} /> ให้เต็มคนที่ส่ง</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); bulk("clear"); }} style="color:var(--text-danger)"><Icon name="eraser" size={20} /> ล้าง</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={20} /> แก้ไขงาน</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={20} /> คัดลอกงาน</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={20} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); manage.publishAll(); }}><Icon name={manage.allHidden ? "eye" : "eye-off"} size={20} /> {manage.allHidden ? "แสดงคะแนนทุกงาน" : "ซ่อนคะแนนทุกงาน"}</button>
+                <button class="sheet-item" onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={20} /> ลบงาน</button>
+              </div>
             </div>
-          </>)}
+          )}
         </div>
       </div>
       {students.map((st, i) => {

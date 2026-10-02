@@ -1,0 +1,537 @@
+{
+  "label": "states",
+  "at": "2026-10-02T18:14:24.142Z",
+  "scenes": 166,
+  "counts": {
+    "P1": 1,
+    "P2": 44,
+    "P3": 14
+  },
+  "matrix": {
+    "home": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569"
+      ],
+      "termPicker": true,
+      "classChips": false,
+      "filterBar": false,
+      "statCards": 4,
+      "summaryLine": true,
+      "cards": 3,
+      "primaryButtons": 0,
+      "rowStyles": [
+        "hm-asg"
+      ],
+      "emptyOrLoading": 0
+    },
+    "scan-choose": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569"
+      ],
+      "termPicker": true,
+      "classChips": false,
+      "filterBar": false,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "gradebook": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "สร้างงาน"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 0,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "attendance": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "แตะเลือก",
+        "สแกน QR"
+      ],
+      "termPicker": false,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 0,
+      "rowStyles": [
+        "att-tile"
+      ],
+      "emptyOrLoading": 0
+    },
+    "random": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "สุ่มชื่อ",
+        "จับกลุ่ม",
+        "จอใหญ่"
+      ],
+      "termPicker": false,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "reports": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "พิมพ์",
+        "ส่งออก Excel"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 4,
+      "summaryLine": true,
+      "cards": 5,
+      "primaryButtons": 1,
+      "rowStyles": [
+        "rp-table"
+      ],
+      "emptyOrLoading": 0
+    },
+    "students": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "นำเข้า Excel",
+        "เพิ่มนักเรียน"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": false,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [
+        "stu-lrow"
+      ],
+      "emptyOrLoading": 0
+    }
+  },
+  "findings": [
+    {
+      "sev": "P2",
+      "where": "gradebook-create @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-edit @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-cell-edit @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-missing @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-month @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-whole-class @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-result @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-groups @desktop/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P3",
+      "where": "settings-restore @desktop/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-menu @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-create @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-edit @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-cell-edit @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-missing @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-month @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-whole-class @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-result @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-groups @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-import @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-add @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-menu @phone/light",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-rooms @phone/light",
+      "what": "6+ tap targets under 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-subjects @phone/light",
+      "what": "4+ tap targets under 32px",
+      "examples": [
+        "เลื่อน วิทยาศาสตร์ ขึ้น  30×36",
+        "เลื่อน วิทยาศาสตร์ ลง  30×36",
+        "เลื่อน คณิตศาสตร์ ขึ้น  30×36",
+        "เลื่อน คณิตศาสตร์ ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-types @phone/light",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "เลื่อน แบบฝึกหัด ขึ้น  30×36",
+        "เลื่อน แบบฝึกหัด ลง  30×36",
+        "เลื่อน ใบงาน ขึ้น  30×36",
+        "เลื่อน ใบงาน ลง  30×36",
+        "เลื่อน ใบกิจกรรม ขึ้น  30×36",
+        "เลื่อน ใบกิจกรรม ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-restore @phone/light",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-create @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-edit @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-cell-edit @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-missing @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-month @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-whole-class @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-result @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-groups @desktop/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P3",
+      "where": "settings-restore @desktop/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "gradebook-menu @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38",
+        "•••  30×38"
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-create @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-edit @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-cell-edit @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-missing @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "gradebook-month @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-whole-class @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-result @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "random-groups @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-import @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-add @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 4000ms exceeded."
+    },
+    {
+      "sev": "P2",
+      "where": "students-menu @phone/dark",
+      "what": "could not reach this screen: locator.click: Timeout 30000ms exceeded."
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-rooms @phone/dark",
+      "what": "6+ tap targets under 32px",
+      "examples": [
+        "เลื่อน ป.6/1 ขึ้น  30×36",
+        "เลื่อน ป.6/1 ลง  30×36",
+        "เลื่อน ป.6/2 ขึ้น  30×36",
+        "เลื่อน ป.6/2 ลง  30×36",
+        "เลื่อน ป.6/3 ขึ้น  30×36",
+        "เลื่อน ป.6/3 ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-subjects @phone/dark",
+      "what": "4+ tap targets under 32px",
+      "examples": [
+        "เลื่อน วิทยาศาสตร์ ขึ้น  30×36",
+        "เลื่อน วิทยาศาสตร์ ลง  30×36",
+        "เลื่อน คณิตศาสตร์ ขึ้น  30×36",
+        "เลื่อน คณิตศาสตร์ ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-catalog-types @phone/dark",
+      "what": "12+ tap targets under 32px",
+      "examples": [
+        "เลื่อน แบบฝึกหัด ขึ้น  30×36",
+        "เลื่อน แบบฝึกหัด ลง  30×36",
+        "เลื่อน ใบงาน ขึ้น  30×36",
+        "เลื่อน ใบงาน ลง  30×36",
+        "เลื่อน ใบกิจกรรม ขึ้น  30×36",
+        "เลื่อน ใบกิจกรรม ลง  30×36"
+      ]
+    },
+    {
+      "sev": "P3",
+      "where": "settings-restore @phone/dark",
+      "what": "1 control(s) without a name",
+      "examples": [
+        "input."
+      ]
+    },
+    {
+      "sev": "P2",
+      "where": "students-down @desktop/light",
+      "what": "server unreachable but the page shows neither data nor a 'could not load' message: หน้าหลัก สแกน คะแนน เช็คชื่อ สุ่มชื่อ รายงาน นักเรียน ตั้งค่า ออฟไลน์ ออกระบบ นักเรียน ป.6/1 · 32 คน ภาคเรียนที่ 1/2569 "
+    },
+    {
+      "sev": "P2",
+      "where": "attendance-down @desktop/light",
+      "what": "server unreachable but the page shows neither data nor a 'could not load' message: หน้าหลัก สแกน คะแนน เช็คชื่อ สุ่มชื่อ รายงาน นักเรียน ตั้งค่า ออฟไลน์ ออกระบบ เช็คชื่อ ป.6/1 · 3 ต.ค. 2569 ออฟไลน์ แตะเล"
+    },
+    {
+      "sev": "P2",
+      "where": "students-down @phone/light",
+      "what": "server unreachable but the page shows neither data nor a 'could not load' message: นักเรียน ป.6/1 · 32 คน ภาคเรียนที่ 1/2569 · ปัจจุบัน ยังไม่ระบุเทอม นำเข้า Excel เพิ่มนักเรียน ป.6/1 32 ป.6/2 4 ป.6/3 3 "
+    },
+    {
+      "sev": "P2",
+      "where": "attendance-down @phone/light",
+      "what": "server unreachable but the page shows neither data nor a 'could not load' message: เช็คชื่อ ป.6/1 · 3 ต.ค. 2569 ออฟไลน์ แตะเลือก สแกน QR ป.6/1 32 ป.6/2 4 ป.6/3 3 วันนี้ รายวัน รายคาบ จ 28 ยังไม่เช็ค อ 29"
+    },
+    {
+      "sev": "P2",
+      "where": "random-empty @desktop/light",
+      "what": "still shows a loading spinner on an empty school"
+    },
+    {
+      "sev": "P1",
+      "where": "onboarding @phone",
+      "what": "the welcome guide did not open for an empty school"
+    },
+    {
+      "sev": "P2",
+      "where": "random-empty @phone/light",
+      "what": "still shows a loading spinner on an empty school"
+    }
+  ]
+}

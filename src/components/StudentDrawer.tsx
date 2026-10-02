@@ -7,22 +7,7 @@ import { classById, selectedTermId, studentsById, subjectById } from "../store";
 import { fullName } from "../lib/names";
 import type { Student } from "@shared/types";
 import { formatThaiDayMonthMs } from "../lib/dates";
-
-const METHOD_LABEL: Record<string, string> = { camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน" };
-const ENTITY_LABEL: Record<string, string> = { submission: "ส่งงาน/คะแนน", attendance: "เช็คชื่อ", qr: "บัตร QR", assignment: "งาน", student: "นักเรียน" };
-
-function describeAudit(r: any): string {
-  if (r.entity === "submission") {
-    const b = r.before?.score, a = r.after?.score;
-    if (r.action === "void") return "ยกเลิกการส่ง";
-    if (b != null && a != null && b !== a) return `คะแนน ${b} → ${a}`;
-    if (a != null) return `ให้คะแนน ${a}`;
-    return "รับงาน";
-  }
-  if (r.entity === "attendance") return `เช็คชื่อ: ${r.after?.status ?? "-"}`;
-  if (r.entity === "qr") return "ออก QR ใหม่";
-  return ENTITY_LABEL[r.entity] ?? r.action;
-}
+import { describeAudit, METHOD_LABEL } from "../lib/auditText";
 
 export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissing }: {
   studentId: string; classId: string; onClose: () => void;

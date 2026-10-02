@@ -162,7 +162,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
         {stage === "pick" && (
           <>
             <div class="page-sub" style="margin-bottom:10px">เลือกไฟล์สำรอง (.json) ที่เคยดาวน์โหลดไว้ ระบบจะตรวจความถูกต้องก่อน</div>
-            <input type="file" accept="application/json,.json" onChange={onPick} />
+            <input type="file" accept="application/json,.json" aria-label="เลือกไฟล์สำรอง (.json)" onChange={onPick} />
           </>
         )}
 

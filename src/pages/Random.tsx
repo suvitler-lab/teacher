@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/random.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, EmptyState } from "../components/ui";
 import { activeClasses, studentsByClass } from "../store";
 import { api } from "../lib/api";
 import { kvGet, kvSet } from "../lib/idb";
@@ -38,7 +38,7 @@ export function RandomPage() {
   const histKey = `random:${classId}:${todayBkk()}`;
 
   async function loadPresent() {
-    if (!classId) return;
+    if (!classId) { setAtt({ status: "ready", marked: 0, present: new Set() }); return; } // no room yet: nothing to wait for
     const fresh = begin();
     setAtt({ status: "loading", marked: 0, present: new Set() });
     try {
@@ -109,7 +109,8 @@ export function RandomPage() {
 
   const remaining = remainingInRound(pool, calledRef.current);
   const classItems = activeClasses.value.map((c) => ({ id: c.id, name: c.name, count: (studentsByClass.value.get(c.id) ?? []).length }));
-  const cameToday = att.status === "ready" && att.marked > 0 ? `มาเรียนวันนี้ ${att.present.size} จาก ${allStudents.length} คน` : att.status === "ready" ? "วันนี้ยังไม่ได้เช็คชื่อ" : att.status === "error" ? "โหลดเช็คชื่อไม่สำเร็จ" : "กำลังโหลดเช็คชื่อ…";
+  const noRoster = allStudents.length === 0;
+  const cameToday = !classId ? "ยังไม่มีห้อง" : noRoster ? "ยังไม่มีนักเรียนในห้องนี้" : att.status === "ready" && att.marked > 0 ? `มาเรียนวันนี้ ${att.present.size} จาก ${allStudents.length} คน` : att.status === "ready" ? "วันนี้ยังไม่ได้เช็คชื่อ" : att.status === "error" ? "โหลดเช็คชื่อไม่สำเร็จ" : "กำลังโหลดเช็คชื่อ…";
 
   return (
     <div class={projector ? "projector" : ""}>
@@ -126,6 +127,10 @@ export function RandomPage() {
 
       <div style="margin-bottom:12px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
 
+      {noRoster ? (
+        <div class="card"><EmptyState icon="users" text={classId ? "ยังไม่มีนักเรียนในห้องนี้ ให้เพิ่มรายชื่อก่อนจึงจะสุ่มได้" : "ยังไม่มีห้องเรียน เพิ่มห้องและนักเรียนก่อนจึงจะสุ่มได้"}
+          action={<button class="primary" onClick={() => navigate("/students")}><Icon name="user-plus" size={16} /> ไปหน้านักเรียน</button>} /></div>
+      ) : (<>
       {blocker !== "none" && (
         <div class="rnd-notice" role="status">
           <Icon name={blocker === "loading" ? "loader-2" : blocker === "error" ? "cloud-off" : "info-circle"} size={18} class={blocker === "loading" ? "spin" : undefined} />
@@ -195,6 +200,7 @@ export function RandomPage() {
           )}
         </div>
       )}
+      </>)}
     </div>
   );
 }
