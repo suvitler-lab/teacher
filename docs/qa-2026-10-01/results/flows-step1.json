@@ -1,0 +1,314 @@
+{
+  "label": "flows-step1",
+  "at": "2026-10-02T17:58:43.673Z",
+  "passed": 51,
+  "total": 51,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 538
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 912
+    },
+    {
+      "id": "A03",
+      "name": "reload keeps the teacher signed in",
+      "pass": true,
+      "ms": 731
+    },
+    {
+      "id": "H01",
+      "name": "home: the four big buttons go where they say",
+      "pass": true,
+      "ms": 3953
+    },
+    {
+      "id": "H02",
+      "name": "home: a class row under “เช็คชื่อวันนี้” opens THAT class's attendance",
+      "pass": true,
+      "ms": 395
+    },
+    {
+      "id": "S01",
+      "name": "students: adding with nothing filled in says what is missing (and saves nothing)",
+      "pass": true,
+      "ms": 729
+    },
+    {
+      "id": "S02",
+      "name": "students: add a student; appears in the list; count goes up",
+      "pass": true,
+      "ms": 872
+    },
+    {
+      "id": "S03",
+      "name": "students: the same student code twice is refused with a readable message",
+      "pass": true,
+      "ms": 959
+    },
+    {
+      "id": "S04",
+      "name": "students: search narrows the list",
+      "pass": true,
+      "ms": 417
+    },
+    {
+      "id": "S05",
+      "name": "students: open a student, edit the nickname, it is saved",
+      "pass": true,
+      "ms": 1064
+    },
+    {
+      "id": "S05b",
+      "name": "students: “ออก QR ใหม่” really changes the child's QR",
+      "pass": true,
+      "ms": 1306
+    },
+    {
+      "id": "S06",
+      "name": "students: Excel paste with a repeated-ID column previews and imports (new children + an update)",
+      "pass": true,
+      "ms": 1737
+    },
+    {
+      "id": "S06b",
+      "name": "students: re-importing a list that has NO class-number column keeps everyone's existing class numbers",
+      "pass": true,
+      "ms": 1402
+    },
+    {
+      "id": "S07",
+      "name": "students: Excel paste with a clashing class number is blocked with a clear warning",
+      "pass": true,
+      "ms": 926
+    },
+    {
+      "id": "S08",
+      "name": "students: print-stickers page opens and closes",
+      "pass": true,
+      "ms": 828
+    },
+    {
+      "id": "G01",
+      "name": "gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column",
+      "pass": true,
+      "ms": 1191
+    },
+    {
+      "id": "G02",
+      "name": "gradebook: a score typed into a cell is saved, and the running total follows",
+      "pass": true,
+      "ms": 845
+    },
+    {
+      "id": "G03",
+      "name": "gradebook: a score above the full mark is refused, not saved",
+      "pass": true,
+      "ms": 705
+    },
+    {
+      "id": "G04",
+      "name": "gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total",
+      "pass": true,
+      "ms": 9296
+    },
+    {
+      "id": "G04b",
+      "name": "gradebook: the blue bar's button hides every work (even columns not selected), survives a reload, and shows them again",
+      "pass": true,
+      "ms": 2991
+    },
+    {
+      "id": "G05",
+      "name": "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it",
+      "pass": true,
+      "ms": 2578
+    },
+    {
+      "id": "G06",
+      "name": "gradebook: edit the work (rename) and the column follows",
+      "pass": true,
+      "ms": 933
+    },
+    {
+      "id": "G07",
+      "name": "gradebook: delete the work; the column is gone",
+      "pass": true,
+      "ms": 1235
+    },
+    {
+      "id": "M02",
+      "name": "phone: the eye by the work's name hides that work only; the menu hides all work",
+      "pass": true,
+      "ms": 4757
+    },
+    {
+      "id": "T01",
+      "name": "attendance: tapping cycles the status and the summary counts follow; reload keeps it",
+      "pass": true,
+      "ms": 3897
+    },
+    {
+      "id": "T02",
+      "name": "attendance: choose a status, then tap students to set it; “มาทั้งหมด” fills everyone",
+      "pass": true,
+      "ms": 850
+    },
+    {
+      "id": "T03",
+      "name": "attendance: yesterday and back to today",
+      "pass": true,
+      "ms": 533
+    },
+    {
+      "id": "N01",
+      "name": "scan: pick work + room + mode, start, scan a QR with the keyboard scanner → the score lands",
+      "pass": true,
+      "ms": 3179
+    },
+    {
+      "id": "N02",
+      "name": "scan: the same child twice does not double-count; an unknown code is called out",
+      "pass": true,
+      "ms": 1872
+    },
+    {
+      "id": "R01",
+      "name": "reports: “คัดลอกไป LINE” puts who-owes-what on the clipboard",
+      "pass": true,
+      "ms": 896
+    },
+    {
+      "id": "R02",
+      "name": "reports: “ส่งออก Excel” downloads a real .xlsx",
+      "pass": true,
+      "ms": 281
+    },
+    {
+      "id": "R03",
+      "name": "reports: switching room / month / subject keeps the page working",
+      "pass": true,
+      "ms": 1667
+    },
+    {
+      "id": "D01",
+      "name": "random: “ใช้ทั้งห้อง” then “สุ่มเลย” shows a name; group mode makes groups",
+      "pass": true,
+      "ms": 34351
+    },
+    {
+      "id": "D02",
+      "name": "random: clicking an option (เฉพาะคนที่มา / ไม่ซ้ำจนครบ) flips it exactly once, and the boxes are normal-sized",
+      "pass": true,
+      "ms": 650
+    },
+    {
+      "id": "E01",
+      "name": "settings: change the school name → save bar → saved → header follows → survives reload",
+      "pass": true,
+      "ms": 3201
+    },
+    {
+      "id": "E02",
+      "name": "settings: the theme chosen stays after a reload",
+      "pass": true,
+      "ms": 3061
+    },
+    {
+      "id": "E03",
+      "name": "settings: leaving with unsaved changes asks first",
+      "pass": true,
+      "ms": 1222
+    },
+    {
+      "id": "E04",
+      "name": "settings: edit a term's number, name and dates (Thai date fields) and save",
+      "pass": true,
+      "ms": 1691
+    },
+    {
+      "id": "E05",
+      "name": "settings: devices list shows this device",
+      "pass": true,
+      "ms": 562
+    },
+    {
+      "id": "E06",
+      "name": "settings: wrong current password is refused; the right one changes it and says so",
+      "pass": true,
+      "ms": 1907
+    },
+    {
+      "id": "E07",
+      "name": "settings: “ดาวน์โหลดไฟล์สำรอง” gives a valid backup file",
+      "pass": true,
+      "ms": 1996
+    },
+    {
+      "id": "E09",
+      "name": "settings: a link to another section (#/settings?section=backup) works even while already on settings",
+      "pass": true,
+      "ms": 1018
+    },
+    {
+      "id": "E10",
+      "name": "settings: side menu OR pills, not both, on a wide screen",
+      "pass": true,
+      "ms": 519
+    },
+    {
+      "id": "K01",
+      "name": "history: when the server cannot be reached it says so (and offers a retry), not “no history yet”",
+      "pass": true,
+      "ms": 1512
+    },
+    {
+      "id": "K02",
+      "name": "reports: when the server cannot be reached the page says so, print/export are off, the badge goes offline — and all recover",
+      "pass": true,
+      "ms": 1030
+    },
+    {
+      "id": "E08",
+      "name": "settings: history lists what was just done",
+      "pass": true,
+      "ms": 1379
+    },
+    {
+      "id": "A04",
+      "name": "sign out lands on the sign-in page; the new password works",
+      "pass": true,
+      "ms": 933
+    },
+    {
+      "id": "Y01",
+      "name": "start the next term of the same year: current term moves on, classes and children stay",
+      "pass": true,
+      "ms": 1002
+    },
+    {
+      "id": "Y02",
+      "name": "start a new school year: empty same-named rooms open, last year's children become 'finished', nothing is deleted",
+      "pass": true,
+      "ms": 1122
+    },
+    {
+      "id": "M01",
+      "name": "phone: bottom tabs and the menu sheet reach every page; the sheet signs out",
+      "pass": true,
+      "ms": 4031
+    },
+    {
+      "id": "X01",
+      "name": "start over (data): needs the password + words; afterwards the welcome guide appears",
+      "pass": true,
+      "ms": 1632
+    }
+  ]
+}

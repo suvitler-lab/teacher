@@ -5,7 +5,7 @@ import { PageHeader, ClassChips, Segmented, WorkCell, EmptyState, LoadError, Ter
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import {
   viewClasses, rosterCount, classById, activeSubjects, activeWorkTypes, studentsByClass, workTypeById, selectedTermId,
-  viewingPastYear, upsertAssignment, dropAssignment,
+  viewingPastYear, upsertAssignment, dropAssignment, patchAssignments,
 } from "../store";
 import type { Assignment, Student } from "@shared/types";
 import { api, ApiError } from "../lib/api";
@@ -238,7 +238,7 @@ export function GradebookPage() {
    * there is no reload afterwards.
    */
   async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string, target: Assignment | null = selAsg) {
-    if (!target) return;
+    if (!target || act.isBusy("pub-all")) return;
     await act.run(`asg:${target.id}`, async () => {
       const before = target;
       setAssignments((list) => list.map((x) => (x.id === before.id ? ({ ...x, ...patch } as Assignment) : x)));
@@ -259,6 +259,36 @@ export function GradebookPage() {
       // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
       if (saved) { upsertAssignment(saved); setAssignments((list) => list.map((x) => (x.id === saved!.id ? { ...x, ...saved! } : x))); }
       if (okMsg) ok(okMsg);
+    });
+  }
+
+  /**
+   * Hide or show the scores of EVERY piece of work on screen (the blue bar's button; it follows the filters above the
+   * grid). Like saveAsgPatch the screen changes at once and goes back, with a message, if the server refuses; the
+   * server takes the list in one call (in chunks of 500, far more than a class ever has).
+   */
+  async function setAllPublish(publish: boolean) {
+    const targets = assignments.filter((a) => a.publish_scores !== publish);
+    if (targets.length === 0 || act.anyBusy) return;
+    await act.run("pub-all", async () => {
+      const ids = targets.map((a) => a.id);
+      const flip = (list: string[], to: boolean) => { const set = new Set(list); setAssignments((cur) => cur.map((x) => (set.has(x.id) ? { ...x, publish_scores: to } : x))); };
+      flip(ids, publish);
+      const done: string[] = [];
+      try {
+        for (let i = 0; i < ids.length; i += 500) {
+          const chunk = ids.slice(i, i + 500);
+          await api.post("/api/assignments/publish", { ids: chunk, publish });
+          done.push(...chunk);
+        }
+      } catch (e) {
+        flip(ids.filter((id) => !done.includes(id)), !publish); // what the server did not take goes back
+        if (done.length) patchAssignments(done, { publish_scores: publish });
+        err((e as Error).message || "บันทึกไม่สำเร็จ");
+        return;
+      }
+      patchAssignments(ids, { publish_scores: publish }); // Home and the scan screen read the shared list
+      ok(`${publish ? "แสดง" : "ซ่อน"}คะแนนทุกงานแล้ว (${ids.length} งาน)`);
     });
   }
 
@@ -338,10 +368,10 @@ export function GradebookPage() {
           <button onClick={() => bulk("all-submitted")} disabled={act.isBusy("bulk")}>{act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทั้งห้องส่งแล้ว</button>
           <button onClick={() => bulk("full-score")} disabled={act.isBusy("bulk")}>ให้เต็มคนที่ส่ง</button>
           <button onClick={() => bulk("clear")} disabled={act.isBusy("bulk")}>ล้าง</button>
-          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว")}
-            disabled={act.isBusy(`asg:${selAsg.id}`)}
-            title={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้ (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)" : "แสดงคะแนนของงานนี้"}>
-            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน"}
+          <span class="gb-sep" aria-hidden="true" />
+          <button onClick={() => setAllPublish(allHidden)} disabled={act.anyBusy} aria-pressed={allHidden}
+            title={allHidden ? "ตอนนี้ซ่อนคะแนนอยู่ทุกงาน — กดเพื่อแสดงทุกงาน" : hiddenCount > 0 ? `ตอนนี้ซ่อนอยู่ ${hiddenCount} จาก ${assignments.length} งาน — กดเพื่อซ่อนทุกงาน` : "ซ่อนคะแนนของทุกงานในหน้านี้ (ผู้ปกครองก็ไม่เห็น)"}>
+            <Icon name={allHidden ? "eye" : "eye-off"} size={14} /> {allHidden ? "แสดงคะแนนทุกงาน" : "ซ่อนคะแนนทุกงาน"}{!allHidden && hiddenCount > 0 ? ` (ซ่อนอยู่ ${hiddenCount})` : ""}
           </button>
           <div style="position:relative">
             <button aria-label="จัดการงาน" onClick={() => setMenuOpen((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
@@ -376,6 +406,8 @@ export function GradebookPage() {
             copy: () => setCopyAsg(selAsg!),
             toggleStatus: () => saveAsgPatch({ status: selAsg!.status === "open" ? "closed" : "open" }, selAsg!.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว"),
             togglePublish: () => saveAsgPatch({ publish_scores: !selAsg!.publish_scores }, selAsg!.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว"),
+            publishAll: () => setAllPublish(allHidden),
+            allHidden, busy: act.anyBusy,
             remove: removeAssignment,
           }} />
       ) : (
@@ -504,7 +536,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
   commitScore: (aid: string, sid: string, initial: string, raw: string) => void;
   bulk: (a: "all-submitted" | "full-score" | "clear") => void;
   // the same per-assignment actions the desktop bar has: edit / copy / close / publish / delete
-  manage: { edit: () => void; copy: () => void; toggleStatus: () => void; togglePublish: (() => void) | null; remove: () => void };
+  manage: { edit: () => void; copy: () => void; toggleStatus: () => void; togglePublish: () => void; publishAll: () => void; allHidden: boolean; busy: boolean; remove: () => void };
 }) {
   const [menu, setMenu] = useState(false);
   if (!selAsg) return null;
@@ -517,7 +549,15 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
         ))}
       </div>
       {/* the tabs above cut long titles short: the work picked is always named in full here */}
-      <div style="font-weight:500;overflow-wrap:anywhere;margin-bottom:2px">{selAsg.title}</div>
+      <div class="row" style="align-items:flex-start;gap:6px;margin-bottom:2px">
+        <div class="grow" style="font-weight:500;overflow-wrap:anywhere;min-width:0">{selAsg.title}</div>
+        <button type="button" class={"gb-meye" + (selAsg.publish_scores ? "" : " off")} disabled={manage.busy} aria-pressed={!selAsg.publish_scores}
+          aria-label={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+          title={selAsg.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อนงานนี้" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดงงานนี้"}
+          onClick={manage.togglePublish}>
+          <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={16} />
+        </button>
+      </div>
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {submitted}/{students.length}</span>
         <div style="position:relative">
@@ -532,7 +572,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
               <button onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
               <button onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
               <button onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
-              {manage.togglePublish && <button onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน (ซ่อนอยู่)"}</button>}
+              <button onClick={() => { setMenu(false); manage.publishAll(); }}><Icon name={manage.allHidden ? "eye" : "eye-off"} size={15} /> {manage.allHidden ? "แสดงคะแนนทุกงาน" : "ซ่อนคะแนนทุกงาน"}</button>
               <button onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
             </div>
           </>)}

@@ -1,0 +1,80 @@
+{
+  "label": "g04b",
+  "at": "2026-10-02T17:50:18.015Z",
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 536
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 935
+    },
+    {
+      "id": "G01",
+      "name": "gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column",
+      "pass": true,
+      "ms": 1665
+    },
+    {
+      "id": "G02",
+      "name": "gradebook: a score typed into a cell is saved, and the running total follows",
+      "pass": true,
+      "ms": 849
+    },
+    {
+      "id": "G03",
+      "name": "gradebook: a score above the full mark is refused, not saved",
+      "pass": true,
+      "ms": 701
+    },
+    {
+      "id": "G04",
+      "name": "gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total",
+      "pass": true,
+      "ms": 9814
+    },
+    {
+      "id": "G04b",
+      "name": "gradebook: the blue bar's button hides every work (even columns not selected), survives a reload, and shows them again",
+      "pass": true,
+      "ms": 3055
+    },
+    {
+      "id": "G05",
+      "name": "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it",
+      "pass": true,
+      "ms": 2634
+    },
+    {
+      "id": "G06",
+      "name": "gradebook: edit the work (rename) and the column follows",
+      "pass": true,
+      "ms": 829
+    },
+    {
+      "id": "G07",
+      "name": "gradebook: delete the work; the column is gone",
+      "pass": true,
+      "ms": 1216
+    },
+    {
+      "id": "M01",
+      "name": "phone: bottom tabs and the menu sheet reach every page; the sheet signs out",
+      "pass": true,
+      "ms": 4293
+    },
+    {
+      "id": "M02",
+      "name": "phone: the eye by the work's name hides that work only; the menu hides all work",
+      "pass": true,
+      "ms": 4709
+    }
+  ]
+}

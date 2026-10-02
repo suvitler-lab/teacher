@@ -52,3 +52,9 @@ table.gb thead th .hs-eye { display: inline-flex; align-items: center; justify-c
 table.gb thead th .hs-eye.off { color: var(--text-warning); }
 table.gb thead th .hs-eye:hover { background: var(--surface-2); }
 table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
+/* the blue bar names ONE work, but the last button acts on all of them: a divider sets it apart */
+.gb-sep { width: 1px; height: 20px; background: var(--border-accent); margin: 0 4px; flex: none; }
+/* phone: the eye for the work picked (the page-wide switch is in the "จัดการงาน" menu) */
+.gb-meye { flex: none; width: 40px; height: 40px; min-width: 40px; padding: 0; border: none; background: transparent; color: var(--text-secondary); border-radius: var(--radius-sm); }
+.gb-meye.off { color: var(--text-warning); background: var(--bg-warning); }
+.gb-meye[disabled] { opacity: 0.45; }

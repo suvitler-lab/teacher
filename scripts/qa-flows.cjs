@@ -285,6 +285,35 @@ async function login(email, password) {
     ok(/•••/.test(await r1.locator("td").last().innerText()), "total should be ••• when all work is hidden");
     for (let i = 0; i < n; i++) { await page.locator("table.gb thead .hs-eye.off").first().click(); await page.waitForTimeout(500); }
   });
+  await step("G04b", "gradebook: the blue bar's button hides every work (even columns not selected), survives a reload, and shows them again", async () => {
+    const heads = page.locator("table.gb thead th:has(.hs-eye)");
+    const n = await heads.count();
+    ok(n >= 3, "need several works to tell 'all' from 'selected'; found " + n);
+    // the work picked is the last column (G02); the first columns are NOT the selected one, as in the report that started this
+    const r1 = page.locator("table.gb tbody tr", { hasText: "ภูมิพัฒน์" }).first();
+    const titles = [];
+    for (let i = 0; i < n; i++) titles.push(await heads.nth(i).getAttribute("title"));
+    const hiddenInDb = async () => (await sql(`SELECT COUNT(*) n FROM assignments WHERE publish_scores = 0 AND deleted_at IS NULL AND title IN (${titles.map(() => "?").join(",")})`, ...titles))[0].n;
+    // the demo already has one work hidden: the button then says how many, and still hides the rest
+    const bar = page.locator(".gb-actionbar");
+    await bar.getByRole("button", { name: /ซ่อนคะแนนทุกงาน/ }).click();
+    await page.waitForTimeout(150);
+    ok((await page.locator("table.gb thead .hs-eye.off").count()) === n, "every column's eye should be off at once (optimistic)");
+    ok((await bar.getByRole("button", { name: "แสดงคะแนนทุกงาน" }).count()) === 1, "the button should now offer to show them");
+    await page.waitForTimeout(700);
+    ok((await hiddenInDb()) === n, `server holds ${await hiddenInDb()} hidden of ${n}`);
+    ok(/•••/.test(await r1.locator("td").last().innerText()), "total should be •••");
+    for (const td of await r1.locator("td.cell").all()) ok(!/^\d+$/.test((await td.innerText()).trim()), "a score is still visible in a column that was not selected");
+    // it is saved, not just drawn
+    await page.reload(); await page.waitForSelector("table.gb tbody tr", { timeout: 10000 });
+    ok((await page.locator("table.gb thead .hs-eye.off").count()) === n, "hidden state lost on reload");
+    await page.locator(".gb-actionbar").getByRole("button", { name: "แสดงคะแนนทุกงาน" }).click();
+    await page.waitForTimeout(900);
+    ok((await hiddenInDb()) === 0, "show-all left " + (await hiddenInDb()) + " hidden");
+    ok((await page.locator("table.gb thead .hs-eye.off").count()) === 0, "an eye is still off");
+    ok(/\d+\s*\/\s*\d+/.test(await page.locator("table.gb tbody tr").first().locator("td").last().innerText()), "total did not come back");
+    await page.locator("table.gb thead th", { hasText: "งานทดสอบ QA" }).click(); // the reload forgot the pick: the next step works on this one
+  });
   await step("G05", "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it", async () => {
     const aid = (await sql("SELECT id FROM assignments WHERE title='งานทดสอบ QA'"))[0].id;
     await page.getByRole("button", { name: /ทั้งห้องส่งแล้ว/ }).click();
@@ -311,6 +340,38 @@ async function login(email, password) {
     await page.getByRole("button", { name: /ลบงาน/ }).click();
     await page.waitForTimeout(1000);
     ok((await page.locator("table.gb thead th", { hasText: "(แก้)" }).count()) === 0, "column still there");
+  });
+
+  await step("M02", "phone: the eye by the work's name hides that work only; the menu hides all work", async () => {
+    const pctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, locale: "th-TH" });
+    const ppage = await pctx.newPage();
+    const main = page; page = ppage;
+    try {
+      ppage.on("pageerror", (e) => errors.push(e.message));
+      await ppage.goto(server.url);
+      await login(server.email, server.password);
+      await ppage.waitForSelector(".bottom-tabs", { timeout: 15000 });
+      await sql("UPDATE assignments SET publish_scores = 1");
+      await ppage.evaluate(() => { location.hash = "/gradebook"; });
+      await ppage.waitForSelector(".gb-mrow", { timeout: 10000 });
+      const eye = ppage.locator(".gb-meye");
+      ok(await eye.count() === 1, "no eye next to the work's name");
+      const box = await eye.boundingBox();
+      ok(box && box.width >= 36 && box.height >= 36, "eye is too small to tap: " + JSON.stringify(box));
+      const firstTitle = (await ppage.locator(".gb-mchips .pill").first().innerText()).replace("…", "");
+      await eye.click(); await ppage.waitForTimeout(800);
+      ok((await sql("SELECT COUNT(*) n FROM assignments WHERE publish_scores = 0"))[0].n === 1, "the eye should hide exactly one work");
+      ok(/•••/.test(await ppage.locator(".gb-mrow").first().innerText()), "the work's scores should be masked");
+      await ppage.getByRole("button", { name: /จัดการงาน/ }).click();
+      await ppage.getByRole("button", { name: "ซ่อนคะแนนทุกงาน" }).click(); await ppage.waitForTimeout(900);
+      const total = (await sql("SELECT COUNT(*) n FROM assignments WHERE deleted_at IS NULL"))[0].n;
+      const hidden = (await sql("SELECT COUNT(*) n FROM assignments WHERE publish_scores = 0 AND deleted_at IS NULL"))[0].n;
+      ok(hidden >= (await ppage.locator(".gb-mchips .pill").count()), `menu hid ${hidden} of ${total}`);
+      await ppage.getByRole("button", { name: /จัดการงาน/ }).click();
+      await ppage.getByRole("button", { name: "แสดงคะแนนทุกงาน" }).click(); await ppage.waitForTimeout(900);
+      ok((await sql("SELECT COUNT(*) n FROM assignments WHERE publish_scores = 0 AND deleted_at IS NULL"))[0].n === hidden - (await ppage.locator(".gb-mchips .pill").count()), "show-all should bring the listed work back");
+      void firstTitle;
+    } finally { page = main; await pctx.close(); }
   });
 
   // ------------------------------------------------------------------ attendance

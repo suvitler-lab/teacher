@@ -120,6 +120,38 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   return c.json({ ok: true, assignment: mapAssignment({ ...b, id: aid, created_at: (existing as any)?.created_at ?? now, updated_at: now, publish_scores: b.publish_scores === false ? 0 : 1, status: b.status ?? "open", deleted_at: null }, b.class_ids) });
 });
 
+// Hide or show the scores of SEVERAL pieces of work at once (the gradebook's "hide all" button). One statement
+// and one audit line per work that really changed, in one batch — a restore in between rolls all of it back.
+const publishSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(500),
+  publish: z.boolean(),
+});
+
+assignmentRoutes.post("/api/assignments/publish", async (c) => {
+  const b = publishSchema.parse(await readJson(c));
+  const now = Date.now();
+  const epoch = await requestEpoch(c);
+  const want = b.publish ? 1 : 0;
+  const ids = JSON.stringify(b.ids);
+  // the work this call will really change (not deleted, not already in the wanted state) — for the audit trail
+  const changing = await c.env.DB.prepare(
+    "SELECT id FROM assignments WHERE id IN (SELECT value FROM json_each(?1)) AND deleted_at IS NULL AND publish_scores != ?2",
+  ).bind(ids, want).all<{ id: string }>();
+  const changedIds = (changing.results ?? []).map((r) => r.id);
+  if (changedIds.length === 0) return c.json({ ok: true, changed: 0 });
+  const audit = auditInsertStmt(c.env, changedIds.map((aid) => ({
+    entity: "assignment", entity_id: aid, assignment_id: aid, action: "update", device_id: c.get("deviceId"),
+    before: { publish_scores: !b.publish }, after: { publish_scores: b.publish }, method: "manual",
+  })), now);
+  const [res] = await batchAtEpoch(c.env, epoch, [
+    c.env.DB.prepare(
+      "UPDATE assignments SET publish_scores = ?2, updated_at = ?3 WHERE id IN (SELECT value FROM json_each(?1)) AND deleted_at IS NULL AND publish_scores != ?2",
+    ).bind(ids, want, now),
+    audit,
+  ]);
+  return c.json({ ok: true, changed: res.meta.changes ?? changedIds.length });
+});
+
 assignmentRoutes.post("/api/assignments/:id/delete", async (c) => {
   const aid = c.req.param("id");
   const now = Date.now();

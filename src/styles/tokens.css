@@ -20,6 +20,7 @@
 
   /* accent (blue) */
   --accent: #2f6fde;
+  --fill-accent: #2f6fde; /* chart bars, dots and avatars in the accent colour */
   --accent-hover: #275fc0;
   --on-accent: #ffffff;
   --bg-accent: #e6f0fc;
@@ -66,7 +67,7 @@
     --text-muted: #7b8494;
     --border: rgba(255, 255, 255, 0.10);
     --border-strong: rgba(255, 255, 255, 0.18);
-    --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
+    --accent: #5a92ee; --fill-accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
     --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #315c93;
     --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
     --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;
@@ -93,7 +94,7 @@
   --text-muted: #7b8494;
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
-  --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
+  --accent: #5a92ee; --fill-accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
   --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #315c93;
   --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
   --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;

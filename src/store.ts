@@ -194,6 +194,11 @@ export function upsertAssignment(a: Assignment) {
 export function patchAssignment(id: string, patch: Partial<Assignment>) {
   assignments.value = assignments.value.map((a) => (a.id === id ? { ...a, ...patch } : a));
 }
+/** The same change for several assignments at once (the gradebook's "hide all scores"). */
+export function patchAssignments(ids: string[], patch: Partial<Assignment>) {
+  const set = new Set(ids);
+  assignments.value = assignments.value.map((a) => (set.has(a.id) ? { ...a, ...patch } : a));
+}
 /** The assignment was deleted (here or on another device). */
 export function dropAssignment(id: string) {
   assignments.value = assignments.value.filter((a) => a.id !== id);
