@@ -245,7 +245,7 @@ const traits = () => {
       const a = await page.evaluate(audit);
       if (a.overflowX > 2) note("P2", where, `page scrolls sideways (${a.overflowX}px)`);
       const t = await page.evaluate(() => ({ spin: document.querySelectorAll(".spin").length, empty: document.querySelectorAll(".uc-empty").length, text: document.body.innerText.slice(0, 160).replace(/\s+/g, " ") }));
-      if (t.spin) note("P2", where, "still shows a loading spinner on an empty school");
+      if (t.spin || /กำลังโหลด/.test(t.text)) note("P2", where, "still says it is loading on an empty school (no class to load)");
       await page.screenshot({ path: path.join(SHOTS, `${id}-empty__${size.name}__light.jpg`), fullPage: true, type: "jpeg", quality: 60 });
       scenesRun.push(where);
     }

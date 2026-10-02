@@ -1,0 +1,51 @@
+{
+  "label": "states3",
+  "at": "2026-10-02T18:27:12.962Z",
+  "scenes": 84,
+  "counts": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "matrix": {
+    "gradebook": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "ภาคเรียนที่ 1/2569",
+        "ภาคเรียนที่ 1/2569",
+        "สร้างงาน"
+      ],
+      "termPicker": true,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 0,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    },
+    "random": {
+      "header": true,
+      "icon": true,
+      "sub": true,
+      "headerButtons": [
+        "สุ่มชื่อ",
+        "จับกลุ่ม",
+        "จอใหญ่"
+      ],
+      "termPicker": false,
+      "classChips": true,
+      "filterBar": true,
+      "statCards": 0,
+      "summaryLine": true,
+      "cards": 1,
+      "primaryButtons": 1,
+      "rowStyles": [],
+      "emptyOrLoading": 0
+    }
+  },
+  "findings": []
+}
