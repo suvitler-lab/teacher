@@ -88,6 +88,7 @@ async function startFixtureServer({
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
   seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
+  account = true, // false: no teacher account yet, so the first-use setup page shows
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
     modules: true,
@@ -108,11 +109,13 @@ async function startFixtureServer({
     await DB.batch(sql.split(";").map((s) => s.trim()).filter(Boolean).map((s) => DB.prepare(s)));
   }
   const { app } = require(path.join(root, "worker/app.ts"));
-  const setup = await app.request("/api/setup", {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ setupCode: "fixture-setup", email: EMAIL, password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
-  }, env);
-  if (setup.status !== 200) throw new Error("fixture setup failed: " + setup.status);
+  if (account) {
+    const setup = await app.request("/api/setup", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setupCode: "fixture-setup", email: EMAIL, password: PASSWORD, deviceId: "fixture", deviceName: "Fixture" }),
+    }, env);
+    if (setup.status !== 200) throw new Error("fixture setup failed: " + setup.status);
+  }
 
   const rules = headerRules(headersFile);
   let dir = path.resolve(assetsDir);
