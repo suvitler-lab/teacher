@@ -205,6 +205,7 @@ function startPolling(): () => void {
   const timer = setInterval(tick, POLL_MS);
   document.addEventListener("visibilitychange", resume);
   window.addEventListener("online", resume);
+  resume(); // returning from another menu mounts a new poller while keeping the previous snapshot
   return () => {
     clearInterval(timer);
     document.removeEventListener("visibilitychange", resume);

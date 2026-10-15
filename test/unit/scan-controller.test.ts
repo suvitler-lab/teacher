@@ -284,6 +284,16 @@ describe("keeping the screen's copy fresh", () => {
     expect(reads()).toBe(0);
   });
 
+  it("returning from another menu with a ready session reads immediately", async () => {
+    stop(); // navigating away unmounts ScanView and stops its poller
+    await vi.advanceTimersByTimeAsync(5 * 60_000);
+    get.mockResolvedValue(handedIn(7)); // another device saved while this device was in another menu
+    stop = __scan.startPolling(); // returning mounts ScanView; the existing snapshot is still ready
+    await settle();
+    expect(reads()).toBe(1);
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 7 });
+  });
+
   it("stopping (leaving the scan screen) ends the timer and the listeners", async () => {
     stop();
     await vi.advanceTimersByTimeAsync(5 * 60_000);
