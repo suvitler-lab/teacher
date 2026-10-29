@@ -1,0 +1,49 @@
+# Final re-run (no code change) - 2026-10-30
+$ npx vitest run test/api/inactive-student.test.ts test/unit/scan-controller.test.ts test/unit/outbox-order.test.ts
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  3 passed (3)
+      Tests  75 passed (75)
+   Start at  01:00:16
+   Duration  3.66s (transform 724ms, setup 1.32s, import 376ms, tests 2.56s, environment 830ms)
+
+exit=0
+
+$ npm run typecheck
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+exit=0
+
+$ npm test
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  61 passed (61)
+      Tests  693 passed (693)
+   Start at  01:00:26
+   Duration  19.44s (transform 16.45s, setup 120.89s, import 16.41s, tests 67.05s, environment 34.41s)
+
+exit=0

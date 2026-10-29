@@ -93,7 +93,8 @@ export function FailedPanel() {
 
   if (n === 0) return null;
   const REASON: Record<string, string> = {
-    not_in_class: "ไม่ได้อยู่ในห้องนี้", full_score_changed: "คะแนนเต็มถูกแก้ไข",
+    not_in_class: "ไม่ได้อยู่ในห้องนี้", student_inactive: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)",
+    full_score_changed: "คะแนนเต็มถูกแก้ไข",
     invalid: "ข้อมูลไม่ถูกต้อง", validation: "ข้อมูลไม่ถูกต้อง", assignment_closed: "งานปิดรับแล้ว",
     blocked_by_earlier_failure: "รอแก้รายการก่อนหน้า", no_response: "เซิร์ฟเวอร์ไม่ตอบรับ",
     superseded: "มีการแก้ไขที่ใหม่กว่าอยู่ในระบบแล้ว (เช่น ล้างทั้งห้อง) จึงไม่ใช้ค่านี้ — ส่งใหม่ถ้ายืนยันว่าค่านี้ถูก",

@@ -1,0 +1,528 @@
+$ npx vitest run test/api/inactive-student.test.ts   # BEFORE fix, 2026-10-30
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/inactive-student.test.ts (22 tests | 16 failed) 1469ms
+     × AC-01: moved student, hid hand-in -> student_inactive, no row, no audit 96ms
+     × AC-01: moved student, camera hand-in -> student_inactive, no row, no audit 62ms
+     × AC-01: moved student, manual hand-in -> student_inactive, no row, no audit 64ms
+     × AC-01: inactive student, hid hand-in -> student_inactive, no row, no audit 64ms
+     × AC-01: inactive student, camera hand-in -> student_inactive, no row, no audit 65ms
+     × AC-01: inactive student, manual hand-in -> student_inactive, no row, no audit 65ms
+     × AC-01: finished student, hid hand-in -> student_inactive, no row, no audit 63ms
+     × AC-01: finished student, camera hand-in -> student_inactive, no row, no audit 60ms
+     × AC-01: finished student, manual hand-in -> student_inactive, no row, no audit 60ms
+     × AC-01: a tap on the grid sent as a hand-in (intent receive) is refused too 62ms
+     × AC-01: a hand-in for a student whose cell already exists (voided) is still refused 82ms
+     × AC-03: moved student with no cell - a gradebook score is refused, no row is created 58ms
+     × AC-03: inactive student with no cell - a gradebook score is refused, no row is created 56ms
+     × AC-03: finished student with no cell - a gradebook score is refused, no row is created 56ms
+     × AC-04: the student is moved between the check and the write -> no row, no audit, reply student_inactive 58ms
+     × AC-04: a gradebook score on an empty cell, student made inactive meanwhile -> no row, no audit 55ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: moved student, hid hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'ocw87iyaimu', …(2) } to deeply equal { opId: 'ocw87iyaimu', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "ocw87iyaimu",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "hid",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290469,
++     "updated_at": 1793295290472,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: moved student, camera hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'oldrr6px3y2i', …(2) } to deeply equal { opId: 'oldrr6px3y2i', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "oldrr6px3y2i",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "camera",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290543,
++     "updated_at": 1793295290545,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: moved student, manual hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'oaisg1za387k', …(2) } to deeply equal { opId: 'oaisg1za387k', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "oaisg1za387k",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "manual",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290607,
++     "updated_at": 1793295290609,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: inactive student, hid hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'okg8yl019sml', …(2) } to deeply equal { opId: 'okg8yl019sml', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "okg8yl019sml",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "hid",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290670,
++     "updated_at": 1793295290673,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: inactive student, camera hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'op4zc5ndjqa', …(2) } to deeply equal { opId: 'op4zc5ndjqa', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "op4zc5ndjqa",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "camera",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290734,
++     "updated_at": 1793295290736,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: inactive student, manual hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'opjr0atyoix', …(2) } to deeply equal { opId: 'opjr0atyoix', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "opjr0atyoix",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "manual",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290802,
++     "updated_at": 1793295290803,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: finished student, hid hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'o9lz9geojv5p', …(2) } to deeply equal { opId: 'o9lz9geojv5p', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "o9lz9geojv5p",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "hid",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290864,
++     "updated_at": 1793295290865,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: finished student, camera hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'o84sp4zimvjx', …(2) } to deeply equal { opId: 'o84sp4zimvjx', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "o84sp4zimvjx",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "camera",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290925,
++     "updated_at": 1793295290927,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: finished student, manual hand-in -> student_inactive, no row, no audit
+AssertionError: expected { opId: 'o2jbtg6z4401', …(2) } to deeply equal { opId: 'o2jbtg6z4401', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "o2jbtg6z4401",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "manual",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295290985,
++     "updated_at": 1793295290987,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:35:19
+     33|         const o = op({ method });
+     34|         const [r] = await batch(cookie, o);
+     35|         expect(r).toEqual({ opId: o.opId, result: "student_inactive" }…
+       |                   ^
+     36|         expect(await cellOf("st1")).toBeNull();
+     37|         expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: a tap on the grid sent as a hand-in (intent receive) is refused too
+AssertionError: expected 'ok' to be 'student_inactive' // Object.is equality
+
+Expected: "student_inactive"
+Received: "ok"
+
+ ❯ test/api/inactive-student.test.ts:45:48
+     43|     await setStatus("st1", "moved");
+     44|     const o = op({ method: "grid", intent: "receive" });
+     45|     expect((await batch(cookie, o))[0].result).toBe("student_inactive"…
+       |                                                ^
+     46|     expect(await cellOf("st1")).toBeNull();
+     47|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-01: a hand-in for a student whose cell already exists (voided) is still refused
+AssertionError: expected 'ok' to be 'student_inactive' // Object.is equality
+
+Expected: "student_inactive"
+Received: "ok"
+
+ ❯ test/api/inactive-student.test.ts:54:48
+     52|     await setStatus("st1", "moved");
+     53|     const o = op({ method: "hid" });
+     54|     expect((await batch(cookie, o))[0].result).toBe("student_inactive"…
+       |                                                ^
+     55|     expect((await cellOf("st1")).status).toBe("void");
+     56|     expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-03: moved student with no cell - a gradebook score is refused, no row is created
+AssertionError: expected { opId: 'o1g1y4hsd24h', …(2) } to deeply equal { opId: 'o1g1y4hsd24h', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "o1g1y4hsd24h",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "grid",
++     "scan_session_id": "scn",
++     "score": 8,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295291267,
++     "updated_at": 1793295291269,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:82:43
+     80|       await setStatus("st1", status);
+     81|       const o = op({ method: "grid", score: 8 });
+     82|       expect((await batch(cookie, o))[0]).toEqual({ opId: o.opId, resu…
+       |                                           ^
+     83|       expect(await cellOf("st1")).toBeNull();
+     84|       expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-03: inactive student with no cell - a gradebook score is refused, no row is created
+AssertionError: expected { opId: 'oc680prqcmnf', …(2) } to deeply equal { opId: 'oc680prqcmnf', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "oc680prqcmnf",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "grid",
++     "scan_session_id": "scn",
++     "score": 8,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295291323,
++     "updated_at": 1793295291325,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:82:43
+     80|       await setStatus("st1", status);
+     81|       const o = op({ method: "grid", score: 8 });
+     82|       expect((await batch(cookie, o))[0]).toEqual({ opId: o.opId, resu…
+       |                                           ^
+     83|       expect(await cellOf("st1")).toBeNull();
+     84|       expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-03: finished student with no cell - a gradebook score is refused, no row is created
+AssertionError: expected { opId: 'odbmrnmicd4h', …(2) } to deeply equal { opId: 'odbmrnmicd4h', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "odbmrnmicd4h",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "grid",
++     "scan_session_id": "scn",
++     "score": 8,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295291379,
++     "updated_at": 1793295291381,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:82:43
+     80|       await setStatus("st1", status);
+     81|       const o = op({ method: "grid", score: 8 });
+     82|       expect((await batch(cookie, o))[0]).toEqual({ opId: o.opId, resu…
+       |                                           ^
+     83|       expect(await cellOf("st1")).toBeNull();
+     84|       expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-04: the student is moved between the check and the write -> no row, no audit, reply student_inactive
+AssertionError: expected { opId: 'o1fwjhni3mh3', …(2) } to deeply equal { opId: 'o1fwjhni3mh3', …(1) }
+
+- Expected
++ Received
+
+  {
+    "opId": "o1fwjhni3mh3",
+-   "result": "student_inactive",
++   "result": "ok",
++   "submission": {
++     "assignment_id": "a1",
++     "device_id": "dev_test",
++     "late": false,
++     "method": "hid",
++     "scan_session_id": "scn",
++     "score": null,
++     "status": "submitted",
++     "student_id": "st1",
++     "submitted_at": 1793295291553,
++     "updated_at": 1793295291555,
++   },
+  }
+
+ ❯ test/api/inactive-student.test.ts:108:29
+    106|
+    107|     const body = (await (await scan).json()) as any;
+    108|     expect(body.results[0]).toEqual({ opId: o.opId, result: "student_i…
+       |                             ^
+    109|     expect(await cellOf("st1")).toBeNull();
+    110|     expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  |workers| test/api/inactive-student.test.ts > BR-02: no new hand-ins for a student who left the class > AC-04: a gradebook score on an empty cell, student made inactive meanwhile -> no row, no audit
+AssertionError: expected 'ok' to be 'student_inactive' // Object.is equality
+
+Expected: "student_inactive"
+Received: "ok"
+
+ ❯ test/api/inactive-student.test.ts:121:67
+    119|     g.release();
+    120|
+    121|     expect(((await (await req).json()) as any).results[0].result).toBe…
+       |                                                                   ^
+    122|     expect(await cellOf("st1")).toBeNull();
+    123|     expect(await auditOf(o.opId)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 6 passed (22)
+   Start at  00:34:48
+   Duration  2.99s (transform 451ms, setup 949ms, import 11ms, tests 1.47s, environment 0ms)
+
+exit=1

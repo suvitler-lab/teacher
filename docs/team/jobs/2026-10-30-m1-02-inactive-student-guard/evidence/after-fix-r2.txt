@@ -1,0 +1,53 @@
+# Round 2 (D23 / AC-08, AC-09) - 2026-10-30
+$ npm run typecheck
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+exit=0
+
+$ npm test
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  59 passed (59)
+      Tests  634 passed (634)
+   Start at  00:40:35
+   Duration  18.29s (transform 20.26s, setup 74.49s, import 21.50s, tests 65.52s, environment 33.46s)
+
+exit=0
+
+$ npx vitest run test/api/inactive-student.test.ts
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  1 passed (1)
+      Tests  30 passed (30)
+   Start at  00:40:56
+   Duration  3.44s (transform 417ms, setup 856ms, import 12ms, tests 2.13s, environment 0ms)
+
+exit=0
+
+# mutation checks on stillValid (restored afterwards):
+#  M1 status clause -> (1 = 1): 3 failed (AC-04 x2, AC-08 race)
+#  M2 roster branch -> (1 = 1): 2 failed (AC-04 grade-on-empty, AC-08 race)

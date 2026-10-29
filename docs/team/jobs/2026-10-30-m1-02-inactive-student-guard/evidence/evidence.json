@@ -1,0 +1,241 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-01",
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-fullstack",
+    "mandatory": false,
+    "command": "npx vitest run test/api/inactive-student.test.ts (before fix)",
+    "artifact": "evidence/before-fix.txt",
+    "expected": "new test fails before fix",
+    "actual": "16 failed / 6 passed (AC-01 x11, AC-03 x3, AC-04 x2 fail; AC-02, AC-05 already pass)",
+    "reason": "",
+    "snapshot": "tree:6031def764ffd3a41d442a64e22dba6ba5d069aa",
+    "at": "2026-10-29T17:41:06.159Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-fullstack",
+    "mandatory": false,
+    "command": "npx vitest run test/api/inactive-student.test.ts",
+    "artifact": "evidence/final-run.txt",
+    "expected": "",
+    "actual": "36/36 passed (within 75/75 targeted run)",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T18:00:54.148Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-fullstack",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/outbox-order.test.ts",
+    "artifact": "evidence/final-run.txt",
+    "expected": "",
+    "actual": "passed (within 75/75 targeted run)",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T18:00:54.470Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-05",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-02.test.ts test/unit/qa-m1-02-outbox.test.ts (evidence/qa-tests-v1.txt)",
+    "artifact": "evidence/qa-expected-from-br.md",
+    "expected": "E-01..E-21 + S-01..S-03 ตาม BR-02 ฉบับ PM ตัดสิน (bulk ตาม memberClause, แถว void ไม่นับเป็นแถวเดิม)",
+    "actual": "ตรงทุกกรณี 52/52 รวม B-01 ปิดแล้ว",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T17:57:52.142Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "offline-replay",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/unit/qa-m1-02-outbox.test.ts",
+    "artifact": "evidence/qa-tests-v1.txt",
+    "expected": "student_inactive -> failed ทันที ไม่ retry, op ถัดไป blocked, เด็กอื่นส่งได้, replay ที่ลงแล้ว = duplicate",
+    "actual": "ตรง",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T17:57:52.505Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "multi-device",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-02.test.ts -t multi-device",
+    "artifact": "evidence/qa-tests-v1.txt",
+    "expected": "status เปลี่ยนจากอีกเครื่องระหว่าง judge กับ batch -> ไม่หลุด",
+    "actual": "ตรง 5/5",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T17:57:52.839Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-02.test.ts test/unit/qa-m1-02-outbox.test.ts",
+    "artifact": "evidence/qa-tests-v1.txt",
+    "expected": "test QA ทั้งหมดผ่าน",
+    "actual": "52 passed, exit 0",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T17:57:53.162Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-fullstack",
+    "mandatory": false,
+    "command": "npx vitest run test/api/inactive-student.test.ts test/unit/scan-controller.test.ts test/unit/outbox-order.test.ts",
+    "artifact": "evidence/final-run.txt",
+    "expected": "",
+    "actual": "3 files / 75 tests passed",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T18:00:54.807Z"
+  },
+  {
+    "check": "Q-94",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-fullstack",
+    "mandatory": true,
+    "command": "npm run typecheck",
+    "artifact": "evidence/final-run.txt",
+    "expected": "",
+    "actual": "exit 0",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T18:00:55.135Z"
+  },
+  {
+    "check": "Q-95",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-fullstack",
+    "mandatory": true,
+    "command": "npm test",
+    "artifact": "evidence/final-run.txt",
+    "expected": ">= 58 files / 603 tests",
+    "actual": "61 files / 693 tests passed",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T18:00:55.467Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06",
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test",
+    "artifact": "evidence/qa-npm-test-v1.txt",
+    "expected": ">= 58 ไฟล์ / 603 tests",
+    "actual": "typecheck exit 0; 61 ไฟล์ / 693 passed, exit 0 (รวม R-02 scan-controller)",
+    "reason": "",
+    "snapshot": "tree:5bb621c6319af277f665ca4ea8d137e956de45e2",
+    "at": "2026-10-29T17:57:53.491Z"
+  }
+]

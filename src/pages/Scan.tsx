@@ -316,6 +316,13 @@ function commitStudent(student: Student, method: "camera" | "hid" | "manual") {
     setFeedback({ kind: "danger", icon: "user-x", name: fullName(student), sub: "ไม่ได้อยู่ในห้องที่เลือก" });
     return;
   }
+  // moved / inactive / finished: the server refuses the hand-in (student_inactive) — say so now, not after a
+  // success beep that an offline teacher would believe until the queue drains
+  if (student.status !== "active") {
+    beep.err(); vibrate(120);
+    setFeedback({ kind: "danger", icon: "user-x", name: fullName(student), sub: REJECTED.student_inactive });
+    return;
+  }
   const existing = effSub(student.id);
   if (existing && existing.status === "submitted") {
     beep.dup(); vibrate(60);
@@ -389,6 +396,7 @@ function undo(studentId: string) {
 
 const REJECTED: Record<string, string> = {
   not_in_class: "ไม่ได้อยู่ในห้อง/งานนี้",
+  student_inactive: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)",
   assignment_closed: "งานนี้ปิดรับแล้ว",
   invalid: "ข้อมูลไม่ถูกต้อง",
   superseded: "มีการแก้ไขที่ใหม่กว่าอยู่แล้ว จึงไม่ใช้ค่านี้",
