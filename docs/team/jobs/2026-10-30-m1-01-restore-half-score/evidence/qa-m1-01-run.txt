@@ -1,0 +1,120 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > null (full 10)
+QA-ROW {"label":"null","full":10,"value":null,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":null,"liveType":"null","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > null (full 10) 196ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0 (full 10)
+QA-ROW {"label":"0","full":10,"value":0,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":0,"liveType":"integer","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0 (full 10) 178ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0.5 (full 10)
+QA-ROW {"label":"0.5","full":10,"value":0.5,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":0.5,"liveType":"real","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0.5 (full 10) 170ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7 (full 10)
+QA-ROW {"label":"7","full":10,"value":7,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":7,"liveType":"integer","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7 (full 10) 167ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7.5 (full 10)
+QA-ROW {"label":"7.5","full":10,"value":7.5,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":7.5,"liveType":"real","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7.5 (full 10) 161ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 10 (= full) (full 10)
+QA-ROW {"label":"10 (= full)","full":10,"value":10,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":10,"liveType":"integer","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 10 (= full) (full 10) 166ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 10.5 (> full) (full 10)
+QA-ROW {"label":"10.5 (> full)","full":10,"value":10.5,"expectOk":false,"expectedCode":"score_over_full","status":422,"stage":"commit","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 10.5 (> full) (full 10) 194ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7.25 (quarter) (full 10)
+QA-ROW {"label":"7.25 (quarter)","full":10,"value":7.25,"expectOk":false,"expectedCode":"invalid_score","status":422,"stage":"chunk:submissions#0","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"not_multiple_of"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 7.25 (quarter) (full 10) 156ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > -0.5 (negative) (full 10)
+QA-ROW {"label":"-0.5 (negative)","full":10,"value":-0.5,"expectOk":false,"expectedCode":"invalid_score","status":422,"stage":"chunk:submissions#0","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"too_small"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > -0.5 (negative) (full 10) 153ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > "7.5" (string) (full 10)
+QA-ROW {"label":"\"7.5\" (string)","full":10,"value":"7.5","expectOk":false,"expectedCode":"invalid_score","status":422,"stage":"chunk:submissions#0","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"invalid_type"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > "7.5" (string) (full 10) 155ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 100.5 (> full) (full 10)
+QA-ROW {"label":"100.5 (> full)","full":10,"value":100.5,"expectOk":false,"expectedCode":"score_over_full","status":422,"stage":"commit","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 100.5 (> full) (full 10) 162ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0.1 (extra) (full 10)
+QA-ROW {"label":"0.1 (extra)","full":10,"value":0.1,"expectOk":false,"expectedCode":"invalid_score","status":422,"stage":"chunk:submissions#0","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"not_multiple_of"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 0.1 (extra) (full 10) 151ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > true (extra) (full 10)
+QA-ROW {"label":"true (extra)","full":10,"value":true,"expectOk":false,"expectedCode":"invalid_score","status":422,"stage":"chunk:submissions#0","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"invalid_type"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > true (extra) (full 10) 156ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 11 (extra, > full) (full 10)
+QA-ROW {"label":"11 (extra, > full)","full":10,"value":11,"expectOk":false,"expectedCode":"score_over_full","status":422,"stage":"commit","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > 11 (extra, > full) (full 10) 164ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 0.5 (full 1)
+QA-ROW {"label":"full1 0.5","full":1,"value":0.5,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":0.5,"liveType":"real","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 0.5 (full 1) 160ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 1 (full 1)
+QA-ROW {"label":"full1 1","full":1,"value":1,"expectOk":true,"expectedCode":null,"status":200,"stage":"commit","error":null,"issues":null,"liveScore":1,"liveType":"integer","epochDelta":1,"auditDelta":1}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 1 (full 1) 162ms
+stdout | test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 1.5 (> full) (full 1)
+QA-ROW {"label":"full1 1.5 (> full)","full":1,"value":1.5,"expectOk":false,"expectedCode":"score_over_full","status":422,"stage":"commit","error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}],"liveScore":1,"liveType":"integer","epochDelta":0,"auditDelta":0}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA BR-01 table through backup -> restore > full1 1.5 (> full) (full 1) 172ms
+stdout | test/api/qa-m1-01.test.ts > QA AC-01 + (ก) reading 7.5 back after a real restore > 7.5 saved via batch -> backup -> drift -> restore -> gradebook + report show 7.5 / 75%
+QA-ROW {"label":"AC-01 (ก)","gradebookScore":7.5,"st1Score":7.5,"st1Full":10,"totalScore":7.5,"rawAvg":7.5,"avgScorePercent":75,"a1Average":75,"a1Scored":1,"fpDataEqual":true}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA AC-01 + (ก) reading 7.5 back after a real restore > 7.5 saved via batch -> backup -> drift -> restore -> gradebook + report show 7.5 / 75% 170ms
+stdout | test/api/qa-m1-01.test.ts > QA (ค) legacy-shape backup (whole numbers / null only) > integer, null and excused rows restore unchanged
+QA-ROW {"label":"(ค) legacy","status":200,"scores":[["st1","submitted",8],["st2","excused",null]]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA (ค) legacy-shape backup (whole numbers / null only) > integer, null and excused rows restore unchanged 159ms
+stdout | test/api/qa-m1-01.test.ts > QA multi-chunk: half scores across the 500-row chunk boundary > 520 rows with 0..10 in 0.5 steps restore exactly; one bad row in chunk #1 refuses everything
+QA-ROW {"label":"multi-chunk","okStatus":200,"sumBefore":2580,"dbSum":{"s":2580,"reals":248},"badStage":"chunk:submissions#1","badStatus":422,"badIssues":[{"table":"submissions","rowId":"qs510","field":"score","code":"not_multiple_of"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA multi-chunk: half scores across the 500-row chunk boundary > 520 rows with 0..10 in 0.5 steps restore exactly; one bad row in chunk #1 refuses everything 351ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.25
+QA-ROW {"label":"sql-guard","score":7.25,"status":422,"error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"invalid_score"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.25 152ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score -0.5
+QA-ROW {"label":"sql-guard","score":-0.5,"status":422,"error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"invalid_score"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score -0.5 150ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.5
+QA-ROW {"label":"sql-guard","score":"7.5","status":422,"error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.5 129ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score true
+QA-ROW {"label":"sql-guard","score":true,"status":422,"error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"invalid_score"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score true 128ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 10.5
+QA-ROW {"label":"sql-guard","score":10.5,"status":422,"error":"invalid_backup","issues":[{"table":"submissions","rowId":"st1","field":"score","code":"score_over_full"}]}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 10.5 137ms
+stdout | test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.5
+QA-ROW {"label":"sql-guard","score":7.5,"status":200,"error":null,"issues":null}
+
+ ✓ |workers| test/api/qa-m1-01.test.ts > QA SQL guard alone (staged rows bypassing the chunk check): which code is reported > staged score 7.5 144ms
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  00:16:23
+   Duration  5.68s (transform 421ms, setup 847ms, import 25ms, tests 4.35s, environment 0ms)
+

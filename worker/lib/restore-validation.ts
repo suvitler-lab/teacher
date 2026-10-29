@@ -5,6 +5,8 @@ export interface RestoreIssue { table: string; rowId: string; field: string; cod
 const text = z.string();
 const key = text.min(1);
 const integer = z.number().int();
+// Scores are saved in 0.5 steps (opSchema in routes/submissions.ts, shared/grade.ts).
+const halfStep = z.number().multipleOf(0.5);
 const stamp = integer.min(0);
 const optionalText = text.nullish();
 const optionalKey = key.nullish();
@@ -31,7 +33,7 @@ const schemas: Record<string, z.ZodType> = {
   assignments: z.object({ id: key, term_id: optionalKey, subject_id: optionalKey, type_id: optionalKey, title: key, unit: optionalText, full_score: integer.min(1).max(100), assigned_date: optionalDate, due_date: optionalDate, note: optionalText, publish_scores: flag, status: z.enum(["open", "closed"]), created_at: stamp, deleted_at: optionalStamp, ...dated }),
   assignment_classes: z.object({ assignment_id: key, class_id: key }),
   scan_sessions: z.object({ id: key, assignment_id: optionalKey, class_id: optionalKey, subject_id: optionalKey, mode: z.enum(["full", "type", "later"]), full_score: integer.min(1).max(100), device_id: optionalText, started_at: stamp, ended_at: optionalStamp, scan_count: integer.min(0) }),
-  submissions: z.object({ assignment_id: key, student_id: key, status: z.enum(["submitted", "excused", "void"]), score: integer.min(0).nullable(), late: flag, submitted_at: optionalStamp, method, device_id: optionalText, scan_session_id: optionalText, event_at: optionalStamp, ...dated }),
+  submissions: z.object({ assignment_id: key, student_id: key, status: z.enum(["submitted", "excused", "void"]), score: halfStep.min(0).nullable(), late: flag, submitted_at: optionalStamp, method, device_id: optionalText, scan_session_id: optionalText, event_at: optionalStamp, ...dated }),
   attendance_sessions: z.object({ id: key, date, class_id: key, subject_id: optionalKey, period: integer.nullish(), ...dated }),
   attendance: z.object({ session_id: key, student_id: key, status: z.enum(["present", "late", "leave", "sick", "absent"]), time: optionalStamp, method, device_id: optionalText, ...dated }),
 };
@@ -98,7 +100,7 @@ rule("terms", "term", "duplicate_term", `(SELECT COUNT(*) FROM terms p WHERE ${v
 rule("terms", "is_current", "multiple_current_terms", `${val("x", "is_current")}=1 AND (SELECT COUNT(*) FROM terms p WHERE ${val("p", "is_current")}=1)>1`);
 rule("students", "number", "duplicate_active_number", `${val("x", "status")}='active' AND ${val("x", "class_id")} IS NOT NULL AND ${val("x", "number")} IS NOT NULL AND (SELECT COUNT(*) FROM students p WHERE ${val("p", "status")}='active' AND ${val("p", "class_id")}=${val("x", "class_id")} AND ${val("p", "number")}=${val("x", "number")})>1`);
 // Row-level checks are repeated in SQL for values that a concurrent chunk replacement could invalidate.
-rule("submissions", "score", "invalid_score", `${val("x", "score")} IS NOT NULL AND (json_type(x.row,'$.score') NOT IN ('integer','real') OR ${val("x", "score")}<0 OR ${val("x", "score")}!=CAST(${val("x", "score")} AS INTEGER))`, "student_id");
+rule("submissions", "score", "invalid_score", `${val("x", "score")} IS NOT NULL AND (json_type(x.row,'$.score') NOT IN ('integer','real') OR ${val("x", "score")}<0 OR ${val("x", "score")}*2!=CAST(${val("x", "score")}*2 AS INTEGER))`, "student_id");
 // D1 has a low compound-SELECT limit. Scalar subqueries avoid a large UNION and
 // stop at the first actionable issue instead of generating an unbounded report.
 const issueSql = `WITH ${ctes.join(",")}, issue AS (SELECT COALESCE(${rules.map((r) => `(${r})`).join(",")}) AS detail)`;

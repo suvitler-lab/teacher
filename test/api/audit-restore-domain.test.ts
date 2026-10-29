@@ -30,7 +30,7 @@ async function unchanged(before: Backup) {
 }
 
 describe("restore domain invariants", () => {
-  it.each([999, -1, 1.5])("refuses invalid score %s without changing live data", async (score) => {
+  it.each([999, -1, 1.25])("refuses invalid score %s without changing live data", async (score) => {
     const before = await takeBackup(cookie), b = structuredClone(before);
     b.data.submissions[0].score = score;
     const r = await attempt(b);

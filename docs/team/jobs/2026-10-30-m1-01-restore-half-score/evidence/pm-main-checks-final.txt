@@ -1,0 +1,10 @@
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+typecheck-exit:0
+ Test Files  58 passed (58)
+      Tests  603 passed (603)
+   Start at  00:20:09
+   Duration  16.39s (transform 15.48s, setup 60.51s, import 13.56s, tests 56.19s, environment 35.21s)
+
+test-exit:0
+snapshot: tree:12e2987d1501cbb3bc89aea9d980c46f7b980f68
