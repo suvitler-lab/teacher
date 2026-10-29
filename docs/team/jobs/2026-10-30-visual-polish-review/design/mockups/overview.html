@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>งานครบ — ก่อน/หลัง (visual polish review)</title>
+<!-- icons: Tabler Icons (MIT) outline paths embedded as an inline SVG sprite; no external files. Font falls back to system-ui when IBM Plex Sans Thai is not installed. -->
+<style>
+/* ===== tokens: copied from src/styles/tokens.css (BEFORE = current) ===== */
+:root{
+  --surface-0:#f4f6fa;--surface-1:#eef1f6;--surface-2:#fff;--surface-3:#fff;
+  --text-primary:#1a1f29;--text-secondary:#59616e;--text-muted:#8b929d;
+  --border:rgba(20,28,46,.10);--border-strong:rgba(20,28,46,.18);
+  --accent:#2f6fde;--accent-hover:#275fc0;--on-accent:#fff;--bg-accent:#e6f0fc;--bg-accent-muted:rgba(47,111,222,.10);--text-accent:#1a56b0;--border-accent:#9cc2f2;
+  --bg-success:#e3f6ec;--text-success:#12703f;--fill-success:#1c9d61;--border-success:#a6e0c2;
+  --bg-warning:#fbefd6;--text-warning:#8a5a08;--fill-warning:#e79a1c;--border-warning:#f0cf8c;
+  --bg-danger:#fbe6e6;--text-danger:#a32626;--fill-danger:#dc4a4a;--border-danger:#f0b2b2;
+  --tint-orange-bg:#fce8d8;--tint-orange-fg:#a5560f;--tint-violet-bg:#ece7fb;--tint-violet-fg:#5636b8;--tint-aqua-bg:#d9f2f0;--tint-aqua-fg:#0d6e6a;--tint-magenta-bg:#f8e2ee;--tint-magenta-fg:#9c2b63;
+  --radius-sm:8px;--radius:12px;--radius-lg:16px;
+  --shadow-pop:0 8px 28px rgba(20,28,46,.14),0 2px 6px rgba(20,28,46,.08);
+  --shadow-card:none;--lh-body:1.5;--ring:0 0 0 3px var(--bg-accent-muted);
+  --font-sans:"IBM Plex Sans Thai",system-ui,sans-serif;
+}
+:root[data-theme=dark]{
+  --surface-0:#14171d;--surface-1:#1b1f27;--surface-2:#232833;--surface-3:#2a303c;
+  --text-primary:#eef1f6;--text-secondary:#a7afbd;--text-muted:#7b8494;
+  --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.18);
+  --accent:#5a92ee;--accent-hover:#6ea1f2;--on-accent:#0b1220;--bg-accent:#1d2b44;--bg-accent-muted:rgba(90,146,238,.16);--text-accent:#9cc2f2;--border-accent:#315c93;
+  --bg-success:#10331f;--text-success:#7fdca6;--fill-success:#1f9d63;--border-success:#26623f;
+  --bg-warning:#3a2a08;--text-warning:#f0c674;--fill-warning:#e79a1c;--border-warning:#6b4e18;
+  --bg-danger:#3a1616;--text-danger:#f0999a;--fill-danger:#dc4a4a;--border-danger:#6b2a2a;
+  --tint-orange-bg:#3a2410;--tint-orange-fg:#f0b276;--tint-violet-bg:#241a44;--tint-violet-fg:#c4b2f0;--tint-aqua-bg:#123634;--tint-aqua-fg:#7ad6d0;--tint-magenta-bg:#3a162a;--tint-magenta-fg:#f0a0c6;
+  --shadow-pop:0 10px 30px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.35);
+}
+/* ===== AFTER = proposed overrides (see visual-design.md section ค) ===== */
+.after{
+  --text-muted:#646c79;--fill-success:#148352;--fill-danger:#c93a3a;--tint-orange-fg:#9a4f0c;--border-accent:#6f9fe0;
+  --shadow-card:0 1px 2px rgba(20,28,46,.06),0 2px 8px rgba(20,28,46,.05);--lh-body:1.6;
+  --ring:0 0 0 3px var(--bg-accent-muted),0 0 0 1.5px var(--accent);
+}
+:root[data-theme=dark] .after{--text-muted:#8d96a6;--border-accent:#4a7fc4;--shadow-card:0 1px 2px rgba(0,0,0,.4)}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.5;background:#c9ced8;color:var(--text-primary)}
+:root[data-theme=dark] body{background:#07090c}
+button{font:inherit;color:inherit;cursor:pointer;border:.5px solid var(--border-strong);background:var(--surface-2);border-radius:8px;height:38px;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .12s,transform .05s}
+button:hover{background:var(--surface-1)} button:active{transform:scale(.98)}
+button.primary{background:var(--accent);color:var(--on-accent);border-color:transparent}
+button:focus-visible{outline:none;box-shadow:var(--ring)}
+.ico{width:1em;height:1em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+
+/* ===== control bar (not part of the app) ===== */
+.bar{position:sticky;top:0;z-index:50;background:#1a1f29;color:#fff;padding:10px 16px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:13px}
+.bar b{font-weight:500;opacity:.7;margin-right:6px}
+.bar .grp{display:inline-flex;gap:2px;background:#2b3240;padding:2px;border-radius:8px}
+.bar .grp button{height:30px;border:0;background:transparent;color:#cfd6e4;padding:0 12px;border-radius:6px;font-size:13px}
+.bar .grp button.on{background:#fff;color:#1a1f29}
+.wrap{padding:16px;display:flex;flex-direction:column;align-items:center;gap:28px}
+h2.sec{margin:0;font-weight:500;font-size:16px;color:#1a1f29;align-self:flex-start}
+:root[data-theme=dark] h2.sec{color:#cfd6e4}
+
+/* ===== app icon proposal ===== */
+.icons{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;background:var(--surface-2);padding:16px 20px;border-radius:16px;align-self:stretch;max-width:1280px;color:var(--text-secondary);font-size:12px}
+.icons figure{margin:0;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+.icons .row{display:flex;gap:10px;align-items:flex-end}
+
+/* ===== frame ===== */
+.frame{background:var(--surface-0);color:var(--text-primary);line-height:var(--lh-body);border-radius:14px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.25);width:375px;max-width:100%}
+body.s1024 .frame{width:1024px}
+body.sdesk .frame{width:1280px}
+.shell{display:grid;grid-template-columns:1fr;min-height:640px}
+body.s1024 .shell,body.sdesk .shell{grid-template-columns:64px 1fr}
+.rail{display:none;background:var(--surface-1);border-right:.5px solid var(--border);padding:10px 6px;flex-direction:column;gap:2px}
+body.s1024 .rail,body.sdesk .rail{display:flex}
+.rail .logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--on-accent);margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+.ri{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;font-size:11px;color:var(--text-secondary);border-radius:8px}
+.ri.on{background:var(--bg-accent);color:var(--text-accent)}
+.main{padding:14px 14px 84px;min-width:0}
+body.s1024 .main,body.sdesk .main{padding:20px 24px 40px}
+body.sdesk .main{max-width:1180px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:var(--surface-2);border-top:.5px solid var(--border);padding:6px 4px;position:absolute;bottom:0;left:0;right:0}
+body.s1024 .tabs,body.sdesk .tabs{display:none}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--text-secondary);min-height:44px;padding:4px 0}
+.tab.on{color:var(--text-accent)}
+.tab.scan{justify-content:flex-end}
+.tab .sb{width:44px;height:44px;border-radius:50%;margin-top:-18px;background:var(--accent);color:var(--on-accent);border:3px solid var(--surface-2);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-pop)}
+.before .tab:not(.scan){justify-content:flex-start} /* current: label baseline differs, "เมนู" sits lower (audit ข1-6) */
+.before .tab.menu{justify-content:flex-end}
+.after .tab{justify-content:flex-start}.after .tab.scan{justify-content:flex-end}
+
+.uh{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.uh-l{display:flex;align-items:center;gap:10px;min-width:0}
+.uh-ic{width:38px;height:38px;border-radius:11px;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;flex:none}
+.uh-t{font-size:19px;font-weight:500;line-height:1.25}.uh-s{font-size:13px;color:var(--text-secondary)}
+.after .uh-t{font-size:20px;line-height:1.35}
+.card{background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow-card)}
+.pill{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-secondary);font-size:13px;white-space:nowrap}
+.pill.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);font-weight:500}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.c-red{background:var(--bg-danger);color:var(--text-danger)}.c-or{background:var(--tint-orange-bg);color:var(--tint-orange-fg)}.c-vi{background:var(--tint-violet-bg);color:var(--tint-violet-fg)}.c-mg{background:var(--tint-magenta-bg);color:var(--tint-magenta-fg)}.c-aq{background:var(--tint-aqua-bg);color:var(--tint-aqua-fg)}
+.muted{color:var(--text-secondary)}.mut2{color:var(--text-muted)}
+.hide{display:none!important}
+/* before/after visibility */
+.before .a-only,.after .b-only{display:none!important}
+.page{display:none}.page.show{display:block}
+
+/* ---- Home ---- */
+.banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;border-radius:12px;background:var(--bg-warning);color:var(--text-warning);border:.5px solid var(--border-warning);font-size:13px}
+.banner.compact{padding:6px 10px;font-size:13px}.banner .sp{flex:1}
+.acts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+body.s1024 .acts,body.sdesk .acts{grid-template-columns:repeat(4,1fr)}
+.act{display:flex;gap:9px;align-items:center;padding:10px 12px;min-height:52px;border-radius:12px;background:var(--surface-2);border:.5px solid var(--border);box-shadow:var(--shadow-card)}
+.act .ico{font-size:20px;color:var(--text-accent)}.act .t{font-weight:500;font-size:14px}.act .s{font-size:11px;opacity:.85}
+.after .act .s{font-size:12px}
+.act.pri{background:var(--accent);color:var(--on-accent);border-color:transparent}.act.pri .ico{color:var(--on-accent)}
+.before .act.mid{justify-content:center} /* current: plus-circle button centred while others are left-aligned */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+body.s1024 .stats,body.sdesk .stats{grid-template-columns:repeat(4,1fr)}
+.st{background:var(--surface-2);border:.5px solid var(--border);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow-card)}
+.st .top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary)}
+.st .ic{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;background:var(--bg-accent);color:var(--text-accent)}
+.after .st .ic{width:28px;height:28px;font-size:16px}
+.st .v{font-size:22px;font-weight:500;line-height:1.3}.st .h{font-size:11px;color:var(--text-secondary)}
+.after .st .v{font-weight:600}.after .st .h{font-size:12px}
+.cols{display:grid;gap:12px;grid-template-columns:1fr}
+body.s1024 .cols,body.sdesk .cols{grid-template-columns:1.4fr 1fr}
+.asg{padding:9px 0;border-top:.5px solid var(--border)}.asg:first-of-type{border-top:none}
+.prog{display:grid;grid-template-columns:46px 1fr 52px auto;gap:8px;align-items:center;font-size:11px;margin-top:5px}
+.bar2{height:6px;border-radius:3px;background:var(--border);overflow:hidden}.bar2>div{height:100%;background:var(--fill-success)}
+
+/* ---- Scan round ---- */
+.ctx{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--bg-accent);color:var(--text-accent);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.sin{display:flex;align-items:center;gap:10px;border:2px solid var(--border-accent);border-radius:12px;padding:0 14px;height:56px;background:var(--surface-2);color:var(--text-muted)}
+.fbslot{margin:10px 0 12px}
+.before .fbslot{min-height:0} .after .fbslot{min-height:76px}
+.fb{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:12px;border:.5px solid var(--border-warning);background:var(--bg-warning);color:var(--text-warning)}
+.fb .ic{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--fill-warning);color:var(--on-warning,#3a2600)}
+.fb.ok{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}.fb.ok .ic{background:var(--fill-success);color:#fff}
+.fb .nm{font-size:17px;font-weight:500}.fb .sc{margin-left:auto;font-size:22px;font-weight:500;white-space:nowrap}
+.sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+body.s1024 .sgrid,body.sdesk .sgrid{grid-template-columns:repeat(8,1fr)}
+.sc{height:40px;border-radius:8px;border:.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;line-height:1.1;position:relative}
+.sc small{font-size:10px}
+.sc.ok{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}
+.sc.aw{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.sc.ms{border-style:dashed;border-color:var(--border-danger);color:var(--text-danger)}
+.sc.pd{border-style:dashed;color:var(--text-secondary)}
+.after .sc.ok::before{content:"";width:9px;height:9px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;top:2px;right:3px}
+.scols{display:grid;gap:12px;grid-template-columns:1fr}
+body.s1024 .scols,body.sdesk .scols{grid-template-columns:1.3fr 1fr}
+.ring{width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--fill-success) 0 var(--p,100%),var(--border) 0);display:flex;align-items:center;justify-content:center}
+.ring>div{width:50px;height:50px;border-radius:50%;background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;line-height:1.1}
+
+/* ---- Gradebook ---- */
+.gtools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.gscroll{overflow-x:auto;border:.5px solid var(--border);border-radius:12px;background:var(--surface-2);box-shadow:var(--shadow-card)}
+table.gb{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+table.gb th,table.gb td{border-bottom:.5px solid var(--border);height:36px;text-align:center;font-weight:400;padding:0 4px}
+table.gb thead th{background:var(--surface-1);font-size:11px;padding:6px 4px;vertical-align:top}
+table.gb .nm{text-align:left;padding-left:10px;white-space:nowrap}
+.cell{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:6px;padding:0 6px;font-size:12px}
+.cell.late{background:var(--bg-warning);color:var(--text-warning)}.cell.miss{background:var(--bg-danger);color:var(--text-danger)}.cell.aw{background:var(--bg-accent);color:var(--text-accent)}
+.cell.pd{color:var(--text-muted)}
+.mrow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:.5px solid var(--border)}.mrow:first-child{border-top:none}
+.gtable{display:none}.glist{display:block}
+body.s1024 .gtable,body.sdesk .gtable{display:block}body.s1024 .glist,body.sdesk .glist{display:none}
+.pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="ti-alert-circle" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+  <path d="M12 8v4" />
+  <path d="M12 16h.01" /></symbol>
+<symbol id="ti-alert-triangle" viewBox="0 0 24 24"><path d="M12 9v4" />
+  <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0" />
+  <path d="M12 16h.01" /></symbol>
+<symbol id="ti-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3l-3 3" />
+  <path d="M18 20l3 -3l-3 -3" />
+  <path d="M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5" />
+  <path d="M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3" /></symbol>
+<symbol id="ti-calendar" viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12" />
+  <path d="M16 3v4" />
+  <path d="M8 3v4" />
+  <path d="M4 11h16" />
+  <path d="M11 15h1" />
+  <path d="M12 15v3" /></symbol>
+<symbol id="ti-calendar-event" viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12" />
+  <path d="M16 3l0 4" />
+  <path d="M8 3l0 4" />
+  <path d="M4 11l16 0" />
+  <path d="M8 15h2v2h-2l0 -2" /></symbol>
+<symbol id="ti-camera" viewBox="0 0 24 24"><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
+  <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol>
+<symbol id="ti-chart-bar" viewBox="0 0 24 24"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" />
+  <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" />
+  <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" />
+  <path d="M4 20h14" /></symbol>
+<symbol id="ti-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10" /></symbol>
+<symbol id="ti-checks" viewBox="0 0 24 24"><path d="M7 12l5 5l10 -10" />
+  <path d="M2 12l5 5m5 -5l5 -5" /></symbol>
+<symbol id="ti-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6l6 -6" /></symbol>
+<symbol id="ti-circle-plus" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+  <path d="M9 12h6" />
+  <path d="M12 9v6" /></symbol>
+<symbol id="ti-clipboard-list" viewBox="0 0 24 24"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+  <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" />
+  <path d="M9 12l.01 0" />
+  <path d="M13 12l2 0" />
+  <path d="M9 16l.01 0" />
+  <path d="M13 16l2 0" /></symbol>
+<symbol id="ti-cloud-check" viewBox="0 0 24 24"><path d="M11 18.004h-4.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.388 0 2.585 .82 3.138 2.007" />
+  <path d="M15 19l2 2l4 -4" /></symbol>
+<symbol id="ti-flag" viewBox="0 0 24 24"><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9" />
+  <path d="M5 21v-7" /></symbol>
+<symbol id="ti-home" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></symbol>
+<symbol id="ti-id-badge-2" viewBox="0 0 24 24"><path d="M7 12h3v4h-3l0 -4" />
+  <path d="M10 6h-6a1 1 0 0 0 -1 1v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1 -1v-12a1 1 0 0 0 -1 -1h-6" />
+  <path d="M10 4a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -3" />
+  <path d="M14 16h2" />
+  <path d="M14 12h4" /></symbol>
+<symbol id="ti-menu-2" viewBox="0 0 24 24"><path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" /></symbol>
+<symbol id="ti-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+  <path d="M13.5 6.5l4 4" /></symbol>
+<symbol id="ti-player-stop" viewBox="0 0 24 24"><path d="M5 7a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -10" /></symbol>
+<symbol id="ti-plus" viewBox="0 0 24 24"><path d="M12 5l0 14" />
+  <path d="M5 12l14 0" /></symbol>
+<symbol id="ti-pointer" viewBox="0 0 24 24"><path d="M7.904 17.563a1.2 1.2 0 0 0 2.228 .308l2.09 -3.093l4.907 4.907a1.067 1.067 0 0 0 1.509 0l1.047 -1.047a1.067 1.067 0 0 0 0 -1.509l-4.907 -4.907l3.113 -2.09a1.2 1.2 0 0 0 -.309 -2.228l-13.582 -3.904l3.904 13.563" /></symbol>
+<symbol id="ti-qrcode" viewBox="0 0 24 24"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+  <path d="M7 17l0 .01" />
+  <path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+  <path d="M7 7l0 .01" />
+  <path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" />
+  <path d="M17 7l0 .01" />
+  <path d="M14 14l3 0" />
+  <path d="M20 14l0 .01" />
+  <path d="M14 14l0 3" />
+  <path d="M14 20l3 0" />
+  <path d="M17 17l3 0" />
+  <path d="M20 17l0 3" /></symbol>
+<symbol id="ti-scan" viewBox="0 0 24 24"><path d="M5 12h14" />
+  <path d="M3 7v-2a2 2 0 0 1 2 -2h2" />
+  <path d="M3 17v2a2 2 0 0 0 2 2h2" />
+  <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+  <path d="M17 21h2a2 2 0 0 0 2 -2v-2" /></symbol>
+<symbol id="ti-settings" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></symbol>
+<symbol id="ti-table" viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14" />
+  <path d="M3 10h18" />
+  <path d="M10 3v18" /></symbol>
+<symbol id="ti-user-check" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+  <path d="M15 19l2 2l4 -4" /></symbol>
+<symbol id="ti-users" viewBox="0 0 24 24"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></symbol>
+</defs></svg>
+<div class="bar">
+  <span><b>เวอร์ชัน</b><span class="grp" id="gv"><button data-v="before">ก่อน (ปัจจุบัน)</button><button data-v="after" class="on">หลัง (ข้อเสนอ)</button></span></span>
+  <span><b>ธีม</b><span class="grp" id="gt"><button data-t="light" class="on">สว่าง</button><button data-t="dark">มืด</button></span></span>
+  <span><b>ขนาด</b><span class="grp" id="gs"><button data-s="375" class="on">375</button><button data-s="1024">1024</button><button data-s="desk">Desktop</button></span></span>
+  <span><b>หน้า</b><span class="grp" id="gp"><button data-p="home" class="on">Home</button><button data-p="scan">สแกนระหว่างรอบ</button><button data-p="grade">สมุดคะแนน</button><button data-p="all">ทั้ง 3</button></span></span>
+</div>
+
+<div class="wrap">
+<h2 class="sec">App icon / favicon (เทียบปัจจุบัน กับข้อเสนอ)</h2>
+<div class="icons">
+  <figure><div class="row">
+    <svg width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2f6fde"/><path d="M17 33.5l7.5 7.5L34 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 33.5l7.5 7.5L48 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+    <svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2f6fde"/><path d="M17 33.5l7.5 7.5L34 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 33.5l7.5 7.5L48 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+    <svg width="16" height="16" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2f6fde"/><path d="M17 33.5l7.5 7.5L34 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 33.5l7.5 7.5L48 27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+  </div>ปัจจุบัน 64/32/16px — ติ๊กซ้อน ที่เล็กกลายเป็นก้อน</figure>
+  <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7df0"/><stop offset="1" stop-color="#2a63c9"/></linearGradient></defs></svg>
+  <figure><div class="row">
+    <svg width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="url(#g)"/><path d="M20 14h17l9 9v25a3 3 0 0 1-3 3H20a3 3 0 0 1-3-3V17a3 3 0 0 1 3-3z" fill="#fff"/><path d="M37 14v9h9z" fill="#c9dcfa"/><path d="M24 36l6 6 11-12" fill="none" stroke="#2a63c9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="url(#g)"/><path d="M20 14h17l9 9v25a3 3 0 0 1-3 3H20a3 3 0 0 1-3-3V17a3 3 0 0 1 3-3z" fill="#fff"/><path d="M37 14v9h9z" fill="#c9dcfa"/><path d="M24 36l6 6 11-12" fill="none" stroke="#2a63c9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg width="16" height="16" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="url(#g)"/><path d="M20 14h17l9 9v25a3 3 0 0 1-3 3H20a3 3 0 0 1-3-3V17a3 3 0 0 1 3-3z" fill="#fff"/><path d="M24 36l6 6 11-12" fill="none" stroke="#2a63c9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>ข้อเสนอ — กระดาษ + ติ๊กเดียว อ่านได้ที่ 16px</figure>
+  <figure><div class="row">
+    <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="url(#g)"/><path d="M22 17h14l7 7v22a3 3 0 0 1-3 3H22a3 3 0 0 1-3-3V20a3 3 0 0 1 3-3z" fill="#fff" transform="translate(-0 0)"/><path d="M25 36l5 5 9-10" fill="none" stroke="#2a63c9" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>Maskable (วงกลม): เครื่องหมายใหญ่ ~62% อยู่ใน safe zone</figure>
+</div>
+
+<!-- ============ FRAME ============ -->
+<div class="frame after" id="frame">
+<div class="shell">
+  <nav class="rail">
+    <div class="logo"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-checks"/></svg></div>
+    <div class="ri on"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-home"/></svg>หน้าหลัก</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-scan"/></svg>สแกน</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-table"/></svg>คะแนน</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-user-check"/></svg>เช็คชื่อ</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-arrows-shuffle"/></svg>สุ่มชื่อ</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-chart-bar"/></svg>รายงาน</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-id-badge-2"/></svg>นักเรียน</div>
+    <div class="ri"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-settings"/></svg>ตั้งค่า</div>
+  </nav>
+  <main class="main">
+
+  <!-- ===== HOME ===== -->
+  <section class="page show" id="p-home">
+    <div class="uh"><div class="uh-l"><div class="uh-ic"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-home"/></svg></div><div><div class="uh-t">สวัสดี ครูผู้สอน</div><div class="uh-s">โรงเรียนบ้านตัวอย่าง · 30 ต.ค. 2569</div></div></div>
+      <span class="pill"><svg class="ico" aria-hidden="true"><use href="#ti-calendar"/></svg>ภาคเรียนที่ 1/2569 · ปัจจุบัน<svg class="ico" aria-hidden="true"><use href="#ti-chevron-down"/></svg></span></div>
+    <div class="banner b-only"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-calendar-event"/></svg><span style="flex:1;min-width:200px">ภาคเรียนที่ 1/2569 สิ้นสุดเมื่อ 10 ต.ค. 2569 แล้ว — พร้อมเริ่มภาคเรียนถัดไปไหม</span><button>เริ่มภาคเรียนใหม่</button></div>
+    <div class="banner compact a-only"><svg class="ico" style="font-size:16px" aria-hidden="true"><use href="#ti-calendar-event"/></svg><span>ภาคเรียนที่ 1/2569 สิ้นสุดแล้ว</span><span class="sp"></span><button style="height:32px">เริ่มภาคเรียนใหม่</button></div>
+    <div class="acts">
+      <div class="act pri"><svg class="ico" aria-hidden="true"><use href="#ti-scan"/></svg><div><div class="t">สแกนส่งงาน</div><div class="s">เครื่องยิง · กล้อง</div></div></div>
+      <div class="act"><svg class="ico" aria-hidden="true"><use href="#ti-user-check"/></svg><div><div class="t">เช็คชื่อ</div><div class="s">ยังเหลือ 3 ห้อง</div></div></div>
+      <div class="act mid"><svg class="ico" aria-hidden="true"><use href="#ti-circle-plus"/></svg><div><div class="t">สร้างงาน</div><div class="s">หลายห้องพร้อมกัน</div></div></div>
+      <div class="act"><svg class="ico" aria-hidden="true"><use href="#ti-arrows-shuffle"/></svg><div><div class="t">สุ่มชื่อ</div><div class="s">เฉพาะคนที่มา</div></div></div>
+    </div>
+    <div class="stats">
+      <div class="st"><div class="top">งานที่เปิดรับ<span class="ic"><svg class="ico" aria-hidden="true"><use href="#ti-clipboard-list"/></svg></span></div><div class="v">5</div><div class="h">กดดูรายห้อง</div></div>
+      <div class="st"><div class="top">รอตรวจ<span class="ic"><svg class="ico" aria-hidden="true"><use href="#ti-pencil"/></svg></span></div><div class="v">4 <small class="muted" style="font-size:12px;font-weight:400">ชิ้น</small></div><div class="h">รวมงานที่ปิดรับแล้ว</div></div>
+      <div class="st"><div class="top">ค้างส่ง<span class="ic" style="background:var(--bg-danger);color:var(--text-danger)"><svg class="ico" aria-hidden="true"><use href="#ti-alert-circle"/></svg></span></div><div class="v" style="color:var(--text-danger)">79 <small style="font-size:12px;font-weight:400">ชิ้น</small></div><div class="h">เฉพาะงานที่ยังเปิดรับ</div></div>
+      <div class="st"><div class="top">มาเรียนวันนี้<span class="ic" style="background:var(--bg-success);color:var(--text-success)"><svg class="ico" aria-hidden="true"><use href="#ti-user-check"/></svg></span></div><div class="v">—</div><div class="h">เช็คครบ 0 จาก 3 ห้อง</div></div>
+    </div>
+    <div class="cols">
+      <div class="card"><div style="display:flex;justify-content:space-between;font-weight:500;margin-bottom:6px"><span><svg class="ico" style="font-size:20px;vertical-align:-4px" aria-hidden="true"><use href="#ti-clipboard-list"/></svg> งานที่กำลังเก็บ</span><span style="color:var(--text-accent);font-size:12px;font-weight:400">สมุดคะแนน ›</span></div>
+        <div class="asg"><span class="chip c-mg">สอบย่อย</span> <span class="muted">วิทยาศาสตร์ · เต็ม 20</span> <span class="chip c-red" style="float:right">เลยกำหนด 52 วัน</span><div style="font-weight:500">สอบย่อย บทที่ 2</div><div class="prog"><span>ป.6/1</span><div class="bar2"><div style="width:100%"></div></div><span class="muted" style="text-align:right">32/32</span><span></span></div></div>
+        <div class="asg"><span class="chip c-vi">ใบงาน</span> <span class="muted">วิทยาศาสตร์ · เต็ม 10</span> <span class="chip c-or" style="float:right">เลยกำหนด 30 วัน</span><div style="font-weight:500">ใบงานที่ 4 ระบบย่อยอาหาร</div><div class="prog"><span>ป.6/1</span><div class="bar2"><div style="width:81%;background:var(--fill-warning)"></div></div><span class="muted" style="text-align:right">26/32</span><span class="chip c-red">ค้าง 6</span></div></div>
+      </div>
+      <div class="card"><div style="font-weight:500;margin-bottom:6px"><svg class="ico" style="font-size:20px;vertical-align:-4px" aria-hidden="true"><use href="#ti-flag"/></svg> ต้องติดตาม</div>
+        <div class="asg" style="display:flex;gap:8px;align-items:center"><span class="chip c-aq" style="width:28px;height:28px;justify-content:center;border-radius:50%">ม</span><div style="flex:1">ด.ญ.มินตรา ประเสริฐ<div class="muted" style="font-size:12px">ป.6/1</div></div><span class="chip c-red">ค้าง 4</span></div>
+        <div class="asg" style="display:flex;gap:8px;align-items:center"><span class="chip c-aq" style="width:28px;height:28px;justify-content:center;border-radius:50%">ว</span><div style="flex:1">ด.ช.วรเมธ สุขใจ<div class="muted" style="font-size:12px">ป.6/1</div></div><span class="chip c-red">ค้าง 3</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCAN ROUND ===== -->
+  <section class="page" id="p-scan">
+    <div class="ctx"><b style="font-weight:500"><svg class="ico" style="font-size:16px;vertical-align:-3px" aria-hidden="true"><use href="#ti-users"/></svg> ป.6/1</b><span>วิทยาศาสตร์</span><span class="chip c-mg">สอบย่อย</span><span>เต็ม 20 · ให้คะแนนเต็ม</span><span style="flex:1"></span><button><svg class="ico" aria-hidden="true"><use href="#ti-player-stop"/></svg>จบรอบ</button></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-size:13px"><span>สอบย่อย บทที่ 2</span><span style="flex:1"></span><span class="chip" style="background:var(--bg-warning);color:var(--text-warning)"><svg class="ico" aria-hidden="true"><use href="#ti-pointer"/></svg>คลิกหน้านี้ก่อนยิง</span><span class="chip" style="background:var(--bg-success);color:var(--text-success)"><svg class="ico" aria-hidden="true"><use href="#ti-cloud-check"/></svg>ออนไลน์</span></div>
+    <div style="display:flex;gap:8px"><div class="sin" style="flex:1"><svg class="ico" style="font-size:22px;color:var(--text-accent)" aria-hidden="true"><use href="#ti-qrcode"/></svg>ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter</div><button style="height:56px;width:56px;border-radius:12px"><svg class="ico" style="font-size:24px" aria-hidden="true"><use href="#ti-camera"/></svg></button></div>
+    <div class="fbslot"><div class="fb"><div class="ic"><svg class="ico" style="font-size:24px" aria-hidden="true"><use href="#ti-alert-triangle"/></svg></div><div><div class="nm">ด.ช.กันตภณ พูนผล</div><div style="font-size:13px">ส่งไปแล้ว — ไม่บันทึกซ้ำ</div></div><div class="sc">15/20</div></div></div>
+    <div class="scols">
+      <div class="card"><div style="display:flex;gap:14px;align-items:center;margin-bottom:12px"><div class="ring" style="--p:81%"><div><b style="font-weight:500">26/32</b><span style="font-size:10px" class="muted">ส่งแล้ว</span></div></div><div style="font-size:13px"><div><span style="color:var(--fill-success)">■</span> ส่งแล้ว 26</div><div class="muted">◌ ยังไม่ส่ง 6</div></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><b style="font-weight:500">ผังเลขที่ ป.6/1</b><span class="muted">แตะช่องว่าง = รับแทน</span></div>
+        <div class="sgrid" id="sgrid"></div></div>
+      <div class="card" style="padding:0"><div style="padding:10px 14px;background:var(--surface-1);display:flex;justify-content:space-between;font-size:13px;border-radius:12px 12px 0 0"><span class="muted">สแกนล่าสุด</span><span class="muted">รอบนี้ 3 คน</span></div>
+        <div style="display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:.5px solid var(--border)"><span class="chip" style="width:30px;height:30px;border-radius:50%;justify-content:center;background:var(--bg-accent);color:var(--text-accent)">ภ</span><div style="flex:1">ด.ช.ภูมิพัฒน์ ใจดี<div class="muted" style="font-size:12px">เลขที่ 1</div></div><b style="font-weight:500;color:var(--text-success)">20/20</b></div>
+        <div style="display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:.5px solid var(--border)"><span class="chip" style="width:30px;height:30px;border-radius:50%;justify-content:center;background:var(--bg-accent);color:var(--text-accent)">ป</span><div style="flex:1">ด.ญ.ปุณยวีร์ แสงทอง<div class="muted" style="font-size:12px">เลขที่ 2</div></div><b style="font-weight:500;color:var(--text-success)">20/20</b></div>
+        <div style="display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:.5px solid var(--border)"><span class="chip" style="width:30px;height:30px;border-radius:50%;justify-content:center;background:var(--bg-accent);color:var(--text-accent)">ธ</span><div style="flex:1">ด.ช.ธนกร รักเรียน<div class="muted" style="font-size:12px">เลขที่ 3</div></div><b style="font-weight:500;color:var(--text-success)">20/20</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GRADEBOOK ===== -->
+  <section class="page" id="p-grade">
+    <div class="uh"><div class="uh-l"><div class="uh-ic"><svg class="ico" style="font-size:20px" aria-hidden="true"><use href="#ti-table"/></svg></div><div><div class="uh-t">สมุดคะแนน</div><div class="uh-s">ป.6/1 · วิทยาศาสตร์</div></div></div><button class="primary"><svg class="ico" style="font-size:18px" aria-hidden="true"><use href="#ti-plus"/></svg>สร้างงาน</button></div>
+    <div class="gtools"><span class="pill on">ป.6/1 32</span><span class="pill">ป.6/2 4</span><span class="pill">ป.6/3 3</span><span class="pill">วิทยาศาสตร์ <svg class="ico" aria-hidden="true"><use href="#ti-chevron-down"/></svg></span><span class="pill">ทุกประเภท <svg class="ico" aria-hidden="true"><use href="#ti-chevron-down"/></svg></span></div>
+    <div style="font-size:13px;margin-bottom:8px">งาน <b style="font-weight:500">5</b> &nbsp; อัตราส่ง <b style="font-weight:500">55%</b> &nbsp; รอตรวจ <b style="font-weight:500;color:var(--text-accent)">4</b> &nbsp; ค้างส่ง <b style="font-weight:500;color:var(--text-danger)">72 ชิ้น</b></div>
+    <div class="gtable"><div class="gscroll"><table class="gb"><thead><tr><th style="width:44%;text-align:left;padding-left:10px">ชื่อ - สกุล</th><th>สอบย่อย บทที่ 2<br><span class="muted">เต็ม 20</span></th><th>แบบฝึกหัด 3<br><span class="muted">เต็ม 10</span></th><th>ใบงาน 4<br><span class="muted">เต็ม 10</span></th><th>การบ้าน<br><span class="muted">เต็ม 10</span></th><th>สะสม</th></tr></thead><tbody id="gbody"></tbody></table></div></div>
+    <div class="glist card" style="padding:12px">
+      <div class="pills"><span class="pill on">สอบย่อย บทที่ 2</span><span class="pill">แบบฝึกหัดที่ 3</span><span class="pill">ใบงานที่ 4</span></div>
+      <div style="font-weight:500">สอบย่อย บทที่ 2</div><div class="muted" style="font-size:13px;margin-bottom:6px">เต็ม 20 · ส่งแล้ว 32/32</div>
+      <div id="mlist"></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin-top:10px" class="muted"><span><span class="cell late">7</span> ส่งสาย</span><span><span class="cell miss">–</span> ค้างส่ง</span><span><span class="cell aw"><svg class="ico" aria-hidden="true"><use href="#ti-check"/></svg></span> รอตรวจ</span></div>
+  </section>
+
+  </main>
+</div>
+<div class="tabs">
+  <div class="tab"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-home"/></svg>หน้าหลัก</div>
+  <div class="tab"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-user-check"/></svg>เช็คชื่อ</div>
+  <div class="tab scan"><span class="sb"><svg class="ico" style="font-size:24px" aria-hidden="true"><use href="#ti-scan"/></svg></span>สแกน</div>
+  <div class="tab"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-table"/></svg>คะแนน</div>
+  <div class="tab menu"><svg class="ico" style="font-size:22px" aria-hidden="true"><use href="#ti-menu-2"/></svg>เมนู</div>
+</div>
+</div>
+</div>
+
+<script>
+const names=["ด.ช.ภูมิพัฒน์ ใจดี","ด.ญ.ปุณยวีร์ แสงทอง","ด.ช.ธนกร รักเรียน","ด.ญ.ณิชา ศรีสวัสดิ์","ด.ช.วรเมธ สุขใจ","ด.ญ.พิมพ์ลภัส วงศ์ใหญ่","ด.ช.กันตภณ พูนผล","ด.ช.ชยพล มีสุข"];
+const short=["ภูมิ","ปุ๊","กร","ณิ","เมธ","พิมพ์","ต้น","ชย","อร","วิญ","แพรว","ภีม","เตย","ฟ้า","ก้อง","บาย","ปอนด์","ใส","ไอซ์","เฟิร์น","ริซ","โม","ผา","ขวัญ","ตะวัน","แก้ม","โอบ","พลอย","นนท์","มิน","เจ","หอม"];
+// scan grid states
+const st={4:"ms",5:"ms",11:"aw",16:"ms",17:"ms",22:"pd",23:"pd",24:"pd",30:"pd"};
+document.getElementById("sgrid").innerHTML=short.slice(0,32).map((n,i)=>{const k=st[i]||"ok";return `<div class="sc ${k}">${i+1}<small>${n}</small></div>`}).join("");
+// gradebook
+const rows=[[ "…",9,10,9,"28/50"],["…",7,10,"–","17/50"],["…",10,10,"–","20/50"],["…",8,10,9,"27/50"],["…","–",10,"–","10/50"],["…",9,10,"✓","19/40"],["…",7,10,"–","17/50"],["…",10,10,"✓","20/40"]];
+const cl=v=>v==="–"?'<span class="cell miss">–</span>':v==="✓"?'<span class="cell aw"><svg class="ico" aria-hidden="true"><use href="#ti-check"/></svg></span>':(v===7?'<span class="cell late">7</span>':v);
+document.getElementById("gbody").innerHTML=rows.map((r,i)=>`<tr><td class="nm"><span style="color:var(--fill-danger);font-size:8px">●</span> ${i+1} ${names[i]}</td><td><span class="mut2">•••</span></td><td>${cl(r[1])}</td><td>${cl(r[2])}</td><td>${cl(r[3])}</td><td class="muted">${r[4]}</td></tr>`).join("");
+document.getElementById("mlist").innerHTML=names.slice(0,6).map((n,i)=>`<div class="mrow"><span class="muted" style="width:22px;text-align:right;font-size:12px">${i+1}</span><span style="flex:1">${n}</span><span style="min-width:44px;text-align:center" class="mut2">•••</span></div>`).join("");
+
+const R=document.documentElement,F=document.getElementById("frame");
+function grp(id,fn){document.querySelectorAll("#"+id+" button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#"+id+" button").forEach(x=>x.classList.remove("on"));b.classList.add("on");fn(b.dataset)})}
+grp("gv",d=>{F.classList.remove("before","after");F.classList.add(d.v)});
+grp("gt",d=>R.dataset.theme=d.t);
+grp("gs",d=>{document.body.classList.remove("s1024","sdesk");if(d.s==="1024")document.body.classList.add("s1024");if(d.s==="desk")document.body.classList.add("sdesk")});
+grp("gp",d=>{document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));(d.p==="all"?["home","scan","grade"]:[d.p]).forEach(k=>document.getElementById("p-"+k).classList.add("show"))});
+</script>
+</body>
+</html>

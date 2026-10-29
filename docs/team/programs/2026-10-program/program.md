@@ -38,13 +38,14 @@
 | job-slug | ขนาด | Epic | Milestone | รอ job | worktree | สถานะ |
 |---|---|---|---|---|---|---|
 | `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
-| `m1-01-restore-half-score` | S | E-01 | M-01 | intake | (หลัก) | รอ |
+| `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | branch `team/…` @ `10e497c` | ปิดแล้ว (รอ merge) |
 | `m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | (หลัก) | รอ |
 | `m1-03-guards-in-transaction` | M | E-01 | M-01 | m1-02 | (หลัก) | รอ |
 | `m1-04-late-flag` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
-| `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | กำลังทำ |
+| `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
+| `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `m2-00-scan-mockups` | M | E-02 | M-02 | — (ขนานกับ M1) | (หลัก, เฉพาะ docs) | รอ |
 | `m2-01-resume-scan` → `m2-02-mode-switch` → `m2-03-scorepad-queue` ∥ `m2-04-undo-policy` → `m2-05-hid-ready` ∥ `m2-06-tap-targets` | M… | E-02 | M-02 | Gate 2 | (หลัก) | รอ |
 | `m3-01`…`m3-07` (ดูแผน) | S/M | E-03 | M-03 | Gate M2 | (หลัก) | รอ |
@@ -67,6 +68,7 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 | P แผนงาน | อนุมัติ | 2026-10-29 | อนุมัติแผน 4 milestone; ตัดสิน: คง design เดิม, ลำดับ M1→M4, commit ก่อน, เพิ่ม .xlsx |
 | Gate 0 | ผ่าน | 2026-10-30 | commit `2c3bbde` + tag · baseline 570/570 · precheck production สะอาด (อนุมัติ D18) · คำถามค้างตอบแล้ว D15–D17 |
 | M-01 demo | รอ | | |
+| 2 ความสวยงาม/ไอคอน (E-05) | อนุมัติ | 2026-10-30 | อนุมัติทั้งแผน VP-1..7 · app icon ใหม่ · รองรับ iPad/คอม/มือถือ (D20–D22) |
 | 2 mockup สแกน | รอ | | |
 | M-02 demo | รอ | | |
 | M-03 demo | รอ | | |
@@ -79,7 +81,9 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 2. M2-04 ยกเลิกในผังเลขที่: action sheet + toast เลิกทำ 5 วิ; bulk มี dialog ยืนยัน (D16)
 3. M3-05 ปุ่มผู้ปกครองเห็นคะแนน: ซ่อนจนกว่าจะมีหน้าผู้ปกครอง (D17)
 
-## E-05 ความสวยงาม/ไอคอน — แผนรวมจากประชุมออกแบบ 30 ต.ค. (รอ Gate 2)
+## E-05 ความสวยงาม/ไอคอน — แผนรวมจากประชุมออกแบบ 30 ต.ค. (Gate 2 อนุมัติ 30 ต.ค.: D20 ทั้งแผน · D21 app icon ใหม่ · D22 รองรับมือถือ/iPad/คอม, 44px บนจอสัมผัส, ไอคอนเมนูใหม่ 3 ตัว)
+
+**กติกาทุกงานหน้าจอ (D22):** ตรวจภาพที่ 375 · 768 · 1024 (สัมผัส) · 1280+ (เมาส์) ทั้ง light/dark · hit target ≥ 44px ใต้ `@media (pointer: coarse)` · คอมใช้คีย์บอร์ดได้
 
 ที่มา: `jobs/2026-10-30-visual-polish-review/visual-design.md` (V1–V7) + `ux.md` (UX-1..7) · mockup: `design/mockups/overview.html` · ภาพปัจจุบัน 25 ไฟล์ใน `design/current/`
 
