@@ -1,0 +1,12 @@
+{
+  "ranAt": "2026-10-30T00:05+07:00",
+  "database": "kru-db-apac (remote, APAC)",
+  "mode": "read-only COUNT queries, no names fetched",
+  "meta": { "rows_read": 316, "rows_written": 0, "changed_db": false, "schema_version": "6" },
+  "results": {
+    "dup_terms": 0, "current_terms": 1, "dup_numbers": 0, "half_scores": 0,
+    "inactive_student_subs": 0, "excused_rows": 0, "published_assignments": 2,
+    "teachers": 1, "students": 44, "submissions": 24, "attendance": 57
+  },
+  "conclusion": "No hotfix needed: no half-point scores exist in production yet, so the current backup is still restorable. M1-01 proceeds in normal order."
+}

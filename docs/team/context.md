@@ -36,7 +36,18 @@ flowchart LR
 | Build/deploy | Vite + Cloudflare plugin, `public/_headers`, `public/sw.js`, `scripts/sw-precache.ts`, `scripts/preflight.cjs`, `wrangler.jsonc` |
 | QA | Vitest DOM + Workers/D1; browser scripts ใช้ fixture server และข้อมูลสมมติ; trial reconciliation เทียบกับกระดาษ |
 
-## คำสั่งและผลล่าสุด
+## ชุดตรวจหลัก (baseline 29 ต.ค. 2569 บน tag `deploy-2026-10-25` = commit `2c3bbde`)
+
+| คำสั่ง | ผล baseline |
+|---|---|
+| `npm run typecheck` | PASS |
+| `npm test` | PASS — 56 ไฟล์ / 570 tests (33 วินาที) · stderr ของ camera.test เป็นการจำลอง WASM ล้มโดยตั้งใจ |
+| `npm run build` | PASS — asset `index-BF_Q-mYw.js` ตรงกับรุ่นที่ deploy · warning chunk exceljs ~940 kB เดิม |
+| `npm audit` | 0 vulnerabilities |
+
+หลักฐาน: `jobs/2026-10-29-program-intake/evidence/baseline.txt` · โปรแกรมปัจจุบัน: `programs/2026-10-program/program.md`
+
+## คำสั่งและผลล่าสุด (ประวัติ)
 
 | คำสั่ง | ผล 23 ต.ค. 2569 |
 |---|---|

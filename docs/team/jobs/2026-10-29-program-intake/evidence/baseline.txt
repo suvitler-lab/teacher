@@ -1,0 +1,36 @@
+== typecheck 2026-10-29T23:54:53+07:00
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+typecheck-exit:0
+== test
+··················································stderr | test/unit/camera.test.ts > diagnoseCamera — what the Settings test button shows > a failed reader load isn't remembered: once the cause is fixed, the next try works
+wasm streaming compile failed: TypeError [ERR_INVALID_ARG_TYPE]: The "source" argument must be an instance of Response or an Promise resolving to Response. Received an instance of Object
+falling back to ArrayBuffer instantiation
+
+stderr | test/unit/camera.test.ts > diagnoseCamera — what the Settings test button shows > a failed reader load isn't remembered: once the cause is fixed, the next try works
+failed to asynchronously prepare wasm: both async and sync fetching of the wasm failed
+Aborted(both async and sync fetching of the wasm failed)
+
+········································································································································································································································································································································································································································································································································
+
+ Test Files  56 passed (56)
+      Tests  570 passed (570)
+   Start at  23:55:05
+   Duration  33.07s (transform 29.69s, setup 204.47s, import 27.47s, tests 53.95s, environment 202.47s)
+
+test-exit:0
+== build
+[2mdist/client/client/[22m[36massets/index-BF_Q-mYw.js                                          [39m[1m[2m  342.70 kB[22m[1m[22m[2m │ gzip:  98.96 kB[22m
+[2mdist/client/client/[22m[36massets/exceljs.min-CpLTIW4O.js                                    [39m[1m[33m  940.07 kB[39m[22m[2m │ gzip: 271.31 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 3.84s[39m
+build-exit:0
+== audit
+found 0 vulnerabilities
+audit-exit:0
