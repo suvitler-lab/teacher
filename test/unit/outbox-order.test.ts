@@ -248,6 +248,19 @@ describe("outbox ordering & durability", () => {
     expect(failedPairKeys.value.size).toBe(1);
   });
 
+  it("student_inactive (moved / inactive / finished) is parked in failed at once, not retried", async () => {
+    post.mockImplementation(async (_p: string, body: { ops: SubmissionOp[] }) => ({
+      results: body.ops.map((o) => ({ opId: o.opId, result: "student_inactive" })),
+    }));
+    await enqueueSubmission(op(null, { method: "hid" }));
+    await flush();
+    expect((await failedAll()).map((f) => f.reason)).toEqual(["student_inactive"]);
+    expect(pendingCount.value).toBe(0);
+    expect(await outboxAll()).toEqual([]);
+    await flush();
+    expect(post).toHaveBeenCalledTimes(1); // nothing left to send again
+  });
+
   it("a whole-request epoch refusal (409) parks the ops as epoch_changed instead of retrying forever", async () => {
     post.mockRejectedValueOnce(new ApiError(409, "epoch_changed", "x", { error: "epoch_changed" }));
     await enqueueSubmission(op(5));

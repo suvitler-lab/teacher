@@ -5,7 +5,7 @@ import { requireAuth } from "../lib/auth";
 import { getEpoch } from "../lib/db";
 import { EPOCH_SQL, abortIf, batchAtEpoch, epochChanged, requestEpoch } from "../lib/guard";
 import { memberClause } from "../lib/roster";
-import { classInYear } from "@shared/roster";
+import { classInYear, inRoster } from "@shared/roster";
 import { readJson, bad, notFound, conflict, ApiError } from "../lib/http";
 import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { isLateSubmission, clampClientTs } from "../lib/time";
@@ -83,6 +83,7 @@ interface GuardedRow {
   op_id: string;         // the audit row that goes with this write
   expect_full: number;   // the full score it was judged against
   receive: 0 | 1;        // accepting a hand-in (refused once the work is closed) rather than grading
+  hand_in: 0 | 1;        // a hand-in by the student (scan / camera / typed number): needs an active student
 }
 
 /**
@@ -93,6 +94,9 @@ interface GuardedRow {
  *   · the assignment is still there, still has the full score the row was judged against, and is still
  *     open if this is a hand-in
  *   · the student's class is (still) one of the assignment's — or the assignment has no class links at all
+ *   · a hand-in needs an active student; anything else (gradebook work, bulk, void, excuse) needs a non-void cell
+ *     already, or the student to be on the class list for the assignment's term (the `inRoster` / `memberClause`
+ *     rule: no term → active only; else active / finished, or moved / inactive who left after the term ended)
  *   · nothing the teacher did LATER is already in the cell
  */
 function stillValid(row: string, epoch: string): string {
@@ -102,7 +106,17 @@ function stillValid(row: string, epoch: string): string {
                 AND a.full_score = ${f("expect_full")} AND NOT (a.status = 'closed' AND ${f("receive")} = 1))
     AND EXISTS (SELECT 1 FROM students st WHERE st.id = ${f("student_id")}
                 AND (NOT EXISTS (SELECT 1 FROM assignment_classes ac WHERE ac.assignment_id = ${f("assignment_id")})
-                     OR st.class_id IN (SELECT ac.class_id FROM assignment_classes ac WHERE ac.assignment_id = ${f("assignment_id")})))
+                     OR st.class_id IN (SELECT ac.class_id FROM assignment_classes ac WHERE ac.assignment_id = ${f("assignment_id")}))
+                AND (st.status = 'active'
+                     OR (${f("hand_in")} = 0
+                         AND (EXISTS (SELECT 1 FROM submissions s0
+                                      WHERE s0.assignment_id = ${f("assignment_id")} AND s0.student_id = ${f("student_id")}
+                                        AND s0.status <> 'void')
+                              OR EXISTS (SELECT 1 FROM assignments a2 JOIN terms t ON t.id = a2.term_id
+                                         WHERE a2.id = ${f("assignment_id")}
+                                           AND (st.status = 'finished'
+                                                OR (st.status IN ('moved','inactive') AND NULLIF(t.end_date, '') IS NOT NULL
+                                                    AND st.left_at IS NOT NULL AND st.left_at > NULLIF(t.end_date, ''))))))))
     AND NOT EXISTS (SELECT 1 FROM submissions s WHERE s.assignment_id = ${f("assignment_id")} AND s.student_id = ${f("student_id")}
                     AND s.event_at IS NOT NULL AND s.event_at > ${f("event_at")})`;
 }
@@ -179,12 +193,20 @@ function opIntent(op: { intent?: "receive" | "grade"; method: string }): "receiv
   return op.method === "camera" || op.method === "hid" || op.method === "manual" ? "receive" : "grade";
 }
 
+/** Accepting a hand-in = a "submitted" op with intent receive — the `receive` and `hand_in` fields of a batch row. */
+function isReceive(op: { status: string; intent?: "receive" | "grade"; method: string }): boolean {
+  return op.status === "submitted" && opIntent(op) === "receive";
+}
+
 type OpIn = z.infer<typeof opSchema>;
-interface AsgRow { id: string; full_score: number; due_date: string | null; status: string; deleted_at: number | null }
+interface AsgRow {
+  id: string; full_score: number; due_date: string | null; status: string; deleted_at: number | null;
+  term_year: number | null; term_end: string | null; // the assignment's term (null year = no term)
+}
 interface World {
   assignments: Map<string, AsgRow>;
   classesOf: Map<string, Set<string>>;
-  students: Map<string, { id: string; class_id: string | null }>;
+  students: Map<string, { id: string; class_id: string | null; status: string; left_at: string | null }>;
   existing: Map<string, any>; // `${assignment}\0${student}` -> current submission row
 }
 
@@ -195,15 +217,16 @@ async function loadWorld(env: Env, ops: OpIn[]): Promise<World> {
   const pairs = JSON.stringify([...new Set(ops.map((o) => `${o.assignmentId}\u0000${o.studentId}`))].map((k) => k.split("\u0000")));
   const [aRes, linkRes, sRes, exRes] = await Promise.all([
     env.DB.prepare(
-      `SELECT a.id, a.full_score, a.due_date, a.status, a.deleted_at FROM assignments a
+      `SELECT a.id, a.full_score, a.due_date, a.status, a.deleted_at, t.year AS term_year, t.end_date AS term_end
+       FROM assignments a LEFT JOIN terms t ON t.id = a.term_id
        WHERE a.id IN (SELECT value FROM json_each(?1))`,
     ).bind(assignmentIds).all<AsgRow>(),
     env.DB.prepare(
       `SELECT ac.assignment_id, ac.class_id FROM assignment_classes ac
        WHERE ac.assignment_id IN (SELECT value FROM json_each(?1))`,
     ).bind(assignmentIds).all<{ assignment_id: string; class_id: string }>(),
-    env.DB.prepare(`SELECT s.id, s.class_id FROM students s WHERE s.id IN (SELECT value FROM json_each(?1))`)
-      .bind(studentIds).all<{ id: string; class_id: string | null }>(),
+    env.DB.prepare(`SELECT s.id, s.class_id, s.status, s.left_at FROM students s WHERE s.id IN (SELECT value FROM json_each(?1))`)
+      .bind(studentIds).all<{ id: string; class_id: string | null; status: string; left_at: string | null }>(),
     // one point lookup per (assignment, student) pair, by the primary key. CROSS JOIN pins the list as the outer loop:
     // matching an expression of both columns instead (or letting the planner pick) reads the WHOLE table per scan
     env.DB.prepare(
@@ -235,11 +258,20 @@ function judge(op: OpIn, w: World): SubmissionOpResult | null {
   if (a.full_score !== op.fullScoreAtScan) return { opId: op.opId, result: "full_score_changed", currentFullScore: a.full_score };
   // a closed assignment stops ACCEPTING hand-ins — by any means (scanner, camera, typed number, tap
   // on the grid) — but the teacher can still grade it in the gradebook, and void/excuse
-  if (a.status === "closed" && op.status === "submitted" && opIntent(op) === "receive") return { opId: op.opId, result: "assignment_closed" };
+  if (a.status === "closed" && isReceive(op)) return { opId: op.opId, result: "assignment_closed" };
   const student = w.students.get(op.studentId);
   const allowed = w.classesOf.get(op.assignmentId);
   if (!student || (allowed && allowed.size > 0 && (!student.class_id || !allowed.has(student.class_id)))) {
     return { opId: op.opId, result: "not_in_class" };
+  }
+  // a student who left the class (moved / inactive / finished) hands in nothing new — by any means. The teacher
+  // can still grade / void / excuse a non-void cell, or any cell of work from a term the student was there for
+  // (last year's gradebook) — the same rule stillValid repeats in SQL. A void cell holds no work: it doesn't count.
+  const cell = w.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
+  if (student.status !== "active" && (isReceive(op)
+    || ((!cell || cell.status === "void")
+        && !inRoster(student, a.term_year == null ? null : { year: a.term_year, end_date: a.term_end })))) {
+    return { opId: op.opId, result: "student_inactive" };
   }
   if (op.score != null && (op.score < 0 || op.score > a.full_score)) return { opId: op.opId, result: "invalid", reason: "score_out_of_range" };
   return null;
@@ -331,7 +363,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         event_at: eventAt,
         op_id: op.opId,
         expect_full: a.full_score,
-        receive: op.status === "submitted" && opIntent(op) === "receive" ? 1 : 0,
+        receive: isReceive(op) ? 1 : 0,
+        hand_in: isReceive(op) ? 1 : 0,
       };
       pending.push({ index, op, row });
       effective.set(pairKey, row);
@@ -483,7 +516,8 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
       score: row.score, late: row.late ?? 0, submitted_at: row.submitted_at,
       method: row.method, device_id: row.device_id, scan_session_id: row.scan_session_id ?? null,
       updated_at: row.updated_at, event_at: now,
-      op_id: opId, expect_full: a.full_score, receive: action === "all-submitted" ? 1 : 0,
+      // bulk is gradebook work (D23): the class list above (memberClause) decides who it reaches, never hand_in
+      op_id: opId, expect_full: a.full_score, receive: action === "all-submitted" ? 1 : 0, hand_in: 0,
     });
     audits.push({
       op_id: opId, at: now, device_id: deviceId, batch_id: batchId,

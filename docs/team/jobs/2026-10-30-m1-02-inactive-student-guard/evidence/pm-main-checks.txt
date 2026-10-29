@@ -1,0 +1,10 @@
+> tsc --noEmit
+
+typecheck-exit:0
+ Test Files  59 passed (59)
+      Tests  634 passed (634)
+   Start at  00:41:53
+   Duration  21.12s (transform 19.19s, setup 132.43s, import 19.82s, tests 64.86s, environment 34.63s)
+
+test-exit:0
+snapshot: tree:6031def764ffd3a41d442a64e22dba6ba5d069aa

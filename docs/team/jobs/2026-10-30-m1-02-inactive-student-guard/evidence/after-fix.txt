@@ -1,0 +1,48 @@
+$ npm run typecheck   # AFTER fix
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+exit=0
+
+$ npm test   # AFTER fix
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  59 passed (59)
+      Tests  626 passed (626)
+   Start at  00:35:54
+   Duration  19.75s (transform 16.02s, setup 121.00s, import 15.28s, tests 60.89s, environment 35.50s)
+
+exit=0
+
+$ npx vitest run test/api/inactive-student.test.ts   # AFTER fix
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  00:36:16
+   Duration  2.82s (transform 438ms, setup 919ms, import 11ms, tests 1.41s, environment 0ms)
+
+exit=0

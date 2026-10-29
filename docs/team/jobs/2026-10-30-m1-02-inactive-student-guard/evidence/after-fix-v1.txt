@@ -1,0 +1,121 @@
+# Verify round 1 fixes (R-01..R-05) - 2026-10-30
+$ npm run typecheck
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+exit=0
+
+$ npm test
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/qa-m1-02.test.ts (47 tests | 5 failed) 6332ms
+     × a voided cell is still an existing cell: the gradebook can score it again 114ms
+     × B-01: ended term: a child who left AFTER the end is on the list, so all-submitted should mark them 137ms
+     × B-01 (what happens today): the dropped child gets no row and no audit; the active ones land 93ms
+     × B-01: 'ทั้งห้องส่งแล้ว' on last year's work marks last year's (finished) children 94ms
+     × B-01 (what happens today): all-submitted answers ok with changed 0 and writes nothing 95ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA BR-02: grading / excusing / voiding an EXISTING cell is always allowed > a voided cell is still an existing cell: the gradebook can score it again
+AssertionError: expected 'student_inactive' to be 'ok' // Object.is equality
+
+Expected: "ok"
+Received: "student_inactive"
+
+ ❯ test/api/qa-m1-02.test.ts:126:74
+    124|     expect((await one(cookie, op({ status: "void", method: "manual", c…
+    125|     await setStudent("st1", "moved", "2026-10-20");
+    126|     expect((await one(cookie, op({ method: "grid", score: 5 }))).resul…
+       |                                                                          ^
+    127|     expect(await cellOf("st1")).toMatchObject({ status: "submitted", s…
+    128|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA AC-05 extension: bulk follows the class list (memberClause) > B-01: ended term: a child who left AFTER the end is on the list, so all-submitted should mark them
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA B-01: last year's gradebook, whole-class actions on last year's finished children > B-01: 'ทั้งห้องส่งแล้ว' on last year's work marks last year's (finished) children
+Error: Expect test to fail
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA AC-05 extension: bulk follows the class list (memberClause) > B-01 (what happens today): the dropped child gets no row and no audit; the active ones land
+AssertionError: expected 4 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 4
+
+ ❯ test/api/qa-m1-02.test.ts:416:23
+    414|     await setTermEnd(END);
+    415|     const r = await bulk("all-submitted");
+    416|     expect(r.changed).toBe(2);
+       |                       ^
+    417|     expect(await cellOf("st4")).toBeNull();
+    418|     expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM audit_logs…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA B-01: last year's gradebook, whole-class actions on last year's finished children > B-01 (what happens today): all-submitted answers ok with changed 0 and writes nothing
+AssertionError: expected { ok: true, changed: 2, …(1) } to match object { ok: true, changed: +0 }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "changed": 0,
++   "changed": 2,
+    "ok": true,
+  }
+
+ ❯ test/api/qa-m1-02.test.ts:448:15
+    446|   it("B-01 (what happens today): all-submitted answers ok with changed…
+    447|     const r = await bulk("all-submitted");
+    448|     expect(r).toMatchObject({ ok: true, changed: 0 });
+       |               ^
+    449|     expect(await oldCell("st5")).toBeNull();
+    450|     expect(await oldCell("st6")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed | 60 passed (61)
+      Tests  5 failed | 687 passed (692)
+   Start at  00:54:43
+   Duration  18.30s (transform 16.85s, setup 65.67s, import 16.56s, tests 74.62s, environment 38.50s)
+
+exit=1
+
+$ npx vitest run test/api/inactive-student.test.ts test/unit/scan-controller.test.ts
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  2 passed (2)
+      Tests  61 passed (61)
+   Start at  00:55:04
+   Duration  3.86s (transform 719ms, setup 1.20s, import 299ms, tests 2.53s, environment 408ms)
+
+exit=0

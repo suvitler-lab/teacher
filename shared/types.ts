@@ -177,6 +177,7 @@ export type SubmissionOpResult =
   | { opId: string; result: "ok"; submission: Submission }
   | { opId: string; result: "duplicate"; submission: Submission }
   | { opId: string; result: "not_in_class" }
+  | { opId: string; result: "student_inactive" }                     // moved / inactive / finished: no new hand-ins
   | { opId: string; result: "full_score_changed"; currentFullScore: number }
   | { opId: string; result: "assignment_closed" }
   | { opId: string; result: "superseded"; submission?: Submission } // the cell already holds something the teacher did LATER

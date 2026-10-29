@@ -84,6 +84,26 @@ describe("the scan round belongs to ONE assignment", () => {
     expect(__scan.feedback.value?.name).toBe("งานนี้ถูกลบแล้ว");
   });
 
+  it("a student who left the class (moved / inactive / finished) is refused at once — error sound, nothing queued", async () => {
+    const { beep } = await import("@client/lib/sound");
+    const err = vi.spyOn(beep, "err");
+    const ok = vi.spyOn(beep, "ok");
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    for (const status of ["moved", "inactive", "finished"] as const) {
+      err.mockClear();
+      __scan.feedback.value = null;
+      await __scan.commitStudent({ ...stu, status }, "hid");
+      expect(enqueue).not.toHaveBeenCalled();
+      expect(err).toHaveBeenCalledTimes(1);
+      expect(__scan.feedback.value).toMatchObject({ kind: "danger", sub: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)" });
+    }
+    expect(ok).not.toHaveBeenCalled();
+    await __scan.commitStudent(stu, "hid"); // an active student still goes through
+    expect(enqueue).toHaveBeenCalledTimes(1);
+    err.mockRestore(); ok.mockRestore();
+  });
+
   it("a server-confirmed closed work still blocks new hand-ins", async () => {
     get.mockResolvedValueOnce({ submissions: [], assignment: { status: "closed", full_score: 10, deleted: false }, serverTime: 100 });
     await __scan.startSession("A", "c1", "full");
