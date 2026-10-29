@@ -1,0 +1,11 @@
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+typecheck-exit:0
+
+ Test Files  57 passed (57)
+      Tests  577 passed (577)
+   Start at  00:11:06
+   Duration  15.71s (transform 15.88s, setup 59.64s, import 13.80s, tests 50.26s, environment 34.47s)
+
+test-exit:0

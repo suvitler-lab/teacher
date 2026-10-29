@@ -20,6 +20,7 @@
 | E-01 | ความถูกต้องของข้อมูลคะแนน | คะแนน .5 กู้คืนได้ · เด็ก status≠active ไม่รับคะแนน · intent ตัดสินฝั่ง server · late/% นิยามเดียว · guard+audit ใน transaction | 💰🔄🗑🔐 |
 | E-02 | ขั้นตอนสแกนใช้ง่าย | จำค่าล่าสุด · สแกนต่อจาก Home · สลับโหมดกลางรอบ · ScorePad แบบคิว · นโยบายยกเลิก/ยืนยัน bulk · HID readiness | 🔄💰♿ |
 | E-03 | Gradebook/ใช้งานประจำวัน/ความปลอดภัย | คีย์บอร์ด Gradebook · รีเฟรชขณะเปิด · นำเข้า .xlsx/.csv · สร้างงานออฟไลน์ · revoke session · เอกสารตรงโค้ด | ♿🔄👤🔐 |
+| E-05 | ความสวยงามของ UI และไอคอน (เพิ่ม 30 ต.ค. ตามคำสั่งเจ้าของงาน) | visual audit 8 หน้า → ข้อเสนอต่อยอด design system เดิม (ไอคอน, app icon, สี/dark mode, spacing, typography, สถานะ) → mockup → job ทำจริง ≤ M หลัง Gate 2 | ♿ |
 | E-04 | อุปกรณ์จริงและทดลองห้องเรียน | Playwright devDep + scan-e2e · release train จาก tag · ทดลอง iPad/กล้อง/เครื่องยิง · ทดลอง 1 ห้อง 2 สัปดาห์ + reconcile | ☁️🗑💰👤 |
 
 ## Milestone
@@ -37,12 +38,14 @@
 | job-slug | ขนาด | Epic | Milestone | รอ job | worktree | สถานะ |
 |---|---|---|---|---|---|---|
 | `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
-| `m1-01-restore-half-score` | S | E-01 | M-01 | intake | (หลัก) | รอ |
+| `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | branch `team/…` @ `10e497c` | ปิดแล้ว (รอ merge) |
 | `m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | (หลัก) | รอ |
 | `m1-03-guards-in-transaction` | M | E-01 | M-01 | m1-02 | (หลัก) | รอ |
 | `m1-04-late-flag` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
+| `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
+| `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `m2-00-scan-mockups` | M | E-02 | M-02 | — (ขนานกับ M1) | (หลัก, เฉพาะ docs) | รอ |
 | `m2-01-resume-scan` → `m2-02-mode-switch` → `m2-03-scorepad-queue` ∥ `m2-04-undo-policy` → `m2-05-hid-ready` ∥ `m2-06-tap-targets` | M… | E-02 | M-02 | Gate 2 | (หลัก) | รอ |
 | `m3-01`…`m3-07` (ดูแผน) | S/M | E-03 | M-03 | Gate M2 | (หลัก) | รอ |
@@ -65,6 +68,7 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 | P แผนงาน | อนุมัติ | 2026-10-29 | อนุมัติแผน 4 milestone; ตัดสิน: คง design เดิม, ลำดับ M1→M4, commit ก่อน, เพิ่ม .xlsx |
 | Gate 0 | ผ่าน | 2026-10-30 | commit `2c3bbde` + tag · baseline 570/570 · precheck production สะอาด (อนุมัติ D18) · คำถามค้างตอบแล้ว D15–D17 |
 | M-01 demo | รอ | | |
+| 2 ความสวยงาม/ไอคอน (E-05) | อนุมัติ | 2026-10-30 | อนุมัติทั้งแผน VP-1..7 · app icon ใหม่ · รองรับ iPad/คอม/มือถือ (D20–D22) |
 | 2 mockup สแกน | รอ | | |
 | M-02 demo | รอ | | |
 | M-03 demo | รอ | | |
@@ -77,7 +81,26 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 2. M2-04 ยกเลิกในผังเลขที่: action sheet + toast เลิกทำ 5 วิ; bulk มี dialog ยืนยัน (D16)
 3. M3-05 ปุ่มผู้ปกครองเห็นคะแนน: ซ่อนจนกว่าจะมีหน้าผู้ปกครอง (D17)
 
+## E-05 ความสวยงาม/ไอคอน — แผนรวมจากประชุมออกแบบ 30 ต.ค. (Gate 2 อนุมัติ 30 ต.ค.: D20 ทั้งแผน · D21 app icon ใหม่ · D22 รองรับมือถือ/iPad/คอม, 44px บนจอสัมผัส, ไอคอนเมนูใหม่ 3 ตัว)
+
+**กติกาทุกงานหน้าจอ (D22):** ตรวจภาพที่ 375 · 768 · 1024 (สัมผัส) · 1280+ (เมาส์) ทั้ง light/dark · hit target ≥ 44px ใต้ `@media (pointer: coarse)` · คอมใช้คีย์บอร์ดได้
+
+ที่มา: `jobs/2026-10-30-visual-polish-review/visual-design.md` (V1–V7) + `ux.md` (UX-1..7) · mockup: `design/mockups/overview.html` · ภาพปัจจุบัน 25 ไฟล์ใน `design/current/`
+
+| job | รวมจาก | ขอบเขต | ขนาด | ความเสี่ยง | ทำเมื่อ |
+|---|---|---|---|---|---|
+| VP-1 tokens + contrast + focus + heading + microcopy | V1, UX-5, UX-4, UX-6 | ปรับค่า `--text-muted`/`fill-success`/`fill-danger`/`border-accent` ให้ ≥ AA · เพิ่ม `--ring-focus` + `:focus-visible` ทั่วระบบ · ชื่อหน้าเป็น `h1`/การ์ดเป็น `h2` (reset ให้หน้าตาเดิม) · microcopy 15 ข้อ + ข้อความ error เป็นไทย | M | ต่ำ–กลาง | ทันทีหลัง M1 (ไม่ชนไฟล์ scan flow) |
+| VP-2 พจนานุกรมไอคอน + ขนาดมาตรฐาน + สถานะส่งงาน/เช็คชื่อ | V2, UX-1, UX-7, UX-2 | map ไอคอนตามพจนานุกรม (check/circle-check/checks, edit→pencil, cloud-off→cloud-x/alert, bulb→flashlight, เมนู table→notebook, id-badge-2→users, arrows-shuffle→dice-3) · `Icon` ขนาด 16/20/24 เท่านั้น ลบ prop `stroke` · WorkCell aria-label ทุกสถานะ | M | กลาง | หลัง VP-1 |
+| VP-3 app icon ใหม่ | V3 | favicon/maskable SVG ใหม่ (กระดาษ + ติ๊กเดียว) + PNG 192/512/180 + apple-touch-icon + manifest | S | กลาง (cache SW, ต้องติดตั้งใหม่บน iPad) | หลัง VP-1 (รอเจ้าของงานเลือกแบบ) |
+| VP-4 hit target 44px + ปุ่ม 40/32 + เงาการ์ด/radius/line-height 1.6 | V4, UX-3 | `button` min-height 44 บน touch · select ภาคเรียน · `sc-cell` 48×44 · `--shadow-card` · radius scale · lh 1.6 | M | **สูง** (ตารางยาวขึ้น ~10%, layout 375) | **หลัง M2 สแกนเสร็จ** (scan.css ชน) |
+| VP-5 Home + สแกนระหว่างรอบ | V5 | จัดปุ่ม Home เท่ากัน, แบนเนอร์ภาคเรียนย่อ, slot ฟีดแบ็กคงที่, header หน้าสรุป | M | กลาง | **รวมเข้า job M2 ของ scan flow** |
+| VP-6 สมุดคะแนน + ตั้งค่า | V6 | header ตาราง, เมนูย่อยตั้งค่า, ซ่อน scrollbar แท็บ + เฟดขอบ, pill แทน select | M | กลาง | รวมกับ M3-01 |
+| VP-7 empty/loading/error + micro-interaction ≤ 5 | V7 | `EmptyState` เดียว, skeleton, แฟลชช่องสแกน, ring transition, แถบใต้แท็บ (reduced-motion) | M | ต่ำ–กลาง | ท้าย M3 |
+
+ลำดับ: VP-1 → VP-2 → VP-3 → (M2) → VP-4 → VP-6/VP-7 · ทุก job ติดธง ♿ · ตรวจด้วยภาพก่อน/หลัง 8 หน้า × 375/1024 × light/dark + ชุดทดสอบเดิม
+
 ## บันทึก
 
 - 2026-10-29 Gate P อนุมัติ · เปิด job intake · secret-scan docs PASS
+- 2026-10-30 M1-01 review: R-01 จาก Code Reviewer — ฝั่งบันทึก `submissions.ts:61` zod `multipleOf(0.5)` มีค่าเผื่อทศนิยมลอย (7.500000000000001 ผ่าน) แม้ UI ยังสร้างค่านั้นไม่ได้ → **เพิ่มเข้า scope M1-05**: ใช้ `isHalfStep` จาก `shared/grade.ts` เป็นนิยามเดียวทั้งฝั่งบันทึกและ restore
 - 2026-10-30 Gate 0 ผ่าน: commit `2c3bbde` + tag `deploy-2026-10-25` · baseline 56 ไฟล์/570 tests PASS · precheck production: คะแนนครึ่ง 0, เทอมซ้ำ 0, เลขที่ซ้ำ 0 (ไม่ต้อง hotfix) · ปิด job intake · เปิด `2026-10-30-m1-01-restore-half-score`
