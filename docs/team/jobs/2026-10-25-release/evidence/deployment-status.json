@@ -1,0 +1,11 @@
+{
+  "id": "e94ed82b-f047-4b9c-9b02-8dc91080a370",
+  "created_on": "2026-10-24T17:05:41.419137Z",
+  "strategy": "percentage",
+  "versions": [
+    {
+      "version_id": "3ecf363b-af00-4542-8072-25a3e3e86905",
+      "percentage": 100
+    }
+  ]
+}

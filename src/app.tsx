@@ -5,7 +5,7 @@ import { kvGet } from "./lib/idb";
 import { pauseSync } from "./lib/outbox";
 import { requestPersist } from "./lib/storage";
 import { route, routeName } from "./router";
-import { api, withTimeout } from "./lib/api";
+import { api } from "./lib/api";
 import { authRequired } from "./lib/session";
 import { retryUntilReachable } from "./lib/reconnect";
 import { Setup } from "./pages/Setup";
@@ -36,7 +36,7 @@ const REACH_TIMEOUT_MS = 8000;
 
 /** Ask the server who we are; while it can't be reached this throws. Live data replaces the saved copy on success. */
 async function goLive() {
-  const me = await withTimeout(api.get<Me>("/api/auth/me"), REACH_TIMEOUT_MS);
+  const me = await api.get<Me>("/api/auth/me", { timeoutMs: REACH_TIMEOUT_MS });
   if (me.authenticated) await loadBootstrap();
   else authRequired.value = true; // the session ended while we were away: sign in again (unsent work is kept)
 }
@@ -47,7 +47,7 @@ export function App() {
   useEffect(() => {
     (async () => {
       try {
-        const me = await withTimeout(api.get<Me>("/api/auth/me"), REACH_TIMEOUT_MS);
+        const me = await api.get<Me>("/api/auth/me", { timeoutMs: REACH_TIMEOUT_MS });
         accountEmailSet.value = me.emailSet !== false;
         if (me.authenticated && (await kvGet<boolean>("loggedOut"))) {
           // The teacher signed out on this device (perhaps offline, so the server session

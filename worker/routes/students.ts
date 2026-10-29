@@ -2,12 +2,13 @@ import { Hono } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
-import { readJson, notFound, conflict } from "../lib/http";
+import { readJson, notFound, conflict, ApiError } from "../lib/http";
 import { writeAudit, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { id, qrToken } from "@shared/ids";
 import { mapStudent } from "../lib/rows";
 import { bkkToday } from "../lib/time";
 import { batchAtEpoch, requestEpoch } from "../lib/guard";
+import { blockedStudentMoves, studentHistoryGuard, HISTORY_MOVE_MESSAGE } from "../lib/student-history";
 
 export const studentRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 studentRoutes.use("/api/students", requireAuth);
@@ -62,6 +63,9 @@ studentRoutes.post("/api/students", async (c) => {
   const existing = await c.env.DB.prepare("SELECT * FROM students WHERE id = ?")
     .bind(sid)
     .first();
+  const moves = [{ studentId: sid, toClassId: b.class_id ?? null }];
+  const blocked = await blockedStudentMoves(c.env, moves);
+  if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
   // Two active children in one class must not share a number: it is how a child is picked when the
   // card is forgotten, and a mark would land on whoever the lookup happened to prefer.
   const nextStatus = b.status ?? (existing as any)?.status ?? "active";
@@ -78,7 +82,8 @@ studentRoutes.post("/api/students", async (c) => {
   const leftAt = gone(nextStatus)
     ? (b.left_at ?? (gone((existing as any)?.status ?? null) ? (existing as any)?.left_at : null) ?? bkkToday())
     : null;
-  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
+  try {
+    await batchAtEpoch(c.env, await requestEpoch(c), [studentHistoryGuard(c.env, moves), c.env.DB.prepare(
     `INSERT INTO students (id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, prefix=excluded.prefix, first_name=excluded.first_name,
@@ -89,6 +94,12 @@ studentRoutes.post("/api/students", async (c) => {
       sid, b.code, token, b.prefix ?? null, b.first_name, b.last_name, b.nickname ?? null,
       b.class_id ?? null, b.number ?? null, nextStatus, leftAt, now,
     )]);
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    const blocked = await blockedStudentMoves(c.env, moves);
+    if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
+    throw e;
+  }
   await writeAudit(c.env, [
     {
       entity: "student", entity_id: sid, student_id: sid,
@@ -171,6 +182,7 @@ studentRoutes.post("/api/students/import/preview", async (c) => {
   });
 
   const { dupNumbers, numberClashes } = await numberProblems(c.env, b.class_id, b.students);
+  const blockedMoves = await blockedStudentMoves(c.env, [...byCode.values()].map((s) => ({ studentId: s.id, toClassId: b.class_id })));
 
   // Children already in this class who are NOT in the paste. If that is most of the class it is usually a new
   // school year's list going into last year's class — the class should be opened fresh instead ("เริ่มภาคเรียนใหม่").
@@ -182,7 +194,7 @@ studentRoutes.post("/api/students/import/preview", async (c) => {
 
   const summary = { create: 0, update: 0, same: 0, move: 0, reactivate: 0 };
   for (const r of rows) summary[r.action]++;
-  return c.json({ ok: true, rows, summary, dupCodes: duplicateCodes(b.students), dupNumbers, numberClashes, classActive, notInPaste });
+  return c.json({ ok: true, rows, summary, dupCodes: duplicateCodes(b.students), dupNumbers, numberClashes, classActive, notInPaste, blockedMoves });
 });
 
 studentRoutes.post("/api/students/import", async (c) => {
@@ -208,6 +220,9 @@ studentRoutes.post("/api/students/import", async (c) => {
     .bind(JSON.stringify(codes))
     .all<{ id: string; code: string }>();
   const byCode = new Map(exRes.results?.map((r) => [r.code, r.id]) ?? []);
+  const moves = [...byCode.values()].map((studentId) => ({ studentId, toClassId: b.class_id }));
+  const blocked = await blockedStudentMoves(c.env, moves);
+  if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
 
   const rows = b.students.map((s) => ({
     id: byCode.get(s.code) ?? id("stu"),
@@ -244,7 +259,14 @@ studentRoutes.post("/api/students/import", async (c) => {
     after: { code: r.code, class_id: r.class_id, number: r.number },
   }));
 
-  await batchAtEpoch(c.env, await requestEpoch(c), [upsertStmt, auditInsertStmt(c.env, audits, now)]);
+  try {
+    await batchAtEpoch(c.env, await requestEpoch(c), [studentHistoryGuard(c.env, moves), upsertStmt, auditInsertStmt(c.env, audits, now)]);
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    const blocked = await blockedStudentMoves(c.env, moves);
+    if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
+    throw e;
+  }
   return c.json({ ok: true, imported: rows.length, created: rows.filter((r) => r._isNew).length });
 });
 

@@ -1,0 +1,20 @@
+{
+  "date":"2026-10-25",
+  "environment":"production",
+  "status":"DEPLOYED_VERIFIED",
+  "url":"https://ngankrob.suvit-ler.workers.dev",
+  "worker":"ngankrob",
+  "database":"kru-db-apac",
+  "databaseId":"86cbb410-14a8-4d46-9b5f-89982e957815",
+  "schema":6,
+  "pendingMigrations":0,
+  "version":"3ecf363b-af00-4542-8072-25a3e3e86905",
+  "previousVersion":"cd3c1453-1c71-43ab-9966-ec99b83c164f",
+  "backup":{"verified":true,"path":"artifacts/releases/2026-10-25/private/kru-db-apac-before-deploy.sql"},
+  "sourceHashDrift":0,
+  "preReleaseTests":{"passed":570,"total":570},
+  "checks":{"health":"PASS","assets":"PASS","unauthenticatedGuards":"PASS","authenticatedReport":"PASS","gradebookRead":"PASS","attendanceRead":"PASS","offlineAppReady":"PASS","coreRowCounts":"PASS"},
+  "productionScoreAttendanceWrites":"NOT_RUN",
+  "realIpadCamera":"NOT_RUN",
+  "oneClassTrial":"NOT_RUN"
+}

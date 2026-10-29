@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import { useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { classesForTerm, currentTerm, students, assignments, terms, loadBootstrap, setSelectedTerm } from "../store";
@@ -52,7 +53,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
   const problem = backwards ? "ภาคเรียนใหม่ต้องมาหลังภาคเรียนปัจจุบัน"
     : exists ? `มีภาคเรียน ${name} อยู่แล้ว — ตั้งเป็นปัจจุบันได้จากรายการภาคเรียน`
     : badDates ? (start ? "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม" : "ใส่วันเริ่มภาคเรียน") : "";
-  const canStart = !busy && !problem && (!newYear || sure);
+  const canStart = !busy && !problem && (!(newYear && cur) || sure);
 
   function toggle(id: string) {
     setKeep((k) => { const n = new Set(k); if (n.has(id)) n.delete(id); else n.add(id); return n; });
@@ -83,11 +84,11 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div class="modal" role="dialog" aria-label="เริ่มภาคเรียนใหม่" style="max-width:520px">
+    <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
+      <Dialog label="เริ่มภาคเรียนใหม่" onClose={onClose} dismissible={!busy} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
           <h2 style="font-size:18px">เริ่มภาคเรียนใหม่</h2>
-          <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
+          <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="page-sub" style="margin-bottom:10px">
           ภาคเรียนปัจจุบัน: <b>{cur?.name ?? "ยังไม่มี"}</b> · สิ่งที่ทำไว้ในภาคเรียนเดิมไม่ถูกลบหรือแก้ — ดูย้อนหลังได้จากตัวเลือกเทอมด้านบน
@@ -158,12 +159,12 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px">
-          <button onClick={onClose}>ยกเลิก</button>
+          <button onClick={onClose} disabled={busy}>ยกเลิก</button>
           <button class="primary" onClick={go} disabled={!canStart}>
             {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="calendar-plus" />} เริ่มภาคเรียน {name}
           </button>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

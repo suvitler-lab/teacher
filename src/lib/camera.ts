@@ -237,10 +237,13 @@ export async function diagnoseCamera(): Promise<CameraCheck[]> {
   // the fallback reader is what iPad depends on: prove each part of it
   try { await assertWasmAllowed(); add("ตัวอ่านสำรอง: อนุญาต WebAssembly", true, "ผ่านนโยบายความปลอดภัยของหน้านี้"); }
   catch (e) { add("ตัวอ่านสำรอง: อนุญาต WebAssembly", false, "ถูกนโยบายความปลอดภัย (CSP) บล็อก — " + (e as Error).message); }
+  const wasmCheck = new AbortController();
+  const wasmDeadline = setTimeout(() => wasmCheck.abort(), 8000);
   try {
-    const r = await fetch(WASM_URL, { method: "HEAD", cache: "no-store" });
+    const r = await fetch(WASM_URL, { method: "HEAD", cache: "no-store", signal: wasmCheck.signal });
     add("ตัวอ่านสำรอง: ไฟล์ zxing_reader.wasm", r.ok, r.ok ? "พร้อมใช้ (โหลดจากเซิร์ฟเวอร์ตัวเอง)" : "โหลดไม่ได้ (HTTP " + r.status + ")");
   } catch (e) { add("ตัวอ่านสำรอง: ไฟล์ zxing_reader.wasm", false, "ออฟไลน์หรือเข้าไม่ถึง — " + (e as Error).message); }
+  finally { clearTimeout(wasmDeadline); }
   if (!nativeOk) {
     try { const { kind } = await getDetector(); add("เริ่มตัวอ่าน QR", true, kind === "wasm" ? "ตัวอ่านสำรอง (WASM) พร้อมใช้งาน" : "ตัวอ่านของเครื่องพร้อมใช้งาน"); }
     catch (e) { add("เริ่มตัวอ่าน QR", false, (e as Error).message); }

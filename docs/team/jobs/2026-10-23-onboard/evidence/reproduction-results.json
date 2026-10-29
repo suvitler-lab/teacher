@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-23",
+  "environment": "isolated in-memory D1, synthetic students",
+  "results": [
+    {
+      "id": "AUTH-CHECK",
+      "statuses": [
+        {
+          "path": "/api/bootstrap",
+          "status": 401
+        },
+        {
+          "path": "/api/gradebook",
+          "status": 401
+        },
+        {
+          "path": "/api/reports/summary?class=none",
+          "status": 401
+        },
+        {
+          "path": "/api/backup?table=students",
+          "status": 401
+        },
+        {
+          "path": "/api/audit",
+          "status": 401
+        }
+      ]
+    },
+    {
+      "id": "DUPLICATE-TERM",
+      "status": 200,
+      "sameYearTermRows": 2
+    },
+    {
+      "id": "RESTORE-DOMAIN",
+      "status": 200,
+      "scoreAboveMaximumRows": 1
+    },
+    {
+      "id": "SETTINGS-RESTORE-RACE",
+      "status": 200,
+      "epochBefore": "4",
+      "epochAfter": "5",
+      "staleValueCommitted": true
+    },
+    {
+      "id": "HISTORY-MOVE",
+      "importStatus": 200,
+      "oldRosterBefore": 32,
+      "oldRosterAfter": 31,
+      "targetPresentBefore": true,
+      "targetPresentAfter": false,
+      "oldScoresBefore": 88,
+      "oldScoresAfter": 84
+    },
+    {
+      "id": "SETUP-RACE",
+      "statuses": [
+        200,
+        200
+      ],
+      "teacherRows": 2
+    }
+  ]
+}

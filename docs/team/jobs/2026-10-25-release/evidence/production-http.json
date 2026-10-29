@@ -1,0 +1,29 @@
+{
+  "health": {
+    "ok": true,
+    "schema": 6,
+    "db": {
+      "reachable": true,
+      "schema": 6,
+      "schemaOk": true
+    },
+    "config": {
+      "pepper": true,
+      "setupCode": true
+    }
+  },
+  "assets": [
+    {
+      "path": "/assets/index-BF_Q-mYw.js",
+      "bytes": 342699,
+      "matchesBuild": true,
+      "sha256": "F602F8C07706F1B964E55A13260FF2903E2F17B0236DD86DEDFECE2D7003F9D9"
+    },
+    {
+      "path": "/sw.js",
+      "bytes": 5921,
+      "matchesBuild": true,
+      "sha256": "388809E84446C7B620809E541D37D13058D433969C16EB864A5B1FC6D7D4306B"
+    }
+  ]
+}

@@ -141,8 +141,8 @@ describe("restore replaces the data — in one transaction", () => {
     const v = (await (await validate(cookie, backup.counts)).json()) as any;
     await upload(cookie, v.restoreId, backup);
     const res = await exec(cookie, { restoreId: v.restoreId, step: "commit" });
-    expect(res.status).toBe(409);
-    expect(((await res.json()) as any).error).toBe("restore_failed");
+    expect(res.status).toBe(422);
+    expect(((await res.json()) as any).error).toBe("invalid_backup");
 
     // everything exactly as it was — no table half-emptied, no half-refilled
     expect({ students: await count("students"), classes: await count("classes"), attendance: await count("attendance") }).toEqual(before);
@@ -154,8 +154,9 @@ describe("restore replaces the data — in one transaction", () => {
     const backup = await takeBackup(cookie);
     delete backup.data.students[1].first_name;
     const v = (await (await validate(cookie, backup.counts)).json()) as any;
-    await upload(cookie, v.restoreId, backup);
-    expect((await exec(cookie, { restoreId: v.restoreId, step: "commit" })).status).toBe(409);
+    const invalid = await exec(cookie, { restoreId: v.restoreId, step: "chunk", table: "students", seq: 0, rows: backup.data.students });
+    expect(invalid.status).toBe(422);
+    expect(await invalid.json()).toMatchObject({ error: "invalid_backup" });
     expect(await count("students")).toBe(3);
     expect(await count("attendance")).toBe(2);
   });

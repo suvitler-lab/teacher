@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/random.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, NoClasses } from "../components/ui";
 import { activeClasses, studentsByClass } from "../store";
 import { api } from "../lib/api";
 import { kvGet, kvSet } from "../lib/idb";
@@ -38,8 +38,8 @@ export function RandomPage() {
   const histKey = `random:${classId}:${todayBkk()}`;
 
   async function loadPresent() {
-    if (!classId) return;
     const fresh = begin();
+    if (!classId) { setAtt({ status: "ready", marked: 0, present: new Set() }); return; }
     setAtt({ status: "loading", marked: 0, present: new Set() });
     try {
       const q = new URLSearchParams({ date: todayBkk(), class: classId });
@@ -97,7 +97,9 @@ export function RandomPage() {
   }
 
   useEffect(() => {
-    function onKey(e: KeyboardEvent) { if (e.code === "Space" && (e.target as HTMLElement)?.tagName !== "INPUT") { e.preventDefault(); go(); } }
+    function onKey(e: KeyboardEvent) {
+      if (e.code === "Space" && !e.repeat && !(e.target as HTMLElement)?.closest('input,textarea,select,button,a,[contenteditable="true"],[role="dialog"]')) { e.preventDefault(); go(); }
+    }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
@@ -110,6 +112,8 @@ export function RandomPage() {
   const remaining = remainingInRound(pool, calledRef.current);
   const classItems = activeClasses.value.map((c) => ({ id: c.id, name: c.name, count: (studentsByClass.value.get(c.id) ?? []).length }));
   const cameToday = att.status === "ready" && att.marked > 0 ? `มาเรียนวันนี้ ${att.present.size} จาก ${allStudents.length} คน` : att.status === "ready" ? "วันนี้ยังไม่ได้เช็คชื่อ" : att.status === "error" ? "โหลดเช็คชื่อไม่สำเร็จ" : "กำลังโหลดเช็คชื่อ…";
+
+  if (!classId) return <><PageHeader icon="arrows-shuffle" title="สุ่มชื่อ" /><NoClasses /></>;
 
   return (
     <div class={projector ? "projector" : ""}>

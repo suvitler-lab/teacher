@@ -1,0 +1,32 @@
+{
+  "integrity": "ok",
+  "foreignKeyViolations": 0,
+  "schema": "6",
+  "bytes": 269663,
+  "sha256": "4448344d528c5dc0165c085677637542570f374c8a48424b85ff80a5038eb902",
+  "counts": {
+    "assignment_classes": 2,
+    "assignments": 2,
+    "attendance": 46,
+    "attendance_sessions": 3,
+    "audit_logs": 342,
+    "classes": 1,
+    "d1_migrations": 7,
+    "devices": 2,
+    "login_attempts": 0,
+    "meta": 3,
+    "restore_jobs": 0,
+    "restore_staging": 0,
+    "revoked_qr_tokens": 0,
+    "scan_sessions": 28,
+    "sessions": 2,
+    "settings": 11,
+    "students": 44,
+    "subjects": 1,
+    "submissions": 24,
+    "teacher": 1,
+    "terms": 1,
+    "work_types": 8
+  },
+  "backup": "artifacts/releases/2026-10-25/private/kru-db-apac-before-deploy.sql"
+}

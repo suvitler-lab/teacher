@@ -1,0 +1,20 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |dom| test/unit/gradebook-enter.test.tsx > desktop gradebook keyboard entry > keeps Enter on the next student when the render commits before the key event finishes bubbling 88ms
+ ✓ |dom| test/unit/gradebook-enter.test.tsx > desktop gradebook keyboard entry > Enter commits to the first student and moves entry to the next student without overwriting the first 28ms
+ ✓ |dom| test/unit/gradebook-enter.test.tsx > desktop gradebook keyboard entry > Escape closes entry without saving or reopening the same cell 17ms
+ ✓ |dom| test/unit/gradebook-enter.test.tsx > desktop gradebook keyboard entry > blur saves the typed score once and does not advance to a different student 18ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  23:32:50
+   Duration  1.10s (transform 198ms, setup 195ms, import 234ms, tests 152ms, environment 388ms)
+

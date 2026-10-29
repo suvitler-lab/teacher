@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import { useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { api } from "../lib/api";
@@ -55,7 +56,7 @@ export function ResetModal({ mode, onClose }: { mode: ResetMode; onClose: () => 
 
   return (
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
-      <div class="modal" role="dialog" aria-label={t.title} style="max-width:520px">
+      <Dialog label={t.title} onClose={onClose} dismissible={!busy} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
           <h2 style="font-size:18px">{t.title}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
@@ -83,7 +84,7 @@ export function ResetModal({ mode, onClose }: { mode: ResetMode; onClose: () => 
             {busy ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="trash" size={16} />} {t.title}
           </button>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import type {
 } from "@shared/types";
 import { classInYear, rosterOf } from "@shared/roster";
 import { api } from "./lib/api";
-import { kvGet, kvSet } from "./lib/idb";
+import { kvGet, kvSet, kvUpdate } from "./lib/idb";
 import { serverSkewMs, dataEpoch, epochStale } from "./lib/session";
 import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
@@ -34,6 +34,13 @@ export const students = signal<Student[]>([]);
 export const revokedTokens = signal<Record<string, string>>({});
 export const qrRotatedAt = signal<Record<string, number>>({});
 export const assignments = signal<Assignment[]>([]);
+/** IDs the server explicitly confirmed deleted in this session; an absent offline cache is not proof. */
+export const deletedAssignmentIds = signal<Set<string>>(new Set());
+let assignmentContextRevision = 0;
+export interface AssignmentContext { epoch: number | null; revision: number }
+/** Capture before a request: a reply from before sign-out or bootstrap replacement is no longer ours. */
+export const captureAssignmentContext = (): AssignmentContext => ({ epoch: dataEpoch.value, revision: assignmentContextRevision });
+export const assignmentContextCurrent = (ctx: AssignmentContext) => ctx.epoch === dataEpoch.value && ctx.revision === assignmentContextRevision;
 export { serverSkewMs };
 // The term every page shares, persisted in kv. A real term id, or UNASSIGNED — the work that
 // belongs to no term yet (sent to the API as term=unassigned, never as "no filter").
@@ -104,6 +111,7 @@ export const studentsByClass = computed(() => {
 
 /** `live` = this came from the server just now (so its serverTime tells us the clock skew); false = a cached copy. */
 export function applyBootstrap(b: Bootstrap, live = true) {
+  assignmentContextRevision++;
   settings.value = b.settings;
   terms.value = b.terms;
   currentTermId.value = b.currentTermId;
@@ -114,6 +122,7 @@ export function applyBootstrap(b: Bootstrap, live = true) {
   revokedTokens.value = b.revokedTokens;
   qrRotatedAt.value = b.qrRotatedAt ?? {};
   assignments.value = b.assignments;
+  deletedAssignmentIds.value = new Set();
   dataEpoch.value = b.dataEpoch ?? null;
   if (live) epochStale.value = false; // we just looked at the server's data: no longer out of date
   if (live) {
@@ -163,6 +172,7 @@ export async function loadBootstrapCached(): Promise<boolean> {
  * ride a session that was meant to end).
  */
 export async function logout() {
+  assignmentContextRevision++;
   pauseSync();
   stopAttSync();
   try { await api.post("/api/auth/logout"); } catch { /* offline: still clear locally; app start finishes it */ }
@@ -182,21 +192,41 @@ export function applyTheme(theme: Settings["theme"]) {
   saveThemeLocal(theme);
 }
 
-export function upsertAssignment(a: Assignment) {
+export function upsertAssignment(a: Assignment, ctx = captureAssignmentContext()): Promise<boolean> {
+  if (!assignmentContextCurrent(ctx)) return Promise.resolve(false);
   const list = assignments.value.slice();
   const i = list.findIndex((x) => x.id === a.id);
   if (i >= 0) list[i] = a;
   else list.unshift(a);
   assignments.value = list;
+  if (deletedAssignmentIds.value.has(a.id)) {
+    const ids = new Set(deletedAssignmentIds.value); ids.delete(a.id); deletedAssignmentIds.value = ids;
+  }
+  return cacheAssignmentChange((rows) => {
+    const i = rows.findIndex((x) => x.id === a.id);
+    return i < 0 ? [a, ...rows] : rows.map((x) => x.id === a.id ? a : x);
+  }, ctx).then(() => assignmentContextCurrent(ctx));
+}
+
+/** Keep offline starts in step with server-confirmed work edits, without replacing other cached data. */
+function cacheAssignmentChange(change: (rows: Assignment[]) => Assignment[], ctx: AssignmentContext) {
+  return kvUpdate<Bootstrap | null>("bootstrap", (b) =>
+    b && assignmentContextCurrent(ctx) && (b.dataEpoch ?? null) === ctx.epoch ? { ...b, assignments: change(b.assignments) } : b,
+  );
 }
 
 /** The server said this assignment changed (closed/reopened/rescored) — every screen must see it, not a stale copy. */
-export function patchAssignment(id: string, patch: Partial<Assignment>) {
+export function patchAssignment(id: string, patch: Partial<Assignment>, ctx = captureAssignmentContext()) {
+  if (!assignmentContextCurrent(ctx)) return Promise.resolve();
   assignments.value = assignments.value.map((a) => (a.id === id ? { ...a, ...patch } : a));
+  return cacheAssignmentChange((rows) => rows.map((a) => a.id === id ? { ...a, ...patch } : a), ctx);
 }
 /** The assignment was deleted (here or on another device). */
-export function dropAssignment(id: string) {
+export function dropAssignment(id: string, ctx = captureAssignmentContext()) {
+  if (!assignmentContextCurrent(ctx)) return Promise.resolve();
   assignments.value = assignments.value.filter((a) => a.id !== id);
+  deletedAssignmentIds.value = new Set([...deletedAssignmentIds.value, id]);
+  return cacheAssignmentChange((rows) => rows.filter((a) => a.id !== id), ctx);
 }
 
 export function subjectById(idv: string | null) {

@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { Assignment, Student } from "@shared/types";
+import { h } from "preact";
+import { act, render, screen } from "@testing-library/preact";
 
 // B02: switching to another work while the network is slow or down must never leave the previous
 // work's hand-ins on screen — the scanner would tell the teacher "already handed in" and queue nothing.
@@ -14,9 +16,10 @@ vi.mock("@client/lib/outbox", async (orig) => ({ ...(await orig<typeof import("@
 vi.mock("@client/lib/sound", () => ({ beep: { ok() {}, err() {}, dup() {}, undo() {} }, vibrate() {} }));
 
 import { ApiError } from "@client/lib/api";
-import { assignments, students, classes } from "@client/store";
-import { pendingOps, pairKey } from "@client/lib/outbox";
-import { __scan } from "@client/pages/Scan";
+import { assignments, deletedAssignmentIds, students, classes, logout } from "@client/store";
+import { pendingOps, pairKey, online, syncing, pendingCount } from "@client/lib/outbox";
+import { serverReachable } from "@client/lib/session";
+import { __scan, ScanPage } from "@client/pages/Scan";
 
 const asg = (id: string): Assignment => ({
   id, term_id: null, subject_id: null, type_id: null, title: id, unit: null, full_score: 10, assigned_date: null, due_date: null,
@@ -34,14 +37,74 @@ beforeEach(() => {
   get.mockReset(); post.mockReset(); enqueue.mockClear();
   post.mockResolvedValue({});
   assignments.value = [asg("A"), asg("B")];
+  deletedAssignmentIds.value = new Set();
   students.value = [stu];
   classes.value = [];
   __scan.session.value = null;
   __scan.feedback.value = null;
   pendingOps.value = new Map();
+  online.value = true;
+  serverReachable.value = true;
+  syncing.value = false;
+  pendingCount.value = 0;
 });
 
 describe("the scan round belongs to ONE assignment", () => {
+  it("shows offline when Wi-Fi is up but the server cannot be reached, and updates after recovery", async () => {
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    serverReachable.value = false;
+    render(h(ScanPage, {}));
+    expect(await screen.findByText("ออฟไลน์", { exact: true })).toBeTruthy();
+    expect(screen.queryByText("ออนไลน์", { exact: true })).toBeNull();
+    await act(() => { serverReachable.value = true; });
+    expect(await screen.findByText("ออนไลน์", { exact: true })).toBeTruthy();
+    await act(() => { online.value = false; });
+    expect(await screen.findByText("ออฟไลน์", { exact: true })).toBeTruthy();
+  });
+
+  it("an offline catalog missing the restored round's work is unknown, not confirmed deleted", async () => {
+    get.mockResolvedValueOnce({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    assignments.value = [];
+    get.mockRejectedValue(offline());
+    await expect(__scan.loadSubs("A")).rejects.toMatchObject({ code: "network" });
+
+    await __scan.commitStudent(stu, "manual");
+    expect(enqueue).toHaveBeenCalledTimes(1);
+    expect(enqueue.mock.calls[0][0]).toMatchObject({ assignmentId: "A", studentId: "st1", score: 10 });
+    expect(__scan.feedback.value?.name).not.toBe("งานนี้ถูกลบแล้ว");
+  });
+
+  it("a server-confirmed deletion still blocks new hand-ins", async () => {
+    get.mockResolvedValueOnce({ submissions: [], assignment: null, serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    await __scan.commitStudent(stu, "manual");
+    expect(enqueue).not.toHaveBeenCalled();
+    expect(__scan.feedback.value?.name).toBe("งานนี้ถูกลบแล้ว");
+  });
+
+  it("a server-confirmed closed work still blocks new hand-ins", async () => {
+    get.mockResolvedValueOnce({ submissions: [], assignment: { status: "closed", full_score: 10, deleted: false }, serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    await __scan.commitStudent(stu, "manual");
+    expect(enqueue).not.toHaveBeenCalled();
+    expect(__scan.feedback.value?.name).toBe("งานนี้ปิดรับแล้ว");
+  });
+
+  it("a late snapshot from before sign-out cannot delete work or replace the round's hand-ins", async () => {
+    get.mockResolvedValueOnce(handedIn(8));
+    await __scan.startSession("A", "c1", "full");
+    let release!: (v: unknown) => void;
+    get.mockImplementationOnce(() => new Promise((r) => { release = r; }));
+    const loading = __scan.loadSubs("A");
+    await logout();
+    release({ submissions: [], assignment: null, serverTime: 200 });
+    await loading;
+    expect(assignments.value.find((a) => a.id === "A")).toBeTruthy();
+    expect(__scan.effSub("st1")).toMatchObject({ score: 8 });
+  });
+
   it("a snapshot started before a local scan cannot erase that scan when it arrives", async () => {
     get.mockResolvedValueOnce({ submissions: [], serverTime: 100 });
     await __scan.startSession("A", "c1", "full");

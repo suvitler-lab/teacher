@@ -54,7 +54,7 @@ describe("terms with dates", () => {
   beforeEach(async () => { cookie = await login(); await seed(); });
 
   it("stores start/end dates and rejects an inverted range", async () => {
-    const ok = await call("/api/terms", json({ year: 2569, term: 1, name: "1/2569", start_date: "2026-05-16", end_date: "2026-10-10", is_current: true }), cookie);
+    const ok = await call("/api/terms", json({ id: "t1", year: 2569, term: 1, name: "1/2569", start_date: "2026-05-16", end_date: "2026-10-10", is_current: true }), cookie);
     expect(ok.status).toBe(200);
     const bad = await call("/api/terms", json({ year: 2569, term: 2, name: "2/2569", start_date: "2026-11-01", end_date: "2026-10-01" }), cookie);
     expect(bad.status).toBe(400);

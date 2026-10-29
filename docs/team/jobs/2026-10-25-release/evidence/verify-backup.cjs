@@ -1,0 +1,20 @@
+// Verify a private D1 SQL export without printing any records or credentials.
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const { DatabaseSync } = require('node:sqlite');
+const root = path.resolve(__dirname, '../../../../..');
+const file = path.join(root, 'artifacts/releases/2026-10-25/private/kru-db-apac-before-deploy.sql');
+const sql = fs.readFileSync(file, 'utf8');
+const db = new DatabaseSync(':memory:');
+db.exec(sql);
+const integrity = db.prepare('PRAGMA integrity_check').get().integrity_check;
+const foreignKeyViolations = db.prepare('PRAGMA foreign_key_check').all().length;
+const tables = db.prepare("SELECT name FROM sqlite_schema WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all();
+const counts = Object.fromEntries(tables.map(({name}) => [name, db.prepare('SELECT COUNT(*) AS n FROM "' + name.replaceAll('"','""') + '"').get().n]));
+const schema = db.prepare("SELECT value FROM meta WHERE key='schema_version'").get()?.value;
+const result = { integrity, foreignKeyViolations, schema, bytes: fs.statSync(file).size, sha256: crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'), counts, backup: 'artifacts/releases/2026-10-25/private/kru-db-apac-before-deploy.sql' };
+fs.writeFileSync(path.join(__dirname,'backup-verification.json'), JSON.stringify(result,null,2));
+console.log(JSON.stringify(result));
+db.close();
+if (integrity !== 'ok' || foreignKeyViolations !== 0 || String(schema) !== '6') process.exitCode = 1;

@@ -4,7 +4,7 @@ import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, bad, conflict, ApiError } from "../lib/http";
 import { setSettingStmt, boolKey, getEpoch } from "../lib/db";
-import { batchAtEpoch, epochChanged, epochGuard, requestEpoch } from "../lib/guard";
+import { abortIf, batchAtEpoch, epochChanged, epochGuard, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 import { auditInsertStmt } from "../lib/audit";
 import { currentYear } from "../lib/roster";
@@ -46,7 +46,7 @@ catalogRoutes.put("/api/settings", async (c) => {
   stmts.push(auditInsertStmt(c.env, [
     { entity: "settings", action: "update", device_id: c.get("deviceId"), after: body },
   ]));
-  await c.env.DB.batch(stmts);
+  await batchAtEpoch(c.env, await requestEpoch(c), stmts);
   return c.json({ ok: true });
 });
 
@@ -61,6 +61,9 @@ const termSchema = z.object({
   end_date: z.string().nullable().optional(),
 });
 
+const duplicateTermSql = "EXISTS (SELECT 1 FROM terms WHERE year = ?1 AND term = ?2 AND id != ?3)";
+const termExists = (year: number, term: number) => conflict("term_exists", `มีภาคเรียน ${term}/${year} อยู่แล้ว`);
+
 catalogRoutes.post("/api/terms", async (c) => {
   const b = termSchema.parse(await readJson(c));
   if (b.start_date && b.end_date && b.end_date < b.start_date) throw bad("bad_range", "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม");
@@ -71,17 +74,22 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (existing && existing.year !== b.year) {
     throw conflict("term_year_locked", "เปลี่ยนปีการศึกษาของภาคเรียนที่มีอยู่ไม่ได้ — สร้างภาคเรียนใหม่ด้วย “เริ่มภาคเรียนใหม่” แทน");
   }
-  // editing a term's number must not collide with another term of the same school year
-  const same = existing && await c.env.DB.prepare("SELECT id FROM terms WHERE year = ? AND term = ? AND id != ?").bind(b.year, b.term, tid).first();
-  if (same) throw conflict("term_exists", `มีภาคเรียน ${b.term}/${b.year} อยู่แล้ว`);
+  // Both new terms and edits must preserve one term number per school year.
+  const same = await c.env.DB.prepare("SELECT id FROM terms WHERE year = ? AND term = ? AND id != ?").bind(b.year, b.term, tid).first();
+  if (same) throw termExists(b.year, b.term);
+  const current = await c.env.DB.prepare("SELECT id, year FROM terms WHERE is_current = 1 LIMIT 1").first<{ id: string; year: number }>();
   if (b.is_current) {
-    const cur = await c.env.DB.prepare("SELECT id, year FROM terms WHERE is_current = 1 AND id != ?").bind(tid).first<{ id: string; year: number }>();
-    if (cur && cur.year !== b.year) {
+    if (current && current.id !== tid && current.year !== b.year) {
       // moving to another academic year also means new classes and finishing the old ones — one guided step
       throw conflict("use_start_term", "การเปลี่ยนไปปีการศึกษาอื่นต้องใช้ “เริ่มภาคเรียนใหม่” (สร้างห้องปีใหม่ให้พร้อมกัน)");
     }
   }
   const stmts = [
+    // Starting a year also archives its classes; an older settings screen must not reverse it.
+    abortIf(c.env, "COALESCE((SELECT id FROM terms WHERE is_current = 1 LIMIT 1), '') != ?1", current?.id ?? ""),
+    abortIf(c.env, "EXISTS (SELECT 1 FROM terms WHERE id = ?1 AND year != ?2)", tid, b.year),
+    // A concurrent create/edit/start can claim the pair after the check above.
+    abortIf(c.env, duplicateTermSql, b.year, b.term, tid),
     c.env.DB.prepare(
       `INSERT INTO terms (id, year, term, name, is_current, start_date, end_date, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET year=excluded.year, term=excluded.term, name=excluded.name, is_current=excluded.is_current, start_date=excluded.start_date, end_date=excluded.end_date, updated_at=excluded.updated_at`,
@@ -90,7 +98,19 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (b.is_current) {
     stmts.push(c.env.DB.prepare("UPDATE terms SET is_current = 0 WHERE id != ?").bind(tid));
   }
-  await batchAtEpoch(c.env, await requestEpoch(c), stmts);
+  try {
+    await batchAtEpoch(c.env, await requestEpoch(c), stmts);
+  } catch (e) {
+    if (e instanceof ApiError) throw e; // preserve epoch_changed when a restore won
+    const latest = await c.env.DB.prepare("SELECT id FROM terms WHERE is_current = 1 LIMIT 1").first<{ id: string }>();
+    if ((latest?.id ?? null) !== (current?.id ?? null)) throw conflict("term_changed", "ภาคเรียนปัจจุบันเปลี่ยนไปแล้ว — โหลดข้อมูลใหม่ก่อนทำต่อ");
+    const latestTerm = await c.env.DB.prepare("SELECT year FROM terms WHERE id = ?").bind(tid).first<{ year: number }>();
+    if (latestTerm && latestTerm.year !== b.year) throw conflict("term_year_locked", "เปลี่ยนปีการศึกษาของภาคเรียนที่มีอยู่ไม่ได้");
+    const duplicate = await c.env.DB.prepare("SELECT id FROM terms WHERE year = ? AND term = ? AND id != ?")
+      .bind(b.year, b.term, tid).first();
+    if (duplicate) throw termExists(b.year, b.term);
+    throw e;
+  }
   return c.json({ ok: true, id: tid });
 });
 
@@ -146,6 +166,7 @@ catalogRoutes.post("/api/terms/start", async (c) => {
     // and the whole batch rolls back — two starts can never both apply
     db.prepare("SELECT CASE WHEN COALESCE((SELECT id FROM terms WHERE is_current = 1 LIMIT 1), '') = ?1 THEN 1 ELSE json('term_changed') END")
       .bind(curId ?? ""),
+    abortIf(c.env, duplicateTermSql, b.year, b.term, tid),
     db.prepare("UPDATE terms SET is_current = 0 WHERE is_current = 1"),
     db.prepare("INSERT INTO terms (id, year, term, name, is_current, start_date, end_date, updated_at) VALUES (?, ?, ?, ?, 1, ?, ?, ?)")
       .bind(tid, b.year, b.term, b.name, b.start_date, b.end_date ?? null, now),
@@ -207,6 +228,8 @@ catalogRoutes.post("/api/terms/start", async (c) => {
     if ((await getEpoch(c.env)) !== epoch) throw epochChanged();
     const after = await db.prepare("SELECT id FROM terms WHERE is_current = 1 LIMIT 1").first<{ id: string }>();
     if ((after?.id ?? null) !== curId) throw changed();
+    const duplicate = await db.prepare("SELECT id FROM terms WHERE year = ? AND term = ?").bind(b.year, b.term).first();
+    if (duplicate) throw termExists(b.year, b.term);
     throw e;
   }
   return c.json({ ok: true, termId: tid, newYear, classes: opened, finished });

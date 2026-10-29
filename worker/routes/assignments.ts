@@ -148,24 +148,22 @@ assignmentRoutes.post("/api/scan-sessions", async (c) => {
   const b = scanSessionSchema.parse(await readJson(c));
   const now = Date.now();
   const sid = b.id ?? id("scn");
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO scan_sessions (id, assignment_id, class_id, subject_id, mode, full_score, device_id, started_at, scan_count)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
      ON CONFLICT(id) DO UPDATE SET mode=excluded.mode`,
   )
-    .bind(sid, b.assignmentId, b.classId ?? null, b.subjectId ?? null, b.mode, b.fullScore, c.get("deviceId") ?? null, now)
-    .run();
+    .bind(sid, b.assignmentId, b.classId ?? null, b.subjectId ?? null, b.mode, b.fullScore, c.get("deviceId") ?? null, now)]);
   return c.json({ ok: true, id: sid, startedAt: now });
 });
 
 assignmentRoutes.post("/api/scan-sessions/:id/end", async (c) => {
   const sid = c.req.param("id");
-  await c.env.DB.prepare(
+  await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `UPDATE scan_sessions SET ended_at = ?,
        scan_count = (SELECT COUNT(*) FROM submissions WHERE scan_session_id = ?)
      WHERE id = ?`,
   )
-    .bind(Date.now(), sid, sid)
-    .run();
+    .bind(Date.now(), sid, sid)]);
   return c.json({ ok: true });
 });

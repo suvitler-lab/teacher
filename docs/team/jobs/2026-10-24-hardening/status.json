@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-24",
+  "environment": "local",
+  "originalFindings": 11,
+  "additionalImprovements": 3,
+  "implemented": 14,
+  "pendingCode": 0,
+  "tests": {"passed": 570, "total": 570, "files": 56},
+  "viewportAcceptance": {"passed":10,"total":10,"environment":"Chromium viewport simulation, not iPadOS/Safari","evidence":"../2026-10-24-ipad/verification.md"},
+  "npmAudit": {"critical": 0, "high": 0, "moderate": 0, "low": 0, "total": 0},
+  "findings": [
+    {"id":"F01","title":"รักษาประวัติปีเก่า","status":"PASS_LOCAL"},
+    {"id":"F02","title":"ตรวจความถูกต้องข้อมูลกู้คืน","status":"PASS_LOCAL"},
+    {"id":"F03","title":"ป้องกันคำขอค้างข้าม restore","status":"PASS_LOCAL"},
+    {"id":"F04","title":"เวลารอเครือข่ายและผลบันทึกไม่แน่นอน","status":"PASS_LOCAL"},
+    {"id":"F05","title":"เริ่มเทอมแรก","status":"PASS_LOCAL"},
+    {"id":"F06","title":"หน้าว่างมีขั้นตอนถัดไป","status":"PASS_LOCAL"},
+    {"id":"F07","title":"ป้องกันเทอมซ้ำและปีถูกย้อน","status":"PASS_LOCAL"},
+    {"id":"F08","title":"ตั้งครูได้เพียงบัญชีเดียว","status":"PASS_LOCAL"},
+    {"id":"F09","title":"คีย์บอร์ด labels และ dialog focus","status":"PASS_LOCAL"},
+    {"id":"F10","title":"คู่มือฐานข้อมูลและ schema","status":"PASS_LOCAL"},
+    {"id":"F11","title":"อัปเดต dependencies ช่องโหว่","status":"PASS_LOCAL"},
+    {"id":"F12","title":"รายงานอัปเดตตามข้อมูล","status":"PASS_LOCAL","additional":true},
+    {"id":"F13","title":"Enter ไปคนถัดไปและ Escape ยกเลิกคะแนน","status":"PASS_LOCAL","additional":true},
+    {"id":"F14","title":"งานใหม่และสถานะเชื่อมต่อหลังรีโหลดออฟไลน์","status":"PASS_LOCAL","additional":true}
+  ],
+  "pendingAcceptance": [
+    {"id":"UAT-DEVICE","title":"Safari/PWA และกล้องบน iPad/มือถือจริง","status":"NOT_RUN"},
+    {"id":"UAT-CLASS","title":"ทดลองหนึ่งห้องและเทียบกระดาษ 100%","status":"NOT_RUN"},
+    {"id":"RELEASE","title":"ตรวจ remote target และนำขึ้นระบบจริง","status":"DEPLOYED_VERIFIED","date":"2026-10-25","evidence":"../2026-10-25-release/verification.md"}
+  ]
+}

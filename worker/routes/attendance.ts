@@ -7,7 +7,7 @@ import { schoolYearStart } from "../lib/roster";
 import { auditInsertStmt, existingOpIds, type AuditRow } from "../lib/audit";
 import { clampClientTs } from "../lib/time";
 import { getEpoch } from "../lib/db";
-import { epochGuard, requestEpoch } from "../lib/guard";
+import { abortIf, batchAtEpoch, epochGuard, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 
 export const attendanceRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -21,6 +21,7 @@ async function findOrCreateSession(
   subjectId: string | null,
   period: number | null,
   now: number,
+  epoch: number,
 ): Promise<string> {
   const existing = await env.DB.prepare(
     "SELECT id FROM attendance_sessions WHERE date = ? AND class_id = ? AND IFNULL(subject_id,'') = ? AND IFNULL(period,0) = ?",
@@ -30,11 +31,10 @@ async function findOrCreateSession(
   if (existing) return existing.id;
   // Two requests can both find "no session yet" and both try to create it: the unique index lets
   // exactly one through. The loser must not fail — it just uses the one that now exists.
-  await env.DB.prepare(
+  await batchAtEpoch(env, epoch, [env.DB.prepare(
     "INSERT OR IGNORE INTO attendance_sessions (id, date, class_id, subject_id, period, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
   )
-    .bind(id("att"), date, classId, subjectId, period, now)
-    .run();
+    .bind(id("att"), date, classId, subjectId, period, now)]);
   const made = await env.DB.prepare(
     "SELECT id FROM attendance_sessions WHERE date = ? AND class_id = ? AND IFNULL(subject_id,'') = ? AND IFNULL(period,0) = ?",
   )
@@ -207,9 +207,17 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     return c.json({ error: "not_in_class", message: "มีนักเรียนที่ไม่ได้อยู่ในห้องนี้", studentIds: strangers }, 422);
   }
 
-  const sessionId = await findOrCreateSession(
-    c.env, b.date, b.classId, b.subjectId ?? null, b.period ?? null, now,
-  );
+  let sessionId: string;
+  try {
+    sessionId = await findOrCreateSession(
+      c.env, b.date, b.classId, b.subjectId ?? null, b.period ?? null, now, epoch,
+    );
+  } catch (e) {
+    if ((await getEpoch(c.env)) !== epoch) {
+      return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — ตรวจสอบรายการนี้ก่อนส่งใหม่", studentIds: sids }, 409);
+    }
+    throw e;
+  }
 
   const todo = b.rows.filter((r) => !(r.opId && applied.has(r.opId)));
 
@@ -279,7 +287,13 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
 
     try {
       // a restore since this request began rolls the batch back too: these taps were made on the old data
-      const stmts = [epochGuard(c.env, epoch), upsertStmt, auditInsertStmt(c.env, audits, now)];
+      // A move can finish after the early membership read. Even force only overrides a status
+      // conflict; it must never write a child into the room they just left.
+      const membershipGuard = abortIf(c.env, `EXISTS (
+        SELECT 1 FROM json_each(?1) j WHERE NOT EXISTS (
+          SELECT 1 FROM students s WHERE s.id = j.value AND s.class_id = ?2 AND s.status = 'active'
+        ))`, JSON.stringify(sids), b.classId);
+      const stmts = [epochGuard(c.env, epoch), membershipGuard, upsertStmt, auditInsertStmt(c.env, audits, now)];
       if (!b.force) stmts.unshift(guard.bind(JSON.stringify(upserts), sessionId));
       await c.env.DB.batch(stmts);
       return c.json({ ok: true, sessionId, updatedAt: now, changed: upserts.length, ...(await confirmed()) });
@@ -287,6 +301,12 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
       // the guard fired (or something else went wrong): look again at what is there NOW
       if ((await getEpoch(c.env)) !== epoch) {
         return c.json({ error: "epoch_changed", message: "ข้อมูลถูกกู้คืนจากไฟล์สำรองแล้ว — ตรวจสอบรายการนี้ก่อนส่งใหม่", studentIds: todo.map((r) => r.studentId) }, 409);
+      }
+      const invalidMembers = await c.env.DB.prepare(`SELECT j.value AS id FROM json_each(?1) j WHERE NOT EXISTS (
+        SELECT 1 FROM students s WHERE s.id = j.value AND s.class_id = ?2 AND s.status = 'active'
+      )`).bind(JSON.stringify(sids), b.classId).all<{ id: string }>();
+      if (invalidMembers.results?.length) {
+        return c.json({ error: "not_in_class", message: "มีนักเรียนที่ไม่ได้อยู่ในห้องนี้", studentIds: invalidMembers.results.map((s) => s.id) }, 422);
       }
       const again = await currentRows(c.env, sessionId, sids);
       const conflicts = b.force ? [] : findConflicts(todo, again);

@@ -223,6 +223,19 @@ export async function kvSet(key: string, value: unknown) {
   }
 }
 
+/** Change a cached value atomically, without reviving a cache cleared by sign-out. */
+export async function kvUpdate<T>(key: string, change: (value: T | undefined) => T | undefined) {
+  try {
+    const d = await db();
+    const tx = d.transaction("kv", "readwrite");
+    const next = change(await tx.store.get(key) as T | undefined);
+    if (next !== undefined) await tx.store.put(next, key);
+    await tx.done;
+  } catch {
+    /* The server mutation succeeded; unavailable local storage must not undo it. */
+  }
+}
+
 /** After "start over": nothing made on this device belongs to the data that was wiped — drop the queue, drafts and cached copy. */
 export async function clearLocalWork() {
   try {

@@ -1,6 +1,7 @@
+import { Dialog } from "./Dialog";
 import { useState } from "preact/hooks";
 import { Icon } from "./Icon";
-import { activeSubjects, activeWorkTypes, classesForTerm, classById, currentTermId, currentTerm, selectedTermId, viewingPastYear, terms, UNASSIGNED, upsertAssignment } from "../store";
+import { activeSubjects, activeWorkTypes, classesForTerm, classById, currentTermId, currentTerm, selectedTermId, viewingPastYear, terms, UNASSIGNED, upsertAssignment, captureAssignmentContext } from "../store";
 import { api } from "../lib/api";
 import type { Assignment } from "@shared/types";
 import { DateField } from "./ui";
@@ -84,6 +85,7 @@ export function AssignmentModal({
     if (dueDate && assignedDate && dueDate < assignedDate) return setErr("วันกำหนดส่งต้องไม่ก่อนวันสั่งงาน");
     if (classIds.length === 0) return setErr("เลือกอย่างน้อย 1 ห้อง");
     setBusy(true);
+    const ctx = captureAssignmentContext();
     try {
       const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
         // editing keeps the work's own term (even "none"); new/copy goes into the term the teacher is viewing
@@ -92,7 +94,7 @@ export function AssignmentModal({
         assigned_date: assignedDate || null, due_date: dueDate || null, note: note || null,
         publish_scores: publish, status: existing?.status ?? "open", class_ids: classIds,
       });
-      upsertAssignment(res.assignment); // reflect on Home/Scan without a reload
+      if (!await upsertAssignment(res.assignment, ctx)) throw new Error("ข้อมูลในเครื่องเปลี่ยนระหว่างบันทึก — โหลดข้อมูลใหม่เพื่อตรวจผล");
       onSaved(res.assignment);
     } catch (e: any) {
       if (e.code === "score_over_full") setErr(`ลดคะแนนเต็มไม่ได้ มี ${e.data?.over ?? ""} รายการที่คะแนนเกิน`);
@@ -103,11 +105,11 @@ export function AssignmentModal({
   }
 
   return (
-    <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div class="modal" role="dialog" aria-label="สร้างงาน">
+    <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
+      <Dialog label={existing ? "แก้ไขงาน" : "สร้างงาน"} onClose={onClose} dismissible={!busy}>
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
           <h2 style="font-size:18px">{existing ? "แก้ไขงาน" : "สร้างงานใหม่"}</h2>
-          <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
+          <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
 
         <label class="field"><span>ประเภทงาน</span></label>
@@ -186,12 +188,12 @@ export function AssignmentModal({
         {err && <div style="color:var(--text-danger);font-size:13px;margin:6px 0">{err}</div>}
 
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
-          <button onClick={onClose}>ยกเลิก</button>
+          <button onClick={onClose} disabled={busy}>ยกเลิก</button>
           <button class="primary" onClick={save} disabled={busy}>
             {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึกงาน
           </button>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

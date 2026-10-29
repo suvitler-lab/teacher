@@ -1,0 +1,16 @@
+{
+  "environment": "production Chrome authenticated user tab; no score or attendance edits",
+  "asset": "/assets/index-BF_Q-mYw.js",
+  "reportReload": "PASS",
+  "reportStudents": 44,
+  "reportWork": 2,
+  "submitted": 21,
+  "expected": 88,
+  "attendanceRows": 46,
+  "attendanceDays": 3,
+  "gradebookStudentRows": 44,
+  "attendanceReady": true,
+  "unmarkedToday": 44,
+  "offlineAppReady": true,
+  "realIpadCamera": "NOT_RUN"
+}

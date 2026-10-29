@@ -68,11 +68,15 @@ authRoutes.post("/api/setup", async (c) => {
 
   const now = Date.now();
   const { hash, salt, iterations } = await hashPassword(body.password, pepper(c.env));
-  await c.env.DB.prepare(
-    "INSERT INTO teacher (id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+  // The initial check is only a fast refusal. Claim the singleton account atomically so two
+  // valid setup requests cannot both create a teacher while password hashing is in flight.
+  const created = await c.env.DB.prepare(
+    `INSERT INTO teacher (id, email, password_hash, salt, iterations, created_at, updated_at)
+     SELECT ?, ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM teacher)`,
   )
     .bind(id("tch"), body.email, hash, salt, iterations, now, now)
     .run();
+  if (created.meta.changes !== 1) throw new ApiError(403, "already_setup", "ตั้งค่าระบบไปแล้ว");
   const ua = c.req.header("User-Agent") ?? "";
   await upsertDevice(c.env, body.deviceId, body.deviceName || deviceNameFrom(ua), ua, now);
   await writeAudit(c.env, [

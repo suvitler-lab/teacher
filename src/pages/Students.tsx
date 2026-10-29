@@ -1,3 +1,4 @@
+import { Dialog } from "../components/Dialog";
 import { useEffect, useState } from "preact/hooks";
 import "../styles/students.css";
 import "../styles/print.css";
@@ -118,7 +119,7 @@ export function StudentsPage() {
       <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
 
       <div class="row" style="gap:8px;margin-bottom:8px;flex-wrap:wrap">
-        <div class="stu-search"><Icon name="search" size={16} class="muted" /><input placeholder="ค้นหาชื่อ ชื่อเล่น รหัส หรือเลขที่" value={query} onInput={(e) => setQuery((e.target as HTMLInputElement).value)} /></div>
+        <div class="stu-search"><Icon name="search" size={16} class="muted" /><input aria-label="ค้นหานักเรียน" placeholder="ค้นหาชื่อ ชื่อเล่น รหัส หรือเลขที่" value={query} onInput={(e) => setQuery((e.target as HTMLInputElement).value)} /></div>
         {!past && <button onClick={() => setPrinting(true)}><Icon name="printer" size={16} /> พิมพ์สติกเกอร์ QR</button>}
         {!past && <div style="position:relative">
           <button class="icon" aria-label="เพิ่มเติม" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
@@ -152,7 +153,7 @@ export function StudentsPage() {
       </div>
 
       <div class="card" style="padding:0;overflow:hidden">
-        <div class="stu-list-head"><span>เลขที่</span><span>ชื่อ - สกุล</span><span>รหัส</span><span>ส่งงาน</span><span class="num" style="text-align:right">ค้าง</span><span>มา</span><span /></div>
+        <div class="stu-list-head"><span class="stu-number">เลขที่</span><span>รหัสนักเรียน</span><span>ชื่อ - สกุล</span><span class="stu-stat">ส่งงาน</span><span class="stu-stat">ค้าง</span><span class="stu-stat">มาเรียน</span><span /></div>
         {!cls ? (
           <EmptyState icon="school" text="ยังไม่มีห้องเรียน — สร้างห้องก่อน แล้วค่อยนำเข้านักเรียน" action={<button class="primary" onClick={() => navigate("/settings")}><Icon name="settings" size={16} /> ไปที่ตั้งค่า › ห้องเรียน</button>} />
         ) : shown.length === 0 ? (
@@ -162,15 +163,15 @@ export function StudentsPage() {
           const attPct = r && r.attendance.daysMarked ? Math.round(((r.attendance.present + r.attendance.late) / r.attendance.daysMarked) * 100) : null;
           const submitPct = r ? r.percent : 0; // no stats yet ≠ "handed everything in"
           return (
-            <div class={"stu-lrow" + (drawer === st.id ? " sel" : "")} onClick={() => setDrawer(st.id)}>
+            <button type="button" class={"stu-lrow" + (drawer === st.id ? " sel" : "")} aria-label={`ดูข้อมูล ${fullName(st)} เลขที่ ${st.number ?? i + 1}`} onClick={() => setDrawer(st.id)}>
               <Avatar text={String(st.number ?? i + 1)} />
-              <div style="min-width:0"><div class="name">{fullName(st)}{st.status !== "active" && <span class="chip" style="margin-left:6px;font-size:11px">{STATUS_LABEL[st.status]}</span>}{rotated[st.id] && <span class="stu-qrnew" style="margin-left:6px"><Icon name="refresh" size={10} /> QR ใหม่</span>}</div><div class="page-sub">{st.nickname}</div></div>
               <span class="code">{st.code}</span>
-              <span class="sc num"><span class="stu-mini"><i style={`width:${submitPct}%${submitPct < 85 ? ";background:var(--fill-warning)" : ""}`} /></span>{r ? `${r.submitted}/${r.applicable}` : "—"}</span>
-              <span class="num" style="text-align:right">{r && r.missing > 0 ? <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">{r.missing}</span> : <span class="muted">–</span>}</span>
-              <span class="att num" style="font-variant-numeric:tabular-nums">{attPct != null ? attPct + "%" : "—"}</span>
+              <div style="min-width:0"><div class="name">{fullName(st)}{st.status !== "active" && <span class="chip" style="margin-left:6px;font-size:11px">{STATUS_LABEL[st.status]}</span>}{rotated[st.id] && <span class="stu-qrnew" style="margin-left:6px"><Icon name="refresh" size={10} /> QR ใหม่</span>}</div><div class="page-sub">{st.nickname}</div></div>
+              <span class="stu-stat sc num"><span class="stu-mini"><i style={`width:${submitPct}%${submitPct < 85 ? ";background:var(--fill-warning)" : ""}`} /></span><span>{r ? `${r.submitted}/${r.applicable}` : "—"}</span></span>
+              <span class="stu-stat missing num">{r && r.missing > 0 ? <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">{r.missing}</span> : <span class="muted">–</span>}</span>
+              <span class="stu-stat att num">{attPct != null ? attPct + "%" : "—"}</span>
               <Icon name="chevron-right" size={16} class="muted" />
-            </div>
+            </button>
           );
         })}
       </div>
@@ -230,11 +231,11 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
   }
 
   return (
-    <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div class="modal" role="dialog" aria-label="นักเรียน" style="max-width:480px">
+    <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
+      <Dialog label="นักเรียน" onClose={onClose} dismissible={!busy} style="max-width:480px">
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
           <h2 style="font-size:18px">{student ? "แก้ไขนักเรียน" : "เพิ่มนักเรียน"}</h2>
-          <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
+          <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="modal-grid3">
           <label class="field"><span>คำนำหน้า</span>
@@ -263,11 +264,11 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
         <div class="row" style="justify-content:space-between;margin-top:10px">
           {student ? <button onClick={rotate}><Icon name="refresh" size={16} /> ออก QR ใหม่</button> : <span />}
           <div class="row" style="gap:8px">
-            <button onClick={onClose}>ยกเลิก</button>
+            <button onClick={onClose} disabled={busy}>ยกเลิก</button>
             <button class="primary" onClick={save} disabled={busy}>{busy ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึก</button>
           </div>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }
@@ -278,6 +279,7 @@ interface ImportPreview {
   dupCodes: string[]; dupNumbers: number[];
   numberClashes: { number: number; code: string; name: string }[];
   classActive?: number; notInPaste?: number; // children already in the class / of them, not in this paste
+  blockedMoves?: { studentId: string; code: string; fromClassId: string | null; toClassId: string | null; reason: "cross_year" | "has_history" }[];
 }
 const MAX_IMPORT = 200;
 
@@ -296,6 +298,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [previewState, setPreviewState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [confirmed, setConfirmed] = useState(false);
+  const [previewAttempt, setPreviewAttempt] = useState(0);
   const begin = useLoadGuard();
 
   const { rows, skipped } = parseImport(text);
@@ -306,16 +309,16 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
   // a student into this class and reactivating them) before anything is written.
   useEffect(() => {
     setConfirmed(false);
+    const fresh = begin();
     if (rows.length === 0 || tooMany) { setPreview(null); setPreviewState("idle"); return; }
     setPreviewState("loading");
-    const fresh = begin();
     const t = setTimeout(() => {
       api.post<ImportPreview>("/api/students/import/preview", { class_id: classId, students: rows })
         .then((p) => { if (fresh()) { setPreview(p); setPreviewState("ready"); } })
         .catch(() => { if (fresh()) { setPreview(null); setPreviewState("error"); } });
     }, 400);
     return () => clearTimeout(t);
-  }, [text, classId]);
+  }, [text, classId, previewAttempt]);
 
   const risky = preview ? preview.summary.move + preview.summary.reactivate : 0;
   // most of the class isn't in this list: probably a new year's children going into last year's class
@@ -323,7 +326,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
   // children who finished last year and are being brought into this class: their old-year history stays with the old class
   const returning = preview ? preview.rows.filter((r) => r.from?.status === "finished").length : 0;
   // a repeated code, or two children on one class number, can't be imported (it would put a mark on the wrong child)
-  const blocked = !!preview && (preview.dupCodes.length > 0 || preview.dupNumbers.length > 0 || preview.numberClashes.length > 0);
+  const blocked = !!preview && (preview.dupCodes.length > 0 || preview.dupNumbers.length > 0 || preview.numberClashes.length > 0 || !!preview.blockedMoves?.length);
   const canImport = !busy && rows.length > 0 && !tooMany && previewState === "ready" && !blocked && (risky === 0 || confirmed);
 
   async function doImport() {
@@ -336,19 +339,19 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
 
   const sum = preview?.summary;
   return (
-    <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div class="modal" role="dialog" aria-label="นำเข้านักเรียน" style="max-width:600px">
+    <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
+      <Dialog label="นำเข้านักเรียน" onClose={onClose} dismissible={!busy} style="max-width:600px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
           <h2 style="font-size:18px">นำเข้านักเรียนจาก Excel → {cls?.name}</h2>
-          <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
+          <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="page-sub" style="margin-bottom:8px">คัดลอกจาก Excel แล้ววางที่นี่ · คอลัมน์: รหัส | คำนำหน้า ชื่อ สกุล | เลขที่ · รหัสที่มีอยู่แล้วจะถูกอัปเดต</div>
-        <textarea rows={6} value={text} onInput={(e) => setText((e.target as HTMLTextAreaElement).value)} placeholder={"10501\tด.ช. ภูมิพัฒน์ ใจดี\t1\n10502\tด.ญ. ปุณยวีร์ แสงทอง\t2"} style="font-family:var(--font-mono);font-size:13px" />
+        <textarea aria-label="รายชื่อนักเรียนที่คัดลอกจาก Excel" rows={6} value={text} onInput={(e) => setText((e.target as HTMLTextAreaElement).value)} placeholder={"10501\tด.ช. ภูมิพัฒน์ ใจดี\t1\n10502\tด.ญ. ปุณยวีร์ แสงทอง\t2"} style="font-family:var(--font-mono);font-size:13px" />
 
         {rows.length > 0 && (
           <div class="imp-sum">
             {previewState === "loading" && <span class="muted"><Icon name="loader-2" size={14} class="spin" /> กำลังตรวจกับข้อมูลในระบบ…</span>}
-            {previewState === "error" && <span style="color:var(--text-warning)"><Icon name="cloud-off" size={14} /> ตรวจกับระบบไม่ได้{navigator.onLine ? "" : " (ออฟไลน์)"} — ต่อเน็ตแล้วแก้ข้อความเล็กน้อยเพื่อตรวจใหม่</span>}
+            {previewState === "error" && <span style="color:var(--text-warning)"><Icon name="cloud-off" size={14} /> ตรวจกับระบบไม่ได้{navigator.onLine ? "" : " (ออฟไลน์)"} <button onClick={() => setPreviewAttempt((n) => n + 1)}>ตรวจอีกครั้ง</button></span>}
             {sum && (<>
               <span class="chip" style={ACTION_LABEL.create.style}>เพิ่มใหม่ {sum.create}</span>
               <span class="chip" style={ACTION_LABEL.update.style}>แก้ข้อมูล {sum.update}</span>
@@ -366,7 +369,8 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
         {oldClassWarn && (
           <div class="imp-warn"><Icon name="info-circle" size={15} /> ห้องนี้ยังมีนักเรียนเดิม {preview!.notInPaste} คนที่ไม่อยู่ในรายการนี้ — ถ้านี่คือนักเรียนของปีการศึกษาใหม่ ให้ปิดหน้าต่างนี้แล้วใช้ “เริ่มภาคเรียนใหม่” (ตั้งค่า › ภาคเรียน) ก่อน จะได้ห้องว่างของปีใหม่ และรายงานปีที่แล้วไม่ปนกับเด็กชุดใหม่</div>
         )}
-        {returning > 0 && (
+        {!!preview?.blockedMoves?.length && <div class="imp-warn danger" role="alert"><Icon name="alert-triangle" size={15} /> ย้ายไม่ได้ {preview.blockedMoves.length} คน: {preview.blockedMoves.map((m) => m.code).join(", ")} — มีประวัติเดิมหรือเป็นการย้ายข้ามปี เก็บนักเรียนไว้ในห้องเดิมเพื่อรักษารายงานย้อนหลัง</div>}
+        {returning > 0 && !preview?.blockedMoves?.length && (
           <div class="imp-warn"><Icon name="info-circle" size={15} /> {returning} คนเคยเรียนกับครูปีที่แล้ว (จบปีการศึกษา) — นำเข้าจะย้ายมาห้องนี้ และประวัติปีเก่าของคนเหล่านี้จะไม่แสดงในรายงานปีเก่าอีก</div>
         )}
         {skipped.length > 0 && <div class="imp-warn"><Icon name="info-circle" size={15} /> อ่านไม่ได้ {skipped.length} บรรทัด (ต้องมีรหัส 3 หลักขึ้นไป และชื่อ): {skipped.slice(0, 3).join(" ⏎ ")}{skipped.length > 3 ? " …" : ""}</div>}
@@ -392,7 +396,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
           </div>
         )}
 
-        {risky > 0 && (
+        {risky > 0 && !blocked && (
           <label class="imp-confirm">
             <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed((e.target as HTMLInputElement).checked)} />
             <span>ตรวจแล้ว — ยอมรับการ<b style="font-weight:500">ย้ายห้อง {sum!.move} คน</b>{sum!.reactivate > 0 ? <> และ<b style="font-weight:500">เปลี่ยนสถานะกลับมาใช้งาน {sum!.reactivate} คน</b></> : null} (ข้อมูลเดิมของนักเรียนเหล่านี้จะถูกแก้)</span>
@@ -403,11 +407,11 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
         <div class="row" style="justify-content:space-between;margin-top:10px">
           <span class="page-sub">อ่านได้ {rows.length} รายการ</span>
           <div class="row" style="gap:8px">
-            <button onClick={onClose}>ยกเลิก</button>
+            <button onClick={onClose} disabled={busy}>ยกเลิก</button>
             <button class="primary" onClick={doImport} disabled={!canImport}>{busy ? <Icon name="loader-2" class="spin" /> : <Icon name="download" />} นำเข้า {rows.length} คน</button>
           </div>
         </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

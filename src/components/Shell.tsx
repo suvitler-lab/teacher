@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import type { ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
 import { route, routeName } from "../router";
@@ -91,7 +92,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
 
       {sheet && (
         <div class="sheet-overlay" onClick={(e) => { if (e.target === e.currentTarget) setSheet(false); }}>
-          <div class="menu-sheet" role="dialog" aria-label="เมนู">
+          <Dialog class="menu-sheet" label="เมนู" onClose={() => setSheet(false)}>
             <div class="sheet-grab" />
             <div class="sheet-term">
               <TermPicker />
@@ -108,7 +109,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
             <button class="sheet-item" style="color:var(--text-danger)" onClick={() => { setSheet(false); doLogout(); }}>
               <Icon name="logout" size={20} /> ออกจากระบบ
             </button>
-          </div>
+          </Dialog>
         </div>
       )}
 

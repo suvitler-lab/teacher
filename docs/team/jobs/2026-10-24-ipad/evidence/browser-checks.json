@@ -1,0 +1,66 @@
+{
+  "environment": "Chromium viewport simulation, synthetic local data",
+  "viewports": [
+    [
+      768,
+      1024
+    ],
+    [
+      1024,
+      768
+    ]
+  ],
+  "script": "/assets/index-BF_Q-mYw.js",
+  "checks": [
+    {
+      "id": "IP01",
+      "status": "PASS",
+      "scenario": "ลงชื่อเข้าใช้และเปิดหน้าหลัก 768×1024"
+    },
+    {
+      "id": "IP02",
+      "status": "PASS",
+      "scenario": "สร้างงานคะแนนเต็ม10สำหรับป.6/1"
+    },
+    {
+      "id": "IP03",
+      "status": "PASS",
+      "scenario": "พบEnterเปิดเซลล์เดิมก่อนแก้ แก้event propagationแล้ว6→9ไปคน2→3 Escapeยกเลิกคน3, DB10501=6,10502=9,10503=10"
+    },
+    {
+      "id": "IP04",
+      "status": "PASS",
+      "scenario": "เช็คชื่อเลขที่1มา เลขที่2สาย"
+    },
+    {
+      "id": "IP05",
+      "status": "PASS",
+      "scenario": "รายงานแนวตั้ง/แนวนอนไม่ล้นหน้า โหลดใหม่เห็นงาน2/32 และExcel10501=7,10502=8"
+    },
+    {
+      "id": "IP06",
+      "status": "PASS",
+      "scenario": "งานใหม่จำmetadataหลังoffline reload, คิว3operations save→undo→save ส่งกลับสุดท้าย1submission10/10; รหัสซ้ำไม่บันทึกซ้ำ; DB20701=10หนึ่งsubmission; ป้ายออฟไลน์/ออนไลน์ตรงกันทั้งเมนูและหน้าสแกน"
+    },
+    {
+      "id": "IP07",
+      "status": "PASS",
+      "scenario": "ค้นหารหัส เปิดรายละเอียดด้วยEnter ปิดEscape คืนfocusปุ่มเดิม"
+    },
+    {
+      "id": "IP08",
+      "status": "PASS",
+      "scenario": "ขึ้นปี2570 ห้องใหม่3ห้องว่าง รุ่นเก่าจบปีแต่32คนยังอยู่รายงาน2569 เพิ่มรุ่นใหม่20701โดยไม่ปะปน"
+    },
+    {
+      "id": "IP09",
+      "status": "PASS",
+      "scenario": "รายงานเปลี่ยนห้อง32→4ไม่ปะปน ขาดการเชื่อมต่อแสดงข้อมูลเก่าพร้อมเตือน ต่อกลับโหลดใหม่สำเร็จ"
+    },
+    {
+      "id": "IP10",
+      "status": "PASS",
+      "scenario": "สุ่มเฉพาะรุ่นใหม่20701 ไม่ใช้รุ่นเก่า ให้เลือกใช้ทั้งห้องเมื่อยังไม่เช็คชื่อ"
+    }
+  ]
+}

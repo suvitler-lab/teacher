@@ -1,0 +1,18 @@
+[
+  {
+    "path": "/api/bootstrap",
+    "status": 401
+  },
+  {
+    "path": "/api/reports/summary",
+    "status": 401
+  },
+  {
+    "path": "/api/gradebook",
+    "status": 401
+  },
+  {
+    "path": "/api/attendance",
+    "status": 401
+  }
+]

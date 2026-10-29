@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "preact/hooks";
 import "../styles/grade.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented, WorkCell, EmptyState, LoadError, TermPicker, YearBanner, useIsPhone } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, WorkCell, EmptyState, LoadError, TermPicker, YearBanner, useIsPhone, NoClasses } from "../components/ui";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import {
   viewClasses, rosterCount, classById, activeSubjects, activeWorkTypes, studentsByClass, workTypeById, selectedTermId,
-  viewingPastYear, upsertAssignment, dropAssignment,
+  viewingPastYear, upsertAssignment, dropAssignment, captureAssignmentContext, assignmentContextCurrent,
 } from "../store";
 import type { Assignment, Student } from "@shared/types";
 import { api, ApiError } from "../lib/api";
@@ -74,8 +74,8 @@ export function GradebookPage() {
   // `keep` = a refresh after an action (keep what's on screen); otherwise the filters changed,
   // so the previous class/subject/term must not stay on screen while the new one loads (or fails)
   async function load(keep = false) {
-    if (!classId) return;
     const fresh = begin();
+    if (!classId) { setStatus("ready"); setAssignments([]); setSubs(new Map()); setRoster([]); return; }
     if (!keep) { setStatus("loading"); setAssignments([]); setSubs(new Map()); setRoster(null); }
     try {
       const q = new URLSearchParams({ class: classId });
@@ -238,9 +238,11 @@ export function GradebookPage() {
    * there is no reload afterwards.
    */
   async function saveAsgPatch(patch: Record<string, unknown>, okMsg?: string, target: Assignment | null = selAsg) {
-    if (!target) return;
+    if (!target) return false;
+    let succeeded = false;
     await act.run(`asg:${target.id}`, async () => {
       const before = target;
+      const ctx = captureAssignmentContext();
       setAssignments((list) => list.map((x) => (x.id === before.id ? ({ ...x, ...patch } as Assignment) : x)));
       let saved: Assignment | null = null;
       try {
@@ -252,13 +254,29 @@ export function GradebookPage() {
         });
         saved = res.assignment;
       } catch (e) {
-        setAssignments((list) => list.map((x) => (x.id === before.id ? before : x))); // the server said no: back to what it holds
+        if (assignmentContextCurrent(ctx)) setAssignments((list) => list.map((x) => (x.id === before.id ? before : x))); // the server said no: back to what it holds
         err((e as Error).message || "บันทึกไม่สำเร็จ");
         return;
       }
       // the scan screen (and Home) read the shared list: closing/reopening must show up there NOW
-      if (saved) { upsertAssignment(saved); setAssignments((list) => list.map((x) => (x.id === saved!.id ? { ...x, ...saved! } : x))); }
+      if (saved) {
+        if (!await upsertAssignment(saved, ctx)) { err("ข้อมูลในเครื่องเปลี่ยนระหว่างบันทึก — โหลดข้อมูลใหม่เพื่อตรวจผล"); return; }
+        setAssignments((list) => list.map((x) => (x.id === saved!.id ? { ...x, ...saved! } : x)));
+      }
+      succeeded = true;
       if (okMsg) ok(okMsg);
+    });
+    return succeeded;
+  }
+
+  async function toggleAllScores() {
+    if (act.anyBusy || assignments.length === 0) return;
+    // A mixed table hides the remaining visible columns; a fully hidden table shows them all.
+    const publish = assignments.every((a) => !a.publish_scores);
+    const targets = assignments.filter((a) => a.publish_scores !== publish);
+    await act.run("publish-all", async () => {
+      const results = await Promise.all(targets.map((a) => saveAsgPatch({ publish_scores: publish }, undefined, a)));
+      if (results.every(Boolean)) ok(publish ? "แสดงคะแนนทั้งหมดแล้ว" : "ซ่อนคะแนนทั้งหมดแล้ว");
     });
   }
 
@@ -266,8 +284,10 @@ export function GradebookPage() {
     if (!selAsg) return;
     setMenuOpen(false);
     if (!confirm(`ลบงาน "${selAsg.title}"? คะแนนที่บันทึกไว้จะถูกซ่อน`)) return;
-    const done = await withToast(() => api.post(`/api/assignments/${selAsg.id}/delete`), "ลบงานไม่สำเร็จ");
-    if (done) { dropAssignment(selAsg.id); setSelCol(null); await load(true); ok("ลบงานแล้ว"); }
+    const ctx = captureAssignmentContext();
+    const aid = selAsg.id;
+    const done = await withToast(() => api.post(`/api/assignments/${aid}/delete`), "ลบงานไม่สำเร็จ");
+    if (done && assignmentContextCurrent(ctx)) { await dropAssignment(aid, ctx); setSelCol(null); await load(true); ok("ลบงานแล้ว"); }
   }
 
   // The running total counts only the work whose scores are showing, so it never gives a hidden score away
@@ -299,17 +319,17 @@ export function GradebookPage() {
       <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
 
       <div class="gb-toolbar">
-        <select value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
+        <select aria-label="วิชา" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
           <option value="">ทุกวิชา</option>
           {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
         </select>
-        <select value={typeId} onInput={(e) => setTypeId((e.target as HTMLSelectElement).value)}>
+        <select aria-label="ประเภทงาน" value={typeId} onInput={(e) => setTypeId((e.target as HTMLSelectElement).value)}>
           <option value="">ทุกประเภท</option>
           {activeWorkTypes.value.map((w) => <option value={w.id}>{w.name}</option>)}
         </select>
         <Segmented value={period} onChange={setPeriod} options={[{ value: "term", label: "ทั้งเทอม" }, { value: "month", label: "รายเดือน" }]} />
         {period === "month" && (
-          <select value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)}>
+          <select aria-label="เดือนของคะแนน" value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)}>
             {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
           </select>
         )}
@@ -338,10 +358,10 @@ export function GradebookPage() {
           <button onClick={() => bulk("all-submitted")} disabled={act.isBusy("bulk")}>{act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทั้งห้องส่งแล้ว</button>
           <button onClick={() => bulk("full-score")} disabled={act.isBusy("bulk")}>ให้เต็มคนที่ส่ง</button>
           <button onClick={() => bulk("clear")} disabled={act.isBusy("bulk")}>ล้าง</button>
-          <button onClick={() => saveAsgPatch({ publish_scores: !selAsg.publish_scores }, selAsg.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว")}
-            disabled={act.isBusy(`asg:${selAsg.id}`)}
-            title={selAsg.publish_scores ? "ซ่อนคะแนนของงานนี้ (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)" : "แสดงคะแนนของงานนี้"}>
-            <Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={14} /> {selAsg.publish_scores ? "ซ่อนคะแนน" : "แสดงคะแนน"}
+          <button onClick={toggleAllScores}
+            disabled={act.anyBusy}
+            title={allHidden ? "แสดงคะแนนทุกงานในตารางตามตัวกรองปัจจุบัน" : "ซ่อนคะแนนทุกงานในตารางตามตัวกรองปัจจุบัน (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)"}>
+            <Icon name={allHidden ? "eye-off" : "eye"} size={14} /> {allHidden ? "แสดงคะแนนทั้งหมด" : "ซ่อนคะแนนทั้งหมด"}
           </button>
           <div style="position:relative">
             <button aria-label="จัดการงาน" onClick={() => setMenuOpen((v) => !v)}><Icon name="dots-vertical" size={16} /></button>
@@ -351,7 +371,7 @@ export function GradebookPage() {
                 <div class="gb-menu">
                   <button onClick={() => { setMenuOpen(false); setEditAsg(selAsg); }}><Icon name="edit" size={15} /> แก้ไข</button>
                   <button onClick={() => { setMenuOpen(false); setCopyAsg(selAsg); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
-                  <button onClick={() => saveAsgPatch({ status: selAsg.status === "open" ? "closed" : "open" }, selAsg.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว")}>
+                  <button disabled={act.isBusy("publish-all")} onClick={() => saveAsgPatch({ status: selAsg.status === "open" ? "closed" : "open" }, selAsg.status === "open" ? "ปิดรับงานแล้ว" : "เปิดรับงานแล้ว")}>
                     <Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}
                   </button>
                   <button onClick={removeAssignment} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
@@ -364,7 +384,7 @@ export function GradebookPage() {
 
       {msg && <div style="color:var(--text-danger);font-size:13px;margin-bottom:6px">{msg}</div>}
 
-      {status === "error" ? (
+      {!classId ? <NoClasses /> : status === "error" ? (
         <LoadError onRetry={() => load()} />
       ) : assignments.length === 0 ? (
         <div class="card">{status === "loading" ? <EmptyState icon="loader-2" text="กำลังโหลด…" /> : <EmptyState icon="clipboard-off" text="ยังไม่มีงานในเงื่อนไขนี้" action={<button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" size={16} /> สร้างงาน</button>} />}</div>
@@ -388,9 +408,10 @@ export function GradebookPage() {
                   const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(a.id, st.id, a))).length;
                   const pct = students.length ? Math.round((submitted / students.length) * 100) : 0;
                   return (
-                    <th class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
+                    <th tabIndex={0} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
                       <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                          disabled={act.isBusy("publish-all") || act.isBusy(`asg:${a.id}`)}
                           title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
                           onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
                           <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
@@ -415,7 +436,7 @@ export function GradebookPage() {
                       const sub = subOf(a.id, st.id);
                       const isEditing = editing?.aid === a.id && editing?.sid === st.id;
                       return (
-                        <td class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
+                        <td tabIndex={isEditing ? -1 : 0} aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} onKeyDown={(e) => { if (e.target === e.currentTarget && !isEditing && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setEditing({ aid: a.id, sid: st.id }); } }} class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
                           {isEditing ? (
                             <CellInput initial={sub?.score != null ? String(sub.score) : ""}
                               onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
@@ -487,11 +508,13 @@ function CellInput({ initial, onCommit, onCancel }: { initial: string; onCommit:
   }, []);
   function finish(next: boolean) { if (done.current) return; done.current = true; onCommit(initial, v, next); }
   return (
-    <input ref={ref} class="cell-input" inputMode="decimal" value={v}
+    <input ref={ref} class="cell-input" aria-label="คะแนน" inputMode="decimal" value={v}
       onInput={(e) => setV((e.target as HTMLInputElement).value)}
       onKeyDown={(e) => {
-        if (e.key === "Enter") { e.preventDefault(); finish(true); }
-        else if (e.key === "Escape") { done.current = true; onCancel(); }
+        // The editor owns these keys. They must not also activate the containing
+        // grid cell after committing moves editing to a different row.
+        if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); finish(true); }
+        else if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); done.current = true; onCancel(); }
       }}
       onBlur={() => finish(false)} />
   );
@@ -513,7 +536,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
     <div class="card">
       <div class="gb-mchips">
         {assignments.map((a) => (
-          <button class={"pill" + (a.id === selAsg.id ? " on" : "")} onClick={() => setSelCol(a.id)}>{a.title.length > 12 ? a.title.slice(0, 12) + "…" : a.title}</button>
+          <button aria-label={a.title} aria-pressed={a.id === selAsg.id} class={"pill" + (a.id === selAsg.id ? " on" : "")} onClick={() => setSelCol(a.id)}>{a.title.length > 12 ? a.title.slice(0, 12) + "…" : a.title}</button>
         ))}
       </div>
       {/* the tabs above cut long titles short: the work picked is always named in full here */}
@@ -549,7 +572,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
               <CellInput initial={sub?.score != null ? String(sub.score) : ""}
                 onCommit={(initial, v) => { commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
             ) : (
-              <button style="background:transparent;border:none;padding:0" onClick={() => setEditing({ aid: selAsg.id, sid: st.id })}>
+              <button aria-label={`กรอกคะแนน ${fullName(st)} · ${selAsg.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} style="background:transparent;border:none;padding:0" onClick={() => setEditing({ aid: selAsg.id, sid: st.id })}>
                 <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} hidden={!selAsg.publish_scores} />
               </button>
             )}

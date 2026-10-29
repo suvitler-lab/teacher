@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import type { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import "../styles/ui.css";
@@ -9,6 +10,7 @@ import { terms, selectedTermId, setSelectedTerm, UNASSIGNED, viewingPastYear, vi
 import { online, syncing, pendingCount } from "../lib/outbox";
 import { serverReachable } from "../lib/session";
 import { thaiMonthsFull } from "../lib/dates";
+import { navigate } from "../router";
 
 // ---- viewport hook -------------------------------------------------------
 export function useIsPhone(bp = 720): boolean {
@@ -73,6 +75,7 @@ export function TermPicker() {
     <label class="pill" style="cursor:pointer;gap:5px">
       <Icon name="calendar-event" size={15} />
       <select
+        aria-label="ภาคเรียนที่แสดง"
         value={selectedTermId.value ?? ""}
         onChange={(e) => setSelectedTerm((e.target as HTMLSelectElement).value)}
         style="border:none;background:transparent;height:auto;width:auto;padding:0;color:inherit;font-size:13px"
@@ -211,6 +214,11 @@ export function EmptyState({ icon = "inbox", text, action }: { icon?: string; te
   );
 }
 
+export function NoClasses() {
+  return <div class="card"><EmptyState icon="school" text="ยังไม่มีห้องเรียนในปีนี้ — เพิ่มห้องก่อนเริ่มใช้งาน"
+    action={<button class="primary" onClick={() => navigate("/settings", { section: "catalog" })}><Icon name="plus" size={16} /> เพิ่มห้องเรียน</button>} /></div>;
+}
+
 // ---- load failed ---------------------------------------------------------
 export function LoadError({ onRetry, text }: { onRetry: () => void; text?: string }) {
   return (
@@ -226,13 +234,13 @@ export function LoadError({ onRetry, text }: { onRetry: () => void; text?: strin
 export function Drawer({ title, onClose, children }: { title: ComponentChildren; onClose: () => void; children: ComponentChildren }) {
   return (
     <div class="drawer-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div class="drawer" role="dialog" aria-label={typeof title === "string" ? title : "รายละเอียด"}>
+      <Dialog class="drawer" label={typeof title === "string" ? title : "รายละเอียด"} onClose={onClose}>
         <div class="drawer-head">
           <div style="min-width:0">{title}</div>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
         </div>
         {children}
-      </div>
+      </Dialog>
     </div>
   );
 }

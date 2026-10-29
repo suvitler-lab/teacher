@@ -1,0 +1,5 @@
+npm run preflight
+Exit code: 0
+PASS wrangler.jsonc
+PASS migrations and schema version
+No remote commands or deployment executed.

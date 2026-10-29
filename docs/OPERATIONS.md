@@ -1,9 +1,13 @@
 # คู่มือปฏิบัติการ — deploy, ย้อนรุ่น, กู้ข้อมูล, แก้อาการ
 
-สำหรับคนที่ดูแลระบบ (ปกติคือครูเจ้าของระบบ) ทุกคำสั่งรันที่โฟลเดอร์โปรเจกต์ ชื่อฐานข้อมูลคือ `kru-db`
+สำหรับคนที่ดูแลระบบ (ปกติคือครูเจ้าของระบบ) ทุกคำสั่งรันที่โฟลเดอร์โปรเจกต์ ชื่อฐานข้อมูลใน config ปัจจุบันคือ `kru-db-apac` (schema v6, migrations ถึง `0007_teacher_email.sql`)
+
+ก่อน reset บัญชีหรือ Time Travel ให้ตรวจบัญชี Cloudflare, ชื่อและ database_id ใน `wrangler.jsonc`, เวอร์ชัน build และไฟล์สำรองล่าสุดให้ตรงระบบเป้าหมาย คำสั่งเหล่านี้มีผลต่อข้อมูลจริง ห้ามคัดลอกไปรันกับฐานที่ยังไม่ยืนยัน
 
 > คำสั่งที่ขึ้นต้นด้วย `npx wrangler …` ต้องเข้าสู่ระบบ Cloudflare ก่อน (`npx wrangler login`) และ **ยังไม่ได้ทดสอบกับบัญชี Cloudflare จริง** —
 > ตรวจชื่อคำสั่งกับ `npx wrangler <คำสั่ง> --help` ก่อนใช้ครั้งแรก ส่วนสคริปต์ `npm run …` ในโปรเจกต์นี้มี test คุมอยู่
+
+อัปเดต25ต.ค.2569: ตรวจบัญชี/ฐานข้อมูล, D1 exportและตรวจไฟล์, migrations list, deployจริงและhealthผ่านแล้วตาม [บันทึกrelease](team/jobs/2026-10-25-release/verification.md) คำเตือน“ยังไม่ได้ทดสอบบัญชีจริง”ด้านบนยังใช้กับคำสั่งreset/restore/Time Travelที่ไม่ได้รันในreleaseนี้
 
 ## 1. Deploy ทุกครั้ง (checklist)
 
@@ -36,7 +40,7 @@
 ข้อมูลนักเรียน คะแนน เช็คชื่อ **ไม่ถูกแตะ** (มี test ยืนยัน) เครื่องทุกเครื่องจะถูกให้เข้าสู่ระบบใหม่
 
 ```bash
-npx wrangler d1 execute kru-db --remote --command "DELETE FROM teacher; DELETE FROM sessions; DELETE FROM login_attempts;"
+npx wrangler d1 execute kru-db-apac --remote --command "DELETE FROM teacher; DELETE FROM sessions; DELETE FROM login_attempts;"
 ```
 
 จากนั้นเปิดแอป จะเข้าหน้า "สร้างบัญชีครู" ใส่ `SETUP_CODE` แล้วตั้งอีเมลและรหัสผ่านใหม่
@@ -55,7 +59,7 @@ npx wrangler d1 execute kru-db --remote --command "DELETE FROM teacher; DELETE F
 | รุ่นใหม่มีบั๊ก และ **ไม่มี** migration ใหม่ | ย้อนโค้ดได้เลย: `npx wrangler rollback` (หรือ Cloudflare dashboard → Workers → Deployments → Rollback) |
 | รุ่นใหม่มีบั๊ก และ **มี** migration ใหม่ | อย่าย้อนโค้ดอย่างเดียว (จะ `schema_mismatch`) — **แก้ไปข้างหน้า**: แก้บั๊กแล้ว deploy รุ่นใหม่อีกครั้ง |
 | ข้อมูลเสียหายจากรุ่นใหม่ | กู้จากไฟล์สำรอง (หัวข้อ 5) — แทนข้อมูลปัจจุบันทั้งชุด ข้อมูลหลังวันที่สำรองจะหาย |
-| ข้อมูลเสียหายและไม่มีไฟล์สำรองที่ใช้ได้ | D1 Time Travel ย้อนได้ 7 วัน: `npx wrangler d1 time-travel info kru-db` ดูจุดที่ย้อนได้ แล้ว `npx wrangler d1 time-travel restore kru-db --timestamp=<เวลา>` — **ย้อนข้อมูลทั้งฐาน** ทุกอย่างหลังเวลานั้นหาย และต้องย้อนโค้ดให้ตรง schema ของเวลานั้นด้วย |
+| ข้อมูลเสียหายและไม่มีไฟล์สำรองที่ใช้ได้ | D1 Time Travel ย้อนได้ 7 วัน: `npx wrangler d1 time-travel info kru-db-apac` ดูจุดที่ย้อนได้ แล้ว `npx wrangler d1 time-travel restore kru-db-apac --timestamp=<เวลา>` — **ย้อนข้อมูลทั้งฐาน** ทุกอย่างหลังเวลานั้นหาย และต้องย้อนโค้ดให้ตรง schema ของเวลานั้นด้วย |
 
 ## 5. สำรองและกู้คืนข้อมูล
 

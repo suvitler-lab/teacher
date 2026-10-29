@@ -1,0 +1,15 @@
+
+ ⛅️ wrangler 4.152.0
+────────────────────
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+✨ Read 36 files from the assets directory C:\Users\User\Desktop\teacher\dist\client\client
+Total Upload: 402.61 KiB / gzip: 88.82 KiB
+Your Worker has access to the following bindings:
+Binding                       Resource         
+env.DB (kru-db-apac)          D1 Database      
+env.ASSETS                    Assets           
+
+--dry-run: exiting now.
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md

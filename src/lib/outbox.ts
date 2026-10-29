@@ -256,7 +256,7 @@ export function startOutbox() {
     kick();
     // the server could not be reached last time: ask it something tiny, so the badge goes green again by itself
     // as soon as it answers (any answer counts, even an error status)
-    if (!serverReachable.value) fetch("/api/health", { cache: "no-store" }).then(() => { serverReachable.value = true; }, () => {});
+    if (!serverReachable.value) void api.get("/api/health").catch(() => {});
   }, 15000);
   kick();
 }

@@ -7,6 +7,7 @@ import { getMeta, setMeta, getEpoch } from "../lib/db";
 import { auditInsertStmt } from "../lib/audit";
 import { id } from "@shared/ids";
 import { SCHEMA_VERSION } from "@shared/types";
+import { restoreRowIssues, restoreDomainGuard, stagedRestoreIssues } from "../lib/restore-validation";
 
 export const backupRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 backupRoutes.use("/api/backup", requireAuth);
@@ -120,8 +121,8 @@ const STAGE_TTL_MS = 30 * 60 * 1000; // an upload nobody finished is dead after 
 
 const validateSchema = z.object({
   manifest: z.object({
-    schema_version: z.number(),
-    counts: z.record(z.number()).optional(),
+    schema_version: z.number().int().min(1),
+    counts: z.record(z.string(), z.number().int().min(0)).optional(),
     sha256: z.string().optional(),
   }),
 });
@@ -163,7 +164,7 @@ const executeSchema = z.object({
   step: z.enum(["chunk", "commit", "abort"]),
   table: z.string().optional(),
   seq: z.number().int().min(0).optional(),
-  rows: z.array(z.record(z.unknown())).optional(),
+  rows: z.array(z.record(z.string(), z.unknown())).optional(),
 });
 
 async function activeJob(env: Env, restoreId: string, now: number) {
@@ -237,6 +238,7 @@ export async function commitRestore(
          WHERE rj.id = ?1 AND COALESCE(s.n, 0) != e.value
        ) THEN json('staged rows do not match the backup') ELSE 1 END`,
     ).bind(restoreId),
+    restoreDomainGuard(env, restoreId),
   ];
 
   const swap = (withFkCheck: boolean) => env.DB.batch([
@@ -272,7 +274,6 @@ export async function commitRestore(
   } catch (e: any) {
     // all-or-nothing: the transaction rolled back, the current data is exactly as it was.
     // Say WHY, by looking at what is true now.
-    console.error("restore commit failed", e);
     const now2 = Date.now();
     const cur = await env.DB.prepare("SELECT status, updated_at FROM restore_jobs WHERE id = ?").bind(restoreId).first<{ status: string; updated_at: number }>();
     if (!cur || cur.status !== "validated" || now2 - cur.updated_at > STAGE_TTL_MS) {
@@ -287,6 +288,9 @@ export async function commitRestore(
         return { status: 409, body: { ok: false, error: "incomplete_upload", table: t, expected: expected[t] ?? 0, got: have.get(t) ?? 0 } };
       }
     }
+    const issues = await stagedRestoreIssues(env, restoreId);
+    if (issues.length > 0) return { status: 422, body: { ok: false, error: "invalid_backup", message: "ไฟล์สำรองมีข้อมูลไม่ถูกต้อง — ข้อมูลเดิมไม่ถูกเปลี่ยน", issues } };
+    console.error("restore commit failed", String(e?.message ?? e).slice(0, 300));
     return { status: 409, body: { ok: false, error: "restore_failed", detail: String(e?.message ?? e).slice(0, 300) } };
   }
   return { status: 200, body: { ok: true } };
@@ -312,6 +316,8 @@ backupRoutes.post("/api/restore/execute", async (c) => {
     if (body.seq === undefined) throw bad("seq_required");
     if (rows.length === 0) return c.json({ ok: true, staged: 0 });
     if (rows.length > PAGE) throw bad("chunk_too_large");
+    const issues = restoreRowIssues(table, rows);
+    if (issues.length > 0) return c.json({ ok: false, error: "invalid_backup", message: "ไฟล์สำรองมีข้อมูลไม่ถูกต้อง — ตรวจไฟล์ก่อนกู้คืน", issues }, 422);
     // re-sending a chunk (a retry) replaces it, so an upload can be resumed safely
     await c.env.DB.batch([
       c.env.DB.prepare("INSERT OR REPLACE INTO restore_staging (job_id, tbl, seq, rows_json) VALUES (?, ?, ?, ?)")

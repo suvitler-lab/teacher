@@ -7,6 +7,7 @@ import {
   activeClasses,
   activeSubjects,
   assignments,
+  deletedAssignmentIds,
   settings,
   students as allStudents,
   studentsById,
@@ -21,6 +22,8 @@ import {
   UNASSIGNED,
   patchAssignment,
   dropAssignment,
+  captureAssignmentContext,
+  assignmentContextCurrent,
 } from "../store";
 import type { ScanMode, Student, SubmissionOpResult } from "@shared/types";
 import { buildIndex, resolveScan } from "@shared/scan";
@@ -37,6 +40,7 @@ import { fullName, shortName, initials } from "../lib/names";
 import { dashboard, loadDashboard } from "../lib/dashboard";
 import { actionTime } from "../lib/clock";
 import { routeParams } from "../router";
+import { serverReachable } from "../lib/session";
 
 interface Session {
   id: string;
@@ -101,7 +105,7 @@ const activeAssignment = computed(() =>
 const closedReason = computed<"closed" | "deleted" | null>(() => {
   if (!session.value) return null;
   const a = activeAssignment.value;
-  if (!a) return "deleted";
+  if (!a) return deletedAssignmentIds.value.has(session.value.assignmentId) ? "deleted" : null;
   return a.status === "closed" ? "closed" : null;
 });
 
@@ -152,6 +156,7 @@ const RESUME_GAP_MS = 10_000;
 let lastFetchAt = 0;
 
 async function loadSubs(assignmentId: string) {
+  const ctx = captureAssignmentContext();
   const seq = ++loadSeq;
   lastFetchAt = Date.now();
   const beforeRequest = subsBox.value.aid === assignmentId ? subsBox.value.map : NO_SUBS;
@@ -160,11 +165,12 @@ async function loadSubs(assignmentId: string) {
     res = await api.get(`/api/assignments/${assignmentId}/submissions`);
   } catch (e) {
     // no answer: say "we don't know" (only if we knew nothing yet) — never leave the last work's numbers up
-    if (seq === loadSeq && roundAid() === assignmentId && subsBox.value.status !== "ready") {
+    if (assignmentContextCurrent(ctx) && seq === loadSeq && roundAid() === assignmentId && subsBox.value.status !== "ready") {
       subsBox.value = { ...subsBox.value, aid: assignmentId, status: "unknown" };
     }
     throw e;
   }
+  if (!assignmentContextCurrent(ctx)) return;
   applyAssignmentInfo(assignmentId, res.assignment); // true of that assignment whichever round is on screen
   if (seq !== loadSeq || roundAid() !== assignmentId) return; // a newer request or another round owns the screen now
   const m = reconcileSubs(res.submissions, beforeRequest);
@@ -178,6 +184,7 @@ async function pollSubs() {
   // never loaded for THIS round (first answer failed): ask for everything, not "changes since" some other work's clock
   if (box.aid !== s.assignmentId || box.status !== "ready") { loadSubs(s.assignmentId).catch(() => {}); return; }
   const seq = ++loadSeq;
+  const ctx = captureAssignmentContext();
   lastFetchAt = Date.now();
   try {
     const res = await api.get<{ submissions: any[]; assignment?: { status: string; full_score: number; deleted: boolean } | null; serverTime: number }>(
@@ -185,6 +192,7 @@ async function pollSubs() {
       // Reconcile the whole assignment; effSub keeps this device's unsent operations on top.
       `/api/assignments/${s.assignmentId}/submissions`,
     );
+    if (!assignmentContextCurrent(ctx)) return;
     applyAssignmentInfo(s.assignmentId, res.assignment);
     // the round changed (or a full reload started) while this was in flight: this answer is about something else
     if (seq !== loadSeq || roundAid() !== s.assignmentId || subsBox.value.aid !== s.assignmentId) return;
@@ -603,6 +611,7 @@ function ScanView() {
   const today = bkkToday();
   const otherClasses = (asg?.class_ids ?? []).filter((c) => c !== s.classId);
   const known = subsBox.value.aid === s.assignmentId && subsBox.value.status === "ready";
+  const up = online.value && serverReachable.value;
 
   return (
     <div>
@@ -648,9 +657,9 @@ function ScanView() {
             <Icon name={scannerReady.value ? "circle-check" : "hand-click"} size={13} />
             {scannerReady.value ? "เครื่องยิงพร้อม" : "คลิกหน้านี้ก่อนยิง"}
           </span>
-          <span class="chip" style={online.value ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-warning);color:var(--text-warning)"}>
-            <Icon name={online.value ? "cloud-check" : "cloud-off"} size={14} />
-            {syncing.value ? "กำลังบันทึก" : online.value ? "ออนไลน์" : "ออฟไลน์"}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
+          <span class="chip" style={up ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-warning);color:var(--text-warning)"}>
+            <Icon name={up ? "cloud-check" : "cloud-off"} size={14} />
+            {syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์"}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
           </span>
         </div>
       </div>
@@ -846,15 +855,23 @@ function ScorePad() {
   const s = session.value!;
   const st = pending.value ? studentsById.value.get(pending.value) : null;
   const [val, setVal] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  const [attempted, setAttempted] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setVal(""); setErrMsg(""); ref.current?.focus(); }, [pending.value]);
+  useEffect(() => { setVal(""); setAttempted(false); ref.current?.focus(); }, [pending.value]);
+
+  function validate(v: string) {
+    const n = Number(v);
+    if (v.trim() !== "" && Number.isFinite(n) && n > s.fullScore) return `คะแนนต้องไม่เกิน ${s.fullScore} คะแนน`;
+    if (v.trim() === "" || !isHalfStep(n) || n < 0) return `ใส่คะแนน 0–${s.fullScore} (ทีละ 0.5)`;
+    return "";
+  }
+  const validation = validate(val);
+  const errMsg = val !== "" || attempted ? validation : "";
 
   function commitVal(v: string) {
-    const n = Number(v);
-    if (v.trim() === "" || !isHalfStep(n) || n < 0 || n > s.fullScore) { setErrMsg(`ใส่คะแนน 0–${s.fullScore} (ทีละ 0.5)`); return; }
-    submitTypedScore(n);
+    if (validate(v)) { setAttempted(true); return; }
+    submitTypedScore(Number(v));
     setVal("");
   }
   if (!st) return null;
@@ -869,20 +886,25 @@ function ScorePad() {
       <div class="sc-quick">
         {quick.map((n) => <button onClick={() => commitVal(String(n))}>{n}/{s.fullScore}</button>)}
       </div>
-      <div class="row" style="gap:8px;align-items:flex-start">
-        <input ref={ref} inputMode="numeric" value={val} style="width:90px;height:52px;font-size:22px;text-align:center" aria-label="คะแนน"
-          onInput={(e) => { setVal((e.target as HTMLInputElement).value); setErrMsg(""); }}
-          onKeyDown={(e) => { if (e.key === "Enter") commitVal(val); }} />
-        <span style="font-size:22px;align-self:center">/ {s.fullScore}</span>
+      <div class="sc-score-controls">
+        <div class="sc-score-entry">
+          <div class="row" style="gap:8px">
+            <input ref={ref} class="sc-score-input" inputMode="decimal" value={val} style="width:90px;height:52px;font-size:22px;text-align:center" aria-label="คะแนน"
+              aria-invalid={!!errMsg} aria-describedby={errMsg ? "scan-score-error" : undefined}
+              onInput={(e) => setVal((e.target as HTMLInputElement).value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitVal(val); } }} />
+            <span style="font-size:22px">/ {s.fullScore}</span>
+          </div>
+          {errMsg && <div id="scan-score-error" class="sc-score-error" role="alert">{errMsg}</div>}
+        </div>
         <div class="scorepad">
           {[1,2,3,4,5,6,7,8,9].map((n) => <button onClick={() => setVal((v) => v + n)}>{n}</button>)}
           <button onClick={() => setVal((v) => (v.includes(".") ? v : (v || "0") + ".5"))} style="font-size:16px">.5</button>
           <button onClick={() => setVal((v) => v + "0")}>0</button>
-          <button onClick={() => setVal((v) => v.slice(0, -1))}><Icon name="backspace" size={18} /></button>
-          <button class="primary" onClick={() => commitVal(val)} style="grid-column:span 3"><Icon name="check" size={18} /> บันทึก</button>
+          <button aria-label="ลบตัวเลขท้ายสุด" onClick={() => setVal((v) => v.slice(0, -1))}><Icon name="backspace" size={18} /></button>
+          <button class="primary" disabled={!!validation} onClick={() => commitVal(val)} style="grid-column:span 3"><Icon name="check" size={18} /> บันทึก</button>
         </div>
       </div>
-      {errMsg && <div style="color:var(--text-danger);font-size:13px;margin-top:6px">{errMsg}</div>}
     </div>
   );
 }

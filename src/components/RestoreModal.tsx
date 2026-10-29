@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import { useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { api, ApiError } from "../lib/api";
@@ -77,7 +78,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
 
   async function sendChunk(table: string, seq: number, rows: unknown[]) {
     for (let attempt = 0; ; attempt++) {
-      try { return await api.post("/api/restore/execute", { restoreId, step: "chunk", table, seq, rows }); }
+      try { return await api.post("/api/restore/execute", { restoreId, step: "chunk", table, seq, rows }, { timeoutMs: 30000 }); }
       catch (e) {
         // a flaky connection: re-sending a chunk is safe (it replaces itself on the server)
         if (attempt < 2 && e instanceof ApiError && (e.status === 0 || e.status >= 500)) continue;
@@ -135,7 +136,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
       // 2) one atomic swap: it all changes, or none of it does
       setProgress("กำลังเปลี่ยนข้อมูล…");
       committing = true;
-      await api.post("/api/restore/execute", { restoreId, step: "commit" });
+      await api.post("/api/restore/execute", { restoreId, step: "commit" }, { timeoutMs: 60000 });
       setProgress("โหลดข้อมูลใหม่…");
       await loadBootstrap();
       setStage("done");
@@ -153,7 +154,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
 
   return (
     <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
-      <div class="modal" role="dialog" aria-label="กู้คืนข้อมูล" style="max-width:520px">
+      <Dialog label="กู้คืนข้อมูล" onClose={close} dismissible={stage !== "running"} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
           <h2 style="font-size:18px">กู้คืนข้อมูลจากไฟล์สำรอง</h2>
           {stage !== "running" && <button class="icon ghost" aria-label="ปิด" onClick={close}><Icon name="x" /></button>}
@@ -214,7 +215,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
         )}
 
         {err && <div style="color:var(--text-danger);font-size:13px;margin-top:10px" role="alert">{err}</div>}
-      </div>
+      </Dialog>
     </div>
   );
 }

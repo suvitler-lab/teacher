@@ -1,0 +1,29 @@
+
+> ngankrob@0.1.0 test
+> vitest run --reporter=dot
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+stderr | test/unit/camera.test.ts > diagnoseCamera — what the Settings test button shows > a failed reader load isn't remembered: once the cause is fixed, the next try works
+wasm streaming compile failed: TypeError [ERR_INVALID_ARG_TYPE]: The "source" argument must be an instance of Response or an Promise resolving to Response. Received an instance of Object
+falling back to ArrayBuffer instantiation
+
+stderr | test/unit/camera.test.ts > diagnoseCamera — what the Settings test button shows > a failed reader load isn't remembered: once the cause is fixed, the next try works
+failed to asynchronously prepare wasm: both async and sync fetching of the wasm failed
+Aborted(both async and sync fetching of the wasm failed)
+
+··········································································································································································································································································································································································································································································································································································
+
+ Test Files  54 passed (54)
+      Tests  554 passed (554)
+   Start at  15:34:21
+   Duration  33.98s (transform 37.57s, setup 208.08s, import 33.92s, tests 106.95s, environment 33.22s)
+

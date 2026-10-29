@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "sheets": [
+    {
+      "name": "สรุปรายคน",
+      "rows": 33
+    },
+    {
+      "name": "คะแนนรายงาน",
+      "rows": 33
+    },
+    {
+      "name": "เช็คชื่อรายวัน",
+      "rows": 33
+    },
+    {
+      "name": "ภาพรวมห้อง",
+      "rows": 7
+    }
+  ],
+  "scoresAtExport": {
+    "10501": 7,
+    "10502": 8
+  },
+  "workProgress": "2/32",
+  "note": "Export before later Enter-fix retest changed scores to 6 and 9; attendance on 24 October is outside this term ending 10 October."
+}

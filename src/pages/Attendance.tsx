@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/attend.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, ClassChips, Segmented, StackBar } from "../components/ui";
+import { PageHeader, ClassChips, Segmented, StackBar, NoClasses } from "../components/ui";
 import { activeClasses, activeSubjects, studentsByClass, settings, studentsById, revokedTokens, schoolYearStart, students as allStudents } from "../store";
 import type { AttendanceStatus, AttendanceDay, Student } from "@shared/types";
 import { api } from "../lib/api";
@@ -90,8 +90,8 @@ export function AttendancePage() {
     (draft?.rows[sid]?.status as AttendanceStatus | undefined) ?? server.get(sid)?.status;
 
   async function load() {
-    if (!classId) return;
     const seq = ++loadSeq.current;
+    if (!classId) { setLoaded(true); setServer(new Map()); setDraft(undefined); return; }
     const myKey = key;
     setLoaded(false); setOffline(false); setServer(new Map()); setScanLog([]);
     const local = await draftGet(myKey); // instant and works offline
@@ -246,6 +246,8 @@ export function AttendancePage() {
     return { id: c.id, name: c.name, count: total, mark } as const;
   });
 
+  if (!classId) return <><PageHeader icon="user-check" title="เช็คชื่อ" /><NoClasses /></>;
+
   return (
     <div>
       <PageHeader icon="user-check" title="เช็คชื่อ"
@@ -266,10 +268,10 @@ export function AttendancePage() {
         </div>
         <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
         {scoped && (<>
-          <select value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:30px">
+          <select aria-label="วิชาเช็คชื่อ" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:30px">
             {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
           </select>
-          <select value={period} onInput={(e) => setPeriod(Number((e.target as HTMLSelectElement).value))} style="width:auto;height:30px">
+          <select aria-label="คาบเรียน" value={period} onInput={(e) => setPeriod(Number((e.target as HTMLSelectElement).value))} style="width:auto;height:30px">
             {[1,2,3,4,5,6,7].map((p) => <option value={p}>คาบ {p}</option>)}
           </select>
         </>)}

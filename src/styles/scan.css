@@ -111,6 +111,10 @@
 
 .scorepad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 260px; }
 .scorepad button { height: 52px; font-size: 20px; }
+.sc-score-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.sc-score-entry { max-width: 200px; }
+.sc-score-input[aria-invalid="true"] { border-color: var(--border-danger); }
+.sc-score-error { margin-top: 6px; font-size: 13px; color: var(--text-danger); }
 
 .miss-chip { height: 26px; font-size: 12px; padding: 0 10px; border-radius: 999px; border: 0.5px dashed var(--border-danger); color: var(--text-danger); background: transparent; }
 

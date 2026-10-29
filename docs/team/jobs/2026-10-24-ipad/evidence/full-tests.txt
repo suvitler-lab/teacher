@@ -1,0 +1,723 @@
+
+> ngankrob@0.1.0 test
+> vitest run --reporter=dot
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 33 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| test/unit/assignment-offline-cache.test.ts [ test/unit/assignment-offline-cache.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165425-9q3muz77vco' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  |dom| test/unit/attSync.test.ts [ test/unit/attSync.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163623-7no5twplb4c' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  |dom| test/unit/audit-api-deadlines.test.ts [ test/unit/audit-api-deadlines.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165382-deat745w934' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  |dom| test/unit/audit-dialog.test.tsx [ test/unit/audit-dialog.test.tsx ]
+ FAIL  |dom| test/unit/backup.test.ts [ test/unit/backup.test.ts ]
+ FAIL  |dom| test/unit/camera.test.ts [ test/unit/camera.test.ts ]
+ FAIL  |dom| test/unit/term-and-dashboard.test.ts [ test/unit/term-and-dashboard.test.ts ]
+ FAIL  |dom| test/unit/trial-reconcile.test.ts [ test/unit/trial-reconcile.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163851-s5oacg082h' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  |dom| test/unit/audit-first-use.test.tsx [ test/unit/audit-first-use.test.tsx ]
+ FAIL  |dom| test/unit/audit-reports-refresh.test.tsx [ test/unit/audit-reports-refresh.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163384-yj3f6ffq3s' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  |dom| test/unit/audit-student-import.test.tsx [ test/unit/audit-student-import.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163289-wlzvon4b03q' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  |dom| test/unit/catalog-editor.test.tsx [ test/unit/catalog-editor.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163333-ly0e0ywgbw' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  |dom| test/unit/csp.test.ts [ test/unit/csp.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165747-j898e9rhjri' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  |dom| test/unit/device-check.test.ts [ test/unit/device-check.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165337-kanj7i9fswo' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  |dom| test/unit/excel-attendance.test.ts [ test/unit/excel-attendance.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163213-985nk7h2m0k' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  |dom| test/unit/excel-filename.test.ts [ test/unit/excel-filename.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165726-nsu41rrmle' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  |dom| test/unit/follow-up-text.test.ts [ test/unit/follow-up-text.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165776-jjl1tcgzu4i' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  |dom| test/unit/gradebook-enter.test.tsx [ test/unit/gradebook-enter.test.tsx ]
+ FAIL  |dom| test/unit/outbox-order.test.ts [ test/unit/outbox-order.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163784-oaeotb8eukb' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  |dom| test/unit/gradebook-visibility.test.tsx [ test/unit/gradebook-visibility.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163560-vika4hmzcbh' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  |dom| test/unit/idb-upgrade.test.ts [ test/unit/idb-upgrade.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163593-jafgny29zms' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  |dom| test/unit/import-parse.test.ts [ test/unit/import-parse.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165672-vmene64zms' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  |dom| test/unit/keymap.test.ts [ test/unit/keymap.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165583-0yggpqoogfpe' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  |dom| test/unit/logic.test.ts [ test/unit/logic.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165766-tivrmsc4r0h' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+ FAIL  |dom| test/unit/metrics.test.ts [ test/unit/metrics.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165649-utggr4ynafn' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/33]⎯
+
+ FAIL  |dom| test/unit/offline.test.ts [ test/unit/offline.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163713-q2ujab9x0y' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/33]⎯
+
+ FAIL  |dom| test/unit/preflight.test.ts [ test/unit/preflight.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163675-7gn8smelvca' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/33]⎯
+
+ FAIL  |dom| test/unit/random.test.ts [ test/unit/random.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165515-gywgyzhzo5c' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/33]⎯
+
+ FAIL  |dom| test/unit/reachable.test.ts [ test/unit/reachable.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165502-rgghmkdef5' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/33]⎯
+
+ FAIL  |dom| test/unit/roster.test.ts [ test/unit/roster.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165714-nhdqfvbjd98' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/33]⎯
+
+ FAIL  |dom| test/unit/scan-controller.test.ts [ test/unit/scan-controller.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163747-910amstf1k' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/33]⎯
+
+ FAIL  |dom| test/unit/scan-score-entry.test.tsx [ test/unit/scan-score-entry.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860163525-ktbrwsbj5e' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/33]⎯
+
+ FAIL  |dom| test/unit/scan.test.ts [ test/unit/scan.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\.tmp-1792860165624-z3pc3ixbvvt' -> 'C:\Users\User\AppData\Local\Packages\sandbox.{370dbfe7-8d3a-4a7f-97b3-d7b7753f621e}\AC\Temp\2YmrkEgcmbd156faUTZhZ\client\a4a770584cbf1b01b98050c36c2499c4c877b16e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/33]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 23 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/restore.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164185","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/backup-consistency.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164246","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/volume.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164287","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/audit-restore-domain.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164359","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/auth.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164414","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/integrity-d.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164494","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/race-r1.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164572","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/school-year.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164598","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/reset.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164646","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/final-audit.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164697","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/audit-history.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164727","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/attendance-integrity.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164796","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/correctness.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164850","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/backend-r3.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164965","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/import-preview.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860164918","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/dashboard.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165029","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/submissions.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165129","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/reports.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165090","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/audit-concurrency.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165191","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/audit-review.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165232","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/manage.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165320","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/qr.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165361","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files C:/Users/User/Desktop/teacher/test/api/publish-toggle.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792860165396","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-pool-workers-runner-workers: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97793:13
+ ❯ Runtime.updateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:97873:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112393:30
+ ❯ Mutex.runWith node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:85487:48
+ ❯ _Miniflare.#waitForReady node_modules/@cloudflare/vitest-pool-workers/node_modules/miniflare/dist/src/index.js:112513:5
+ ❯ getProjectMiniflare node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60919:2
+ ❯ CloudflarePoolWorker.start node_modules/@cloudflare/vitest-pool-workers/dist/pool/index.mjs:60374:13
+ ❯ PoolRunner.start node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:2966:4
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.B0Pz1_R7.js:3532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  33 failed (33)
+      Tests  no tests
+     Errors  23 errors
+   Start at  23:42:40
+   Duration  4.81s (transform 0ms, setup 0ms, import 0ms, tests 0ms, environment 61.87s)
+
+close timed out after 10000ms
+Tests closed successfully but something prevents the main process from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter

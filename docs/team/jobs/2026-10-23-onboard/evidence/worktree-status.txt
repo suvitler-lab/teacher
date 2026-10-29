@@ -1,0 +1,18 @@
+ M docs/audit-2026-09-29/REVIEW.md
+ M package-lock.json
+ M src/pages/Gradebook.tsx
+ M src/pages/Scan.tsx
+ M src/pages/Students.tsx
+ M src/styles/scan.css
+ M src/styles/students.css
+?? docs/audit-2026-09-30/REVIEW.md
+?? docs/audit-2026-09-30/gradebook-desktop.jpg
+?? docs/audit-2026-09-30/offline-reload.jpg
+?? docs/audit-2026-09-30/preview.cjs
+?? docs/audit-2026-09-30/reconnected.jpg
+?? docs/audit-2026-09-30/reproduce-new.cjs
+?? docs/audit-2026-09-30/reproduction-results.jsonl
+?? docs/audit-2026-09-30/scan-return-5cda72b.patch
+?? docs/team/
+?? test/unit/gradebook-visibility.test.tsx
+?? test/unit/scan-score-entry.test.tsx

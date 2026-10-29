@@ -1,0 +1,101 @@
+
+> ngankrob@0.1.0 build
+> vite build
+
+vite v6.4.5 building SSR bundle for production...
+transforming...
+node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 174 modules transformed.
+[plugin vite:reporter] 
+rendering chunks...
+(!) C:/Users/User/Desktop/teacher/worker/lib/auth.ts is dynamically imported by C:/Users/User/Desktop/teacher/worker/routes/auth.ts but also statically imported by C:/Users/User/Desktop/teacher/worker/app.ts, C:/Users/User/Desktop/teacher/worker/routes/assignments.ts, C:/Users/User/Desktop/teacher/worker/routes/attendance.ts, C:/Users/User/Desktop/teacher/worker/routes/audit.ts, C:/Users/User/Desktop/teacher/worker/routes/auth.ts, C:/Users/User/Desktop/teacher/worker/routes/backup.ts, C:/Users/User/Desktop/teacher/worker/routes/bootstrap.ts, C:/Users/User/Desktop/teacher/worker/routes/catalog.ts, C:/Users/User/Desktop/teacher/worker/routes/dashboard.ts, C:/Users/User/Desktop/teacher/worker/routes/gradebook.ts, C:/Users/User/Desktop/teacher/worker/routes/reports.ts, C:/Users/User/Desktop/teacher/worker/routes/reset.ts, C:/Users/User/Desktop/teacher/worker/routes/students.ts, C:/Users/User/Desktop/teacher/worker/routes/submissions.ts, dynamic import will not move module into another chunk.
+
+Using secrets defined in .dev.vars
+X [ERROR] Failed to write to log file Error: EPERM: operation not permitted, open 'C:\Users\User\.wrangler\logs\wrangler-2026-10-24_08-34-40_659.log'
+
+      at async open (node:internal/fs/promises:640:25)
+      at async writeFile (node:internal/fs/promises:1257:14)
+      at async C:\Users\User\Desktop\teacher\node_modules\wrangler\wrangler-dist\cli.js:69690:7
+      at async Mutex.runWith (C:\Users\User\Desktop\teacher\node_modules\miniflare\dist\src\index.js:80712:16)
+      at async appendToDebugLogFile (C:\Users\User\Desktop\teacher\node_modules\wrangler\wrangler-dist\cli.js:69687:3) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'open',
+    path: 'C:\\Users\\User\\.wrangler\\logs\\wrangler-2026-10-24_08-34-40_659.log'
+  }
+
+
+X [ERROR] Would have written: 
+
+  --- 2026-10-24T08:34:41.631Z debug
+  🪵  Writing logs to "C:\Users\User\.wrangler\logs\wrangler-2026-10-24_08-34-40_659.log"
+  ---
+  
+
+
+dist/client/ngankrob/.dev.vars              0.08 kB
+dist/client/ngankrob/.vite/manifest.json    0.16 kB
+dist/client/ngankrob/wrangler.json          1.54 kB
+dist/client/ngankrob/index.js             412.27 kB
+✓ built in 783ms
+vite v6.4.5 building for production...
+transforming...
+✓ 139 modules transformed.
+rendering chunks...
+[plugin vite:reporter] 
+(!) C:/Users/User/Desktop/teacher/src/lib/session.ts is dynamically imported by C:/Users/User/Desktop/teacher/src/lib/api.ts, C:/Users/User/Desktop/teacher/src/lib/api.ts, C:/Users/User/Desktop/teacher/src/lib/api.ts, C:/Users/User/Desktop/teacher/src/lib/api.ts but also statically imported by C:/Users/User/Desktop/teacher/src/app.tsx, C:/Users/User/Desktop/teacher/src/components/Overlays.tsx, C:/Users/User/Desktop/teacher/src/components/ui.tsx, C:/Users/User/Desktop/teacher/src/lib/attSync.ts, C:/Users/User/Desktop/teacher/src/lib/clock.ts, C:/Users/User/Desktop/teacher/src/lib/outbox.ts, C:/Users/User/Desktop/teacher/src/store.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) C:/Users/User/Desktop/teacher/src/lib/outbox.ts is dynamically imported by C:/Users/User/Desktop/teacher/src/pages/Setup.tsx but also statically imported by C:/Users/User/Desktop/teacher/src/app.tsx, C:/Users/User/Desktop/teacher/src/components/Overlays.tsx, C:/Users/User/Desktop/teacher/src/components/ResetModal.tsx, C:/Users/User/Desktop/teacher/src/components/Shell.tsx, C:/Users/User/Desktop/teacher/src/components/StartTermModal.tsx, C:/Users/User/Desktop/teacher/src/components/ui.tsx, C:/Users/User/Desktop/teacher/src/lib/deviceCheck.ts, C:/Users/User/Desktop/teacher/src/pages/Gradebook.tsx, C:/Users/User/Desktop/teacher/src/pages/Home.tsx, C:/Users/User/Desktop/teacher/src/pages/Scan.tsx, C:/Users/User/Desktop/teacher/src/store.ts, dynamic import will not move module into another chunk.
+
+[plugin vite:reporter] 
+(!) C:/Users/User/Desktop/teacher/src/store.ts is dynamically imported by C:/Users/User/Desktop/teacher/src/pages/Setup.tsx but also statically imported by C:/Users/User/Desktop/teacher/src/app.tsx, C:/Users/User/Desktop/teacher/src/components/AssignmentModal.tsx, C:/Users/User/Desktop/teacher/src/components/AuditHistory.tsx, C:/Users/User/Desktop/teacher/src/components/CatalogEditor.tsx, C:/Users/User/Desktop/teacher/src/components/Overlays.tsx, C:/Users/User/Desktop/teacher/src/components/RestoreModal.tsx, C:/Users/User/Desktop/teacher/src/components/Shell.tsx, C:/Users/User/Desktop/teacher/src/components/StartTermModal.tsx, C:/Users/User/Desktop/teacher/src/components/StickerSheet.tsx, C:/Users/User/Desktop/teacher/src/components/StudentDrawer.tsx, C:/Users/User/Desktop/teacher/src/components/ui.tsx, C:/Users/User/Desktop/teacher/src/lib/backup.ts, C:/Users/User/Desktop/teacher/src/pages/Attendance.tsx, C:/Users/User/Desktop/teacher/src/pages/Gradebook.tsx, C:/Users/User/Desktop/teacher/src/pages/Home.tsx, C:/Users/User/Desktop/teacher/src/pages/Onboarding.tsx, C:/Users/User/Desktop/teacher/src/pages/Random.tsx, C:/Users/User/Desktop/teacher/src/pages/Reports.tsx, C:/Users/User/Desktop/teacher/src/pages/Scan.tsx, C:/Users/User/Desktop/teacher/src/pages/Settings.tsx, C:/Users/User/Desktop/teacher/src/pages/Setup.tsx, C:/Users/User/Desktop/teacher/src/pages/Students.tsx, dynamic import will not move module into another chunk.
+
+[sw-precache] version 9cad037fc7a8 · 20 files · 3050 kB for offline use
+computing gzip size...
+dist/client/client/.assetsignore                                                         0.02 kB
+dist/client/client/index.html                                                            0.59 kB │ gzip:   0.36 kB
+dist/client/client/assets/ibm-plex-sans-thai-cyrillic-ext-400-normal-BEjoQ6U0.woff       1.16 kB
+dist/client/client/assets/ibm-plex-sans-thai-cyrillic-ext-500-normal-Do1XVVIP.woff       1.16 kB
+dist/client/client/assets/ibm-plex-sans-thai-cyrillic-ext-500-normal-Cm2I9ryc.woff2      1.41 kB
+dist/client/client/assets/ibm-plex-sans-thai-cyrillic-ext-400-normal-Dn6MWgci.woff2      1.41 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-ext-400-normal-n-X-g5Z4.woff          4.84 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-ext-500-normal-DcylQI4B.woff          4.86 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-ext-500-normal-n470B0cW.woff2         6.25 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-ext-400-normal-DBkYO1u-.woff2         6.36 kB
+dist/client/client/assets/ibm-plex-sans-thai-thai-500-normal-BoHUoq0p.woff              10.35 kB
+dist/client/client/assets/ibm-plex-sans-thai-thai-400-normal-DKc8V4lk.woff              10.42 kB
+dist/client/client/assets/ibm-plex-sans-thai-thai-500-normal-BrMc1XKn.woff2             11.72 kB
+dist/client/client/assets/ibm-plex-sans-thai-thai-400-normal-Bt1rR4gi.woff2             11.80 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-400-normal-YXrLwNa7.woff             16.23 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-500-normal-h5t7erDE.woff             17.34 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-400-normal-CwmoKdEh.woff2            17.74 kB
+dist/client/client/assets/ibm-plex-sans-thai-latin-500-normal-DQcnnbdd.woff2            18.52 kB
+dist/client/client/assets/tabler-icons-Blg4lqvZ.woff2                                  504.30 kB
+dist/client/client/assets/tabler-icons-BmOo6UIQ.woff                                   776.56 kB
+dist/client/client/assets/tabler-icons-D6JEe7Df.ttf                                  1,818.82 kB
+dist/client/client/assets/index-Ck4LRvZv.css                                           257.38 kB │ gzip:  47.35 kB
+dist/client/client/assets/excel-CbsBdRsr.js                                              4.50 kB │ gzip:   1.94 kB
+dist/client/client/assets/StartTermModal-BBRExdEx.js                                     8.33 kB │ gzip:   2.99 kB
+dist/client/client/assets/camera-CpcI06NO.js                                             8.65 kB │ gzip:   3.17 kB
+dist/client/client/assets/pure-CgzuC4Jl.js                                              43.15 kB │ gzip:  15.21 kB
+dist/client/client/assets/index-ChpFi4A9.js                                            341.14 kB │ gzip:  98.46 kB
+dist/client/client/assets/exceljs.min-BktY4DtA.js                                      940.07 kB │ gzip: 271.31 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 11.63s
+🪵  Logs were written to "C:\Users\User\.wrangler\logs\wrangler-2026-10-24_08-34-40_659.log"

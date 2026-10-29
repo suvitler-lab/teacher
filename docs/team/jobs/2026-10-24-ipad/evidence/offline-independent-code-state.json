@@ -1,0 +1,34 @@
+[
+  {
+    "path": "src/store.ts",
+    "sha256": "B025D7F6ED2969AF6C65DEBC3BB35324D8BD93961F3622DE4EB3AF7D7C704F19"
+  },
+  {
+    "path": "src/lib/idb.ts",
+    "sha256": "BA7285391EDCEC9A23E0D56CD165B1EF3185E9EB6C9775226F7FCA9F711A2433"
+  },
+  {
+    "path": "src/pages/Scan.tsx",
+    "sha256": "0102B864287C928E9D325ABF87C0A3920C2C5BF0D199A17AAD54264F06393921"
+  },
+  {
+    "path": "src/components/AssignmentModal.tsx",
+    "sha256": "085384BB6223052CDA780ECC53025B7FC743328DB2FD83A3B25441F63D75EA9C"
+  },
+  {
+    "path": "src/pages/Gradebook.tsx",
+    "sha256": "9A7F380462811C75D0111DBE925A2EC8B3FCC1FFD9B130C5633446CA3B90DFFB"
+  },
+  {
+    "path": "test/unit/assignment-offline-cache.test.ts",
+    "sha256": "C226F21CA7EDFD3723771CD8E8679B1C7789304FC88FE64B0EFE74C8541BCA6B"
+  },
+  {
+    "path": "test/unit/scan-controller.test.ts",
+    "sha256": "32C57EEADA31D42DEE3778D8011EA5182D45C31CA78B780253156E6D0F74409B"
+  },
+  {
+    "path": "test/unit/gradebook-enter.test.tsx",
+    "sha256": "6E46246CA486E19D8C8F37B738456920DBE11000A750C072AD70DB919CE79A3E"
+  }
+]

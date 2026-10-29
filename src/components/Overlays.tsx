@@ -1,3 +1,4 @@
+import { Dialog } from "./Dialog";
 import { useEffect, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { toasts, dismiss, err } from "../lib/notify";
@@ -105,7 +106,7 @@ export function FailedPanel() {
       </button>
       {open && (
         <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
-          <div class="modal" style="max-width:460px" role="dialog" aria-label="รายการส่งไม่สำเร็จ">
+          <Dialog label="รายการส่งไม่สำเร็จ" style="max-width:460px" onClose={() => setOpen(false)}>
             <div class="row" style="justify-content:space-between;margin-bottom:8px">
               <h2 style="font-size:18px">ส่งไม่สำเร็จ {n} รายการ</h2>
               <button class="icon ghost" aria-label="ปิด" onClick={() => setOpen(false)}><Icon name="x" /></button>
@@ -125,7 +126,7 @@ export function FailedPanel() {
                 );
               })}
             </div>
-          </div>
+          </Dialog>
         </div>
       )}
     </>
@@ -157,7 +158,8 @@ function ReloginForm() {
 
   return (
     <div class="modal-overlay" style="z-index:200">
-      <form class="modal" style="max-width:400px" onSubmit={submit}>
+      <Dialog label="เข้าสู่ระบบอีกครั้ง" style="max-width:400px" onClose={() => {}} dismissible={false}>
+      <form onSubmit={submit}>
         <div class="row" style="gap:8px;margin-bottom:8px">
           <Icon name="lock" size={20} class="muted" />
           <h2 style="font-size:18px">เข้าสู่ระบบอีกครั้ง</h2>
@@ -178,6 +180,7 @@ function ReloginForm() {
           {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="login" />} เข้าสู่ระบบ
         </button>
       </form>
+      </Dialog>
     </div>
   );
 }

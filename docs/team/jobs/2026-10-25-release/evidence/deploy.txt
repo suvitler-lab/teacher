@@ -1,0 +1,33 @@
+
+ ⛅️ wrangler 4.152.0
+────────────────────
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+🌀 Building list of assets...
+✨ Read 36 files from the assets directory C:\Users\User\Desktop\teacher\dist\client\client
+🌀 Starting asset upload...
+🌀 Found 8 new or modified static assets to upload. Proceeding with upload...
++ /index.html
++ /assets/StartTermModal-D6nsWDq0.js
++ /assets/index-BF_Q-mYw.js
++ /assets/excel-C7oxdJ09.js
++ /assets/camera-DHELIYvZ.js
++ /assets/exceljs.min-CpLTIW4O.js
++ /sw.js
++ /assets/index-Ck4LRvZv.css
+Uploaded 3 of 8 assets
+Uploaded 6 of 8 assets
+Uploaded 8 of 8 assets
+✨ Success! Uploaded 8 files (24 already uploaded) (3.76 sec)
+
+Total Upload: 402.61 KiB / gzip: 88.82 KiB
+Worker Startup Time: 29 ms
+Your Worker has access to the following bindings:
+Binding                       Resource         
+env.DB (kru-db-apac)          D1 Database      
+env.ASSETS                    Assets           
+
+Uploaded ngankrob (14.25 sec)
+Deployed ngankrob triggers (2.36 sec)
+  https://ngankrob.suvit-ler.workers.dev
+Current Version ID: 3ecf363b-af00-4542-8072-25a3e3e86905

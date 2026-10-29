@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-24",
+  "environment": "local",
+  "simulation": "Chromium viewport on Windows; not iPadOS or Safari",
+  "viewports": [[768,1024],[1024,768]],
+  "browserAcceptance": {"passed":10,"total":10},
+  "tests": {"passed":570,"total":570,"files":56},
+  "originalFindings":11,
+  "previousAdditionalFindings":1,
+  "newFindings":2,
+  "implemented":14,
+  "pendingCode":0,
+  "findings": [
+    {"id":"F13","title":"Enter ในสมุดคะแนนไปคนถัดไปและ Escape ยกเลิก","status":"PASS_LOCAL"},
+    {"id":"F14","title":"งานใหม่และสถานะเชื่อมต่อหลังรีโหลดออฟไลน์","status":"PASS_LOCAL"}
+  ],
+  "pendingAcceptance": [
+    {"id":"UAT-DEVICE","title":"Safari/PWA บน iPad จริง และพัก/ตื่นเครื่อง","status":"NOT_RUN"},
+    {"id":"UAT-CAMERA","title":"กล้องและบัตร QR จริง","status":"NOT_RUN"},
+    {"id":"UAT-INPUT","title":"สัมผัสและแป้นพิมพ์บนจอจริง","status":"NOT_RUN"},
+    {"id":"UAT-CLASS","title":"ทดลองสอนหนึ่งห้องเทียบข้อมูล","status":"NOT_RUN"},
+    {"id":"RELEASE","title":"นำขึ้นระบบจริง","status":"DEPLOYED_VERIFIED","date":"2026-10-25","evidence":"../2026-10-25-release/verification.md"}
+  ]
+}

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/report.css";
 import { Icon } from "../components/Icon";
-import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState } from "../components/ui";
+import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState, NoClasses } from "../components/ui";
 import { StudentDrawer } from "../components/StudentDrawer";
 import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED } from "../store";
 import { api } from "../lib/api";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { computeReport, followUpText, type ReportModel, type ReportPayload } from "../lib/report";
 import { fullName } from "../lib/names";
-import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs } from "../lib/dates";
+import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs, formatThaiTimeMs } from "../lib/dates";
 import { StudentModal } from "./Students";
 import type { Student } from "@shared/types";
 
@@ -28,12 +28,21 @@ export function ReportsPage() {
   const [sort, setSort] = useState<SortKey>("submit");
   const [drawer, setDrawer] = useState<string | null>(null);
   const [editStu, setEditStu] = useState<Student | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
+  const [updatedAt, setUpdatedAt] = useState<number | null>(null);
+  const loading = useRef(false);
+  const refresh = useRef(() => {});
 
-  async function load() {
-    if (!classId) return;
+  async function load(background = false) {
+    if (background && loading.current) return;
     const fresh = begin();
+    if (!classId) { setStatus("ready"); setPayload(null); setModel(null); setUpdatedAt(null); loading.current = false; setRefreshing(false); return; }
+    const keep = background && !!model;
+    loading.current = true;
+    setRefreshing(true); setRefreshFailed(false);
     // never keep showing the previous class/term/month while the new one loads (or fails)
-    setStatus("loading"); setPayload(null); setModel(null);
+    if (!keep) { setStatus("loading"); setPayload(null); setModel(null); setUpdatedAt(null); }
     try {
       const q = new URLSearchParams({ class: classId });
       if (selectedTermId.value) q.set("term", selectedTermId.value);
@@ -45,11 +54,22 @@ export function ReportsPage() {
       setPayload(p);
       setModel(computeReport(p));
       setStatus("ready");
+      setUpdatedAt(Date.now());
     } catch {
-      if (fresh()) setStatus("error");
+      if (fresh()) { if (keep) setRefreshFailed(true); else setStatus("error"); }
+    } finally {
+      if (fresh()) { loading.current = false; setRefreshing(false); }
     }
   }
   useEffect(() => { load(); }, [classId, subjectId, month, period, att, selectedTermId.value]);
+  refresh.current = () => { void load(true); };
+  useEffect(() => {
+    const visible = () => { if (document.visibilityState !== "hidden") refresh.current(); };
+    const timer = setInterval(visible, 60000);
+    document.addEventListener("visibilitychange", visible);
+    window.addEventListener("online", visible);
+    return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); window.removeEventListener("online", visible); };
+  }, []);
   // the term changed: the class we were on may not exist in that year
   useEffect(() => {
     if (!viewClasses.value.some((c) => c.id === classId)) setClassId(viewClasses.value[0]?.id ?? "");
@@ -64,12 +84,14 @@ export function ReportsPage() {
   async function exportExcel() {
     if (!model || !payload) return;
     setMsg("กำลังสร้างไฟล์ Excel…");
-    const { exportExcel } = await import("../lib/excel");
-    await exportExcel(model, payload, {
-      className: cls?.name ?? "", subjectName: subj?.name ?? "ทุกวิชา", periodLabel,
-      workTypeName: (id) => workTypeById(id)?.name ?? "-", fullName,
-    });
-    setMsg("ดาวน์โหลด Excel แล้ว"); setTimeout(() => setMsg(""), 2500);
+    try {
+      const { exportExcel } = await import("../lib/excel");
+      await exportExcel(model, payload, {
+        className: cls?.name ?? "", subjectName: subj?.name ?? "ทุกวิชา", periodLabel,
+        workTypeName: (id) => workTypeById(id)?.name ?? "-", fullName,
+      });
+      setMsg("ดาวน์โหลด Excel แล้ว"); setTimeout(() => setMsg(""), 2500);
+    } catch { setMsg("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
   }
   function copyLine() {
     if (!model) return;
@@ -113,6 +135,7 @@ export function ReportsPage() {
       <PageHeader icon="chart-bar" title="รายงานสรุป" sub={<span>{cls?.name} · {subj?.name ?? "ทุกวิชา"} · {periodLabel}</span>}
         actions={<>
           <TermPicker />
+          <button onClick={() => load(true)} disabled={!classId || refreshing}><Icon name="refresh" size={16} class={refreshing ? "spin" : undefined} /> โหลดใหม่</button>
           {msg && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">{msg}</span>}
           <button onClick={() => window.print()} disabled={status !== "ready" || !model}><Icon name="printer" size={16} /> พิมพ์</button>
           <button class="primary" onClick={exportExcel} disabled={status !== "ready" || !model}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
@@ -120,15 +143,19 @@ export function ReportsPage() {
       />
 
       <YearBanner note="รายงานและ Excel ตรงกับตอนนั้น" />
+      {classId && <div class="page-sub" role="status" aria-live="polite" style="margin-bottom:8px">
+        {refreshing ? "กำลังอัปเดตรายงาน…" : updatedAt ? `ข้อมูลล่าสุด ${formatThaiTimeMs(updatedAt)} · อัปเดตอัตโนมัติทุก 1 นาทีเมื่อเปิดหน้านี้` : ""}
+        {refreshFailed && <span style="color:var(--text-warning)"> · อัปเดตไม่สำเร็จ — ยังแสดงข้อมูลครั้งก่อน กดโหลดใหม่ได้</span>}
+      </div>}
       <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
       <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
-        <select value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
+        <select aria-label="วิชาของรายงาน" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
           <option value="">ทุกวิชา</option>
           {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
         </select>
         <Segmented value={period} onChange={setPeriod} options={[{ value: "term", label: "ทั้งเทอม" }, { value: "month", label: "รายเดือน" }]} />
         {period === "month" && (
-          <select value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
+          <select aria-label="เดือนของรายงาน" value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
             {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
           </select>
         )}
@@ -146,8 +173,8 @@ export function ReportsPage() {
         <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {payload.range.to ? formatThaiDate(payload.range.to) : "ปัจจุบัน"} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
       )}
 
-      {status === "error" ? (
-        <LoadError onRetry={load} />
+      {!classId ? <NoClasses /> : status === "error" ? (
+        <LoadError onRetry={() => load()} />
       ) : !model ? (
         <div class="card"><EmptyState icon="loader-2" text="กำลังโหลด…" /></div>
       ) : model.students.length === 0 ? (

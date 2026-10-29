@@ -10,27 +10,45 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+export interface RequestOptions { timeoutMs?: number; signal?: AbortSignal }
+
+async function request<T>(method: string, path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   // Writes say which data epoch they were made against; after a restore elsewhere the server refuses them.
   const { dataEpoch, serverReachable } = await import("./session");
   if (method !== "GET" && dataEpoch.value != null) headers["X-Data-Epoch"] = String(dataEpoch.value);
+  const controller = new AbortController();
+  let timedOut = false;
+  const abort = () => controller.abort();
+  options.signal?.addEventListener("abort", abort, { once: true });
+  if (options.signal?.aborted) abort();
+  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? (method === "GET" ? 8000 : 15000));
   const init: RequestInit = {
     method,
     headers,
     credentials: "same-origin",
+    cache: "no-store",
+    signal: controller.signal,
   };
   if (body !== undefined) init.body = JSON.stringify(body);
   let res: Response;
+  let payload: any;
   try {
     res = await fetch(path, init);
+    const isJson = (res.headers.get("Content-Type") || "").includes("application/json");
+    payload = isJson ? await res.json() : {};
   } catch {
+    if (options.signal?.aborted && !timedOut) throw new ApiError(0, "aborted", "ยกเลิกคำขอแล้ว");
     serverReachable.value = false;
+    if (timedOut) throw new ApiError(0, "timeout", method === "GET"
+      ? "เครือข่ายตอบช้าเกินไป — ลองโหลดใหม่"
+      : "เครือข่ายตอบช้าเกินไป — ยังไม่ทราบผล ตรวจข้อมูลล่าสุดก่อนทำซ้ำ");
     throw new ApiError(0, "network", "ต่ออินเทอร์เน็ตไม่ได้");
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", abort);
   }
   serverReachable.value = true; // it answered (whatever it said)
-  const isJson = (res.headers.get("Content-Type") || "").includes("application/json");
-  const payload: any = isJson ? await res.json().catch(() => ({})) : {};
   if (!res.ok) {
     // a 401 anywhere means the session expired — prompt re-login globally
     if (res.status === 401 && path !== "/api/auth/me" && path !== "/api/auth/login") {
@@ -61,7 +79,7 @@ export function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>("GET", path),
-  post: <T>(path: string, body?: unknown) => request<T>("POST", path, body),
-  put: <T>(path: string, body?: unknown) => request<T>("PUT", path, body),
+  get: <T>(path: string, options?: RequestOptions) => request<T>("GET", path, undefined, options),
+  post: <T>(path: string, body?: unknown, options?: RequestOptions) => request<T>("POST", path, body, options),
+  put: <T>(path: string, body?: unknown, options?: RequestOptions) => request<T>("PUT", path, body, options),
 };

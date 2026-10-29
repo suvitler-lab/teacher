@@ -1,0 +1,72 @@
+- navigation "เมนูหลัก":
+  - generic: 
+  - link "หน้าหลัก":
+    - /url: "#/home"
+    - generic: 
+    - text: หน้าหลัก
+  - link "สแกน":
+    - /url: "#/scan"
+    - generic: 
+    - text: สแกน
+  - link "คะแนน":
+    - /url: "#/gradebook"
+    - generic: 
+    - text: คะแนน
+  - link "เช็คชื่อ":
+    - /url: "#/attendance"
+    - generic: 
+    - text: เช็คชื่อ
+  - link "สุ่มชื่อ":
+    - /url: "#/random"
+    - generic: 
+    - text: สุ่มชื่อ
+  - link "รายงาน":
+    - /url: "#/reports"
+    - generic: 
+    - text: รายงาน
+  - link "นักเรียน":
+    - /url: "#/students"
+    - generic: 
+    - text: นักเรียน
+  - link "ตั้งค่า":
+    - /url: "#/settings"
+    - generic: 
+    - text: ตั้งค่า
+  - generic: 
+  - text: ออนไลน์
+  - button "ออกระบบ":
+    - generic: 
+    - text: ออกระบบ
+- main:
+  - button "ป.6/1":
+    - generic: 
+    - text: ป.6/1
+  - generic: วิทยาศาสตร์
+  - generic: แบบฝึกหัด
+  - generic: เต็ม 10 · ให้คะแนนเต็ม
+  - button "จบรอบ":
+    - generic: 
+    - text: จบรอบ
+  - generic: ทดสอบ iPad ออฟไลน์
+  - generic: 
+  - text: เครื่องยิงพร้อม
+  - generic: 
+  - text: ออนไลน์
+  - generic: 
+  - textbox "รหัสนักเรียน":
+    - /placeholder: ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter
+  - button "สแกนด้วยกล้อง":
+    - generic: 
+  - generic: สแกนล่าสุด
+  - generic: รอบนี้ 0 คน
+  - generic: ยังไม่มีการสแกน
+  - generic: 1/1
+  - generic: ส่งแล้ว
+  - generic: ส่งแล้ว 1
+  - generic: ยังไม่ส่ง 0
+  - generic: ผังเลขที่ ป.6/1
+  - generic: แตะช่องว่าง = รับแทน
+  - button "1 ใหม่":
+    - generic: "1"
+    - generic: ใหม่
+- text:     
