@@ -164,6 +164,20 @@ function guardedAuditStmt(env: Env, audits: AuditRow[], rows: GuardedRow[], epoc
   });
 }
 
+/**
+ * Appended to a batch AFTER lateFixForCells: the audit lines `opIds` (whose cells this batch wrote) are made to say
+ * the `late` that is really stored — the value lateFix decided from the due date as it is inside the transaction,
+ * not the value computed before the write. Found by op_id (UNIQUE index); only lines that differ are written.
+ */
+function auditLateSyncStmt(env: Env, opIds: string[]) {
+  const stored = `(SELECT s.late FROM submissions s WHERE s.assignment_id = audit_logs.assignment_id AND s.student_id = audit_logs.student_id)`;
+  return env.DB.prepare(
+    `UPDATE audit_logs SET after_json = json_set(after_json, '$.late', json(CASE WHEN ${stored} = 1 THEN 'true' ELSE 'false' END))
+     WHERE op_id IN (SELECT value FROM json_each(?1)) AND after_json IS NOT NULL
+       AND json_extract(after_json, '$.late') IS NOT (CASE WHEN ${stored} = 1 THEN 1 ELSE 0 END)`,
+  ).bind(JSON.stringify(opIds));
+}
+
 // Guard the exact cells read to calculate timestamps and audit.before. Checking only updated_at
 // misses two saves in the same millisecond; event_at alone misses changes to the other fields.
 const CELL_FIELDS = ["status", "score", "late", "submitted_at", "method", "device_id", "scan_session_id", "updated_at", "event_at"] as const;
@@ -554,7 +568,8 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
     const snapshots = cellSnapshots(upserts, before);
     try {
       await batchAtEpoch(c.env, epoch, [cellsGuard(c.env, snapshots), guardedAuditStmt(c.env, audits, upserts, epoch, now), submissionUpsertStmt(c.env, upserts, epoch),
-        lateFixForCells(c.env, upserts)]); // late from the due date as it is now, not as read above
+        lateFixForCells(c.env, upserts), // late from the due date as it is now, not as read above
+        auditLateSyncStmt(c.env, upserts.map((u) => u.op_id))]); // ...and the history says that late (AC-04)
     } catch (e) {
       if (e instanceof ApiError) throw e;
       if (await cellsChanged(c.env, snapshots)) throw conflict("modified_since", "มีการบันทึกคะแนนระหว่างทำรายการ — โหลดข้อมูลใหม่แล้วลองอีกครั้ง");
@@ -610,12 +625,14 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
   const curMap = new Map<string, any>();
   for (const r of (curRes.results ?? []) as any[]) curMap.set(r.student_id, r);
 
-  // Compare the full saved state, including same-millisecond changes, before restoring anything.
+  // Compare the full saved state, including same-millisecond changes, before restoring anything — except `late`:
+  // nobody sets it, it is re-decided from the due date whenever that moves (BR-04), and status / submitted_at, which
+  // decide it with the due date, are compared. A due-date edit since the bulk action is not "modified since" (R-10).
   const modified = () => c.json({ error: "modified_since", message: "มีการแก้ไขหลังการล้าง" }, 409);
   for (const r of rows) {
     const after = r.after_json ? JSON.parse(r.after_json) : null;
     const cur = curMap.get(r.student_id);
-    if (!cur || !after || Object.entries(mapSubmission(cur)).some(([key, value]) => value !== after[key])) return modified();
+    if (!cur || !after || Object.entries(mapSubmission(cur)).some(([key, value]) => key !== "late" && value !== after[key])) return modified();
   }
 
   const upserts: any[] = [];
@@ -668,6 +685,7 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
       auditInsertStmt(c.env, audits, now),
       // the saved late belongs to the due date of the time of the bulk action: re-decide it from today's due date
       lateFixForCells(c.env, upserts),
+      auditLateSyncStmt(c.env, audits.map((a) => a.op_id!)), // ...and the restore lines say that late (AC-04)
     ]);
   } catch (e) {
     if (e instanceof ApiError) throw e; // epoch_changed

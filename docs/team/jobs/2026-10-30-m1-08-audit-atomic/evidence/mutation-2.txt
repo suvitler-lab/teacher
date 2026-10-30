@@ -1,0 +1,40 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/audit-atomic.test.ts (29 tests | 1 failed) 2870ms
+     × undo of all-submitted succeeds when only late changed since (R-10) 141ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo of all-submitted succeeds when only late changed since (R-10)
+AssertionError: expected 409 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 409
+
+ ❯ test/api/audit-atomic.test.ts:263:24
+    261|     expect((await cell("st1")).late).toBe(1);
+    262|     const res = await undo(batchId);
+    263|     expect(res.status).toBe(200);
+       |                        ^
+    264|     expect(await res.json()).toMatchObject({ ok: true, changed: 2 });
+    265|     expect((await cell("st1"))).toMatchObject({ status: "void", late: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 passed (29)
+   Start at  17:19:34
+   Duration  4.30s (transform 451ms, setup 910ms, import 15ms, tests 2.87s, environment 0ms)
+

@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, notFound, ApiError } from "../lib/http";
-import { writeAudit, auditInsertStmt } from "../lib/audit";
+import { auditInsertStmt } from "../lib/audit";
 import { abortIf, batchAtEpoch, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 import { mapAssignment } from "../lib/rows";
@@ -163,14 +163,16 @@ assignmentRoutes.post("/api/assignments", async (c) => {
 assignmentRoutes.post("/api/assignments/:id/delete", async (c) => {
   const aid = c.req.param("id");
   const now = Date.now();
-  const [r] = await batchAtEpoch(c.env, await requestEpoch(c), [
+  // the history line first, in the same transaction, and only if this delete really happens (the work is
+  // there and not deleted yet — the same condition as the update below)
+  const [, r] = await batchAtEpoch(c.env, await requestEpoch(c), [
+    auditInsertStmt(c.env, [
+      { entity: "assignment", entity_id: aid, assignment_id: aid, action: "void", device_id: c.get("deviceId"), method: "manual" },
+    ], now, { sql: "EXISTS (SELECT 1 FROM assignments WHERE id = ?2 AND deleted_at IS NULL)", binds: [aid] }),
     c.env.DB.prepare("UPDATE assignments SET deleted_at = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL")
       .bind(now, now, aid),
   ]);
   if (r.meta.changes === 0) throw notFound("assignment");
-  await writeAudit(c.env, [
-    { entity: "assignment", entity_id: aid, assignment_id: aid, action: "void", device_id: c.get("deviceId"), method: "manual" },
-  ]);
   return c.json({ ok: true });
 });
 

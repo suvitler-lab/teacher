@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { readJson, notFound, conflict, ApiError } from "../lib/http";
-import { writeAudit, auditInsertStmt, type AuditRow } from "../lib/audit";
+import { auditInsertStmt, type AuditRow } from "../lib/audit";
 import { id, qrToken } from "@shared/ids";
 import { mapStudent } from "../lib/rows";
 import { bkkToday } from "../lib/time";
@@ -35,6 +35,12 @@ studentRoutes.get("/api/students", async (c) => {
   ).bind(...binds).all();
   return c.json({ students: (res.results ?? []).map(mapStudent) });
 });
+
+/** A student as the history keeps it: never the card token (it opens the child's record) nor the PIN. */
+function studentForAudit(r: any) {
+  const { qr_token: _token, ...rest } = mapStudent(r);
+  return rest;
+}
 
 const studentSchema = z.object({
   id: z.string().optional(),
@@ -90,6 +96,11 @@ studentRoutes.post("/api/students", async (c) => {
   const leftAt = gone(nextStatus)
     ? (b.left_at ?? (gone((existing as any)?.status ?? null) ? (existing as any)?.left_at : null) ?? bkkToday())
     : null;
+  const after = {
+    id: sid, code: b.code, prefix: b.prefix ?? null, first_name: b.first_name, last_name: b.last_name,
+    nickname: b.nickname ?? null, class_id: b.class_id ?? null, number: b.number ?? null, status: nextStatus,
+    left_at: leftAt, updated_at: now,
+  };
   try {
     await batchAtEpoch(c.env, await requestEpoch(c), [
       studentHistoryGuard(c.env, moves),
@@ -104,6 +115,12 @@ studentRoutes.post("/api/students", async (c) => {
         sid, b.code, token, b.prefix ?? null, b.first_name, b.last_name, b.nickname ?? null,
         b.class_id ?? null, b.number ?? null, nextStatus, leftAt, now,
       ),
+      // the history line in the same transaction: both land, or neither
+      auditInsertStmt(c.env, [{
+        entity: "student", entity_id: sid, student_id: sid,
+        action: existing ? "update" : "create", device_id: c.get("deviceId"),
+        before: existing ? studentForAudit(existing) : null, after, method: "manual",
+      }], now),
     ]);
   } catch (e) {
     if (e instanceof ApiError) throw e;
@@ -115,13 +132,6 @@ studentRoutes.post("/api/students", async (c) => {
     if (taken) throw taken;
     throw e;
   }
-  await writeAudit(c.env, [
-    {
-      entity: "student", entity_id: sid, student_id: sid,
-      action: existing ? "update" : "create", device_id: c.get("deviceId"),
-      before: existing ? mapStudent(existing) : null, method: "manual",
-    },
-  ]);
   const row = await c.env.DB.prepare("SELECT * FROM students WHERE id = ?").bind(sid).first();
   return c.json({ ok: true, student: mapStudent(row) });
 });
@@ -350,8 +360,8 @@ async function rotateOne(env: Env, studentId: string, deviceId: string | null, n
     auditInsertStmt(env, [
       {
         entity: "qr", entity_id: studentId, student_id: studentId, action: "rotate",
-        device_id: deviceId, before: { qr_token: s.qr_token }, after: { qr_token: newToken },
-        method: "manual",
+        // only THAT a new card was issued — never the card tokens (the old one is in revoked_qr_tokens)
+        device_id: deviceId, after: { reissued: true }, method: "manual",
       },
     ], now),
   ]);
@@ -387,7 +397,13 @@ studentRoutes.post("/api/students/:id/pin", async (c) => {
   const sid = c.req.param("id");
   const { pin } = pinSchema.parse(await readJson(c));
   const now = Date.now();
-  const [r] = await batchAtEpoch(c.env, await requestEpoch(c), [
+  // the history says THAT the PIN was set or cleared, by which device and when — never the PIN itself.
+  // Same transaction as the change, and only for a student that exists (the update then changes one row).
+  const [, r] = await batchAtEpoch(c.env, await requestEpoch(c), [
+    auditInsertStmt(c.env, [{
+      entity: "student", entity_id: sid, student_id: sid, action: pin == null ? "pin_clear" : "pin_set",
+      device_id: c.get("deviceId"), method: "manual",
+    }], now, { sql: "EXISTS (SELECT 1 FROM students WHERE id = ?2)", binds: [sid] }),
     c.env.DB.prepare("UPDATE students SET pin = ?, updated_at = ? WHERE id = ?").bind(pin, now, sid),
   ]);
   if (r.meta.changes === 0) throw notFound("student");

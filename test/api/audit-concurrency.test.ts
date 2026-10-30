@@ -14,21 +14,27 @@ function gateSetupInsert() {
   let reached!: () => void;
   const ready = new Promise<void>((resolve) => { reached = resolve; });
   const wait = new Promise<void>((resolve) => { release = resolve; });
+  const teacherInserts = new WeakSet<object>();
   function wrap(stmt: D1PreparedStatement): D1PreparedStatement {
     return new Proxy(stmt, {
       get(target, prop) {
-        if (prop === "bind") return (...values: unknown[]) => wrap(target.bind(...values));
+        if (prop === "bind") return (...values: unknown[]) => { const b = target.bind(...values); teacherInserts.add(b); return b; };
         if (prop === "run") return async () => { reached(); await wait; return target.run(); };
         const value = Reflect.get(target, prop);
         return typeof value === "function" ? value.bind(target) : value;
       },
     });
   }
+  // the insert may run on its own (.run) or inside a batch with its audit line (M1-08): hold either
   const DB = new Proxy(env.DB, {
     get(target, prop) {
       if (prop === "prepare") return (sql: string) => {
         const stmt = target.prepare(sql);
         return /INSERT INTO teacher/i.test(sql) ? wrap(stmt) : stmt;
+      };
+      if (prop === "batch") return async (stmts: D1PreparedStatement[]) => {
+        if (stmts.some((s) => teacherInserts.has(s))) { reached(); await wait; }
+        return target.batch(stmts);
       };
       const value = Reflect.get(target, prop);
       return typeof value === "function" ? value.bind(target) : value;
@@ -133,7 +139,8 @@ describe("catalog and setup concurrency audit", () => {
     expect(await loser.json()).toMatchObject({ error: "term_exists" });
     expect(await count("terms", "year = 2569 AND term = 2")).toBe(1);
     expect(await env.DB.prepare("SELECT id FROM terms WHERE is_current = 1").first()).toEqual({ id: "t1" });
-    expect(await count("audit_logs", "entity = 'term'")).toBe(0);
+    // the winner's create has its own history line since M1-08; the refused start has none
+    expect(await count("audit_logs", "entity = 'term' AND action LIKE 'start%'")).toBe(0);
   });
 
   it("still edits a term without duplicating itself and starts a distinct next term", async () => {
@@ -143,6 +150,7 @@ describe("catalog and setup concurrency audit", () => {
     expect((await call("/api/terms/start", json(term({ expectedCurrentTermId: "t1", start_date: "2026-10-01" })), cookie)).status).toBe(200);
     expect(await count("terms")).toBe(2);
     expect(await count("terms", "is_current = 1")).toBe(1);
-    expect(await count("audit_logs", "entity = 'term'")).toBe(1);
+    expect(await count("audit_logs", "entity = 'term' AND action LIKE 'start%'")).toBe(1);
+    expect(await count("audit_logs", "entity = 'term' AND action = 'update'")).toBe(1); // the rename (M1-08)
   });
 });

@@ -43,8 +43,8 @@
 | `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
 | `2026-10-30-m1-04-late-flag` | S | E-01 | M-01 | m1-03 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
 | `2026-10-30-m1-05-metrics-single-source` | S | E-01 | M-01 | m1-04 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำ M1-06 ต่อ") | ปิดแล้ว |
-| `2026-10-30-m1-06-server-intent` (รวม M1-07 + R-06 ของ M1-02 + D24) | S | E-01 | M-01 | m1-05 | (หลัก) | กำลังทำ |
-| `m1-08-audit-atomic` | M | E-01 | M-01 | m1-06 | (หลัก) | รอ |
+| `2026-10-30-m1-06-server-intent` (รวม M1-07 + R-06 ของ M1-02 + D24) | S | E-01 | M-01 | m1-05 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำ M1-08 ต่อ") | ปิดแล้ว |
+| `2026-10-30-m1-08-audit-atomic` | S | E-01 | M-01 | m1-06 | รอผู้ใช้สั่ง merge | ปิดแล้ว |
 | `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
 | `2026-10-30-projector-mode-design` (โหมดฉายจอ D26: ux + mockup) | M | E-05 | M-02 | — (ขนานกับ M1-06, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D27) |
 | `pj-1-projector-shell-random` → `pj-2-projector-scan-attendance` → `pj-3-projector-reports` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
@@ -118,3 +118,4 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 - 2026-10-30 M1-02 review: R-06 (judge ใช้ `w.existing` แทน `effective` ในกรณี [void, grade] คำขอเดียว) + intent จาก client → **เพิ่มเข้า scope M1-06**
 - 2026-10-30 M1-01 review: R-01 จาก Code Reviewer — ฝั่งบันทึก `submissions.ts:61` zod `multipleOf(0.5)` มีค่าเผื่อทศนิยมลอย (7.500000000000001 ผ่าน) แม้ UI ยังสร้างค่านั้นไม่ได้ → **เพิ่มเข้า scope M1-05**: ใช้ `isHalfStep` จาก `shared/grade.ts` เป็นนิยามเดียวทั้งฝั่งบันทึกและ restore
 - 2026-10-30 Gate 0 ผ่าน: commit `2c3bbde` + tag `deploy-2026-10-25` · baseline 56 ไฟล์/570 tests PASS · precheck production: คะแนนครึ่ง 0, เทอมซ้ำ 0, เลขที่ซ้ำ 0 (ไม่ต้อง hotfix) · ปิด job intake · เปิด `2026-10-30-m1-01-restore-half-score`
+- 2026-10-30 M1-08 ปิดแล้ว (รอผู้ใช้สั่ง merge): audit เข้า transaction เดียวกับข้อมูลทุกเส้นทาง · backlog: S-01 PIN เก็บข้อความธรรมดา (ต้องแก้ก่อนมีฟีเจอร์ใช้ PIN/หน้าผู้ปกครอง), S-02 เตือนตอนดาวน์โหลด backup, S-03 ล้าง qr_token ในประวัติเก่า, R-01/S-04 ป้ายไทยใน AuditHistory (รวมกับงานขนาดตัวอักษร), R-02..R-07

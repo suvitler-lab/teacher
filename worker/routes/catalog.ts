@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
@@ -21,6 +21,17 @@ catalogRoutes.use("/api/subjects/*", requireAuth);
 catalogRoutes.use("/api/work-types", requireAuth);
 catalogRoutes.use("/api/work-types/*", requireAuth);
 
+/**
+ * The history line of a catalog write (class / subject / work type / term): the row before (null = created) and
+ * after. Goes in the write's own batch, so the two land together or not at all.
+ */
+function catalogAudit(c: Context<{ Bindings: Env; Variables: Vars }>, entity: string, entityId: string, before: unknown, after: unknown, now: number) {
+  return auditInsertStmt(c.env, [{
+    entity, entity_id: entityId, action: before ? "update" : "create", device_id: c.get("deviceId") ?? null,
+    before: before ?? null, after, method: "manual",
+  }], now);
+}
+
 // ---- settings ------------------------------------------------------------
 const ALLOWED_SETTINGS = new Set([
   "school_name",
@@ -40,11 +51,11 @@ const ALLOWED_SETTINGS = new Set([
 catalogRoutes.put("/api/settings", async (c) => {
   const body = (await readJson(c)) as Record<string, unknown>;
   // all the settings and the audit line in ONE batch: one round trip to the database, and all-or-nothing
-  const stmts = Object.entries(body)
-    .filter(([k]) => ALLOWED_SETTINGS.has(k))
-    .map(([k, v]) => setSettingStmt(c.env, k, boolKey(k) ? Boolean(v) : String(v ?? "")));
+  const allowed = Object.entries(body).filter(([k]) => ALLOWED_SETTINGS.has(k));
+  const stmts = allowed.map(([k, v]) => setSettingStmt(c.env, k, boolKey(k) ? Boolean(v) : String(v ?? "")));
+  // the history keeps only what was saved: keys outside the allowed list are neither written nor recorded
   stmts.push(auditInsertStmt(c.env, [
-    { entity: "settings", action: "update", device_id: c.get("deviceId"), after: body },
+    { entity: "settings", action: "update", device_id: c.get("deviceId"), after: Object.fromEntries(allowed) },
   ]));
   await batchAtEpoch(c.env, await requestEpoch(c), stmts);
   return c.json({ ok: true });
@@ -69,7 +80,7 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (b.start_date && b.end_date && b.end_date < b.start_date) throw bad("bad_range", "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม");
   const now = Date.now();
   const tid = b.id ?? id("term");
-  const existing = await c.env.DB.prepare("SELECT year FROM terms WHERE id = ?").bind(tid).first<{ year: number }>();
+  const existing = await c.env.DB.prepare("SELECT * FROM terms WHERE id = ?").bind(tid).first<{ year: number }>();
   // classes and their children are filed under the term's YEAR — changing it would strand them
   if (existing && existing.year !== b.year) {
     throw conflict("term_year_locked", "เปลี่ยนปีการศึกษาของภาคเรียนที่มีอยู่ไม่ได้ — สร้างภาคเรียนใหม่ด้วย “เริ่มภาคเรียนใหม่” แทน");
@@ -98,6 +109,10 @@ catalogRoutes.post("/api/terms", async (c) => {
   if (b.is_current) {
     stmts.push(c.env.DB.prepare("UPDATE terms SET is_current = 0 WHERE id != ?").bind(tid));
   }
+  stmts.push(catalogAudit(c, "term", tid, existing, {
+    id: tid, year: b.year, term: b.term, name: b.name, is_current: b.is_current ? 1 : 0,
+    start_date: b.start_date ?? null, end_date: b.end_date ?? null, updated_at: now,
+  }, now));
   try {
     await batchAtEpoch(c.env, await requestEpoch(c), stmts);
   } catch (e) {
@@ -249,7 +264,7 @@ catalogRoutes.post("/api/classes", async (c) => {
   const now = Date.now();
   const cid = b.id ?? id("cls");
   // a class belongs to one academic year: a new class is filed under the current year, an existing one keeps its own
-  const existing = await c.env.DB.prepare("SELECT year FROM classes WHERE id = ?").bind(cid).first<{ year: number | null }>();
+  const existing = await c.env.DB.prepare("SELECT * FROM classes WHERE id = ?").bind(cid).first<{ year: number | null }>();
   const cur = await currentYear(c.env);
   if (existing && existing.year != null && cur != null && existing.year !== cur && !b.archived) {
     throw conflict("class_of_past_year", "ห้องนี้เป็นของปีการศึกษาที่ผ่านมา นำกลับมาใช้ไม่ได้ — เพิ่มห้องใหม่ในปีนี้แทน");
@@ -258,7 +273,11 @@ catalogRoutes.post("/api/classes", async (c) => {
     `INSERT INTO classes (id, name, grade, sort, archived, year, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name=excluded.name, grade=excluded.grade, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
   )
-    .bind(cid, b.name, b.grade ?? null, b.sort ?? 0, b.archived ? 1 : 0, existing ? existing.year : cur, now)]);
+    .bind(cid, b.name, b.grade ?? null, b.sort ?? 0, b.archived ? 1 : 0, existing ? existing.year : cur, now),
+    catalogAudit(c, "class", cid, existing, {
+      id: cid, name: b.name, grade: b.grade ?? null, sort: b.sort ?? 0, archived: b.archived ? 1 : 0,
+      year: existing ? existing.year : cur, updated_at: now,
+    }, now)]);
   return c.json({ ok: true, id: cid });
 });
 
@@ -276,11 +295,15 @@ catalogRoutes.post("/api/subjects", async (c) => {
   const b = subjectSchema.parse(await readJson(c));
   const now = Date.now();
   const sid = b.id ?? id("sub");
+  const existing = await c.env.DB.prepare("SELECT * FROM subjects WHERE id = ?").bind(sid).first();
   await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO subjects (id, code, name, color, sort, archived, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, name=excluded.name, color=excluded.color, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
   )
-    .bind(sid, b.code ?? null, b.name, b.color ?? "blue", b.sort ?? 0, b.archived ? 1 : 0, now)]);
+    .bind(sid, b.code ?? null, b.name, b.color ?? "blue", b.sort ?? 0, b.archived ? 1 : 0, now),
+    catalogAudit(c, "subject", sid, existing, {
+      id: sid, code: b.code ?? null, name: b.name, color: b.color ?? "blue", sort: b.sort ?? 0, archived: b.archived ? 1 : 0, updated_at: now,
+    }, now)]);
   return c.json({ ok: true, id: sid });
 });
 
@@ -300,21 +323,17 @@ catalogRoutes.post("/api/work-types", async (c) => {
   const b = workTypeSchema.parse(await readJson(c));
   const now = Date.now();
   const wid = b.id ?? id("wt");
+  const existing = await c.env.DB.prepare("SELECT * FROM work_types WHERE id = ?").bind(wid).first();
+  const after = {
+    id: wid, name: b.name, icon: b.icon ?? "file-text", color: b.color ?? "violet", is_exam: b.is_exam ? 1 : 0,
+    default_full: b.default_full ?? 10, sort: b.sort ?? 0, archived: b.archived ? 1 : 0, updated_at: now,
+  };
   await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO work_types (id, name, icon, color, is_exam, default_full, sort, archived, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name=excluded.name, icon=excluded.icon, color=excluded.color, is_exam=excluded.is_exam, default_full=excluded.default_full, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
   )
-    .bind(
-      wid,
-      b.name,
-      b.icon ?? "file-text",
-      b.color ?? "violet",
-      b.is_exam ? 1 : 0,
-      b.default_full ?? 10,
-      b.sort ?? 0,
-      b.archived ? 1 : 0,
-      now,
-    )]);
+    .bind(after.id, after.name, after.icon, after.color, after.is_exam, after.default_full, after.sort, after.archived, now),
+    catalogAudit(c, "work_type", wid, existing, after, now)]);
   return c.json({ ok: true, id: wid });
 });

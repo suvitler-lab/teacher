@@ -15,21 +15,23 @@ import {
 } from "../lib/auth";
 import { teacherExists } from "../lib/db";
 import { pepperOf } from "../lib/config";
-import { writeAudit } from "../lib/audit";
+import { auditInsertStmt } from "../lib/audit";
 import { id } from "@shared/ids";
 
 export const authRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 
 const pepper = pepperOf;
 
-async function upsertDevice(env: Env, deviceId: string, name: string, ua: string, now: number) {
-  await env.DB.prepare(
+function upsertDeviceStmt(env: Env, deviceId: string, name: string, ua: string, now: number) {
+  return env.DB.prepare(
     `INSERT INTO devices (id, name, user_agent, first_seen, last_seen)
      VALUES (?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name = excluded.name, user_agent = excluded.user_agent, last_seen = excluded.last_seen`,
   )
-    .bind(deviceId, name, ua, now, now)
-    .run();
+    .bind(deviceId, name, ua, now, now);
+}
+async function upsertDevice(env: Env, deviceId: string, name: string, ua: string, now: number) {
+  await upsertDeviceStmt(env, deviceId, name, ua, now).run();
 }
 
 const email = z.string().trim().toLowerCase().max(120).email("อีเมลไม่ถูกต้อง");
@@ -70,18 +72,20 @@ authRoutes.post("/api/setup", async (c) => {
   const { hash, salt, iterations } = await hashPassword(body.password, pepper(c.env));
   // The initial check is only a fast refusal. Claim the singleton account atomically so two
   // valid setup requests cannot both create a teacher while password hashing is in flight.
-  const created = await c.env.DB.prepare(
-    `INSERT INTO teacher (id, email, password_hash, salt, iterations, created_at, updated_at)
-     SELECT ?, ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM teacher)`,
-  )
-    .bind(id("tch"), body.email, hash, salt, iterations, now, now)
-    .run();
-  if (created.meta.changes !== 1) throw new ApiError(403, "already_setup", "ตั้งค่าระบบไปแล้ว");
+  // The account, its first device and the history line are one transaction; the history line (no e-mail, no hash)
+  // is written only if THIS request created the account.
+  const tid = id("tch");
   const ua = c.req.header("User-Agent") ?? "";
-  await upsertDevice(c.env, body.deviceId, body.deviceName || deviceNameFrom(ua), ua, now);
-  await writeAudit(c.env, [
-    { entity: "auth", action: "create", device_id: body.deviceId, method: "manual" },
+  const [created] = await c.env.DB.batch([
+    c.env.DB.prepare(
+      `INSERT INTO teacher (id, email, password_hash, salt, iterations, created_at, updated_at)
+       SELECT ?, ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM teacher)`,
+    ).bind(tid, body.email, hash, salt, iterations, now, now),
+    auditInsertStmt(c.env, [{ entity: "auth", action: "create", device_id: body.deviceId, method: "manual" }], now,
+      { sql: "EXISTS (SELECT 1 FROM teacher WHERE id = ?2)", binds: [tid] }),
   ]);
+  if (created.meta.changes !== 1) throw new ApiError(403, "already_setup", "ตั้งค่าระบบไปแล้ว");
+  await upsertDevice(c.env, body.deviceId, body.deviceName || deviceNameFrom(ua), ua, now);
   const token = await createSession(c.env, body.deviceId, now);
   setSessionCookie(c, token);
   return c.json({ ok: true });
@@ -160,9 +164,12 @@ authRoutes.get("/api/devices", requireAuth, async (c) => {
 // request gets a 401. Signing out the current device is allowed too.
 authRoutes.post("/api/devices/:id/signout", requireAuth, async (c) => {
   const target = c.req.param("id");
-  await c.env.DB.prepare("DELETE FROM sessions WHERE device_id = ?").bind(target).run();
-  await writeAudit(c.env, [
-    { entity: "auth", action: "update", device_id: c.get("deviceId"), entity_id: target, after: { signed_out: target }, method: "manual" },
+  // one transaction: the sign-out and its history line (which device did it, which device — never a session token)
+  await c.env.DB.batch([
+    c.env.DB.prepare("DELETE FROM sessions WHERE device_id = ?").bind(target),
+    auditInsertStmt(c.env, [
+      { entity: "auth", action: "device_signout", device_id: c.get("deviceId"), entity_id: target, after: { signed_out: target }, method: "manual" },
+    ]),
   ]);
   return c.json({ ok: true });
 });
@@ -179,13 +186,15 @@ authRoutes.post("/api/auth/change-password", requireAuth, async (c) => {
     throw new ApiError(403, "wrong_password", "รหัสผ่านเดิมไม่ถูกต้อง");
   const now = Date.now();
   const h = await hashPassword(body.next, pepper(c.env));
-  await c.env.DB.prepare(
-    "UPDATE teacher SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE id = ?",
-  )
-    .bind(h.hash, h.salt, h.iterations, now, row.id)
-    .run();
-  await writeAudit(c.env, [
-    { entity: "auth", action: "update", device_id: c.get("deviceId"), method: "manual" },
+  // one transaction: the new password and its history line — which records THAT it changed, by which device and
+  // when, never the password, its hash or its salt
+  await c.env.DB.batch([
+    c.env.DB.prepare(
+      "UPDATE teacher SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE id = ?",
+    ).bind(h.hash, h.salt, h.iterations, now, row.id),
+    auditInsertStmt(c.env, [
+      { entity: "auth", action: "password_change", device_id: c.get("deviceId"), method: "manual" },
+    ], now),
   ]);
   return c.json({ ok: true });
 });

@@ -29,7 +29,8 @@ async function sheet(p: ReportPayload, name: string) {
   return rows;
 }
 
-describe("Excel attendance sheet matches the Reports page", () => {
+// loads exceljs — slow when the whole suite runs at once (local timeout, not global)
+describe("Excel attendance sheet matches the Reports page", { timeout: 30_000 }, () => {
   it("per-subject: a day with two periods keeps BOTH columns, totals equal the report", async () => {
     // Sep 10: period 1 present, period 2 absent · Sep 11: period 1 late
     const p = payload("subject",

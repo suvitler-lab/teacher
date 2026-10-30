@@ -1,0 +1,95 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > creating a student: audit fails → no student; success → both, without the card token
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11) {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at C:/Users/User/Desktop/teacher/worker/routes/students.ts:129:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+}
+
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > editing a student: audit fails → the edit is not kept; success → before and after
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11) {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at C:/Users/User/Desktop/teacher/worker/routes/students.ts:129:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+}
+
+ ❯ |workers| test/api/audit-atomic.test.ts (29 tests | 2 failed) 2837ms
+     × creating a student: audit fails → no student; success → both, without the card token 103ms
+     × editing a student: audit fails → the edit is not kept; success → before and after 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > creating a student: audit fails → no student; success → both, without the card token
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/api/audit-atomic.test.ts:44:54
+     42|     await auditDown();
+     43|     expect((await post("/api/students", newStudent)).status).toBe(500);
+     44|     expect(await count("students", "id = 'st_new'")).toBe(0);
+       |                                                      ^
+     45|     await env.DB.prepare("DROP TRIGGER t_audit_down").run();
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > editing a student: audit fails → the edit is not kept; success → before and after
+AssertionError: expected 'แก้แล้ว' to be 'ก' // Object.is equality
+
+Expected: "ก"
+Received: "แก้แล้ว"
+
+ ❯ test/api/audit-atomic.test.ts:59:112
+     57|     await auditDown();
+     58|     expect((await post("/api/students", edit)).status).toBe(500);
+     59|     expect((await env.DB.prepare("SELECT first_name FROM students WHER…
+       |                                                                                                                ^
+     60|     await env.DB.prepare("DROP TRIGGER t_audit_down").run();
+     61|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 27 passed (29)
+   Start at  17:19:27
+   Duration  4.31s (transform 474ms, setup 962ms, import 15ms, tests 2.84s, environment 0ms)
+

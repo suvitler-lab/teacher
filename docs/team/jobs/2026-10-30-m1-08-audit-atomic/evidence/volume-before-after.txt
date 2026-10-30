@@ -1,0 +1,41 @@
+# M1-08 volume before/after — seedVolume (200 students, 40 assignments, 8000 scores), metered() as volume.test.ts
+# before = worker/ from git HEAD 11a4d2b (git archive, temp copy) · after = working tree · columns: version, request, status, statements, rows read, rows written
+# note: row 'all-submitted (a7, after clear)' is actually action=clear on class c2 of a7 (label typo in the temp script)
+before	one scan	200	12	67	9
+before	50 scans	200	12	3350	401
+before	full-score class	200	14	2096	289
+before	clear class	200	14	2334	321
+before	undo clear	200	13	950	321
+before	all-submitted (a7, after clear)	200	14	2414	321
+before	edit assignment	200	17	250	30
+before	import 40	200	9	292	481
+before	create student	200	12	14	13
+before	edit student	200	12	23	11
+before	set PIN	200	4	9	1
+before	delete assignment	200	5	12	10
+before	create class	200	6	9	3
+before	edit class	200	6	11	2
+before	create subject	200	4	8	3
+before	create work type	200	4	8	3
+before	create term	200	10	12	2
+before	change password	200	5	12	8
+before	sign out device	200	4	11	7
+after	one scan	200	12	67	9
+after	50 scans	200	12	3350	401
+after	full-score class	200	15	2241	289
+after	clear class	200	15	2495	321
+after	undo clear	200	14	1111	321
+after	all-submitted (a7, after clear)	200	15	2575	321
+after	edit assignment	200	17	250	30
+after	import 40	200	9	292	481
+after	create student	200	12	14	13
+after	edit student	200	12	23	11
+after	set PIN	200	5	13	8
+after	delete assignment	200	5	13	10
+after	create class	200	7	12	10
+after	edit class	200	7	14	9
+after	create subject	200	6	11	10
+after	create work type	200	6	11	10
+after	create term	200	11	15	9
+after	change password	200	5	12	8
+after	sign out device	200	4	11	7

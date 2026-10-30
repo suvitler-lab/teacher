@@ -1,0 +1,93 @@
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |dom| test/unit/m1-05-verify1.test.tsx (17 tests | 1 failed) 11597ms
+     × class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6/10 next to 60% 10590ms
+ ❯ |workers| test/api/audit-concurrency.test.ts (8 tests | 3 failed) 6266ms
+     × creates only one teacher when two setup requests pass the initial check 5035ms
+     × refuses starting a term if a catalog create takes the year/term while the start is pending 169ms
+     × still edits a term without duplicating itself and starts a distinct next term 140ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/audit-concurrency.test.ts > catalog and setup concurrency audit > creates only one teacher when two setup requests pass the initial check
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/api/audit-concurrency.test.ts:67:3
+     65|   });
+     66|
+     67|   it("creates only one teacher when two setup requests pass the initia…
+       |   ^
+     68|     const gate = gateSetupInsert();
+     69|     const body = { setupCode: "test-code", password: "pw123456" };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |workers| test/api/audit-concurrency.test.ts > catalog and setup concurrency audit > refuses starting a term if a catalog create takes the year/term while the start is pending
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/api/audit-concurrency.test.ts:136:58
+    134|     expect(await count("terms", "year = 2569 AND term = 2")).toBe(1);
+    135|     expect(await env.DB.prepare("SELECT id FROM terms WHERE is_current…
+    136|     expect(await count("audit_logs", "entity = 'term'")).toBe(0);
+       |                                                          ^
+    137|   });
+    138|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |workers| test/api/audit-concurrency.test.ts > catalog and setup concurrency audit > still edits a term without duplicating itself and starts a distinct next term
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ test/api/audit-concurrency.test.ts:146:58
+    144|     expect(await count("terms")).toBe(2);
+    145|     expect(await count("terms", "is_current = 1")).toBe(1);
+    146|     expect(await count("audit_logs", "entity = 'term'")).toBe(1);
+       |                                                          ^
+    147|   });
+    148| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 Excel > class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6/10 next to 60%
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/unit/m1-05-verify1.test.tsx:91:3
+     89|
+     90| describe("AC-09 / AC-11 Excel", () => {
+     91|   it("class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6…
+       |   ^
+     92|     const row = (await sheet(ac01(), "ภาพรวมห้อง"))[1];
+     93|     expect(row.slice(3, 5)).toEqual(["6/8 · ยกเว้น 2", "75%"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 73 passed (75)
+      Tests  4 failed | 896 passed (900)
+   Start at  17:10:43
+   Duration  86.37s (transform 56.86s, setup 565.26s, import 70.88s, tests 292.90s, environment 267.50s)
+
