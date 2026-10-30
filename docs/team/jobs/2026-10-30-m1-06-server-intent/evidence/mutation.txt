@@ -1,0 +1,35 @@
+== M1: opIntent trusts op.intent again
+1
+     × AC-01: closed work, hid op claiming intent "grade" -> assignment_closed, no row, no audit 74ms
+     × AC-01: closed work, camera op claiming intent "grade" -> assignment_closed, no row, no audit 60ms
+     × AC-01: closed work, manual op claiming intent "grade" -> assignment_closed, no row, no audit 58ms
+     × AC-02: closed work, gradebook (grid) score 8 with {"intent":"receive"} -> ok 58ms
+     × M1-06 BR-06: the client's intent is ignored - the method alone decides 63ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  5 failed | 29 passed (34)
+restored (cmp identical)
+== M2: bulk touches excused again
+2
+     × AC-05: all-submitted, full-score and clear leave the excused cell alone; changed counts real changes; undo works 69ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+restored (cmp identical)
+== M2b: only 'clear' touches excused again
+1
+     × AC-05: all-submitted, full-score and clear leave the excused cell alone; changed counts real changes; undo works 104ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 5 to be 4 // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+restored (cmp identical)
+== M3: batch method enum back to all 7 methods
+1
+     × R-01: method bulk through the batch route -> 422, no row, no audit 59ms
+     × R-01: method import through the batch route -> 422, no row, no audit 56ms
+     × R-01: method restore through the batch route -> 422, no row, no audit 58ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  3 failed | 11 passed (14)
+restored (cmp identical)

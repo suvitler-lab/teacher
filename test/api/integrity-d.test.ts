@@ -164,11 +164,11 @@ describe("closed work stops accepting hand-ins on EVERY route, but can still be 
     expect(res.results[0].result).toBe("ok");
   });
 
-  it("intent overrides the guess from the method", async () => {
+  it("M1-06 BR-06: the client's intent is ignored - the method alone decides", async () => {
     const recv = (await (await batch(cookie, [op({ method: "grid", intent: "receive" })])).json()) as any;
-    expect(recv.results[0].result).toBe("assignment_closed");
+    expect(recv.results[0].result).toBe("ok");
     const grade = (await (await batch(cookie, [op({ method: "manual", intent: "grade", score: 4 })])).json()) as any;
-    expect(grade.results[0].result).toBe("ok");
+    expect(grade.results[0].result).toBe("assignment_closed");
   });
 
   it("voiding is always allowed", async () => {

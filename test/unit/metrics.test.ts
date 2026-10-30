@@ -152,12 +152,14 @@ describe("M1-05 scorePercent / attendancePercent", () => {
     // attendanceRate keeps its old 0 fallback
     expect(attendanceRate({ present: 0, late: 0, leave: 0, sick: 0, absent: 0 })).toBe(0);
   });
-  it("averageAttendancePercent keeps the Students page's mean-per-child figure and skips unchecked children", () => {
+  it("M1-06 AC-06 / D24: averageAttendancePercent pools every child's days (sum then divide), not a mean of %", () => {
     const a = { present: 3, late: 1, leave: 1, sick: 0, absent: 1 }; // 4/6
     const b = { present: 1, late: 0, leave: 0, sick: 0, absent: 1 }; // 1/2
     const none = { present: 0, late: 0, leave: 0, sick: 0, absent: 0 };
-    expect(averageAttendancePercent([a, b, none])).toBe(58); // (0.6667 + 0.5) / 2 = 58.3
-    expect(averageAttendancePercent([none])).toBeNull();
+    expect(averageAttendancePercent([a, b, none])).toBe(63); // (4 + 1) / (6 + 2) = 62.5 -> 63
+    expect(averageAttendancePercent([a, b])).toBe(63);
+    expect(averageAttendancePercent([none])).toBeNull(); // nothing checked -> "—"
+    expect(averageAttendancePercent([])).toBeNull();
   });
 });
 

@@ -62,12 +62,18 @@ const opSchema = z.object({
   status: z.enum(["submitted", "excused", "void"]),
   score: z.number().refine(isHalfStep).nullable(), // the same half-point rule as the screens (shared/grade.ts)
   fullScoreAtScan: z.number().int(),
-  method: z.enum(["camera", "hid", "manual", "grid", "bulk", "import", "restore"]),
+  // only what a screen sends (R-01): the whole-class buttons, import and restore have routes of their own, so a
+  // `bulk` / `import` / `restore` label here could only be a hand-made request mislabelling the cell and its audit
+  method: z.enum(["camera", "hid", "manual", "grid"]),
   clientTs: z.number(),
   intent: z.enum(["receive", "grade"]).optional(),
   dataEpoch: z.number().int().optional(),
 });
-const batchSchema = z.object({ ops: z.array(opSchema).min(1).max(50) });
+// one opId per op (R-03): two ops sharing an id would both be written, but only the first audited
+const batchSchema = z.object({
+  ops: z.array(opSchema).min(1).max(50)
+    .refine((ops) => new Set(ops.map((o) => o.opId)).size === ops.length, { message: "duplicate opId in one request" }),
+});
 
 /** A submission row plus what the write's guard needs to re-check inside the transaction. */
 interface GuardedRow {
@@ -189,14 +195,17 @@ async function cellsChanged(env: Env, snapshots: CellSnapshot[]): Promise<boolea
   return r?.changed === 1;
 }
 
-/** Does this op ACCEPT a hand-in (refused once the work is closed), or is it the teacher grading? */
-function opIntent(op: { intent?: "receive" | "grade"; method: string }): "receive" | "grade" {
-  if (op.intent) return op.intent;
+/**
+ * Does this op ACCEPT a hand-in (refused once the work is closed), or is it the teacher grading?
+ * Decided by the server from the method alone (BR-06): the client's `intent` is still accepted by the schema so
+ * older clients keep working, but never trusted — a hand-crafted `hid` + `intent: "grade"` must not slip past a close.
+ */
+function opIntent(op: { method: string }): "receive" | "grade" {
   return op.method === "camera" || op.method === "hid" || op.method === "manual" ? "receive" : "grade";
 }
 
 /** Accepting a hand-in = a "submitted" op with intent receive — the `receive` and `hand_in` fields of a batch row. */
-function isReceive(op: { status: string; intent?: "receive" | "grade"; method: string }): boolean {
+function isReceive(op: { status: string; method: string }): boolean {
   return op.status === "submitted" && opIntent(op) === "receive";
 }
 
@@ -253,8 +262,12 @@ async function loadWorld(env: Env, ops: OpIn[]): Promise<World> {
   };
 }
 
-/** Why this op cannot be applied to `w` — or null if the data allows it (event-time clashes are decided separately). */
-function judge(op: OpIn, w: World): SubmissionOpResult | null {
+/**
+ * Why this op cannot be applied to `w` — or null if the data allows it (event-time clashes are decided separately).
+ * `cells` is the cell state to judge against: by default the stored rows, but inside one request the state left by
+ * the ops before this one (a `[void, grade]` pair is judged on the void, not on what was stored before the request).
+ */
+function judge(op: OpIn, w: World, cells: Map<string, any> = w.existing): SubmissionOpResult | null {
   const a = w.assignments.get(op.assignmentId);
   if (!a || a.deleted_at) return { opId: op.opId, result: "invalid", reason: "assignment_missing" };
   if (a.full_score !== op.fullScoreAtScan) return { opId: op.opId, result: "full_score_changed", currentFullScore: a.full_score };
@@ -269,7 +282,7 @@ function judge(op: OpIn, w: World): SubmissionOpResult | null {
   // a student who left the class (moved / inactive / finished) hands in nothing new — by any means. The teacher
   // can still grade / void / excuse a non-void cell, or any cell of work from a term the student was there for
   // (last year's gradebook) — the same rule stillValid repeats in SQL. A void cell holds no work: it doesn't count.
-  const cell = w.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
+  const cell = cells.get(`${op.assignmentId}\u0000${op.studentId}`);
   if (student.status !== "active" && (isReceive(op)
     || ((!cell || cell.status === "void")
         && !inRoster(student, a.term_year == null ? null : { year: a.term_year, end_date: a.term_end })))) {
@@ -319,7 +332,7 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         results[index] = { opId: op.opId, result: "epoch_changed" };
         continue;
       }
-      const refused = judge(op, world);
+      const refused = judge(op, world, effective);
       if (refused) {
         results[index] = refused;
         continue;
@@ -498,19 +511,19 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
     const before = curMap.get(s.id);
     let row: any | null = null;
     if (action === "all-submitted") {
-      if (before && before.status === "submitted") continue; // already submitted
+      if (before && (before.status === "submitted" || before.status === "excused")) continue; // already in, or excused (BR-07)
       row = {
         assignment_id: aid, student_id: s.id, status: "submitted",
         score: before?.score ?? null, late, submitted_at: now,
         method: "bulk", device_id: deviceId, scan_session_id: null, updated_at: now,
       };
     } else if (action === "full-score") {
-      if (!before || before.status !== "submitted") continue; // only score those submitted
+      if (!before || before.status !== "submitted") continue; // only score those submitted (never excused: BR-07)
       if (before.score === a.full_score) continue;
       row = { ...before, score: a.full_score, method: "bulk", device_id: deviceId, updated_at: now };
     } else {
       // clear
-      if (!before || before.status === "void") continue;
+      if (!before || before.status === "void" || before.status === "excused") continue; // excused stays (BR-07)
       row = {
         assignment_id: aid, student_id: s.id, status: "void", score: null, late: 0,
         submitted_at: null, method: "bulk", device_id: deviceId,

@@ -1,7 +1,7 @@
 import type { Student, Assignment } from "@shared/types";
 import {
   workState, isSubmitted, assignmentProgress, studentSummary,
-  attendancePercent, classSubmitRate, scorePercent, type AttendanceCounts,
+  averageAttendancePercent, classSubmitRate, scorePercent, type AttendanceCounts,
 } from "@shared/metrics";
 import { bkkToday } from "@shared/time";
 
@@ -129,7 +129,7 @@ export function computeReport(p: ReportPayload): ReportModel {
       submitRate: classSubmitRate(students),
       missingCount: students.reduce((n, s) => n + s.missing, 0),
       avgScorePercent: scorePercent(totScore, totFull) ?? 0,
-      attendanceRate: attendancePercent(totCounts),
+      attendanceRate: averageAttendancePercent(students.map((s) => s.attendance)), // the Students page's rule (D24)
     },
     attendance: {
       unit: p.range?.att === "subject" ? "period" : "day",

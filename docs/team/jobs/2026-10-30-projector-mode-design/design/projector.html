@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mockup: โหมดฉายจอ (งานครบ)</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:#d9dde5;color:#1a1f29}
+.bar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #c5cad4;padding:8px 16px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:14px}
+.bar b{margin-right:4px}.bar button{font:inherit;padding:6px 12px;border:1px solid #9aa3b2;background:#fff;border-radius:8px;cursor:pointer;min-height:36px}
+.bar button[aria-pressed=true]{background:#2f6fde;color:#fff;border-color:#2f6fde}
+.note{padding:8px 16px;font-size:13px;color:#46505f}
+.wrap{padding:16px;display:flex;justify-content:center}
+.screen{background:#000;position:relative;overflow:hidden}
+.scaler{transform-origin:0 0;width:1024px;height:768px;position:absolute;top:0}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.125em;flex:none}
+.app{width:1024px;height:768px;display:flex;overflow:hidden;position:relative;
+ --s0:#f4f6fa;--s1:#eef1f6;--s2:#fff;--t1:#1a1f29;--t2:#59616e;--bd:rgba(20,28,46,.18);--ac:#2f6fde;--tac:#1a56b0;--bac:#e6f0fc;
+ --bok:#e3f6ec;--tok:#12703f;--fok:#1c9d61;--bbad:#fbe6e6;--tbad:#a32626;--bwarn:#fbefd6;--twarn:#8a5a08;
+ background:var(--s0);color:var(--t1);font-size:15px}
+.app[data-mode=pj][data-theme=dark]{--s0:#0b1220;--s1:#151e33;--s2:#151e33;--t1:#fff;--t2:#cdd5e3;--bd:#5b6a8a;--ac:#9cc2f2;--tac:#9cc2f2;--bac:#1d2b44;
+ --bok:#0f3a26;--tok:#6ee7a8;--fok:#6ee7a8;--bbad:#3a1616;--tbad:#ff9a9a;--bwarn:#3a2a08;--twarn:#ffd166}
+.app[data-mode=pj][data-theme=light]{--s0:#fff;--s1:#eef2f8;--s2:#eef2f8;--t1:#0b1220;--t2:#2c3648;--bd:#55627a;--ac:#164a9e;--tac:#164a9e;--bac:#dfeafb;
+ --bok:#dcf3e6;--tok:#0d6a3a;--fok:#0d6a3a;--bbad:#fbe1e1;--tbad:#9b1c1c;--bwarn:#fbefd6;--twarn:#7a4b00}
+.rail{width:64px;background:var(--s2);border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:12px;font-size:22px;color:var(--t2)}
+.rail span{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.rail .on{background:var(--bac);color:var(--tac)}
+.main{flex:1;padding:18px 22px;min-width:0;position:relative}
+.n-inl{display:inline}.app[data-mode=pj] .n-inl{display:none}.p-only{display:none}.app[data-mode=pj] .p-only{display:block}.app[data-mode=pj] .n-only{display:none}
+.p-flex{display:none}.app[data-mode=pj] .p-flex{display:flex}.app[data-mode=pj] .n-flex{display:none}
+.app[data-mode=pj] .rail{display:none}.app[data-mode=pj] .main{padding:0 24px 18px}
+.pg{display:none}
+.app[data-page=random] .pg-random,.app[data-page=scan] .pg-scan,.app[data-page=att] .pg-att,.app[data-page=rep] .pg-rep{display:block}
+h1{margin:0;font-size:22px;font-weight:600;display:flex;align-items:center;gap:8px}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.btn{font:inherit;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);background:var(--s2);color:var(--t1);border-radius:10px;padding:8px 14px;min-height:44px;font-size:15px}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.card{background:var(--s2);border:1px solid var(--bd);border-radius:14px;padding:16px}
+.muted{color:var(--t2)}.sub{font-size:15px;color:var(--t2)}.app[data-mode=pj] .sub{font-size:26px}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 10px;font-size:13px}
+.ok{background:var(--bok);color:var(--tok)}.bad{background:var(--bbad);color:var(--tbad)}.warn{background:var(--bwarn);color:var(--twarn)}
+.pjbar{height:84px;align-items:center;justify-content:space-between}
+.pjbar h1{font-size:40px;font-weight:600}
+.row{display:flex;align-items:center;gap:14px}
+.live{display:inline-flex;align-items:center;gap:10px;font-size:26px;font-weight:600;border:3px solid var(--ac);color:var(--tac);border-radius:999px;padding:6px 18px}
+.live i{width:14px;height:14px;border-radius:50%;background:var(--tac)}
+.hold{width:64px;height:64px;border-radius:50%;border:3px solid var(--bd);background:var(--s2);color:var(--t2);display:inline-flex;align-items:center;justify-content:center;font-size:30px}
+.pjbtn{font:inherit;font-size:34px;font-weight:600;height:80px;padding:0 44px;border-radius:20px;background:var(--ac);color:#fff;border:0;display:inline-flex;align-items:center;gap:12px}
+.app[data-theme=dark][data-mode=pj] .pjbtn{color:#0b1220}
+.stage{border:2px dashed var(--bd);border-radius:20px;text-align:center;padding:22px 10px;background:var(--s2)}
+.badge{display:inline-flex;width:64px;height:64px;border-radius:50%;background:var(--bac);color:var(--tac);font-size:26px;font-weight:600;align-items:center;justify-content:center}
+.rname{font-size:34px;font-weight:500;line-height:1.25}
+.app[data-mode=pj] .rname{font-size:84px;font-weight:600}.app[data-mode=pj] .rname.fb{font-size:64px}
+.app[data-mode=pj] .badge{width:96px;height:96px;font-size:48px}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.grp{background:var(--s2);border:1px solid var(--bd);border-radius:14px;padding:10px 14px}
+.grp b{display:block;font-size:15px;margin-bottom:4px}
+.app[data-mode=pj] .grp{border:3px solid var(--bd)}.app[data-mode=pj] .grp b{font-size:30px;color:var(--tac)}.app[data-mode=pj] .grp div{font-size:28px;line-height:1.45}
+.tiles{display:grid;gap:8px}
+.t{border:1.5px dashed var(--bd);border-radius:10px;padding:4px 8px;display:flex;align-items:center;gap:6px;font-size:13px;min-height:44px}
+.t.d{border:1.5px solid var(--fok);background:var(--bok);color:var(--tok)}
+.app[data-mode=pj] .t{font-size:26px;min-height:60px;border-width:3px;gap:8px;padding:4px 10px}
+.app[data-mode=pj] .t.d{font-weight:600}
+.bigstat{font-size:30px;font-weight:600;line-height:1.2}.app[data-mode=pj] .bigstat{font-size:56px}
+.bar2{height:20px;border-radius:14px;background:var(--s1);border:2px solid var(--bd);overflow:hidden}.bar2 i{display:block;height:100%;background:var(--fok)}
+.app[data-mode=pj] .bar2{height:28px}
+.arow{display:grid;grid-template-columns:330px 1fr 200px;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:30px}
+.sc{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sc b{display:block;font-size:24px}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="presentation" viewBox="0 0 24 24"><path d="M3 4l18 0"/><path d="M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10"/><path d="M12 16l0 4"/><path d="M9 20l6 0"/><path d="M8 12l3 -3l2 2l3 -3"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10"/></symbol>
+<symbol id="user-check" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/><path d="M15 19l2 2l4 -4"/></symbol>
+<symbol id="dice-3" viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><circle cx="8.5" cy="8.5" r=".6" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".6" fill="currentColor"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></symbol>
+<symbol id="scan" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M3 7v-2a2 2 0 0 1 2 -2h2"/><path d="M3 17v2a2 2 0 0 0 2 2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M17 21h2a2 2 0 0 0 2 -2v-2"/></symbol>
+<symbol id="chart-bar" viewBox="0 0 24 24"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6"/><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10"/><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14"/><path d="M4 20h14"/></symbol>
+</defs></svg>
+
+<div class="bar" role="toolbar" aria-label="ตัวเลือก mockup">
+ <span><b>หน้า</b> <button data-k="page" data-v="random">สุ่มชื่อ/จับกลุ่ม</button> <button data-k="page" data-v="scan">สแกนส่งงาน</button> <button data-k="page" data-v="att">เช็คชื่อ</button> <button data-k="page" data-v="rep">รายงาน</button></span>
+ <span><b>โหมด</b> <button data-k="mode" data-v="n">ปกติ</button> <button data-k="mode" data-v="pj">โหมดฉายจอ</button></span>
+ <span><b>ธีมฉาย</b> <button data-k="theme" data-v="dark">เข้ม (แนะนำ)</button> <button data-k="theme" data-v="light">สว่าง</button></span>
+ <span><b>มุมมอง</b> <button data-k="view" data-v="ipad">iPad 1024×768</button> <button data-k="view" data-v="proj">บนโปรเจกเตอร์ 16:9</button> <button data-k="view" data-v="far">ไกล ~10 ม. (ย่อ)</button></span>
+</div>
+<div class="note" id="note"></div>
+<div class="wrap"><div class="screen" id="screen"><div class="scaler" id="scaler">
+
+<div class="app" id="app" data-page="random" data-mode="n" data-theme="dark">
+ <nav class="rail n-only" aria-label="เมนู"><span class="on"><svg class="i"><use href="#dice-3"/></svg></span><span><svg class="i"><use href="#scan"/></svg></span><span><svg class="i"><use href="#user-check"/></svg></span><span><svg class="i"><use href="#chart-bar"/></svg></span></nav>
+ <div class="main">
+
+ <div class="pjbar p-flex">
+  <h1 id="pjtitle"></h1>
+  <div class="row"><span class="live"><i></i>กำลังฉายจอ</span><span class="hold" aria-label="ออกจากโหมดฉายจอ (กดค้าง 1 วินาที)"><svg class="i"><use href="#x"/></svg></span></div>
+ </div>
+
+ <section class="pg pg-random">
+  <div class="hd n-flex"><h1><svg class="i"><use href="#dice-3"/></svg> สุ่มชื่อ</h1><span class="btn"><svg class="i"><use href="#presentation"/></svg> โหมดฉายจอ</span></div>
+  <div class="stage"><div class="badge">12</div><div class="rname">น้องมะลิ ใจดี</div><div class="sub">เลขที่ 12 · ป.4/1</div>
+   <div class="p-only" style="margin-top:14px"><button class="pjbtn"><svg class="i"><use href="#dice-3"/></svg> สุ่มคนต่อไป</button></div>
+   <div class="n-only" style="margin-top:12px"><span class="btn pri">สุ่ม (Space)</span> <span class="btn">ไม่สุ่มซ้ำ</span> <span class="btn">แบ่งกลุ่ม</span></div></div>
+  <div class="groups">
+   <div class="grp"><b>กลุ่ม 1 (4)</b><div>มะลิ · ต้นกล้า · ฟ้าใส · บอส</div></div>
+   <div class="grp"><b>กลุ่ม 2 (4)</b><div>ข้าวหอม · ภู · แพรว · เจ</div></div>
+   <div class="grp"><b>กลุ่ม 3 (4)</b><div>ปลื้ม · ใบเตย · กัน · มินท์</div></div>
+  </div>
+ </section>
+
+ <section class="pg pg-scan">
+  <div class="hd n-flex"><h1><svg class="i"><use href="#scan"/></svg> สแกนส่งงาน</h1><span class="btn"><svg class="i"><use href="#presentation"/></svg> โหมดฉายจอ</span></div>
+  <div class="card" style="background:var(--bok);border-color:var(--fok);display:flex;align-items:center;gap:20px;padding:16px 22px">
+   <svg class="i" style="font-size:72px;color:var(--fok)"><use href="#check"/></svg>
+   <div><div class="rname fb">น้องใบเตย รักเรียน</div><div class="sub">เลขที่ 7 · ส่งแล้ว<span class="n-only n-inl"> · <b>คะแนน 10/10</b></span></div></div>
+  </div>
+  <div class="row" style="margin:14px 0 10px;justify-content:space-between">
+   <div><div class="sub">แบบฝึกหัด 3.2 · ป.4/1</div><div class="bigstat">ส่งแล้ว 21 จาก 32 คน</div></div>
+   <div class="n-flex row"><span class="chip warn">รอส่งขึ้นระบบ 2</span><span class="btn">จบรอบสแกน</span></div>
+  </div>
+  <div class="bar2" style="margin-bottom:14px"><i style="width:66%"></i></div>
+  <div class="tiles" id="seats" style="grid-template-columns:repeat(8,1fr)"></div>
+ </section>
+
+ <section class="pg pg-att">
+  <div class="hd n-flex"><h1><svg class="i"><use href="#user-check"/></svg> เช็คชื่อ</h1><span class="btn"><svg class="i"><use href="#presentation"/></svg> โหมดฉายจอ</span></div>
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+   <div class="bigstat">มาแล้ว 28 จาก 32 คน <span class="muted n-only n-inl" style="font-size:15px;font-weight:400">(88%)</span></div>
+   <div class="n-flex row"><span class="btn">มาทั้งหมด</span><span class="btn pri">บันทึก</span></div>
+  </div>
+  <div class="p-flex" style="font-size:36px;align-items:center;gap:12px;color:var(--tok);font-weight:600;margin-bottom:10px"><svg class="i"><use href="#check"/></svg> น้องภู สวัสดี มาแล้ว</div>
+  <div class="bar2" style="margin-bottom:14px"><i style="width:88%"></i></div>
+  <div class="tiles" id="att" style="grid-template-columns:repeat(6,1fr)"></div>
+ </section>
+
+ <section class="pg pg-rep">
+  <div class="hd n-flex"><h1><svg class="i"><use href="#chart-bar"/></svg> รายงาน</h1><span class="btn"><svg class="i"><use href="#presentation"/></svg> โหมดฉายจอ</span></div>
+  <div class="sc n-only">
+   <div class="card"><span class="muted">อัตราส่งงาน</span><b style="color:var(--tok)">86%</b></div>
+   <div class="card"><span class="muted">งานค้าง</span><b style="color:var(--tbad)">9 ชิ้น</b></div>
+   <div class="card"><span class="muted">คะแนนเฉลี่ย</span><b>74%</b></div>
+   <div class="card"><span class="muted">มาเรียน</span><b>93%</b></div>
+  </div>
+  <div class="p-only">
+   <div class="row" style="gap:48px;margin-bottom:10px">
+    <div><div class="bigstat" style="color:var(--tok)">412 / 480</div><div class="sub">ชิ้นงานที่ส่งแล้ว</div></div>
+    <div><div class="bigstat" style="color:var(--twarn)">9 ชิ้น</div><div class="sub">ยังไม่ส่ง (แสดงจำนวนรวม ไม่แสดงชื่อ)</div></div>
+   </div>
+   <div style="font-size:28px;font-weight:600;margin:8px 0 2px">ความคืบหน้ารายงาน</div>
+   <div class="arow"><span>แบบฝึกหัด 3.2</span><div class="bar2"><i style="width:66%"></i></div><span><b>21/32</b> ส่งแล้ว</span></div>
+   <div class="arow"><span>ใบงานเศษส่วน</span><div class="bar2"><i style="width:94%"></i></div><span><b>30/32</b> ส่งแล้ว</span></div>
+   <div class="arow"><span>อ่านหนังสือ สัปดาห์ 5</span><div class="bar2"><i style="width:81%"></i></div><span><b>26/32</b> ส่งแล้ว</span></div>
+   <div class="arow"><span>โครงงานวิทย์</span><div class="bar2"><i style="width:50%"></i></div><span><b>16/32</b> ส่งแล้ว</span></div>
+  </div>
+  <div class="card n-only" style="margin-top:12px"><b>ต้องติดตาม (3 คน)</b>
+   <table><tr><td>7 · ใบเตย รักเรียน</td><td><span class="chip bad">ค้าง 3</span></td><td>คะแนน 42%</td><td>มาเรียน 80%</td></tr>
+   <tr><td>15 · บอส ศรีสุข</td><td><span class="chip bad">ค้าง 2</span></td><td>คะแนน 55%</td><td>มาเรียน 91%</td></tr>
+   <tr><td>22 · เจ แสงทอง</td><td><span class="chip bad">ค้าง 2</span></td><td>คะแนน 58%</td><td>มาเรียน 88%</td></tr></table></div>
+ </section>
+ </div>
+</div></div></div></div>
+
+<script>
+var st={page:'random',mode:'n',theme:'dark',view:'ipad'};
+var titles={random:'สุ่มชื่อ / จับกลุ่ม',scan:'สแกนส่งงาน',att:'เช็คชื่อ',rep:'ภาพรวมงาน ป.4/1'};
+var icons={random:'dice-3',scan:'scan',att:'user-check',rep:'chart-bar'};
+var notes={ipad:'มุมมอง iPad จริง 1024x768 แนวนอน',proj:'บนโปรเจกเตอร์ 16:9: iPad 4:3 ขยายเต็มความสูง เหลือขอบดำซ้าย-ขวา (ใช้พื้นที่ได้ 75% ของความกว้าง)',far:'ย่อมากเพื่อจำลองการมองจากหลังห้อง ตัวอักษรที่ยังอ่านออกที่นี่ = ผ่านเกณฑ์'};
+var names=['มะลิ','ต้นกล้า','ฟ้าใส','บอส','ข้าวหอม','ภู','แพรว','เจ','ปลื้ม','ใบเตย','กัน','มินท์','น้ำ','ฝน','เฟิร์น','ไอซ์','ตะวัน','ขวัญ','พลอย','ดาว','กวาง','นนท์','เมย์','โอ๊ต','พีท','ฟ้า','จูน','ก้อง','แบม','ต้น','หนึ่ง','ปอ'];
+var CK='<svg class="i"><use href="#check"/></svg>';
+function build(){
+ var pj=st.mode==='pj',s='',a='',i;
+ for(i=0;i<32;i++){var d=i<21;s+='<div class="t'+(d?' d':'')+'">'+(d?CK:'')+'<b>'+(i+1)+'</b>'+(!pj&&d?'<span style="font-size:11px">'+names[i]+'</span>':'')+'</div>';}
+ document.getElementById('seats').innerHTML=s;
+ for(i=0;i<32;i++){var h=i<28;
+  if(pj){a+='<div class="t'+(h?' d':'')+'">'+(h?CK:'')+'<b>'+(i+1)+'</b>'+(h?'<span>'+names[i]+'</span>':'')+'</div>';}
+  else{var lab=h?(i%9===4?'สาย 08:41':'มา'):(i%2?'ขาด':'ป่วย');a+='<div class="t'+(h?' d':'')+'" style="flex-direction:column;align-items:flex-start;gap:0"><b>'+(i+1)+' '+names[i]+'</b><span style="font-size:11px">'+lab+' · มาเรียน 88%</span></div>';}}
+ document.getElementById('att').innerHTML=a;
+}
+function apply(){
+ var app=document.getElementById('app');app.dataset.page=st.page;app.dataset.mode=st.mode;app.dataset.theme=st.theme;
+ document.getElementById('pjtitle').innerHTML='<svg class="i"><use href="#'+icons[st.page]+'"/></svg> '+titles[st.page];
+ var sc=document.getElementById('screen'),sl=document.getElementById('scaler'),k,w,h;
+ if(st.view==='ipad'){w=1024;h=768;k=1;sl.style.left='0px';}
+ else{h=st.view==='proj'?576:230;w=Math.round(h*16/9);k=h/768;sl.style.left=((w-1024*k)/2)+'px';}
+ sc.style.width=w+'px';sc.style.height=h+'px';sl.style.transform='scale('+k+')';
+ document.getElementById('note').textContent=notes[st.view];
+ var bs=document.querySelectorAll('.bar button');
+ for(var j=0;j<bs.length;j++){bs[j].setAttribute('aria-pressed',st[bs[j].dataset.k]===bs[j].dataset.v);}
+ build();
+}
+var bs=document.querySelectorAll('.bar button');
+for(var j=0;j<bs.length;j++){(function(b){b.onclick=function(){st[b.dataset.k]=b.dataset.v;apply();};})(bs[j]);}
+apply();
+</script></body></html>
