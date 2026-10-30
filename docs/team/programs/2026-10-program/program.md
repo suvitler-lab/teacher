@@ -50,7 +50,7 @@
 | `2026-10-30-fs-1-font-size-density` | M | E-02,E-05 | M-02 | m1-08 | merge เข้า main `f032c8d` | ปิดแล้ว |
 | `2026-10-30-scan-1-big-name-keypad` | S | E-02 | M-02 | fs-1 | merge เข้า main `e518f9e` | ปิดแล้ว |
 | `2026-10-30-gb-1a-gradebook-structure` (gb-1b: แถบย่อ/ปุ่มกระโดด/เลือกคอลัมน์ ตามหลัง) | S | E-02 | M-02 | scan-1 | merge เข้า main `92e9db4` | ปิดแล้ว |
-| `2026-10-30-gb-1b-minimap-columns` | S | E-02 | M-02 | gb-1a | รอผู้ใช้สั่ง merge | ปิดแล้ว |
+| `2026-10-30-gb-1b-minimap-columns` | S | E-02 | M-02 | gb-1a | merge เข้า main | ปิดแล้ว |
 | `pj-1-projector-shell-random` → `pj-2-projector-scan-attendance` → `pj-3-projector-reports` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `2026-10-30-m2-00-scan-mockups` (mockup สแกน/ตั้งค่า/สมุดคะแนน) | M | E-02 | M-02 | — | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D30) |
