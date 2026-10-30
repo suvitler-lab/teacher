@@ -109,5 +109,23 @@
     "reason": "",
     "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
     "at": "2026-10-30T16:10:40.814Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "ผลวัดของ QA (getBoundingClientRect หลังเลื่อนที่ 1180: ซ้าย 1px, หัว 1px, สะสมชิดขวา) ใน qa-report.md AC-01 · PM บันทึกอ้างผลนั้น",
+    "artifact": "evidence/q02-measure-sizes.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T16:11:34.299Z"
   }
 ]
