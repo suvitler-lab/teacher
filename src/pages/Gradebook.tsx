@@ -23,6 +23,11 @@ import { Dialog } from "../components/Dialog";
 import {
   buildGroups, defaultCollapsed, isCollapsed, loadGroupMode, saveGroupMode, type GroupMode, type Group,
 } from "../lib/gbGroups";
+import {
+  loadColumnPrefs, saveColumnPrefs, effectiveHidden, makeIsShown, toggleType, columnCounts, displayGroups, jumpTargets,
+  jumpScrollLeft, minimapSegments, typeKeyOf, type ColumnPrefs,
+} from "../lib/gbColumns";
+import { GradebookNav, ColumnsMenu, useScrollInfo, scrollFrameTo, edgeClass } from "../components/GradebookNav";
 import { routeParams, navigate, setNavGuard } from "../router";
 import { useAction } from "../lib/useAction";
 
@@ -82,6 +87,9 @@ export function GradebookPage() {
   const [bulkAsk, setBulkAsk] = useState<{ action: BulkAction; count: number } | null>(null);
   const [groupMode, setGroupModeState] = useState<GroupMode>(() => loadGroupMode());
   const [foldTaps, setFoldTaps] = useState<Map<string, boolean>>(new Map()); // the teacher's own fold/unfold taps (true = folded)
+  const [colPrefs, setColPrefsState] = useState<ColumnPrefs>(() => loadColumnPrefs()); // which columns are DRAWN (display only)
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const pendingJump = useRef<string | null>(null);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
   const act = useAction();
@@ -346,6 +354,43 @@ export function GradebookPage() {
   }
   function toggleFoldAll() { setFoldTaps(new Map(groups.map((g) => [g.key, !allFolded] as [string, boolean]))); }
 
+  // Which columns are drawn. This only decides what to DRAW: สะสม, the group totals and every count above keep
+  // working from the full `assignments` list, so hiding a column never changes a number.
+  const presentTypes = [...new Set(assignments.map(typeKeyOf))];
+  const hiddenTypes = effectiveHidden(colPrefs, presentTypes);
+  const isShown = makeIsShown<Assignment>(hiddenTypes);
+  const dgroups = displayGroups(groups, isShown);
+  const colCount = columnCounts(assignments, isShown);
+  const typeLabel = (key: string) => { const t = workTypeById(key || null); return { name: t?.name ?? "ไม่ระบุประเภท", color: t?.color ?? "violet" }; };
+  function setColPrefs(p: ColumnPrefs) { setColPrefsState(p); saveColumnPrefs(p); }
+
+  const hasTable = !phone && !!classId && status !== "error" && assignments.length > 0;
+  const scrollSig = dgroups.map((x) => `${x.group.key}:${folded(x.group) ? "f" : x.shown.length}`).join("|") + `|${colPrefs.showTotal}|${colPrefs.showBars}|${shownStudents.length}`;
+  const scrollInfo = useScrollInfo(scrollRef, hasTable, scrollSig);
+  const segments = minimapSegments(dgroups, folded, (a) => workTypeById(a.type_id)?.color ?? "violet");
+  const jumps = jumpTargets(assignments, isShown).map((j) => ({ typeKey: j.typeKey, ...typeLabel(j.typeKey) }));
+
+  function scrollToAsg(id: string) {
+    const sc = scrollRef.current;
+    const th = sc?.querySelector(`th[data-aid="${id}"]`) as HTMLElement | null;
+    if (!sc || !th) return;
+    const colLeft = th.getBoundingClientRect().left - sc.getBoundingClientRect().left + sc.scrollLeft;
+    scrollFrameTo(sc, jumpScrollLeft(colLeft, (sc.querySelector("th.name-col") as HTMLElement | null)?.offsetWidth ?? 0, sc.scrollWidth, sc.clientWidth), true);
+  }
+  /** Jump button: go to the first column of that type; a folded group is opened first (the column must exist to be reached). */
+  function jumpToType(typeKey: string) {
+    const a = assignments.find((x) => typeKeyOf(x) === typeKey && isShown(x));
+    if (!a) return;
+    const g = groups.find((x) => x.items.includes(a));
+    if (g && folded(g)) { pendingJump.current = a.id; setFoldTaps((prev) => new Map(prev).set(g.key, false)); }
+    else scrollToAsg(a.id);
+  }
+  useEffect(() => { // after the opened group has been drawn
+    if (!pendingJump.current) return;
+    const id = pendingJump.current; pendingJump.current = null;
+    scrollToAsg(id);
+  }, [foldTaps]);
+
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
 
   return (
@@ -376,6 +421,13 @@ export function GradebookPage() {
         {!phone && <Segmented label="จัดกลุ่มคอลัมน์" value={groupMode} onChange={setGroupMode} options={[
           { value: "none", label: "ไม่จัดกลุ่ม" }, { value: "type", label: "ตามประเภท" }, { value: "month", label: "ตามเดือน" },
         ]} />}
+        {!phone && assignments.length > 0 && (
+          <ColumnsMenu prefs={colPrefs} hidden={hiddenTypes} shown={colCount.shown} total={colCount.total}
+            types={presentTypes.map((k) => ({ key: k, ...typeLabel(k), count: assignments.filter((a) => typeKeyOf(a) === k).length }))}
+            onToggleType={(k) => setColPrefs(toggleType(colPrefs, k, presentTypes))}
+            onTotal={() => setColPrefs({ ...colPrefs, showTotal: !colPrefs.showTotal })}
+            onBars={() => setColPrefs({ ...colPrefs, showBars: !colPrefs.showBars })} />
+        )}
         <span class="grow" />
         <Segmented value={rowFilter} onChange={setRowFilter} options={[
           { value: "all", label: "ทุกคน" },
@@ -399,7 +451,7 @@ export function GradebookPage() {
           {selAsg.status === "closed" && <span class="chip" style="background:var(--surface-2);color:var(--text-secondary)">ปิดรับ</span>}
           <span class="grow" />
           <div style="position:relative">
-            <button data-bulk-trigger aria-haspopup="menu" aria-expanded={bulkMenu} disabled={act.isBusy("bulk")} onClick={() => setBulkMenu((v) => !v)}>
+            <button data-bulk-trigger aria-haspopup="menu" aria-expanded={bulkMenu} aria-disabled={act.isBusy("bulk")} onClick={() => { if (!act.isBusy("bulk")) setBulkMenu((v) => !v); }}>
               {act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทำทั้งห้อง <Icon name="chevron-down" size={14} />
             </button>
             {bulkMenu && (
@@ -455,7 +507,10 @@ export function GradebookPage() {
             remove: removeAssignment,
           }} />
       ) : (
-        <div class="gb-scroll" role="region" aria-label="ตารางคะแนน">
+        <>
+        <GradebookNav info={scrollInfo} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />
+        <div class={"gb-frame" + edgeClass(scrollInfo) + (colPrefs.showTotal ? "" : " no-tot")}>
+        <div class="gb-scroll" ref={scrollRef} role="region" aria-label="ตารางคะแนน">
           <table class={"gb" + (flat ? "" : " grouped")}>
             <thead>
               {!flat && (
@@ -465,10 +520,10 @@ export function GradebookPage() {
                       <Icon name={allFolded ? "arrows-diagonal" : "arrows-diagonal-minimize-2"} size={14} /> {allFolded ? "กางทั้งหมด" : "พับทั้งหมด"}
                     </button>
                   </th>
-                  {groups.map((g) => {
+                  {dgroups.map(({ group: g, shown: cols }) => {
                     const closed = folded(g);
                     return (
-                      <th colSpan={closed ? 1 : g.items.length} class="gh-cell" style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
+                      <th colSpan={closed ? 1 : cols.length} class="gh-cell" style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
                         <button type="button" class="gh-btn" aria-expanded={!closed} title={`${g.label} · ${g.items.length} งาน`} onClick={() => toggleGroup(g.key)}>
                           <Icon name={closed ? "chevron-right" : "chevron-down"} size={14} />
                           <span class="gh-label">{g.label} · {g.items.length} งาน</span>
@@ -476,21 +531,21 @@ export function GradebookPage() {
                       </th>
                     );
                   })}
-                  <th class="tot-col gh-tot" />
+                  {colPrefs.showTotal && <th class="tot-col gh-tot" />}
                 </tr>
               )}
               <tr class="hd">
                 <th scope="col" class="name-col">ชื่อ - สกุล</th>
-                {groups.map((g) => folded(g) ? (
-                  <th scope="col" tabIndex={0} class="col-w sumcol" style={`border-top-color:${TINT_FG[g.color]}`} title={`รวม${g.label} · ${g.items.length} งาน · แตะเพื่อกางกลุ่ม`}
+                {dgroups.map(({ group: g, shown: cols }) => folded(g) ? (
+                  <th scope="col" tabIndex={0} data-gkey={g.key} class="col-w sumcol" style={`border-top-color:${TINT_FG[g.color]}`} title={`รวม${g.label} · ${g.items.length} งาน · แตะเพื่อกางกลุ่ม`}
                     onClick={() => toggleGroup(g.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleGroup(g.key); } }}>
                     <div class="ht">รวม {g.label}</div>
                     <div class="hs">{g.items.length} งาน</div>
                   </th>
-                ) : g.items.map((a) => {
+                ) : cols.map((a) => {
                   const pct = assignmentRate(countWorkStates(students.map((st) => stateOf(a.id, st.id, a))));
                   return (
-                    <th scope="col" tabIndex={0} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={"col-w" + (a.id === selCol ? " sel" : "")} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
+                    <th scope="col" tabIndex={0} data-aid={a.id} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={"col-w" + (a.id === selCol ? " sel" : "")} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
                       <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>
                         <span>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</span>
@@ -501,11 +556,11 @@ export function GradebookPage() {
                           <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
                         </button>
                       </div>
-                      <div class="hbar" title={`ส่งแล้ว ${pct}%`}><div style={`width:${pct}%`} /></div>
+                      {colPrefs.showBars && <div class="hbar" title={`ส่งแล้ว ${pct}%`}><div style={`width:${pct}%`} /></div>}
                     </th>
                   );
                 }))}
-                <th scope="col" class="tot-col" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>
+                {colPrefs.showTotal && <th scope="col" class="tot-col" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>}
               </tr>
             </thead>
             <tbody>
@@ -518,7 +573,7 @@ export function GradebookPage() {
                       {missingByStudent(st.id) && <span class="gb-reddot" />}
                       <span class="muted" style="margin-right:6px">{st.number ?? i + 1}</span>{fullName(st)}
                     </td>
-                    {groups.map((g) => {
+                    {dgroups.map(({ group: g, shown: cols }) => {
                       if (folded(g)) {
                         // the group's own total: same rule as สะสม, only over this group's work whose scores are showing
                         const shown = g.items.filter((a) => a.publish_scores);
@@ -529,7 +584,7 @@ export function GradebookPage() {
                           </td>
                         );
                       }
-                      return g.items.map((a) => {
+                      return cols.map((a) => {
                         const sub = subOf(a.id, st.id);
                         const isEditing = editing?.aid === a.id && editing?.sid === st.id;
                         return (
@@ -545,23 +600,25 @@ export function GradebookPage() {
                         );
                       });
                     })}
-                    <td class="tot-col" style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
+                    {colPrefs.showTotal && <td class="tot-col" style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>}
                   </tr>
                 );
               })}
               <tr class="avg">
                 <td class="name-col">เฉลี่ย · ส่งแล้ว</td>
-                {groups.map((g) => folded(g) ? <td /> : g.items.map((a) => {
+                {dgroups.map(({ group: g, shown: cols }) => folded(g) ? <td /> : cols.map((a) => {
                   const counts = countWorkStates(students.map((st) => stateOf(a.id, st.id, a)));
                   const scored = students.map((st) => subOf(a.id, st.id)).filter((s) => s && s.score != null) as Sub[];
                   const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
                   return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{assignmentFraction(counts)}</span></td>;
                 }))}
-                <td class="tot-col" />
+                {colPrefs.showTotal && <td class="tot-col" />}
               </tr>
             </tbody>
           </table>
         </div>
+        </div>
+        </>
       )}
 
       <div class="gb-legend">

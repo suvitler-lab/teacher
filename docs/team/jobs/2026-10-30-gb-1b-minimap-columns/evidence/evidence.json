@@ -1,0 +1,129 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/qa-gb-1b.test.ts (12/12) รันซ้ำโดย PM บนโค้ดสุดท้าย · ทดสอบเขียนโดย QA จากกติกา ก่อนดูโค้ด",
+    "artifact": "evidence/final-qa-expected-from-br.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T17:00:53.694Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser 820@24 minimap tap + jump unfold + hide type totals equal",
+    "artifact": "evidence/820x24-minimap-tap.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T16:55:21.950Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "browser 1180/1440@18 coarse-sim: tap<44=0 font<13=0 no h-scroll; Esc restores focus; B-01 not a bug",
+    "artifact": "evidence/1440x18-hidden-fits-menu.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T16:57:57.687Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser: after bulk confirm activeElement=ทำทั้งห้อง; typing in other cell during slow bulk not stolen/not saved",
+    "artifact": "evidence/1180x18-after-bulk-focus.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T16:57:58.046Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser: hide type totals equal, reload persists, corrupt localStorage -> all shown",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T16:57:58.446Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (85 ไฟล์ / 1016) && npm run build",
+    "artifact": "evidence/final-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T17:00:34.298Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "ผลวัดของ QA ใน qa-report.md: แตะ minimap 70% → กรอบ 70.3%, snap หยุดขอบคอลัมน์ ช่องว่างกับคอลัมน์ล็อก 0, ซ่อนแถบเมื่อพอดีจอ (1440 เหลือ 2/18) · ยังไม่ได้ลองนิ้วจริงบน iPad และลากต่อเนื่องรอบสุดท้าย",
+    "artifact": "evidence/820x24-minimap-tap.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3f6e694f968e73f327512fcb41fca87895a89d14",
+    "at": "2026-10-30T17:00:54.230Z"
+  }
+]

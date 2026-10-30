@@ -89,3 +89,36 @@ table.gb thead th .ht { padding-right: 0.9rem; }
 table.gb thead th .hs-eye.off { color: var(--text-warning); }
 table.gb thead th .hs-eye:hover { background: var(--surface-2); }
 table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
+
+/* gb-1b: edge shadows, one-column-at-a-time scrolling, minimap + jump buttons, column picker */
+.gb-frame { position: relative; --gb-name-w: clamp(9.5rem, 15vw, 14rem); --gb-col-w: 7.6rem; --gb-tot-w: 5.2rem; --gb-gh: max(var(--tap), 2.4rem); }
+.gb-frame::before, .gb-frame::after { content: ""; position: absolute; top: 0; bottom: 0; width: 1.1rem; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 7; }
+.gb-frame::before { left: var(--gb-name-w); background: linear-gradient(to right, rgba(20, 28, 46, 0.22), transparent); }
+.gb-frame::after { right: var(--gb-tot-w); background: linear-gradient(to left, rgba(20, 28, 46, 0.22), transparent); }
+.gb-frame.no-tot::after { right: 0; }
+.gb-frame.can-l::before, .gb-frame.can-r::after { opacity: 1; }
+.gb-frame .gb-scroll { scroll-snap-type: x mandatory; scroll-padding-left: var(--gb-name-w); scroll-padding-right: var(--gb-tot-w); }
+.gb-frame.no-tot .gb-scroll { scroll-padding-right: 0; }
+table.gb thead th.col-w { scroll-snap-align: start; }
+@media (prefers-reduced-motion: reduce) { .gb-frame::before, .gb-frame::after { transition: none; } }
+
+.gb-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.gb-nav-lbl { font-size: var(--fs-sm); color: var(--text-secondary); }
+.gb-mini { flex: 1; min-width: 9rem; height: max(var(--tap), 2.4rem); position: relative; display: flex; overflow: hidden; border-radius: 0.6rem; background: var(--surface-1); border: 0.5px solid var(--border); cursor: pointer; touch-action: none; user-select: none; }
+.gb-mini > i { flex: 1 1 0; min-width: 0; height: 100%; opacity: 0.55; border-right: 1px solid var(--surface-2); }
+.gb-mini-win { position: absolute; top: 0; bottom: 0; border: 2px solid var(--accent); border-radius: 0.5rem; background: var(--bg-accent-muted); pointer-events: none; }
+.gb-mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.gb-jump { min-height: max(var(--tap), 2.4rem); border-radius: 999px; font-size: var(--fs-sm); padding: 0 0.9rem; font-weight: 500; white-space: nowrap; }
+.gb-cols-btn { min-height: max(var(--tap), 2.13rem); white-space: nowrap; }
+
+.gb-colmenu { left: 0; right: auto; min-width: 17rem; max-width: min(24rem, 90vw); gap: 0; }
+.gb-colmenu-h { font-size: var(--fs-sm); font-weight: 600; padding: 0.25rem 0.5rem; }
+.gb-colmenu button[role="checkbox"] { display: flex; align-items: center; gap: 0.5rem; width: 100%; min-height: max(var(--tap), 2.27rem); white-space: normal; text-align: left; }
+.gb-colmenu button[role="checkbox"][aria-disabled="true"] { opacity: 0.55; cursor: default; }
+.gb-colmenu-dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; flex: none; }
+.gb-colmenu-note { margin: 0.35rem 0.5rem; font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.4; }
+button[aria-disabled="true"] { opacity: 0.5; cursor: default; }
+/* the column picker hangs from the whole toolbar (not from its own button) so it can never run past the page edge */
+.gb-toolbar { position: relative; }
+.gb-cols-wrap { position: static; }
+.gb-colmenu { top: calc(100% + 4px); max-height: 70dvh; overflow-y: auto; }
