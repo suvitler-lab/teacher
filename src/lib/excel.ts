@@ -1,4 +1,5 @@
 import type { ReportModel, ReportPayload } from "./report";
+import { attendancePercent, assignmentFraction } from "@shared/metrics";
 
 // "2026-09-30" -> "30/9" (day/month, the order Thai readers expect)
 const dayMonth = (iso: string) => `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}`;
@@ -63,7 +64,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
     for (const a of payload.assignments) {
       const sub = subMap.get(`${a.id}:${st.id}`);
       if (!sub || sub.status === "void") row.push(a.due_date && model.today > a.due_date ? "ไม่ส่ง" : "");
-      else if (sub.status === "excused") row.push("ลา");
+      else if (sub.status === "excused") row.push("ยกเว้น");
       else if (sub.score == null) row.push("รอตรวจ");
       else row.push(sub.score);
     }
@@ -98,9 +99,9 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
       if (status in tally) tally[status]++;
       row.push(status ? SHORT[status] : "");
     }
-    const marked = tally.present + tally.late + tally.leave + tally.sick + tally.absent;
     // nothing checked is "no data", not 0%
-    const pct = marked > 0 ? Math.round(((tally.present + tally.late) / marked) * 100) + "%" : "—";
+    const p = attendancePercent({ present: tally.present, late: tally.late, leave: tally.leave, sick: tally.sick, absent: tally.absent });
+    const pct = p != null ? p + "%" : "—";
     row.push(tally.present, tally.late, tally.leave, tally.sick, tally.absent, pct);
     s3.addRow(row);
   }
@@ -121,7 +122,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
       a.assignment.title,
       opts.workTypeName(a.assignment.type_id),
       a.assignment.full_score,
-      `${a.submitted}/${a.total}`,
+      assignmentFraction(a),
       a.rate + "%",
       a.average,
     ]);

@@ -11,6 +11,7 @@ import { fullName } from "../lib/names";
 import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs, formatThaiTimeMs } from "../lib/dates";
 import { StudentModal } from "./Students";
 import type { Student } from "@shared/types";
+import { scorePercent, attendancePercent, assignmentFraction } from "@shared/metrics";
 
 type SortKey = "number" | "submit" | "score" | "att";
 
@@ -111,8 +112,8 @@ export function ReportsPage() {
   // score distribution buckets
   const buckets = [0, 0, 0, 0, 0]; // <50, 50-59, 60-69, 70-79, 80+
   if (model) for (const s of model.students) {
-    if (!s.fullScore) continue;
-    const pct = (s.score / s.fullScore) * 100;
+    const pct = scorePercent(s.score, s.fullScore); // the same rounded % the table shows
+    if (pct == null) continue;
     const i = pct < 50 ? 0 : pct < 60 ? 1 : pct < 70 ? 2 : pct < 80 ? 3 : 4;
     buckets[i]++;
   }
@@ -184,7 +185,7 @@ export function ReportsPage() {
           <div class="stat-row" style="margin-bottom:12px">
             <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)} ที่ถึงกำหนด` + (model.students.reduce((n, s) => n + s.pending, 0) > 0 ? ` · ยังไม่ถึงกำหนด ${model.students.reduce((n, s) => n + s.pending, 0)}` : "")} />
             <StatCard label="งานค้าง" value={model.metrics.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint={`นักเรียน ${model.followUp.length} คน`} />
-            <StatCard label="คะแนนเฉลี่ย" value={`${model.metrics.avgScorePercent}%`} icon="star" hint="เฉพาะงานที่ตรวจแล้ว" />
+            <StatCard label="คะแนนเฉลี่ย" value={`${model.metrics.avgScorePercent}%`} icon="star" hint="คะแนนสะสม · ค้างส่งนับ 0" />
             <StatCard label="มาเรียน" value={model.metrics.attendanceRate == null ? "—" : `${model.metrics.attendanceRate}%`} tone="success" icon="user-check"
               hint={model.metrics.attendanceRate == null ? "ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้" : `จาก ${model.attendance.sessions} ${unitLabel} · ขาดรวม ${attMix?.absent ?? 0} ครั้ง`} />
           </div>
@@ -201,7 +202,7 @@ export function ReportsPage() {
                       <div>
                         <span class="lbl" title={a.assignment.title}>{a.assignment.title}</span>
                         <div class="track"><div style={`width:${a.rate}%;background:${color}`} /></div>
-                        <span class="num">{a.submitted}/{a.total}</span>
+                        <span class="num">{assignmentFraction(a)}</span>
                         <span class="pct" style={overdue ? "" : "color:var(--text-secondary);font-weight:400"}>{overdue ? a.rate + "%" : "เก็บอยู่"}</span>
                       </div>
                     );
@@ -272,8 +273,8 @@ export function ReportsPage() {
                 </tr></thead>
                 <tbody>
                   {sorted.map((s) => {
-                    const scorePct = s.fullScore ? Math.round((s.score / s.fullScore) * 100) : null;
-                    const attPct = s.attendance.daysMarked ? Math.round(((s.attendance.present + s.attendance.late) / s.attendance.daysMarked) * 100) : null;
+                    const scorePct = scorePercent(s.score, s.fullScore);
+                    const attPct = attendancePercent(s.attendance);
                     return (
                       <tr onClick={() => setDrawer(s.student.id)}>
                         <td class="muted">{s.student.number ?? "-"}</td>

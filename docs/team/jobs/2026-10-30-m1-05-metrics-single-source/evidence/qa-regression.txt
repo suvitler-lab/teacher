@@ -1,0 +1,24 @@
+== npm run typecheck
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+typecheck exit=0
+== npm test
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+This package will not receive future updates.
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  71 passed (71)
+      Tests  841 passed (841)
+   Start at  13:32:56
+   Duration  26.44s (transform 21.45s, setup 165.91s, import 25.88s, tests 101.36s, environment 47.10s)
+
+test exit=0

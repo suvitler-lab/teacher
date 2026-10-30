@@ -85,3 +85,97 @@ describe("attendanceRate", () => {
     expect(attendanceRate({ present: 0, late: 0, leave: 0, sick: 0, absent: 0 })).toBe(0);
   });
 });
+
+// ---- M1-05: one definition per number (BR-05) ------------------------------
+import {
+  percentOf, assignmentRate, classSubmitRate, scorePercent, attendancePercent,
+  averageAttendancePercent, countWorkStates,
+} from "@shared/metrics";
+import { bkkToday as sharedBkkToday, bkkParts as sharedBkkParts } from "@shared/time";
+import { bkkToday as workerBkkToday } from "../../worker/lib/time";
+import { isHalfStep } from "@shared/grade";
+
+describe("M1-05 percentOf — the one rounding point", () => {
+  it("rounds half up to a whole percent, null when there is nothing to divide by", () => {
+    expect(percentOf(2, 3)).toBe(67);
+    expect(percentOf(1, 8)).toBe(13); // 12.5 -> 13
+    expect(percentOf(0, 5)).toBe(0);
+    expect(percentOf(3, 0)).toBeNull();
+  });
+});
+
+describe("M1-05 AC-01 assignmentRate = submitted ÷ (class − excused)", () => {
+  // 10 children, past due: 4 scored on time · 1 late with score · 1 no score · 2 excused · 2 not handed in
+  const ids = Array.from({ length: 10 }, (_, i) => ({ id: "s" + i }));
+  const subs = new Map<string, SubLike>([
+    ["s0", scored(8)], ["s1", scored(7)], ["s2", scored(6)], ["s3", scored(9)],
+    ["s4", scored(5, true)], ["s5", awaiting], ["s6", excused], ["s7", excused],
+  ]);
+  it("75% from raw counts, the same as assignmentProgress.rate", () => {
+    const p = assignmentProgress(dueAgo, ids, subs, TODAY);
+    expect(assignmentRate({ submitted: 6, total: 10, excused: 2 })).toBe(75);
+    expect(assignmentRate(p)).toBe(p.rate);
+    expect(p.rate).toBe(75);
+  });
+  it("a class where everyone is excused is 0, not NaN", () => {
+    expect(assignmentRate({ submitted: 0, total: 2, excused: 2 })).toBe(0);
+  });
+  it("AC-02 countWorkStates counts every seat by its work state and adds up to the whole class", () => {
+    const states = ids.map((s) => workState(subs.get(s.id), dueAgo, TODAY));
+    const l = countWorkStates(states);
+    expect(l).toMatchObject({ scored: 4, late: 1, awaiting: 1, missing: 2, pending: 0, excused: 2, total: 10, submitted: 6, counted: 8 });
+    expect(l.scored + l.late + l.awaiting + l.missing + l.pending + l.excused).toBe(l.total);
+  });
+});
+
+describe("M1-05 AC-03 per-student and whole-class submit rate", () => {
+  it("2 handed in · 1 overdue · 1 not due yet = 67% (not-yet-due work is left out)", () => {
+    const s = studentSummary([dueAgo, dueAgo, dueAgo, dueSoon], (i) => [scored(8), awaiting, undefined, undefined][i], TODAY);
+    expect(s.submitRate).toBe(67);
+    expect(classSubmitRate([s])).toBe(67);
+  });
+  it("the class rate pools every child (Σ submitted ÷ Σ(submitted + missing)), not a mean of percents", () => {
+    // 1/1 and 1/3 -> pooled 2/4 = 50 (mean of percents would be 67)
+    expect(classSubmitRate([{ submitted: 1, missing: 0 }, { submitted: 1, missing: 2 }])).toBe(50);
+    expect(classSubmitRate([])).toBe(0);
+  });
+});
+
+describe("M1-05 scorePercent / attendancePercent", () => {
+  it("scorePercent: Σscore ÷ Σfull, null without any full score", () => {
+    expect(scorePercent(9, 20)).toBe(45);
+    expect(scorePercent(0, 0)).toBeNull();
+  });
+  it("AC-04 present 3 · late 1 · leave 1 · sick 0 · absent 1 = 67%; nothing checked = null (shown as —)", () => {
+    expect(attendancePercent({ present: 3, late: 1, leave: 1, sick: 0, absent: 1 })).toBe(67);
+    expect(attendancePercent({ present: 0, late: 0, leave: 0, sick: 0, absent: 0 })).toBeNull();
+    // attendanceRate keeps its old 0 fallback
+    expect(attendanceRate({ present: 0, late: 0, leave: 0, sick: 0, absent: 0 })).toBe(0);
+  });
+  it("averageAttendancePercent keeps the Students page's mean-per-child figure and skips unchecked children", () => {
+    const a = { present: 3, late: 1, leave: 1, sick: 0, absent: 1 }; // 4/6
+    const b = { present: 1, late: 0, leave: 0, sick: 0, absent: 1 }; // 1/2
+    const none = { present: 0, late: 0, leave: 0, sick: 0, absent: 0 };
+    expect(averageAttendancePercent([a, b, none])).toBe(58); // (0.6667 + 0.5) / 2 = 58.3
+    expect(averageAttendancePercent([none])).toBeNull();
+  });
+});
+
+describe("M1-05 AC-06 one Bangkok 'today' helper", () => {
+  it("23:30 and 00:30 Bangkok give the Bangkok date, the same in shared and worker", () => {
+    const at2330 = Date.UTC(2026, 9, 30, 16, 30); // 23:30 on 30 Oct in Bangkok
+    const at0030 = Date.UTC(2026, 9, 30, 17, 30); // 00:30 on 31 Oct in Bangkok
+    expect(sharedBkkToday(at2330)).toBe("2026-10-30");
+    expect(sharedBkkToday(at0030)).toBe("2026-10-31");
+    expect(workerBkkToday(at2330)).toBe(sharedBkkToday(at2330));
+    expect(workerBkkToday(at0030)).toBe(sharedBkkToday(at0030));
+    expect(sharedBkkParts(at0030)).toMatchObject({ hm: "00:30", minutes: 30 });
+  });
+});
+
+describe("M1-05 AC-05 isHalfStep is the one half-point rule", () => {
+  it("accepts 7.5 and 0.5, rejects 7.25 and 7.500000000000001", () => {
+    expect([7.5, 0.5, 0, 10].every(isHalfStep)).toBe(true);
+    expect([7.25, 7.500000000000001, NaN, Infinity].some(isHalfStep)).toBe(false);
+  });
+});

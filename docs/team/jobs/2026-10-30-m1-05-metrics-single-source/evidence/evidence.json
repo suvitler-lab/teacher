@@ -1,0 +1,280 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/metrics.test.ts test/unit/m1-05-screens.test.tsx test/unit/m1-05-scan.test.tsx test/api/m1-05-metrics.test.ts",
+    "artifact": "evidence/before-fix.txt",
+    "expected": "new tests fail on unfixed tree",
+    "actual": "4 files failed, 8 tests failed + metrics.test import of @shared/time missing",
+    "reason": "",
+    "snapshot": "tree:b71e5e8b3a99b2ea4e10bd8be2cfef030703ddcd",
+    "at": "2026-10-30T06:14:22.165Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test",
+    "artifact": "evidence/regression-final.txt",
+    "expected": ">= 65/772",
+    "actual": "typecheck 0; 71 files / 841 passed",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:23.893Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "mutation M-1..M-3 (see artifact)",
+    "artifact": "evidence/mutation.txt",
+    "expected": "each mutation fails >=1 test",
+    "actual": "4/4 killed, cmp identical; no app file under shared/src/worker newer than mutation-verify1.txt",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:24.710Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "grep -rnE '\\* ?100\\b|Math.round\\(' src/pages src/components src/lib",
+    "artifact": "evidence/grep-ac07-final.txt",
+    "expected": "no %/rate formula",
+    "actual": "none; display-only hits as before",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:25.509Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [
+      "BR-05"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/unit/qa-m1-05.test.ts test/api/qa-m1-05.test.ts",
+    "artifact": "evidence/expected-from-br.md",
+    "expected": "E-01..E-14,E-16 by hand from BR-05; R-05 full 3 (1.5,2,2,2) = 7.5/12 = 62.5 -> 63; all full -> 100",
+    "actual": "Verify 2: all match (20/20)",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:33:37.748Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test",
+    "artifact": "evidence/qa-regression.txt",
+    "expected": "baseline >= 65 files / 772",
+    "actual": "Verify 2: typecheck exit 0; 71 files / 841 passed, 0 failed",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:33:38.133Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-03",
+      "AC-04",
+      "AC-10"
+    ],
+    "br": [
+      "BR-05"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/qa-m1-05.test.ts test/api/qa-m1-05.test.ts (B-01, AC-10, R-05 tests)",
+    "artifact": "evidence/qa-tests.txt",
+    "expected": "23/40 -> 58, 57.5/100 -> 58, 29/200 -> 15; graded avg 62.5 -> 63, all full -> 100",
+    "actual": "58, 58, 15, 63 (model+Excel), 100",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:33:38.527Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-03",
+      "AC-04",
+      "AC-08",
+      "AC-09",
+      "AC-11"
+    ],
+    "br": [
+      "BR-05"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/qa-m1-05.test.ts test/api/qa-m1-05.test.ts",
+    "artifact": "evidence/qa-tests.txt",
+    "expected": "same % on Gradebook/Reports/model/Excel/API; AC-09; AC-11; no-excused unchanged",
+    "actual": "Verify 2: 20 passed",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:33:38.913Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06",
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "bkkToday 23:30/00:30 test + grep src/pages",
+    "artifact": "evidence/qa-grep-ac06-ac07.txt",
+    "expected": "one helper; no % formula in pages; README heading",
+    "actual": "Verify 2: unchanged, pass",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:33:39.286Z"
+  },
+  {
+    "check": "Q-94",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test",
+    "artifact": "evidence/regression-final.txt",
+    "expected": "71 files / 841",
+    "actual": "typecheck 0; 71 files / 841 passed",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:24.307Z"
+  },
+  {
+    "check": "Q-95",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-10"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "mutation M-4..M-6 (see artifact)",
+    "artifact": "evidence/mutation-verify1.txt",
+    "expected": "each mutation fails >=1 test",
+    "actual": "3/3 killed, cmp identical; app code unchanged since M-6 (find -newer: none)",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:25.111Z"
+  },
+  {
+    "check": "Q-96",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "grep -rnE '\\* ?100\\b|Math.round\\(' src/pages src/components src/lib",
+    "artifact": "evidence/grep-ac07-final.txt",
+    "expected": "no %/rate formula in pages, components, lib",
+    "actual": "none; display-only hits as before",
+    "reason": "",
+    "snapshot": "tree:6948b6eca429aa133472c821cce0b3122a8d2676",
+    "at": "2026-10-30T06:35:25.902Z"
+  },
+  {
+    "check": "Q-97",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-10"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/m1-05-verify1.test.tsx -t R-05",
+    "artifact": "evidence/before-fix-r05.txt",
+    "expected": "R-05 tests fail before fix",
+    "actual": "2 failed: 87 instead of 88 (unit + Excel)",
+    "reason": "",
+    "snapshot": "tree:89f62f40a91cb596ed1e15672c289799df3137f1",
+    "at": "2026-10-30T06:31:55.326Z"
+  }
+]

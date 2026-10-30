@@ -13,7 +13,8 @@ import { enqueueSubmission, onResult, pendingOps, failedPairKeys, pairKey, flush
 import { actionTime } from "../lib/clock";
 import { ulid } from "@shared/ids";
 import { decideCellCommit } from "@shared/grade";
-import { workState, studentSummary, type WorkState } from "@shared/metrics";
+import { workState, studentSummary, countWorkStates, assignmentRate, assignmentFraction, classSubmitRate, type WorkState } from "@shared/metrics";
+import { bkkToday } from "@shared/time";
 import { fullName } from "../lib/names";
 import { formatThaiDate, monthOptions, currentMonthIso } from "../lib/dates";
 import { notify, ok, err, withToast } from "../lib/notify";
@@ -25,9 +26,6 @@ interface Sub { status: string; score: number | null; late: boolean }
 type SubKey = string; // `${assignmentId}:${studentId}`
 type RowFilter = "all" | "missing" | "awaiting";
 
-function bkkToday(): string {
-  return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-}
 const TINT_FG: Record<string, string> = {
   aqua: "var(--tint-aqua-fg)", violet: "var(--tint-violet-fg)", orange: "var(--tint-orange-fg)",
   green: "var(--tint-green-fg)", blue: "var(--tint-blue-fg)", magenta: "var(--tint-magenta-fg)", red: "var(--tint-red-fg)",
@@ -297,14 +295,9 @@ export function GradebookPage() {
   const allHidden = assignments.length > 0 && visibleWork.length === 0;
 
   // summary metrics for the toolbar
-  let totSubmitted = 0, totApplic = 0, totAwaiting = 0, totMissing = 0;
-  for (const st of students) for (const a of assignments) {
-    const s = stateOf(a.id, st.id, a);
-    if (s === "scored" || s === "late" || s === "awaiting") { totSubmitted++; totApplic++; }
-    else if (s === "missing") { totApplic++; totMissing++; }
-    if (s === "awaiting") totAwaiting++;
-  }
-  const submitRate = totApplic ? Math.round((totSubmitted / totApplic) * 100) : 0;
+  const tot = countWorkStates(students.flatMap((st) => assignments.map((a) => stateOf(a.id, st.id, a))));
+  const totAwaiting = tot.awaiting, totMissing = tot.missing;
+  const submitRate = classSubmitRate([tot]); // Σ handed in ÷ Σ(handed in + overdue), not-yet-due left out
 
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
 
@@ -405,8 +398,7 @@ export function GradebookPage() {
               <tr>
                 <th class="name-col">ชื่อ - สกุล</th>
                 {assignments.map((a) => {
-                  const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(a.id, st.id, a))).length;
-                  const pct = students.length ? Math.round((submitted / students.length) * 100) : 0;
+                  const pct = assignmentRate(countWorkStates(students.map((st) => stateOf(a.id, st.id, a))));
                   return (
                     <th tabIndex={0} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
@@ -454,10 +446,10 @@ export function GradebookPage() {
               <tr class="avg">
                 <td class="name-col">เฉลี่ย · ส่งแล้ว</td>
                 {assignments.map((a) => {
-                  const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(a.id, st.id, a))).length;
+                  const counts = countWorkStates(students.map((st) => stateOf(a.id, st.id, a)));
                   const scored = students.map((st) => subOf(a.id, st.id)).filter((s) => s && s.score != null) as Sub[];
                   const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
-                  return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{submitted}/{students.length}</span></td>;
+                  return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{assignmentFraction(counts)}</span></td>;
                 })}
                 <td />
               </tr>
@@ -531,7 +523,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
 }) {
   const [menu, setMenu] = useState(false);
   if (!selAsg) return null;
-  const submitted = students.filter((st) => ["scored", "late", "awaiting"].includes(stateOf(selAsg.id, st.id, selAsg))).length;
+  const counts = countWorkStates(students.map((st) => stateOf(selAsg.id, st.id, selAsg)));
   return (
     <div class="card">
       <div class="gb-mchips">
@@ -542,7 +534,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
       {/* the tabs above cut long titles short: the work picked is always named in full here */}
       <div style="font-weight:500;overflow-wrap:anywhere;margin-bottom:2px">{selAsg.title}</div>
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
-        <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {submitted}/{students.length}</span>
+        <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {assignmentFraction(counts)}</span>
         <div style="position:relative">
           <button style="height:28px" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
           {menu && (<>

@@ -28,7 +28,8 @@ import {
 import type { ScanMode, Student, SubmissionOpResult } from "@shared/types";
 import { buildIndex, resolveScan } from "@shared/scan";
 import { isHalfStep } from "@shared/grade";
-import { workState } from "@shared/metrics";
+import { bkkToday } from "@shared/time";
+import { workState, countWorkStates } from "@shared/metrics";
 import { ulid } from "@shared/ids";
 import { api } from "../lib/api";
 import { enqueueSubmission, onResult, pendingCount, syncing, online, pendingOps, failedPairKeys, pairKey } from "../lib/outbox";
@@ -121,9 +122,6 @@ function applyAssignmentInfo(aid: string, info: { status: string; full_score: nu
   }
 }
 
-function bkkToday(): string {
-  return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-}
 
 // restore a saved session across reloads
 kvGet<Session>("scanSession").then((s) => {
@@ -627,17 +625,23 @@ function ScanView() {
   const subj = subjectById(s.subjectId);
   const wt = workTypeById(asg?.type_id ?? null);
   const classStudents = studentsByClass.value.get(s.classId) ?? [];
-  const submittedCount = classStudents.filter((st) => effSub(st.id)?.status === "submitted").length;
-  const missing = classStudents.filter((st) => effSub(st.id)?.status !== "submitted");
   const waiting = classStudents.filter((st) => markOf(st.id) === "pend").length;
   const modeLabel = s.mode === "full" ? "ให้คะแนนเต็ม" : s.mode === "type" ? "กรอกทีละคน" : "รับงานก่อน";
   const today = bkkToday();
-  // the seat grid's "late" colour, counted the same way the grid decides it. The legend splits the hand-ins:
-  // on time (ส่งแล้ว) + late (ส่งช้า) + not handed in (ยังไม่ส่ง) = the whole class; the ring keeps all hand-ins
-  const lateCount = asg ? classStudents.filter((st) => {
+  // the legend counts every seat by the same work state that colours it, so the groups add up to the
+  // whole class; the ring is hand-ins ÷ (class − excused), the same rate as Home / Gradebook / Reports
+  const seat = countWorkStates(classStudents.map((st) => {
     const sub = effSub(st.id);
-    return !!sub && workState({ status: sub.status, score: sub.score, late: sub.late === true }, asg, today) === "late";
-  }).length : 0;
+    return asg ? workState(sub ? { status: sub.status, score: sub.score, late: sub.late === true } : null, asg, today) : "pending";
+  }));
+  const overdue = !!asg?.due_date && today > asg.due_date;
+  const LEGEND: { n: number; label: string; swatch: string }[] = [
+    { n: seat.scored, label: "ส่งแล้ว", swatch: "background:var(--bg-success);border:0.5px solid var(--border-success)" },
+    { n: seat.late, label: "ส่งช้า", swatch: "background:var(--bg-warning);border:0.5px solid var(--border-warning)" },
+    { n: seat.awaiting, label: "รอตรวจ", swatch: "background:var(--bg-accent);border:0.5px solid var(--border-accent)" },
+    { n: seat.missing + seat.pending, label: "ยังไม่ส่ง", swatch: overdue ? "border:0.5px dashed var(--border-danger)" : "border:0.5px dashed var(--text-secondary)" },
+    { n: seat.excused, label: "ยกเว้น", swatch: "background:var(--surface-1);border:0.5px solid var(--border)" },
+  ];
   const otherClasses = (asg?.class_ids ?? []).filter((c) => c !== s.classId);
   const known = subsBox.value.aid === s.assignmentId && subsBox.value.status === "ready";
   const up = online.value && serverReachable.value;
@@ -790,11 +794,11 @@ function ScanView() {
 
         <div class="card">
           <div class="row" style="gap:12px;margin-bottom:8px">
-            <ProgressRing value={known ? submittedCount : 0} total={classStudents.length} size={72} label={known ? "ส่งแล้ว" : "ไม่ทราบ"} />
+            <ProgressRing value={known ? seat.submitted : 0} total={known ? seat.counted : classStudents.length} size={72} label={known ? "ส่งแล้ว" : "ไม่ทราบ"} />
             <div style="font-size:13px">
-              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;background:var(--fill-success)" />ส่งแล้ว {known ? submittedCount - lateCount : "?"}</div>
-              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;background:var(--bg-warning);border:0.5px solid var(--border-warning)" />ส่งช้า {known ? lateCount : "?"}</div>
-              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;border:0.5px dashed var(--text-secondary)" />ยังไม่ส่ง {known ? missing.length : "?"}</div>
+              {known
+                ? LEGEND.filter((g) => g.n > 0).map((g) => <div class="row" style="gap:6px"><span style={"width:9px;height:9px;border-radius:2px;" + g.swatch} />{g.label} {g.n}</div>)
+                : <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;border:0.5px dashed var(--text-secondary)" />ยังไม่ทราบ ?</div>}
               {waiting > 0 && <div class="row" style="gap:6px;color:var(--text-warning)"><span style="width:9px;height:9px;border-radius:50%;background:var(--fill-warning)" />รอส่งขึ้นระบบ {waiting}</div>}
             </div>
           </div>
@@ -825,7 +829,9 @@ function ScanSummary({ s }: { s: Session }) {
   const cls = activeClasses.value.find((c) => c.id === s.classId);
   const classStudents = studentsByClass.value.get(s.classId) ?? [];
   const submitted = classStudents.filter((st) => effSub(st.id)?.status === "submitted");
-  const missing = classStudents.filter((st) => effSub(st.id)?.status !== "submitted");
+  // excused children are not counted (BR-05): not in the ring's total, not on the "not handed in" list
+  const missing = classStudents.filter((st) => { const st2 = effSub(st.id)?.status; return st2 !== "submitted" && st2 !== "excused"; });
+  const counted = submitted.length + missing.length;
   const [copied, setCopied] = useState(false);
 
   function copyMissing() {
@@ -838,7 +844,7 @@ function ScanSummary({ s }: { s: Session }) {
       <div class="page-head"><div class="page-title">จบรอบสแกน</div></div>
       <div class="card sc-summary">
         <div class="row" style="gap:10px;margin-bottom:12px">
-          <ProgressRing value={submitted.length} total={classStudents.length} label="ส่งแล้ว" />
+          <ProgressRing value={submitted.length} total={counted} label="ส่งแล้ว" />
           <div>
             <div style="font-weight:500">{asg?.title}</div>
             <div class="page-sub">{cls?.name} · เต็ม {s.fullScore}</div>

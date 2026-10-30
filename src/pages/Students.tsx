@@ -11,6 +11,7 @@ import { rosterOf } from "@shared/roster";
 import { computeReport, type ReportPayload, type StudentReport } from "../lib/report";
 import { selectedTermId } from "../store";
 import type { Student } from "@shared/types";
+import { attendancePercent, averageAttendancePercent } from "@shared/metrics";
 import { api } from "../lib/api";
 import { fullName } from "../lib/names";
 import { ok, withToast } from "../lib/notify";
@@ -95,11 +96,7 @@ export function StudentsPage() {
     for (const s of active) if (s.number != null) by.set(s.number, [...(by.get(s.number) ?? []), s.first_name]);
     return [...by.entries()].filter(([, names]) => names.length > 1).sort((a, b) => a[0] - b[0]);
   })();
-  const avgAtt = (() => {
-    const rs = [...reports.values()].filter((r) => r.attendance.daysMarked > 0);
-    if (!rs.length) return null;
-    return Math.round(rs.reduce((n, r) => n + (r.attendance.present + r.attendance.late) / r.attendance.daysMarked, 0) / rs.length * 100);
-  })();
+  const avgAtt = averageAttendancePercent([...reports.values()].map((r) => r.attendance));
 
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
 
@@ -160,7 +157,7 @@ export function StudentsPage() {
           <EmptyState icon="user-question" text={q ? "ไม่พบนักเรียนที่ค้นหา" : "ยังไม่มีนักเรียนในห้องนี้"} action={!q && !past && <button class="primary" onClick={() => setEdit("new")}><Icon name="plus" size={16} /> เพิ่มนักเรียน</button>} />
         ) : shown.map((st, i) => {
           const r = reports.get(st.id);
-          const attPct = r && r.attendance.daysMarked ? Math.round(((r.attendance.present + r.attendance.late) / r.attendance.daysMarked) * 100) : null;
+          const attPct = r ? attendancePercent(r.attendance) : null;
           const submitPct = r ? r.percent : 0; // no stats yet ≠ "handed everything in"
           return (
             <button type="button" class={"stu-lrow" + (drawer === st.id ? " sel" : "")} aria-label={`ดูข้อมูล ${fullName(st)} เลขที่ ${st.number ?? i + 1}`} onClick={() => setDrawer(st.id)}>

@@ -10,10 +10,11 @@ import { navigate } from "../router";
 import { useLoadGuard } from "../lib/loader";
 import { pickNext, shuffle, remainingInRound, attendancePool, type PoolBlocker } from "../lib/random";
 import type { Student } from "@shared/types";
+import { bkkToday } from "@shared/time";
 
 const GROUP_COLORS = ["var(--tint-blue-fg)", "var(--tint-aqua-fg)", "var(--tint-violet-fg)", "var(--tint-orange-fg)", "var(--tint-green-fg)", "var(--tint-magenta-fg)", "var(--tint-red-fg)", "var(--text-secondary)"];
 
-function todayBkk(): string { return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10); }
+const todayBkk = () => bkkToday();
 
 interface Att { status: "loading" | "ready" | "error"; marked: number; present: Set<string> }
 const NOBODY: Att = { status: "loading", marked: 0, present: new Set() };

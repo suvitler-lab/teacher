@@ -1,0 +1,8 @@
+# M1-05 final regression 2026-10-30 13:34
+## npm run typecheck
+> tsc --noEmit
+
+exit=0
+## npm test
+ Test Files  71 passed (71)
+      Tests  841 passed (841)

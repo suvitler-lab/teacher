@@ -1,12 +1,13 @@
 import { z } from "zod";
 import type { Env } from "../env";
+import { isHalfStep } from "@shared/grade";
 
 export interface RestoreIssue { table: string; rowId: string; field: string; code: string }
 const text = z.string();
 const key = text.min(1);
 const integer = z.number().int();
-// Scores are saved in 0.5 steps (opSchema in routes/submissions.ts, shared/grade.ts).
-const halfStep = z.number().multipleOf(0.5);
+// Scores are saved in 0.5 steps: one rule, isHalfStep, for opSchema in routes/submissions.ts and the screens.
+const halfStep = z.number().refine(isHalfStep);
 const stamp = integer.min(0);
 const optionalText = text.nullish();
 const optionalKey = key.nullish();

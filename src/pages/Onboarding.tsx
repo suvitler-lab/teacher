@@ -4,15 +4,13 @@ import { Icon } from "../components/Icon";
 import { api, ApiError } from "../lib/api";
 import { classes, subjects, terms, settings, loadBootstrap, onboardingOn, setSelectedTerm } from "../store";
 import { navigate } from "../router";
+import { bkkToday } from "@shared/time";
 
 const STEPS = ["โรงเรียน", "ภาคเรียน", "ห้องเรียน", "วิชา", "เสร็จแล้ว"];
 const GRADES = ["ป.1", "ป.2", "ป.3", "ป.4", "ป.5", "ป.6", "ม.1", "ม.2", "ม.3", "ม.4", "ม.5", "ม.6"];
 const SUBJECT_IDEAS = ["ภาษาไทย", "คณิตศาสตร์", "วิทยาศาสตร์", "ภาษาอังกฤษ", "สังคมศึกษา", "สุขศึกษาและพลศึกษา", "ศิลปะ", "การงานอาชีพ", "คอมพิวเตอร์"];
 const COLORS = ["blue", "green", "orange", "violet", "aqua", "magenta", "red"];
 
-function bkkToday(): string {
-  return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-}
 /** The academic year (พ.ศ.) and term the calendar suggests: term 1 from May, term 2 from Oct; Jan–Mar still belongs to last year's term 2. */
 function suggestedTerm(): { year: number; term: number } {
   const d = new Date(Date.now() + 7 * 3600 * 1000);

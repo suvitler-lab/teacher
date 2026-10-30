@@ -1,23 +1,6 @@
-// Asia/Bangkok is UTC+7 with no DST — a fixed offset, safe to compute directly.
-const BKK_OFFSET_MS = 7 * 60 * 60 * 1000;
-
-export function bkkParts(ms: number): { date: string; hm: string; minutes: number } {
-  const d = new Date(ms + BKK_OFFSET_MS);
-  const y = d.getUTCFullYear();
-  const mo = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  const hh = d.getUTCHours();
-  const mm = d.getUTCMinutes();
-  return {
-    date: `${y}-${mo}-${day}`,
-    hm: `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`,
-    minutes: hh * 60 + mm,
-  };
-}
-
-export function bkkToday(ms = Date.now()): string {
-  return bkkParts(ms).date;
-}
+// bkkParts/bkkToday live in shared/time.ts so the pages use the very same "today" (M1-05).
+import { bkkToday } from "@shared/time";
+export { bkkParts, bkkToday } from "@shared/time";
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
 /** Trust the client's event time, but never in the future or older than 7 days. */

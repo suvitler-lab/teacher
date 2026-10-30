@@ -1,0 +1,10 @@
+# R-05 failing-before-fix 13:30
+# cmd: npx vitest run test/unit/m1-05-verify1.test.tsx -t R-05
+     × full 3, scores 2.5 2.5 3 2.5 -> 10.5 / 12 = 87.5 -> 88 5ms
+     × Excel class overview shows the same 88 in the average column 377ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > full 3, scores 2.5 2.5 3 2.5 -> 10.5 / 12 = 87.5 -> 88
+AssertionError: expected 87 to be 88 // Object.is equality
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > Excel class overview shows the same 88 in the average column
+AssertionError: expected 87 to be 88 // Object.is equality
+      Tests  2 failed | 15 skipped (17)
