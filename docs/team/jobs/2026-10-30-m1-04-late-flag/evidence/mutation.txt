@@ -1,0 +1,60 @@
+# Mutation re-run on the current code (Verify round 3) — 2026-10-30
+== M1: assignment edit without the late UPDATE ==
+     × E01-E05 same due date: 23:59 / 23:59:59.999 on time, 00:00 / 00:01 next Bangkok day late, UTC-yesterday 00:00 BKK on time 105ms
+     × E06-E07 postponing by one day clears 10-21 hand-ins (incl. 00:00 BKK) but not 10-22 00:00 BKK 76ms
+     × E08-E09 moving the due date back: 10-22 10:00 late, 10-20 23:59 still on time 92ms
+     × E10-E13 void/excused with a stale late=1 and a row without submitted_at end at 0; a submitted twin stays late 100ms
+     × E14-E15 month end: adding due 10-31 makes 11-01 00:00 BKK late, 10-31 23:59 on time 77ms
+     × E16 year end: due 2026-12-31 makes 2027-01-01 00:00 BKK late, 23:59:59.999 on time 87ms
+     × R report scenario: late counts in gradebook / reports summary / dashboard follow each due change 121ms
+     × the scan screen's source (GET /api/assignments/:id/submissions) returns late as a boolean after the edit 79ms
+     × a first hand-in made after the due change is decided by the NEW due date (scan op path) 104ms
+     × bulk 'all submitted' after the due change uses the new due date, and a later edit agrees 104ms
+     × saving the same due date twice is idempotent and never touches updated_at / event_at / submitted_at / score 81ms
+     × two edits sent at once: the stored late always matches the stored due date 110ms
+     × R-02 malformed due/assigned dates are refused (422) and change nothing; an empty due date means none 120ms
+     × AC-01 moving the due date later clears late; submitted_at, score, updated_at, event_at are untouched 100ms
+     × AC-02 moving the due date back earlier makes the after-due hand-in late again 87ms
+     × AC-01+02 round trip: 10-20 → 10-25 → 10-20 77ms
+     × AC-03 removing the due date clears every late flag 99ms
+     × AC-04 compares the Bangkok date, not UTC: 23:30 on the due day is on time, 00:30 the next day is late 75ms
+     × AC-04 early-morning Bangkok hand-in is a new day although UTC still says yesterday 78ms
+     × AC-04 the SQL decision equals isLateSubmission at every boundary minute 84ms
+     × R-02 a due date must be YYYY-MM-DD; an empty one means none 90ms
+     × R-03 a fractional ms in the last half-ms before Bangkok midnight is still that day (truncated, as in JS) 74ms
+     × AC-05 void, excused, and rows without submitted_at are never late 103ms
+     × AC-09 gradebook, reports and dashboard count late by the new value 161ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 24 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  24 failed | 21 passed (45)
+restored worker/routes/assignments.ts
+== M4: bulk-undo without the appended late UPDATE ==
+     × AC-10 clear class → postpone due to 10-25 → undo the clear: A comes back NOT late, counts 0 everywhere 193ms
+     × AC-10 reverse: due 10-25, clear → move due back to 10-20 → undo: A comes back late, counts 1 everywhere 152ms
+     × clear the class → move the due date later → undo the clear: A comes back on time 161ms
+     × clear → move the due date earlier → undo: an on-time hand-in comes back late 124ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 41 passed (45)
+restored worker/routes/submissions.ts
+== M5: /api/submissions/batch without the appended late UPDATE ==
+     × AC-10 a due-date edit landing between the scan op's judge and its write: the new row follows the NEW due date 79ms
+     × a due-date edit landing between the judge and the write of a first hand-in: late follows the new date 84ms
+     × the reverse race: judged on time, the edit moves the due date into the past first → stored late 87ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 42 passed (45)
+restored worker/routes/submissions.ts
+== M10: back to the plain YYYY-MM-DD regex (no CE year range, no real-date check) ==
+     × R-02 (B-01) a Buddhist-era due date (2569-10-20) is refused — brief: YYYY-MM-DD in the Common Era 68ms
+     × B-01 a date that does not exist (2026-02-30) is refused and changes nothing 68ms
+     × B-01 a year before 1900 (1899-12-31) is refused; 1900-01-01 and 2099-12-31 are accepted 68ms
+     × B-01 an old work already stored with a BE due date can still be hidden / closed with that same value (late unchanged) 80ms
+     × B-01/R-09 a due date must be a real Common-Era date (1900–2099) 72ms
+     × B-01 a date the work already holds (older BE data) is kept; a changed one must be CE 72ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  6 failed | 39 passed (45)
+restored worker/routes/assignments.ts
+== M12: no 'same as stored' exception (every date must be CE) ==
+     × B-01 an old work already stored with a BE due date can still be hidden / closed with that same value (late unchanged) 67ms
+     × B-01 a date the work already holds (older BE data) is kept; a changed one must be CE 68ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 43 passed (45)
+restored worker/routes/assignments.ts

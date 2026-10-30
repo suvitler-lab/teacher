@@ -31,10 +31,3 @@ export function isLateSubmission(dueDate: string | null, submittedMs: number): b
   if (!dueDate) return false;
   return bkkToday(submittedMs) > dueDate;
 }
-
-/** minutes-of-day threshold from "HH:MM"; used to flag late attendance. */
-export function hmToMinutes(hm: string): number {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(hm);
-  if (!m) return 8 * 60 + 30;
-  return Number(m[1]) * 60 + Number(m[2]);
-}

@@ -9,6 +9,7 @@ import { classInYear, inRoster } from "@shared/roster";
 import { readJson, bad, notFound, conflict, ApiError } from "../lib/http";
 import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { isLateSubmission, clampClientTs } from "../lib/time";
+import { lateFixForCells } from "../lib/late";
 import { id, ulid } from "@shared/ids";
 import type { SubmissionOpResult, Submission } from "@shared/types";
 
@@ -390,8 +391,13 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       // the audit goes FIRST: both statements judge the same "before" (the upsert is what changes it), and
       // both re-check `stillValid` — so a row is audited if and only if it is written
       const snapshots = cellSnapshots(rows, world.existing);
+      // last: late re-decided from the due date as it is inside this transaction (a due-date edit may have
+      // landed since the judge read it) — RETURNING the cells it corrected, so the reply says what is stored
+      let corrected = new Map<string, number>();
       try {
-        await c.env.DB.batch([cellsGuard(c.env, snapshots, epoch), guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch)]);
+        const res = await c.env.DB.batch([cellsGuard(c.env, snapshots, epoch), guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch), lateFixForCells(c.env, rows)]);
+        corrected = new Map(((res[3]?.results ?? []) as { assignment_id: string; student_id: string; late: number }[])
+          .map((r) => [`${r.assignment_id} ${r.student_id}`, r.late]));
       } catch (e) {
         if ((await getEpoch(c.env)) !== epoch) {
           for (const p of pending) results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
@@ -413,7 +419,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         : null;
       for (const p of pending) {
         if (landed.has(p.op.opId)) {
-          results[p.index] = { opId: p.op.opId, result: "ok", submission: mapSubmission(p.row) };
+          const fixed = corrected.get(`${p.op.assignmentId} ${p.op.studentId}`);
+          results[p.index] = { opId: p.op.opId, result: "ok", submission: mapSubmission(fixed == null ? p.row : { ...p.row, late: fixed }) };
         } else if (fresh!.epoch !== epoch) {
           results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
         } else {
@@ -532,7 +539,8 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
     const before = new Map([...curMap].map(([sid, row]) => [`${aid}\u0000${sid}`, row]));
     const snapshots = cellSnapshots(upserts, before);
     try {
-      await batchAtEpoch(c.env, epoch, [cellsGuard(c.env, snapshots), guardedAuditStmt(c.env, audits, upserts, epoch, now), submissionUpsertStmt(c.env, upserts, epoch)]);
+      await batchAtEpoch(c.env, epoch, [cellsGuard(c.env, snapshots), guardedAuditStmt(c.env, audits, upserts, epoch, now), submissionUpsertStmt(c.env, upserts, epoch),
+        lateFixForCells(c.env, upserts)]); // late from the due date as it is now, not as read above
     } catch (e) {
       if (e instanceof ApiError) throw e;
       if (await cellsChanged(c.env, snapshots)) throw conflict("modified_since", "มีการบันทึกคะแนนระหว่างทำรายการ — โหลดข้อมูลใหม่แล้วลองอีกครั้ง");
@@ -644,6 +652,8 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
         JSON.stringify(upserts), aid),
       submissionUpsertStmt(c.env, upserts),
       auditInsertStmt(c.env, audits, now),
+      // the saved late belongs to the due date of the time of the bulk action: re-decide it from today's due date
+      lateFixForCells(c.env, upserts),
     ]);
   } catch (e) {
     if (e instanceof ApiError) throw e; // epoch_changed

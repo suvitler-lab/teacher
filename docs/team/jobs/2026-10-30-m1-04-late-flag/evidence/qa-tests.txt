@@ -1,0 +1,37 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E01-E05 same due date: 23:59 / 23:59:59.999 on time, 00:00 / 00:01 next Bangkok day late, UTC-yesterday 00:00 BKK on time 85ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E06-E07 postponing by one day clears 10-21 hand-ins (incl. 00:00 BKK) but not 10-22 00:00 BKK 68ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E08-E09 moving the due date back: 10-22 10:00 late, 10-20 23:59 still on time 65ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E10-E13 void/excused with a stale late=1 and a row without submitted_at end at 0; a submitted twin stays late 79ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E14-E15 month end: adding due 10-31 makes 11-01 00:00 BKK late, 10-31 23:59 on time 69ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > E16 year end: due 2026-12-31 makes 2027-01-01 00:00 BKK late, 23:59:59.999 on time 67ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > R report scenario: late counts in gradebook / reports summary / dashboard follow each due change 230ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > the scan screen's source (GET /api/assignments/:id/submissions) returns late as a boolean after the edit 69ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > a first hand-in made after the due change is decided by the NEW due date (scan op path) 80ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > bulk 'all submitted' after the due change uses the new due date, and a later edit agrees 80ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > saving the same due date twice is idempotent and never touches updated_at / event_at / submitted_at / score 67ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > two edits sent at once: the stored late always matches the stored due date 67ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > AC-10 clear class → postpone due to 10-25 → undo the clear: A comes back NOT late, counts 0 everywhere 120ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > AC-10 reverse: due 10-25, clear → move due back to 10-20 → undo: A comes back late, counts 1 everywhere 99ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > AC-10 a due-date edit landing between the scan op's judge and its write: the new row follows the NEW due date 67ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > AC-10 bulk 'all submitted' with a due-date edit landing before its write follows the NEW due date 70ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > R-02 malformed due/assigned dates are refused (422) and change nothing; an empty due date means none 79ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > R-02 (B-01) a Buddhist-era due date (2569-10-20) is refused — brief: YYYY-MM-DD in the Common Era 59ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > B-01 a date that does not exist (2026-02-30) is refused and changes nothing 63ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > B-01 a year before 1900 (1899-12-31) is refused; 1900-01-01 and 2099-12-31 are accepted 66ms
+ ✓ |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > B-01 an old work already stored with a BE due date can still be hidden / closed with that same value (late unchanged) 69ms
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  12:25:22
+   Duration  3.17s (transform 469ms, setup 972ms, import 16ms, tests 1.72s, environment 0ms)
+
