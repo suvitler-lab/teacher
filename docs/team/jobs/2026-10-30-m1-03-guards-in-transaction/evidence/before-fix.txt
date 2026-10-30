@@ -1,0 +1,22 @@
+# npx vitest run test/api/guards-in-transaction.test.ts (before fix, 2026-10-30)
+     × AC-01: a class moved to another year between the check and the write is refused (422 class_year_mismatch) 70ms
+     × AC-01: same when work moves to another term and a kept class changed year meanwhile 60ms
+     × AC-02: two children added on one free number at once — one lands, the other gets 409 number_taken 67ms
+     × AC-02: an edit onto a number that was taken meanwhile is refused and leaves the child as they were 60ms
+     × AC-03: two children added with one code at once — one lands, the other gets 409 code_taken (not 500) 95ms
+     × AC-04: an import whose number was given to a child outside the paste meanwhile is refused and writes nothing 61ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-01: a class moved to another year between the check and the write is refused (422 class_year_mismatch)
+AssertionError: expected 200 to be 422 // Object.is equality
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-01: same when work moves to another term and a kept class changed year meanwhile
+AssertionError: expected 200 to be 422 // Object.is equality
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-02: two children added on one free number at once — one lands, the other gets 409 number_taken
+AssertionError: expected 200 to be 409 // Object.is equality
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-02: an edit onto a number that was taken meanwhile is refused and leaves the child as they were
+AssertionError: expected 200 to be 409 // Object.is equality
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-03: two children added with one code at once — one lands, the other gets 409 code_taken (not 500)
+AssertionError: expected 500 to be 409 // Object.is equality
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-04: an import whose number was given to a child outside the paste meanwhile is refused and writes nothing
+AssertionError: expected 200 to be 422 // Object.is equality
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)

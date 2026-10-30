@@ -1,0 +1,6 @@
+# npm run typecheck (final, tree c10866891f0a)
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+exit=0

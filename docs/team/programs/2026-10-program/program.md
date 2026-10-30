@@ -40,7 +40,7 @@
 | `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
 | `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | merge เข้า main `0020a93` (D19) | ปิดแล้ว |
 | `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | merge เข้า main `a1ef3fa` | ปิดแล้ว |
-| `m1-03-guards-in-transaction` | M | E-01 | M-01 | m1-02 | (หลัก) | รอ |
+| `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | (หลัก) | กำลังทำ |
 | `m1-04-late-flag` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
@@ -102,6 +102,8 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 ## บันทึก
 
 - 2026-10-29 Gate P อนุมัติ · เปิด job intake · secret-scan docs PASS
+- 2026-10-30 M1-03 → VP-1: ข้อความ `number_conflict` ตอนนำเข้า เมื่อแถวไม่มีเลขที่ชนเด็กนอกรายการ ให้ระบุชื่อเด็กที่ถือเลขนั้น (`students.ts` numberConflict)
+- 2026-10-30 M1-03 backlog (จาก dev): (ก) assignments `prevRows` อ่านก่อน — สองเครื่องผูกห้องเดียวกันให้งานเดียวกันพร้อมกันจะข้ามการตรวจปี (แคบมาก) (ข) catalog POST /api/classes `class_of_past_year` ตรวจก่อนเขียน ไม่ซ้ำใน batch → รวมเป็น job เล็กท้าย M1 ถ้ามีเวลา
 - 2026-10-30 M1-02 review: R-06 (judge ใช้ `w.existing` แทน `effective` ในกรณี [void, grade] คำขอเดียว) + intent จาก client → **เพิ่มเข้า scope M1-06**
 - 2026-10-30 M1-01 review: R-01 จาก Code Reviewer — ฝั่งบันทึก `submissions.ts:61` zod `multipleOf(0.5)` มีค่าเผื่อทศนิยมลอย (7.500000000000001 ผ่าน) แม้ UI ยังสร้างค่านั้นไม่ได้ → **เพิ่มเข้า scope M1-05**: ใช้ `isHalfStep` จาก `shared/grade.ts` เป็นนิยามเดียวทั้งฝั่งบันทึกและ restore
 - 2026-10-30 Gate 0 ผ่าน: commit `2c3bbde` + tag `deploy-2026-10-25` · baseline 56 ไฟล์/570 tests PASS · precheck production: คะแนนครึ่ง 0, เทอมซ้ำ 0, เลขที่ซ้ำ 0 (ไม่ต้อง hotfix) · ปิด job intake · เปิด `2026-10-30-m1-01-restore-half-score`

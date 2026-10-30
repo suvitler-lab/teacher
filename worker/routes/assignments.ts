@@ -65,18 +65,23 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   // must be of the term's year; and when the work MOVES to another term, every class it keeps must be of the
   // new year too (moving only the term would leave last year's class holding this year's work). Classes it
   // already had, under an unchanged term, are left alone — older data may predate the year model.
+  // (checked again inside the write below — a class can change year between this look and that write)
+  let yearChecked: string[] = [];
+  const yearMismatch = (off: { name: string }[]) => c.json({
+    error: "class_year_mismatch",
+    message: `ห้อง ${off.map((r) => r.name).join(", ")} เป็นของปีการศึกษาอื่น ไม่ตรงกับภาคเรียนของงานนี้`,
+  }, 422);
   if (term) {
     const termMoved = !existing || (existing.term_id ?? null) !== b.term_id;
     const prev = new Set((prevRows.results ?? []).map((r) => r.class_id));
-    const toCheck = new Set(termMoved ? b.class_ids : b.class_ids.filter((cid) => !prev.has(cid)));
+    yearChecked = termMoved ? b.class_ids : b.class_ids.filter((cid) => !prev.has(cid));
+    const toCheck = new Set(yearChecked);
     const off = (classRows.results ?? []).filter((r) => toCheck.has(r.id) && r.year != null && r.year !== term.year);
-    if (off.length > 0) {
-      return c.json({
-        error: "class_year_mismatch",
-        message: `ห้อง ${off.map((r) => r.name).join(", ")} เป็นของปีการศึกษาอื่น ไม่ตรงกับภาคเรียนของงานนี้`,
-      }, 422);
-    }
+    if (off.length > 0) return yearMismatch(off);
   }
+  // the same rule in SQL (classes looked up by primary key): the guard in the batch, and the fresh look after it fails
+  const classesOffYear =
+    "SELECT name FROM classes WHERE id IN (SELECT value FROM json_each(?1)) AND year IS NOT NULL AND year != (SELECT year FROM terms WHERE id = ?2)";
 
   const stmts = [
     c.env.DB.prepare(
@@ -108,13 +113,24 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     },
   ], now);
   try {
-    // both guards first: a restore since this request began, or scores that now sit above the new full
-    // score, roll the whole batch back — nothing of it (title, full score, class links, the audit line) is half-applied
-    await batchAtEpoch(c.env, epoch, [abortIf(c.env, lowersBelowScores, aid, b.full_score), ...stmts, audit]);
+    // guards first: a restore since this request began, scores that now sit above the new full score, or a
+    // class that is no longer of the term's year roll the whole batch back — nothing of it (title, full score,
+    // class links, the audit line) is half-applied
+    await batchAtEpoch(c.env, epoch, [
+      abortIf(c.env, lowersBelowScores, aid, b.full_score),
+      ...(yearChecked.length > 0 ? [abortIf(c.env, `EXISTS (${classesOffYear})`, JSON.stringify(yearChecked), b.term_id)] : []),
+      ...stmts,
+      audit,
+    ]);
   } catch (e) {
     if (e instanceof ApiError) throw e; // epoch_changed
+    // fresh look, same order as the checks above (scores, then class years)
     const over = await scoreOverFull();
     if (over > 0 && existing && b.full_score < existing.full_score) return c.json({ error: "score_over_full", over }, 409);
+    if (yearChecked.length > 0) {
+      const off = await c.env.DB.prepare(classesOffYear).bind(JSON.stringify(yearChecked), b.term_id).all<{ name: string }>();
+      if ((off.results ?? []).length > 0) return yearMismatch(off.results);
+    }
     throw e;
   }
   return c.json({ ok: true, assignment: mapAssignment({ ...b, id: aid, created_at: (existing as any)?.created_at ?? now, updated_at: now, publish_scores: b.publish_scores === false ? 0 : 1, status: b.status ?? "open", deleted_at: null }, b.class_ids) });

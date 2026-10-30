@@ -1,0 +1,63 @@
+# Mutation test (2026-10-30): each new guard / catch re-check removed alone, then: npx vitest run test/api/guards-in-transaction.test.ts — code restored after each
+## M1 assignments: drop year guard from batch
+× AC-01: a class moved to another year between the check and the write is refused (422 class_year_mismatch) 68ms
+× AC-01: same when work moves to another term and a kept class changed year meanwhile 57ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 200 to be 422 // Object.is equality
+AssertionError: expected 200 to be 422 // Object.is equality
+Tests  2 failed | 5 passed (7)
+## M2 assignments: drop fresh year look in catch
+× AC-01: a class moved to another year between the check and the write is refused (422 class_year_mismatch) 91ms
+× AC-01: same when work moves to another term and a kept class changed year meanwhile 58ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 500 to be 422 // Object.is equality
+AssertionError: expected 500 to be 422 // Object.is equality
+Tests  2 failed | 5 passed (7)
+## M3 students: drop number guard from batch
+× AC-02: two children added on one free number at once — one lands, the other gets 409 number_taken 66ms
+× AC-02: an edit onto a number that was taken meanwhile is refused and leaves the child as they were 56ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 200 to be 409 // Object.is equality
+AssertionError: expected 200 to be 409 // Object.is equality
+Tests  2 failed | 5 passed (7)
+## M4 students: drop number re-check in catch
+× AC-02: two children added on one free number at once — one lands, the other gets 409 number_taken 71ms
+× AC-02: an edit onto a number that was taken meanwhile is refused and leaves the child as they were 57ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 500 to be 409 // Object.is equality
+AssertionError: expected 500 to be 409 // Object.is equality
+Tests  2 failed | 5 passed (7)
+## M6 import: drop number clash guard from batch
+× AC-04: an import whose number was given to a child outside the paste meanwhile is refused and writes nothing 61ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 200 to be 422 // Object.is equality
+Tests  1 failed | 6 passed (7)
+## M7 import: drop numberProblems re-check in catch
+× AC-04: an import whose number was given to a child outside the paste meanwhile is refused and writes nothing 63ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 500 to be 422 // Object.is equality
+Tests  1 failed | 6 passed (7)
+## M5 students: drop code re-check in catch
+× AC-03: two children added with one code at once — one lands, the other gets 409 code_taken (not 500) 67ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 500 to be 409 // Object.is equality
+Tests  1 failed | 6 passed (7)
+## M8 import: drop fresh code re-check in catch (AC-07)
+× AC-07: an import whose new code was added by another device meanwhile gets 409 code_taken (not 500) and writes nothing 75ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 500 to be 409 // Object.is equality
+Tests  1 failed | 7 passed (8)
+## M9 numberProblems: drop the kept number of number-less pasted rows (R-01/AC-08)
+× AC-08: a number-less row brings a former child back on their kept number — counted as the paste's number (preview + import) 56ms
+× AC-08: two number-less former children on one kept number are a repeat within the paste 54ms
+× R-04: a number-less pasted child given a pasted number by another device meanwhile is refused 60ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [] to deeply equal [ { number: 7, code: '601', …(1) } ]
+AssertionError: expected [] to deeply equal [ 7 ]
+AssertionError: expected 500 to be 422 // Object.is equality
+Tests  3 failed | 10 passed (13)
+## M10 numberClashGuard: kept-number subquery replaced by NULL in the transaction (R-01)
+× R-04: a number-less pasted child given a pasted number by another device meanwhile is refused 55ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 200 to be 422 // Object.is equality
+Tests  1 failed | 12 passed (13)

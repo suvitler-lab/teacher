@@ -7,7 +7,7 @@ import { writeAudit, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { id, qrToken } from "@shared/ids";
 import { mapStudent } from "../lib/rows";
 import { bkkToday } from "../lib/time";
-import { batchAtEpoch, requestEpoch } from "../lib/guard";
+import { abortIf, batchAtEpoch, requestEpoch } from "../lib/guard";
 import { blockedStudentMoves, studentHistoryGuard, HISTORY_MOVE_MESSAGE } from "../lib/student-history";
 
 export const studentRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -54,11 +54,13 @@ studentRoutes.post("/api/students", async (c) => {
   const b = studentSchema.parse(await readJson(c));
   const now = Date.now();
   const sid = b.id ?? id("stu");
-  // unique code guard (ignore self)
-  const clash = await c.env.DB.prepare("SELECT id FROM students WHERE code = ? AND id != ?")
+  // unique code guard (ignore self). Inside the write UNIQUE(code) is the guard; a request that loses that
+  // race is answered here again from fresh data (409, not the constraint's 500).
+  const codeClash = () => c.env.DB.prepare("SELECT id FROM students WHERE code = ? AND id != ?")
     .bind(b.code, sid)
     .first<{ id: string }>();
-  if (clash) throw conflict("code_taken", "รหัสนักเรียนนี้มีอยู่แล้ว");
+  const codeTaken = () => conflict("code_taken", "รหัสนักเรียนนี้มีอยู่แล้ว");
+  if (await codeClash()) throw codeTaken();
 
   const existing = await c.env.DB.prepare("SELECT * FROM students WHERE id = ?")
     .bind(sid)
@@ -68,12 +70,18 @@ studentRoutes.post("/api/students", async (c) => {
   if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
   // Two active children in one class must not share a number: it is how a child is picked when the
   // card is forgotten, and a mark would land on whoever the lookup happened to prefer.
+  // Checked again inside the write (another device can take the number in between). `+status` keeps the
+  // planner on idx_students_class (class_id, number) rather than idx_students_status, with or without ANALYZE.
   const nextStatus = b.status ?? (existing as any)?.status ?? "active";
-  if (nextStatus === "active" && b.class_id && b.number != null) {
-    const taken = await c.env.DB.prepare(
-      "SELECT first_name, last_name FROM students WHERE class_id = ? AND number = ? AND status = 'active' AND id != ?",
-    ).bind(b.class_id, b.number, sid).first<{ first_name: string; last_name: string }>();
-    if (taken) throw conflict("number_taken", `เลขที่ ${b.number} ในห้องนี้มีนักเรียนอยู่แล้ว: ${taken.first_name} ${taken.last_name}`.trim());
+  const numberHeld = "SELECT first_name, last_name FROM students WHERE class_id = ?1 AND number = ?2 AND +status = 'active' AND id != ?3";
+  const checksNumber = nextStatus === "active" && !!b.class_id && b.number != null;
+  const numberTaken = async () => {
+    const taken = await c.env.DB.prepare(numberHeld).bind(b.class_id, b.number, sid).first<{ first_name: string; last_name: string }>();
+    return taken ? conflict("number_taken", `เลขที่ ${b.number} ในห้องนี้มีนักเรียนอยู่แล้ว: ${taken.first_name} ${taken.last_name}`.trim()) : null;
+  };
+  if (checksNumber) {
+    const taken = await numberTaken();
+    if (taken) throw taken;
   }
   const token = (existing as any)?.qr_token ?? qrToken();
   // left_at: the day they stopped being in the class. Only moved/inactive have one; it is set when the
@@ -83,21 +91,28 @@ studentRoutes.post("/api/students", async (c) => {
     ? (b.left_at ?? (gone((existing as any)?.status ?? null) ? (existing as any)?.left_at : null) ?? bkkToday())
     : null;
   try {
-    await batchAtEpoch(c.env, await requestEpoch(c), [studentHistoryGuard(c.env, moves), c.env.DB.prepare(
-    `INSERT INTO students (id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-     ON CONFLICT(id) DO UPDATE SET code=excluded.code, prefix=excluded.prefix, first_name=excluded.first_name,
-       last_name=excluded.last_name, nickname=excluded.nickname, class_id=excluded.class_id,
-       number=excluded.number, status=excluded.status, left_at=excluded.left_at, updated_at=excluded.updated_at`,
-  )
-    .bind(
-      sid, b.code, token, b.prefix ?? null, b.first_name, b.last_name, b.nickname ?? null,
-      b.class_id ?? null, b.number ?? null, nextStatus, leftAt, now,
-    )]);
+    await batchAtEpoch(c.env, await requestEpoch(c), [
+      studentHistoryGuard(c.env, moves),
+      ...(checksNumber ? [abortIf(c.env, `EXISTS (${numberHeld})`, b.class_id, b.number, sid)] : []),
+      c.env.DB.prepare(
+        `INSERT INTO students (id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, left_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET code=excluded.code, prefix=excluded.prefix, first_name=excluded.first_name,
+           last_name=excluded.last_name, nickname=excluded.nickname, class_id=excluded.class_id,
+           number=excluded.number, status=excluded.status, left_at=excluded.left_at, updated_at=excluded.updated_at`,
+      ).bind(
+        sid, b.code, token, b.prefix ?? null, b.first_name, b.last_name, b.nickname ?? null,
+        b.class_id ?? null, b.number ?? null, nextStatus, leftAt, now,
+      ),
+    ]);
   } catch (e) {
     if (e instanceof ApiError) throw e;
+    // fresh look, same order as the checks above
+    if (await codeClash()) throw codeTaken();
     const blocked = await blockedStudentMoves(c.env, moves);
     if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
+    const taken = checksNumber ? await numberTaken() : null;
+    if (taken) throw taken;
     throw e;
   }
   await writeAudit(c.env, [
@@ -136,23 +151,61 @@ function duplicateCodes(students: { code: string }[]): string[] {
 }
 
 /**
- * Class numbers that would collide once this paste is applied: two pasted rows with one number, or a
- * pasted number already held by an active student who is NOT in the paste. (Class numbers are how a
- * child is picked when the card is forgotten — two children on one number means a mark can land on the
- * wrong one, so a collision blocks the import instead of being left for someone to notice.)
+ * Class numbers that would collide once this paste is applied: two pasted rows that end up on one number,
+ * or a pasted row's number already held by an active student who is NOT in the paste. (Class numbers are
+ * how a child is picked when the card is forgotten — two children on one number means a mark can land on
+ * the wrong one, so a collision blocks the import instead of being left for someone to notice.)
+ *
+ * "A pasted row's number" is the number the child will have AFTER the write (the upsert's CASE): the
+ * pasted number if there is one; otherwise the number the child already has in THIS class, whatever their
+ * status (a former child brought back by a number-less list comes back on their old number); else none.
+ * `(+status)` keeps the planner on idx_students_class (class_id, number) instead of idx_students_status.
  */
 async function numberProblems(env: Env, classId: string, students: { code: string; number?: number | null }[]) {
-  const nums = students.map((s) => s.number).filter((n): n is number => n != null);
+  const res = await env.DB.prepare(
+    `SELECT code, number, status, first_name, last_name FROM students
+     WHERE class_id = ?1 AND number IS NOT NULL AND (+status = 'active' OR code IN (SELECT value FROM json_each(?2)))`,
+  ).bind(classId, JSON.stringify(students.map((s) => s.code))).all<any>();
+  const rows = res.results ?? [];
+  const pasted = new Set(students.map((s) => s.code));
+  const kept = new Map<string, number>(rows.filter((r) => pasted.has(r.code)).map((r) => [r.code, r.number]));
+  const nums = students.map((s) => s.number ?? kept.get(s.code) ?? null).filter((n): n is number => n != null);
   const dupNumbers = [...new Set(nums.filter((n, i) => nums.indexOf(n) !== i))];
-  const held = await env.DB.prepare(
-    "SELECT code, number, first_name, last_name FROM students WHERE class_id = ? AND status = 'active' AND number IS NOT NULL",
-  ).bind(classId).all<any>();
-  // a pasted row WITH a number replaces the child's number; one without keeps it (so that number is still taken)
-  const importedCodes = new Set(students.filter((s) => s.number != null).map((s) => s.code));
-  const numberClashes = (held.results ?? [])
-    .filter((r) => !importedCodes.has(r.code) && nums.includes(r.number))
+  // every pasted child's own number is already in `nums`, so only children outside the paste can clash
+  const numberClashes = rows
+    .filter((r) => r.status === "active" && !pasted.has(r.code) && nums.includes(r.number))
     .map((r) => ({ number: r.number as number, code: r.code as string, name: `${r.first_name} ${r.last_name}`.trim() }));
   return { dupNumbers, numberClashes };
+}
+
+/**
+ * numberProblems as a guard for the import's own batch: another device can hand a pasted number to a child
+ * outside the paste, or change the number a number-less pasted child keeps, between the check and the write.
+ * Same "number after the write" per pasted row; children are looked up by code (UNIQUE) and by
+ * (class_id, number) via idx_students_class (`+s.status` keeps idx_students_status out of it).
+ */
+const PASTE_NUMBERS_AFTER = `SELECT json_extract(j.value, '$.code') AS code,
+    COALESCE(json_extract(j.value, '$.number'),
+      (SELECT k.number FROM students k WHERE k.code = json_extract(j.value, '$.code') AND k.class_id = ?1)) AS number
+  FROM json_each(?2) j`;
+function numberClashGuard(env: Env, classId: string, students: { code: string; number?: number | null }[]) {
+  const paste = JSON.stringify(students.map((s) => ({ code: s.code, number: s.number ?? null })));
+  return [abortIf(env, `EXISTS (SELECT 1 FROM (${PASTE_NUMBERS_AFTER}) p WHERE p.number IS NOT NULL GROUP BY p.number HAVING COUNT(*) > 1)
+      OR EXISTS (SELECT 1 FROM students s WHERE s.class_id = ?1
+        AND s.number IN (SELECT p.number FROM (${PASTE_NUMBERS_AFTER}) p WHERE p.number IS NOT NULL)
+        AND +s.status = 'active' AND s.code NOT IN (SELECT json_extract(value, '$.code') FROM json_each(?2)))`,
+    classId, paste)];
+}
+
+function numberConflict(np: Awaited<ReturnType<typeof numberProblems>>) {
+  if (np.dupNumbers.length === 0 && np.numberClashes.length === 0) return null;
+  return {
+    error: "number_conflict",
+    message: np.dupNumbers.length > 0
+      ? `เลขที่ซ้ำกันในรายการ: ${np.dupNumbers.join(", ")}`
+      : `เลขที่ชนกับนักเรียนที่ไม่ได้อยู่ในรายการ: ${np.numberClashes.map((x) => `เลขที่ ${x.number} (${x.name})`).join(", ")}`,
+    ...np,
+  };
 }
 
 /**
@@ -201,16 +254,8 @@ studentRoutes.post("/api/students/import", async (c) => {
   const b = importSchema.parse(await readJson(c));
   const dup = duplicateCodes(b.students);
   if (dup.length > 0) return c.json({ error: "duplicate_codes", message: `รหัสซ้ำในรายการ: ${dup.join(", ")}`, codes: dup }, 422);
-  const np = await numberProblems(c.env, b.class_id, b.students);
-  if (np.dupNumbers.length > 0 || np.numberClashes.length > 0) {
-    return c.json({
-      error: "number_conflict",
-      message: np.dupNumbers.length > 0
-        ? `เลขที่ซ้ำกันในรายการ: ${np.dupNumbers.join(", ")}`
-        : `เลขที่ชนกับนักเรียนที่ไม่ได้อยู่ในรายการ: ${np.numberClashes.map((x) => `เลขที่ ${x.number} (${x.name})`).join(", ")}`,
-      ...np,
-    }, 422);
-  }
+  const conflictBefore = numberConflict(await numberProblems(c.env, b.class_id, b.students));
+  if (conflictBefore) return c.json(conflictBefore, 422);
   const now = Date.now();
   // existing codes -> id (so re-import updates instead of duplicating)
   const codes = b.students.map((s) => s.code);
@@ -260,9 +305,26 @@ studentRoutes.post("/api/students/import", async (c) => {
   }));
 
   try {
-    await batchAtEpoch(c.env, await requestEpoch(c), [studentHistoryGuard(c.env, moves), upsertStmt, auditInsertStmt(c.env, audits, now)]);
+    await batchAtEpoch(c.env, await requestEpoch(c), [
+      studentHistoryGuard(c.env, moves),
+      ...numberClashGuard(c.env, b.class_id, b.students),
+      upsertStmt,
+      auditInsertStmt(c.env, audits, now),
+    ]);
   } catch (e) {
     if (e instanceof ApiError) throw e;
+    // fresh look: a code this paste would create may have been added by another device meanwhile (the
+    // batch then failed on UNIQUE(code)) — answered like a plain add (409 code_taken), not 500
+    const newCodes = rows.filter((r) => r._isNew).map((r) => r.code);
+    if (newCodes.length > 0) {
+      const taken = await c.env.DB.prepare("SELECT code FROM students WHERE code IN (SELECT value FROM json_each(?1))")
+        .bind(JSON.stringify(newCodes)).all<{ code: string }>();
+      const codesTaken = (taken.results ?? []).map((r) => r.code);
+      if (codesTaken.length > 0) throw conflict("code_taken", `รหัสนักเรียนนี้มีอยู่แล้ว: ${codesTaken.join(", ")}`);
+    }
+    // then the checks above, in the same order
+    const conflictNow = numberConflict(await numberProblems(c.env, b.class_id, b.students));
+    if (conflictNow) return c.json(conflictNow, 422);
     const blocked = await blockedStudentMoves(c.env, moves);
     if (blocked.length) return c.json({ error: "history_move_blocked", message: HISTORY_MOVE_MESSAGE, blockedMoves: blocked }, 409);
     throw e;
