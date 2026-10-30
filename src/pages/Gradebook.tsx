@@ -31,6 +31,11 @@ const TINT_FG: Record<string, string> = {
   green: "var(--tint-green-fg)", blue: "var(--tint-blue-fg)", magenta: "var(--tint-magenta-fg)", red: "var(--tint-red-fg)",
 };
 
+/** How many cells "clear" will really change: handed-in ones only — never void (nothing there) or excused (BR-07). */
+export function clearableCount(cells: ({ status: string } | undefined)[]): number {
+  return cells.filter((s) => s && s.status !== "void" && s.status !== "excused").length;
+}
+
 export function GradebookPage() {
   const params = routeParams();
   const phone = useIsPhone();
@@ -201,7 +206,7 @@ export function GradebookPage() {
     setMenuOpen(false);
     const className = classById(classId)?.name ?? "";
     if (action === "clear") {
-      const count = students.filter((st) => { const s = subOf(selAsg.id, st.id); return s && s.status !== "void"; }).length;
+      const count = clearableCount(students.map((st) => subOf(selAsg.id, st.id)));
       if (!confirm(`ล้างการส่ง "${selAsg.title}" ของ ${className} (${count} รายการ)?`)) return;
     }
     setMsg("");

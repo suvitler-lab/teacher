@@ -1,0 +1,11 @@
+     × counts submitted cells only: excused, void and empty cells are left out 3ms
+     × R-01: method bulk through the batch route -> 422, no row, no audit 55ms
+     × R-01: method import through the batch route -> 422, no row, no audit 55ms
+     × R-01: method restore through the batch route -> 422, no row, no audit 54ms
+     × R-03: the same opId twice in one request -> 422, nothing written 61ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 200 to be 422 // Object.is equality
+AssertionError: expected 200 to be 422 // Object.is equality
+TypeError: clearableCount is not a function
+ Test Files  2 failed (2)
+      Tests  5 failed | 10 passed (15)

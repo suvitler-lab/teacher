@@ -1,0 +1,8 @@
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  2 passed (2)
+      Tests  60 passed (60)
+   Start at  13:56:06
+   Duration  4.96s (transform 753ms, setup 1.69s, import 37ms, tests 4.65s, environment 0ms)
+

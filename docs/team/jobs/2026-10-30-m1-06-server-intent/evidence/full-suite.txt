@@ -1,0 +1,45 @@
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/qa-m1-02.test.ts (48 tests | 1 failed) 7057ms
+     × E-05/E-06: on the list of a finished term (finished, or left after the end) - still no scan 166ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/qa-m1-02.test.ts > QA BR-02: hand-ins (intent receive) need an active student > E-05/E-06: on the list of a finished term (finished, or left after the end) - still no scan
+AssertionError: finished {"method":"grid","intent":"receive"}: expected 'ok' to be 'student_inactive' // Object.is equality
+
+Expected: "student_inactive"
+Received: "ok"
+
+ ❯ test/api/qa-m1-02.test.ts:69:85
+     67|       for (const extra of [{ method: "hid" }, { method: "camera" }, { …
+     68|         const o = op(extra);
+     69|         expect((await one(cookie, o)).result, `${status} ${JSON.string…
+       |                                                                                     ^
+     70|       }
+     71|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 71 passed (72)
+      Tests  1 failed | 849 passed (850)
+   Start at  13:49:46
+   Duration  29.93s (transform 26.13s, setup 193.60s, import 30.79s, tests 109.98s, environment 57.29s)
+

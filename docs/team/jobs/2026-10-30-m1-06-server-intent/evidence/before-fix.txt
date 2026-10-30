@@ -1,0 +1,24 @@
+     × M1-06 AC-06 / D24: averageAttendancePercent pools every child's days (sum then divide), not a mean of % 4ms
+     × AC-01: closed work, hid op claiming intent "grade" -> assignment_closed, no row, no audit 79ms
+     × AC-01: closed work, camera op claiming intent "grade" -> assignment_closed, no row, no audit 65ms
+     × AC-01: closed work, manual op claiming intent "grade" -> assignment_closed, no row, no audit 61ms
+     × AC-02: closed work, gradebook (grid) score 8 with {"intent":"receive"} -> ok 58ms
+     × AC-04: moved student, one request [void, grade 8] -> void ok, grade student_inactive, the cell stays void 71ms
+     × AC-05: all-submitted, full-score and clear leave the excused cell alone; changed counts real changes; undo works 69ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/server-intent.test.ts > BR-06: a hand-in is decided from the method, never from the client's intent > AC-01: closed work, hid op claiming intent "grade" -> assignment_closed, no row, no audit
+AssertionError: expected { opId: 'oule4dlybuq', …(2) } to deeply equal { opId: 'oule4dlybuq', …(1) }
+ FAIL  |workers| test/api/server-intent.test.ts > BR-06: a hand-in is decided from the method, never from the client's intent > AC-01: closed work, camera op claiming intent "grade" -> assignment_closed, no row, no audit
+AssertionError: expected { opId: 'o0t3f9o1dk46', …(2) } to deeply equal { opId: 'o0t3f9o1dk46', …(1) }
+ FAIL  |workers| test/api/server-intent.test.ts > BR-06: a hand-in is decided from the method, never from the client's intent > AC-01: closed work, manual op claiming intent "grade" -> assignment_closed, no row, no audit
+AssertionError: expected { opId: 'ochghs4fnl66', …(2) } to deeply equal { opId: 'ochghs4fnl66', …(1) }
+ FAIL  |workers| test/api/server-intent.test.ts > BR-06: a hand-in is decided from the method, never from the client's intent > AC-02: closed work, gradebook (grid) score 8 with {"intent":"receive"} -> ok
+AssertionError: expected 'assignment_closed' to be 'ok' // Object.is equality
+ FAIL  |workers| test/api/server-intent.test.ts > BR-02 / R-06: a batch is judged against the state the ops before it left > AC-04: moved student, one request [void, grade 8] -> void ok, grade student_inactive, the cell stays void
+AssertionError: expected { opId: 'g', result: 'ok', …(1) } to deeply equal { opId: 'g', …(1) }
+ FAIL  |workers| test/api/server-intent.test.ts > BR-07: the whole-class buttons never touch an excused cell > AC-05: all-submitted, full-score and clear leave the excused cell alone; changed counts real changes; undo works
+AssertionError: expected 3 to be 2 // Object.is equality
+ FAIL  |dom| test/unit/metrics.test.ts > M1-05 scorePercent / attendancePercent > M1-06 AC-06 / D24: averageAttendancePercent pools every child's days (sum then divide), not a mean of %
+AssertionError: expected 58 to be 63 // Object.is equality
+ Test Files  2 failed | 1 passed (3)
+      Tests  7 failed | 47 passed (54)

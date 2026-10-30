@@ -1,0 +1,187 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [
+      "BR-06",
+      "BR-07",
+      "BR-02"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/server-intent.test.ts test/unit/metrics.test.ts test/api/integrity-d.test.ts (before fix)",
+    "artifact": "evidence/before-fix.txt",
+    "expected": "new assertions fail before fix",
+    "actual": "before fix: 7 failed / 47 passed (R-01..R-03 verify-1: 5 failed, before-fix-verify1.txt)",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:07:25.568Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-05"
+    ],
+    "br": [
+      "BR-06",
+      "BR-07"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "mutations M1 (opIntent reads op.intent), M2/M2b (bulk touches excused), M3 (method enum back to 7) one at a time, restored + cmp; find worker src shared -newer evidence/mutation.txt = empty",
+    "artifact": "evidence/mutation.txt",
+    "expected": "each mutation killed; app code unchanged since",
+    "actual": "M1: 5 fail; M2, M2b: AC-05 fails; M3: 3 R-01 fail; restored cmp identical each; no app file newer than mutation.txt",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:07:25.980Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [
+      "BR-06",
+      "BR-07",
+      "BR-02",
+      "BR-05"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-06.test.ts test/api/qa-m1-02.test.ts",
+    "artifact": "evidence/qa-expected-from-br.md",
+    "expected": "Verify 1: E-01 24 cells (open 12 ok; closed camera/hid/manual 9 assignment_closed; closed grid 3 ok) · bulk/import/restore on batch -> 422 · dup opId -> 422 · E-02 [void,grade] moved -> ok/student_inactive · E-03 each button changed 2, excused untouched · E-04 63",
+    "actual": "65/65 in the two QA files, all as written before the run (evidence/qa-tests-v2.txt)",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:08:31.303Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "server-enforcement",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-04"
+    ],
+    "br": [
+      "BR-06",
+      "BR-02"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-06.test.ts",
+    "artifact": "evidence/qa-tests-v2.txt",
+    "expected": "forged intent on closed work -> assignment_closed; no/forged/expired/signed-out session 401; bad intent 422; bulk/import/restore via batch 422 no row/audit; dup opId 422 nothing written; valid+restore op -> whole request 422; grid cannot write a moved child's empty cell",
+    "actual": "all as expected (qa-m1-06 17/17)",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:08:31.693Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run typecheck ; npm test",
+    "artifact": "evidence/qa-npm-test-v2.txt",
+    "expected": ">= 71 files / 841 tests, 0 failed",
+    "actual": "typecheck exit 0 · 74 files / 873 tests passed, 0 failed",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:08:32.075Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-07"
+    ],
+    "br": [
+      "BR-06",
+      "BR-07"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm run typecheck && npm test",
+    "artifact": "evidence/full-suite-final.txt",
+    "expected": "typecheck PASS; 74 files / 873 tests pass",
+    "actual": "typecheck PASS; 74 files / 873 tests passed",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:07:24.759Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [
+      "BR-06",
+      "BR-07"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/server-intent.test.ts test/unit/gradebook-clear-count.test.ts test/unit/metrics.test.ts test/api/integrity-d.test.ts",
+    "artifact": "evidence/own-tests-final.txt",
+    "expected": "all pass",
+    "actual": "4 files / 60 tests passed",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:07:25.144Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "role-matrix",
+    "status": "PASS",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [
+      "BR-06"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-06.test.ts",
+    "artifact": "evidence/qa-role-matrix.txt",
+    "expected": "(ก) signed-in teacher ok on batch/bulk/bulk-undo; (ข) no session, (ค) forged + expired cookie, (ง) device signed out via POST /api/devices/:id/signout -> 401 on all three, submissions + audit_logs unchanged",
+    "actual": "17/17 pass; (ข)(ค)(ง) 401 x3 endpoints, state identical before/after; (ก) ok (E-01, E-03, undo tests + control after sign-out)",
+    "reason": "",
+    "snapshot": "tree:fa7361187401ea603be6c35aada948a15b557be3",
+    "at": "2026-10-30T07:06:13.456Z"
+  }
+]

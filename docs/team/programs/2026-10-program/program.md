@@ -37,16 +37,20 @@
 
 | job-slug | ขนาด | Epic | Milestone | รอ job | worktree | สถานะ |
 |---|---|---|---|---|---|---|
-| `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
+| `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | ปิดแล้ว |
 | `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | merge เข้า main `0020a93` (D19) | ปิดแล้ว |
 | `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | merge เข้า main `a1ef3fa` | ปิดแล้ว |
 | `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
 | `2026-10-30-m1-04-late-flag` | S | E-01 | M-01 | m1-03 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
-| `2026-10-30-m1-05-metrics-single-source` | S | E-01 | M-01 | m1-04 | (หลัก) | กำลังทำ |
-| `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
+| `2026-10-30-m1-05-metrics-single-source` | S | E-01 | M-01 | m1-04 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำ M1-06 ต่อ") | ปิดแล้ว |
+| `2026-10-30-m1-06-server-intent` (รวม M1-07 + R-06 ของ M1-02 + D24) | S | E-01 | M-01 | m1-05 | (หลัก) | กำลังทำ |
+| `m1-08-audit-atomic` | M | E-01 | M-01 | m1-06 | (หลัก) | รอ |
 | `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
+| `2026-10-30-projector-mode-design` (โหมดฉายจอ D26: ux + mockup) | M | E-05 | M-02 | — (ขนานกับ M1-06, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D27) |
+| `pj-1-projector-shell-random` → `pj-2-projector-scan-attendance` → `pj-3-projector-reports` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
-| `m2-00-scan-mockups` | M | E-02 | M-02 | — (ขนานกับ M1) | (หลัก, เฉพาะ docs) | รอ |
+| `2026-10-30-m2-00-scan-mockups` (mockup สแกน/ตั้งค่า/สมุดคะแนน) | M | E-02 | M-02 | — | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D30) |
+| **ลำดับสร้างจริงหลัง M1 (D30):** `fs-1-font-size-density` (ตัวปรับตัวอักษร+ความหนาแน่นทั้งแอป px→rem, เสี่ยงสุด) → `scan-1-big-name-keypad` (ชื่อ+แป้นคะแนนใหญ่, คงหน้าตาเดิม) → `gb-1-many-columns` (สมุดคะแนน 10–15 คอลัมน์ ล็อก/จัดกลุ่ม/เมนูทำทั้งห้อง, M–L) → `pj-1..3` (โหมดฉายจอทีวี) | M/M/L/M·M·S | E-02,E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `m2-01-resume-scan` → `m2-02-mode-switch` → `m2-03-scorepad-queue` ∥ `m2-04-undo-policy` → `m2-05-hid-ready` ∥ `m2-06-tap-targets` | M… | E-02 | M-02 | Gate 2 | (หลัก) | รอ |
 | `m3-01`…`m3-07` (ดูแผน) | S/M | E-03 | M-03 | Gate M2 | (หลัก) | รอ |
 | `m4-01-playwright-e2e` (ทำได้ตั้งแต่ M2) · `m4-02-release-train` · `m4-03-device-trial` · `m4-04-classroom-trial` | M/S/S/M | E-04 | M-04 | — | (หลัก) | รอ |
@@ -82,6 +86,8 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 3. M3-05 ปุ่มผู้ปกครองเห็นคะแนน: ซ่อนจนกว่าจะมีหน้าผู้ปกครอง (D17)
 
 ## E-05 ความสวยงาม/ไอคอน — แผนรวมจากประชุมออกแบบ 30 ต.ค. (Gate 2 อนุมัติ 30 ต.ค.: D20 ทั้งแผน · D21 app icon ใหม่ · D22 รองรับมือถือ/iPad/คอม, 44px บนจอสัมผัส, ไอคอนเมนูใหม่ 3 ตัว)
+
+**โหมดฉายจอ (D26, D27):** iPad แนวนอน AirPlay ขึ้น**สมาร์ททีวีในห้องเรียน** (สื่อการสอน) · ฉาย สุ่มชื่อ/สแกน/เช็คชื่อ/รายงาน · ปุ่ม "โหมดฉายจอ" ตัวใหญ่ ธีมเข้ม ปรับขนาดตัวอักษร 3 ระดับ ซ่อนคะแนน · ค้างส่ง = จำนวนอย่างเดียว · ปิดด้วยกดค้าง 1 วิ → Gate 2 อนุมัติ 30 ต.ค. · สร้างจริง PJ-1..3 หลังจบ M1
 
 **กติกาทุกงานหน้าจอ (D22):** ตรวจภาพที่ 375 · 768 · 1024 (สัมผัส) · 1280+ (เมาส์) ทั้ง light/dark · hit target ≥ 44px ใต้ `@media (pointer: coarse)` · คอมใช้คีย์บอร์ดได้
 

@@ -64,12 +64,18 @@ describe("QA BR-02: hand-ins (intent receive) need an active student", () => {
     await setTermEnd(END);
     for (const [status, leftAt] of [["finished", null], ["moved", "2026-10-15"], ["inactive", "2026-12-01"]] as const) {
       await setStudent("st1", status, leftAt);
-      for (const extra of [{ method: "hid" }, { method: "camera" }, { method: "manual" }, { method: "grid", intent: "receive" }]) {
+      for (const extra of [{ method: "hid" }, { method: "camera" }, { method: "manual" }]) {
         const o = op(extra);
         expect((await one(cookie, o)).result, `${status} ${JSON.stringify(extra)}`).toBe("student_inactive");
       }
     }
     expect(await cellOf("st1")).toBeNull();
+    // M1-06 / BR-06: the server ignores the client's intent - a grid op is grading, so a finished child who is on
+    // the ended term's list can be scored even when the request claims intent "receive"
+    await setStudent("st1", "finished", null);
+    const g = op({ method: "grid", intent: "receive", score: 7 });
+    expect((await one(cookie, g)).result).toBe("ok");
+    expect((await cellOf("st1")).score).toBe(7);
   });
 
   it("an active student is not affected by anything above (control)", async () => {

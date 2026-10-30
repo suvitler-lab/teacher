@@ -211,14 +211,15 @@ export function attendancePercent(c: AttendanceCounts): number | null {
 }
 
 /**
- * The Students page's "average attendance": the mean of each checked child's own present rate
- * (children with nothing checked are left out). null when no child was checked.
+ * The Students page's "average attendance" (D24): every child's days pooled, then divided —
+ * Σ(present + late) ÷ Σmarked, the same rule as attendancePercent. null ("—") when nobody was checked.
  */
 export function averageAttendancePercent(list: AttendanceCounts[]): number | null {
-  const checked = list.filter((c) => markedOf(c) > 0);
-  if (!checked.length) return null;
-  const sum = checked.reduce((n, c) => n + ((c.present + c.late) * 100) / markedOf(c), 0);
-  return roundPercent(sum / checked.length);
+  const total: AttendanceCounts = { present: 0, late: 0, leave: 0, sick: 0, absent: 0 };
+  for (const c of list) {
+    total.present += c.present; total.late += c.late; total.leave += c.leave; total.sick += c.sick; total.absent += c.absent;
+  }
+  return attendancePercent(total);
 }
 
 /**
