@@ -1,0 +1,89 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |dom| test/unit/scan-controller.test.ts (28 tests | 1 failed) 187ms
+     × R-08: the server's answer to a scan (late included) shows at once, without waiting for the next poll 5ms
+ ❯ |workers| test/api/qa-m1-04.test.ts (18 tests | 1 failed) 1467ms
+     × R-02 (B-01) a Buddhist-era due date (2569-10-20) is refused — brief: YYYY-MM-DD in the Common Era 63ms
+ ❯ |workers| test/api/late-flag.test.ts (23 tests | 1 failed) 1648ms
+     × B-01/R-09 a due date must be a real Common-Era date (1900–2099) 61ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date (BR-04) > B-01/R-09 a due date must be a real Common-Era date (1900–2099)
+AssertionError: expected { bad: '2569-10-20', status: 200 } to deeply equal { bad: '2569-10-20', status: 422 }
+
+- Expected
++ Received
+
+  {
+    "bad": "2569-10-20",
+-   "status": 422,
++   "status": 200,
+  }
+
+ ❯ test/api/late-flag.test.ts:128:71
+    126|     await putSub("st1", { late: 1, submitted_at: A_AT });
+    127|     for (const bad of ["2569-10-20", "2026-02-30", "2026-13-01", "1899…
+    128|       expect({ bad, status: (await save({ due_date: bad })).status }).…
+       |                                                                       ^
+    129|       expect({ bad, status: (await save({ assigned_date: bad })).statu…
+    130|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |workers| test/api/qa-m1-04.test.ts > QA M1-04 late follows the current due date > R-02 (B-01) a Buddhist-era due date (2569-10-20) is refused — brief: YYYY-MM-DD in the Common Era
+AssertionError: expected 200 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 200
+
+ ❯ test/api/qa-m1-04.test.ts:252:22
+    250|     await put("st1", { late: 1, at: Z("2026-10-22T03:00:00Z") });
+    251|     const r = await call("/api/assignments", json(body({ due_date: "25…
+    252|     expect(r.status).toBe(422);
+       |                      ^
+    253|     expect((await env.DB.prepare("SELECT due_date FROM assignments WHE…
+    254|     expect(await lates(["st1"])).toEqual([1]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |dom| test/unit/scan-controller.test.ts > the seat grid shows late hand-ins > R-08: the server's answer to a scan (late included) shows at once, without waiting for the next poll
+AssertionError: expected { Object (status, score, ...) } to match object { Object (status, score, ...) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "late": true,
+    "score": 10,
+    "status": "submitted",
+  }
+
+ ❯ test/unit/scan-controller.test.ts:437:34
+    435|       method: "manual", device_id: null, scan_session_id: null, update…
+    436|     expect(get).toHaveBeenCalledTimes(1); // no extra read
+    437|     expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", …
+       |                                  ^
+    438|   });
+    439|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  3 failed | 66 passed (69)
+   Start at  12:12:47
+   Duration  3.37s (transform 1.21s, setup 2.31s, import 392ms, tests 3.30s, environment 437ms)
+

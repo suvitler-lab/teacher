@@ -12,7 +12,15 @@ vi.mock("@client/lib/api", async (orig) => {
   const actual = await orig<typeof import("@client/lib/api")>();
   return { ...actual, api: { get, post, put: vi.fn() } };
 });
-vi.mock("@client/lib/outbox", async (orig) => ({ ...(await orig<typeof import("@client/lib/outbox")>()), enqueueSubmission: enqueue }));
+// the screen's verdict listeners are kept so a test can hand them a server answer (as the outbox does after a send)
+const resultListeners = vi.hoisted(() => [] as ((r: any, op: any) => void)[]);
+vi.mock("@client/lib/outbox", async (orig) => {
+  const actual = await orig<typeof import("@client/lib/outbox")>();
+  return {
+    ...actual, enqueueSubmission: enqueue,
+    onResult: (cb: (r: any, op: any) => void) => { resultListeners.push(cb); return actual.onResult(cb); },
+  };
+});
 vi.mock("@client/lib/sound", () => ({ beep: { ok() {}, err() {}, dup() {}, undo() {} }, vibrate() {} }));
 
 import { ApiError } from "@client/lib/api";
@@ -383,5 +391,82 @@ describe("keeping the screen's copy fresh", () => {
     setVisible(false); setVisible(true); setOnline(true);
     await settle();
     expect(reads()).toBe(0);
+  });
+});
+
+// M1-04 AC-08: the seat grid shows "late" from the server's own late flag (the same flag the gradebook shows)
+describe("the seat grid shows late hand-ins", () => {
+  const stu2: Student = { ...stu, id: "st2", code: "102", qr_token: "Q-BBBBBBBBBB", first_name: "ค", last_name: "ง", number: 2 };
+  const stu3: Student = { ...stu, id: "st3", code: "103", qr_token: "Q-CCCCCCCCCC", first_name: "จ", last_name: "ฉ", number: 3 };
+
+  it("a late=1 hand-in is drawn late, an on-time one scored; the legend splits on time + late + not handed in = class", async () => {
+    students.value = [stu, stu2, stu3];
+    assignments.value = [{ ...asg("A"), due_date: "2026-10-20" }];
+    get.mockResolvedValue({
+      submissions: [
+        { student_id: "st1", status: "submitted", score: 8, late: true, updated_at: 100 },
+        { student_id: "st2", status: "submitted", score: 9, late: false, updated_at: 100 },
+      ],
+      serverTime: 100,
+    });
+    await __scan.startSession("A", "c1", "full");
+    const { container } = render(h(ScanPage, {}));
+    const cell = (n: string) =>
+      [...container.querySelectorAll<HTMLButtonElement>("button.sc-cell")].find((b) => b.querySelector("span")?.textContent === n);
+    await vi.waitFor(() => expect(cell("1")?.classList.contains("late")).toBe(true));
+    expect(cell("2")?.classList.contains("late")).toBe(false);
+    expect(cell("2")?.classList.contains("scored")).toBe(true);
+    // R-05: no overlap — 1 on time + 1 late + 1 not handed in = 3 in the class
+    expect(screen.getByText("ส่งแล้ว 1", { exact: true })).toBeTruthy();
+    expect(screen.getByText("ส่งช้า 1", { exact: true })).toBeTruthy();
+    expect(screen.getByText("ยังไม่ส่ง 1", { exact: true })).toBeTruthy();
+  });
+
+  it("R-08: the server's answer to a scan (late included) shows at once, without waiting for the next poll", async () => {
+    assignments.value = [{ ...asg("A"), due_date: "2026-10-20" }];
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    __scan.commitStudent(stu, "manual");
+    const op = enqueue.mock.calls[0][0] as any;
+    expect(__scan.effSub("st1")?.late).not.toBe(true); // before the answer: not known
+    pendingOps.value = new Map(); // the outbox removed it once the server said ok
+    for (const cb of resultListeners) cb({ opId: op.opId, result: "ok", submission: {
+      assignment_id: "A", student_id: "st1", status: "submitted", score: 10, late: true, submitted_at: 900,
+      method: "manual", device_id: null, scan_session_id: null, updated_at: 900 } }, op);
+    expect(get).toHaveBeenCalledTimes(1); // no extra read
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 10, late: true });
+  });
+
+  const ack = (op: any, sub: Record<string, unknown>) => {
+    for (const cb of resultListeners) cb({ opId: op.opId, result: "ok", submission: {
+      assignment_id: op.assignmentId, student_id: op.studentId, status: "submitted", score: 10, late: true, submitted_at: 900,
+      method: "manual", device_id: null, scan_session_id: null, updated_at: 900, ...sub } }, op);
+  };
+
+  it("R-12: an answer about ANOTHER work does not touch the cells on screen", async () => {
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "full");
+    const other = { opId: "other", scanSessionId: "s", assignmentId: "B", studentId: "st1", status: "submitted", score: 10, fullScoreAtScan: 10, method: "manual", clientTs: 800 };
+    ack(other, {});
+    expect(__scan.effSub("st1")).toBeUndefined();
+  });
+
+  it("R-12: a newer scan of the same child still waiting to be sent stays on screen when the older one is answered", async () => {
+    get.mockResolvedValue({ submissions: [], serverTime: 100 });
+    await __scan.startSession("A", "c1", "type");
+    const older = { opId: "o1", scanSessionId: "s", assignmentId: "A", studentId: "st1", status: "submitted" as const, score: null, fullScoreAtScan: 10, method: "manual" as const, clientTs: 700 };
+    const newer = { ...older, opId: "o2", score: 5, clientTs: 800 };
+    pendingOps.value = new Map([[pairKey(newer), newer]]); // the older one has left the queue, the newer waits
+    ack(older, { score: null, late: false });
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 5 });
+  });
+
+  it("R-04: re-scoring a late hand-in keeps it late while the new score waits to be sent", async () => {
+    assignments.value = [{ ...asg("A"), due_date: "2026-10-20" }];
+    get.mockResolvedValue({ submissions: [{ student_id: "st1", status: "submitted", score: null, late: true, updated_at: 100 }], serverTime: 100 });
+    await __scan.startSession("A", "c1", "type");
+    const op = { opId: "p1", scanSessionId: "s", assignmentId: "A", studentId: "st1", status: "submitted" as const, score: 8, fullScoreAtScan: 10, method: "manual" as const, clientTs: 700 };
+    pendingOps.value = new Map([[pairKey(op), op]]);
+    expect(__scan.effSub("st1")).toMatchObject({ status: "submitted", score: 8, late: true });
   });
 });

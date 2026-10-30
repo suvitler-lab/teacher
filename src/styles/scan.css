@@ -36,6 +36,7 @@
 }
 .sc-cell .nm { font-size: 10px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sc-cell.scored { background: var(--bg-success); border-color: var(--border-success); color: var(--text-success); }
+.sc-cell.late { background: var(--bg-warning); border-color: var(--border-warning); color: var(--text-warning); }
 .sc-cell.awaiting { background: var(--bg-accent); border-color: var(--border-accent); color: var(--text-accent); }
 .sc-cell.missing { border-style: dashed; border-color: var(--border-danger); color: var(--text-danger); }
 .sc-cell.pending { border-style: dashed; color: var(--text-secondary); }

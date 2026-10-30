@@ -54,6 +54,8 @@ interface SubState {
   status: "submitted" | "excused" | "void";
   score: number | null;
   at: number;
+  /** the server's late flag (BR-04); unknown for a scan still waiting to be sent */
+  late?: boolean;
 }
 interface Feedback {
   kind: "success" | "warning" | "danger" | "accent";
@@ -134,7 +136,7 @@ function big(score: number, full: number) { return `${score}/${full}`; }
 /** A response may predate a scan/ACK that changed this map while its request was in flight. */
 function reconcileSubs(rows: any[], beforeRequest: Map<string, SubState>): Map<string, SubState> {
   const map = new Map<string, SubState>();
-  for (const row of rows) map.set(row.student_id, { status: row.status, score: row.score, at: row.updated_at });
+  for (const row of rows) map.set(row.student_id, { status: row.status, score: row.score, at: row.updated_at, late: row.late === true || row.late === 1 });
   const current = getSubs();
   for (const sid of new Set([...beforeRequest.keys(), ...current.keys()])) {
     const now = current.get(sid);
@@ -231,7 +233,9 @@ function effSub(studentId: string): SubState | undefined {
   const op = pendingOps.value.get(pairKey({ assignmentId: s.assignmentId, studentId }));
   if (!op) return server;
   if (op.status === "void") return undefined;
-  return { status: op.status === "excused" ? "excused" : "submitted", score: op.score, at: op.clientTs };
+  // a hand-in already on the server keeps its submit time and lateness when re-scored (as the server does)
+  const late = server?.status === "submitted" ? server.late : undefined;
+  return { status: op.status === "excused" ? "excused" : "submitted", score: op.score, at: op.clientTs, late };
 }
 /** "pend" = saved on this device, not on the server yet · "fail" = the server refused it */
 function markOf(studentId: string): "pend" | "fail" | null {
@@ -372,7 +376,7 @@ function submitTypedScore(score: number) {
   const s = session.value;
   if (!pid || !s) return;
   const prev = effSub(pid);
-  updateSub(pid, { status: "submitted", score, at: Date.now() });
+  updateSub(pid, { status: "submitted", score, at: Date.now(), late: prev?.status === "submitted" ? prev.late : undefined });
   void enqueueRevertible(makeOp(pid, "submitted", score, "manual"), pid, prev);
   pushRecent(pid, score);
   const st = studentsById.value.get(pid);
@@ -405,7 +409,18 @@ const REJECTED: Record<string, string> = {
 // The server said no. The grid must stop showing that student as submitted, and the
 // teacher must be told why — a green square that the server refused is a lie.
 onResult((r: SubmissionOpResult, op) => {
-  if (r.result === "ok" || r.result === "duplicate") return;
+  if (r.result === "ok" || r.result === "duplicate") {
+    // R-08: what the server stored (its late flag included) shows at once, not at the next poll — only on the copy of
+    // the same work; a newer scan still waiting in the queue stays on top (effSub)
+    const sub = r.result === "ok" ? r.submission : undefined;
+    const box = subsBox.value;
+    if (sub && box.aid === op.assignmentId) {
+      const m = new Map(box.map);
+      m.set(op.studentId, { status: sub.status, score: sub.score, at: sub.updated_at ?? Date.now(), late: sub.late === true });
+      subsBox.value = { ...box, map: m };
+    }
+    return;
+  }
   beep.err(); vibrate(120);
   if (r.result === "full_score_changed") {
     setFeedback({ kind: "warning", icon: "alert-triangle", name: "คะแนนเต็มถูกแก้ไข", sub: `คะแนนเต็มปัจจุบันคือ ${r.currentFullScore} — เริ่มรอบใหม่เพื่อความถูกต้อง` });
@@ -617,6 +632,12 @@ function ScanView() {
   const waiting = classStudents.filter((st) => markOf(st.id) === "pend").length;
   const modeLabel = s.mode === "full" ? "ให้คะแนนเต็ม" : s.mode === "type" ? "กรอกทีละคน" : "รับงานก่อน";
   const today = bkkToday();
+  // the seat grid's "late" colour, counted the same way the grid decides it. The legend splits the hand-ins:
+  // on time (ส่งแล้ว) + late (ส่งช้า) + not handed in (ยังไม่ส่ง) = the whole class; the ring keeps all hand-ins
+  const lateCount = asg ? classStudents.filter((st) => {
+    const sub = effSub(st.id);
+    return !!sub && workState({ status: sub.status, score: sub.score, late: sub.late === true }, asg, today) === "late";
+  }).length : 0;
   const otherClasses = (asg?.class_ids ?? []).filter((c) => c !== s.classId);
   const known = subsBox.value.aid === s.assignmentId && subsBox.value.status === "ready";
   const up = online.value && serverReachable.value;
@@ -771,7 +792,8 @@ function ScanView() {
           <div class="row" style="gap:12px;margin-bottom:8px">
             <ProgressRing value={known ? submittedCount : 0} total={classStudents.length} size={72} label={known ? "ส่งแล้ว" : "ไม่ทราบ"} />
             <div style="font-size:13px">
-              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;background:var(--fill-success)" />ส่งแล้ว {known ? submittedCount : "?"}</div>
+              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;background:var(--fill-success)" />ส่งแล้ว {known ? submittedCount - lateCount : "?"}</div>
+              <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;background:var(--bg-warning);border:0.5px solid var(--border-warning)" />ส่งช้า {known ? lateCount : "?"}</div>
               <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;border:0.5px dashed var(--text-secondary)" />ยังไม่ส่ง {known ? missing.length : "?"}</div>
               {waiting > 0 && <div class="row" style="gap:6px;color:var(--text-warning)"><span style="width:9px;height:9px;border-radius:50%;background:var(--fill-warning)" />รอส่งขึ้นระบบ {waiting}</div>}
             </div>
@@ -781,7 +803,7 @@ function ScanView() {
             {classStudents.map((st) => {
               const sub = effSub(st.id);
               const mark = markOf(st.id);
-              const state = asg ? workState(sub ? { status: sub.status, score: sub.score, late: false } : null, asg, today) : "pending";
+              const state = asg ? workState(sub ? { status: sub.status, score: sub.score, late: sub.late === true } : null, asg, today) : "pending";
               const hit = recent.value[0]?.studentId === st.id;
               return (
                 <button class={`sc-cell ${state}${hit ? " hit" : ""}${mark ? " " + mark : ""}`} title={fullName(st) + (mark === "pend" ? " · รอส่งขึ้นระบบ" : mark === "fail" ? " · ส่งไม่สำเร็จ" : "")}

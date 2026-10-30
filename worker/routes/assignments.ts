@@ -7,12 +7,25 @@ import { writeAudit, auditInsertStmt } from "../lib/audit";
 import { abortIf, batchAtEpoch, requestEpoch } from "../lib/guard";
 import { id } from "@shared/ids";
 import { mapAssignment } from "../lib/rows";
+import { lateFixForAssignment } from "../lib/late";
 
 export const assignmentRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 assignmentRoutes.use("/api/assignments", requireAuth);
 assignmentRoutes.use("/api/assignments/*", requireAuth);
 assignmentRoutes.use("/api/scan-sessions", requireAuth);
 assignmentRoutes.use("/api/scan-sessions/*", requireAuth);
+
+// a real Common-Era calendar date YYYY-MM-DD, years 1900–2099 (the restore check's `date` plus a year range: a
+// Buddhist-era "2569-10-20" would compare after every hand-in and silently switch "late" off)
+const ceDate = z.string().regex(/^(19|20)\d{2}-\d{2}-\d{2}$/).refine((v) => {
+  const d = new Date(`${v}T00:00:00Z`);
+  return !Number.isNaN(d.valueOf()) && d.toISOString().slice(0, 10) === v;
+}, "not a real date");
+// "" from an older screen means "no date". The CE check runs in the route, once the work's stored dates are known.
+const ymd = z.preprocess((v) => (v === "" ? null : v), z.string().nullable().optional());
+const newDates = z.object({ assigned_date: ceDate.nullish(), due_date: ceDate.nullish() });
+/** A date the work already holds, character for character, is kept as it is — anything else is checked. */
+const changed = (v: string | null | undefined, stored: string | null | undefined) => (v != null && v === stored ? null : v);
 
 const assignmentSchema = z.object({
   id: z.string().optional(),
@@ -22,8 +35,8 @@ const assignmentSchema = z.object({
   title: z.string().min(1),
   unit: z.string().nullable().optional(),
   full_score: z.number().int().min(1).max(100),
-  assigned_date: z.string().nullable().optional(),
-  due_date: z.string().nullable().optional(),
+  assigned_date: ymd,
+  due_date: ymd,
   note: z.string().nullable().optional(),
   publish_scores: z.boolean().optional(),
   status: z.enum(["open", "closed"]).optional(),
@@ -46,6 +59,13 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     db.prepare("SELECT id, name, year FROM classes WHERE id IN (SELECT value FROM json_each(?1))")
       .bind(JSON.stringify(b.class_ids)).all<{ id: string; name: string; year: number | null }>(),
   ]);
+
+  // dates: new or changed ones must be real CE dates (422) — but older work restored with a Buddhist-era date can still
+  // be closed / have its scores hidden, which sends the stored dates back unchanged
+  newDates.parse({
+    assigned_date: changed(b.assigned_date, existing?.assigned_date),
+    due_date: changed(b.due_date, existing?.due_date),
+  });
 
   // refuse to lower full_score below scores already recorded (checked again inside the write below —
   // a score can land between this look and that write)
@@ -102,13 +122,17 @@ assignmentRoutes.post("/api/assignments", async (c) => {
         "INSERT OR IGNORE INTO assignment_classes (assignment_id, class_id) VALUES (?, ?)",
       ).bind(aid, cid),
     ),
+    // BR-04: "late" follows the work's CURRENT due date (lib/late.ts) — re-decided here, after the upsert above and in
+    // the same transaction, so moving the due date (or clearing it) fixes every row at once. Only rows whose value
+    // changes are written; updated_at / event_at stay (the teacher did not act on those cells).
+    lateFixForAssignment(c.env, aid),
   ];
   const audit = auditInsertStmt(c.env, [
     {
       entity: "assignment", entity_id: aid, assignment_id: aid,
       action: existing ? "update" : "create", device_id: c.get("deviceId"),
-      before: existing ? { full_score: (existing as any).full_score, title: (existing as any).title } : null,
-      after: { title: b.title, full_score: b.full_score, class_ids: b.class_ids },
+      before: existing ? { full_score: (existing as any).full_score, title: (existing as any).title, due_date: (existing as any).due_date ?? null } : null,
+      after: { title: b.title, full_score: b.full_score, class_ids: b.class_ids, due_date: b.due_date ?? null },
       method: "manual",
     },
   ], now);

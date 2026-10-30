@@ -1,0 +1,29 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |workers| test/api/volume.test.ts > reading at school size > every screen's data is complete and correct, and cheap 245ms
+ ✓ |workers| test/api/volume.test.ts > reading at school size > a whole backup reads each row about once — not the square of the table's size 423ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > scanning: one child, and a whole class or more in one request 175ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > whole-class actions and their undo 182ms
+stdout | test/api/volume.test.ts > writing at school size > attendance for a class, and editing an assignment
+[R-06] due-date edit flipping every row: 17 statements, 652 rows read, 230 written
+
+stdout | test/api/volume.test.ts > writing at school size > attendance for a class, and editing an assignment
+[R-06] same edit again (nothing flips): 17 statements, 251 rows read, 30 written
+
+ ✓ |workers| test/api/volume.test.ts > writing at school size > attendance for a class, and editing an assignment 169ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > importing a class list 154ms
+ ✓ |workers| test/api/volume.test.ts > restoring at school size > fits in one request's statements — and costs almost a whole day's write allowance, which is why the runbook says when to do it 1095ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  12:23:37
+   Duration  4.24s (transform 603ms, setup 1.22s, import 41ms, tests 2.45s, environment 0ms)
+

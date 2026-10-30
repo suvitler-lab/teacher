@@ -40,8 +40,8 @@
 | `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
 | `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | merge เข้า main `0020a93` (D19) | ปิดแล้ว |
 | `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | merge เข้า main `a1ef3fa` | ปิดแล้ว |
-| `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | (หลัก) | กำลังทำ |
-| `m1-04-late-flag` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
+| `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
+| `2026-10-30-m1-04-late-flag` | S | E-01 | M-01 | m1-03 | (หลัก) | กำลังทำ |
 | `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
 | `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
@@ -102,6 +102,11 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 ## บันทึก
 
 - 2026-10-29 Gate P อนุมัติ · เปิด job intake · secret-scan docs PASS
+- 2026-10-30 M1-04 → M1-05: legend หน้าสแกน "ส่งแล้ว" รวมเด็กที่ส่งช้าแต่ยังไม่มีคะแนน (ตามนิยาม workState: late ต้องมีคะแนน) — ตัดสินในงานนิยามกลาง · → M1-08: undo ของ ส่งครบ/คะแนนเต็ม หลังเลื่อนกำหนดส่งได้ modified_since เพราะเทียบ after.late (ข้ามคีย์ late) · → M2: legend หน้าสแกนไม่มีแถว "ยกเว้น"
+- 2026-10-30 M1-04 ปิด known issue "การส่งครั้งแรกอ่าน due_date ก่อนเขียน" แล้ว (late คำนวณใหม่ท้ายทุก batch ที่เขียน submissions) — **ตัดออกจาก scope M1-06** · ส่งต่อ M1-08: audit after.late ของ bulk/bulk-undo เป็นค่าก่อน UPDATE ต่อท้าย · งบ volume ใหม่: แก้กำหนดส่งพลิกทุกแถว 1,000 read / 300 written
+- 2026-10-30 M1-04 (PM จากภาพ QA `jobs/2026-10-30-m1-04-late-flag/evidence/qa-scan-late-375.jpg`) → M2/VP-5: ที่ 375 แถบหัวรอบสแกนแบบ sticky ซ้อนทับช่องสแกนเมื่อเลื่อนหน้าจอ — ต้องตรวจใน mockup/งาน M2 ตาม D22
+- 2026-10-30 M1-04 (QA) → M1-06: server ไม่ตรวจรูปแบบ `due_date` (`assignments.ts` ใช้ `z.string()`) ถ้าได้ปี พ.ศ./รูปแบบอื่น การเทียบวันที่จะไม่มีวันนับว่าช้า → เพิ่ม regex YYYY-MM-DD (ค.ศ.) แบบเดียวกับ `left_at`
+- 2026-10-30 M1-04 → M1-06: การส่งครั้งแรก (`submissions.ts`) อ่าน due_date ก่อนเขียน late — ถ้าครูแก้กำหนดส่งแทรก แถวใหม่ได้ late ตามกำหนดเดิม → เพิ่ม due_date ใน stillValid หรือคำนวณ late ใน SQL
 - 2026-10-30 M1-03 → VP-1: ข้อความ `number_conflict` ตอนนำเข้า เมื่อแถวไม่มีเลขที่ชนเด็กนอกรายการ ให้ระบุชื่อเด็กที่ถือเลขนั้น (`students.ts` numberConflict)
 - 2026-10-30 M1-03 backlog (จาก dev): (ก) assignments `prevRows` อ่านก่อน — สองเครื่องผูกห้องเดียวกันให้งานเดียวกันพร้อมกันจะข้ามการตรวจปี (แคบมาก) (ข) catalog POST /api/classes `class_of_past_year` ตรวจก่อนเขียน ไม่ซ้ำใน batch → รวมเป็น job เล็กท้าย M1 ถ้ามีเวลา
 - 2026-10-30 M1-02 review: R-06 (judge ใช้ `w.existing` แทน `effective` ในกรณี [void, grade] คำขอเดียว) + intent จาก client → **เพิ่มเข้า scope M1-06**

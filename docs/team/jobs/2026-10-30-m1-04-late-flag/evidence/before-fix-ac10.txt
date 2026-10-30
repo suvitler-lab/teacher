@@ -1,0 +1,130 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/late-flag.test.ts (20 tests | 5 failed) 1401ms
+     × clear the class → move the due date later → undo the clear: A comes back on time 76ms
+     × clear → move the due date earlier → undo: an on-time hand-in comes back late 68ms
+     × a due-date edit landing between the judge and the write of a first hand-in: late follows the new date 64ms
+     × the reverse race: judged on time, the edit moves the due date into the past first → stored late 63ms
+     × all-submitted judged under an old due date, edit lands first: rows follow the new date 75ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date on every write path (AC-10) > clear the class → move the due date later → undo the clear: A comes back on time
+AssertionError: expected { assignment_id: 'a1', …(10) } to match object { status: 'submitted', score: 7, …(2) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "late": 0,
++   "late": 1,
+    "score": 7,
+    "status": "submitted",
+    "submitted_at": 1792638000000,
+  }
+
+ ❯ test/api/late-flag.test.ts:240:30
+    238|     const undo = await call("/api/assignments/a1/bulk-undo", json({ ba…
+    239|     expect(undo.status).toBe(200);
+    240|     expect(await row("st1")).toMatchObject({ status: "submitted", scor…
+       |                              ^
+    241|   });
+    242|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date on every write path (AC-10) > clear → move the due date earlier → undo: an on-time hand-in comes back late
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/api/late-flag.test.ts:248:37
+    246|     await save({ due_date: "2026-10-18" });
+    247|     expect((await call("/api/assignments/a1/bulk-undo", json({ batchId…
+    248|     expect((await row("st2")).late).toBe(1);
+       |                                     ^
+    249|   });
+    250|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date on every write path (AC-10) > a due-date edit landing between the judge and the write of a first hand-in: late follows the new date
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/api/late-flag.test.ts:265:37
+    263|     const out = await res.json() as any;
+    264|     expect(out.results[0].result).toBe("ok");
+    265|     expect((await row("st1")).late).toBe(0);
+       |                                     ^
+    266|     expect(out.results[0].submission.late).toBe(false); // the reply s…
+    267|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date on every write path (AC-10) > the reverse race: judged on time, the edit moves the due date into the past first → stored late
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/api/late-flag.test.ts:280:37
+    278|     const out = await (await pending).json() as any;
+    279|     expect(out.results[0].result).toBe("ok");
+    280|     expect((await row("st1")).late).toBe(1);
+       |                                     ^
+    281|     expect(out.results[0].submission.late).toBe(true);
+    282|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |workers| test/api/late-flag.test.ts > late follows the current due date on every write path (AC-10) > all-submitted judged under an old due date, edit lands first: rows follow the new date
+AssertionError: expected [ 1, 1 ] to deeply equal [ +0, +0 ]
+
+- Expected
++ Received
+
+  [
+-   0,
+-   0,
++   1,
++   1,
+  ]
+
+ ❯ test/api/late-flag.test.ts:293:64
+    291|     gate.release();
+    292|     expect((await pending).status).toBe(200);
+    293|     expect([(await row("st1")).late, (await row("st2")).late]).toEqual…
+       |                                                                ^
+    294|   });
+    295| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 15 passed (20)
+   Start at  11:57:15
+   Duration  2.73s (transform 431ms, setup 869ms, import 15ms, tests 1.40s, environment 0ms)
+

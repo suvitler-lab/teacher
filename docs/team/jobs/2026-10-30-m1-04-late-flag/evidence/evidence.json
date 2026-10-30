@@ -1,0 +1,266 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-07",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/late-flag.test.ts test/unit/scan-controller.test.ts (ก่อนแก้)",
+    "artifact": "evidence/before-fix.txt",
+    "expected": "test ใหม่ล้มก่อนแก้",
+    "actual": "12 failed | 29 passed (AC-06 x3 ผ่านก่อนแก้ตามคาด — เป็น guard)",
+    "reason": "",
+    "snapshot": "tree:019449c3f0ce88c9ada0a794f839fb479db22692",
+    "at": "2026-10-30T04:40:33.899Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test",
+    "artifact": "evidence/regression.txt",
+    "expected": "65 ไฟล์ ผ่านทั้งหมด",
+    "actual": "typecheck PASS · 65 ไฟล์ / 772 passed",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:22:33.888Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "mutation re-run on current code: M1, M4, M5, M10, M12 (late-flag + qa-m1-04)",
+    "artifact": "evidence/mutation.txt",
+    "expected": "test ที่เกี่ยวล้มทุก mutation · คืนไฟล์ cmp ตรง",
+    "actual": "M1 24 · M4 4 · M5 3 · M10 6 · M12 2 failed · คืนไฟล์ครบ",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:25:00.754Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/volume.test.ts --reporter=verbose",
+    "artifact": "evidence/volume.txt",
+    "expected": "พลิกทุกแถว read<=1000 written<=300 · ไม่พลิก read<=500 written<=200",
+    "actual": "7/7 · พลิก 652/230 · ไม่พลิก 251/30",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:23:42.501Z"
+  },
+  {
+    "check": "Q-94",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/late-flag.test.ts test/api/qa-m1-04.test.ts test/unit/scan-controller.test.ts",
+    "artifact": "evidence/after-fix.txt",
+    "expected": "",
+    "actual": "75 passed",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:22:34.303Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-09",
+      "AC-10"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "คิดมือจาก BR-04 ก่อนรัน (E01-E17, R, V1-V10) เทียบ test/api/qa-m1-04.test.ts",
+    "artifact": "evidence/qa-expected-from-br.md",
+    "expected": "ตามตาราง E/R/V",
+    "actual": "ตรงทุกแถว (qa-m1-04 21/21)",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:26:08.964Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run typecheck; npm test (snapshot ก่อน/หลังรันเท่ากัน)",
+    "artifact": "evidence/qa-regression.txt",
+    "expected": "65 ไฟล์ / 772",
+    "actual": "typecheck exit 0 · 65 ไฟล์ / 772 ผ่าน ล้ม 0 · snapshot ก่อน=หลัง 4767c9fbede0 (รอบก่อนหน้า 2 ครั้งใช้ไม่ได้: exit 127 และไฟล์แอปถูกแก้ระหว่างรัน)",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:26:09.348Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-09",
+      "AC-10"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/api/qa-m1-04.test.ts --reporter=verbose",
+    "artifact": "evidence/qa-tests.txt",
+    "expected": "21/21",
+    "actual": "21/21",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:26:09.758Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "ภาพเดิม fixture 4105 (1024x768, 375x812) + test/unit/scan-controller.test.ts (R-05 legend, R-08 ACK late) ในชุดเต็ม Q-02",
+    "artifact": "evidence/qa-scan-late-1024.jpg",
+    "expected": "ช่องช้าสีเหลืองอำพัน · legend ไม่ซ้อน · สีช่องช้าอัปเดตจาก ACK ทันที",
+    "actual": "ภาพเดิมยืนยันสีช่อง · unit test R-05/R-08 ผ่านในชุดเต็ม 772/772 · ไม่ได้ถ่ายภาพใหม่ (ห้ามเปิด server)",
+    "reason": "",
+    "snapshot": "tree:4767c9fbede0d702b03370e6ea5dfb6a154e510f",
+    "at": "2026-10-30T05:26:10.158Z"
+  },
+  {
+    "check": "Q-95",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-10"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/late-flag.test.ts (ก่อนแก้ AC-10)",
+    "artifact": "evidence/before-fix-ac10.txt",
+    "expected": "test AC-10 ล้มก่อนแก้",
+    "actual": "5 failed | 15 passed",
+    "reason": "",
+    "snapshot": "tree:c04dfe1a01b78e58ee89d7ec450180cac5fe8201",
+    "at": "2026-10-30T05:02:16.635Z"
+  },
+  {
+    "check": "Q-96",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/late-flag.test.ts test/api/qa-m1-04.test.ts test/unit/scan-controller.test.ts (ก่อนแก้ B-01/R-08)",
+    "artifact": "evidence/before-fix-b01.txt",
+    "expected": "test B-01 (QA+ของ dev) และ R-08 ล้มก่อนแก้",
+    "actual": "3 failed | 66 passed",
+    "reason": "",
+    "snapshot": "tree:effe752cb73d416ba33bdaebe9c6f20e1ad38372",
+    "at": "2026-10-30T05:14:27.368Z"
+  }
+]

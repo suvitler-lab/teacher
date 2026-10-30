@@ -149,6 +149,27 @@ describe("writing at school size", () => {
     const edit = await cost(cookie, "edit an assignment given to five classes", { read: 500, written: 200 }, "/api/assignments",
       { id: "a1", term_id: "t1", subject_id: "s1", type_id: "wt_worksheet", title: "แก้ชื่อ", full_score: 10, class_ids: ["c1", "c2", "c3", "c4", "c5"] });
     expect(edit.status).toBe(200);
+
+    // M1-04 R-06: the worst case of a due-date edit — every hand-in of the work flips late (5 classes × 40 = 200 rows).
+    // Measured and reported (not held to the 200-row budget above): the flip is the point of the edit.
+    const flip = { id: "a1", term_id: "t1", subject_id: "s1", type_id: "wt_worksheet", title: "แก้ชื่อ", full_score: 10, due_date: "2026-01-01", class_ids: ["c1", "c2", "c3", "c4", "c5"] };
+    const m = metered();
+    expect((await callIn(m.env, "/api/assignments", json(flip), cookie)).status).toBe(200);
+    expect(m.stats.measured).toBe(true);
+    console.log(`[R-06] due-date edit flipping every row: ${m.stats.queries} statements, ${m.stats.rowsRead} rows read, ${m.stats.rowsWritten} written`);
+    expect(m.stats.queries).toBeLessThanOrEqual(MAX_QUERIES);
+    // AC-11: the budget of the worst case (every row flips)
+    expect(m.stats.rowsRead, "due-date edit flipping every row: rows read").toBeLessThanOrEqual(1_000);
+    expect(m.stats.rowsWritten, "due-date edit flipping every row: rows written").toBeLessThanOrEqual(300);
+    expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM submissions WHERE assignment_id = 'a1' AND late = 1").first<any>()).n).toBe(VOLUME.classes * VOLUME.perClass);
+    // saving again with the same due date writes no late rows at all
+    const again = metered();
+    expect((await callIn(again.env, "/api/assignments", json(flip), cookie)).status).toBe(200);
+    console.log(`[R-06] same edit again (nothing flips): ${again.stats.queries} statements, ${again.stats.rowsRead} rows read, ${again.stats.rowsWritten} written`);
+    // nothing flips: the edit's usual budget
+    expect(again.stats.queries).toBeLessThanOrEqual(MAX_QUERIES);
+    expect(again.stats.rowsRead, "same edit again: rows read").toBeLessThanOrEqual(500);
+    expect(again.stats.rowsWritten, "same edit again: rows written").toBeLessThanOrEqual(200);
   }, 120_000);
 
   it("importing a class list", async () => {
