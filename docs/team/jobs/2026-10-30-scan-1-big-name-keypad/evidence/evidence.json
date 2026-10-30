@@ -1,0 +1,146 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser 820x1180 fs18 type mode (coarse simulated): name 34.2px/600, no 21.96px, 20-char name 1 line 321/321",
+    "artifact": "evidence/qa-820-type-fs18.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:49:58.938Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "820x1180 fs18: input 190.8x88.2 (52px), keys/quick/save 64.8px, doc scrollH 1180=innerHeight",
+    "artifact": "evidence/qa2-820-full-fs18.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:49:59.625Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser: 7 then .5 -> 7.5 sent score 7.5 (receive null then 7.5, as before); quick 19/20 -> 19; backspace; later closes w/o request; status announces saved",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:50:00.209Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "3 modes x 390/820/1180/1440 x fs14/18/24: buttons<44 = 0 (820/1180/1440 coarse simulated; 390 by CSS), text<13 = 0",
+    "artifact": "evidence/qa2-390-type-fs18.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:50:00.788Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-05"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "same matrix: hscroll none, overlaps 0; 390 scrolled: only scan row sticky",
+    "artifact": "evidence/qa2-390-sticky-scrolled.jpg",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:50:01.339Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "offline-replay",
+    "status": "N/A",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": true,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ดู brief N/A ที่รับ Q-06",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:50:49.955Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "multi-device",
+    "status": "N/A",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": true,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ดู brief N/A ที่รับ Q-07",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:50:50.532Z"
+  },
+  {
+    "check": "Q-08",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (79 ไฟล์ / 936) && npm run build",
+    "artifact": "evidence/final-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:09342c91e8fe795adc05b39a5ae25c819e152838",
+    "at": "2026-10-30T12:51:45.956Z"
+  }
+]

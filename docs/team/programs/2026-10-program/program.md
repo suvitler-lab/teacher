@@ -47,7 +47,8 @@
 | `2026-10-30-m1-08-audit-atomic` | S | E-01 | M-01 | m1-06 | merge เข้า main `b9115d7` | ปิดแล้ว |
 | `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
 | `2026-10-30-projector-mode-design` (โหมดฉายจอ D26: ux + mockup) | M | E-05 | M-02 | — (ขนานกับ M1-06, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D27) |
-| `2026-10-30-fs-1-font-size-density` | M | E-02,E-05 | M-02 | m1-08 | รอผู้ใช้สั่ง merge | ปิดแล้ว |
+| `2026-10-30-fs-1-font-size-density` | M | E-02,E-05 | M-02 | m1-08 | merge เข้า main `f032c8d` | ปิดแล้ว |
+| `2026-10-30-scan-1-big-name-keypad` | S | E-02 | M-02 | fs-1 | รอผู้ใช้สั่ง merge | ปิดแล้ว |
 | `pj-1-projector-shell-random` → `pj-2-projector-scan-attendance` → `pj-3-projector-reports` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `2026-10-30-m2-00-scan-mockups` (mockup สแกน/ตั้งค่า/สมุดคะแนน) | M | E-02 | M-02 | — | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D30) |
@@ -121,3 +122,4 @@ job-slug จริงจะเติมวันที่ `YYYY-MM-DD-` ตอ�
 - 2026-10-30 Gate 0 ผ่าน: commit `2c3bbde` + tag `deploy-2026-10-25` · baseline 56 ไฟล์/570 tests PASS · precheck production: คะแนนครึ่ง 0, เทอมซ้ำ 0, เลขที่ซ้ำ 0 (ไม่ต้อง hotfix) · ปิด job intake · เปิด `2026-10-30-m1-01-restore-half-score`
 - 2026-10-30 M1-08 ปิดแล้ว (รอผู้ใช้สั่ง merge): audit เข้า transaction เดียวกับข้อมูลทุกเส้นทาง · backlog: S-01 PIN เก็บข้อความธรรมดา (ต้องแก้ก่อนมีฟีเจอร์ใช้ PIN/หน้าผู้ปกครอง), S-02 เตือนตอนดาวน์โหลด backup, S-03 ล้าง qr_token ในประวัติเก่า, R-01/S-04 ป้ายไทยใน AuditHistory (รวมกับงานขนาดตัวอักษร), R-02..R-07
 - 2026-10-30 fs-1 ปิดแล้ว (รอ merge): ส่งต่อ scan-1 = ช่อง .sc-cell กว้าง ~28px + หัวขั้นสแกน 390@24 · gb-1 = ปุ่มตา hs-eye <44px · ยังไม่ได้ลอง iPad จริง · AC-01 ไม่กะพริบตรวจจากโค้ดเท่านั้น
+- 2026-10-30 scan-1 ปิดแล้ว (รอ merge): ยังไม่ได้ลอง iPad จริง · 1180 นอนโหมดกรอกทีละคนเลื่อนเล็กน้อย · ปุ่มลัด 'ล่าสุด' → M2-01 · R-06 (ชื่อปุ่มบันทึกมีค่า) ข้ามเพราะ test เดิม · ProgressRing ทับกรอบ (ของเดิม ไม่พบในรอบวัดสุดท้าย)

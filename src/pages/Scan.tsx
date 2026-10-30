@@ -64,6 +64,7 @@ interface Feedback {
   name: string;
   sub: string;
   score?: string;
+  awaitScore?: string; // studentId whose score pad is open for this "received" card
 }
 
 const session = signal<Session | null>(null);
@@ -352,7 +353,7 @@ function commitStudent(student: Student, method: "camera" | "hid" | "manual") {
     pushRecent(student.id, null);
     pending.value = student.id;
     beep.ok(); vibrate(40);
-    setFeedback({ kind: "accent", icon: "pencil", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว ใส่คะแนนแล้วกด Enter` });
+    setFeedback({ kind: "accent", icon: "pencil", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว ใส่คะแนนแล้วกด Enter`, awaitScore: student.id });
   }
 }
 
@@ -483,7 +484,7 @@ function SessionSetup() {
   };
 
   return (
-    <div>
+    <div class="sc-page">
       <PageHeader icon="scan" title="สแกนส่งงาน" sub="เลือกงาน ห้อง และวิธีให้คะแนน" actions={<TermPicker />} />
       {open.length === 0 ? (
         <div class="card empty">
@@ -647,7 +648,7 @@ function ScanView() {
   const up = online.value && serverReachable.value;
 
   return (
-    <div>
+    <div class="sc-page">
       {!known && (
         <div class="imp-warn" role="status" style="margin:0 0 8px;font-size:var(--fs-sm)">
           <Icon name={subsBox.value.status === "unknown" ? "cloud-off" : "loader-2"} size={15} class={subsBox.value.status === "unknown" ? "" : "spin"} />
@@ -705,6 +706,7 @@ function ScanView() {
         </div>
       )}
 
+      <div class="sc-layout">
       <div class="scan-input-row">
         <label class="scan-input">
           <Icon name="qrcode" size={22} class="muted" />
@@ -724,6 +726,7 @@ function ScanView() {
         </button>
       </div>
 
+      <div class="sc-mid">
       {cameraProblem.value && (
         <div class="imp-warn danger" role="alert" style="margin:0 0 12px;font-size:var(--fs-sm)">
           <Icon name="camera-off" size={16} />
@@ -745,7 +748,8 @@ function ScanView() {
         </div>
       )}
 
-      {feedback.value && <FeedbackCard />}
+      {/* while the score pad is open its header already names the child, so the "รับงานแล้ว" card would repeat it */}
+      {feedback.value && <FeedbackCard hidden={s.mode === "type" && !!pending.value && feedback.value.awaitScore === pending.value} />}
       {choices.value && (
         <div class="card sc-choose" role="group" aria-label="เลือกนักเรียน">
           <div class="row" style="justify-content:space-between;gap:8px;margin-bottom:8px">
@@ -763,9 +767,9 @@ function ScanView() {
         </div>
       )}
       {s.mode === "type" && pending.value && <ScorePad />}
+      </div>
 
-      <div class="scan-cols">
-        <div class="card" style="padding:0;overflow:hidden">
+        <div class="card sc-recent" style="padding:0;overflow:hidden">
           <div class="row" style="justify-content:space-between;padding:10px 12px;background:var(--surface-1)">
             <span style="font-size:var(--fs-sm)" class="muted">สแกนล่าสุด</span>
             <span style="font-size:var(--fs-sm)" class="muted">รอบนี้ {recent.value.length} คน</span>
@@ -792,7 +796,7 @@ function ScanView() {
           )}
         </div>
 
-        <div class="card">
+        <div class="card sc-gridcard">
           <div class="row" style="gap:12px;margin-bottom:8px">
             <ProgressRing value={known ? seat.submitted : 0} total={known ? seat.counted : classStudents.length} size={72} label={known ? "ส่งแล้ว" : "ไม่ทราบ"} />
             <div style="font-size:var(--fs-sm)">
@@ -840,7 +844,7 @@ function ScanSummary({ s }: { s: Session }) {
   }
 
   return (
-    <div>
+    <div class="sc-page">
       <div class="page-head"><div class="page-title">จบรอบสแกน</div></div>
       <div class="card sc-summary">
         <div class="row" style="gap:10px;margin-bottom:12px">
@@ -873,10 +877,10 @@ function ScanSummary({ s }: { s: Session }) {
   );
 }
 
-function FeedbackCard() {
+function FeedbackCard({ hidden }: { hidden?: boolean }) {
   const f = feedback.value!;
   return (
-    <div class={"fb " + f.kind} role="status">
+    <div class={"fb " + f.kind + (hidden ? " sr-only" : "")} role="status">
       <div class="ic"><Icon name={f.icon} size={24} /></div>
       <div class="grow">
         <div class="name">{f.name}</div>
@@ -914,34 +918,38 @@ function ScorePad() {
   const quick = [s.fullScore, s.fullScore - 1, s.fullScore - 2, Math.round(s.fullScore * 0.5)].filter((n, i, a) => n >= 0 && a.indexOf(n) === i);
 
   return (
-    <div class="card" style="margin-bottom:12px">
-      <div class="row" style="justify-content:space-between;margin-bottom:8px">
-        <div><span style="font-weight:500">{fullName(st)}</span> <span class="muted">เลขที่ {st.number ?? "-"}</span></div>
+    <section class="card sc-pad" aria-label="ให้คะแนน">
+      <div class="sc-pad-head">
+        <span class="sc-pad-name" id="sc-pad-name">{fullName(st)}</span>
+        <span class="sc-pad-no">เลขที่ {st.number ?? "-"}</span>
+        <span class="grow" />
         <button class="ghost" onClick={() => { pending.value = null; }}>ให้คะแนนทีหลัง</button>
       </div>
-      <div class="sc-quick">
-        {quick.map((n) => <button onClick={() => commitVal(String(n))}>{n}/{s.fullScore}</button>)}
-      </div>
-      <div class="sc-score-controls">
-        <div class="sc-score-entry">
-          <div class="row" style="gap:8px">
-            <input ref={ref} class="sc-score-input" inputMode="decimal" value={val} style="width:6rem;min-width:6rem;height:3.47rem;font-size:1.47rem;text-align:center" aria-label="คะแนน"
-              aria-invalid={!!errMsg} aria-describedby={errMsg ? "scan-score-error" : undefined}
-              onInput={(e) => setVal((e.target as HTMLInputElement).value)}
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitVal(val); } }} />
-            <span style="font-size:1.47rem">/ {s.fullScore}</span>
+      <div class="sc-pad-body">
+        <div class="sc-pad-left">
+          <div class="sc-score-entry">
+            <div class="sc-score-row">
+              <input ref={ref} class="sc-score-input" inputMode="decimal" value={val} aria-label="คะแนน" aria-describedby={errMsg ? "scan-score-error" : "sc-pad-name"}
+                aria-invalid={!!errMsg}
+                onInput={(e) => setVal((e.target as HTMLInputElement).value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitVal(val); } }} />
+              <span class="sc-score-full">/ {s.fullScore}</span>
+            </div>
+            {errMsg && <div id="scan-score-error" class="sc-score-error" role="alert">{errMsg}</div>}
           </div>
-          {errMsg && <div id="scan-score-error" class="sc-score-error" role="alert">{errMsg}</div>}
+          <div class="sc-quick">
+            {quick.map((n) => <button onClick={() => commitVal(String(n))}>{n}/{s.fullScore}</button>)}
+          </div>
         </div>
         <div class="scorepad">
           {[1,2,3,4,5,6,7,8,9].map((n) => <button onClick={() => setVal((v) => v + n)}>{n}</button>)}
-          <button onClick={() => setVal((v) => (v.includes(".") ? v : (v || "0") + ".5"))} style="font-size:1.07rem">.5</button>
+          <button onClick={() => setVal((v) => (v.includes(".") ? v : (v || "0") + ".5"))}>.5</button>
           <button onClick={() => setVal((v) => v + "0")}>0</button>
-          <button aria-label="ลบตัวเลขท้ายสุด" onClick={() => setVal((v) => v.slice(0, -1))}><Icon name="backspace" size={18} /></button>
-          <button class="primary" disabled={!!validation} onClick={() => commitVal(val)} style="grid-column:span 3"><Icon name="check" size={18} /> บันทึก</button>
+          <button aria-label="ลบตัวเลขท้ายสุด" onClick={() => setVal((v) => v.slice(0, -1))}><Icon name="backspace" size={28} /></button>
+          <button class="primary sc-save" aria-label="บันทึก" disabled={!!validation} onClick={() => commitVal(val)}><Icon name="check" size={28} /> บันทึก{val.trim() !== "" ? ` ${val}/${s.fullScore}` : ""}</button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
