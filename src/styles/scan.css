@@ -30,7 +30,7 @@
 .sc-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 5px; }
 @media (max-width: 720px) { .sc-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .sc-cell {
-  height: 2.53rem; border-radius: 8px; border: 0.5px solid var(--border); background: var(--surface-1);
+  height: var(--tap); border-radius: 8px; border: 0.5px solid var(--border); background: var(--surface-1);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
   font-size: var(--fs-sm); font-variant-numeric: tabular-nums; cursor: pointer; line-height: 1.1; padding: 0 2px;
 }
@@ -46,15 +46,10 @@
 .sc-cell.pend::after { background: var(--fill-warning); }
 .sc-cell.fail::after { background: var(--fill-danger); }
 
-/* ---- score quick chips ---- */
-.sc-quick { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
-.sc-quick button { height: 1.73rem; padding: 0 10px; font-size: var(--fs-xs); border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
-
 /* ---- end-of-round summary ---- */
 .sc-summary { max-width: 560px; }
 
 .ctxbar {
-  position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   background: var(--bg-accent); color: var(--text-accent);
   border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px;
@@ -98,8 +93,30 @@
 .fb.accent .ic { background: var(--accent); }
 .fb.accent .name, .fb.accent .sub, .fb.accent .score { color: var(--text-accent); }
 
-.scan-cols { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 12px; }
-@media (max-width: 720px) { .scan-cols { grid-template-columns: 1fr; } }
+/* ---- page layout: one column on phones / iPad portrait, two on iPad landscape + desktop ---- */
+.sc-layout { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "scan" "mid" "recent" "grid"; }
+.sc-layout > .scan-input-row { grid-area: scan; margin-bottom: 0; }
+.sc-mid { grid-area: mid; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.sc-mid:empty { display: none; }
+.sc-mid > * { margin-bottom: 0 !important; }
+.sc-recent { grid-area: recent; align-self: start; min-width: 0; }
+.sc-gridcard { grid-area: grid; align-self: start; min-width: 0; }
+/* one column: the scan field is the only sticky element (the round header scrolls away) so the two never stack */
+@media (max-width: 999px) {
+  .sc-layout > .scan-input-row { position: sticky; top: 0; z-index: 20; background: var(--surface-0); padding: 6px 0; box-shadow: 0 6px 8px -6px rgba(20, 28, 46, 0.25); }
+}
+@media (min-width: 721px) and (max-width: 999px) {
+  .sc-layout { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); grid-template-areas: "scan scan" "mid mid" "recent grid"; }
+}
+@media (min-width: 1000px) {
+  .sc-layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-areas: "scan grid" "mid grid" "recent grid"; grid-template-rows: auto auto 1fr; }
+  .sc-mid:empty { display: block; margin-bottom: -12px; }
+}
+
+/* every button on the scan page is a finger target (>= 44px), whatever the pointer type */
+.sc-page button { min-height: var(--tap); min-width: var(--tap); }
+/* grid seats keep their own width (8 per row); only the height is the finger target. !important beats the touch floor in base.css */
+.sc-page .sc-cell { min-width: 0 !important; min-height: var(--tap) !important; }
 
 .recent-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 0.5px solid var(--border); }
 .avatar { width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-sm); font-weight: 500; flex: none; background: var(--bg-accent); color: var(--text-accent); }
@@ -110,12 +127,24 @@
 .cam-tools { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; }
 .cam-tools button { background: rgba(0,0,0,0.55); color: #fff; border-color: rgba(255,255,255,0.3); }
 
-.scorepad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 260px; }
-.scorepad button { height: 3.47rem; font-size: 1.33rem; }
-.sc-score-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
-.sc-score-entry { max-width: 200px; }
+/* ---- score card (type-in mode): big name, big entry box, 64px keys ---- */
+.sc-pad { --key-h: max(var(--tap), 3.6rem); padding: 16px; }
+.sc-pad-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.sc-pad-name { font-size: 1.9rem; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; min-width: 0; }
+.sc-pad-no { font-size: 1.22rem; color: var(--text-secondary); }
+.sc-pad-head button { align-self: center; }
+.sc-pad-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start; }
+@media (max-width: 520px) { .sc-pad-body { grid-template-columns: minmax(0, 1fr); } }
+.sc-score-row { display: flex; align-items: center; gap: 10px; }
+.sc-score-full { font-size: 1.67rem; color: var(--text-secondary); white-space: nowrap; }
+.sc-score-input { flex: 1; min-width: 0; max-width: 10.6rem; height: 4.9rem; border: 2px solid var(--accent); border-radius: 14px; font-size: 2.9rem; font-weight: 600; text-align: center; padding: 0 4px; }
 .sc-score-input[aria-invalid="true"] { border-color: var(--border-danger); }
 .sc-score-error { margin-top: 6px; font-size: var(--fs-sm); color: var(--text-danger); }
+.sc-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.sc-page .sc-quick button { height: auto; min-height: var(--key-h) !important; font-size: 1.1rem; font-weight: 600; border-radius: 14px; padding: 0 6px; background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.scorepad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sc-page .scorepad button { height: auto; min-height: var(--key-h) !important; font-size: 1.67rem; border-radius: 14px; padding: 0; }
+.scorepad .sc-save { grid-column: 1 / 4; font-size: 1.22rem; font-weight: 600; gap: 10px; }
 
 .miss-chip { height: 1.73rem; font-size: var(--fs-xs); padding: 0 10px; border-radius: 999px; border: 0.5px dashed var(--border-danger); color: var(--text-danger); background: transparent; }
 
