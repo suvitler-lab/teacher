@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2-00 mockup หน้าสแกนใหม่ (ชื่อนักเรียนสมมติ)</title>
+<style>
+/* tokens: ค่าเดิมจาก src/styles/tokens.css + ค่าที่ VP-1 เสนอ (ทำเครื่องหมาย VP-1) */
+:root{
+  --surface-0:#f4f6fa;--surface-1:#eef1f6;--surface-2:#fff;
+  --text-primary:#1a1f29;--text-secondary:#59616e;
+  --text-muted:#646c79; /* VP-1 */
+  --border:rgba(20,28,46,.10);--border-strong:rgba(20,28,46,.18);
+  --accent:#2f6fde;--on-accent:#fff;--bg-accent:#e6f0fc;--text-accent:#1a56b0;
+  --border-accent:#6f9fe0; /* VP-1 */
+  --bg-success:#e3f6ec;--text-success:#12703f;--fill-success:#148352;--border-success:#a6e0c2; /* fill VP-1 */
+  --bg-warning:#fbefd6;--text-warning:#8a5a08;--fill-warning:#e79a1c;--border-warning:#f0cf8c;
+  --bg-danger:#fbe6e6;--text-danger:#a32626;--fill-danger:#c93a3a;--border-danger:#f0b2b2; /* fill VP-1 */
+  --bg-purple:#efeafc;--text-purple:#5a3fb0;
+  --tint-violet-bg:#ece7fb;--tint-violet-fg:#5636b8;--tint-aqua-bg:#d9f2f0;--tint-aqua-fg:#0d6e6a;
+  --radius-xs:6px;--radius-sm:8px;--radius:12px;--radius-lg:16px; /* xs = VP-1 */
+  --shadow-card:0 1px 2px rgba(20,28,46,.06),0 2px 8px rgba(20,28,46,.05); /* VP-1 */
+  --ring:0 0 0 3px rgba(47,111,222,.22),0 0 0 1.5px var(--accent); /* VP-1 */
+  --font-sans:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* ใหม่ในงานนี้ (เสนอเพิ่ม): ช่องยกเว้น */
+  --excused-bg:repeating-linear-gradient(135deg,#e4e8ee 0 5px,#f1f3f7 5px 10px);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans);background:#d9dde4;color:var(--text-primary);line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface-2);border-radius:var(--radius);display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;min-height:44px}
+button:focus-visible,input:focus-visible{outline:none;box-shadow:var(--ring)}
+svg{flex:none}
+/* ---------- แผงควบคุม mockup (ไม่ใช่ส่วนของแอป) ---------- */
+.ctl{position:sticky;top:0;z-index:100;background:#1a1f29;color:#fff;padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+.ctl .g{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ctl b{opacity:.7;font-weight:400;margin-right:2px}
+.ctl button{min-height:30px;padding:0 10px;border-radius:6px;background:#39414f;color:#fff;border-color:#4b5566;font-size:13px}
+.ctl button.on{background:#2f6fde;border-color:#9cc2f2}
+.ctl button:disabled{opacity:.35;cursor:not-allowed}
+.stage{padding:12px;display:flex;justify-content:center}
+.fit{position:relative}
+.frame{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--surface-0);overflow:auto;display:flex;box-shadow:0 6px 30px rgba(0,0,0,.3);font-size:16px}
+.note{font-size:13px;padding:6px 12px;background:#fff7d6;color:#5a4200}
+/* ---------- เปลือกแอป ---------- */
+.rail{width:64px;flex:none;background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;position:sticky;top:0;height:100%;align-self:flex-start}
+.rail .logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.rail a{width:60px;min-height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--text-secondary);text-decoration:none}
+.rail a.on{background:var(--bg-accent);color:var(--text-accent)}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:64px;background:var(--surface-2);border-top:1px solid var(--border);display:flex;z-index:30}
+.tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--text-secondary);gap:2px}
+.tabbar a.on{color:var(--text-accent)}
+.main{flex:1;min-width:0;padding:var(--pad,16px);display:flex;flex-direction:column;gap:6px;position:relative}
+.phone .main{padding-bottom:84px}
+.phone.frame{display:block}
+.phone .cell{padding:3px 3px 3px 5px}
+.card{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:var(--pad,16px)}
+.row{display:flex;align-items:center;gap:8px}.sp{flex:1}
+.h1{font-size:24px;font-weight:600;line-height:1.35}
+.muted{color:var(--text-muted)}.sec{color:var(--text-secondary)}
+/* ---------- ป้าย / chip ---------- */
+.chip,.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-size:16px;min-height:32px;padding:0 12px;white-space:nowrap}
+.badge.ok{background:var(--bg-success);color:var(--text-success);border:.5px solid var(--border-success)}
+.badge.warn{background:var(--bg-warning);color:var(--text-warning);border:.5px solid var(--border-warning)}
+.badge.acc{background:var(--bg-accent);color:var(--text-accent);border:.5px solid var(--border-accent)}
+.chip.subj{background:var(--tint-aqua-bg);color:var(--tint-aqua-fg)}
+.chip.type{background:var(--tint-violet-bg);color:var(--tint-violet-fg)}
+.pill{min-height:44px;border-radius:999px;background:var(--surface-2);color:var(--text-accent);font-weight:500;font-size:17px;padding:0 16px}
+/* ---------- แถบหัวรอบ (ไม่ sticky) ---------- */
+.ctx{background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:8px 12px;display:flex;flex-direction:column;gap:6px}
+.ctx .r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctx button{min-height:44px}
+.ctx .btnq{background:var(--surface-2);color:var(--text-accent);font-weight:500}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:var(--radius);background:var(--surface-2);border:.5px solid var(--border-strong)}
+.seg button{min-height:48px;border:1.5px solid transparent;background:transparent;color:var(--text-secondary);font-size:16px;padding:0 16px;border-radius:var(--radius-sm)}
+.seg button.on{background:var(--bg-accent);color:var(--text-accent);font-weight:600;border-color:var(--border-accent)}
+.phone .seg{width:100%}.phone .seg button{flex:1;padding:0 4px;min-height:44px;font-size:15px}
+.fullpill{font-weight:600;font-size:16px}
+/* ---------- ช่องสแกน ---------- */
+.scanrow{display:flex;gap:8px}
+.scanin{flex:1;display:flex;align-items:center;gap:10px;min-width:0;height:var(--input-h,64px);border:2px solid var(--border-accent);border-radius:var(--radius);padding:0 14px;background:var(--surface-2);box-shadow:var(--ring)}
+.scanin span{font-size:17px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scanrow .cam{width:var(--input-h,64px);height:var(--input-h,64px);padding:0}
+.stick .scanrow{position:sticky;top:0;z-index:20;background:var(--surface-0);padding:6px 0;margin:-6px 0 0;box-shadow:0 6px 8px -6px rgba(20,28,46,.25)}
+/* ---------- feedback ---------- */
+.fb{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:var(--radius);border:.5px solid var(--border);min-height:72px}
+.fb .ic{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.fb .nm{font-size:20px;font-weight:600;line-height:1.3}.fb .sb{font-size:16px}.fb .sc{font-size:26px;font-weight:600;white-space:nowrap;margin-left:auto}
+.fb.success{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}.fb.success .ic{background:var(--fill-success)}
+.fb.acc{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}.fb.acc .ic{background:var(--accent)}
+.fb.idle{background:var(--surface-2);color:var(--text-secondary)}.fb.idle .ic{background:var(--text-muted)}
+/* ---------- ScorePad ---------- */
+.pad .head{display:flex;align-items:center;gap:8px;min-height:44px}
+.pad .head .t{font-size:20px;font-weight:600}
+.entryrow{display:flex;gap:12px;align-items:stretch;margin-top:8px;flex-wrap:wrap}
+.entry{display:flex;align-items:center;gap:8px;font-size:24px;color:var(--text-secondary)}
+.entry .box{width:150px;height:var(--key-h,64px);border:2px solid var(--accent);border-radius:var(--radius);box-shadow:var(--ring);font-size:34px;font-weight:600;color:var(--text-primary);display:flex;align-items:center;justify-content:center}
+.quick{display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:0}
+.quick button{flex:1 1 60px;max-width:112px;min-height:var(--key-h,64px);flex-direction:column;gap:0;background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);border-radius:var(--radius);line-height:1.2;padding:0 6px}
+.quick button small{font-size:14px}.quick button b{font-size:22px}
+.queue{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding:4px 8px;border-radius:var(--radius);background:var(--bg-warning);border:.5px solid var(--border-warning);color:var(--text-warning)}
+.queue .lb{font-weight:600;font-size:16px;display:flex;align-items:center;gap:6px}
+.queue button{min-height:48px;background:var(--surface-2);border-color:var(--border-warning);color:var(--text-primary);font-size:16px}
+.keys{display:grid;grid-template-columns:repeat(6,1fr) 1.7fr;grid-template-rows:var(--key-h,64px) var(--key-h,64px);gap:8px;margin-top:8px}
+.keys button{font-size:26px;border-radius:var(--radius);padding:0}
+.keys .save{grid-row:1/3;grid-column:7;background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-size:20px;font-weight:600;flex-direction:column;gap:4px}
+.narrow .keys{grid-template-columns:repeat(6,1fr);grid-template-rows:var(--key-h,64px) var(--key-h,64px) var(--key-h,64px)}
+.narrow .keys .save{grid-row:3;grid-column:1/7;flex-direction:row}
+.keys button:disabled{opacity:.5}
+/* ---------- ผังเลขที่ ---------- */
+.seat{display:grid;grid-template-columns:repeat(var(--cols,8),minmax(0,1fr));gap:6px}
+.cell{height:var(--cell-h,58px);border-radius:var(--radius-sm);border:1.5px solid var(--border-strong);background:var(--surface-1);padding:4px 4px 3px 6px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;font-size:var(--num-fs,22px);min-height:44px;gap:0;align-items:stretch;position:relative}
+.cell .t{display:flex;justify-content:space-between;align-items:center;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.cell .t svg{width:16px;height:16px}
+.cell .nm{font-size:var(--nm-fs,16px);font-weight:400;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell.scored{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}
+.cell.late{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.cell.await{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.cell.miss{background:var(--surface-2);border:1.5px dashed var(--border-danger);color:var(--text-danger)}
+.cell.exc{background:var(--excused-bg);border:1.5px solid var(--border-strong);color:var(--text-secondary)}
+.cell.cur{outline:3px solid var(--accent);outline-offset:1px;box-shadow:var(--ring)}
+.cell.q::after{content:"";position:absolute;inset:auto 0 0 0;height:4px;background:var(--fill-warning);border-radius:0 0 6px 6px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:16px;margin-top:10px;color:var(--text-secondary)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:22px;height:22px;border-radius:5px;border:1.5px solid;display:inline-flex;align-items:center;justify-content:center}
+.sw svg{width:16px;height:16px}
+.sw.scored{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}.sw.late{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.sw.await{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}.sw.miss{background:#fff;border:1.5px dashed var(--border-danger);color:var(--text-danger)}
+.sw.exc{background:var(--excused-bg);border-color:var(--border-strong);color:var(--text-secondary)}
+.gh{display:flex;align-items:center;gap:12px;min-height:56px;margin-bottom:8px}
+.ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;flex:none}
+/* ---------- สแกนล่าสุด (แถบ) ---------- */
+.recent{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:60px}
+.recent .lb{font-weight:600;font-size:16px;color:var(--text-secondary);white-space:nowrap}
+.rchip{display:inline-flex;align-items:center;gap:8px;min-height:44px;border-radius:999px;border:.5px solid var(--border-strong);background:var(--surface-1);padding:0 14px 0 6px;font-size:16px}
+.rchip .av{width:32px;height:32px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px}
+.rlist{border-top:.5px solid var(--border);margin-top:8px;max-height:176px;overflow:auto}
+.rlist div{display:flex;gap:10px;align-items:center;min-height:44px;border-bottom:.5px solid var(--border);font-size:16px}
+/* ---------- ซ้อนทับ ---------- */
+.scrim{position:sticky;inset:0;}
+.ovl{position:absolute;left:0;top:0;right:0;bottom:0;background:rgba(20,28,46,.45);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+.phone .ovl{align-items:flex-end;padding:0}
+.sheet{background:var(--surface-2);border-radius:var(--radius-lg);box-shadow:0 8px 28px rgba(20,28,46,.25);width:100%;max-width:440px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.phone .sheet{max-width:none;border-radius:16px 16px 0 0;padding-bottom:28px}
+.sheet h3{margin:0;font-size:20px;line-height:1.35}
+.sheet button{min-height:64px;justify-content:flex-start;font-size:18px;padding:0 16px}
+.sheet button.danger{color:var(--text-danger);border-color:var(--border-danger);background:var(--bg-danger)}
+.sheet button.pri{background:var(--accent);color:#fff;border-color:var(--accent);justify-content:center}
+.sheet .two{display:flex;gap:8px}.sheet .two button{flex:1;justify-content:center}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--toast-b,24px);z-index:70;background:#1a1f29;color:#fff;border-radius:var(--radius);padding:6px 6px 6px 16px;display:flex;align-items:center;gap:12px;min-height:56px;font-size:16px;max-width:calc(100% - 24px);box-shadow:0 8px 28px rgba(20,28,46,.3)}
+.toast button{min-height:44px;background:#fff;color:#1a56b0;border-color:#fff;font-weight:600}
+.toast .bar{position:absolute;left:0;bottom:0;height:3px;width:60%;background:#9cc2f2;border-radius:0 0 12px 12px}
+.banner{display:flex;align-items:center;gap:10px;border-radius:var(--radius);padding:8px 12px;min-height:48px;font-size:16px}
+/* ---------- ตั้งค่ารอบ / หน้าหลัก ---------- */
+.opt{width:100%;display:flex;align-items:center;justify-content:flex-start;text-align:left;gap:12px;min-height:72px;border-radius:var(--radius);padding:10px 14px;background:var(--surface-2);border:1px solid var(--border-strong)}
+.opt.on{border:2px solid var(--border-accent);background:var(--bg-accent)}
+.opt .tt{font-weight:600;font-size:17px}.opt .ss{font-size:16px;color:var(--text-secondary)}
+.opts{display:grid;gap:8px}.opts.c3{grid-template-columns:repeat(3,1fr)}.opts.c2{grid-template-columns:repeat(2,1fr)}
+.phone .opts.c3,.phone .opts.c2{grid-template-columns:1fr}
+.step{display:flex;align-items:center;gap:8px;font-weight:600;font-size:17px;margin:10px 0 6px}
+.step i{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-style:normal;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.tag{font-size:16px;background:var(--bg-success);color:var(--text-success);border-radius:999px;padding:0 10px;min-height:28px;display:inline-flex;align-items:center;gap:4px}
+.bigbtn{min-height:72px;background:var(--accent);color:#fff;border-color:var(--accent);font-size:20px;font-weight:600;border-radius:var(--radius);padding:0 28px}
+.startbar{position:sticky;bottom:0;background:var(--surface-0);padding:8px 0 0;display:flex;gap:12px;align-items:center;margin-top:auto}
+.phone .startbar{bottom:64px}
+.resume{background:var(--bg-accent);border:2px solid var(--border-accent)}
+.wrow{display:flex;align-items:center;gap:10px;min-height:64px;border-bottom:.5px solid var(--border)}
+.wrow:last-child{border:0}
+.sumlist{display:flex;flex-wrap:wrap;gap:6px}
+.sumlist .rchip{padding:0 12px;min-height:44px}
+/* ---------- แบบ "ก่อน (ปัจจุบัน)" จาก src/styles/scan.css ---------- */
+.before .card{padding:14px;border-radius:12px;box-shadow:none}
+.before .ctxb{background:var(--bg-accent);color:var(--text-accent);border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+.before .ctxb .p{background:#fff;border-radius:8px;padding:6px 12px;font-size:15px}
+.before .ctxb .c{border-radius:999px;padding:2px 10px;font-size:13px}
+.before .ctxb button{min-height:36px;font-size:14px;border-radius:8px;padding:0 10px}
+.before .smallrow{font-size:13px;display:flex;gap:8px;justify-content:space-between;align-items:center;color:var(--text-secondary)}
+.before .bd{font-size:13px;min-height:26px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;background:var(--bg-success);color:var(--text-success)}
+.before .scanin{height:56px}.before .scanin span{font-size:16px}
+.before .fb{min-height:0;padding:12px 16px}.before .fb .nm{font-size:17px;font-weight:500}.before .fb .sb{font-size:13px}.before .fb .ic{width:44px;height:44px}
+.before .qk{display:flex;gap:4px;justify-content:center;margin:8px 0}.before .qk button{min-height:26px;height:26px;font-size:12px;border-radius:999px;padding:0 10px;background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.before .spad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:260px}.before .spad button{height:52px;font-size:20px;min-height:0;border-radius:8px}
+.before .cols{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
+.before .sg{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px}
+.before .sc-cell{height:38px;border-radius:8px;border:.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;line-height:1.1;padding:0 2px;min-height:0}
+.before .sc-cell .nm{font-size:10px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.before .sc-cell.scored{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}
+.before .sc-cell.late{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.before .sc-cell.await{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.before .sc-cell.miss{border-style:dashed;border-color:var(--border-danger);color:var(--text-danger)}
+.before .sc-cell.exc{background:var(--surface-1)}
+.before .sc-cell.cur{outline:2px solid var(--accent);outline-offset:-1px}
+.before .rrow{display:flex;gap:10px;align-items:center;padding:8px 12px;border-top:.5px solid var(--border);font-size:15px}
+.measure{position:absolute;right:8px;top:8px;z-index:90;background:#fff7d6;border:1px solid #d8b84a;border-radius:6px;padding:4px 8px;font-size:13px;color:#5a4200}
+.orig .main{gap:10px}.orig .modebtn{font-size:14px;background:#fff}.orig .ctxb button{min-height:44px}
+.orig .smallrow .tst{min-height:44px;font-size:14px;padding:0 12px}.orig .smallrow{min-height:44px}
+.orig .bd{font-size:14px;min-height:32px}
+.orig .sg{grid-template-columns:repeat(8,minmax(0,1fr))}.phone.orig .sg{grid-template-columns:repeat(6,minmax(0,1fr))}
+.orig .sc-cell{height:44px;font-size:14px;cursor:pointer;background:var(--surface-1);font-family:inherit;color:inherit;padding:0 2px}.orig .sc-cell .nm{font-size:11px}
+.orig .sc-cell.scored{background:var(--bg-success);color:var(--text-success)}.orig .sc-cell.late{background:var(--bg-warning);color:var(--text-warning)}.orig .sc-cell.await{background:var(--bg-accent);color:var(--text-accent)}.orig .sc-cell.miss{background:#fff;color:var(--text-danger)}
+.orig .sc-cell.exc{background:var(--excused-bg);color:var(--text-secondary)}
+.orig .ocols{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:start}.phone.orig .ocols{grid-template-columns:1fr}
+.orig .gh2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.orig .ring2{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}.orig .ring2 span{background:#fff;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px}
+.orig .lg{display:inline-flex;gap:6px;align-items:center}.orig .sw2{width:14px;height:14px;border-radius:3px;border:1px solid var(--border);display:inline-block}
+.orig .av2{width:30px;height:30px;border-radius:50%;background:var(--bg-accent);display:inline-flex;align-items:center;justify-content:center}
+.orig .rrow{min-height:56px}
+.pop{background:#fff;border:1px solid var(--border-strong);border-radius:12px;box-shadow:0 8px 28px rgba(20,28,46,.22);padding:8px;width:340px;margin-left:auto;display:flex;flex-direction:column;gap:2px;position:relative;z-index:30}
+.pop>b{font-size:14px;padding:4px 8px;font-weight:500;color:var(--text-secondary)}.pop button{justify-content:flex-start;text-align:left;min-height:64px;border:0;background:transparent;font-size:17px}.pop button.on{background:var(--bg-accent);color:var(--text-accent)}.pop small{font-size:14px;color:var(--text-secondary)}
+.bp{padding:16px}.bph{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}.bpn{font-size:34px;font-weight:600;line-height:1.3}.bpno{font-size:22px;color:var(--text-secondary)}
+.bph button{align-self:center;min-height:48px;font-size:16px}
+.bpb{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;align-items:start}
+.bpe{display:flex;align-items:center;gap:10px;font-size:30px;color:var(--text-secondary)}.bpe .box{flex:1;max-width:190px;height:88px;border:2px solid var(--accent);border-radius:14px;box-shadow:var(--ring);font-size:52px;font-weight:600;color:var(--text-primary);display:flex;align-items:center;justify-content:center}
+.bpq{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.bpq button{min-height:64px;font-size:20px;border-radius:14px;background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);font-weight:600}.bpq .last{grid-column:1/3;font-size:18px}
+.bpk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bpk button{min-height:var(--key-h,64px);height:var(--key-h,64px);font-size:30px;border-radius:14px;padding:0}.bpk .save{grid-column:1/4;background:var(--accent);color:#fff;border-color:var(--accent);font-size:22px;font-weight:600;gap:10px}
+.phone .bpb{grid-template-columns:1fr}.phone .bpn{font-size:26px}.phone .bpe .box{height:72px;font-size:42px}
+.camrow{display:flex;gap:12px;align-items:stretch}.camv{position:relative;flex:0 0 min(62%,460px);aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#2b2623,#6b625a 45%,#1d1a18)}
+.camf{position:absolute;inset:16% 22%;border:3px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 0 0 100vmax rgba(0,0,0,.25)}.camt{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center}
+.camside{flex:1;background:#fff;border:.5px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px;justify-content:center}
+.phone .camrow{flex-direction:column}.phone .camv{flex:none;width:100%}
+</style>
+</head>
+<body>
+<div class="ctl" id="ctl"></div>
+<div class="note" id="note"></div>
+<div class="stage"><div class="fit" id="fit"><div class="frame" id="frame"></div></div></div>
+<script>
+const ICONS={"home":"<path d=\"M5 12l-2 0l9 -9l9 9l-2 0\" /><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" />","scan":"<path d=\"M5 12h14\" /><path d=\"M3 7v-2a2 2 0 0 1 2 -2h2\" /><path d=\"M3 17v2a2 2 0 0 0 2 2h2\" /><path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /><path d=\"M17 21h2a2 2 0 0 0 2 -2v-2\" />","notebook":"<path d=\"M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18\" /><path d=\"M13 8l2 0\" /><path d=\"M13 12l2 0\" />","user-check":"<path d=\"M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h4\" /><path d=\"M15 19l2 2l4 -4\" />","dice-3":"<path d=\"M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14\" /><path d=\"M8 8.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" /><path d=\"M15 15.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" /><path d=\"M11.5 12a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" />","chart-bar":"<path d=\"M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6\" /><path d=\"M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10\" /><path d=\"M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14\" /><path d=\"M4 20h14\" />","users":"<path d=\"M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0\" /><path d=\"M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2\" /><path d=\"M16 3.13a4 4 0 0 1 0 7.75\" /><path d=\"M21 21v-2a4 4 0 0 0 -3 -3.85\" />","settings":"<path d=\"M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065\" /><path d=\"M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\" />","check":"<path d=\"M5 12l5 5l10 -10\" />","checks":"<path d=\"M7 12l5 5l10 -10\" /><path d=\"M2 12l5 5m5 -5l5 -5\" />","x":"<path d=\"M18 6l-12 12\" /><path d=\"M6 6l12 12\" />","clock":"<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\" /><path d=\"M12 7v5l3 3\" />","file-text":"<path d=\"M14 3v4a1 1 0 0 0 1 1h4\" /><path d=\"M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2\" /><path d=\"M9 9l1 0\" /><path d=\"M9 13l6 0\" /><path d=\"M9 17l6 0\" />","thermometer":"<path d=\"M19 5a2.828 2.828 0 0 1 0 4l-8 8h-4v-4l8 -8a2.828 2.828 0 0 1 4 0\" /><path d=\"M16 7l-1.5 -1.5\" /><path d=\"M13 10l-1.5 -1.5\" /><path d=\"M10 13l-1.5 -1.5\" /><path d=\"M7 17l-3 3\" />","chevron-down":"<path d=\"M6 9l6 6l6 -6\" />","chevron-right":"<path d=\"M9 6l6 6l-6 6\" />","chevron-left":"<path d=\"M15 6l-6 6l6 6\" />","chevron-up":"<path d=\"M6 15l6 -6l6 6\" />","arrow-right":"<path d=\"M5 12l14 0\" /><path d=\"M13 18l6 -6\" /><path d=\"M13 6l6 6\" />","eye":"<path d=\"M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6\" />","eye-off":"<path d=\"M10.585 10.587a2 2 0 0 0 2.829 2.828\" /><path d=\"M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87\" /><path d=\"M3 3l18 18\" />","columns-3":"<path d=\"M3 4a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-16\" /><path d=\"M9 3v18\" /><path d=\"M15 3v18\" />","plus":"<path d=\"M12 5l0 14\" /><path d=\"M5 12l14 0\" />","minus":"<path d=\"M5 12l14 0\" />","calendar":"<path d=\"M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12\" /><path d=\"M16 3v4\" /><path d=\"M8 3v4\" /><path d=\"M4 11h16\" /><path d=\"M11 15h1\" /><path d=\"M12 15v3\" />","palette":"<path d=\"M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25\" /><path d=\"M7.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M11.5 7.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M15.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" />","typography":"<path d=\"M4 20l3 0\" /><path d=\"M14 20l7 0\" /><path d=\"M6.9 15l6.9 0\" /><path d=\"M10.2 6.3l5.8 13.7\" /><path d=\"M5 20l6 -16l2 0l7 16\" />","qrcode":"<path d=\"M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M7 17l0 .01\" /><path d=\"M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M7 7l0 .01\" /><path d=\"M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M17 7l0 .01\" /><path d=\"M14 14l3 0\" /><path d=\"M20 14l0 .01\" /><path d=\"M14 14l0 3\" /><path d=\"M14 20l3 0\" /><path d=\"M17 17l3 0\" /><path d=\"M20 17l0 3\" />","barcode":"<path d=\"M4 7v-1a2 2 0 0 1 2 -2h2\" /><path d=\"M4 17v1a2 2 0 0 0 2 2h2\" /><path d=\"M16 4h2a2 2 0 0 1 2 2v1\" /><path d=\"M16 20h2a2 2 0 0 0 2 -2v-1\" /><path d=\"M5 11h1v2h-1l0 -2\" /><path d=\"M10 11l0 2\" /><path d=\"M14 11h1v2h-1l0 -2\" /><path d=\"M19 11l0 2\" />","camera":"<path d=\"M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2\" /><path d=\"M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\" />","camera-off":"<path d=\"M8.297 4.289a.997 .997 0 0 1 .703 -.289h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v8m-1.187 2.828c-.249 .11 -.524 .172 -.813 .172h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h1c.298 0 .58 -.065 .834 -.181\" /><path d=\"M10.422 10.448a3 3 0 1 0 4.15 4.098\" /><path d=\"M3 3l18 18\" />","camera-rotate":"<path d=\"M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2\" /><path d=\"M11.245 15.904a3 3 0 0 0 3.755 -2.904m-2.25 -2.905a3 3 0 0 0 -3.75 2.905\" /><path d=\"M14 13h2v2\" /><path d=\"M10 13h-2v-2\" />","pencil":"<path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\" /><path d=\"M13.5 6.5l4 4\" />","arrow-back-up":"<path d=\"M9 14l-4 -4l4 -4\" /><path d=\"M5 10h11a4 4 0 1 1 0 8h-1\" />","history":"<path d=\"M12 8l0 4l2 2\" /><path d=\"M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5\" />","player-stop":"<path d=\"M5 7a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -10\" />","player-play":"<path d=\"M7 4v16l13 -8l-13 -8\" />","presentation":"<path d=\"M3 4l18 0\" /><path d=\"M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10\" /><path d=\"M12 16l0 4\" /><path d=\"M9 20l6 0\" /><path d=\"M8 12l3 -3l2 2l3 -3\" />","circle-check":"<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M9 12l2 2l4 -4\" />","wifi":"<path d=\"M12 18l.01 0\" /><path d=\"M9.172 15.172a4 4 0 0 1 5.656 0\" /><path d=\"M6.343 12.343a8 8 0 0 1 11.314 0\" /><path d=\"M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0\" />","ban":"<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M5.7 5.7l12.6 12.6\" />","backspace":"<path d=\"M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5l11 0\" /><path d=\"M12 10l4 4m0 -4l-4 4\" />","list-numbers":"<path d=\"M11 6h9\" /><path d=\"M11 12h9\" /><path d=\"M12 18h8\" /><path d=\"M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4\" /><path d=\"M6 10v-6l-2 2\" />","selector":"<path d=\"M8 9l4 -4l4 4\" /><path d=\"M16 15l-4 4l-4 -4\" />","dots-vertical":"<path d=\"M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" />","device-tv":"<path d=\"M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9\" /><path d=\"M16 3l-4 4l-4 -4\" />","cloud":"<path d=\"M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878\" />"};
+const ic=(n,s=20,x='')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${x}>${ICONS[n]||''}</svg>`;
+const SIZES={
+ ipadP:{w:820,h:1180,label:'iPad แนวตั้ง 820×1180 (ค่าหลัก)',cols:8,cell:56,num:22,nm:16,key:64,input:64,pad:16,shell:'rail',two:false},
+ ipadL:{w:1180,h:820,label:'iPad แนวนอน 1180×820',cols:7,cell:56,num:20,nm:14,key:64,input:64,pad:16,shell:'rail',two:true,left:580},
+ phone:{w:390,h:844,label:'มือถือ 390×844',cols:5,cell:52,num:20,nm:13,key:52,input:56,pad:12,shell:'tab',two:false,narrow:true},
+ desk:{w:1440,h:900,label:'คอม 1440×900',cols:8,cell:56,num:20,nm:15,key:56,input:60,pad:20,shell:'rail',two:true,left:520,narrow:true}
+};
+const SCREENS={home:'หน้าหลัก (การ์ดสแกนต่อ)',setup:'ตั้งค่ารอบ',full:'ระหว่างรอบ: ให้เต็ม',type:'ระหว่างรอบ: กรอกทีละคน',cam:'ระหว่างรอบ: เปิดกล้อง',recv:'ระหว่างรอบ: รับก่อน',sheet:'action sheet (แตะช่องที่ส่งแล้ว)',end:'จบรอบ'};
+const OVLS={none:'ไม่มี',toastUndo:'toast เลิกทำ 5 วิ',toastMode:'toast สลับโหมด',mode:'เมนูสลับโหมด',bulk:'dialog bulk',test:'ทดสอบเครื่องยิง'};
+const S={size:'ipadP',screen:'type',ovl:'none',ba:'after'};
+const NICK=['ฟ้า','ใบบัว','มินนี่','ภูผา','น้ำใส','พลอย','กานต์','ต้นไม้','เมฆา','ข้าวหอม','ปลาทอง','ดวงดาว','แจ๋ว','ไอซ์','นุ่น','บีม','เจ','ต้นกล้า','มะลิ','ธารา','มะม่วง','สายฟ้า','พิมพ์','ก้อง','โอม','ตะวัน','ใบเตย','เป็ด','ฝ้าย','น้ำฝน','เกด','ปุ้ย','ออมสิน','ภัทร','อิงฟ้า','กะทิ','ดาว','นะโม','เบนซ์','พีพี','แพรว','ต้า','ชมพู่','โบนัส'];
+const FULLNAME=n=>({21:'มะม่วง ตัวอย่าง',12:'ดวงดาว ตัวอย่าง',18:'ต้นกล้า ตัวอย่าง',19:'มะลิ ตัวอย่าง',20:'ธารา ตัวอย่าง',22:'สายฟ้า ตัวอย่าง'}[n]||NICK[n-1]+' ตัวอย่าง');
+/* สถานะช่อง ต่อหน้าจอ */
+function states(screen){
+  const st={};for(let i=1;i<=44;i++)st[i]='miss';
+  const sc=[1,2,3,5,6,8,10,11,12,13,14,16,17,20],late=[4,9,15],exc=[7,30];
+  sc.forEach(i=>st[i]='scored');late.forEach(i=>st[i]='late');exc.forEach(i=>st[i]='exc');
+  let cur=21,q=[];
+  if(screen==='type'||screen==='sheet'||screen==='cam'){st[18]='await';st[19]='await';}
+  if(screen==='full'||screen==='end'){st[18]='scored';st[19]='scored';st[21]='scored';}
+  if(screen==='recv'){Object.keys(st).forEach(k=>{if(st[k]==='scored')st[k]='await'});st[18]='await';st[19]='await';st[21]='await';}
+  if(screen==='end'){cur=0;st[21]='miss';st[18]='await';}
+  return{st,cur,q};
+}
+const ICN={scored:'check',late:'clock',await:'pencil',exc:'ban',miss:''};
+function counts(st){const c={scored:0,late:0,await:0,miss:0,exc:0};Object.values(st).forEach(v=>c[v]++);return c;}
+function seat(screen,opts={}){
+  const {st,cur,q}=states(screen);const sel=opts.sel;
+  let h='<div class="seat" role="group" aria-label="ผังเลขที่ ป.6/1">';
+  for(let i=1;i<=44;i++){const s=st[i];const lab={scored:'ส่งแล้ว',late:'ส่งช้า',await:'รอคะแนน',miss:'ยังไม่ส่ง',exc:'ยกเว้น'}[s];
+    h+=`<button class="cell ${s}${i===cur&&screen!=='end'||i===sel?' cur':''}${q.includes(i)?' q':''}" aria-label="เลขที่ ${i} ${NICK[i-1]} ${lab}"><span class="t"><span>${i}</span>${ICN[s]?ic(ICN[s],16):''}</span><span class="nm">${NICK[i-1]}</span></button>`;}
+  return h+'</div>';
+}
+function legend(c){
+  const L=[['scored','check','ส่งแล้ว',c.scored],['late','clock','ส่งช้า',c.late],['await','pencil','รอตรวจ',c.await],['miss','','ยังไม่ส่ง',c.miss],['exc','ban','ยกเว้น',c.exc]];
+  return '<div class="legend">'+L.map(([k,i,t,n])=>`<span><span class="sw ${k}">${i?ic(i,16):''}</span>${t} ${n}</span>`).join('')+'</div>';
+}
+function seatCard(screen,opts={}){
+  const {st}=states(screen);const c=counts(st);const done=c.scored+c.late+c.await,total=44-c.exc;
+  return `<section class="card"><div class="gh"><div class="ring" style="background:conic-gradient(var(--fill-success) ${done/total*360}deg,var(--border) 0)"><span style="background:#fff;border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:15px">${done}/${total}</span></div><div><div style="font-weight:600;font-size:18px">ผังเลขที่ ป.6/1</div><div class="sec" style="font-size:16px">แตะช่องว่าง = รับแทน · แตะช่องที่ส่งแล้ว = แก้/ยกเลิก</div></div><span class="sp"></span><button aria-haspopup="menu">ทำทั้งห้อง ${ic('chevron-down',20)}</button></div>${seat(screen,opts)}${legend(c)}</section>`;
+}
+function ctx(screen){
+  const sz=SIZES[S.size];const m={full:'full',type:'type',sheet:'type',recv:'recv'}[screen]||'type';
+  const modes=[['full','ให้เต็ม','checks'],['type','กรอกทีละคน','pencil'],['recv','รับก่อน','arrow-right']];
+  const proj=`<button class="btnq">${ic('presentation',20)}${S.size==='phone'?'ฉายจอ':'โหมดฉายจอ'}</button>`;
+  const end=`<button class="btnq">${ic('player-stop',20)}จบรอบ</button>`;
+  const tst=S.ovl==='test';
+  const ph=S.size==='phone';
+  return `<div class="ctx"><div class="r">${ph?'':'<span class="pill" style="display:inline-flex;align-items:center;gap:6px">'+ic('users',20)+'ป.6/1</span><span class="chip subj">คณิตศาสตร์</span><span class="chip type">ใบงาน</span><span class="chip fullpill" style="background:#fff;color:var(--text-accent)">เต็ม 10</span>'}${ph?'<span style="font-size:16px;font-weight:600;display:flex;gap:6px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap">'+ic('users',20)+'ป.6/1 · คณิตศาสตร์ · ใบงาน</span>':''}<span class="sp"></span>${proj}${end}</div>
+  <div class="r"><div class="seg" role="radiogroup" aria-label="วิธีรับงาน">${modes.map(([k,t,i])=>`<button role="radio" aria-checked="${k===m}" class="${k===m?'on':''}">${ic(i,20)}${t}</button>`).join('')}</div>${ph?'':`<span class="sp"></span><span class="badge ok">${ic('circle-check',16)}เครื่องยิงพร้อม</span><button class="btnq">ทดสอบ</button>`}</div>
+  ${ph?`<div class="r"><span class="fullpill">เต็ม 10</span><span class="badge ok">${ic('circle-check',16)}เครื่องยิงพร้อม</span><button class="btnq">ทดสอบ</button></div>`:''}
+  ${tst?`<div class="banner" style="background:var(--bg-success);color:var(--text-success);border:.5px solid var(--border-success)">${ic('circle-check',20)}<span><b>ได้รับสัญญาณแล้ว</b> — ยิงเร็ว 5 ครั้ง ครบ 5 ไม่ตกหล่น · เครื่องยิงพร้อมใช้งาน</span><span class="sp"></span><button style="background:#fff">ปิด</button></div>`:''}
+  </div>`;
+}
+function scanrow(){return `<div class="scanrow"><label class="scanin">${ic('qrcode',28)}<span>ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter</span></label><button class="cam" aria-label="เปิดกล้องสแกน">${ic('camera',28)}</button></div>`;}
+function pad(narrow){
+  return `<section class="card pad ${narrow?'narrow':''}"><div class="head"><span class="t">${ic('pencil',20)} มะม่วง ตัวอย่าง</span><span class="sec">เลขที่ 21</span><span class="sp"></span><button>ให้คะแนนทีหลัง</button></div>
+  <div class="queue" role="group" aria-label="รอคะแนน 2 คน แตะเพื่อกลับไปให้คะแนน" title="แตะเพื่อกลับไปให้คะแนน"><span class="lb">${ic('clock',16)}รอคะแนน (2)</span><button>18 ต้นกล้า</button><button>19 มะลิ</button></div>
+  <div class="entryrow"><div class="entry"><div class="box" aria-label="คะแนน">8</div>/ 10</div><div class="quick"><button><small>เต็ม</small><b>10</b></button><button><small>เต็ม−1</small><b>9</b></button><button><small>เต็ม−2</small><b>8</b></button><button><small>ครึ่ง</small><b>5</b></button><button>${ic('history',20)}<small>ล่าสุด</small><b style="font-size:18px">7.5</b></button></div></div>
+  <div class="keys">${[1,2,3,4,5,6,7,8,9,0].map(k=>`<button>${k}</button>`).join('')}<button>.5</button><button aria-label="ลบ">${ic('backspace',28)}</button><button class="save">${ic('check',28)}<span>บันทึก 8/10</span></button></div></section>`;
+}
+function fbCard(screen){
+  if(screen==='full')return `<div class="fb success" role="status" aria-live="polite"><span class="ic">${ic('check',28)}</span><div><div class="nm">มะม่วง ตัวอย่าง</div><div class="sb">เลขที่ 21 · ส่งแล้ว · ให้เต็ม</div></div><span class="sc">10/10</span><button style="background:#fff;margin-left:8px">${ic('arrow-back-up',20)}เลิกทำ</button></div>
+  <section class="card sec" style="font-size:17px;display:flex;gap:12px;align-items:center;min-height:64px">${ic('barcode',28)}<span>ยิงคนถัดไปได้เลย — ระบบให้ <b>10/10</b> ทันที ไม่ต้องพิมพ์คะแนน</span></section>`;
+  if(screen==='recv')return `<div class="fb acc" role="status" aria-live="polite"><span class="ic">${ic('pencil',28)}</span><div><div class="nm">มะม่วง ตัวอย่าง</div><div class="sb">เลขที่ 21 · รับงานแล้ว · รอให้คะแนนที่สมุดคะแนน</div></div><button style="background:#fff;margin-left:auto">${ic('arrow-back-up',20)}เลิกทำ</button></div>
+  <section class="card sec" style="font-size:17px;display:flex;gap:12px;align-items:center;min-height:64px">${ic('barcode',28)}<span>โหมดรับก่อน: ยังไม่ต้องใส่คะแนน — ให้คะแนนภายหลังที่สมุดคะแนน</span></section>`;
+  return '';
+}
+function recent(){
+  const items=[['21','มะม่วง','รอคะแนน','warn'],['20','ธารา','10/10','ok'],['19','มะลิ','รอคะแนน','warn'],['18','ต้นกล้า','รอคะแนน','warn']];
+  return `<section class="card" style="padding:8px 12px"><div class="recent"><span class="lb">${ic('history',20)} สแกนล่าสุด</span>${items.slice(0,2).map(([n,t,b,k])=>`<span class="rchip"><span class="av">${n}</span>${t}<span class="badge ${k==='ok'?'ok':'warn'}" style="min-height:28px">${b}</span></span>`).join('')}<span class="sp"></span><button aria-expanded="false">ทั้งหมด 4 ${ic('chevron-down',20)}</button></div></section>`;
+}
+function ctxO(screen){
+  const m={full:'ให้เต็ม',recv:'รับงานก่อน'}[screen]||'กรอกทีละคน';
+  const pop=S.ovl==='mode'?`<div class="pop" role="menu" aria-label="วิธีรับงาน"><b>วิธีรับงาน (มีผลกับการสแกนครั้งถัดไป)</b>${[['ให้เต็ม','ยิงแล้วได้เต็มทันที'],['กรอกทีละคน','ยิงแล้วพิมพ์คะแนน'],['รับงานก่อน','ยังไม่ให้คะแนน']].map(([t,d])=>`<button role="menuitemradio" aria-checked="${t===m}" class="${t===m?'on':''}">${t===m?ic('check',20):'<span style="width:20px"></span>'}<span><b>${t}</b><br><small>${d}</small></span></button>`).join('')}</div>`:'';
+  const tst=S.ovl==='test'?`<div class="banner" style="background:var(--bg-success);color:var(--text-success);border:.5px solid var(--border-success)">${ic('circle-check',20)}<span><b>ได้รับสัญญาณแล้ว</b> — ยิงเร็ว 5 ครั้ง ครบ ไม่ตกหล่น</span></div>`:'';
+  return `<div class="ctxb"><span class="p" style="display:inline-flex;gap:6px;align-items:center">${ic('users',20)}ป.6/1</span><span class="c" style="background:var(--tint-aqua-bg);color:var(--tint-aqua-fg)">คณิตศาสตร์</span><span class="c" style="background:var(--tint-violet-bg);color:var(--tint-violet-fg)">ใบงาน</span><span class="sp"></span><button class="modebtn" aria-haspopup="menu">เต็ม 10 · ${m} ${ic('chevron-down',20)}</button><button>${ic('presentation',20)}${S.size==='phone'?'ฉายจอ':'โหมดฉายจอ'}</button><button>${ic('player-stop',20)}จบรอบ</button></div>${pop}
+  <div class="smallrow"><span>เศษส่วน</span><span><span class="bd">${ic('circle-check',16)}เครื่องยิงพร้อม</span> <button class="tst">ทดสอบ</button> <span class="bd">ออนไลน์</span></span></div>${tst}`;
+}
+function bigpad(){
+  return `<section class="card bp" aria-label="ให้คะแนน"><div class="bph"><span class="bpn">มะม่วง ตัวอย่าง</span><span class="bpno">เลขที่ 21</span><span class="sp"></span><button>ให้คะแนนทีหลัง</button></div>
+  <div class="bpb"><div class="bpl"><div class="bpe"><div class="box" aria-label="คะแนน">8</div><span>/ 10</span></div><div class="bpq"><button>10/10</button><button>9/10</button><button>8/10</button><button>5/10</button><button class="last">${ic('history',20)}ล่าสุด 7.5</button></div></div>
+  <div class="bpk">${[1,2,3,4,5,6,7,8,9].map(k=>`<button>${k}</button>`).join('')}<button>.5</button><button>0</button><button aria-label="ลบ">${ic('backspace',30)}</button><button class="save">${ic('check',30)}บันทึก 8/10</button></div></div></section>`;
+}
+function camRow(){
+  return `<div class="camrow"><div class="camv"><div class="camf"></div><div class="camt"><button aria-label="สลับกล้อง" style="background:rgba(0,0,0,.6);color:#fff;border-color:rgba(255,255,255,.3);width:48px;padding:0">${ic('camera-rotate',24)}</button></div></div><div class="camside"><div class="sec" style="font-size:14px">สแกนล่าสุด</div><div style="font-size:24px;font-weight:600;line-height:1.3">มะม่วง ตัวอย่าง</div><div class="sec">เลขที่ 21</div><span class="bd" style="background:var(--bg-accent);color:var(--text-accent)">รับงานแล้ว</span></div></div>`;
+}
+function origRecent(){
+  return `<div class="card" style="padding:0"><div class="smallrow" style="padding:12px 16px;background:var(--surface-1);border-radius:12px 12px 0 0"><span>สแกนล่าสุด</span><span>รอบนี้ 1 คน</span></div><div class="rrow"><span class="av2">ม</span><span style="flex:1">มะม่วง ตัวอย่าง<br><span class="sec" style="font-size:14px">เลขที่ 21</span></span><span class="bd" style="background:var(--bg-accent);color:var(--text-accent)">รอคะแนน</span><button aria-label="เลิกทำ" style="padding:0;width:44px">${ic('arrow-back-up',20)}</button></div></div>`;
+}
+function origGrid(screen,sel){
+  const {st}=states(screen);const cur=screen==='end'?0:21;
+  const cells=Array.from({length:44},(_,i)=>{const n=i+1;const s2=st[n];return `<button class="sc-cell ${s2}${n===cur||n===sel?' cur':''}" aria-label="เลขที่ ${n} ${NICK[i]}">${n}<span class="nm">${NICK[i]}</span></button>`}).join('');
+  const c=counts(st);const done=c.scored+c.late+c.await,total=44-c.exc;
+  return `<div class="card"><div class="gh2"><div class="ring2" style="background:conic-gradient(var(--fill-success) ${done/total*360}deg,var(--border) 0)"><span>${done}/${total}</span></div><div style="font-size:15px"><span class="lg"><i class="sw2" style="background:var(--bg-success);border-color:var(--border-success)"></i>ส่งแล้ว ${done}</span><br><span class="lg"><i class="sw2" style="border-style:dashed;border-color:var(--border-danger)"></i>ยังไม่ส่ง ${c.miss}</span><br><span class="lg"><i class="sw2" style="background:var(--excused-bg)"></i>ยกเว้น ${c.exc}</span></div><span class="sp"></span><button>ทำทั้งห้อง ${ic('chevron-down',20)}</button></div><div style="font-size:13px;margin:6px 0;display:flex;justify-content:space-between"><b style="font-weight:500">ผังเลขที่ ป.6/1</b><span class="sec">แตะช่องว่าง = รับแทน</span></div><div class="sg">${cells}</div></div>`;
+}
+function inRound(screen){
+  const sz=SIZES[S.size];
+  const typeLike=['type','sheet','cam'].includes(screen);
+  const A=ctxO(screen);const cam=screen==='cam'?camRow():'';
+  const mid=typeLike?bigpad():fbCard(screen);
+  const grid=origGrid(typeLike?'type':screen,screen==='sheet'?12:0);
+  if(sz.two)return A+`<div style="display:grid;grid-template-columns:${sz.left}px minmax(0,1fr);gap:12px;align-items:start"><div style="display:flex;flex-direction:column;gap:10px">${scanrow()}${cam}${mid}${origRecent()}</div>${grid}</div>`;
+  return A+scanrow()+cam+mid+`<div class="ocols">${origRecent()}${grid}</div>`;
+}
+function setup(){
+  const ph=S.size==='phone';
+  return `<div class="row"><div class="h1">เริ่มรอบสแกน</div><span class="sp"></span><span class="tag">${ic('history',16)}ใช้ค่าจากครั้งก่อนแล้ว</span></div>
+  <div class="step"><i>1</i>เลือกงาน</div><div class="opts c2"><button class="opt on">${ic('check',20)}<span><div class="tt">ใบงานบทที่ 3 การคูณ</div><div class="ss">คณิตศาสตร์ · เต็ม 10 · ส่งภายใน 3 พ.ย.</div></span></button><button class="opt"><span><div class="tt">แบบฝึกหัด 2.1</div><div class="ss">คณิตศาสตร์ · เต็ม 20 · ส่งภายใน 6 พ.ย.</div></span></button></div>
+  <div class="step"><i>2</i>เลือกห้อง</div><div class="row" style="flex-wrap:wrap"><button class="pill" style="border:2px solid var(--border-accent);background:var(--bg-accent)">${ic('check',20)}ป.6/1 <span class="sec" style="font-weight:400">ส่งแล้ว 19/42</span></button><button class="pill" style="color:var(--text-primary)">ป.6/2 <span class="sec" style="font-weight:400">ส่งแล้ว 0/40</span></button></div>
+  <div class="step"><i>3</i>เลือกวิธีรับงาน</div><div class="opts c3"><button class="opt">${ic('checks',24)}<span><div class="tt">ให้เต็ม</div><div class="ss">ยิงแล้วได้เต็มทันที</div></span></button><button class="opt on">${ic('pencil',24)}<span><div class="tt">กรอกทีละคน</div><div class="ss">ยิงแล้วพิมพ์คะแนน</div></span></button><button class="opt">${ic('arrow-right',24)}<span><div class="tt">รับก่อน</div><div class="ss">ยังไม่ให้คะแนน</div></span></button></div>
+  <div class="sec" style="font-size:16px;margin-top:6px">เปลี่ยนวิธีรับงานกลางรอบได้ที่แถบด้านบน</div>
+  <div class="startbar"><div class="sec" style="flex:1;font-size:16px">ใบงานบทที่ 3 · ป.6/1 · กรอกทีละคน</div><button class="bigbtn" style="${ph?'flex:1':''}">${ic('scan',24)}เริ่มสแกน</button></div>`;
+}
+function home(){
+  const ph=S.size==='phone';
+  return `<div class="h1">หน้าหลัก</div>
+  <section class="card resume"><div class="row" style="gap:6px;color:var(--text-accent);font-weight:600;font-size:16px">${ic('history',20)}สแกนต่อจากครั้งก่อน</div>
+  <div style="font-size:22px;font-weight:600;margin:6px 0 2px">ใบงานบทที่ 3 การคูณ</div>
+  <div class="row" style="flex-wrap:wrap;gap:6px"><span class="chip" style="background:#fff;color:var(--text-accent)">${ic('users',16)}ป.6/1</span><span class="chip subj">คณิตศาสตร์</span><span class="chip" style="background:#fff;color:var(--text-accent)">${ic('pencil',16)}กรอกทีละคน</span></div>
+  <div class="sec" style="margin:8px 0 12px;font-size:16px">ส่งแล้ว 19 จาก 42 คน · สแกนล่าสุด 14:02</div>
+  <div class="row" style="flex-wrap:wrap"><button class="bigbtn" style="${ph?'width:100%':''}">${ic('player-play',24)}สแกนต่อ</button><button>เปลี่ยนงาน ห้อง หรือวิธีรับงาน</button></div></section>
+  <section class="card"><div class="row"><b style="font-size:18px">งานที่เปิดรับ</b></div>
+  ${[['ใบงานบทที่ 3 การคูณ','ป.6/1 · ส่งแล้ว 19/42'],['แบบฝึกหัด 2.1','ป.6/1 · ส่งแล้ว 40/42 · ครบกำหนดวันนี้'],['โครงงานวิทย์','ป.6/2 · ส่งแล้ว 0/40']].map(([a,b])=>`<div class="wrow"><span style="flex:1;min-width:0"><div style="font-weight:500">${a}</div><div class="sec" style="font-size:16px">${b}</div></span><button>${ic('scan',20)}สแกน</button></div>`).join('')}</section>`;
+}
+function endScreen(){
+  const {st}=states('end');const c=counts(st);const done=c.scored+c.late+c.await,total=44-c.exc;
+  const miss=[],none=[];for(let i=1;i<=44;i++){if(st[i]==='miss')miss.push(i);if(st[i]==='await')none.push(i);}
+  return `<div class="row"><div class="h1">จบรอบสแกน</div></div>
+  <section class="card"><div class="gh"><div class="ring" style="width:72px;height:72px;background:conic-gradient(var(--fill-success) ${done/total*360}deg,var(--border) 0)"><span style="background:#fff;border-radius:50%;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:17px">${done}/${total}</span></div><div><div style="font-size:22px;font-weight:600">ส่งแล้ว ${done} จาก ${total} คน</div><div class="sec" style="font-size:16px">ไม่นับยกเว้น ${c.exc} คน</div></div></div>${legend(c)}</section>
+  <section class="card"><div class="row"><b style="font-size:18px;color:var(--text-warning);display:flex;gap:6px;align-items:center">${ic('pencil',20)}ยังไม่มีคะแนน (${none.length})</b><span class="sp"></span><button>ให้คะแนนตอนนี้</button></div><div class="sumlist" style="margin-top:8px">${none.map(i=>`<span class="rchip"><span class="av">${i}</span>${NICK[i-1]}</span>`).join('')}</div></section>
+  <section class="card"><div class="row"><b style="font-size:18px;color:var(--text-danger)">ยังไม่ส่ง (${miss.length})</b><span class="sp"></span><button>${ic('list-numbers',20)}คัดลอกรายชื่อ</button></div><div class="sumlist" style="margin-top:8px">${miss.map(i=>`<span class="rchip" style="background:#fff;border-style:dashed;border-color:var(--border-danger);color:var(--text-danger)"><b>${i}</b>${NICK[i-1]}</span>`).join('')}</div></section>
+  <div class="row" style="flex-wrap:wrap"><button class="bigbtn" style="min-height:64px">${ic('check',24)}เสร็จสิ้น</button><button style="min-height:64px">กลับไปสแกนต่อ</button><button style="min-height:64px">${ic('notebook',20)}ไปที่สมุดคะแนน</button></div>`;
+}
+function overlay(){
+  const ph=S.size==='phone';
+  if(S.screen==='sheet')return `<div class="ovl" role="dialog" aria-modal="true" aria-label="เลขที่ 12 ดวงดาว"><div class="sheet"><h3>เลขที่ 12 ดวงดาว</h3><div class="sec" style="font-size:16px;margin-top:-6px">ส่งแล้ว · ได้ 9/10 · ตรงเวลา</div><button>${ic('pencil',24)}แก้คะแนน</button><button class="danger">${ic('arrow-back-up',24)}ยกเลิกการส่ง</button><button style="justify-content:center">ปิด</button></div></div>`;
+  if(S.ovl==='bulk')return `<div class="ovl" role="alertdialog" aria-modal="true" aria-label="ยืนยันให้เต็มทั้งห้อง"><div class="sheet"><h3>ให้คะแนนเต็มทั้งห้อง?</h3><div style="font-size:17px">จะให้ <b>10/10</b> กับ <b>23 คน</b> ที่ยังไม่ส่ง · ไม่รวมคนที่ส่งแล้ว 19 คน และยกเว้น 2 คน<br><span class="sec" style="font-size:16px">เลิกทำได้ 5 วินาทีหลังกด</span></div><div class="two"><button autofocus>ยกเลิก</button><button class="pri">ให้เต็ม 23 คน</button></div></div></div>`;
+  if(S.ovl==='toastUndo')return `<div class="toast" role="status" aria-live="polite">${ic('check',20)}<span>ยกเลิกการส่งของเลขที่ 12 แล้ว</span><button>${ic('arrow-back-up',20)}เลิกทำ (5)</button><span class="bar"></span></div>`;
+  if(S.ovl==='toastMode')return `<div class="toast" role="status" aria-live="polite">${ic('checks',20)}<span>เปลี่ยนเป็น “ให้เต็ม” · มีผลกับการสแกนครั้งถัดไป</span><button>เข้าใจแล้ว</button></div>`;
+  return '';
+}
+/* ---------- แบบเดิม (ก่อน) ---------- */
+function before(){
+  const {st}=states('type');
+  const cells=Array.from({length:44},(_,i)=>{const n=i+1;const s=st[n];return `<div class="sc-cell ${s}${n===21?' cur':''}">${n}<span class="nm">${NICK[i]}</span></div>`}).join('');
+  return `<div class="ctxb"><span class="p">ป.6/1</span><span class="c" style="background:var(--tint-aqua-bg);color:var(--tint-aqua-fg)">คณิตศาสตร์</span><span class="c" style="background:var(--tint-violet-bg);color:var(--tint-violet-fg)">ใบงาน</span><span class="sp"></span><span>เต็ม 10 · กรอกทีละคน</span><button>จบรอบ</button></div>
+  <div class="smallrow"><span>เศษส่วน</span><span><span class="bd">เครื่องยิงพร้อม</span> <span class="bd">ออนไลน์</span></span></div>
+  <div class="scanrow"><label class="scanin">${ic('qrcode',24)}<span>ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter</span></label><button class="cam" style="width:56px;height:56px;padding:0">${ic('camera',24)}</button></div>
+  <div class="fb acc" style="background:var(--bg-accent);color:var(--text-accent)"><span class="ic" style="background:var(--accent)">${ic('pencil',22)}</span><div><div class="nm">มะม่วง ตัวอย่าง</div><div class="sb">เลขที่ 21 · รับงานแล้ว ใส่คะแนนแล้วกด Enter</div></div></div>
+  <div class="card"><div class="smallrow" style="font-size:16px;color:var(--text-primary);margin-bottom:6px"><b style="font-weight:500">มะม่วง ตัวอย่าง <span class="sec" style="font-weight:400">เลขที่ 21</span></b><span>ให้คะแนนทีหลัง</span></div>
+  <div class="qk"><button>10/10</button><button>9/10</button><button>8/10</button><button>5/10</button></div>
+  <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:150px;height:52px;border:1px solid var(--accent);border-radius:8px;flex:none"></div><span style="font-size:24px;line-height:52px">/ 10</span><div class="spad">${[1,2,3,4,5,6,7,8,9,'.5',0,'⌫'].map(k=>`<button>${k}</button>`).join('')}<button style="grid-column:1/4;background:#9bb7ec;color:#fff;border-color:#9bb7ec">บันทึก</button></div></div></div>
+  <div class="cols"><div class="card" style="padding:0"><div class="smallrow" style="padding:12px 16px;background:var(--surface-1);border-radius:12px 12px 0 0"><span>สแกนล่าสุด</span><span>รอบนี้ 1 คน</span></div><div class="rrow"><span class="av" style="width:30px;height:30px;border-radius:50%;background:var(--bg-accent);display:inline-flex;align-items:center;justify-content:center">ม</span><span style="flex:1">มะม่วง ตัวอย่าง<br><span class="sec" style="font-size:14px">เลขที่ 21</span></span><span class="bd" style="background:var(--bg-accent);color:var(--text-accent)">รอคะแนน</span></div><div style="height:320px"></div></div>
+  <div class="card"><div style="font-size:13px;margin-bottom:8px"><b style="font-weight:500">ผังเลขที่ ป.6/1</b></div><div class="sg">${cells}</div><div style="font-size:12px;margin-top:8px;color:var(--text-secondary)">ส่งแล้ว 18 · ยังไม่ส่ง 26</div></div></div>`;
+}
+/* ---------- ประกอบหน้า ---------- */
+function shell(inner,on){
+  const sz=SIZES[S.size];
+  const nav=[['home','home','หน้าหลัก'],['scan','scan','สแกน'],['notebook','notebook','คะแนน'],['user-check','user-check','เช็คชื่อ'],['dice-3','dice-3','สุ่มชื่อ'],['chart-bar','chart-bar','รายงาน'],['users','users','นักเรียน'],['settings','settings','ตั้งค่า']];
+  const act=on==='home'?'home':'scan';
+  if(sz.shell==='tab'){const t=nav.filter(n=>['home','scan','notebook','user-check'].includes(n[0])).concat([['dots','settings','เพิ่มเติม']]);
+    return `<div class="main stick" style="--pad:${sz.pad}px">${inner}</div><nav class="tabbar" aria-label="เมนูหลัก">${t.map(n=>`<a class="${n[0]===act?'on':''}">${ic(n[1],24)}${n[2]}</a>`).join('')}</nav>`;}
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="logo">${ic('checks',24)}</div>${nav.map(n=>`<a class="${n[0]===act?'on':''}">${ic(n[1],24)}${n[2]}</a>`).join('')}</nav><div class="main ${sz.two?'':'stick'}" style="--pad:${sz.pad}px">${inner}</div>`;
+}
+function render(){
+  const sz=SIZES[S.size];const f=document.getElementById('frame');
+  const showBefore=S.ba==='before'&&S.size==='ipadP'&&S.screen==='type';const isOrig=!showBefore&&['full','type','recv','sheet','cam'].includes(S.screen);
+  f.className='frame '+S.size+(showBefore?' before':'')+(isOrig?' before orig':'');
+  f.style.cssText=`width:${sz.w}px;height:${sz.h}px;--cols:${sz.cols};--cell-h:${sz.cell}px;--num-fs:${sz.num}px;--nm-fs:${sz.nm}px;--key-h:${sz.key}px;--input-h:${sz.input}px;--pad:${sz.pad}px;--toast-b:${sz.shell==='tab'?'80px':'24px'}`;
+  let inner;
+  if(showBefore)inner=before();
+  else if(S.screen==='home')inner=home();
+  else if(S.screen==='setup')inner=setup();
+  else if(S.screen==='end')inner=endScreen();
+  else inner=inRound(S.screen);
+  const mainInner=showBefore?`<div class="main" style="--pad:20px;gap:12px">${inner}</div>`:null;
+  f.innerHTML=(showBefore?`<nav class="rail" style="width:64px"><div class="logo">${ic('checks',24)}</div></nav>`+mainInner:shell(inner,S.screen))+(showBefore?'':overlay());
+  const s=Math.min(1,(window.innerWidth-24)/sz.w);f.style.transform=`scale(${s})`;
+  const fit=document.getElementById('fit');fit.style.width=sz.w*s+'px';fit.style.height=sz.h*s+'px';
+  document.getElementById('note').textContent=(showBefore?'แบบก่อน (ปัจจุบัน) จำลองจาก scan.css จริง · ':'')+SIZES[S.size].label+` · แสดงที่ ${Math.round(s*100)}% ของขนาดจริง · พื้นที่ภายในเลื่อนได้เหมือนหน้าจอจริง`;
+  measure();
+}
+function measure(){
+  const f=document.getElementById('frame');
+  const m=f.querySelector('.measure');if(m)m.remove();
+  const small=[...f.querySelectorAll('button,a,label.scanin')].filter(b=>b.offsetParent&&b.offsetHeight<44&&(!f.classList.contains('before')||f.classList.contains('orig'))&&!b.closest('.cell'));
+  const nm=[...f.querySelectorAll('.nm')].filter(e=>e.scrollWidth>e.clientWidth+1).length;
+  const hs=f.scrollWidth>f.clientWidth;
+  window.AUDIT={size:S.size,screen:S.screen,ovl:S.ovl,ba:S.ba,hscroll:hs,frameW:f.clientWidth,contentH:f.scrollHeight,frameH:f.clientHeight,vscroll:f.scrollHeight>f.clientHeight+1,nickCut:nm,btnUnder44:small.length,cellW:(f.querySelector('.cell,.sc-cell')||{}).offsetWidth,cellH:(f.querySelector('.cell,.sc-cell')||{}).offsetHeight,keyH:(f.querySelector('.keys button,.spad button')||{}).offsetHeight,keyW:(f.querySelector('.keys button,.spad button')||{}).offsetWidth,smallList:small.map(b=>b.textContent.trim().slice(0,12)+':'+b.offsetWidth+'x'+b.offsetHeight)};
+}
+function ctl(){
+  const c=document.getElementById('ctl');
+  const grp=(t,o,k)=>`<div class="g"><b>${t}</b>${Object.entries(o).map(([v,l])=>`<button class="${S[k]===v?'on':''}" data-k="${k}" data-v="${v}" ${(k==='ovl'&&['home','setup','end','sheet'].includes(S.screen)&&v!=='none')?'disabled':''}>${l}</button>`).join('')}</div>`;
+  c.innerHTML=grp('ขนาดจอ',{ipadP:'iPad ตั้ง',ipadL:'iPad นอน',phone:'มือถือ',desk:'คอม'},'size')+grp('หน้าจอ',SCREENS,'screen')+grp('ซ้อนทับ',OVLS,'ovl')+grp('เทียบ',{after:'หลัง (ใหม่)',before:'ก่อน (ปัจจุบัน)'},'ba');
+  const dis=!(S.size==='ipadP'&&S.screen==='type');c.querySelectorAll('[data-k=ba][data-v=before]').forEach(b=>b.disabled=dis);
+}
+document.getElementById('ctl').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;S[b.dataset.k]=b.dataset.v;
+  if(['home','setup','end','sheet'].includes(S.screen))S.ovl='none';
+  if(!(S.size==='ipadP'&&S.screen==='type'))S.ba='after';
+  const q=new URLSearchParams(S);history.replaceState(null,'','#'+q.toString());ctl();render();});
+(function(){const h=new URLSearchParams(location.hash.slice(1));for(const k of['size','screen','ovl','ba'])if(h.get(k))S[k]=h.get(k);})();
+addEventListener('resize',render);ctl();render();
+</script>
+</body>
+</html>

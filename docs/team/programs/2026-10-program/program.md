@@ -49,7 +49,8 @@
 | `2026-10-30-projector-mode-design` (โหมดฉายจอ D26: ux + mockup) | M | E-05 | M-02 | — (ขนานกับ M1-06, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D27) |
 | `pj-1-projector-shell-random` → `pj-2-projector-scan-attendance` → `pj-3-projector-reports` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |
-| `m2-00-scan-mockups` | M | E-02 | M-02 | — (ขนานกับ M1) | (หลัก, เฉพาะ docs) | รอ |
+| `2026-10-30-m2-00-scan-mockups` (mockup สแกน/ตั้งค่า/สมุดคะแนน) | M | E-02 | M-02 | — | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ D30) |
+| **ลำดับสร้างจริงหลัง M1 (D30):** `fs-1-font-size-density` (ตัวปรับตัวอักษร+ความหนาแน่นทั้งแอป px→rem, เสี่ยงสุด) → `scan-1-big-name-keypad` (ชื่อ+แป้นคะแนนใหญ่, คงหน้าตาเดิม) → `gb-1-many-columns` (สมุดคะแนน 10–15 คอลัมน์ ล็อก/จัดกลุ่ม/เมนูทำทั้งห้อง, M–L) → `pj-1..3` (โหมดฉายจอทีวี) | M/M/L/M·M·S | E-02,E-05 | M-02 | Gate M1 | (หลัก) | รอ |
 | `m2-01-resume-scan` → `m2-02-mode-switch` → `m2-03-scorepad-queue` ∥ `m2-04-undo-policy` → `m2-05-hid-ready` ∥ `m2-06-tap-targets` | M… | E-02 | M-02 | Gate 2 | (หลัก) | รอ |
 | `m3-01`…`m3-07` (ดูแผน) | S/M | E-03 | M-03 | Gate M2 | (หลัก) | รอ |
 | `m4-01-playwright-e2e` (ทำได้ตั้งแต่ M2) · `m4-02-release-train` · `m4-03-device-trial` · `m4-04-classroom-trial` | M/S/S/M | E-04 | M-04 | — | (หลัก) | รอ |

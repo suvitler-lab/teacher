@@ -1,0 +1,103 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M2-00 mockup สมุดคะแนน + เช็คชื่อ ก่อน/หลัง (iPad ตั้ง, ข้อมูลสมมติ)</title>
+<style>
+:root{--surface-0:#f4f6fa;--surface-1:#eef1f6;--surface-2:#fff;--text-primary:#1a1f29;--text-secondary:#59616e;--text-muted:#646c79;--border:rgba(20,28,46,.10);--border-strong:rgba(20,28,46,.18);--accent:#2f6fde;--bg-accent:#e6f0fc;--text-accent:#1a56b0;--border-accent:#6f9fe0;--bg-success:#e3f6ec;--text-success:#12703f;--border-success:#a6e0c2;--fill-success:#148352;--bg-warning:#fbefd6;--text-warning:#8a5a08;--border-warning:#f0cf8c;--bg-danger:#fbe6e6;--text-danger:#a32626;--border-danger:#f0b2b2;--bg-purple:#efeafc;--text-purple:#5a3fb0;--radius:12px;--radius-lg:16px;--font-sans:"IBM Plex Sans Thai",system-ui,sans-serif;--shadow-card:0 1px 2px rgba(20,28,46,.06),0 2px 8px rgba(20,28,46,.05);--ring:0 0 0 3px rgba(47,111,222,.22),0 0 0 1.5px var(--accent)}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font-sans);background:#d9dde4;color:var(--text-primary)}
+button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface-2);border-radius:var(--radius);display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px}
+svg{flex:none}
+.ctl{position:sticky;top:0;z-index:100;background:#1a1f29;color:#fff;padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}.ctl .g{display:flex;gap:4px;align-items:center}.ctl b{opacity:.7;font-weight:400}
+.ctl button{min-height:30px;padding:0 10px;border-radius:6px;background:#39414f;color:#fff;border-color:#4b5566;font-size:13px}.ctl button.on{background:#2f6fde;border-color:#9cc2f2}
+.note{font-size:13px;padding:6px 12px;background:#fff7d6;color:#5a4200}
+.stage{padding:12px;display:flex;justify-content:center}.fit{position:relative}
+.frame{position:absolute;left:0;top:0;width:820px;height:1180px;transform-origin:0 0;background:var(--surface-0);overflow:auto;display:flex;box-shadow:0 6px 30px rgba(0,0,0,.3)}
+.rail{width:64px;flex:none;background:#fff;border-right:1px solid var(--border);height:100%;position:sticky;top:0;align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0}
+.rail .logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.rail a{width:60px;min-height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--text-secondary);gap:2px}.rail a.on{background:var(--bg-accent);color:var(--text-accent)}
+.main{flex:1;min-width:0;padding:16px;display:flex;flex-direction:column;gap:10px}
+.after{--scale:1;font-size:calc(17px*var(--scale));line-height:1.6}
+.after.l{--scale:1.125}.after.xl{--scale:1.25}
+.before{font-size:13px;line-height:1.4}
+h1{margin:0;line-height:1.35}.after h1{font-size:calc(26px*var(--scale))}.before h1{font-size:20px}
+.row{display:flex;align-items:center;gap:8px}.sp{flex:1}
+.tb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.before .tb button{height:32px;font-size:13px;border-radius:8px;padding:0 10px}
+.after .tb button{min-height:48px;font-size:calc(17px*var(--scale))}
+.menu{position:absolute;z-index:40;background:#fff;border:1px solid var(--border-strong);border-radius:var(--radius);box-shadow:0 8px 28px rgba(20,28,46,.2);padding:6px;width:320px}
+.menu button{width:100%;justify-content:flex-start;min-height:56px;border:0;background:transparent;font-size:calc(17px*var(--scale,1))}
+.menu hr{border:0;border-top:1px solid var(--border);margin:6px 0}
+.menu .danger{color:var(--text-danger)}
+.sc{background:#fff;border:.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);overflow:auto;flex:1;min-height:0}
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+th,td{border-bottom:.5px solid var(--border);text-align:center;white-space:nowrap;background:#fff}
+th{position:sticky;top:0;z-index:3;background:var(--surface-1);font-weight:600}
+td.s1,th.s1{position:sticky;left:0;z-index:2;text-align:right}
+td.s2,th.s2{position:sticky;left:var(--w1);z-index:2;text-align:left;border-right:1px solid var(--border-strong)}
+th.s1,th.s2{z-index:4}
+.before th{font-size:10px;height:30px;padding:0 8px}.before td{height:34px;font-size:12px;padding:0 8px}.before{--w1:44px}
+.after th{font-size:calc(14px*var(--scale));height:64px;padding:0 10px;line-height:1.3}.after td{height:52px;font-size:calc(17px*var(--scale));padding:0 12px}
+.after{--w1:56px}
+.after td.s1,.after th.s1{min-width:56px}.after td.s2,.after th.s2{min-width:calc(104px*var(--scale))}
+.after td.c,.after th.c{min-width:calc(96px*var(--scale))}
+.none{color:var(--text-danger)}.late{background:var(--bg-warning)!important;color:var(--text-warning)}.pend{background:var(--bg-accent)!important;color:var(--text-accent)}.exc{background:repeating-linear-gradient(135deg,#e4e8ee 0 5px,#f1f3f7 5px 10px)!important;color:var(--text-secondary)}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:0 12px;min-height:32px;font-size:calc(16px*var(--scale,1))}
+.hint{display:flex;gap:6px;align-items:center;color:var(--text-secondary);font-size:calc(15px*var(--scale,1))}
+.card{background:#fff;border:.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:12px}
+.tiles{display:grid;gap:6px}
+.before .tiles{grid-template-columns:repeat(8,1fr)}.after .tiles{grid-template-columns:repeat(4,1fr)}
+.tile{border:1.5px solid var(--border-strong);background:var(--surface-1);border-radius:10px;text-align:left;padding:4px 8px;display:flex;justify-content:flex-start;gap:8px;align-items:center}
+.before .tile{flex-direction:column;align-items:flex-start;gap:0;height:56px;justify-content:center;font-size:11px;border-width:.5px}
+.before .tile b{font-size:13px;font-weight:500}.after .tile{min-height:64px}.after .tile b{font-size:calc(20px*var(--scale));min-width:calc(30px*var(--scale))}
+.after .tile .nm{font-size:calc(17px*var(--scale));line-height:1.3}.after .tile .st{font-size:calc(16px*var(--scale));display:flex;gap:4px;align-items:center;margin-top:2px}
+.t-come{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}.t-late{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.t-leave{background:#e0edfc;border-color:var(--border-accent);color:var(--text-accent)}.t-sick{background:var(--bg-purple);border-color:#cdbcf0;color:var(--text-purple)}.t-abs{background:var(--bg-danger);border-color:var(--border-danger);color:var(--text-danger)}.t-none{background:#fff;border-style:dashed}
+.bopts{display:flex;gap:6px}
+.before .bopts button{height:40px;font-size:13px;padding:0 10px;border-radius:8px}
+.after .bopts button{min-height:64px;flex:1;flex-direction:column;gap:2px;font-size:calc(16px*var(--scale));padding:0 4px}
+.bopts button.on{border:2px solid var(--accent);box-shadow:var(--ring);font-weight:600}
+</style></head><body>
+<div class="ctl" id="ctl"></div><div class="note" id="note"></div>
+<div class="stage"><div class="fit" id="fit"><div class="frame" id="frame"></div></div></div>
+<script>
+const ICONS={"home":"<path d=\"M5 12l-2 0l9 -9l9 9l-2 0\" /><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" />","scan":"<path d=\"M5 12h14\" /><path d=\"M3 7v-2a2 2 0 0 1 2 -2h2\" /><path d=\"M3 17v2a2 2 0 0 0 2 2h2\" /><path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /><path d=\"M17 21h2a2 2 0 0 0 2 -2v-2\" />","notebook":"<path d=\"M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18\" /><path d=\"M13 8l2 0\" /><path d=\"M13 12l2 0\" />","user-check":"<path d=\"M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h4\" /><path d=\"M15 19l2 2l4 -4\" />","check":"<path d=\"M5 12l5 5l10 -10\" />","checks":"<path d=\"M7 12l5 5l10 -10\" /><path d=\"M2 12l5 5m5 -5l5 -5\" />","x":"<path d=\"M18 6l-12 12\" /><path d=\"M6 6l12 12\" />","clock":"<path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\" /><path d=\"M12 7v5l3 3\" />","file-text":"<path d=\"M14 3v4a1 1 0 0 0 1 1h4\" /><path d=\"M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2\" /><path d=\"M9 9l1 0\" /><path d=\"M9 13l6 0\" /><path d=\"M9 17l6 0\" />","thermometer":"<path d=\"M19 5a2.828 2.828 0 0 1 0 4l-8 8h-4v-4l8 -8a2.828 2.828 0 0 1 4 0\" /><path d=\"M16 7l-1.5 -1.5\" /><path d=\"M13 10l-1.5 -1.5\" /><path d=\"M10 13l-1.5 -1.5\" /><path d=\"M7 17l-3 3\" />","chevron-down":"<path d=\"M6 9l6 6l6 -6\" />","arrow-right":"<path d=\"M5 12l14 0\" /><path d=\"M13 18l6 -6\" /><path d=\"M13 6l6 6\" />","eye":"<path d=\"M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6\" />"};
+const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const NICK=['ฟ้า','ใบบัว','มินนี่','ภูผา','น้ำใส','พลอย','กานต์','ต้นไม้','เมฆา','ข้าวหอม','ปลาทอง','ดวงดาว','แจ๋ว','ไอซ์','นุ่น','บีม','เจ','ต้นกล้า','มะลิ','ธารา','มะม่วง','สายฟ้า','พิมพ์','ก้อง','โอม','ตะวัน','ใบเตย','เป็ด','ฝ้าย','น้ำฝน','เกด','ปุ้ย','ออมสิน','ภัทร','อิงฟ้า','กะทิ','ดาว','นะโม','เบนซ์','พีพี','แพรว','ต้า','ชมพู่','โบนัส'];
+const S={page:'grade',ba:'after',lvl:'',menu:'none'};
+const WORK=['ใบงาน 1','ใบงาน 2','แบบฝึก 2.1','แบบฝึก 2.2','โครงงาน','สอบย่อย'];
+const rnd=i=>{const x=Math.sin(i*9301+49297)*233280;return x-Math.floor(x)};
+function gradeTable(rows){let h='<table><thead><tr><th class="s1">เลขที่</th><th class="s2">ชื่อเล่น</th>'+WORK.map(w=>`<th class="c">${w}<div style="font-weight:400;color:var(--text-secondary)">เต็ม 10</div></th>`).join('')+'<th class="c">รวม</th></tr></thead><tbody>';
+ for(let i=1;i<=rows;i++){let tot=0,n=0;h+=`<tr><td class="s1">${i}</td><td class="s2">${NICK[i-1]}</td>`;
+  WORK.forEach((w,j)=>{const r=rnd(i*7+j);let c='',t='';if(i===7){c='exc';t='ยกเว้น'}else if(r<.12){c='none';t='–'}else if(r<.2){c='pend';t='รอ'}else{const v=Math.round((5+rnd(i+j*3)*5)*2)/2;t=v;tot+=v;n++;if(r<.3)c='late'}h+=`<td class="${c}">${t}</td>`});
+  h+=`<td><b>${n?Math.round(tot/(n*10)*100)+'%':'–'}</b></td></tr>`}
+ return h+'</tbody></table>';}
+function grade(){
+ const A=S.ba==='after';
+ const menu=S.menu==='open'?`<div class="menu" style="left:16px;top:${A?150:104}px"><button>${ic('checks',20)}ทั้งห้อง "ส่งแล้ว" (ที่ยังไม่ส่ง)</button><button>${ic('check',20)}ให้เต็มทั้งห้อง</button><hr><button class="danger">${ic('x',20)}ล้างคะแนนทั้งงาน…</button></div>`:'';
+ const tb=A?`<div class="tb"><button style="border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent)">${ic('chevron-down',20)}ทำทั้งห้อง</button><button>${ic('eye',20)}ซ่อนคะแนน</button><span class="sp"></span><span class="hint">${ic('arrow-right',16)}เลื่อนซ้าย-ขวาดูงานอื่น (เลขที่/ชื่อเล่นค้างไว้)</span></div>`:
+ `<div class="tb"><button>ทั้งห้องส่งแล้ว</button><button>ให้เต็ม</button><button>ล้าง</button><button>ซ่อนคะแนน</button></div>`;
+ return `<div class="row"><h1>สมุดคะแนน</h1><span class="sp"></span><span class="badge" style="background:var(--bg-accent);color:var(--text-accent)">ป.6/1 · คณิตศาสตร์</span></div>${tb}<div class="sc">${gradeTable(44)}</div>${menu}`;
+}
+function att(){
+ const A=S.ba==='after';const st=['come','come','late','come','come','leave','come','sick','come','come','come','abs','come','come','late','come','come'];
+ while(st.length<44)st.push('none');
+ const L={come:['มา','check'],late:['สาย','clock'],leave:['ลา','file-text'],sick:['ป่วย','thermometer'],abs:['ขาด','x'],none:['ยังไม่เช็ค','']};
+ const tiles=NICK.map((n,i)=>{const s=st[i];return A?`<button class="tile t-${s}"><b>${i+1}</b><span><div class="nm">${n}</div><div class="st">${L[s][1]?ic(L[s][1],16):''}${L[s][0]}</div></span></button>`:`<button class="tile t-${s}"><b>${i+1}</b>${n}<span>${s==='none'?'แตะเพื่อเช็ค':L[s][0]}</span></button>`}).join('');
+ const bo=A?`<div class="bopts"><button class="on">${ic('check',24)}มา</button><button>${ic('clock',24)}สาย</button><button>${ic('file-text',24)}ลา</button><button>${ic('thermometer',24)}ป่วย</button><button>${ic('x',24)}ขาด</button></div>`:`<div class="bopts"><button class="on">มา</button><button>สาย</button><button>ลา</button><button>ป่วย</button><button>ขาด</button></div>`;
+ return `<div class="row"><h1>เช็คชื่อ</h1><span class="sp"></span><span class="badge" style="background:var(--bg-accent);color:var(--text-accent)">ป.6/1 · ศุกร์ 30 ต.ค.</span></div>
+ <div class="card"><div class="row" style="margin-bottom:8px"><b>เลือกสถานะ แล้วแตะชื่อเด็ก</b><span class="sp"></span><button style="min-height:${A?48:36}px">${ic('checks',20)}มาทั้งห้อง</button></div>${bo}</div>
+ <div class="card"><div class="tiles">${tiles}</div></div>`;
+}
+function render(){
+ const f=document.getElementById('frame');const A=S.ba==='after';
+ f.innerHTML=`<nav class="rail"><div class="logo">${ic('checks',24)}</div>${['home:หน้าหลัก','scan:สแกน','notebook:คะแนน','user-check:เช็คชื่อ'].map(x=>{const[a,b]=x.split(':');return `<a class="${(S.page==='grade'&&a==='notebook')||(S.page==='att'&&a==='user-check')?'on':''}">${ic(a,24)}${b}</a>`}).join('')}</nav><div class="main ${A?'after '+S.lvl:'before'}" style="position:relative">${S.page==='grade'?grade():att()}</div>`;
+ const s=Math.min(1,(innerWidth-24)/820);f.style.transform=`scale(${s})`;const fit=document.getElementById('fit');fit.style.width=820*s+'px';fit.style.height=1180*s+'px';
+ const btn=[...f.querySelectorAll('.main button')].filter(b=>b.offsetHeight<44);
+ const fs=[...f.querySelectorAll('.main td,.main th,.tile,.main button,.hint')].map(e=>parseFloat(getComputedStyle(e).fontSize));
+ const sc=f.querySelector('.sc');const row=f.querySelector('td');
+ window.AUDIT={page:S.page,ba:S.ba,lvl:S.lvl,btnUnder44:btn.length,minFont:Math.min(...fs),rowH:row?row.offsetHeight:null,tileH:(f.querySelector('.tile')||{}).offsetHeight,tileW:(f.querySelector('.tile')||{}).offsetWidth,tableW:sc?sc.scrollWidth:null,tableViewW:sc?sc.clientWidth:null,hscrollTable:sc?sc.scrollWidth>sc.clientWidth:null,hscrollPage:f.scrollWidth>f.clientWidth,small:btn.map(b=>b.textContent.trim().slice(0,10)+b.offsetHeight)};
+ document.getElementById('note').textContent='iPad ตั้ง 820×1180 · '+(A?'หลัง: type scale ใหม่':'ก่อน (ปัจจุบัน) จำลองจากค่าที่วัดในระบบจริง: ข้อความ 10–13px แถวสูง 34px')+' · ข้อมูลสมมติ 44 คน';
+}
+function ctl(){const c=document.getElementById('ctl');const g=(t,o,k)=>`<div class="g"><b>${t}</b>${Object.entries(o).map(([v,l])=>`<button class="${S[k]===v?'on':''}" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div>`;
+ c.innerHTML=g('หน้า',{grade:'สมุดคะแนน',att:'เช็คชื่อ'},'page')+g('เทียบ',{before:'ก่อน (ปัจจุบัน)',after:'หลัง (ใหม่)'},'ba')+g('ขนาดตัวอักษรแอป',{'':'ปกติ (17px)',l:'ใหญ่ (19)',xl:'ใหญ่มาก (21)'},'lvl')+g('เมนู bulk',{none:'ปิด',open:'เปิด'},'menu');}
+document.getElementById('ctl').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[b.dataset.k]=b.dataset.v;ctl();render()});
+addEventListener('resize',render);ctl();render();
+</script></body></html>
