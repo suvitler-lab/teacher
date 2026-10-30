@@ -1,0 +1,14 @@
+RE-MEASURE after fixes (fixture gb14 math 14 works; coarse emulated by copying (pointer: coarse) CSS; font via html style)
+viewport font docSW  gb-scroll(client/scroll)  thead(group+col=total)  btn<44  text<13
+820x1180  14  805   676/1753   45+74=119   0 0
+820x1180  18  805   659/2248   47+87=134   0 0
+820x1180  24  805   632/2998   62+112=174  0 0
+1180x820  14  1165  1036/1797  119  0 0
+1180x820  18  1165  1019/2254  134  0 0
+1180x820  24  1165   992/2998  174  0 0
+1440x900  14  1425  1296/1816  119  0 0
+1440x900  18  1425  1279/2293  134  0 0
+1440x900  24  1425  1252/2998  174  0 0
+Header total was 163/178/218 before fix; now 119/134/174 (<=150 at 18 as expected). 390 not re-measured (asked).
+Sticky @1180: after scrollLeft=594 scrollTop=800: left col 1px, header top 1px, right col at edge (gap 16 = scrollbar), window scrollX=0.
+Note: scroll width grew (1927->2254 at 18) because header now shows due date; still scrolls inside the frame.

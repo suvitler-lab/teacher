@@ -13,12 +13,16 @@ import { enqueueSubmission, onResult, pendingOps, failedPairKeys, pairKey, flush
 import { actionTime } from "../lib/clock";
 import { ulid } from "@shared/ids";
 import { decideCellCommit } from "@shared/grade";
-import { workState, studentSummary, countWorkStates, assignmentRate, assignmentFraction, classSubmitRate, type WorkState } from "@shared/metrics";
+import { workState, studentSummary, groupScoreTotal, countWorkStates, assignmentRate, assignmentFraction, classSubmitRate, type WorkState } from "@shared/metrics";
 import { bkkToday } from "@shared/time";
 import { fullName } from "../lib/names";
 import { formatThaiDate, monthOptions, currentMonthIso } from "../lib/dates";
 import { notify, ok, err, withToast } from "../lib/notify";
 import { AssignmentModal } from "../components/AssignmentModal";
+import { Dialog } from "../components/Dialog";
+import {
+  buildGroups, defaultCollapsed, isCollapsed, loadGroupMode, saveGroupMode, type GroupMode, type Group,
+} from "../lib/gbGroups";
 import { routeParams, navigate, setNavGuard } from "../router";
 import { useAction } from "../lib/useAction";
 
@@ -35,6 +39,26 @@ const TINT_FG: Record<string, string> = {
 export function clearableCount(cells: ({ status: string } | undefined)[]): number {
   return cells.filter((s) => s && s.status !== "void" && s.status !== "excused").length;
 }
+
+type BulkAction = "all-submitted" | "full-score" | "clear";
+
+/**
+ * How many children a whole-class button will really change (the number the confirm box shows):
+ * "submitted" = not handed in yet and not excused; "full score" = handed in and not already full; "clear" = clearableCount.
+ * Excused children are never touched (BR-07). Mirrors the server's bulk rules.
+ */
+export function bulkAffectedCount(action: BulkAction, cells: ({ status: string; score: number | null } | undefined)[], full: number): number {
+  if (action === "clear") return clearableCount(cells);
+  if (action === "all-submitted") return cells.filter((s) => !s || (s.status !== "submitted" && s.status !== "excused")).length;
+  return cells.filter((s) => s && s.status === "submitted" && s.score !== full).length;
+}
+
+/** The menu button that opened the confirm box was unmounted with its menu: give the keyboard its place back. */
+function refocusBulkTrigger() {
+  setTimeout(() => (document.querySelector("[data-bulk-trigger]") as HTMLElement | null)?.focus(), 0);
+}
+
+const monthShort = (ym: string) => (ym ? formatThaiDate(`${ym}-01`).split(" ")[1] ?? ym : "ไม่ระบุวันที่");
 
 export function GradebookPage() {
   const params = routeParams();
@@ -54,6 +78,10 @@ export function GradebookPage() {
   const [editAsg, setEditAsg] = useState<Assignment | null>(null);
   const [copyAsg, setCopyAsg] = useState<Assignment | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bulkMenu, setBulkMenu] = useState(false);
+  const [bulkAsk, setBulkAsk] = useState<{ action: BulkAction; count: number } | null>(null);
+  const [groupMode, setGroupModeState] = useState<GroupMode>(() => loadGroupMode());
+  const [foldTaps, setFoldTaps] = useState<Map<string, boolean>>(new Map()); // the teacher's own fold/unfold taps (true = folded)
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
   const act = useAction();
@@ -201,14 +229,14 @@ export function GradebookPage() {
     return () => { setNavGuard(null); window.removeEventListener("beforeunload", beforeUnload); };
   }, [unsaved.size]);
 
-  async function bulk(action: "all-submitted" | "full-score" | "clear") {
+  /** A whole-class button was pressed: ask first, saying how many children it will really change. */
+  function bulk(action: BulkAction) {
     if (!selAsg) return;
-    setMenuOpen(false);
-    const className = classById(classId)?.name ?? "";
-    if (action === "clear") {
-      const count = clearableCount(students.map((st) => subOf(selAsg.id, st.id)));
-      if (!confirm(`ล้างการส่ง "${selAsg.title}" ของ ${className} (${count} รายการ)?`)) return;
-    }
+    setBulkMenu(false);
+    setBulkAsk({ action, count: bulkAffectedCount(action, students.map((st) => subOf(selAsg.id, st.id)), selAsg.full_score) });
+  }
+  async function runBulk(action: BulkAction) {
+    if (!selAsg) return;
     setMsg("");
     // Scores still waiting in this device's queue were made BEFORE this button press: they must reach the server
     // first (they would otherwise arrive after it and be pushed aside as older, or worse, fight it). If they
@@ -304,6 +332,20 @@ export function GradebookPage() {
   const totAwaiting = tot.awaiting, totMissing = tot.missing;
   const submitRate = classSubmitRate([tot]); // Σ handed in ÷ Σ(handed in + overdue), not-yet-due left out
 
+  // columns: grouped by type / month (or not at all). Old groups start folded; the teacher's own taps win.
+  const groups: Group<Assignment>[] = buildGroups(assignments, groupMode,
+    (id) => { const t = workTypeById(id); return { name: t?.name ?? "ไม่ระบุประเภท", color: t?.color ?? "violet" }; }, monthShort);
+  const flat = groupMode === "none";
+  const foldedByDefault = defaultCollapsed(groups, today);
+  const folded = (g: Group<Assignment>) => !flat && isCollapsed(g.key, foldedByDefault, foldTaps);
+  const allFolded = !flat && groups.length > 0 && groups.every(folded);
+  function setGroupMode(m: GroupMode) { setGroupModeState(m); setFoldTaps(new Map()); saveGroupMode(m); }
+  function toggleGroup(key: string) {
+    const g = groups.find((x) => x.key === key);
+    if (g) setFoldTaps((prev) => new Map(prev).set(key, !folded(g)));
+  }
+  function toggleFoldAll() { setFoldTaps(new Map(groups.map((g) => [g.key, !allFolded] as [string, boolean]))); }
+
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
 
   return (
@@ -331,6 +373,9 @@ export function GradebookPage() {
             {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
           </select>
         )}
+        {!phone && <Segmented label="จัดกลุ่มคอลัมน์" value={groupMode} onChange={setGroupMode} options={[
+          { value: "none", label: "ไม่จัดกลุ่ม" }, { value: "type", label: "ตามประเภท" }, { value: "month", label: "ตามเดือน" },
+        ]} />}
         <span class="grow" />
         <Segmented value={rowFilter} onChange={setRowFilter} options={[
           { value: "all", label: "ทุกคน" },
@@ -353,9 +398,22 @@ export function GradebookPage() {
           <span>· เต็ม {selAsg.full_score}</span>
           {selAsg.status === "closed" && <span class="chip" style="background:var(--surface-2);color:var(--text-secondary)">ปิดรับ</span>}
           <span class="grow" />
-          <button onClick={() => bulk("all-submitted")} disabled={act.isBusy("bulk")}>{act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทั้งห้องส่งแล้ว</button>
-          <button onClick={() => bulk("full-score")} disabled={act.isBusy("bulk")}>ให้เต็มคนที่ส่ง</button>
-          <button onClick={() => bulk("clear")} disabled={act.isBusy("bulk")}>ล้าง</button>
+          <div style="position:relative">
+            <button data-bulk-trigger aria-haspopup="menu" aria-expanded={bulkMenu} disabled={act.isBusy("bulk")} onClick={() => setBulkMenu((v) => !v)}>
+              {act.isBusy("bulk") ? <Icon name="loader-2" size={14} class="spin" /> : <Icon name="checks" size={14} />} ทำทั้งห้อง <Icon name="chevron-down" size={14} />
+            </button>
+            {bulkMenu && (
+              <>
+                <div style="position:fixed;inset:0;z-index:39" onClick={() => setBulkMenu(false)} />
+                <div class="gb-menu gb-menu-left" role="menu">
+                  <button role="menuitem" onClick={() => bulk("all-submitted")}><Icon name="checks" size={15} /> ทั้งห้องส่งแล้ว…</button>
+                  <button role="menuitem" onClick={() => bulk("full-score")}><Icon name="star" size={15} /> ให้เต็มคนที่ส่ง…</button>
+                  <div class="gb-menu-sep" role="separator" />
+                  <button role="menuitem" onClick={() => bulk("clear")} style="color:var(--text-danger)"><Icon name="eraser" size={15} /> ล้างคะแนนทั้งงาน…</button>
+                </div>
+              </>
+            )}
+          </div>
           <button onClick={toggleAllScores}
             disabled={act.anyBusy}
             title={allHidden ? "แสดงคะแนนทุกงานในตารางตามตัวกรองปัจจุบัน" : "ซ่อนคะแนนทุกงานในตารางตามตัวกรองปัจจุบัน (ในหน้านี้ และไม่ให้ผู้ปกครองเห็น)"}>
@@ -397,66 +455,109 @@ export function GradebookPage() {
             remove: removeAssignment,
           }} />
       ) : (
-        <div class="gb-scroll">
-          <table class="gb">
+        <div class="gb-scroll" role="region" aria-label="ตารางคะแนน">
+          <table class={"gb" + (flat ? "" : " grouped")}>
             <thead>
-              <tr>
-                <th class="name-col">ชื่อ - สกุล</th>
-                {assignments.map((a) => {
+              {!flat && (
+                <tr role="presentation" class="gh">
+                  <th class="name-col gh-corner">
+                    <button type="button" class="gh-all" onClick={toggleFoldAll}>
+                      <Icon name={allFolded ? "arrows-diagonal" : "arrows-diagonal-minimize-2"} size={14} /> {allFolded ? "กางทั้งหมด" : "พับทั้งหมด"}
+                    </button>
+                  </th>
+                  {groups.map((g) => {
+                    const closed = folded(g);
+                    return (
+                      <th colSpan={closed ? 1 : g.items.length} class="gh-cell" style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
+                        <button type="button" class="gh-btn" aria-expanded={!closed} title={`${g.label} · ${g.items.length} งาน`} onClick={() => toggleGroup(g.key)}>
+                          <Icon name={closed ? "chevron-right" : "chevron-down"} size={14} />
+                          <span class="gh-label">{g.label} · {g.items.length} งาน</span>
+                        </button>
+                      </th>
+                    );
+                  })}
+                  <th class="tot-col gh-tot" />
+                </tr>
+              )}
+              <tr class="hd">
+                <th scope="col" class="name-col">ชื่อ - สกุล</th>
+                {groups.map((g) => folded(g) ? (
+                  <th scope="col" tabIndex={0} class="col-w sumcol" style={`border-top-color:${TINT_FG[g.color]}`} title={`รวม${g.label} · ${g.items.length} งาน · แตะเพื่อกางกลุ่ม`}
+                    onClick={() => toggleGroup(g.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleGroup(g.key); } }}>
+                    <div class="ht">รวม {g.label}</div>
+                    <div class="hs">{g.items.length} งาน</div>
+                  </th>
+                ) : g.items.map((a) => {
                   const pct = assignmentRate(countWorkStates(students.map((st) => stateOf(a.id, st.id, a))));
                   return (
-                    <th tabIndex={0} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={a.id === selCol ? "sel" : ""} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
+                    <th scope="col" tabIndex={0} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={"col-w" + (a.id === selCol ? " sel" : "")} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
                       <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
-                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}<button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                      <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>
+                        <span>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</span>
+                        <button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
                           disabled={act.isBusy("publish-all") || act.isBusy(`asg:${a.id}`)}
                           title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
                           onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
                           <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
-                        </button></div>
-                      <div class="hbar"><div style={`width:${pct}%`} /></div>
+                        </button>
+                      </div>
+                      <div class="hbar" title={`ส่งแล้ว ${pct}%`}><div style={`width:${pct}%`} /></div>
                     </th>
                   );
-                })}
-                <th title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>
+                }))}
+                <th scope="col" class="tot-col" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>
               </tr>
             </thead>
             <tbody>
               {shownStudents.map((st, i) => {
-                const sum = studentSummary(visibleWork, (idx) => { const s = subOf(visibleWork[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; }, today);
+                const subFor = (list: Assignment[]) => (idx: number) => { const s = subOf(list[idx].id, st.id); return s ? { status: s.status, score: s.score, late: s.late } : undefined; };
+                const sum = studentSummary(visibleWork, subFor(visibleWork), today);
                 return (
                   <tr>
-                    <td class="name-col">
+                    <td class="name-col" title={fullName(st)}>
                       {missingByStudent(st.id) && <span class="gb-reddot" />}
                       <span class="muted" style="margin-right:6px">{st.number ?? i + 1}</span>{fullName(st)}
                     </td>
-                    {assignments.map((a) => {
-                      const sub = subOf(a.id, st.id);
-                      const isEditing = editing?.aid === a.id && editing?.sid === st.id;
-                      return (
-                        <td tabIndex={isEditing ? -1 : 0} aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} onKeyDown={(e) => { if (e.target === e.currentTarget && !isEditing && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setEditing({ aid: a.id, sid: st.id }); } }} class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
-                          {isEditing ? (
-                            <CellInput initial={sub?.score != null ? String(sub.score) : ""}
-                              onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
-                              onCancel={() => setEditing(null)} />
-                          ) : (
-                            <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} hidden={!a.publish_scores} />
-                          )}
-                        </td>
-                      );
+                    {groups.map((g) => {
+                      if (folded(g)) {
+                        // the group's own total: same rule as สะสม, only over this group's work whose scores are showing
+                        const shown = g.items.filter((a) => a.publish_scores);
+                        const tot = groupScoreTotal(shown, subFor(shown), today);
+                        return (
+                          <td class="sumc" title={shown.length === 0 ? "ซ่อนคะแนนทุกงานในกลุ่มนี้" : shown.length < g.items.length ? `ไม่รวมงานที่ซ่อนคะแนน (${g.items.length - shown.length} งาน)` : undefined}>
+                            {shown.length === 0 ? "•••" : tot ? <>{tot.score}<span class="muted">/{tot.fullScore}</span></> : <span class="muted">–</span>}{shown.length > 0 && shown.length < g.items.length ? "*" : ""}
+                          </td>
+                        );
+                      }
+                      return g.items.map((a) => {
+                        const sub = subOf(a.id, st.id);
+                        const isEditing = editing?.aid === a.id && editing?.sid === st.id;
+                        return (
+                          <td tabIndex={isEditing ? -1 : 0} aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} onKeyDown={(e) => { if (e.target === e.currentTarget && !isEditing && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setEditing({ aid: a.id, sid: st.id }); } }} class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
+                            {isEditing ? (
+                              <CellInput initial={sub?.score != null ? String(sub.score) : ""}
+                                onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
+                                onCancel={() => setEditing(null)} />
+                            ) : (
+                              <WorkCell state={stateOf(a.id, st.id, a)} score={sub?.score} mark={markOf(a.id, st.id)} hidden={!a.publish_scores} />
+                            )}
+                          </td>
+                        );
+                      });
                     })}
-                    <td style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
+                    <td class="tot-col" style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
                   </tr>
                 );
               })}
               <tr class="avg">
                 <td class="name-col">เฉลี่ย · ส่งแล้ว</td>
-                {assignments.map((a) => {
+                {groups.map((g) => folded(g) ? <td /> : g.items.map((a) => {
                   const counts = countWorkStates(students.map((st) => stateOf(a.id, st.id, a)));
                   const scored = students.map((st) => subOf(a.id, st.id)).filter((s) => s && s.score != null) as Sub[];
                   const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
                   return <td>{!a.publish_scores && avg != null ? "•••" : (avg ?? "–")}<br /><span class="muted">{assignmentFraction(counts)}</span></td>;
-                })}
-                <td />
+                }))}
+                <td class="tot-col" />
               </tr>
             </tbody>
           </table>
@@ -476,9 +577,42 @@ export function GradebookPage() {
       </div>
       {!phone && <div class="page-sub" style="margin-top:6px">คลิกหัวคอลัมน์เพื่อเลือกงาน · คลิกช่องเพื่อกรอกคะแนน · Enter ไปคนถัดไป · Esc ยกเลิก · สะสม = คะแนนที่ได้ ÷ เต็มของงานมีคะแนนและค้างส่ง</div>}
 
+      {bulkAsk && selAsg && (
+        <BulkConfirm ask={bulkAsk} asg={selAsg} className={classById(classId)?.name ?? ""}
+          onCancel={() => { setBulkAsk(null); refocusBulkTrigger(); }}
+          onConfirm={() => { const a = bulkAsk.action; setBulkAsk(null); refocusBulkTrigger(); runBulk(a); }} />
+      )}
+
       {showCreate && <AssignmentModal defaultClassId={classId} defaultSubjectId={subjectId} onClose={() => setShowCreate(false)} onSaved={() => { setShowCreate(false); load(true); }} />}
       {editAsg && <AssignmentModal existing={editAsg} onClose={() => setEditAsg(null)} onSaved={() => { setEditAsg(null); load(true); }} />}
       {copyAsg && <AssignmentModal copyFrom={copyAsg} defaultClassId={classId} onClose={() => setCopyAsg(null)} onSaved={() => { setCopyAsg(null); load(true); }} />}
+    </div>
+  );
+}
+
+const BULK_TEXT: Record<BulkAction, { title: (n: number) => string; body: (full: number) => string; go: (n: number) => string; danger?: boolean }> = {
+  "all-submitted": { title: (n) => `ทั้งห้องส่งแล้ว ${n} คน?`, body: () => "ทำเครื่องหมายว่าส่งแล้วให้คนที่ยังไม่ส่ง · คนที่ยกเว้นไม่ถูกแตะ", go: (n) => `ส่งแล้ว ${n} คน` },
+  "full-score": { title: (n) => `ให้เต็ม ${n} คน?`, body: (full) => `ให้คะแนนเต็ม ${full} กับคนที่ส่งแล้ว · คนที่ยกเว้นไม่ถูกแตะ`, go: (n) => `ให้เต็ม ${n} คน` },
+  clear: { title: (n) => `ล้างคะแนนทั้งงาน ${n} คน?`, body: () => "ล้างการส่งและคะแนนของคนที่ส่งแล้ว · คนที่ยกเว้นไม่ถูกแตะ · ย้อนกลับได้หลังล้าง", go: (n) => `ล้าง ${n} คน`, danger: true },
+};
+
+/** Confirm a whole-class action. Cancel comes first in the DOM so the dialog opens focused on it. */
+function BulkConfirm({ ask, asg, className, onCancel, onConfirm }: {
+  ask: { action: BulkAction; count: number }; asg: Assignment; className: string; onCancel: () => void; onConfirm: () => void;
+}) {
+  const t = BULK_TEXT[ask.action];
+  return (
+    <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
+      <Dialog label={t.title(ask.count)} style="max-width:420px" onClose={onCancel}>
+        <h2 style="font-size:1.2rem;margin-bottom:6px">{t.title(ask.count)}</h2>
+        <div style="overflow-wrap:anywhere;font-weight:500">{asg.title}</div>
+        <div class="page-sub" style="margin-bottom:8px">{className} · {t.body(asg.full_score)}</div>
+        {ask.count === 0 && <div class="page-sub" style="margin-bottom:8px">ไม่มีรายการที่ต้องเปลี่ยน</div>}
+        <div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px">
+          <button type="button" onClick={onCancel}>ยกเลิก</button>
+          <button type="button" class={t.danger ? "" : "primary"} style={t.danger ? "background:var(--fill-danger);color:var(--on-danger);border-color:var(--fill-danger)" : undefined} disabled={ask.count === 0} onClick={onConfirm}>{t.go(ask.count)}</button>
+        </div>
+      </Dialog>
     </div>
   );
 }
@@ -541,13 +675,13 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {assignmentFraction(counts)}</span>
         <div style="position:relative">
-          <button style="height:1.87rem" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
+          <button data-bulk-trigger style="height:1.87rem" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
           {menu && (<>
             <div style="position:fixed;inset:0;z-index:39" onClick={() => setMenu(false)} />
             <div class="gb-menu">
-              <button onClick={() => { setMenu(false); bulk("all-submitted"); }}><Icon name="checks" size={15} /> ทั้งห้องส่งแล้ว</button>
-              <button onClick={() => { setMenu(false); bulk("full-score"); }}><Icon name="star" size={15} /> ให้เต็มคนที่ส่ง</button>
-              <button onClick={() => { setMenu(false); bulk("clear"); }} style="color:var(--text-danger)"><Icon name="eraser" size={15} /> ล้าง</button>
+              <button onClick={() => { setMenu(false); bulk("all-submitted"); }}><Icon name="checks" size={15} /> ทั้งห้องส่งแล้ว…</button>
+              <button onClick={() => { setMenu(false); bulk("full-score"); }}><Icon name="star" size={15} /> ให้เต็มคนที่ส่ง…</button>
+              <button onClick={() => { setMenu(false); bulk("clear"); }} style="color:var(--text-danger)"><Icon name="eraser" size={15} /> ล้างคะแนนทั้งงาน…</button>
               <div class="gb-menu-sep" />
               <button onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
               <button onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>

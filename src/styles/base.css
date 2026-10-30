@@ -166,7 +166,7 @@ label { font-size: var(--fs-sm); color: var(--text-secondary); }
   button:not(.hs-eye):not(.lk) { min-height: 2.4rem; }
   .rnd-count .step { width: 2.4rem; height: 2.4rem; }
 }
-/* touch screens: every button / field is at least 44px tall (AC-03). The gradebook header eye is a gb-1 item. */
+/* touch screens: every button / field is at least 44px tall (AC-03). The gradebook header eye has its own 44px rule in grade.css. */
 @media (pointer: coarse) {
   button:not(.hs-eye), select, input:not([type="checkbox"]):not([type="radio"]) { min-height: var(--tap) !important; } /* !important: older per-page floors (36-40px) must not win */
   .rnd-count .step { min-width: var(--tap) !important; }

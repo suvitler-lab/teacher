@@ -83,11 +83,53 @@ function timedDb(DB, latency, stats) {
   });
 }
 
+/**
+ * Opt-in (--gb14): a gradebook with 14 pieces of work (4 types, Aug-Oct 2026) and 44 children in ป.6/1, for คณิตศาสตร์.
+ * Fictional and deterministic. Not part of the default seed so other checks keep their numbers.
+ */
+async function addGradebook14(DB) {
+  const have = (await DB.prepare("SELECT COUNT(*) n FROM students WHERE class_id = 'cls_61' AND status = 'active'").first()).n;
+  const stmts = [];
+  const names = ["สมมติ", "ทดลอง", "ตัวอย่าง", "จำลอง"];
+  for (let i = have + 1; i <= 44; i++) {
+    stmts.push(DB.prepare("INSERT OR REPLACE INTO students (id, code, qr_token, prefix, first_name, last_name, nickname, class_id, number, status, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,0)")
+      .bind(`stu_gb_${i}`, `19${String(i).padStart(3, "0")}`, `Q-GB${String(i).padStart(8, "0")}`, "ด.ช.", `เด็ก${i}`, names[i % 4], `น้อง${i}`, "cls_61", i, "active"));
+  }
+  const types = { w: "wt_worksheet", e: "wt_exercise", q: "wt_quiz", p: "wt_project" };
+  const defs = [
+    ["w", "ใบงาน 1 เลขยกกำลัง", 10, "2026-08-04"], ["w", "ใบงาน 2 เศษส่วน", 10, "2026-08-18"], ["e", "แบบฝึกหัด 1.1", 10, "2026-08-25"],
+    ["w", "ใบงาน 3 ทศนิยม", 10, "2026-09-02"], ["e", "แบบฝึกหัด 1.2", 10, "2026-09-09"], ["q", "สอบย่อย บทที่ 1", 20, "2026-09-16"],
+    ["w", "ใบงาน 4 ร้อยละ", 10, "2026-09-23"], ["e", "แบบฝึกหัด 2.1", 10, "2026-10-01"], ["w", "ใบงาน 5 อัตราส่วน", 10, "2026-10-06"],
+    ["e", "แบบฝึกหัด 2.2", 10, "2026-10-13"], ["q", "สอบย่อย บทที่ 2", 20, "2026-10-16"], ["p", "โครงงานคณิตศาสตร์ในชีวิตประจำวัน", 20, "2026-10-20"],
+    ["w", "ใบงาน 6 สมการ", 10, "2026-10-27"], ["e", "แบบฝึกหัด 3.1", 10, "2026-10-28"],
+  ];
+  const rnd = (n) => { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
+  defs.forEach(([t, title, full, date], j) => {
+    const id = `asg_gb_${j + 1}`;
+    const due = date.slice(0, 8) + String(Math.min(28, Number(date.slice(8)) + 5)).padStart(2, "0");
+    stmts.push(DB.prepare("INSERT OR REPLACE INTO assignments (id, term_id, subject_id, type_id, title, unit, full_score, assigned_date, due_date, note, publish_scores, status, created_at, updated_at, deleted_at) VALUES (?,?,?,?,?,NULL,?,?,?,NULL,1,'open',0,0,NULL)")
+      .bind(id, "term_demo", "sub_math", types[t], title, full, date, due));
+    stmts.push(DB.prepare("INSERT OR REPLACE INTO assignment_classes (assignment_id, class_id) VALUES (?, 'cls_61')").bind(id));
+  });
+  await DB.batch(stmts);
+  const rows = (await DB.prepare("SELECT id FROM students WHERE class_id = 'cls_61' AND status = 'active' ORDER BY number").all()).results;
+  const subs = [];
+  defs.forEach(([, , full], j) => rows.forEach((st, i) => {
+    const r = rnd((i + 1) * 13 + j * 7);
+    if (i === 6) { subs.push(DB.prepare("INSERT OR REPLACE INTO submissions (assignment_id, student_id, status, score, late, submitted_at, method, updated_at) VALUES (?,?,'excused',NULL,0,NULL,'grid',1)").bind(`asg_gb_${j + 1}`, st.id)); return; }
+    if (r > (j > 11 ? 0.45 : 0.9)) return; // not handed in
+    const score = r < 0.1 ? null : Math.round(full * (0.5 + rnd(i * 3 + j) * 0.5) * 2) / 2;
+    subs.push(DB.prepare("INSERT OR REPLACE INTO submissions (assignment_id, student_id, status, score, late, submitted_at, method, updated_at) VALUES (?,?,'submitted',?,?,1,'grid',1)").bind(`asg_gb_${j + 1}`, st.id, score, r > 0.8 ? 1 : 0));
+  }));
+  for (let k = 0; k < subs.length; k += 80) await DB.batch(subs.slice(k, k + 80));
+}
+
 async function startFixtureServer({
   port = 5194,
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
   seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
+  gradebook14 = false, // true: 14 pieces of work x 44 children for คณิตศาสตร์ in ป.6/1 (gradebook layout checks)
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
     modules: true,
@@ -107,6 +149,7 @@ async function startFixtureServer({
     const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");
     await DB.batch(sql.split(";").map((s) => s.trim()).filter(Boolean).map((s) => DB.prepare(s)));
   }
+  if (gradebook14 && seed) await addGradebook14(DB);
   const { app } = require(path.join(root, "worker/app.ts"));
   const setup = await app.request("/api/setup", {
     method: "POST", headers: { "Content-Type": "application/json" },
@@ -180,7 +223,7 @@ async function startFixtureServer({
 module.exports = { startFixtureServer, PASSWORD, EMAIL };
 
 if (require.main === module) {
-  startFixtureServer().then((s) => {
+  startFixtureServer({ gradebook14: process.argv.includes("--gb14") }).then((s) => {
     console.log(`fixture server on ${s.url} — password: ${s.password} — synthetic data only`);
     for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, async () => { await s.close(); process.exit(0); });
   }).catch((e) => { console.error(e); process.exitCode = 1; });

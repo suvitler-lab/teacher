@@ -1,0 +1,8 @@
+After-fix browser checks (1180x820, fixture gb14 math; session re-login needed after server restart):
+- Edit one cell 9 -> 10 (typed): saved; group total ใบงาน row1 32.5/60 -> 33.5/60, cumulative 85/130 -> 86/130 (expected +1).
+- Hide scores: cells show dots; folded group totals dots; cumulative header shows "สะสม*"; show again restores 33.5/60 17/30 17/20 18.5/20 86/130.
+- Tap folded "รวม ใบงาน" header: group expands (11 header cols).
+- Header progress bars vs submitted/(44-excused): ใบงาน1..6 = 37/43=86, 36/43=84, 37/43=86, 34/43=79, 38/43=88, 15/43=35 -> bars 86,84,86,79,88,35 (match).
+- ใบงาน 6 (12 scored, 3 awaiting, 28 missing, 1 excused): dialogs: ทั้งห้องส่งแล้ว 28 คน, ให้เต็ม 15 คน, ล้าง 15 คน (all = non-excused; matches). Focus in dialog = ยกเลิก; after cancel focus returns to "ทำทั้งห้อง" button; data unchanged for all 3.
+- Confirm ให้เต็ม 15: 15 cells -> 10, missing 28 + excused 1 untouched. Confirm ส่งแล้ว 28: 28 missing -> awaiting, excused untouched. Not tested: confirm of ล้าง.
+- After confirming (not cancel) document.activeElement is not the "ทำทั้งห้อง" button (nav/body).
