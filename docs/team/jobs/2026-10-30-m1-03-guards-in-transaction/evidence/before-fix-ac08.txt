@@ -1,0 +1,13 @@
+# npx vitest run test/api/guards-in-transaction.test.ts -t 'AC-08|R-04' (before fix R-01..R-04, 2026-10-30)
+     × AC-08: a number-less row brings a former child back on their kept number — counted as the paste's number (preview + import) 64ms
+     × AC-08: two number-less former children on one kept number are a repeat within the paste 52ms
+     × R-04: a number-less pasted child given a pasted number by another device meanwhile is refused 79ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-08: a number-less row brings a former child back on their kept number — counted as the paste's number (preview + import)
+AssertionError: expected [] to deeply equal [ { number: 7, code: '601', …(1) } ]
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-08: two number-less former children on one kept number are a repeat within the paste
+AssertionError: expected [] to deeply equal [ 7 ]
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > R-04: a number-less pasted child given a pasted number by another device meanwhile is refused
+AssertionError: expected { error: 'number_conflict', …(3) } to match object { error: 'number_conflict', …(1) }
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed | 8 skipped (13)

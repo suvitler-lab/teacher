@@ -1,0 +1,4 @@
+# npm test (final, 2026-10-30) — summary lines
+ Test Files  63 passed (63)
+      Tests  722 passed (722)
+   Duration  19.49s (transform 19.49s, setup 122.74s, import 19.38s, tests 67.78s, environment 33.27s)

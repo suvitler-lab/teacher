@@ -1,0 +1,7 @@
+# npx vitest run test/api/guards-in-transaction.test.ts -t AC-07 (before fix, 2026-10-30)
+     × AC-07: an import whose new code was added by another device meanwhile gets 409 code_taken (not 500) and writes nothing 105ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-07: an import whose new code was added by another device meanwhile gets 409 code_taken (not 500) and writes nothing
+AssertionError: expected 500 to be 409 // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)

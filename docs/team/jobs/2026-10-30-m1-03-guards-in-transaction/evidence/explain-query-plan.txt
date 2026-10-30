@@ -1,0 +1,82 @@
+
+=== no sqlite_stat1 (as the test DB) ===
+-- students POST numberHeld (pre-check + guard)
+   SEARCH students USING INDEX idx_students_class (class_id=? AND number=?)
+-- import numberProblems
+   SEARCH students USING INDEX idx_students_class (class_id=? AND number>?)
+   LIST SUBQUERY 1
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+-- import numberClashGuard
+   SCAN CONSTANT ROW
+   SCALAR SUBQUERY 3
+   SCAN j VIRTUAL TABLE INDEX 1:
+   CORRELATED SCALAR SUBQUERY 1
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   USE TEMP B-TREE FOR GROUP BY
+   CORRELATED SCALAR SUBQUERY 1
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   SCALAR SUBQUERY 8
+   SEARCH s USING INDEX idx_students_class (class_id=? AND number=?)
+   LIST SUBQUERY 6
+   SCAN j VIRTUAL TABLE INDEX 1:
+   CORRELATED SCALAR SUBQUERY 4
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   CORRELATED SCALAR SUBQUERY 4
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   CREATE BLOOM FILTER
+   LIST SUBQUERY 7
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+-- assignments year guard
+   SCAN CONSTANT ROW
+   SCALAR SUBQUERY 3
+   SEARCH classes USING INDEX sqlite_autoindex_classes_1 (id=?)
+   LIST SUBQUERY 1
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+   SCALAR SUBQUERY 2
+   SEARCH terms USING INDEX sqlite_autoindex_terms_1 (id=?)
+-- (old, for comparison) status = 'active' without +
+   SEARCH students USING INDEX idx_students_status (status=?)
+
+=== after ANALYZE (1,400 students / 7 classes) ===
+-- students POST numberHeld (pre-check + guard)
+   SEARCH students USING INDEX idx_students_class (class_id=? AND number=?)
+-- import numberProblems
+   SEARCH students USING INDEX idx_students_class (class_id=? AND number>?)
+   LIST SUBQUERY 1
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+-- import numberClashGuard
+   SCAN CONSTANT ROW
+   SCALAR SUBQUERY 3
+   SCAN j VIRTUAL TABLE INDEX 1:
+   CORRELATED SCALAR SUBQUERY 1
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   USE TEMP B-TREE FOR GROUP BY
+   CORRELATED SCALAR SUBQUERY 1
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   SCALAR SUBQUERY 8
+   SEARCH s USING INDEX idx_students_class (class_id=? AND number=?)
+   LIST SUBQUERY 6
+   SCAN j VIRTUAL TABLE INDEX 1:
+   CORRELATED SCALAR SUBQUERY 4
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   CORRELATED SCALAR SUBQUERY 4
+   SEARCH k USING INDEX sqlite_autoindex_students_2 (code=?)
+   CREATE BLOOM FILTER
+   LIST SUBQUERY 7
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+-- assignments year guard
+   SCAN CONSTANT ROW
+   SCALAR SUBQUERY 3
+   SCAN classes
+   LIST SUBQUERY 1
+   SCAN json_each VIRTUAL TABLE INDEX 1:
+   CREATE BLOOM FILTER
+   SCALAR SUBQUERY 2
+   SEARCH terms USING INDEX sqlite_autoindex_terms_1 (id=?)
+-- (old, for comparison) status = 'active' without +
+   SEARCH students USING INDEX idx_students_class (class_id=? AND number=?)

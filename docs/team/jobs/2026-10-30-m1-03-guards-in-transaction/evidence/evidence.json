@@ -1,0 +1,277 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [
+      "BR-03"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/guards-in-transaction.test.ts (before fix)",
+    "artifact": "evidence/before-fix.txt",
+    "expected": "race tests fail before fix",
+    "actual": "6 failed / 1 passed: AC-01/02/04 got 200, AC-03 got 500",
+    "reason": "",
+    "snapshot": "tree:d1583ae9ed57451a045b7c5ddc88868415daa3dc",
+    "at": "2026-10-30T03:24:25.431Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [
+      "BR-03"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npx vitest run guards-in-transaction + qa-m1-03 + related files --reporter=verbose",
+    "artifact": "evidence/related-after-fix.txt",
+    "expected": "",
+    "actual": "9 files / 123 tests passed",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:42:32.150Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm test",
+    "artifact": "evidence/full-suite.txt",
+    "expected": ">= 63 files / 722",
+    "actual": "63 files / 722 passed",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:42:32.482Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-05"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "npm run typecheck",
+    "artifact": "evidence/typecheck.txt",
+    "expected": "",
+    "actual": "tsc --noEmit exit 0",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:42:32.814Z"
+  },
+  {
+    "check": "Q-94",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-fullstack-dev",
+    "mandatory": true,
+    "command": "volume.test.ts (in related run) + EXPLAIN QUERY PLAN with/without ANALYZE",
+    "artifact": "evidence/explain-query-plan.txt",
+    "expected": "",
+    "actual": "volume 7/7 in final run; number queries use idx_students_class",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:42:33.146Z"
+  },
+  {
+    "check": "Q-95",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [
+      "BR-03"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "mutation (M1-M10); worker unchanged since M9/M10: git diff --stat -- worker = 2 files +131/-53, students.ts identical to M9/M10 copy",
+    "artifact": "evidence/mutation.txt",
+    "expected": "",
+    "actual": "10/10 mutations killed",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:42:33.484Z"
+  },
+  {
+    "check": "Q-96",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [
+      "BR-03"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/guards-in-transaction.test.ts -t AC-07 (before fix)",
+    "artifact": "evidence/before-fix-ac07.txt",
+    "expected": "fails before fix",
+    "actual": "500 instead of 409",
+    "reason": "",
+    "snapshot": "tree:056cc5eff158a6522c4c71adcc3f3a672087d6f9",
+    "at": "2026-10-30T03:27:14.842Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "concurrency",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/api/qa-m1-03.test.ts -> 16/16 (gateBatch races incl. TC-G4)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:39:53.133Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "multi-device",
+    "status": "PASS",
+    "ac": [
+      "AC-02",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "qa-m1-03 TC-A, TC-B, TC-E3, TC-G4 -> loser 409/422, db snapshot unchanged",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:39:53.511Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-05",
+      "AC-06",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm test -> full suite pass; npm run typecheck exit 0 (evidence/qa-full-suite.txt)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:39:53.911Z"
+  },
+  {
+    "check": "Q-97",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [
+      "BR-03"
+    ],
+    "by": "team-fullstack-dev",
+    "mandatory": false,
+    "command": "npx vitest run test/api/guards-in-transaction.test.ts -t 'AC-08|R-04' (before fix)",
+    "artifact": "evidence/before-fix-ac08.txt",
+    "expected": "AC-08 fails before fix",
+    "actual": "3 failed (AC-08 x2 empty clashes/dups; R-04 race reported as clash not dup) / 2 passed",
+    "reason": "",
+    "snapshot": "tree:31d5e5b6bffc9a922af4cca57ea275d3df0f8553",
+    "at": "2026-10-30T03:37:45.864Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "concurrency",
+    "status": "PASS",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "qa-m1-03 TC-G (preview+import 422), G2 (31 ok), G3 (no false positive), G4 (race) -> pass",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:39:54.339Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "offline-replay",
+    "status": "N/A",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "read src/components/AssignmentModal.tsx:90, src/pages/Students.tsx:217,336",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ยืนยันจากโค้ด: AssignmentModal.tsx:90, Students.tsx:217, Students.tsx:336 เรียก api.post ตรง ไม่เข้าคิวออฟไลน์ (PM รับ N/A ใน brief)",
+    "snapshot": "tree:c10866891f0ad45f065885e76aa1f40cc3e95df7",
+    "at": "2026-10-30T03:43:11.765Z"
+  }
+]

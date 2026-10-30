@@ -1,0 +1,127 @@
+# npx vitest run (related files, final) --reporter=verbose
+ ✓ |workers| test/api/manage.test.ts > assignment management > a closed assignment refuses camera/hid scans but allows grid grading 112ms
+ ✓ |workers| test/api/manage.test.ts > assignment management > refuses to lower full_score below a recorded score (409) 74ms
+ ✓ |workers| test/api/manage.test.ts > assignment management > allows lowering full_score when no score exceeds it 77ms
+ ✓ |workers| test/api/manage.test.ts > terms with dates > stores start/end dates and rejects an inverted range 70ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > classifies every row: new / changed / unchanged / moved / reactivated — and writes nothing 100ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > a moved student who is also in another class is both a move and a reactivation 64ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > warns about repeated codes and numbers, and about numbers held by someone outside the paste 62ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > the import itself refuses repeated codes with a clear 422, instead of a 500 58ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > does what the preview said: the move and the reactivation really happen 70ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > a list WITHOUT class numbers leaves every child's existing number alone (and is not counted as a change) 72ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > a number-less row for a child who moves in from another class does not carry the old class's number 61ms
+ ✓ |workers| test/api/import-preview.test.ts > import preview (dry run) > a number kept by a number-less row still counts as taken: a new row cannot claim it 62ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > preview and both write paths refuse a same-year move with score history 135ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > preview and both write paths refuse a same-year move with attendance history 124ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > blocks cross-year reuse even before the student has any marks 82ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > cannot detach a student with history by choosing no class 71ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > keeps same-class edits and reimports working, and allows a same-year move with no history 98ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > rolls back the entire edit if a score lands after its early check 100ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > rolls back the entire import if a score lands after its early check 76ms
+ ✓ |workers| test/api/audit-history.test.ts > student history stays in its original class > rejects an attendance request when its student moves after the membership check 81ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-01: a class moved to another year between the check and the write is refused (422 class_year_mismatch) 111ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-01: same when work moves to another term and a kept class changed year meanwhile 73ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-02: two children added on one free number at once — one lands, the other gets 409 number_taken 86ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-02: an edit onto a number that was taken meanwhile is refused and leaves the child as they were 78ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-03: two children added with one code at once — one lands, the other gets 409 code_taken (not 500) 80ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-04: an import whose number was given to a child outside the paste meanwhile is refused and writes nothing 71ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-07: an import whose new code was added by another device meanwhile gets 409 code_taken (not 500) and writes nothing 80ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-08: a number-less row brings a former child back on their kept number — counted as the paste's number (preview + import) 77ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-08: two number-less former children on one kept number are a repeat within the paste 59ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > R-04: a number-less pasted child given a pasted number by another device meanwhile is refused 65ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > R-04: a class whose year became NULL meanwhile still passes the year guard 62ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > R-04: a moved student is not held to the number guard, even when the number was taken meanwhile 66ms
+ ✓ |workers| test/api/guards-in-transaction.test.ts > guards repeated inside the write's own transaction > AC-05: without a race the same requests still go through 80ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-A multi-device: two EXISTING children edited onto one free number at once -> 1 ok, 1 x 409 number_taken 129ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-B moved child brought back to active onto a number someone else holds -> 409, stays moved (plain and raced) 106ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-B2 a non-active child may take a number an active child holds (guard only for active) 67ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-C moving existing work to a term of another year while its class is old-year -> 422, nothing changes 79ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-C2 adding a class to existing work, class changes year before the write -> 422, links unchanged 78ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-D import with two pasted rows on one number -> 422 number_conflict dupNumbers, nothing written 74ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-D2 import onto a number held by an outside child (no race) -> 422 with clash detail 69ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-E create with a code that exists, no race -> 409 code_taken (not 500), nothing written 63ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-E2 import with a repeated code inside the paste -> 422 duplicate_codes (not 500), nothing written 65ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-E3 import race: two new pasted codes, other device takes ONE -> 409 naming that code, none of the paste written 71ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-F normal paths repeated on the same class still 200: edit twice, re-import twice, edit work 92ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-F2 old data: work whose class is of another year can still be edited under the same term 58ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-G AC-08 preview warns and import is refused (422 number_conflict, readable Thai), nothing changes 72ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-G2 AC-08 giving 103 a new number 31 -> preview clean, import 200, 103 active with 31, 104 keeps 7 70ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-G3 AC-08 no false positive: re-import of an all-active class with no numbers in the paste -> 200, numbers kept 68ms
+ ✓ |workers| test/api/qa-m1-03.test.ts > QA M1-03 > TC-G4 AC-08 race: unnumbered pasted child keeps number 1, another device gives 1 to an outside child meanwhile -> 422, nothing written 67ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B01: a request that started before a restore does not write into the restored data 100ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B01: same for a whole-class bulk action 108ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B01: same for an assignment edit 72ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B04: an older score that lost to a newer one is answered `superseded`, and never audited as written 96ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B04: two ops for one student in one request are both audited when both land 66ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B05: a score checked against the old full score is refused when the full score was lowered meanwhile 82ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B05: and the other way round — lowering the full score under a score that lands first is refused 76ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > B05: a bulk full-score is not written with a full score that has since changed 83ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > closing the assignment meanwhile stops a hand-in that was accepted a moment earlier 76ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > deleting the assignment meanwhile stops the write 69ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > moving the student to another class meanwhile stops the write 63ms
+ ✓ |workers| test/api/race-r1.test.ts > a write that was checked before the world changed > bulk reports what it really changed, not what it meant to 74ms
+ ✓ |workers| test/api/race-r1.test.ts > every other data write holds the same line against a restore that lands mid-request > attendance taps are refused with the students named, and nothing is written 61ms
+ ✓ |workers| test/api/race-r1.test.ts > every other data write holds the same line against a restore that lands mid-request > a student edit is refused 65ms
+ ✓ |workers| test/api/race-r1.test.ts > every other data write holds the same line against a restore that lands mid-request > a class rename is refused 60ms
+ ✓ |workers| test/api/race-r1.test.ts > every other data write holds the same line against a restore that lands mid-request > deleting an assignment is refused 55ms
+ ✓ |workers| test/api/race-r1.test.ts > every other data write holds the same line against a restore that lands mid-request > two undos of one bulk clear at the same moment apply once 84ms
+ ✓ |workers| test/api/race-r1.test.ts > the API keeps the relations the screens rely on > B07: bulk refuses a class the assignment was not given to, and touches nobody 55ms
+ ✓ |workers| test/api/race-r1.test.ts > the API keeps the relations the screens rely on > B07: an assignment with no class links at all still accepts bulk for any class (older data) 55ms
+ ✓ |workers| test/api/race-r1.test.ts > the API keeps the relations the screens rely on > B08: moving an assignment to a term of another year is refused while it keeps last year's class 56ms
+ ✓ |workers| test/api/race-r1.test.ts > the API keeps the relations the screens rely on > B08: editing an assignment without changing its term never re-judges older classes 56ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > both start from the same version with different values → exactly one wins, the other gets a 409 129ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > same for a row both devices had seen at the same version 94ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > two devices agreeing on the value is not a clash 78ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > re-sending an op that already landed writes nothing again, and audits once 95ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > returns the version of every row, and versions only go up 76ms
+ ✓ |workers| test/api/integrity-d.test.ts > attendance: two devices at the same moment > taps made before a restore are refused (epoch_changed) and nothing is written 69ms
+ ✓ |workers| test/api/integrity-d.test.ts > scores: the teacher's LATER action always wins > a score that waited in an offline queue does not bring back what a whole-class clear removed 105ms
+ ✓ |workers| test/api/integrity-d.test.ts > scores: the teacher's LATER action always wins > 3 then 9 arriving out of order still ends at 9 71ms
+ ✓ |workers| test/api/integrity-d.test.ts > scores: the teacher's LATER action always wins > an older op is not applied and leaves no audit row 69ms
+ ✓ |workers| test/api/integrity-d.test.ts > scores: the teacher's LATER action always wins > ops made before a restore are held (epoch_changed), not applied 72ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > method camera is refused 63ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > method hid is refused 66ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > method manual is refused 65ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > the gradebook (grid) can still enter a score 67ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > intent overrides the guess from the method 66ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > voiding is always allowed 68ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > 'everyone handed it in' (bulk) is refused; scoring and clearing still work 82ms
+ ✓ |workers| test/api/integrity-d.test.ts > closed work stops accepting hand-ins on EVERY route, but can still be graded > the scan screen can ask whether the work is still open 57ms
+ ✓ |workers| test/api/integrity-d.test.ts > a write from a screen that hasn't heard about a restore > is refused with epoch_changed; the same write without a stale epoch goes through 55ms
+ ✓ |workers| test/api/integrity-d.test.ts > a write from a screen that hasn't heard about a restore > bootstrap tells the client which epoch it is looking at 68ms
+ ✓ |workers| test/api/integrity-d.test.ts > one class number per child > adding or editing a student onto a number another active child holds is refused (409 number_taken) 64ms
+ ✓ |workers| test/api/integrity-d.test.ts > one class number per child > editing a student without changing their own number is fine 54ms
+ ✓ |workers| test/api/integrity-d.test.ts > one class number per child > a moved-out child's old number is free again; a different class may reuse a number 70ms
+ ✓ |workers| test/api/integrity-d.test.ts > one class number per child > bringing a former student back onto a taken number is refused too 54ms
+ ✓ |workers| test/api/integrity-d.test.ts > one class number per child > import: two rows on one number, or a number held by someone outside the paste, is refused (422) and writes nothing 58ms
+ ✓ |workers| test/api/volume.test.ts > reading at school size > every screen's data is complete and correct, and cheap 239ms
+ ✓ |workers| test/api/volume.test.ts > reading at school size > a whole backup reads each row about once — not the square of the table's size 403ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > scanning: one child, and a whole class or more in one request 146ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > whole-class actions and their undo 157ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > attendance for a class, and editing an assignment 137ms
+ ✓ |workers| test/api/volume.test.ts > writing at school size > importing a class list 132ms
+ ✓ |workers| test/api/volume.test.ts > restoring at school size > fits in one request's statements — and costs almost a whole day's write allowance, which is why the runbook says when to do it 829ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > a new term in the SAME year only adds the term: classes and children stay as they are 96ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > a new YEAR opens fresh classes with the same names, puts last year's away, and finishes the children in them 129ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > HEADLINE: after the new year starts and a new cohort is imported into the same-named class, last term's report, gradebook and dashboard have exactly the same numbers 208ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > last year's class asked about in THIS year's term is empty — the two years can't mix 132ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > last year's work can still be graded after the year has started — for last year's children only 145ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > starting the same term twice changes nothing the second time — a repeat tap or a second device can't double it 103ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > two starts racing each other: exactly one wins, and no class or term is doubled (the guard is inside the write) 128ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > refuses a page that is out of date, dates that run into another term, and a term that isn't next 80ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > only the classes the teacher chose are opened for the new year; an unknown class is refused 103ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > can close last year's still-open work — and leaves it alone otherwise 97ms
+ ✓ |workers| test/api/school-year.test.ts > starting terms and school years > term changes across years must go through 'start' — and a term's year can't be edited under its classes 77ms
+ ✓ |workers| test/api/school-year.test.ts > who is in a class during a term > a child who left during term 2 is still in term 1's report, but not in term 2's 102ms
+ ✓ |workers| test/api/school-year.test.ts > who is in a class during a term > the day they left is recorded by the server (today if not given), kept on later edits, and cleared when they return 92ms
+ ✓ |workers| test/api/school-year.test.ts > who is in a class during a term > importing a paste puts children back in the class as current ones (no left day) 65ms
+ ✓ |workers| test/api/school-year.test.ts > who is in a class during a term > the import preview says when most of a class isn't in the paste (a new year's list going into last year's class) 58ms
+ ✓ |workers| test/api/school-year.test.ts > attendance and classes across years > attendance can't be written for a day before the current school year began 72ms
+ ✓ |workers| test/api/school-year.test.ts > attendance and classes across years > with no term dates there is no start to enforce (older setups keep working) 66ms
+ ✓ |workers| test/api/school-year.test.ts > attendance and classes across years > a new class is filed under the current year; a class of a past year can't be brought back 94ms
+ ✓ |workers| test/api/school-year.test.ts > attendance and classes across years > work for a new year can't be attached to last year's class (and vice versa) 102ms
+ ✓ |workers| test/api/school-year.test.ts > backups from before the school-year model > carries each class's year and each child's left day through a backup and back 128ms
+ ✓ |workers| test/api/school-year.test.ts > backups from before the school-year model > restores a v4 file (no year, no left day): the classes count as belonging to any year, so nothing disappears 132ms
+ Test Files  9 passed (9)
+      Tests  123 passed (123)
+   Duration  6.80s (transform 3.42s, setup 23.20s, import 392ms, tests 11.47s, environment 1ms)
