@@ -148,7 +148,7 @@ export function Onboarding() {
         <div class="ob-head">
           <div class="auth-logo" style="margin:0"><Icon name="checks" size={28} /></div>
           <div>
-            <h1 style="font-size:20px">ยินดีต้อนรับสู่งานครบ</h1>
+            <h1 style="font-size:1.33rem">ยินดีต้อนรับสู่งานครบ</h1>
             <div class="page-sub">ตั้งค่าเริ่มต้น 4 ขั้นตอน ใช้เวลาไม่ถึง 3 นาที</div>
           </div>
         </div>

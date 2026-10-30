@@ -497,8 +497,8 @@ function SessionSetup() {
           <div class="sc-step"><span class="sn">1</span>เลือกงาน
             <span class="grow" />
             <div class="chips-row">
-              <button class={"pill" + (subjectFilter === "" ? " on" : "")} style="height:26px" onClick={() => setSubjectFilter("")}>ทุกวิชา</button>
-              {activeSubjects.value.map((s) => <button class={"pill" + (subjectFilter === s.id ? " on" : "")} style="height:26px" onClick={() => setSubjectFilter(s.id)}>{s.name}</button>)}
+              <button class={"pill" + (subjectFilter === "" ? " on" : "")} style="height:1.73rem" onClick={() => setSubjectFilter("")}>ทุกวิชา</button>
+              {activeSubjects.value.map((s) => <button class={"pill" + (subjectFilter === s.id ? " on" : "")} style="height:1.73rem" onClick={() => setSubjectFilter(s.id)}>{s.name}</button>)}
             </div>
           </div>
           <div class="sc-asg-grid">
@@ -512,7 +512,7 @@ function SessionSetup() {
                   </div>
                   <div class="ttl">{a.title}</div>
                   <div class="page-sub">{subjectById(a.subject_id)?.name} · เต็ม {a.full_score}</div>
-                  <div class="row wrap" style="gap:10px;margin-top:4px;font-size:12px;font-variant-numeric:tabular-nums">
+                  <div class="row wrap" style="gap:10px;margin-top:4px;font-size:var(--fs-xs);font-variant-numeric:tabular-nums">
                     {a.class_ids.map((cid) => {
                       const p = progressFor(a.id, cid);
                       const c = activeClasses.value.find((x) => x.id === cid);
@@ -557,7 +557,7 @@ function SessionSetup() {
               <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="barcode" size={13} /> เครื่องยิง QR</span>
               <span class="chip" style="background:var(--bg-accent);color:var(--text-accent)"><Icon name="camera" size={13} /> กล้อง</span>
             </div>
-            <button class="primary" style="height:42px;padding:0 20px" disabled={!classId || !asg} onClick={() => startSession(assignmentId, classId, mode)}>
+            <button class="primary" style="height:2.8rem;padding:0 20px" disabled={!classId || !asg} onClick={() => startSession(assignmentId, classId, mode)}>
               <Icon name="scan" /> เริ่มสแกน {classesForAsg.find((c) => c.id === classId)?.name ?? ""}
             </button>
           </div>
@@ -649,17 +649,17 @@ function ScanView() {
   return (
     <div>
       {!known && (
-        <div class="imp-warn" role="status" style="margin:0 0 8px;font-size:13px">
+        <div class="imp-warn" role="status" style="margin:0 0 8px;font-size:var(--fs-sm)">
           <Icon name={subsBox.value.status === "unknown" ? "cloud-off" : "loader-2"} size={15} class={subsBox.value.status === "unknown" ? "" : "spin"} />
           <span class="grow">{subsBox.value.status === "unknown"
             ? "ยังไม่ทราบว่าใครส่งงานนี้แล้วบ้าง (โหลดจากระบบไม่ได้) — สแกนต่อได้ ทุกรายการเข้าคิวและระบบจะตรวจซ้ำตอนส่ง"
             : "กำลังโหลดข้อมูลของงานนี้…"}</span>
-          {subsBox.value.status === "unknown" && <button class="ghost" style="height:26px;font-size:12px" onClick={() => loadSubs(s.assignmentId).catch(() => {})}>ลองอีกครั้ง</button>}
+          {subsBox.value.status === "unknown" && <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={() => loadSubs(s.assignmentId).catch(() => {})}>ลองอีกครั้ง</button>}
         </div>
       )}
       <div class="ctxbar">
         <div style="position:relative">
-          <button class="ghost" style="color:inherit;height:28px;background:var(--surface-2)" onClick={() => otherClasses.length && setRoomMenu((v) => !v)}>
+          <button class="ghost" style="color:inherit;height:1.87rem;background:var(--surface-2)" onClick={() => otherClasses.length && setRoomMenu((v) => !v)}>
             <Icon name="users" size={15} /> {cls?.name} {otherClasses.length > 0 && <Icon name="chevron-down" size={14} />}
           </button>
           {roomMenu && (
@@ -679,7 +679,7 @@ function ScanView() {
           {wt && <span class={"chip " + wt.color}>{wt.name}</span>}
         </div>
         <span class="grow" style="min-width:8px" />
-        <span style="font-size:13px">เต็ม {s.fullScore} · {modeLabel}</span>
+        <span style="font-size:var(--fs-sm)">เต็ม {s.fullScore} · {modeLabel}</span>
         <button class="ghost" style="color:inherit;background:var(--surface-2)" onClick={endSession}><Icon name="player-stop" size={16} /> จบรอบ</button>
       </div>
 
@@ -701,7 +701,7 @@ function ScanView() {
         <div class="sc-closed" role="alert">
           <Icon name="lock" size={18} />
           <div class="grow"><b style="font-weight:500">{closedReason.value === "closed" ? "งานนี้ปิดรับแล้ว" : "งานนี้ถูกลบแล้ว"}</b> — สแกนแล้วจะไม่บันทึก ให้คะแนนย้อนหลังได้ที่ <a href="#/gradebook">สมุดคะแนน</a></div>
-          <button style="height:30px;font-size:12px" onClick={endSession}>จบรอบ</button>
+          <button style="height:2rem;font-size:var(--fs-xs)" onClick={endSession}>จบรอบ</button>
         </div>
       )}
 
@@ -719,16 +719,16 @@ function ScanView() {
             }}
           />
         </label>
-        <button class="icon" style="width:56px;height:56px;border-radius:var(--radius)" aria-label="สแกนด้วยกล้อง" onClick={() => (useCamera.value = !useCamera.value)}>
+        <button class="icon" style="width:3.73rem;height:3.73rem;border-radius:var(--radius)" aria-label="สแกนด้วยกล้อง" onClick={() => (useCamera.value = !useCamera.value)}>
           <Icon name={useCamera.value ? "camera-off" : "camera"} size={22} />
         </button>
       </div>
 
       {cameraProblem.value && (
-        <div class="imp-warn danger" role="alert" style="margin:0 0 12px;font-size:13px">
+        <div class="imp-warn danger" role="alert" style="margin:0 0 12px;font-size:var(--fs-sm)">
           <Icon name="camera-off" size={16} />
           <span class="grow"><b style="font-weight:500">{cameraProblem.value.title}</b><br />{cameraProblem.value.hint}</span>
-          <button class="ghost" style="height:26px;font-size:12px" onClick={() => (cameraProblem.value = null)}>ปิด</button>
+          <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={() => (cameraProblem.value = null)}>ปิด</button>
         </div>
       )}
 
@@ -750,7 +750,7 @@ function ScanView() {
         <div class="card sc-choose" role="group" aria-label="เลือกนักเรียน">
           <div class="row" style="justify-content:space-between;gap:8px;margin-bottom:8px">
             <span style="font-weight:500">เลขที่ {choices.value.raw} มี {choices.value.students.length} คน — เลือกคนที่ถูกต้อง</span>
-            <button class="ghost" style="height:28px;font-size:12px" onClick={() => (choices.value = null)}>ยกเลิก</button>
+            <button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)" onClick={() => (choices.value = null)}>ยกเลิก</button>
           </div>
           <div class="row" style="gap:8px;flex-wrap:wrap">
             {choices.value.students.map((st) => (
@@ -767,8 +767,8 @@ function ScanView() {
       <div class="scan-cols">
         <div class="card" style="padding:0;overflow:hidden">
           <div class="row" style="justify-content:space-between;padding:10px 12px;background:var(--surface-1)">
-            <span style="font-size:13px" class="muted">สแกนล่าสุด</span>
-            <span style="font-size:13px" class="muted">รอบนี้ {recent.value.length} คน</span>
+            <span style="font-size:var(--fs-sm)" class="muted">สแกนล่าสุด</span>
+            <span style="font-size:var(--fs-sm)" class="muted">รอบนี้ {recent.value.length} คน</span>
           </div>
           {recent.value.length === 0 ? (
             <div class="empty" style="padding:24px">ยังไม่มีการสแกน</div>
@@ -795,14 +795,14 @@ function ScanView() {
         <div class="card">
           <div class="row" style="gap:12px;margin-bottom:8px">
             <ProgressRing value={known ? seat.submitted : 0} total={known ? seat.counted : classStudents.length} size={72} label={known ? "ส่งแล้ว" : "ไม่ทราบ"} />
-            <div style="font-size:13px">
+            <div style="font-size:var(--fs-sm)">
               {known
                 ? LEGEND.filter((g) => g.n > 0).map((g) => <div class="row" style="gap:6px"><span style={"width:9px;height:9px;border-radius:2px;" + g.swatch} />{g.label} {g.n}</div>)
                 : <div class="row" style="gap:6px"><span style="width:9px;height:9px;border-radius:2px;border:0.5px dashed var(--text-secondary)" />ยังไม่ทราบ ?</div>}
               {waiting > 0 && <div class="row" style="gap:6px;color:var(--text-warning)"><span style="width:9px;height:9px;border-radius:50%;background:var(--fill-warning)" />รอส่งขึ้นระบบ {waiting}</div>}
             </div>
           </div>
-          <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500;font-size:13px">ผังเลขที่ {cls?.name}</span><span class="page-sub">แตะช่องว่าง = รับแทน</span></div>
+          <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500;font-size:var(--fs-sm)">ผังเลขที่ {cls?.name}</span><span class="page-sub">แตะช่องว่าง = รับแทน</span></div>
           <div class="sc-grid">
             {classStudents.map((st) => {
               const sub = effSub(st.id);
@@ -848,7 +848,7 @@ function ScanSummary({ s }: { s: Session }) {
           <div>
             <div style="font-weight:500">{asg?.title}</div>
             <div class="page-sub">{cls?.name} · เต็ม {s.fullScore}</div>
-            <div class="row" style="gap:12px;margin-top:6px;font-size:13px">
+            <div class="row" style="gap:12px;margin-top:6px;font-size:var(--fs-sm)">
               <span style="color:var(--text-success)"><Icon name="check" size={14} /> ส่งแล้ว {submitted.length}</span>
               <span style="color:var(--text-danger)"><Icon name="alert-circle" size={14} /> ยังไม่ส่ง {missing.length}</span>
             </div>
@@ -857,7 +857,7 @@ function ScanSummary({ s }: { s: Session }) {
         {missing.length > 0 && (
           <div style="border-top:0.5px solid var(--border);padding-top:10px">
             <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">ยังไม่ส่ง {missing.length} คน</span>
-              <button class="ghost" style="height:28px;font-size:12px" onClick={copyMissing}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>
+              <button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)" onClick={copyMissing}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>
             </div>
             <div class="row wrap" style="gap:4px">
               {missing.map((st) => <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">{st.number ?? "-"} {shortName(st)}</span>)}
@@ -925,17 +925,17 @@ function ScorePad() {
       <div class="sc-score-controls">
         <div class="sc-score-entry">
           <div class="row" style="gap:8px">
-            <input ref={ref} class="sc-score-input" inputMode="decimal" value={val} style="width:90px;height:52px;font-size:22px;text-align:center" aria-label="คะแนน"
+            <input ref={ref} class="sc-score-input" inputMode="decimal" value={val} style="width:6rem;min-width:6rem;height:3.47rem;font-size:1.47rem;text-align:center" aria-label="คะแนน"
               aria-invalid={!!errMsg} aria-describedby={errMsg ? "scan-score-error" : undefined}
               onInput={(e) => setVal((e.target as HTMLInputElement).value)}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitVal(val); } }} />
-            <span style="font-size:22px">/ {s.fullScore}</span>
+            <span style="font-size:1.47rem">/ {s.fullScore}</span>
           </div>
           {errMsg && <div id="scan-score-error" class="sc-score-error" role="alert">{errMsg}</div>}
         </div>
         <div class="scorepad">
           {[1,2,3,4,5,6,7,8,9].map((n) => <button onClick={() => setVal((v) => v + n)}>{n}</button>)}
-          <button onClick={() => setVal((v) => (v.includes(".") ? v : (v || "0") + ".5"))} style="font-size:16px">.5</button>
+          <button onClick={() => setVal((v) => (v.includes(".") ? v : (v || "0") + ".5"))} style="font-size:1.07rem">.5</button>
           <button onClick={() => setVal((v) => v + "0")}>0</button>
           <button aria-label="ลบตัวเลขท้ายสุด" onClick={() => setVal((v) => v.slice(0, -1))}><Icon name="backspace" size={18} /></button>
           <button class="primary" disabled={!!validation} onClick={() => commitVal(val)} style="grid-column:span 3"><Icon name="check" size={18} /> บันทึก</button>

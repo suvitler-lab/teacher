@@ -71,13 +71,13 @@ function ColorSelect({ value, onChange, label }: { value: string; onChange: (v: 
 function MoveButtons({ i, n, label, move }: { i: number; n: number; label: string; move: (dir: -1 | 1) => void }) {
   return (
     <span class="row" style="gap:2px;flex:none">
-      <button class="icon ghost" style="width:30px;height:30px" aria-label={`เลื่อน ${label} ขึ้น`} title="เลื่อนขึ้น" disabled={i === 0} onClick={() => move(-1)}><Icon name="chevron-up" size={16} /></button>
-      <button class="icon ghost" style="width:30px;height:30px" aria-label={`เลื่อน ${label} ลง`} title="เลื่อนลง" disabled={i === n - 1} onClick={() => move(1)}><Icon name="chevron-down" size={16} /></button>
+      <button class="icon ghost" style="width:2rem;height:2rem" aria-label={`เลื่อน ${label} ขึ้น`} title="เลื่อนขึ้น" disabled={i === 0} onClick={() => move(-1)}><Icon name="chevron-up" size={16} /></button>
+      <button class="icon ghost" style="width:2rem;height:2rem" aria-label={`เลื่อน ${label} ลง`} title="เลื่อนลง" disabled={i === n - 1} onClick={() => move(1)}><Icon name="chevron-down" size={16} /></button>
     </span>
   );
 }
 
-const SMALL = "height:30px;font-size:12px";
+const SMALL = "height:2rem;font-size:var(--fs-xs)";
 const ROW = "padding:8px 0;border-top:0.5px solid var(--border)";
 
 function ClassRow({ c, i, n, save, move }: { c: Class; i: number; n: number; save: (b: unknown) => Promise<boolean>; move: (dir: -1 | 1) => void }) {
@@ -279,9 +279,9 @@ function TermRow({ t, save }: { t: Term; save: (body: unknown) => Promise<void> 
     <div style="padding:8px 0;border-top:0.5px solid var(--border)">
       <div class="row" style="gap:8px">
         <div class="grow">{t.name}{t.is_current ? " · ปัจจุบัน" : ""}</div>
-        <button style="height:30px;font-size:12px" onClick={() => setEditing((v) => !v)}><Icon name="edit" size={14} /> {editing ? "ซ่อน" : "แก้ไข"}</button>
+        <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => setEditing((v) => !v)}><Icon name="edit" size={14} /> {editing ? "ซ่อน" : "แก้ไข"}</button>
         {canSwitch && (
-          <button style="height:30px;font-size:12px" onClick={() => save({ id: t.id, year: t.year, term: t.term, name: t.name, start_date: t.start_date, end_date: t.end_date, is_current: true })}>
+          <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => save({ id: t.id, year: t.year, term: t.term, name: t.name, start_date: t.start_date, end_date: t.end_date, is_current: true })}>
             ตั้งเป็นปัจจุบัน
           </button>
         )}
@@ -299,7 +299,7 @@ function TermRow({ t, save }: { t: Term; save: (body: unknown) => Promise<void> 
         <span class="page-sub">–</span>
         <DateField value={end} onChange={setEnd} label={`วันสิ้นสุด ${t.name}`} />
         {changed && (
-          <button class="primary" style="height:30px;font-size:12px" disabled={!name.trim()}
+          <button class="primary" style="height:2rem;font-size:var(--fs-xs)" disabled={!name.trim()}
             onClick={() => save({ id: t.id, year: t.year, term: termNo, name: name.trim(), start_date: start || null, end_date: end || null, is_current: t.is_current })}>
             บันทึก
           </button>

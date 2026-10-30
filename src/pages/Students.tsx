@@ -1,6 +1,7 @@
 import { Dialog } from "../components/Dialog";
 import { useEffect, useState } from "preact/hooks";
 import "../styles/students.css";
+import "../styles/stickers.css";
 import "../styles/print.css";
 import { Icon } from "../components/Icon";
 import { PageHeader, ClassChips, Avatar, EmptyState, YearBanner, TermPicker, DateField } from "../components/ui";
@@ -163,7 +164,7 @@ export function StudentsPage() {
             <button type="button" class={"stu-lrow" + (drawer === st.id ? " sel" : "")} aria-label={`ดูข้อมูล ${fullName(st)} เลขที่ ${st.number ?? i + 1}`} onClick={() => setDrawer(st.id)}>
               <Avatar text={String(st.number ?? i + 1)} />
               <span class="code">{st.code}</span>
-              <div style="min-width:0"><div class="name">{fullName(st)}{st.status !== "active" && <span class="chip" style="margin-left:6px;font-size:11px">{STATUS_LABEL[st.status]}</span>}{rotated[st.id] && <span class="stu-qrnew" style="margin-left:6px"><Icon name="refresh" size={10} /> QR ใหม่</span>}</div><div class="page-sub">{st.nickname}</div></div>
+              <div style="min-width:0"><div class="name">{fullName(st)}{st.status !== "active" && <span class="chip" style="margin-left:6px;font-size:var(--fs-xs)">{STATUS_LABEL[st.status]}</span>}{rotated[st.id] && <span class="stu-qrnew" style="margin-left:6px"><Icon name="refresh" size={10} /> QR ใหม่</span>}</div><div class="page-sub">{st.nickname}</div></div>
               <span class="stu-stat sc num"><span class="stu-mini"><i style={`width:${submitPct}%${submitPct < 85 ? ";background:var(--fill-warning)" : ""}`} /></span><span>{r ? `${r.submitted}/${r.applicable}` : "—"}</span></span>
               <span class="stu-stat missing num">{r && r.missing > 0 ? <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">{r.missing}</span> : <span class="muted">–</span>}</span>
               <span class="stu-stat att num">{attPct != null ? attPct + "%" : "—"}</span>
@@ -180,7 +181,7 @@ export function StudentsPage() {
             <div class="row" style="gap:10px;padding:6px 0;border-top:0.5px solid var(--border)">
               <Avatar student={st} />
               <span class="grow">{fullName(st)} <span class="page-sub">· {st.status === "moved" ? "ย้ายออก" : "ไม่ใช้งาน"}</span></span>
-              <button style="height:28px;font-size:12px" onClick={() => setEdit(st)}><Icon name="edit" size={14} /> แก้ไข</button>
+              <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={() => setEdit(st)}><Icon name="edit" size={14} /> แก้ไข</button>
             </div>
           ))}
         </div>
@@ -231,7 +232,7 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
       <Dialog label="นักเรียน" onClose={onClose} dismissible={!busy} style="max-width:480px">
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
-          <h2 style="font-size:18px">{student ? "แก้ไขนักเรียน" : "เพิ่มนักเรียน"}</h2>
+          <h2 style="font-size:1.2rem">{student ? "แก้ไขนักเรียน" : "เพิ่มนักเรียน"}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="modal-grid3">
@@ -257,7 +258,7 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
           </label>
         )}
         {student && <div class="page-sub" style="margin:6px 0">QR ปัจจุบัน: <span style="font-family:var(--font-mono)">{student.qr_token}</span></div>}
-        {err && <div style="color:var(--text-danger);font-size:13px;margin:6px 0">{err}</div>}
+        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
         <div class="row" style="justify-content:space-between;margin-top:10px">
           {student ? <button onClick={rotate}><Icon name="refresh" size={16} /> ออก QR ใหม่</button> : <span />}
           <div class="row" style="gap:8px">
@@ -339,11 +340,11 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
       <Dialog label="นำเข้านักเรียน" onClose={onClose} dismissible={!busy} style="max-width:600px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <h2 style="font-size:18px">นำเข้านักเรียนจาก Excel → {cls?.name}</h2>
+          <h2 style="font-size:1.2rem">นำเข้านักเรียนจาก Excel → {cls?.name}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="page-sub" style="margin-bottom:8px">คัดลอกจาก Excel แล้ววางที่นี่ · คอลัมน์: รหัส | คำนำหน้า ชื่อ สกุล | เลขที่ · รหัสที่มีอยู่แล้วจะถูกอัปเดต</div>
-        <textarea aria-label="รายชื่อนักเรียนที่คัดลอกจาก Excel" rows={6} value={text} onInput={(e) => setText((e.target as HTMLTextAreaElement).value)} placeholder={"10501\tด.ช. ภูมิพัฒน์ ใจดี\t1\n10502\tด.ญ. ปุณยวีร์ แสงทอง\t2"} style="font-family:var(--font-mono);font-size:13px" />
+        <textarea aria-label="รายชื่อนักเรียนที่คัดลอกจาก Excel" rows={6} value={text} onInput={(e) => setText((e.target as HTMLTextAreaElement).value)} placeholder={"10501\tด.ช. ภูมิพัฒน์ ใจดี\t1\n10502\tด.ญ. ปุณยวีร์ แสงทอง\t2"} style="font-family:var(--font-mono);font-size:var(--fs-sm)" />
 
         {rows.length > 0 && (
           <div class="imp-sum">
@@ -374,14 +375,14 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
 
         {rows.length > 0 && (
           <div class="card" style="margin-top:8px;padding:0;overflow:hidden;max-height:220px;overflow-y:auto">
-            <div class="row" style="padding:6px 12px;background:var(--surface-1);font-size:12px"><span style="width:60px">รหัส</span><span class="grow">ชื่อ</span><span style="width:40px">เลขที่</span><span style="width:100px;text-align:right">ผล</span></div>
+            <div class="row" style="padding:6px 12px;background:var(--surface-1);font-size:var(--fs-xs)"><span style="width:60px">รหัส</span><span class="grow">ชื่อ</span><span style="width:40px">เลขที่</span><span style="width:100px;text-align:right">ผล</span></div>
             {rows.slice(0, MAX_IMPORT).map((r, i) => {
               const pr = preview?.rows[i];
               const lab = pr ? ACTION_LABEL[pr.action] : null;
               return (
                 <div class="row" style="padding:6px 12px;border-top:0.5px solid var(--border);gap:0">
-                  <span class="code" style="width:60px;font-family:var(--font-mono);font-size:12px">{r.code}</span>
-                  <span class="grow" style="font-size:13px;min-width:0">{r.prefix} {r.first_name} {r.last_name}
+                  <span class="code" style="width:60px;font-family:var(--font-mono);font-size:var(--fs-xs)">{r.code}</span>
+                  <span class="grow" style="font-size:var(--fs-sm);min-width:0">{r.prefix} {r.first_name} {r.last_name}
                     {pr?.action === "move" && pr.from && <span class="page-sub"> · จาก {(classById(pr.from!.class_id)?.name ?? "ห้องอื่น")}{pr.reactivates ? " (และกลับมาใช้งาน)" : ""}</span>}
                     {pr?.action === "reactivate" && pr.from && <span class="page-sub"> · เดิมสถานะ {STATUS_LABEL[pr.from.status] ?? pr.from.status}</span>}
                   </span>
@@ -400,7 +401,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
           </label>
         )}
 
-        {err && <div style="color:var(--text-danger);font-size:13px;margin-top:8px">{err}</div>}
+        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-top:8px">{err}</div>}
         <div class="row" style="justify-content:space-between;margin-top:10px">
           <span class="page-sub">อ่านได้ {rows.length} รายการ</span>
           <div class="row" style="gap:8px">

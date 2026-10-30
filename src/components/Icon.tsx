@@ -17,7 +17,7 @@ export function Icon({
   return (
     <i
       class={`ti ti-${name}${cls ? " " + cls : ""}`}
-      style={`font-size:${size}px;line-height:1${style ? ";" + style : ""}`}
+      style={`font-size:${Math.round((size / 15) * 1000) / 1000}rem;line-height:1${style ? ";" + style : ""}`}
       aria-hidden={title ? undefined : "true"}
       aria-label={title}
       title={title}

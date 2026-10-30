@@ -380,7 +380,7 @@ export function GradebookPage() {
         </div>
       )}
 
-      {msg && <div style="color:var(--text-danger);font-size:13px;margin-bottom:6px">{msg}</div>}
+      {msg && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-bottom:6px">{msg}</div>}
 
       {!classId ? <NoClasses /> : status === "error" ? (
         <LoadError onRetry={() => load()} />
@@ -444,7 +444,7 @@ export function GradebookPage() {
                         </td>
                       );
                     })}
-                    <td style="font-size:12px" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
+                    <td style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>
                   </tr>
                 );
               })}
@@ -541,7 +541,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {assignmentFraction(counts)}</span>
         <div style="position:relative">
-          <button style="height:28px" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
+          <button style="height:1.87rem" onClick={() => setMenu((v) => !v)}><Icon name="dots-vertical" size={15} /> จัดการงาน</button>
           {menu && (<>
             <div style="position:fixed;inset:0;z-index:39" onClick={() => setMenu(false)} />
             <div class="gb-menu">

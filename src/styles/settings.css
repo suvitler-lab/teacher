@@ -1,22 +1,22 @@
 /* งานครบ · settings */
 .set-cols { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 12px; align-items: start; }
 .set-nav { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 6px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 12px; }
-.set-nav button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 13px; color: var(--text-secondary); background: transparent; border: none; cursor: pointer; text-align: left; width: 100%; }
-.set-nav button i { font-size: 16px; }
+.set-nav button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: var(--fs-sm); color: var(--text-secondary); background: transparent; border: none; cursor: pointer; text-align: left; width: 100%; }
+.set-nav button i { font-size: 1.07rem; }
 .set-nav button.on { background: var(--bg-accent); color: var(--text-accent); font-weight: 500; }
 .set-nav button:hover:not(.on) { background: var(--surface-1); }
 .set-nav button .warndot { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--fill-warning); }
 
 .set-body { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .set-section-title { display: flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 8px; }
-.set-section-title i { color: var(--text-accent); font-size: 17px; }
-.set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 0.5px solid var(--border); }
+.set-section-title i { color: var(--text-accent); font-size: 1.13rem; }
+.set-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 0.5px solid var(--border); }
 .set-row:first-of-type { border-top: none; }
 
 .set-periods { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 6px; }
 .set-periods label span { white-space: nowrap; }
-.set-periods label { display: flex; align-items: center; gap: 6px; font-size: 13px; border: 0.5px solid var(--border); border-radius: 8px; padding: 4px 8px; background: var(--surface-1); }
-.set-periods label input { height: 28px; width: auto; min-width: 0; flex: 1 1 0; }
+.set-periods label { display: flex; align-items: center; gap: 6px; font-size: var(--fs-sm); border: 0.5px solid var(--border); border-radius: 8px; padding: 4px 8px; background: var(--surface-1); }
+.set-periods label input { height: 1.87rem; width: auto; min-width: 0; flex: 1 1 0; }
 
 .set-nav-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; }
 @media (min-width: 721px) { .set-nav-chips { display: none; } } /* the side menu does this job on wide screens; showing both was the same menu twice */
@@ -27,3 +27,14 @@
   box-shadow: var(--shadow-pop); margin-top: 12px;
 }
 @media (max-width: 720px) { .set-cols { grid-template-columns: 1fr; } .set-nav { display: none; } .set-savebar { bottom: calc(76px + env(safe-area-inset-bottom)); } }
+
+/* text size stepper + live preview (device display settings) */
+.fs-step { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fs-step button { min-width: 56px; min-height: 56px; height: 56px; padding: 0 14px; }
+.fs-step .v { min-width: 4.5rem; min-height: 56px; display: flex; align-items: center; justify-content: center; background: var(--surface-1); border-radius: var(--radius); font-weight: 500; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.fs-live { padding: 10px 0; border-top: 0.5px solid var(--border); }
+.fs-prev { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius); background: var(--surface-1); }
+.fs-prev-title { font-size: 1.25rem; font-weight: 500; line-height: 1.35; }
+.fs-trow { display: flex; align-items: center; gap: 10px; min-height: var(--row-h); padding: 0 10px; border-radius: var(--radius); background: var(--surface-2); }
+.fs-trow b { min-width: 1.6em; text-align: right; font-variant-numeric: tabular-nums; }
+.fs-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 2.5em; height: 2.2em; border-radius: 0.6em; }

@@ -58,16 +58,16 @@ export function ResetModal({ mode, onClose }: { mode: ResetMode; onClose: () => 
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
       <Dialog label={t.title} onClose={onClose} dismissible={!busy} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <h2 style="font-size:18px">{t.title}</h2>
+          <h2 style="font-size:1.2rem">{t.title}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="imp-warn danger" style="margin:0 0 10px"><Icon name="alert-triangle" size={15} /> ย้อนกลับไม่ได้ ถ้าไม่มีไฟล์สำรอง ข้อมูลจะหายถาวร</div>
-        <div style="font-size:13px;line-height:1.6;margin-bottom:10px">
+        <div style="font-size:var(--fs-sm);line-height:1.6;margin-bottom:10px">
           <div><b style="font-weight:500">ที่จะถูกลบ:</b> {t.goes}</div>
           <div><b style="font-weight:500">ที่เก็บไว้:</b> {t.stays}</div>
           <div><b style="font-weight:500">หลังจากนั้น:</b> {t.after}</div>
         </div>
-        <label class="row" style="gap:8px;margin-bottom:10px;font-size:13px">
+        <label class="row" style="gap:8px;margin-bottom:10px;font-size:var(--fs-sm)">
           <input type="checkbox" checked={backupFirst} onChange={(e) => setBackupFirst((e.target as HTMLInputElement).checked)} style="width:auto" />
           <span>ดาวน์โหลดไฟล์สำรองก่อนลบ (แนะนำ)</span>
         </label>
@@ -77,7 +77,7 @@ export function ResetModal({ mode, onClose }: { mode: ResetMode; onClose: () => 
         <label class="field"><span>พิมพ์ “{PHRASE[mode]}” เพื่อยืนยัน</span>
           <input value={confirm} onInput={(e) => setConfirm((e.target as HTMLInputElement).value)} placeholder={PHRASE[mode]} />
         </label>
-        {err && <div style="color:var(--text-danger);font-size:13px;margin:6px 0">{err}</div>}
+        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
           <button onClick={onClose} disabled={busy}>ยกเลิก</button>
           <button class="primary" style="background:var(--fill-danger);border-color:var(--fill-danger)" disabled={!ready} onClick={go}>

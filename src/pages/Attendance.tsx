@@ -270,10 +270,10 @@ export function AttendancePage() {
         </div>
         <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
         {scoped && (<>
-          <select aria-label="วิชาเช็คชื่อ" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:30px">
+          <select aria-label="วิชาเช็คชื่อ" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:2rem">
             {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
           </select>
-          <select aria-label="คาบเรียน" value={period} onInput={(e) => setPeriod(Number((e.target as HTMLSelectElement).value))} style="width:auto;height:30px">
+          <select aria-label="คาบเรียน" value={period} onInput={(e) => setPeriod(Number((e.target as HTMLSelectElement).value))} style="width:auto;height:2rem">
             {[1,2,3,4,5,6,7].map((p) => <option value={p}>คาบ {p}</option>)}
           </select>
         </>)}
@@ -349,11 +349,11 @@ export function AttendancePage() {
           {conflicts.map((c) => { const st = studentsById.value.get(c.studentId); return (
             <div class="row" style="gap:8px;padding:8px 0;border-top:0.5px solid var(--border);flex-wrap:wrap">
               <div class="grow" style="min-width:120px">
-                <div style="font-size:13px">{st ? fullName(st) : c.studentId}</div>
+                <div style="font-size:var(--fs-sm)">{st ? fullName(st) : c.studentId}</div>
                 <div class="page-sub">ในระบบ: {LABELS[c.server.status as AttendanceStatus]}{c.server.deviceName ? ` (${c.server.deviceName})` : ""} · ร่างนี้: {LABELS[c.draft.status as AttendanceStatus]}</div>
               </div>
-              <button style="height:30px;font-size:12px" onClick={() => pick(c, "server")}>ใช้ของระบบ</button>
-              <button class="primary" style="height:30px;font-size:12px" onClick={() => pick(c, "draft")}>ใช้ร่างนี้</button>
+              <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => pick(c, "server")}>ใช้ของระบบ</button>
+              <button class="primary" style="height:2rem;font-size:var(--fs-xs)" onClick={() => pick(c, "draft")}>ใช้ร่างนี้</button>
             </div>
           ); })}
         </div>
@@ -365,11 +365,11 @@ export function AttendancePage() {
           {review.map((r) => { const st = studentsById.value.get(r.studentId); return (
             <div class="row" style="gap:8px;padding:8px 0;border-top:0.5px solid var(--border);flex-wrap:wrap">
               <div class="grow" style="min-width:140px">
-                <div style="font-size:13px">{st ? fullName(st) : r.studentId} · <b style="font-weight:500">{LABELS[r.status as AttendanceStatus] ?? r.status}</b></div>
+                <div style="font-size:var(--fs-sm)">{st ? fullName(st) : r.studentId} · <b style="font-weight:500">{LABELS[r.status as AttendanceStatus] ?? r.status}</b></div>
                 <div class="page-sub">{REVIEW_REASON[r.reason] ?? r.reason}</div>
               </div>
-              <button style="height:30px;font-size:12px" onClick={() => resend(r)}>ส่งใหม่</button>
-              <button class="ghost" style="height:30px;font-size:12px" onClick={() => discard(r)}>ทิ้ง</button>
+              <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => resend(r)}>ส่งใหม่</button>
+              <button class="ghost" style="height:2rem;font-size:var(--fs-xs)" onClick={() => discard(r)}>ทิ้ง</button>
             </div>
           ); })}
         </div>
@@ -380,11 +380,11 @@ export function AttendancePage() {
           <div class="row" style="gap:6px;margin-bottom:6px"><Icon name="clock" size={18} /> <span style="font-weight:500">มีเช็คชื่อที่ยังไม่ได้ส่งในที่อื่น</span></div>
           {elsewhere.map((d) => (
             <div class="row" style="gap:8px;padding:6px 0;border-top:0.5px solid var(--border)">
-              <span class="grow" style="font-size:13px">
+              <span class="grow" style="font-size:var(--fs-sm)">
                 {activeClasses.value.find((c) => c.id === d.ctx.classId)?.name ?? d.ctx.classId} · {formatThaiDate(d.ctx.date)}{d.ctx.subjectId ? ` · คาบ ${d.ctx.period ?? "-"}` : ""}
                 <span class="page-sub"> — {[d.rows - d.held > 0 && `รอส่ง ${d.rows - d.held}`, d.held > 0 && `ชนกัน ${d.held}`, d.review > 0 && `ต้องตรวจสอบ ${d.review}`].filter(Boolean).join(" · ")}</span>
               </span>
-              <button style="height:28px;font-size:12px" onClick={() => openDraft(d.ctx)}>เปิด</button>
+              <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={() => openDraft(d.ctx)}>เปิด</button>
             </div>
           ))}
         </div>

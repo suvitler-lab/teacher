@@ -23,11 +23,11 @@ export function Toasts() {
           <Icon name={KIND_ICON[t.kind]} size={18} />
           <span class="grow">{t.message}</span>
           {t.action && (
-            <button class="ghost" style="height:28px;font-size:13px;color:inherit" onClick={() => { t.action!.run(); dismiss(t.id); }}>
+            <button class="ghost" style="height:1.87rem;font-size:var(--fs-sm);color:inherit" onClick={() => { t.action!.run(); dismiss(t.id); }}>
               {t.action.label}
             </button>
           )}
-          <button class="icon ghost" aria-label="ปิด" style="width:26px;height:26px;color:inherit" onClick={() => dismiss(t.id)}>
+          <button class="icon ghost" aria-label="ปิด" style="width:1.73rem;height:1.73rem;color:inherit" onClick={() => dismiss(t.id)}>
             <Icon name="x" size={14} />
           </button>
         </div>
@@ -54,7 +54,7 @@ export function UpdateBanner() {
     <div class="epoch-banner" role="status">
       <Icon name="download" size={18} />
       <span class="grow">มีเวอร์ชันใหม่ของแอปพร้อมใช้ — งานที่ค้างส่งในเครื่องนี้ไม่หาย กดเมื่อสะดวก (ไม่ต้องรีบระหว่างสแกน)</span>
-      <button class="primary" style="height:30px" onClick={applyUpdate}><Icon name="refresh" size={15} /> อัปเดตเลย</button>
+      <button class="primary" style="height:2rem" onClick={applyUpdate}><Icon name="refresh" size={15} /> อัปเดตเลย</button>
     </div>
   );
 }
@@ -73,7 +73,7 @@ export function EpochBanner() {
     <div class="epoch-banner" role="alert">
       <Icon name="database-import" size={18} />
       <span class="grow">ข้อมูลถูกกู้คืนจากไฟล์สำรอง (อาจทำจากอีกเครื่อง) — หน้านี้ยังเป็นข้อมูลก่อนกู้คืน รายการที่ค้างส่งจะถูกพักไว้ให้ตรวจสอบ ไม่ถูกส่งเข้าข้อมูลใหม่เอง</span>
-      <button class="primary" style="height:30px" onClick={reload} disabled={busy}>{busy ? <Icon name="loader-2" class="spin" /> : <Icon name="refresh" size={15} />} โหลดข้อมูลใหม่</button>
+      <button class="primary" style="height:2rem" onClick={reload} disabled={busy}>{busy ? <Icon name="loader-2" class="spin" /> : <Icon name="refresh" size={15} />} โหลดข้อมูลใหม่</button>
     </div>
   );
 }
@@ -109,7 +109,7 @@ export function FailedPanel() {
         <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
           <Dialog label="รายการส่งไม่สำเร็จ" style="max-width:460px" onClose={() => setOpen(false)}>
             <div class="row" style="justify-content:space-between;margin-bottom:8px">
-              <h2 style="font-size:18px">ส่งไม่สำเร็จ {n} รายการ</h2>
+              <h2 style="font-size:1.2rem">ส่งไม่สำเร็จ {n} รายการ</h2>
               <button class="icon ghost" aria-label="ปิด" onClick={() => setOpen(false)}><Icon name="x" /></button>
             </div>
             <div style="max-height:60vh;overflow-y:auto">
@@ -118,11 +118,11 @@ export function FailedPanel() {
                 return (
                   <div class="row" style="gap:8px;padding:8px 0;border-top:0.5px solid var(--border)">
                     <div class="grow" style="min-width:0">
-                      <div style="font-size:13px">{st ? fullName(st) : it.payload.studentId}</div>
+                      <div style="font-size:var(--fs-sm)">{st ? fullName(st) : it.payload.studentId}</div>
                       <div class="page-sub">{REASON[it.reason] ?? it.reason}{it.payload.score != null ? ` · คะแนน ${it.payload.score}` : ""}</div>
                     </div>
-                    <button style="height:30px;font-size:12px" onClick={async () => { try { await retryFailed(it.opId); } catch { err("ลองใหม่ไม่ได้ — เครื่องนี้บันทึกข้อมูลไม่ได้ รายการยังอยู่ตามเดิม"); } refresh(); }}>ลองใหม่</button>
-                    <button class="ghost" style="height:30px;font-size:12px" onClick={async () => { await discardFailed(it.opId); refresh(); }}>ทิ้ง</button>
+                    <button style="height:2rem;font-size:var(--fs-xs)" onClick={async () => { try { await retryFailed(it.opId); } catch { err("ลองใหม่ไม่ได้ — เครื่องนี้บันทึกข้อมูลไม่ได้ รายการยังอยู่ตามเดิม"); } refresh(); }}>ลองใหม่</button>
+                    <button class="ghost" style="height:2rem;font-size:var(--fs-xs)" onClick={async () => { await discardFailed(it.opId); refresh(); }}>ทิ้ง</button>
                   </div>
                 );
               })}
@@ -163,7 +163,7 @@ function ReloginForm() {
       <form onSubmit={submit}>
         <div class="row" style="gap:8px;margin-bottom:8px">
           <Icon name="lock" size={20} class="muted" />
-          <h2 style="font-size:18px">เข้าสู่ระบบอีกครั้ง</h2>
+          <h2 style="font-size:1.2rem">เข้าสู่ระบบอีกครั้ง</h2>
         </div>
         <p class="page-sub" style="margin-bottom:12px">
           เซสชันหมดอายุ{pendingCount.value + attDraftCount.value > 0 ? ` — มีข้อมูลรอส่ง ${pendingCount.value + attDraftCount.value} รายการ (เก็บไว้ในเครื่องแล้ว)` : ""} เข้าสู่ระบบเพื่อส่งต่อ
@@ -177,7 +177,7 @@ function ReloginForm() {
           <input type="password" autocomplete="current-password" autofocus={!!email} value={password} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} />
         </label>
         {err && <div class="auth-err" role="alert">{err}</div>}
-        <button class="primary" style="width:100%;height:42px;margin-top:6px" disabled={busy}>
+        <button class="primary" style="width:100%;height:2.8rem;margin-top:6px" disabled={busy}>
           {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="login" />} เข้าสู่ระบบ
         </button>
       </form>

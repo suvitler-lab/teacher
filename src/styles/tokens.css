@@ -47,13 +47,21 @@
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
-  --rail-w: 64px;
+  --rail-w: max(64px, 4.5rem); /* grows with the text size so the online chip / logout label fit */
   --font-sans: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
   --shadow-pop: 0 8px 28px rgba(20, 28, 46, 0.14), 0 2px 6px rgba(20, 28, 46, 0.08);
 
   --tap: 44px; /* min touch target */
+
+  /* display scale — html font-size is set from JS (lib/display.ts) to the chosen 14-24px, so 1rem = that size */
+  --fs-xs: max(13px, 0.85rem);  /* smallest label, never under 13px */
+  --fs-sm: max(13px, 0.9rem);   /* secondary text */
+  --row-k: 3.2;                 /* density: compact 2.6 / normal 3.2 / roomy 3.9 */
+  --row-h: calc(1rem * var(--row-k));
 }
+
+@media (pointer: coarse) { :root { --row-h: max(var(--tap), calc(1rem * var(--row-k))); } }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

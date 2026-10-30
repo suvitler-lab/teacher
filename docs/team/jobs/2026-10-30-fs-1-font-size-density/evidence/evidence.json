@@ -1,0 +1,111 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-05"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser sweep 390 touch final build + 820/1180/1440 reused; exceptions per brief",
+    "artifact": "evidence/q04-final-b02-recheck.md",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:20:15.276Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "corrupt localStorage + aria-label (reused; unrelated to CSS change)",
+    "artifact": "evidence/q02-a11y-corrupt-storage.md",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:20:15.843Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "min-height 46.8/57.6/70.2 + vitest test/unit/qa-fs-1.test.ts 13/13 (reused)",
+    "artifact": "evidence/q01-ac05-measure.md",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:20:16.418Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "no-flash not measurable in pane; code read",
+    "artifact": "evidence/q04-final-b02-recheck.md",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:20:16.983Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-04"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "vitest display.test.ts no-fixed-font-size.test.ts qa-fs-1.test.ts · ค่าเริ่มต้น 18/16 ตรวจด้วย unit test; ไม่กะพริบตรวจจากลำดับใน src/main.tsx (applyStoredDisplay ก่อน render) ไม่ได้วัดด้วย browser (ดู Q-04)",
+    "artifact": "evidence/final-unit-tests.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:22:15.199Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (79 ไฟล์ / 936) && npm run build",
+    "artifact": "evidence/final-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:95b24fbd80bebd4014f6aa6d446000b3423618f2",
+    "at": "2026-10-30T11:22:15.723Z"
+  }
+]

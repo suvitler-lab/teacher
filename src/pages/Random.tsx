@@ -141,9 +141,9 @@ export function RandomPage() {
             {blocker === "nobody" && "เช็คชื่อแล้ว แต่วันนี้ไม่มีใครมาเรียน — ไม่มีรายชื่อให้สุ่ม"}
           </div>
           <div class="row" style="gap:6px;flex-wrap:wrap">
-            {blocker === "unchecked" && <button style="height:30px;font-size:12px" onClick={() => navigate("/attendance")}>ไปเช็คชื่อ</button>}
-            {blocker === "error" && <button style="height:30px;font-size:12px" onClick={loadPresent}><Icon name="refresh" size={14} /> ลองอีกครั้ง</button>}
-            {blocker !== "loading" && <button style="height:30px;font-size:12px" onClick={() => setPresentOnly(false)}>ใช้ทั้งห้อง ({allStudents.length})</button>}
+            {blocker === "unchecked" && <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => navigate("/attendance")}>ไปเช็คชื่อ</button>}
+            {blocker === "error" && <button style="height:2rem;font-size:var(--fs-xs)" onClick={loadPresent}><Icon name="refresh" size={14} /> ลองอีกครั้ง</button>}
+            {blocker !== "loading" && <button style="height:2rem;font-size:var(--fs-xs)" onClick={() => setPresentOnly(false)}>ใช้ทั้งห้อง ({allStudents.length})</button>}
           </div>
         </div>
       )}
@@ -157,13 +157,13 @@ export function RandomPage() {
       {mode === "group" && groups.length > 0 && (
         <>
           <div class="row" style="justify-content:flex-end;margin-bottom:6px">
-            <button class="ghost" style="height:28px;font-size:12px" onClick={copyGroups}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</button>
+            <button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)" onClick={copyGroups}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</button>
           </div>
           <div class="rnd-groups">
             {groups.map((g, i) => (
               <div class="rnd-group">
                 <div class="gh"><span class="gd" style={`background:${GROUP_COLORS[i % GROUP_COLORS.length]}`} />กลุ่ม {i + 1} <span class="muted" style="font-weight:400">({g.length})</span></div>
-                <div style="font-size:13px;line-height:1.6">{g.map((s) => `${s.number ?? "-"} ${shortName(s)}`).join(" · ")}</div>
+                <div style="font-size:var(--fs-sm);line-height:1.6">{g.map((s) => `${s.number ?? "-"} ${shortName(s)}`).join(" · ")}</div>
               </div>
             ))}
           </div>
@@ -174,13 +174,13 @@ export function RandomPage() {
         <label class={"rnd-opt" + (presentOnly ? " on" : "")}><input type="checkbox" checked={presentOnly} onChange={(e) => setPresentOnly((e.target as HTMLInputElement).checked)} /> เฉพาะคนที่มา ({presentOnly ? pool.length : att.present.size})</label>
         {mode === "pick" && <label class={"rnd-opt" + (noRepeat ? " on" : "")}><input type="checkbox" checked={noRepeat} onChange={(e) => setNoRepeat((e.target as HTMLInputElement).checked)} /> ไม่ซ้ำจนครบ</label>}
         <div class="rnd-count">
-          <span style="font-size:13px">{mode === "group" ? "กลุ่มละ" : "จำนวน"}</span>
+          <span style="font-size:var(--fs-sm)">{mode === "group" ? "กลุ่มละ" : "จำนวน"}</span>
           <button class="icon step" onClick={() => setCount((c) => Math.max(mode === "group" ? 2 : 1, c - 1))} aria-label="ลด">−</button>
           <span style="min-width:18px;text-align:center;font-weight:500">{count}</span>
           <button class="icon step" onClick={() => setCount((c) => Math.min(mode === "group" ? 8 : 6, c + 1))} aria-label="เพิ่ม">+</button>
         </div>
         <span class="grow" />
-        <button class="primary" style="height:44px;padding:0 22px;font-size:16px" onClick={go} disabled={rolling || pool.length === 0}>
+        <button class="primary" style="height:2.93rem;padding:0 22px;font-size:1.07rem" onClick={go} disabled={rolling || pool.length === 0}>
           <Icon name="arrows-shuffle" /> {mode === "group" ? "จับกลุ่ม" : "สุ่มเลย"}
         </button>
       </div>
@@ -188,8 +188,8 @@ export function RandomPage() {
       {mode === "pick" && (
         <div class="card" style="margin-top:12px">
           <div class="row" style="justify-content:space-between;margin-bottom:6px">
-            <span style="font-size:13px"><b style="font-weight:500">เรียกแล้ว {called.length}</b> <span class="muted">· เหลือ {remaining} คนในรอบนี้</span></span>
-            {called.length > 0 && <button class="ghost" style="height:26px;font-size:12px" onClick={resetHistory}><Icon name="refresh" size={14} /> เริ่มรอบใหม่</button>}
+            <span style="font-size:var(--fs-sm)"><b style="font-weight:500">เรียกแล้ว {called.length}</b> <span class="muted">· เหลือ {remaining} คนในรอบนี้</span></span>
+            {called.length > 0 && <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={resetHistory}><Icon name="refresh" size={14} /> เริ่มรอบใหม่</button>}
           </div>
           {called.length === 0 ? <div class="page-sub">ยังไม่มีใครถูกเรียก</div> : (
             <div class="rnd-hist">

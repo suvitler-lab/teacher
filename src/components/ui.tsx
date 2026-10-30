@@ -78,7 +78,7 @@ export function TermPicker() {
         aria-label="ภาคเรียนที่แสดง"
         value={selectedTermId.value ?? ""}
         onChange={(e) => setSelectedTerm((e.target as HTMLSelectElement).value)}
-        style="border:none;background:transparent;height:auto;width:auto;padding:0;color:inherit;font-size:13px"
+        style="border:none;background:transparent;height:auto;width:auto;padding:0;color:inherit;font-size:var(--fs-sm)"
       >
         {list.map((t) => <option value={t.id}>{t.name}{t.is_current ? " · ปัจจุบัน" : ""}</option>)}
         <option value={UNASSIGNED}>ยังไม่ระบุเทอม</option>
@@ -163,8 +163,8 @@ export function ProgressRing({ value, total, size = 84, label }: { value: number
           stroke-linecap="round" stroke-dasharray={`${circ * pct} ${circ}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
       </svg>
       <div class="cap">
-        <span style="font-size:16px;font-weight:500;font-variant-numeric:tabular-nums">{value}/{total}</span>
-        {label && <span style="font-size:11px;color:var(--text-secondary)">{label}</span>}
+        <span style="font-size:1.07rem;font-weight:500;font-variant-numeric:tabular-nums">{value}/{total}</span>
+        {label && <span style="font-size:var(--fs-xs);color:var(--text-secondary)">{label}</span>}
       </div>
     </div>
   );
@@ -184,7 +184,8 @@ export function StackBar({ segments }: { segments: { value: number; color: strin
 // ---- avatar --------------------------------------------------------------
 export function Avatar({ student, text, size = 28, tone }: { student?: Student; text?: string; size?: number; tone?: "accent" }) {
   const label = text ?? (student ? initials(student) : "?");
-  const style = `width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px`
+  const rem = (n: number) => Math.round((n / 15) * 100) / 100;
+  const style = `width:${rem(size)}rem;height:${rem(size)}rem;font-size:max(13px,${rem(size * 0.42)}rem)`
     + (tone === "accent" ? ";background:var(--fill-accent);color:var(--on-accent)" : "");
   return <span class="uc-av" style={style}>{label}</span>;
 }
