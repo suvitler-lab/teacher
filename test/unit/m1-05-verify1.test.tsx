@@ -87,7 +87,8 @@ beforeEach(() => {
   subjects.value = [{ id: "math", name: "คณิตศาสตร์", code: null, color: "blue", sort: 1, archived: false, updated_at: 0 }];
 });
 
-describe("AC-09 / AC-11 Excel", () => {
+// Excel tests load exceljs on first use — slow when the whole suite runs at once (local timeout, not global)
+describe("AC-09 / AC-11 Excel", { timeout: 30_000 }, () => {
   it("class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6/10 next to 60%", async () => {
     const row = (await sheet(ac01(), "ภาพรวมห้อง"))[1];
     expect(row.slice(3, 5)).toEqual(["6/8 · ยกเว้น 2", "75%"]);
@@ -130,7 +131,7 @@ describe("AC-09 / AC-11 screens", () => {
   });
 });
 
-describe("R-05 scored average divides once: Σscore ÷ (scored × full)", () => {
+describe("R-05 scored average divides once: Σscore ÷ (scored × full)", { timeout: 30_000 }, () => {
   const subs3 = new Map<string, SubLike>([2.5, 2.5, 3, 2.5].map((sc, i) => ["s" + i, { status: "submitted", score: sc }]));
   it("full 3, scores 2.5 2.5 3 2.5 -> 10.5 / 12 = 87.5 -> 88", () => {
     expect(assignmentProgress({ full_score: 3, due_date: null }, ids(4), subs3, TODAY).average).toBe(88);

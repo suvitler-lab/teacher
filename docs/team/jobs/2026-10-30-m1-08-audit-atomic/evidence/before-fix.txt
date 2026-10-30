@@ -1,0 +1,542 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > creating a student: audit fails → no student; success → both, without the card token
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:74:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/students.ts:118:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+}
+
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > editing a student: audit fails → the edit is not kept; success → before and after
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:74:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/students.ts:118:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+}
+
+ × |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > creating a student: audit fails → no student; success → both, without the card token 104ms
+   → expected 1 to be +0 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > editing a student: audit fails → the edit is not kept; success → before and after 65ms
+   → expected 'แก้แล้ว' to be 'ก' // Object.is equality
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > a student write that fails leaves no history line
+unhandled Error: D1_ERROR: down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:137:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:74:5 {
+  [cause]: Error: down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:137:19
+      at batchAtEpoch (C:/Users/User/Desktop/teacher/worker/lib/guard.ts:45:13)
+      at C:/Users/User/Desktop/teacher/worker/routes/students.ts:94:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+}
+
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > deleting work: audit fails → the work stays; success → one line; deleting again → 404 and no new line
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:36:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/assignments.ts:171:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:36:5
+}
+
+ ✓ |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > a student write that fails leaves no history line 69ms
+ × |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > deleting work: audit fails → the work stays; success → one line; deleting again → 404 and no new line 61ms
+   → expected 1793354729025 to be null
+stderr | test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > a delete whose write fails leaves no history line
+unhandled Error: D1_ERROR: down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:137:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:36:5 {
+  [cause]: Error: down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:137:19
+      at batchAtEpoch (C:/Users/User/Desktop/teacher/worker/lib/guard.ts:45:13)
+      at C:/Users/User/Desktop/teacher/worker/routes/assignments.ts:166:15
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:36:5
+}
+
+ ✓ |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > a delete whose write fails leaves no history line 61ms
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > setting and clearing a PIN: who / which device / when — never the PIN 62ms
+   → expected [] to have a length of 2 but got +0
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a PIN change whose history line fails is not kept 57ms
+   → expected 200 to be 500 // Object.is equality
+stderr | test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a password change whose history line fails is not kept
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:36:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/auth.ts:187:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:36:5
+}
+
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > changing the password: a history line with the device, never the password, hash or salt 133ms
+   → expected [] to have a length of 1 but got +0
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a password change whose history line fails is not kept 181ms
+   → expected 401 to be 200 // Object.is equality
+stderr | test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a sign-out whose history line fails keeps the device signed in
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:36:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/auth.ts:164:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at requireAuth (C:/Users/User/Desktop/teacher/worker/lib/auth.ts:83:3)
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:36:5
+}
+
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > signing a device out: which device did it and which was signed out — never a session token 99ms
+   → expected [] to have a length of 1 but got +0
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a sign-out whose history line fails keeps the device signed in 100ms
+   → expected +0 to be 1 // Object.is equality
+stderr | test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > first-run setup: the account, its device and its history line land together
+unhandled Error: D1_ERROR: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+    at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:188:19)
+    at cloudflare-internal:d1-api:478:19
+    ... 7 lines matching cause stack trace ...
+    at C:/Users/User/Desktop/teacher/worker/app.ts:29:5 {
+  [cause]: Error: audit down: SQLITE_CONSTRAINT (extended: SQLITE_CONSTRAINT_TRIGGER)
+      at D1DatabaseSessionAlwaysPrimary._sendOrThrow (cloudflare-internal:d1-api:189:24)
+      at cloudflare-internal:d1-api:478:19
+      at writeAudit (C:/Users/User/Desktop/teacher/worker/lib/audit.ts:83:3)
+      at C:/Users/User/Desktop/teacher/worker/routes/auth.ts:82:3
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:74:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:36:5
+      at dispatch (C:/Users/User/Desktop/teacher/node_modules/hono/dist/compose.js:35:11)
+      at C:/Users/User/Desktop/teacher/worker/app.ts:29:5
+}
+
+ × |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > first-run setup: the account, its device and its history line land together 104ms
+   → expected 1 to be +0 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'class': create and edit are both in the history 72ms
+   → expected [] to deeply equal [ 'create', 'update' ]
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'subject': create and edit are both in the history 61ms
+   → expected [] to deeply equal [ 'create', 'update' ]
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'work_type': create and edit are both in the history 58ms
+   → expected [] to deeply equal [ 'create', 'update' ]
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'term': create and edit are both in the history 61ms
+   → expected [] to deeply equal [ 'create', 'update' ]
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'class': history down → nothing written 59ms
+   → expected 200 to be 500 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'subject': history down → nothing written 59ms
+   → expected 200 to be 500 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'work_type': history down → nothing written 57ms
+   → expected 200 to be 500 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'term': history down → nothing written 58ms
+   → expected 200 to be 500 // Object.is equality
+ × |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > all-submitted while the due date moves into the past: after.late = stored late 99ms
+   → expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+ × |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > full-score on a row whose stored late was stale: after.late = stored late 113ms
+   → expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+ × |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > undo of a clear after the due date moved: the restore lines say the late value stored 182ms
+   → expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+ × |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo of all-submitted succeeds when only late changed since (R-10) 137ms
+   → expected 409 to be 200 // Object.is equality
+ ✓ |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo of a clear succeeds after the due date moved 151ms
+ ✓ |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo is still refused when a score was really changed since 152ms
+ ✓ |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo is still refused when a status was really changed since 130ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > creating a student: audit fails → no student; success → both, without the card token
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/api/audit-atomic.test.ts:41:54
+     39|     await auditDown();
+     40|     expect((await post("/api/students", newStudent)).status).toBe(500);
+     41|     expect(await count("students", "id = 'st_new'")).toBe(0);
+       |                                                      ^
+     42|     await env.DB.prepare("DROP TRIGGER t_audit_down").run();
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > editing a student: audit fails → the edit is not kept; success → before and after
+AssertionError: expected 'แก้แล้ว' to be 'ก' // Object.is equality
+
+Expected: "ก"
+Received: "แก้แล้ว"
+
+ ❯ test/api/audit-atomic.test.ts:56:112
+     54|     await auditDown();
+     55|     expect((await post("/api/students", edit)).status).toBe(500);
+     56|     expect((await env.DB.prepare("SELECT first_name FROM students WHER…
+       |                                                                                                                ^
+     57|     await env.DB.prepare("DROP TRIGGER t_audit_down").run();
+     58|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-01 the history line and the write are one transaction > deleting work: audit fails → the work stays; success → one line; deleting again → 404 and no new line
+AssertionError: expected 1793354729025 to be null
+
+- Expected:
+null
+
++ Received:
+1793354729025
+
+ ❯ test/api/audit-atomic.test.ts:76:114
+     74|     await auditDown();
+     75|     expect((await post("/api/assignments/a1/delete", {})).status).toBe…
+     76|     expect((await env.DB.prepare("SELECT deleted_at FROM assignments W…
+       |                                                                                                                  ^
+     77|     await env.DB.prepare("DROP TRIGGER t_audit_down").run();
+     78|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > setting and clearing a PIN: who / which device / when — never the PIN
+AssertionError: expected [] to have a length of 2 but got +0
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ test/api/audit-atomic.test.ts:98:18
+     96|     expect((await post("/api/students/nobody/pin", { pin: "1111" })).s…
+     97|     const rows = await audits("entity = 'student' AND student_id = 'st…
+     98|     expect(rows).toHaveLength(2);
+       |                  ^
+     99|     expect(rows.map((r: any) => r.action)).toEqual(["pin_set", "pin_cl…
+    100|     for (const r of rows) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a PIN change whose history line fails is not kept
+AssertionError: expected 200 to be 500 // Object.is equality
+
+- Expected
++ Received
+
+- 500
++ 200
+
+ ❯ test/api/audit-atomic.test.ts:114:75
+    112|   it("a PIN change whose history line fails is not kept", async () => {
+    113|     await auditDown();
+    114|     expect((await post("/api/students/st1/pin", { pin: "4826" })).stat…
+       |                                                                           ^
+    115|     expect((await env.DB.prepare("SELECT pin FROM students WHERE id = …
+    116|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > changing the password: a history line with the device, never the password, hash or salt
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/api/audit-atomic.test.ts:122:18
+    120|     const t = await env.DB.prepare("SELECT password_hash, salt FROM te…
+    121|     const rows = await audits("entity = 'auth' AND action = 'password_…
+    122|     expect(rows).toHaveLength(1);
+       |                  ^
+    123|     expect(rows[0]).toMatchObject({ device_id: "dev_test", actor_id: "…
+    124|     const text = JSON.stringify(rows[0]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a password change whose history line fails is not kept
+AssertionError: expected 401 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 401
+
+ ❯ test/api/audit-atomic.test.ts:132:24
+    130|     expect((await post("/api/auth/change-password", { current: "pw1234…
+    131|     const res = await call("/api/auth/login", json({ email: "teacher@e…
+    132|     expect(res.status).toBe(200);
+       |                        ^
+    133|   });
+    134|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > signing a device out: which device did it and which was signed out — never a session token
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/api/audit-atomic.test.ts:142:18
+    140|     expect(await count("sessions", "device_id = 'dev_b'")).toBe(0);
+    141|     const rows = await audits("entity = 'auth' AND action = 'device_si…
+    142|     expect(rows).toHaveLength(1);
+       |                  ^
+    143|     expect(rows[0]).toMatchObject({ device_id: "dev_test", entity_id: …
+    144|     expect(JSON.stringify(rows[0])).not.toContain(token);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > a sign-out whose history line fails keeps the device signed in
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ test/api/audit-atomic.test.ts:151:60
+    149|     await auditDown();
+    150|     expect((await post("/api/devices/dev_b/signout", {})).status).toBe…
+    151|     expect(await count("sessions", "device_id = 'dev_b'")).toBe(1);
+       |                                                            ^
+    152|   });
+    153|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-02 PIN, password and device sign-out are in the history, with no secret in it > first-run setup: the account, its device and its history line land together
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ test/api/audit-atomic.test.ts:159:36
+    157|     const res = await call("/api/setup", json({ setupCode: "test-code"…
+    158|     expect(res.status).toBe(500);
+    159|     expect(await count("teacher")).toBe(0);
+       |                                    ^
+    160|     expect(await count("devices")).toBe(0);
+    161|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'class': create and edit are both in the history
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'subject': create and edit are both in the history
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'work_type': create and edit are both in the history
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'term': create and edit are both in the history
+AssertionError: expected [] to deeply equal [ 'create', 'update' ]
+
+- Expected
++ Received
+
+- [
+-   "create",
+-   "update",
+- ]
++ []
+
+ ❯ test/api/audit-atomic.test.ts:175:44
+    173|     expect((await post(path, update)).status).toBe(200);
+    174|     const rows = await audits("entity = ? AND entity_id = ?", entity, …
+    175|     expect(rows.map((r: any) => r.action)).toEqual(["create", "update"…
+       |                                            ^
+    176|     expect(rows[0].before_json).toBeNull();
+    177|     expect(JSON.parse(rows[0].after_json)[field]).toBe((create as any)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'class': history down → nothing written
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'subject': history down → nothing written
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'work_type': history down → nothing written
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-03 every catalog write leaves before/after in its own transaction > 'term': history down → nothing written
+AssertionError: expected 200 to be 500 // Object.is equality
+
+- Expected
++ Received
+
+- 500
++ 200
+
+ ❯ test/api/audit-atomic.test.ts:185:47
+    183|   it.each(cases)("$entity: history down → nothing written", async ({ e…
+    184|     await auditDown();
+    185|     expect((await post(path, create)).status).toBe(500);
+       |                                               ^
+    186|     const table = { class: "classes", subject: "subjects", work_type: …
+    187|     expect(await count(table, "id = ?", create.id)).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > all-submitted while the due date moves into the past: after.late = stored late
+AssertionError: expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+
+- Expected
++ Received
+
+  {
+-   "late": true,
++   "late": false,
+    "student": "st1",
+  }
+
+ ❯ expectAuditLateMatches test/api/audit-atomic.test.ts:206:76
+    204|   for (const r of rows) {
+    205|     const stored = await cell(r.student_id);
+    206|     expect({ student: r.student_id, late: JSON.parse(r.after_json).lat…
+       |                                                                            ^
+    207|   }
+    208| }
+ ❯ test/api/audit-atomic.test.ts:225:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > full-score on a row whose stored late was stale: after.late = stored late
+AssertionError: expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+
+- Expected
++ Received
+
+  {
+-   "late": true,
++   "late": false,
+    "student": "st1",
+  }
+
+ ❯ expectAuditLateMatches test/api/audit-atomic.test.ts:206:76
+    204|   for (const r of rows) {
+    205|     const stored = await cell(r.student_id);
+    206|     expect({ student: r.student_id, late: JSON.parse(r.after_json).lat…
+       |                                                                            ^
+    207|   }
+    208| }
+ ❯ test/api/audit-atomic.test.ts:236:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-04 the history of a whole-class action says the late value really stored > undo of a clear after the due date moved: the restore lines say the late value stored
+AssertionError: expected { student: 'st1', late: false } to deeply equal { student: 'st1', late: true }
+
+- Expected
++ Received
+
+  {
+-   "late": true,
++   "late": false,
+    "student": "st1",
+  }
+
+ ❯ expectAuditLateMatches test/api/audit-atomic.test.ts:206:76
+    204|   for (const r of rows) {
+    205|     const stored = await cell(r.student_id);
+    206|     expect({ student: r.student_id, late: JSON.parse(r.after_json).lat…
+       |                                                                            ^
+    207|   }
+    208| }
+ ❯ test/api/audit-atomic.test.ts:248:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  |workers| test/api/audit-atomic.test.ts > AC-05 undo after the due date moved > undo of all-submitted succeeds when only late changed since (R-10)
+AssertionError: expected 409 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 409
+
+ ❯ test/api/audit-atomic.test.ts:260:24
+    258|     expect((await cell("st1")).late).toBe(1);
+    259|     const res = await undo(batchId);
+    260|     expect(res.status).toBe(200);
+       |                        ^
+    261|     expect(await res.json()).toMatchObject({ ok: true, changed: 2 });
+    262|     expect((await cell("st1"))).toMatchObject({ status: "void", late: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  22 failed | 5 passed (27)
+   Start at  17:05:27
+   Duration  4.06s (transform 444ms, setup 900ms, import 17ms, tests 2.55s, environment 0ms)
+

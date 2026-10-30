@@ -77,11 +77,8 @@ export function auditInsertStmt(env: Env, rows: AuditRow[], now = Date.now(), on
   return env.DB.prepare(sql).bind(payload, ...(only?.binds ?? []));
 }
 
-/** Convenience: write one or more audit rows immediately (own transaction). */
-export async function writeAudit(env: Env, rows: AuditRow[], now = Date.now()): Promise<void> {
-  if (rows.length === 0) return;
-  await auditInsertStmt(env, rows, now).run();
-}
+// No "write the audit on its own" helper on purpose (M1-08): a history line in a transaction of its own can land
+// without its write, or the write without it. Put auditInsertStmt in the write's own batch.
 
 /** Which op_ids from this set already exist (already applied). */
 export async function existingOpIds(env: Env, opIds: string[]): Promise<Set<string>> {

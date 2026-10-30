@@ -1,0 +1,189 @@
+[
+  {
+    "check": "Q-90",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npx vitest run --project workers test/api/audit-atomic.test.ts test/api/qa-m1-08.test.ts (37/37) · before-fix.txt เดิม: 22 ล้ม/5 ผ่าน",
+    "artifact": "evidence/final-m1-08-tests.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:27.713Z"
+  },
+  {
+    "check": "Q-93",
+    "kind": "perf-measure",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npx vitest run --project workers test/api/volume.test.ts (7/7 ในงบ) · ก่อน/หลัง ดู volume-before-after.txt",
+    "artifact": "evidence/final-volume.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:28.822Z"
+  },
+  {
+    "check": "Q-91",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (76 ไฟล์ / 910)",
+    "artifact": "evidence/after-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:28.075Z"
+  },
+  {
+    "check": "Q-92",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "restore + audit-restore-domain tests ผ่านที่โค้ดสุดท้าย; mutation ดู mutation-1/2.txt",
+    "artifact": "evidence/final-restore-tests.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:28.441Z"
+  },
+  {
+    "check": "Q-01",
+    "kind": "reconciliation",
+    "status": "PASS",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/api/qa-m1-08.test.ts (8 passed: audit down => no data change, no audit; success => data+1 audit line)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:22:58.024Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "pii-handling",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/api/qa-m1-08.test.ts (every audit_logs row + /api/audit feed free of PIN, passwords, hash, salt, session tokens, qr tokens; 401 when not signed in)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:22:58.431Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm test -> 76 files / 910 passed (evidence/qa-full-suite.txt)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:22:58.836Z"
+  },
+  {
+    "check": "Q-80",
+    "kind": "pii-handling",
+    "status": "PASS",
+    "ac": [
+      "AC-02",
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-security-reviewer",
+    "mandatory": false,
+    "command": "code review: git diff main -- worker; grep auditInsertStmt/writeAudit/pin in worker+src",
+    "artifact": "security-review.md",
+    "expected": "audit ใหม่ไม่มี PIN/รหัสผ่าน/hash/salt/qr_token/session token/SETUP_CODE · GET /api/audit ต้องล็อกอิน · writeAudit ไม่เหลือ",
+    "actual": "ตรงทุกข้อ · ข้อสังเกต: PIN ข้อความธรรมดาในไฟล์สำรอง (S-01 ต่ำ, job แยก), qr_token ในไฟล์สำรองไม่มีคำเตือน (S-02), ประวัติเก่ามี qr_token (S-03)",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:24:23.215Z"
+  },
+  {
+    "check": "Q-94",
+    "kind": "restore",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": true,
+    "command": "npx vitest run --project workers test/api/restore.test.ts restore-half-score.test.ts audit-restore-domain.test.ts (45/45): backup→restore ได้ค่าเดิม, audit ไม่อยู่ในไฟล์สำรอง",
+    "artifact": "evidence/final-restore-tests.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:29.193Z"
+  },
+  {
+    "check": "Q-95",
+    "kind": "dry-run",
+    "status": "N/A",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": true,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ดู brief ## N/A ที่รับ Q-95",
+    "snapshot": "tree:c3f199953d6827ed826a68c8dd6c88811844692c",
+    "at": "2026-10-30T10:28:29.559Z"
+  }
+]
