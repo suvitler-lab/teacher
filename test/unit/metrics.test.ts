@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  workState, isSubmitted, assignmentProgress, studentSummary, attendanceRate,
+  workState, isSubmitted, assignmentProgress, studentSummary, attendanceRate, groupScoreTotal,
   type SubLike,
 } from "@shared/metrics";
 
@@ -179,5 +179,39 @@ describe("M1-05 AC-05 isHalfStep is the one half-point rule", () => {
   it("accepts 7.5 and 0.5, rejects 7.25 and 7.500000000000001", () => {
     expect([7.5, 0.5, 0, 10].every(isHalfStep)).toBe(true);
     expect([7.25, 7.500000000000001, NaN, Infinity].some(isHalfStep)).toBe(false);
+  });
+});
+
+// gb-1a: the folded-group "รวม" is the running total's rule (BR-05) applied to the group's work only
+describe("groupScoreTotal", () => {
+  const half = { full_score: 20, due_date: "2026-09-20" };
+  const hand = (list: (SubLike | undefined)[], asgs: { full_score: number; due_date: string | null }[] = [dueAgo, dueAgo, dueAgo, dueAgo]) =>
+    groupScoreTotal(asgs, (i) => list[i], TODAY);
+
+  it("adds score over full for scored + late; half points are kept exactly", () => {
+    expect(hand([scored(8), scored(7.5, true)], [dueAgo, dueAgo])).toEqual({ score: 15.5, fullScore: 20 });
+  });
+  it("a zero score counts (0/10), it is not 'no data'", () => {
+    expect(hand([scored(0)], [dueAgo])).toEqual({ score: 0, fullScore: 10 });
+  });
+  it("overdue and not handed in counts as 0 of its full score", () => {
+    expect(hand([scored(8), undefined], [dueAgo, half])).toEqual({ score: 8, fullScore: 30 });
+  });
+  it("excused work is left out of both sides", () => {
+    expect(hand([scored(8), excused], [dueAgo, half])).toEqual({ score: 8, fullScore: 10 });
+  });
+  it("handed in but not scored yet, not yet due, and empty cells are left out", () => {
+    expect(hand([scored(9), awaiting, undefined, voided], [dueAgo, dueAgo, dueSoon, noDue])).toEqual({ score: 9, fullScore: 10 });
+  });
+  it("nothing counts at all -> null (shown as –, never 0)", () => {
+    expect(hand([excused, awaiting, undefined], [dueAgo, dueAgo, dueSoon])).toBeNull();
+    expect(hand([], [])).toBeNull();
+  });
+  it("agrees with studentSummary over the same work (same rule as สะสม)", () => {
+    const list = [scored(8), scored(5, true), undefined, excused, awaiting];
+    const asgs = [dueAgo, dueAgo, half, dueAgo, dueAgo];
+    const g = groupScoreTotal(asgs, (i) => list[i], TODAY)!;
+    const s = studentSummary(asgs, (i) => list[i], TODAY);
+    expect([g.score, g.fullScore]).toEqual([s.score, s.fullScore]);
   });
 });

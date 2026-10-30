@@ -1,0 +1,113 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npx vitest run test/unit/qa-gb-1a.test.ts (rerun after fixes)",
+    "artifact": "evidence/q01-expected-from-br.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T15:04:25.234Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "JS audit 820/1180/1440 x 14/18/24 after fixes, coarse emulated",
+    "artifact": "evidence/q02-measure-sizes.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T15:07:13.419Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "fold-all compare 44 rows (before fix) + recheck row1 after fix",
+    "artifact": "evidence/q03-group-total-ui.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T15:07:15.413Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "bulk+edit+hide checked in browser; full suite not run by QA",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T15:07:14.789Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-05",
+      "AC-06",
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser edit/hide/bulk confirm/cancel/focus/progress",
+    "artifact": "evidence/q05-functional.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T15:07:14.083Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-08"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (82 ไฟล์ / 973) && npm run build",
+    "artifact": "evidence/final-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:3a8c9996f89887dbc2c07b6218fd106524815701",
+    "at": "2026-10-30T16:10:40.814Z"
+  }
+]

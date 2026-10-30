@@ -180,6 +180,21 @@ export function studentSummary(
   };
 }
 
+/**
+ * The "รวม" of one group of work for one student (gradebook folded group): the SAME rule as the running total
+ * (studentSummary) applied to just that group's work — Σ score over scored + late, Σ full over scored + late +
+ * missing (as 0). Excused, awaiting (no score yet) and not-yet-due work are left out. null when nothing in the
+ * group counts yet (the screen shows "–", never 0/0 or 0).
+ */
+export function groupScoreTotal(
+  assignments: AsgLike[],
+  subForAssignment: (i: number) => SubLike | undefined,
+  today: string,
+): { score: number; fullScore: number } | null {
+  const s = studentSummary(assignments, subForAssignment, today);
+  return s.fullScore > 0 ? { score: s.score, fullScore: s.fullScore } : null;
+}
+
 /** Σscore ÷ Σfull as a rounded %; null when there is no full score to compare with. */
 export function scorePercent(score: number, fullScore: number): number | null {
   return percentOf(score, fullScore);
