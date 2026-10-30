@@ -108,7 +108,7 @@ export function AssignmentModal({
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
       <Dialog label={existing ? "แก้ไขงาน" : "สร้างงาน"} onClose={onClose} dismissible={!busy}>
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
-          <h2 style="font-size:18px">{existing ? "แก้ไขงาน" : "สร้างงานใหม่"}</h2>
+          <h2 style="font-size:1.2rem">{existing ? "แก้ไขงาน" : "สร้างงานใหม่"}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
 
@@ -172,7 +172,7 @@ export function AssignmentModal({
 
         <div class="row" style="justify-content:space-between;background:var(--surface-1);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:10px">
           <div>
-            <div style="font-weight:500;font-size:14px">ให้ผู้ปกครองเห็นคะแนน</div>
+            <div style="font-weight:500;font-size:1rem">ให้ผู้ปกครองเห็นคะแนน</div>
             <div class="page-sub">{publish ? "เห็นสถานะและคะแนนทันที" : "ซ่อนคะแนนไว้ก่อน"}</div>
           </div>
           <button class={"switch " + (publish ? "on" : "")} role="switch" aria-checked={publish} onClick={() => setPublish(!publish)}>
@@ -185,7 +185,7 @@ export function AssignmentModal({
           <textarea rows={2} value={note} onInput={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
         </label>
 
-        {err && <div style="color:var(--text-danger);font-size:13px;margin:6px 0">{err}</div>}
+        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
 
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
           <button onClick={onClose} disabled={busy}>ยกเลิก</button>

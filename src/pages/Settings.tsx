@@ -19,6 +19,7 @@ import { routeParams, setNavGuard } from "../router";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
 import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
 import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
+import { getFontSize, getDensity, setFontSize, resetFontSize, setDensity, defaultFont, isCoarse, FONT_MIN, FONT_MAX, DENSITY_LABEL, type Density } from "../lib/display";
 import { formatThaiDateTimeMs, formatThaiDayMonthMs } from "../lib/dates";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
@@ -41,7 +42,7 @@ function StorageRow() {
   return (
     <div class="set-row" style="align-items:flex-start">
       <div>
-        <div style="font-weight:500;font-size:14px">ที่เก็บข้อมูลในเครื่องนี้</div>
+        <div style="font-weight:500;font-size:1rem">ที่เก็บข้อมูลในเครื่องนี้</div>
         <div class="page-sub">
           {safe
             ? "เบราว์เซอร์มีโอกาสลบข้อมูลของเว็บนี้น้อยลง แต่ไม่ใช่การรับประกัน — งานที่ยังรอส่งควรถูกส่งขึ้นระบบให้เร็วที่สุด (ดูตัวเลข \"รอส่ง\" แล้วต่อเน็ต)"
@@ -50,7 +51,7 @@ function StorageRow() {
       </div>
       {safe
         ? <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="shield-check" size={13} /> {installed ? "ติดตั้งแล้ว" : "ขอเก็บถาวรแล้ว"}</span>
-        : <button style="height:30px;font-size:12px;white-space:nowrap;flex:none" onClick={async () => { const okk = await requestPersist(); setPersisted(okk); if (!okk) err("เบราว์เซอร์ไม่อนุญาต — ลองเพิ่มไว้ที่หน้าจอโฮม"); }}>ขอเก็บถาวร</button>}
+        : <button style="height:2rem;font-size:var(--fs-xs);white-space:nowrap;flex:none" onClick={async () => { const okk = await requestPersist(); setPersisted(okk); if (!okk) err("เบราว์เซอร์ไม่อนุญาต — ลองเพิ่มไว้ที่หน้าจอโฮม"); }}>ขอเก็บถาวร</button>}
     </div>
   );
 }
@@ -68,15 +69,46 @@ function OfflineRow() {
   return (
     <div class="set-row" style="align-items:flex-start">
       <div>
-        <div style="font-weight:500;font-size:14px">ใช้ออฟไลน์</div>
+        <div style="font-weight:500;font-size:1rem">ใช้ออฟไลน์</div>
         <div class="page-sub">{text[st]}{st === "ready" && offlineNote.value ? " · " + offlineNote.value : ""}</div>
       </div>
       {st === "ready" && <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="circle-check" size={13} /> พร้อม</span>}
       {st === "preparing" && <span class="chip" style="background:var(--bg-accent);color:var(--text-accent)"><Icon name="loader-2" size={13} class="spin" /> กำลังเตรียม</span>}
-      {st === "update" && <button class="primary" style="height:30px;font-size:12px;white-space:nowrap;flex:none" onClick={applyUpdate}>อัปเดตเลย</button>}
+      {st === "update" && <button class="primary" style="height:2rem;font-size:var(--fs-xs);white-space:nowrap;flex:none" onClick={applyUpdate}>อัปเดตเลย</button>}
       {st === "error" && <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)"><Icon name="alert-triangle" size={13} /> ไม่พร้อม</span>}
       {st === "unsupported" && <span class="chip" style="background:var(--surface-1);color:var(--text-secondary)">ไม่รองรับ</span>}
     </div>
+  );
+}
+
+// Text size + row density: per device, applied at once (no Save button), see lib/display.ts.
+function DisplayRows() {
+  const [fs, setFs] = useState(getFontSize);
+  const [den, setDen] = useState<Density>(getDensity);
+  const def = defaultFont(isCoarse());
+  return (
+    <>
+      <div class="set-row"><div><div style="font-weight:500">ขนาดตัวอักษร</div><div class="page-sub">ใช้ทั้งแอป · จำไว้ในเครื่องนี้ · ค่าเริ่มต้น {def}</div></div>
+        <div class="fs-step">
+          <button aria-label="ลดขนาดตัวอักษร" disabled={fs <= FONT_MIN} onClick={() => setFs(setFontSize(fs - 1))}><Icon name="minus" size={24} /></button>
+          <div class="v" role="status" aria-live="polite" aria-label={`ขนาดตัวอักษร ${fs}`}>{fs}</div>
+          <button aria-label="เพิ่มขนาดตัวอักษร" disabled={fs >= FONT_MAX} onClick={() => setFs(setFontSize(fs + 1))}><Icon name="plus" size={24} /></button>
+          <button aria-label={`ใช้ขนาดค่าเริ่มต้น ${def}`} disabled={fs === def} onClick={() => setFs(resetFontSize())}>ค่าเริ่มต้น</button>
+        </div>
+      </div>
+      <div class="set-row"><div><div style="font-weight:500">ความหนาแน่น</div><div class="page-sub">ระยะห่างระหว่างแถวและปุ่ม (ไม่ต่ำกว่า 44px บนจอสัมผัส)</div></div>
+        <Segmented label="ความหนาแน่น" value={den} onChange={(v) => setDen(setDensity(v))} options={(["compact", "normal", "roomy"] as Density[]).map((d) => ({ value: d, label: DENSITY_LABEL[d] }))} />
+      </div>
+      <div class="fs-live" role="group" aria-label="ตัวอย่างสด">
+        <div style="font-weight:500">ตัวอย่างสด <span class="page-sub">— ขนาดนี้ใช้กับสมุดคะแนน สแกน เช็คชื่อ รายงานทั้งหมด</span></div>
+        <div class="fs-prev">
+          <div class="fs-prev-title">ใบงานบทที่ 3 การคูณ</div>
+          <div class="page-sub">คณิตศาสตร์ · ป.6/1 · ส่งภายใน 3 พ.ย.</div>
+          <div class="fs-trow"><b>21</b><span class="grow">นักเรียน ตัวอย่าง</span><span class="fs-pill" style="background:var(--bg-warning);color:var(--text-warning)">8</span><span class="fs-pill" style="background:var(--bg-accent);color:var(--text-accent)"><Icon name="check" size={18} /></span><span class="fs-pill" style="background:var(--bg-danger);color:var(--text-danger)">–</span></div>
+          <div class="row" style="gap:8px;flex-wrap:wrap"><span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="circle-check" size={16} /> เครื่องยิงพร้อม</span><button class="primary">บันทึก 8/10</button><button>ยกเลิก</button></div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -195,6 +227,7 @@ export function SettingsPage() {
               <div class="set-row"><span>ธีม</span>
                 <Segmented value={draft.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
               </div>
+              <DisplayRows />
               <OfflineRow />
               <StorageRow />
             </div>
@@ -203,10 +236,10 @@ export function SettingsPage() {
           {section === "time" && (
             <div class="card">
               <div class="set-section-title"><Icon name="clock" /> เวลาเรียน</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">เริ่มนับสาย (เช็คชื่อรายวัน)</div><div class="page-sub">สแกนหลังเวลานี้ = สาย</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">เริ่มนับสาย (เช็คชื่อรายวัน)</div><div class="page-sub">สแกนหลังเวลานี้ = สาย</div></div>
                 <input type="time" aria-label="เวลาเริ่มนับสาย" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
               <div style="padding-top:10px;border-top:0.5px solid var(--border)">
-                <div style="font-weight:500;font-size:14px">เวลาเริ่มคาบ (สำหรับเช็คชื่อรายคาบ)</div>
+                <div style="font-weight:500;font-size:1rem">เวลาเริ่มคาบ (สำหรับเช็คชื่อรายคาบ)</div>
                 <div class="page-sub" style="margin-bottom:8px">สแกนหลังเวลาเริ่มคาบจะนับเป็นสาย · เว้นว่างได้ถ้าไม่ใช้คาบนั้น</div>
                 <PeriodTimes value={draft.period_times} onChange={(v) => set("period_times", v)} />
               </div>
@@ -216,9 +249,9 @@ export function SettingsPage() {
           {section === "scan" && (
             <div class="card">
               <div class="set-section-title"><Icon name="barcode" /> การสแกน</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">เสียงตอบรับ</div><div class="page-sub">ติ๊ด = สำเร็จ · ตื๊ด = ซ้ำ/ไม่พบ</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">เสียงตอบรับ</div><div class="page-sub">ติ๊ด = สำเร็จ · ตื๊ด = ซ้ำ/ไม่พบ</div></div>
                 <Switch on={draft.sound_enabled} onToggle={() => set("sound_enabled", !draft.sound_enabled)} label="เสียงตอบรับ" /></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">รับบาร์โค้ดบัตรนักเรียนเดิม</div><div class="page-sub">สแกนรหัสนักเรียนตรงๆ ได้ นอกจาก QR ของระบบ</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">รับบาร์โค้ดบัตรนักเรียนเดิม</div><div class="page-sub">สแกนรหัสนักเรียนตรงๆ ได้ นอกจาก QR ของระบบ</div></div>
                 <Switch on={draft.accept_student_code_scan} onToggle={() => set("accept_student_code_scan", !draft.accept_student_code_scan)} label="รับบาร์โค้ดบัตรเดิม" /></div>
               <div style="padding-top:10px;border-top:0.5px solid var(--border)"><HidTest allowCode={draft.accept_student_code_scan} /></div>
               <div style="padding-top:10px;margin-top:10px;border-top:0.5px solid var(--border)"><CameraTest /></div>
@@ -245,21 +278,21 @@ export function SettingsPage() {
             <div class="card">
               <div class="set-section-title"><Icon name="database-export" /> สำรองข้อมูล</div>
               {(restoreInfo?.pending || restoreInfo?.maintenance) && (
-                <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:13px;flex-wrap:wrap">
+                <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:var(--fs-sm);flex-wrap:wrap">
                   <Icon name="alert-triangle" size={16} />
                   <span class="grow" style="min-width:180px">{restoreInfo.maintenance ? "ระบบถูกล็อกจากการกู้คืนครั้งก่อนที่ไม่จบ — ปลดล็อกเพื่อใช้งานต่อ" : "มีงานกู้คืนที่ส่งไฟล์ค้างไว้ (ข้อมูลจริงยังไม่ถูกเปลี่ยน)"}</span>
-                  <button style="height:28px;font-size:12px" onClick={cancelRestore} disabled={busy === "cancel"}>{restoreInfo.maintenance ? "ปลดล็อก" : "ยกเลิกงานนี้"}</button>
+                  <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={cancelRestore} disabled={busy === "cancel"}>{restoreInfo.maintenance ? "ปลดล็อก" : "ยกเลิกงานนี้"}</button>
                 </div>
               )}
-              {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:13px"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
+              {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:var(--fs-sm)"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
                 <button onClick={backup} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
                 <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
               <div class="set-section-title" style="margin-top:16px;color:var(--text-danger)"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างข้อมูลทดลอง</div><div class="page-sub">ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ล้างข้อมูลทดลอง</div><div class="page-sub">ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก</div></div>
                 <button onClick={() => setResetMode("data")}><Icon name="trash" size={16} /> ล้างข้อมูล</button></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:14px">ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น</div><div class="page-sub">ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก</div></div>
+              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น</div><div class="page-sub">ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก</div></div>
                 <button onClick={() => setResetMode("all")}><Icon name="trash-x" size={16} /> ล้างทั้งหมด</button></div>
             </div>
           )}
@@ -271,7 +304,7 @@ export function SettingsPage() {
       {changed.length > 0 && (
         <div class="set-savebar">
           <Icon name="pencil" size={16} style="color:var(--text-accent)" />
-          <span class="grow" style="font-size:13px">แก้ไขแล้ว {changed.length} รายการ ยังไม่บันทึก</span>
+          <span class="grow" style="font-size:var(--fs-sm)">แก้ไขแล้ว {changed.length} รายการ ยังไม่บันทึก</span>
           <button onClick={() => setDraft(s ? { ...s } : null)}>ยกเลิก</button>
           <button class="primary" onClick={save} disabled={busy === "save"}>{busy === "save" ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึก</button>
         </div>
@@ -309,13 +342,13 @@ function HidTest({ allowCode }: { allowCode: boolean }) {
   }, [allowCode]);
   return (
     <div>
-      <div style="font-weight:500;font-size:14px">ทดสอบเครื่องยิง</div>
+      <div style="font-weight:500;font-size:1rem">ทดสอบเครื่องยิง</div>
       <div class="page-sub" style="margin-bottom:8px">ยิงสติกเกอร์ใบไหนก็ได้ ระบบจะบอกว่าอ่านได้ถูกไหม (ไม่บันทึกอะไร)</div>
       {log.length === 0 ? <div class="page-sub" style="padding:8px;background:var(--surface-1);border-radius:10px;text-align:center">รอการยิง…</div> : log.map((r) => (
         <div class="row" style={`gap:8px;padding:6px 10px;border-radius:10px;margin-bottom:4px;${r.ok ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-danger);color:var(--text-danger)"}`}>
           <Icon name={r.ok ? "circle-check" : "x"} size={16} />
-          <span class="grow" style="font-size:13px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="font-family:var(--font-mono)">{r.raw.slice(0, 16)}</span>{r.who ? ` → ${r.who}` : " — ไม่พบ"}</span>
-          <span style="font-size:11px">{r.ms} ms</span>
+          <span class="grow" style="font-size:var(--fs-sm);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="font-family:var(--font-mono)">{r.raw.slice(0, 16)}</span>{r.who ? ` → ${r.who}` : " — ไม่พบ"}</span>
+          <span style="font-size:var(--fs-xs)">{r.ms} ms</span>
         </div>
       ))}
     </div>
@@ -338,7 +371,7 @@ function CameraTest() {
   const allOk = !!rows && rows.every((r) => r.ok);
   return (
     <div>
-      <div style="font-weight:500;font-size:14px">ทดสอบกล้อง</div>
+      <div style="font-weight:500;font-size:1rem">ทดสอบกล้อง</div>
       <div class="page-sub" style="margin-bottom:8px">ตรวจว่าเครื่องนี้สแกนด้วยกล้องได้ไหม และถ้าไม่ได้ เพราะอะไร (ระบบจะขอเปิดกล้องแวบเดียวแล้วปิด ไม่บันทึกภาพ)</div>
       <button onClick={run} disabled={busy}>{busy ? <Icon name="loader-2" size={16} class="spin" /> : <Icon name="camera" size={16} />} {rows ? "ทดสอบอีกครั้ง" : "เริ่มทดสอบกล้อง"}</button>
       {rows && (
@@ -348,7 +381,7 @@ function CameraTest() {
             <span>{allOk ? "ผ่านทุกขั้น — เครื่องนี้สแกนด้วยกล้องได้" : "มีขั้นที่ไม่ผ่าน — ดูรายละเอียดด้านล่าง (ถ่ายหน้าจอส่งให้ผู้ดูแลได้)"}</span>
           </div>
           {rows.map((r) => (
-            <div class="row" style="gap:8px;align-items:flex-start;padding:5px 0;border-top:0.5px solid var(--border);font-size:13px">
+            <div class="row" style="gap:8px;align-items:flex-start;padding:5px 0;border-top:0.5px solid var(--border);font-size:var(--fs-sm)">
               <Icon name={r.ok ? "circle-check" : "circle-x"} size={16} style={r.ok ? "color:var(--text-success);margin-top:2px" : "color:var(--text-danger);margin-top:2px"} />
               <div style="min-width:0"><div style="font-weight:500">{r.label}</div><div class="page-sub" style="word-break:break-word">{r.detail}</div></div>
             </div>
@@ -400,7 +433,7 @@ function DeviceCheck() {
             <Icon name={icon[verdict][0]} size={15} /> <span>{VERDICT[verdict]}</span>
           </div>
           {state.checks.map((c) => (
-            <div class="row" style="gap:8px;align-items:flex-start;padding:5px 0;border-top:0.5px solid var(--border);font-size:13px">
+            <div class="row" style="gap:8px;align-items:flex-start;padding:5px 0;border-top:0.5px solid var(--border);font-size:var(--fs-sm)">
               <Icon name={icon[c.level][0]} size={16} style={`color:${icon[c.level][1]};margin-top:2px`} />
               <div style="min-width:0"><div style="font-weight:500">{c.label}</div><div class="page-sub" style="word-break:break-word">{c.detail}</div></div>
             </div>
@@ -428,7 +461,7 @@ function DeviceList() {
         <div class="set-row">
           <div class="row" style="gap:8px;min-width:0"><Icon name="device-mobile" size={18} class="muted" /><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</span></div>
           <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{formatThaiDayMonthMs(d.last_seen)}</span>
-            {!d.current && <button style="height:28px;font-size:12px" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}</div>
+            {!d.current && <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}</div>
         </div>
       ))}
     </div>
@@ -449,7 +482,7 @@ function ChangePassword() {
   if (!open) return (
     <div class="row" style="gap:8px;flex-wrap:wrap">
       <button onClick={() => { setMsg(""); setOpen(true); }}><Icon name="key" size={15} /> เปลี่ยนรหัสผ่าน</button>
-      {msg && <span style="font-size:13px;color:var(--text-success)"><Icon name="circle-check" size={14} /> {msg}</span>}
+      {msg && <span style="font-size:var(--fs-sm);color:var(--text-success)"><Icon name="circle-check" size={14} /> {msg}</span>}
     </div>
   );
   return (
@@ -458,7 +491,7 @@ function ChangePassword() {
       <input type="password" placeholder="รหัสใหม่" value={next} onInput={(e) => setNext((e.target as HTMLInputElement).value)} style="width:140px" />
       <button class="primary" onClick={submit}>บันทึก</button>
       <button onClick={() => { setMsg(""); setOpen(false); }}>ยกเลิก</button>
-      {msg && <div style="font-size:12px;color:var(--text-secondary);width:100%">{msg}</div>}
+      {msg && <div style="font-size:var(--fs-xs);color:var(--text-secondary);width:100%">{msg}</div>}
     </div>
   );
 }
@@ -470,7 +503,7 @@ function HistorySection() {
     <div class="card">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div class="set-section-title" style="margin:0"><Icon name="history" /> ประวัติการแก้ไข</div>
-        <div class="chips-row">{FILTERS.map((f) => <button class={"pill" + (filter === f.v ? " on" : "")} style="height:26px" onClick={() => setFilter(f.v)}>{f.l}</button>)}</div>
+        <div class="chips-row">{FILTERS.map((f) => <button class={"pill" + (filter === f.v ? " on" : "")} style="height:1.73rem" onClick={() => setFilter(f.v)}>{f.l}</button>)}</div>
       </div>
       <AuditHistory entity={filter || undefined} />
     </div>

@@ -74,7 +74,7 @@ export function AuditHistory({ entity }: { entity?: string }) {
           <div class="row" style="gap:10px;padding:8px 0;border-top:0.5px solid var(--border)">
             <Icon name="history" size={16} class="muted" />
             <div class="grow" style="min-width:0">
-              <div style="font-size:13px">
+              <div style="font-size:var(--fs-sm)">
                 <span style="font-weight:500">{describe(r)}</span>
                 {st && <span class="muted"> · {fullName(st)}</span>}
               </div>

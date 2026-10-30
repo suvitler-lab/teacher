@@ -4,20 +4,20 @@
 .uh { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
 .uh-l { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .uh-ic {
-  width: 38px; height: 38px; border-radius: 11px; flex: none;
+  width: 2.53rem; height: 2.53rem; border-radius: 11px; flex: none;
   background: var(--bg-accent); color: var(--text-accent);
   display: flex; align-items: center; justify-content: center;
 }
-.uh-title { font-size: 19px; font-weight: 500; line-height: 1.25; }
-.uh-sub { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.uh-title { font-size: 1.27rem; font-weight: 500; line-height: 1.25; }
+.uh-sub { font-size: var(--fs-sm); color: var(--text-secondary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .uh-act { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
 /* class chips + generic pill chips row */
 .chips-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .pill {
-  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px;
+  display: inline-flex; align-items: center; gap: 6px; height: 2rem; padding: 0 12px;
   border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--surface-2);
-  color: var(--text-secondary); font-size: 13px; white-space: nowrap; cursor: pointer;
+  color: var(--text-secondary); font-size: var(--fs-sm); white-space: nowrap; cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
 }
 .pill:hover { background: var(--surface-1); }
@@ -28,7 +28,7 @@
 /* segmented control */
 .seg { display: inline-flex; padding: 2px; gap: 2px; border-radius: var(--radius-sm); background: var(--surface-1); border: 0.5px solid var(--border); }
 .seg button {
-  height: 28px; padding: 0 12px; border-radius: 6px; font-size: 13px; border: 0.5px solid transparent;
+  height: 1.87rem; padding: 0 12px; border-radius: 6px; font-size: var(--fs-sm); border: 0.5px solid transparent;
   background: transparent; color: var(--text-secondary);
 }
 .seg button.on { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-strong); }
@@ -40,11 +40,11 @@
 button.uc-stat { cursor: pointer; width: 100%; height: auto; display: block; }
 button.uc-stat:hover { background: var(--surface-1); }
 .uc-stat .top { display: flex; align-items: center; justify-content: space-between; }
-.uc-stat .lbl { font-size: 12px; color: var(--text-secondary); }
-.uc-stat .val { font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.3; }
-.uc-stat .val small { font-size: 12px; font-weight: 400; color: var(--text-secondary); }
-.uc-stat .hint { font-size: 11px; color: var(--text-secondary); }
-.uc-stat .ic { width: 24px; height: 24px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+.uc-stat .lbl { font-size: var(--fs-xs); color: var(--text-secondary); }
+.uc-stat .val { font-size: 1.47rem; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.3; }
+.uc-stat .val small { font-size: var(--fs-xs); font-weight: 400; color: var(--text-secondary); }
+.uc-stat .hint { font-size: var(--fs-xs); color: var(--text-secondary); }
+.uc-stat .ic { width: 1.6rem; height: 1.6rem; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; }
 
 /* progress bar + ring */
 .pbar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
@@ -60,7 +60,7 @@ button.uc-stat:hover { background: var(--surface-1); }
 .uc-av { border-radius: 50%; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-weight: 500; flex: none; }
 
 /* work-state cell (gradebook / scan grid / student list) */
-.wcell { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 24px; border-radius: 6px; padding: 0 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.wcell { display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; height: 1.6rem; border-radius: 6px; padding: 0 6px; font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
 .wcell.scored { color: var(--text-primary); }
 .wcell.late { background: var(--bg-warning); color: var(--text-warning); }
 .wcell.awaiting { background: var(--bg-accent); color: var(--text-accent); }
@@ -75,7 +75,7 @@ button.uc-stat:hover { background: var(--surface-1); }
 
 /* empty state */
 .uc-empty { text-align: center; color: var(--text-secondary); padding: 32px 16px; }
-.uc-empty .ei { font-size: 30px; color: var(--text-muted); margin-bottom: 6px; }
+.uc-empty .ei { font-size: 2rem; color: var(--text-muted); margin-bottom: 6px; }
 
 /* drawer: right panel on desktop, full-height sheet on phone */
 .drawer-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(10,14,22,0.4); display: flex; justify-content: flex-end; }
@@ -87,19 +87,19 @@ button.uc-stat:hover { background: var(--surface-1); }
 @media (max-width: 560px) { .drawer { width: 100%; border-left: none; } }
 
 /* sync badge */
-.sync { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.sync { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-xs); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
 .sync.online { background: var(--bg-success); color: var(--text-success); }
 .sync.offline { background: var(--bg-warning); color: var(--text-warning); }
 .sync.saving { background: var(--surface-1); color: var(--text-secondary); }
 
 /* Touch screens: the compact desktop controls are too small for a thumb. Same look, a bigger hit area —
    only where the pointer is coarse, so desktop keeps its density. min-height wins over the inline
-   `height:26px` some buttons carry. Inline chips and text-link headers ("สมุดคะแนน ›") stay as they are. */
+   `height:1.73rem` some buttons carry. Inline chips and text-link headers ("สมุดคะแนน ›") stay as they are. */
 @media (pointer: coarse) {
-  button:not(.chip):not(.lk) { min-height: 40px; }
-  button.icon { min-width: 40px; }
+  button:not(.chip):not(.lk) { min-height: 2.67rem; }
+  button.icon { min-width: var(--tap); }
   /* the score in a one-assignment row: a transparent button around a number — give the number a real target */
-  .gb-mrow > button { min-width: 44px; min-height: 44px; }
+  .gb-mrow > button { min-width: 44px; min-height: 2.93rem; }
 }
 
 /* Thai date field: day · month · year on ONE line (a modal column is only ~270px wide, so the year needs its 4 digits
@@ -111,6 +111,6 @@ button.uc-stat:hover { background: var(--surface-1); }
 
 /* fingers: chips, tabs and segmented buttons are at least 36px tall on a phone (they were 26–30px) */
 @media (max-width: 720px) {
-  .pill { height: 36px; }
-  .seg button { height: 34px; }
+  .pill { height: 2.4rem; }
+  .seg button { height: 2.27rem; }
 }

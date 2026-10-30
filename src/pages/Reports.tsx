@@ -150,13 +150,13 @@ export function ReportsPage() {
       </div>}
       <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
       <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
-        <select aria-label="วิชาของรายงาน" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
+        <select aria-label="วิชาของรายงาน" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:2.13rem">
           <option value="">ทุกวิชา</option>
           {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
         </select>
         <Segmented value={period} onChange={setPeriod} options={[{ value: "term", label: "ทั้งเทอม" }, { value: "month", label: "รายเดือน" }]} />
         {period === "month" && (
-          <select aria-label="เดือนของรายงาน" value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)} style="width:auto;height:32px">
+          <select aria-label="เดือนของรายงาน" value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)} style="width:auto;height:2.13rem">
             {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
           </select>
         )}
@@ -166,7 +166,7 @@ export function ReportsPage() {
       </div>
 
       {payload?.range.termDatesMissing && (
-        <div class="row" style="gap:8px;padding:8px 12px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:10px;font-size:13px">
+        <div class="row" style="gap:8px;padding:8px 12px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:10px;font-size:var(--fs-sm)">
           <Icon name="alert-triangle" size={16} /> เทอมนี้ยังไม่ได้ตั้งช่วงวันที่ การนับเช็คชื่ออาจไม่ครบ — ตั้งวันเริ่ม/สิ้นสุดในหน้าตั้งค่า
         </div>
       )}
@@ -247,14 +247,14 @@ export function ReportsPage() {
             <div class="card">
               <div class="row" style="justify-content:space-between;margin-bottom:6px">
                 <span style="font-weight:500">ต้องติดตาม ({model.followUp.length} คน)</span>
-                <button class="ghost" style="height:26px;font-size:12px" onClick={copyLine}><Icon name="brand-line" size={14} /> คัดลอกไป LINE</button>
+                <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={copyLine}><Icon name="brand-line" size={14} /> คัดลอกไป LINE</button>
               </div>
               {model.followUp.length === 0 ? (
                 <div class="page-sub" style="color:var(--text-success)"><Icon name="circle-check" size={14} /> ส่งงานครบทุกคน</div>
               ) : model.followUp.slice(0, 8).map((f) => (
                 <button class="rp-follow" onClick={() => setDrawer(f.student.id)}>
                   <span class="muted num" style="width:16px">{f.student.number ?? "-"}</span>
-                  <div class="grow" style="min-width:0"><div style="font-size:13px">{fullName(f.student)}</div><div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{f.missing.slice(0, 3).join(" · ")}{f.missing.length > 3 ? " …" : ""}</div></div>
+                  <div class="grow" style="min-width:0"><div style="font-size:var(--fs-sm)">{fullName(f.student)}</div><div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{f.missing.slice(0, 3).join(" · ")}{f.missing.length > 3 ? " …" : ""}</div></div>
                   <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">ค้าง {f.missing.length}</span>
                 </button>
               ))}

@@ -1,31 +1,31 @@
 /* งานครบ · students list */
 .stu-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.stu-tab { height: 32px; padding: 0 14px; border-radius: 999px; font-size: 13px; }
+.stu-tab { height: 2.13rem; padding: 0 14px; border-radius: 999px; font-size: var(--fs-sm); }
 .stu-tab.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
 
-.stu-search { display: flex; align-items: center; gap: 8px; height: 34px; border: 0.5px solid var(--border-strong); border-radius: 8px; padding: 0 10px; background: var(--surface-2); flex: 1; min-width: 200px; }
-.stu-search input { border: none; box-shadow: none; height: 32px; padding: 0; background: transparent; }
+.stu-search { display: flex; align-items: center; gap: 8px; height: 2.27rem; border: 0.5px solid var(--border-strong); border-radius: 8px; padding: 0 10px; background: var(--surface-2); flex: 1; min-width: 200px; }
+.stu-search input { border: none; box-shadow: none; height: 2.13rem; padding: 0; background: transparent; }
 .stu-search input:focus { box-shadow: none; }
 
-.stu-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin-bottom: 8px; }
+.stu-summary { display: flex; gap: 14px; flex-wrap: wrap; font-size: var(--fs-sm); margin-bottom: 8px; }
 .stu-summary b { font-weight: 500; }
 
 .stu-list-head, .stu-lrow {
   display: grid; grid-template-columns: 40px 100px minmax(0,1fr) 168px 88px 108px 20px; gap: 12px; align-items: center;
 }
-.stu-list-head { padding: 10px 16px; background: var(--surface-1); font-size: 12px; color: var(--text-secondary); }
-.stu-lrow { width: 100%; height: auto; border: none; border-radius: 0; background: transparent; color: inherit; text-align: left; padding: 9px 16px; border-top: 0.5px solid var(--border); cursor: pointer; }
+.stu-list-head { padding: 10px 16px; background: var(--surface-1); font-size: var(--fs-xs); color: var(--text-secondary); }
+.stu-lrow { width: 100%; height: auto; min-height: var(--row-h); border: none; border-radius: 0; background: transparent; color: inherit; text-align: left; padding: 9px 16px; border-top: 0.5px solid var(--border); cursor: pointer; }
 .stu-number { text-align: center; }
 .stu-lrow > .uc-av { justify-self: center; }
 .stu-stat { display: flex; align-items: center; justify-content: center; align-self: stretch; min-width: 0; padding: 0 12px; border-left: 0.5px solid var(--border); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .stu-lrow .sc { gap: 8px; }
 .stu-lrow:hover { background: var(--surface-1); }
 .stu-lrow.sel { background: var(--bg-accent-muted); }
-.stu-lrow .code { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.stu-lrow .code { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-secondary); }
 .stu-lrow .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stu-mini { display: inline-block; flex: none; width: 44px; height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
 .stu-mini > i { display: block; height: 100%; border-radius: 3px; background: var(--fill-success); }
-.stu-qrnew { font-size: 10px; padding: 0 6px; height: 16px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; gap: 3px; }
+.stu-qrnew { font-size: var(--fs-xs); padding: 0 6px; height: 1.07rem; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; gap: 3px; }
 
 @media (max-width: 1000px) {
   .stu-list-head, .stu-lrow { grid-template-columns: 32px 80px minmax(0,1fr) 80px 56px 72px 16px; gap: 8px; padding-left: 10px; padding-right: 10px; }
@@ -44,9 +44,13 @@
 .print-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
 
 /* import preview */
-.imp-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; }
-.imp-warn { display: flex; align-items: flex-start; gap: 6px; margin-top: 6px; padding: 6px 10px; border-radius: 8px; font-size: 12px; background: var(--bg-warning); color: var(--text-warning); }
+.imp-sum { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; font-size: var(--fs-sm); }
+.imp-warn { display: flex; align-items: flex-start; gap: 6px; margin-top: 6px; padding: 6px 10px; border-radius: 8px; font-size: var(--fs-xs); background: var(--bg-warning); color: var(--text-warning); }
 .imp-warn.danger { background: var(--bg-danger); color: var(--text-danger); }
 .imp-warn > i { margin-top: 1px; flex: none; }
-.imp-confirm { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--border-warning); background: var(--bg-warning); color: var(--text-warning); font-size: 13px; cursor: pointer; }
+.imp-confirm { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--border-warning); background: var(--bg-warning); color: var(--text-warning); font-size: var(--fs-sm); cursor: pointer; }
 .imp-confirm input { width: auto; height: auto; margin-top: 2px; }
+
+.stu-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 0.5px solid var(--border); }
+.stu-row .no { width: 1.87rem; text-align: center; color: var(--text-secondary); font-size: var(--fs-sm); }
+.stu-row .code { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--text-secondary); }

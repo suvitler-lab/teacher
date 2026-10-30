@@ -218,7 +218,7 @@ export function Home() {
       )}
 
       {list && (
-        <Drawer title={<><div style="font-weight:500;font-size:16px">{LIST_TITLE[list]} · {list === "open" ? open.length : rows.reduce((n, r) => n + r.n, 0)}</div><div class="page-sub">{LIST_HINT[list]}</div></>} onClose={() => setList(null)}>
+        <Drawer title={<><div style="font-weight:500;font-size:1.07rem">{LIST_TITLE[list]} · {list === "open" ? open.length : rows.reduce((n, r) => n + r.n, 0)}</div><div class="page-sub">{LIST_HINT[list]}</div></>} onClose={() => setList(null)}>
           {rows.length === 0 ? <EmptyState icon="circle-check" text="ไม่มีรายการ" /> : rows.map((r) => {
             const subj = subjectById(r.a.assignment.subject_id);
             return (

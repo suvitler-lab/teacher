@@ -87,7 +87,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
     <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
       <Dialog label="เริ่มภาคเรียนใหม่" onClose={onClose} dismissible={!busy} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <h2 style="font-size:18px">เริ่มภาคเรียนใหม่</h2>
+          <h2 style="font-size:1.2rem">เริ่มภาคเรียนใหม่</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
         <div class="page-sub" style="margin-bottom:10px">
@@ -129,13 +129,13 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
             ))}
           </div>
 
-          <ul class="sty-list" style="margin:6px 0 8px 18px;padding:0;font-size:13px;line-height:1.7">
+          <ul class="sty-list" style="margin:6px 0 8px 18px;padding:0;font-size:var(--fs-sm);line-height:1.7">
             <li>นักเรียน <b>{finishing} คน</b> ที่ยังกำลังเรียนในห้องปี {cur.year} จะเป็น “จบปีการศึกษา” (ข้อมูลและคะแนนยังอยู่)</li>
             <li>ห้องปี {cur.year} ทั้งหมดถูกเก็บ · เช็กชื่อ/สแกนใช้ห้องของปี {year} เท่านั้น</li>
           </ul>
 
           {openWork > 0 && (
-            <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-bottom:8px;cursor:pointer">
+            <label style="display:flex;gap:8px;align-items:flex-start;font-size:var(--fs-sm);margin-bottom:8px;cursor:pointer">
               <input type="checkbox" checked={closeWork} onChange={(e) => setCloseWork((e.target as HTMLInputElement).checked)} style="width:auto;height:auto;margin-top:3px" />
               <span>ปิดรับงานที่ยังเปิดอยู่ของปี {cur.year} ({openWork} งาน) — ตรวจ/แก้คะแนนย้อนหลังได้ตามเดิม</span>
             </label>
@@ -154,7 +154,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
         )}
 
         {err && (
-          <div style="color:var(--text-danger);font-size:13px;margin-top:8px" role="alert">
+          <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-top:8px" role="alert">
             {err}{stale && <> · <button class="lk" style="background:none;border:none;color:var(--text-accent);cursor:pointer;padding:0;font:inherit" onClick={onClose}>ปิดหน้าต่างนี้</button></>}
           </div>
         )}

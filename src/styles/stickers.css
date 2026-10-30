@@ -1,0 +1,23 @@
+/* งานครบ · QR sticker sheet, screen preview. Sizes are fixed on purpose: they mirror the printed sticker (mm), not the app text size. */
+/* sticker sheet (screen preview + print) */
+.sheet { background: #fff; color: #1f2328; }
+.sticker-grid { display: grid; gap: 8px; }
+.sticker-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.sticker-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.sticker-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.qr-card {
+  border: 1px dashed #b6bdc6; border-radius: 10px; padding: 8px 10px;
+  display: flex; gap: 8px; align-items: center; break-inside: avoid;
+}
+.qr-card .info { flex: 1; min-width: 0; }
+.qr-card .school { font-size: 9px; color: #57606a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qr-card .sname { font-size: 13px; font-weight: 500; margin-top: 2px; line-height: 1.25; }
+.qr-card .meta { font-size: 10px; color: #57606a; }
+.qr-card .code { font-size: 13px; font-weight: 500; letter-spacing: 1px; }
+.qr-card img { flex: none; }
+.sticker-grid.cols-4 .qr-card .sname { font-size: 11px; }
+.sticker-grid.cols-4 .qr-card .school { display: none; }
+
+@media screen {
+  .sheet { max-width: 760px; margin: 0 auto; padding: 16px; border-radius: var(--radius); border: 0.5px solid var(--border); }
+}

@@ -156,7 +156,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
     <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <Dialog label="กู้คืนข้อมูล" onClose={close} dismissible={stage !== "running"} style="max-width:520px">
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
-          <h2 style="font-size:18px">กู้คืนข้อมูลจากไฟล์สำรอง</h2>
+          <h2 style="font-size:1.2rem">กู้คืนข้อมูลจากไฟล์สำรอง</h2>
           {stage !== "running" && <button class="icon ghost" aria-label="ปิด" onClick={close}><Icon name="x" /></button>}
         </div>
 
@@ -171,10 +171,10 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
           <>
             <div class="card" style="background:var(--surface-1);margin-bottom:10px">
               <div class="page-sub">ไฟล์สำรองเมื่อ {formatThaiDateTimeMs(new Date(file.exported_at).getTime())}</div>
-              <div style="font-size:14px;margin-top:4px">นักเรียน {file.counts.students ?? 0} · งาน {file.counts.assignments ?? 0} · ส่งงาน {file.counts.submissions ?? 0} · เช็คชื่อ {file.counts.attendance ?? 0}</div>
+              <div style="font-size:1rem;margin-top:4px">นักเรียน {file.counts.students ?? 0} · งาน {file.counts.assignments ?? 0} · ส่งงาน {file.counts.submissions ?? 0} · เช็คชื่อ {file.counts.attendance ?? 0}</div>
               <div class="page-sub" style="margin-top:4px">รวม {totalRows} แถว</div>
             </div>
-            <div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;margin-bottom:10px">
+            <div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius-sm);padding:10px 12px;font-size:var(--fs-sm);margin-bottom:10px">
               <div><Icon name="alert-triangle" size={14} /> <b style="font-weight:500">กู้คืนแทนข้อมูลปัจจุบัน</b> — ข้อมูลที่เกิดหลังวันที่สำรองจะหายไป</div>
               <div style="margin-top:4px;opacity:.9">ระบบดาวน์โหลดสำรองข้อมูลปัจจุบันให้อัตโนมัติก่อน และเปลี่ยนข้อมูลทีเดียวทั้งหมด ถ้าล้มเหลวจะไม่มีอะไรเปลี่ยน · รหัสผ่านและเครื่องที่เข้าระบบไว้ไม่ถูกแตะ</div>
             </div>
@@ -196,7 +196,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
 
         {stage === "unknown" && (
           <div>
-            <div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;margin-bottom:10px">
+            <div style="background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius-sm);padding:10px 12px;font-size:var(--fs-sm);margin-bottom:10px">
               <Icon name="help-circle" size={14} /> ยังไม่ทราบผลการกู้คืน — ห้ามเริ่มใหม่หรือแก้ข้อมูลจนกว่าจะตรวจสอบ
             </div>
             <div class="row" style="justify-content:flex-end;gap:8px">
@@ -208,13 +208,13 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
 
         {stage === "done" && (
           <div style="text-align:center;padding:16px">
-            <div style="width:56px;height:56px;border-radius:50%;background:var(--fill-success);color:#fff;display:inline-flex;align-items:center;justify-content:center"><Icon name="check" size={30} /></div>
-            <div style="font-size:16px;font-weight:500;margin-top:10px">กู้คืนข้อมูลสำเร็จ</div>
+            <div style="width:3.73rem;height:3.73rem;border-radius:50%;background:var(--fill-success);color:#fff;display:inline-flex;align-items:center;justify-content:center"><Icon name="check" size={30} /></div>
+            <div style="font-size:1.07rem;font-weight:500;margin-top:10px">กู้คืนข้อมูลสำเร็จ</div>
             <button class="primary" style="margin-top:12px" onClick={onDone}>เสร็จสิ้น</button>
           </div>
         )}
 
-        {err && <div style="color:var(--text-danger);font-size:13px;margin-top:10px" role="alert">{err}</div>}
+        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-top:10px" role="alert">{err}</div>}
       </Dialog>
     </div>
   );
