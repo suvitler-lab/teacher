@@ -39,7 +39,7 @@
 |---|---|---|---|---|---|---|
 | `2026-10-29-program-intake` (Gate 0: commit/tag, baseline, precheck) | S | — | M-00 | — | (หลัก) | กำลังทำ |
 | `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | merge เข้า main `0020a93` (D19) | ปิดแล้ว |
-| `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | (หลัก) | กำลังทำ |
+| `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | merge เข้า main `a1ef3fa` | ปิดแล้ว |
 | `m1-03-guards-in-transaction` | M | E-01 | M-01 | m1-02 | (หลัก) | รอ |
 | `m1-04-late-flag` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
 | `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
