@@ -1,0 +1,22 @@
+# M1-05 Verify-1 mutations (one at a time; backup, restore, cmp)
+## M-4 percentOf back to (part / whole) * 100
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(23, 40) = 58
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(29, 200) = 15
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > every per-number function goes through it
+      Tests  3 failed | 12 passed (15)
+restored: cmp identical (shared/metrics.ts)
+## M-5 fraction back to submitted / total
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-09 the fraction next to the rate uses class − excused > assignmentFraction: 6/8 · ยกเว้น 2; without excused it is the old form
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 Excel > class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6/10 next to 60%
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 screens > Home shows 6/8 · ยกเว้น 2 beside the 75% bar
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 screens > Reports: the bar reads 6/8 · ยกเว้น 2 · 75% and the score card says what it counts
+      Tests  4 failed | 11 passed (15)
+restored: cmp identical (shared/metrics.ts)
+## M-6 (Verify-2) average back to per-child mean of percents
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > full 3, scores 2.5 2.5 3 2.5 -> 10.5 / 12 = 87.5 -> 88
+ FAIL  |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > Excel class overview shows the same 88 in the average column
+      Tests  2 failed | 15 passed (17)
+restored: cmp identical (shared/metrics.ts)

@@ -9,14 +9,12 @@ import { navigate } from "../router";
 import { formatThaiDate, formatThaiTimeMs } from "../lib/dates";
 import { fullName } from "../lib/names";
 import { dashboard, dashboardStale, dashboardAt, dashboardStatus, loadDashboard } from "../lib/dashboard";
-import { attendanceProgress } from "@shared/metrics";
+import { attendanceProgress, attendancePercent, assignmentRate, assignmentFraction } from "@shared/metrics";
+import { bkkToday } from "@shared/time";
 import { attDraftCount } from "../lib/attSync";
 import { pendingCount, failedCount } from "../lib/outbox";
 import type { AttendanceDay, AssignmentDashboard } from "@shared/types";
 
-function bkkToday(): string {
-  return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-}
 function daysUntil(due: string, today: string): number {
   return Math.round((Date.parse(due) - Date.parse(today)) / 86400000);
 }
@@ -69,9 +67,9 @@ export function Home() {
   const prog = att.map((a) => attendanceProgress(a.marked, a.total));
   const completeN = prog.filter((p) => p === "complete").length;
   const partialN = prog.filter((p) => p === "partial").length;
-  const attMarked = att.reduce((n, a) => n + a.marked, 0);
-  const attPresent = att.reduce((n, a) => n + a.present + a.late, 0);
-  const attPct = attMarked ? Math.round((attPresent / attMarked) * 100) : 0;
+  const attPct = attendancePercent(att.reduce((c, a) => ({
+    present: c.present + a.present, late: c.late + a.late, leave: c.leave + a.leave, sick: c.sick + a.sick, absent: c.absent + a.absent,
+  }), { present: 0, late: 0, leave: 0, sick: 0, absent: 0 }));
   const attSub = att.length === 0 ? "ยังไม่มีนักเรียน"
     : completeN === att.length ? "วันนี้เช็คครบทุกห้อง"
     : `ยังเหลือ ${att.length - completeN} ห้อง`;
@@ -141,7 +139,7 @@ export function Home() {
         <StatCard label="งานที่เปิดรับ" value={open.length} icon="clipboard-list" hint="กดดูรายห้อง" onClick={() => setList("open")} />
         <StatCard label="รอตรวจ" value={d.awaitingCount} unit="ชิ้น" icon="pencil" hint="รวมงานที่ปิดรับแล้ว" onClick={() => setList("awaiting")} />
         <StatCard label="ค้างส่ง" value={d.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint="เฉพาะงานที่ยังเปิดรับ" onClick={() => setList("missing")} />
-        <StatCard label="มาเรียนวันนี้" value={attMarked ? `${attPct}%` : "—"} tone="success" icon="user-check"
+        <StatCard label="มาเรียนวันนี้" value={attPct != null ? `${attPct}%` : "—"} tone="success" icon="user-check"
           hint={att.length ? `เช็คครบ ${completeN} จาก ${att.length} ห้อง${partialN ? ` · บางส่วน ${partialN}` : ""}` : "—"} onClick={() => navigate("/attendance")} />
       </div>
 
@@ -168,13 +166,13 @@ export function Home() {
                 </div>
                 {a.perClass.map((p) => {
                   const cls = classById(p.classId);
-                  const pct = p.total ? Math.round((p.submitted / p.total) * 100) : 0;
+                  const pct = assignmentRate(p); // submitted ÷ (class − excused), as the dashboard and reports
                   const tone = p.missing > 0 ? "var(--fill-warning)" : "var(--fill-success)";
                   return (
                     <div class="hm-prog">
                       <span>{cls?.name}</span>
                       <ProgressBar pct={pct} tone={tone} />
-                      <span class="num">{p.submitted}/{p.total}</span>
+                      <span class="num">{assignmentFraction(p)}</span>
                       {p.awaiting > 0 ? <span class="chip" style={CHIP.accent}>รอตรวจ {p.awaiting}</span>
                         : p.missing > 0 ? <span class="chip" style={CHIP.danger}>ค้าง {p.missing}</span>
                         : <button class="chip" style={CHIP.muted + ";border:none;cursor:pointer"} onClick={() => navigate("/scan", { asg: a.assignment.id, class: p.classId })}><Icon name="scan" size={13} /> สแกน</button>}

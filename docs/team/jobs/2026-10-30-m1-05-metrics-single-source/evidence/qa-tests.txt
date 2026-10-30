@@ -1,0 +1,35 @@
+
+This package will not receive future updates.
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-01 every child excused: per-assignment rate 0 ÷ 0 is 0%, never NaN 3ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-02 / E-14 per-child rate ignores not-yet-due work (0 ÷ 0 → 0, early hand-in → 100%) 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-03 / E-04 / E-11 an exact .5 rounds up once (Math.round) 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > B-01 true 57.5% must show 58% (23 of 40 children, 57.5 of 100 points) 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-05 whole-class rate is pooled, not a mean of each child's % 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-08 / E-13 late without a score is awaiting; void follows the due date 0ms
+ ✓ |workers| test/api/qa-m1-05.test.ts > dashboard API = report = shared function > E-01 the whole class excused: 0%, no NaN, nobody counted as overdue 83ms
+ ✓ |workers| test/api/qa-m1-05.test.ts > dashboard API = report = shared function > E-16 / AC-08 no excused: 1 of 2 = 50% on both sides; the overdue child is 0% 73ms
+stdout | test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-03 with excused children: 13% on every screen
+[B-02] Reports "1/8 · ยกเว้น 2" · Excel "1/8 · ยกเว้น 2" · Gradebook "1/8 · ยกเว้น 2" next to 13% (= 1/8)
+
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-09 / E-10 attendance: nothing checked is no data; checked-but-away is 0% 381ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-12 accumulated score counts overdue as 0 and leaves awaiting out 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > B-05 studentSummary.awaiting counts handed-in work without a score 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > AC-06 one Bangkok 'today' at 23:30 and 00:30, shared by worker and pages 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-03 with excused children: 13% on every screen 125ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-06 / E-07 Reports score buckets use the rounded %: 59.5 → 60–69, 59 → 50–59 12ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-16 / AC-08 no excused children: 6 of 10 stays 60% in the model and the Excel sheets 21ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-09 AC-01 data: the count next to 75% is 6/8 · ยกเว้น 2 on Reports and the Excel class sheet 17ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-10 edge .5 values: 23 of 40 → 58% in the model and Excel; 29/200 → 15 13ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-11 Excel score sheet says ยกเว้น (not ลา); Reports score card hint matches its value 13ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > R-05 graded average of half-point work divides once: 62.5 → 63 in the model and Excel; awaiting/excused left out 8ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > R-05 everyone full marks on half-point work → 100 0ms
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  13:32:42
+   Duration  1.75s (transform 775ms, setup 1.18s, import 424ms, tests 754ms, environment 406ms)
+

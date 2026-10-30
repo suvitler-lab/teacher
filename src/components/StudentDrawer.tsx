@@ -6,6 +6,7 @@ import { computeReport, type ReportPayload, type StudentReport } from "../lib/re
 import { classById, selectedTermId, studentsById, subjectById } from "../store";
 import { fullName } from "../lib/names";
 import type { Student } from "@shared/types";
+import { scorePercent, attendancePercent } from "@shared/metrics";
 import { formatThaiDayMonthMs } from "../lib/dates";
 
 const METHOD_LABEL: Record<string, string> = { camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน" };
@@ -83,8 +84,8 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
     }>
       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px">
         <div style="background:var(--surface-1);border-radius:10px;padding:6px 8px"><div class="page-sub">ส่งงาน</div><div style="font-size:16px;font-weight:500;font-variant-numeric:tabular-nums">{report ? `${report.submitted}/${report.applicable}` : "—"}</div></div>
-        <div style="background:var(--surface-1);border-radius:10px;padding:6px 8px"><div class="page-sub">คะแนนสะสม</div><div style="font-size:16px;font-weight:500" class={report && report.fullScore && report.score / report.fullScore < 0.6 ? "" : ""}>{report && report.fullScore ? Math.round((report.score / report.fullScore) * 100) + "%" : "—"}</div></div>
-        <div style="background:var(--surface-1);border-radius:10px;padding:6px 8px"><div class="page-sub">มาเรียน</div><div style="font-size:16px;font-weight:500">{att && att.daysMarked ? Math.round(((att.present + att.late) / att.daysMarked) * 100) + "%" : "—"}</div></div>
+        <div style="background:var(--surface-1);border-radius:10px;padding:6px 8px"><div class="page-sub">คะแนนสะสม</div><div style="font-size:16px;font-weight:500" class={report && report.fullScore && report.score / report.fullScore < 0.6 ? "" : ""}>{report && scorePercent(report.score, report.fullScore) != null ? scorePercent(report.score, report.fullScore) + "%" : "—"}</div></div>
+        <div style="background:var(--surface-1);border-radius:10px;padding:6px 8px"><div class="page-sub">มาเรียน</div><div style="font-size:16px;font-weight:500">{att && attendancePercent(att) != null ? attendancePercent(att) + "%" : "—"}</div></div>
       </div>
 
       <div class="row" style="justify-content:space-between;font-weight:500;margin-bottom:4px">

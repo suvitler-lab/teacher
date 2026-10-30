@@ -1,0 +1,16 @@
+# AC-07 grep final 13:35
+$ grep -rnE "\* ?100\b|Math.round\(" src/pages src/components src/lib
+src/pages/Gradebook.tsx:451:                  const avg = scored.length ? Math.round((scored.reduce((n, s) => n + (s.score ?? 0), 0) / scored.length) * 10) / 10 : null;
+src/pages/Home.tsx:19:  return Math.round((Date.parse(due) - Date.parse(today)) / 86400000);
+src/pages/Home.tsx:215:          <span class="grow">{lastBackup ? `สำรองข้อมูลล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันที่แล้ว` : "ยังไม่เคยสำรองข้อมูล"} · ควรสำรองสัปดาห์ละครั้ง</span>
+src/pages/Random.tsx:76:      const k = Math.max(1, Math.round(s.length / count));
+src/pages/Reports.tsx:239:                  {buckets.map((n, i) => <div class="col"><span class="n">{n}</span><div class="bar" style={`height:${Math.round((n / maxBucket) * 54)}px;background:${bucketColor[i]}`} /></div>)}
+src/pages/Scan.tsx:914:  const quick = [s.fullScore, s.fullScore - 1, s.fullScore - 2, Math.round(s.fullScore * 0.5)].filter((n, i, a) => n >= 0 && a.indexOf(n) === i);
+src/pages/Settings.tsx:254:              {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:13px"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
+src/pages/Settings.tsx:307:      setLog((l) => [{ raw, who: st ? fullName(st) : (r.kind === "revoked" ? "บัตรถูกยกเลิก" : null), ok: r.kind === "student", ms: Math.round(performance.now() - t0), at: Date.now() }, ...l].slice(0, 6));
+src/components/ui.tsx:187:  const style = `width:${size}px;height:${size}px;font-size:${Math.round(size * 0.42)}px`
+src/lib/deviceCheck.ts:46:const secs = (ms: number) => Math.round(Math.abs(ms) / 1000);
+src/lib/deviceCheck.ts:47:const minsText = (ms: number) => (Math.abs(ms) >= 90_000 ? `${Math.round(Math.abs(ms) / 60_000)} นาที` : `${secs(ms)} วินาที`);
+src/lib/deviceCheck.ts:90:    add("storage", "ที่เก็บข้อมูลในเครื่อง", "warn", `พื้นที่ของเบราว์เซอร์เหลือน้อย (${Math.round(f.freeMb)} MB) — ลบไฟล์/แอปในเครื่องก่อน`);
+src/lib/deviceCheck.ts:170:    return { reachable: true, latencyMs: t1 - t0, health, skewMs: Number.isFinite(date) ? date - Math.round((t0 + t1) / 2) : null };
+(end)

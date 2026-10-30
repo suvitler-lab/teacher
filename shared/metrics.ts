@@ -23,6 +23,22 @@ export interface AsgLike {
 
 const isLate = (s: SubLike) => s.late === true || s.late === 1;
 
+// ---- the one rounding point ----------------------------------------------
+
+/** Every percent on screen is rounded here and nowhere else: Math.round to a whole percent (BR-05). */
+export function roundPercent(x: number): number {
+  return Math.round(x);
+}
+
+/**
+ * part ÷ whole as a whole-number percent; null when there is nothing to divide by ("no data", not 0%).
+ * Multiply first, then divide: (23 / 40) * 100 is 57.49999… in floating point and would round to 57,
+ * (23 * 100) / 40 is exactly 57.5 and rounds to 58 (AC-10).
+ */
+export function percentOf(part: number, whole: number): number | null {
+  return whole > 0 ? roundPercent((part * 100) / whole) : null;
+}
+
 /** Classify one student's state on one assignment. `today` is YYYY-MM-DD. */
 export function workState(sub: SubLike | undefined | null, asg: AsgLike, today: string): WorkState {
   if (sub && sub.status === "excused") return "excused";
@@ -52,7 +68,7 @@ export interface AssignmentProgress {
   pending: number;
   excused: number;
   rate: number;      // submitted ÷ (total − excused), rounded %
-  average: number;   // mean of (score ÷ full × 100) over scored, rounded
+  average: number;   // Σscore ÷ (scored × full) over scored work, rounded %
 }
 
 export function assignmentProgress<S extends { id: string }>(
@@ -75,16 +91,47 @@ export function assignmentProgress<S extends { id: string }>(
     }
     if (state === "scored" || state === "late") {
       const sc = subByStudent.get(st.id)!.score ?? 0;
-      scoreSum += asg.full_score > 0 ? (sc / asg.full_score) * 100 : 0;
+      scoreSum += sc; // raw points; divided once below (R-05)
     }
   }
   const denom = students.length - excused;
   return {
     total: students.length,
     submitted, scored, awaiting, late, missing, pending, excused,
-    rate: denom > 0 ? Math.round((submitted / denom) * 100) : 0,
-    average: scored > 0 ? Math.round(scoreSum / scored) : 0,
+    rate: percentOf(submitted, denom) ?? 0,
+    average: percentOf(scoreSum, scored * asg.full_score) ?? 0, // Σscore ÷ (scored × full)
   };
+}
+
+/** Per-assignment submit rate from counts: submitted ÷ (class − excused), rounded %; 0 if nobody counts. */
+export function assignmentRate(c: { submitted: number; total: number; excused: number }): number {
+  return percentOf(c.submitted, c.total - c.excused) ?? 0;
+}
+
+/**
+ * The fraction shown next to assignmentRate, over the same denominator: "6/8 · ยกเว้น 2".
+ * Without excused children it is the old "6/10".
+ */
+export function assignmentFraction(c: { submitted: number; total: number; excused: number }): string {
+  return `${c.submitted}/${c.total - c.excused}` + (c.excused > 0 ? ` · ยกเว้น ${c.excused}` : "");
+}
+
+export interface WorkStateCounts extends Record<WorkState, number> {
+  total: number;     // every seat
+  submitted: number; // scored + late + awaiting
+  counted: number;   // total − excused (the rate's denominator)
+}
+
+/** Count seats by work state — what the scan legend and a column's progress bar show. */
+export function countWorkStates(states: WorkState[]): WorkStateCounts {
+  const c: WorkStateCounts = { scored: 0, late: 0, awaiting: 0, missing: 0, pending: 0, excused: 0, total: 0, submitted: 0, counted: 0 };
+  for (const st of states) {
+    c[st]++;
+    c.total++;
+    if (isSubmitted(st)) c.submitted++;
+  }
+  c.counted = c.total - c.excused;
+  return c;
 }
 
 // ---- per-student rollup (one student, many assignments) ------------------
@@ -118,7 +165,7 @@ export function studentSummary(
         score += sub!.score ?? 0;
         fullScore += asg.full_score;
         break;
-      case "awaiting": submitted++; break;
+      case "awaiting": submitted++; awaiting++; break;
       case "missing": missing++; fullScore += asg.full_score; break; // counts as 0
       case "pending": pending++; break;
       case "excused": excused++; break;
@@ -127,10 +174,22 @@ export function studentSummary(
   const applic = submitted + missing;
   return {
     submitted, awaiting, missing, excused, pending,
-    submitRate: applic > 0 ? Math.round((submitted / applic) * 100) : 0,
+    submitRate: percentOf(submitted, applic) ?? 0,
     score, fullScore,
-    scorePercent: fullScore > 0 ? Math.round((score / fullScore) * 100) : 0,
+    scorePercent: scorePercent(score, fullScore) ?? 0,
   };
+}
+
+/** Σscore ÷ Σfull as a rounded %; null when there is no full score to compare with. */
+export function scorePercent(score: number, fullScore: number): number | null {
+  return percentOf(score, fullScore);
+}
+
+/** Whole-class submit rate: pooled Σsubmitted ÷ Σ(submitted + missing) over every child (not a mean of %). */
+export function classSubmitRate(rows: { submitted: number; missing: number }[]): number {
+  let submitted = 0, applicable = 0;
+  for (const r of rows) { submitted += r.submitted; applicable += r.submitted + r.missing; }
+  return percentOf(submitted, applicable) ?? 0;
 }
 
 // ---- attendance ----------------------------------------------------------
@@ -139,10 +198,27 @@ export interface AttendanceCounts {
   present: number; late: number; leave: number; sick: number; absent: number;
 }
 
-/** Present rate = (present + late) ÷ marked days, rounded %. */
+const markedOf = (c: AttendanceCounts) => c.present + c.late + c.leave + c.sick + c.absent;
+
+/** Present rate = (present + late) ÷ marked days, rounded %. 0 when nothing was checked. */
 export function attendanceRate(c: AttendanceCounts): number {
-  const marked = c.present + c.late + c.leave + c.sick + c.absent;
-  return marked > 0 ? Math.round(((c.present + c.late) / marked) * 100) : 0;
+  return attendancePercent(c) ?? 0;
+}
+
+/** Same as attendanceRate, but null when nothing was checked — the screen shows "—", never 0%. */
+export function attendancePercent(c: AttendanceCounts): number | null {
+  return percentOf(c.present + c.late, markedOf(c));
+}
+
+/**
+ * The Students page's "average attendance": the mean of each checked child's own present rate
+ * (children with nothing checked are left out). null when no child was checked.
+ */
+export function averageAttendancePercent(list: AttendanceCounts[]): number | null {
+  const checked = list.filter((c) => markedOf(c) > 0);
+  if (!checked.length) return null;
+  const sum = checked.reduce((n, c) => n + ((c.present + c.late) * 100) / markedOf(c), 0);
+  return roundPercent(sum / checked.length);
 }
 
 /**

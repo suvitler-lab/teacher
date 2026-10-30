@@ -1,8 +1,9 @@
 import type { Student, Assignment } from "@shared/types";
 import {
   workState, isSubmitted, assignmentProgress, studentSummary,
-  attendanceRate, type AttendanceCounts,
+  attendancePercent, classSubmitRate, scorePercent, type AttendanceCounts,
 } from "@shared/metrics";
+import { bkkToday } from "@shared/time";
 
 export interface ReportPayload {
   classId: string;
@@ -30,6 +31,7 @@ export interface AssignmentReport {
   assignment: Assignment;
   submitted: number;
   total: number;
+  excused: number;
   rate: number;
   average: number;
   scoredCount: number;
@@ -45,12 +47,8 @@ export interface ReportModel {
   today: string;
 }
 
-function todayBkk(): string {
-  return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
-}
-
 export function computeReport(p: ReportPayload): ReportModel {
-  const today = todayBkk();
+  const today = bkkToday();
   const subKey = (aid: string, sid: string) => `${aid}:${sid}`;
   const subMap = new Map(p.submissions.map((s) => [subKey(s.assignment_id, s.student_id), s]));
 
@@ -94,6 +92,7 @@ export function computeReport(p: ReportPayload): ReportModel {
       assignment,
       submitted: prog.submitted,
       total: prog.total,
+      excused: prog.excused,
       rate: prog.rate,
       average: prog.average,
       scoredCount: prog.scored,
@@ -110,8 +109,6 @@ export function computeReport(p: ReportPayload): ReportModel {
     }))
     .sort((a, b) => b.missing.length - a.missing.length);
 
-  const totApplicable = students.reduce((n, s) => n + s.applicable, 0);
-  const totSubmitted = students.reduce((n, s) => n + s.submitted, 0);
   const totScore = students.reduce((n, s) => n + s.score, 0);
   const totFull = students.reduce((n, s) => n + s.fullScore, 0);
   const totCounts = students.reduce<AttendanceCounts>(
@@ -129,10 +126,10 @@ export function computeReport(p: ReportPayload): ReportModel {
   return {
     students, assignments, followUp,
     metrics: {
-      submitRate: totApplicable ? Math.round((totSubmitted / totApplicable) * 100) : 0,
+      submitRate: classSubmitRate(students),
       missingCount: students.reduce((n, s) => n + s.missing, 0),
-      avgScorePercent: totFull ? Math.round((totScore / totFull) * 100) : 0,
-      attendanceRate: marks > 0 ? attendanceRate(totCounts) : null,
+      avgScorePercent: scorePercent(totScore, totFull) ?? 0,
+      attendanceRate: attendancePercent(totCounts),
     },
     attendance: {
       unit: p.range?.att === "subject" ? "period" : "day",

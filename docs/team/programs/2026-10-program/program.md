@@ -41,8 +41,8 @@
 | `2026-10-30-m1-01-restore-half-score` | S | E-01 | M-01 | intake | merge เข้า main `0020a93` (D19) | ปิดแล้ว |
 | `2026-10-30-m1-02-inactive-student-guard` | S | E-01 | M-01 | m1-01 | merge เข้า main `a1ef3fa` | ปิดแล้ว |
 | `2026-10-30-m1-03-guards-in-transaction` | S | E-01 | M-01 | m1-02 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
-| `2026-10-30-m1-04-late-flag` | S | E-01 | M-01 | m1-03 | (หลัก) | กำลังทำ |
-| `m1-05-metrics-single-source` | M | E-01 | M-01 | m1-03 | (หลัก) | รอ |
+| `2026-10-30-m1-04-late-flag` | S | E-01 | M-01 | m1-03 | merge เข้า main (ผู้ใช้สั่ง "merge แล้วทำต่อ") | ปิดแล้ว |
+| `2026-10-30-m1-05-metrics-single-source` | S | E-01 | M-01 | m1-04 | (หลัก) | กำลังทำ |
 | `m1-06-server-intent` · `m1-07-bulk-excused` · `m1-08-audit-atomic` | S/S/M | E-01 | M-01 | m1-04/05 | (หลัก) | รอ |
 | `2026-10-30-visual-polish-review` (ประชุมออกแบบ: audit + ข้อเสนอ + mockup) | M | E-05 | M-02 | — (ขนานกับ M1, เฉพาะ docs) | (หลัก, เฉพาะ docs) | ปิดแล้ว (Gate 2 อนุมัติ) |
 | `vp-1-tokens-a11y` → `vp-2-icons` → `vp-3-app-icon` | M/M/S | E-05 | M-02 | Gate M1 | (หลัก) | รอ |

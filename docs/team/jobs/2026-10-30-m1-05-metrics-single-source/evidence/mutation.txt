@@ -1,0 +1,22 @@
+# M1-05 mutations (one at a time; file backed up, restored, cmp checked)
+## M-1 Home:171 back to submitted / total
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-screens.test.tsx > AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere > Home: the class progress bar of an open assignment (and AC-04 attendance card)
+      Tests  1 failed | 8 passed (9)
+restored: cmp identical (src/pages/Home.tsx)
+## M-2a opSchema back to multipleOf(0.5)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/m1-05-metrics.test.ts > AC-05 batch: isHalfStep decides > refuses 7.500000000000001 with 422 and stores nothing
+      Tests  1 failed | 8 passed (9)
+restored: cmp identical (worker/routes/submissions.ts)
+## M-2b restore halfStep back to multipleOf(0.5)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |workers| test/api/m1-05-metrics.test.ts > AC-05 restore: the chunk step refuses what isHalfStep refuses > chunk with 7.500000000000001 is refused as invalid_backup on submissions.score
+      Tests  1 failed | 8 passed (9)
+restored: cmp identical (worker/lib/restore-validation.ts)
+## M-3 scan legend drops awaiting
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  |dom| test/unit/m1-05-scan.test.tsx > AC-02 scan legend and ring > lists on time, late, awaiting, not handed in, excused; adds up to the class; ring 6/8
+ FAIL  |dom| test/unit/m1-05-scan.test.tsx > AC-02 scan legend and ring > each swatch uses the same colour tokens as its seat
+      Tests  2 failed | 1 passed (3)
+restored: cmp identical (src/pages/Scan.tsx)

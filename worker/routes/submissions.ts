@@ -11,6 +11,7 @@ import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { isLateSubmission, clampClientTs } from "../lib/time";
 import { lateFixForCells } from "../lib/late";
 import { id, ulid } from "@shared/ids";
+import { isHalfStep } from "@shared/grade";
 import type { SubmissionOpResult, Submission } from "@shared/types";
 
 export const submissionRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -59,7 +60,7 @@ const opSchema = z.object({
   assignmentId: z.string().min(1),
   studentId: z.string().min(1),
   status: z.enum(["submitted", "excused", "void"]),
-  score: z.number().multipleOf(0.5).nullable(),
+  score: z.number().refine(isHalfStep).nullable(), // the same half-point rule as the screens (shared/grade.ts)
   fullScoreAtScan: z.number().int(),
   method: z.enum(["camera", "hid", "manual", "grid", "bulk", "import", "restore"]),
   clientTs: z.number(),

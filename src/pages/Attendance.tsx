@@ -7,7 +7,8 @@ import type { AttendanceStatus, AttendanceDay, Student } from "@shared/types";
 import { api } from "../lib/api";
 import { buildIndex, resolveScan } from "@shared/scan";
 import { nextStatus } from "@shared/attendance";
-import { attendanceProgress } from "@shared/metrics";
+import { attendanceProgress, attendancePercent } from "@shared/metrics";
+import { bkkToday, bkkParts } from "@shared/time";
 import { installHidScanner } from "../lib/hid";
 import { fullName, shortName } from "../lib/names";
 import { formatThaiDate, formatThaiTimeMs } from "../lib/dates";
@@ -33,8 +34,8 @@ const REVIEW_REASON: Record<string, string> = {
 };
 const TH_DOW = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
 
-function todayBkk(): string { return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10); }
-function nowMinutesBkk(): number { const d = new Date(Date.now() + 7 * 3600 * 1000); return d.getUTCHours() * 60 + d.getUTCMinutes(); }
+const todayBkk = () => bkkToday();
+const nowMinutesBkk = () => bkkParts(Date.now()).minutes;
 function hmToMin(hm: string, fallback = 510): number { const m = /^(\d{1,2}):(\d{2})$/.exec(hm); return m ? Number(m[1]) * 60 + Number(m[2]) : fallback; }
 function periodTimes(): Record<string, string> { try { return JSON.parse(settings.value?.period_times || "{}"); } catch { return {}; } }
 function lateThreshold(scoped: boolean, period: number): number | null {
@@ -233,6 +234,7 @@ export function AttendancePage() {
 
   const counts = STATUSES.map((s) => students.filter((st) => statusOf(st.id) === s).length);
   const marked = counts.reduce((a, b) => a + b, 0);
+  const presentPct = attendancePercent({ present: counts[0], late: counts[1], leave: counts[2], sick: counts[3], absent: counts[4] });
   const unmarked = students.length - marked;
   const days = weekDays(date);
   const classItems = activeClasses.value.map((c) => {
@@ -304,7 +306,7 @@ export function AttendancePage() {
 
       <div class="card att-sum">
         <div class="row" style="justify-content:space-between;margin-bottom:6px">
-          <span style="font-weight:500">มาเรียน {counts[0] + counts[1]} จาก {students.length} คน {marked ? <span class="muted" style="font-weight:400">({Math.round(((counts[0] + counts[1]) / (marked || 1)) * 100)}%)</span> : null}</span>
+          <span style="font-weight:500">มาเรียน {counts[0] + counts[1]} จาก {students.length} คน {presentPct != null ? <span class="muted" style="font-weight:400">({presentPct}%)</span> : null}</span>
           <span class="page-sub">{unmarked > 0 ? `ยังไม่เช็ค ${unmarked} คน` : "ครบทุกคนแล้ว"}</span>
         </div>
         <StackBar segments={STATUSES.map((s, i) => ({ value: counts[i], color: DOT[s] }))} />
