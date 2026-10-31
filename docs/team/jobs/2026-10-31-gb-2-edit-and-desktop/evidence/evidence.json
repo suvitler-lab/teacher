@@ -1,0 +1,92 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser default ungrouped, no group row, rows/scroll measures",
+    "artifact": "evidence/qa-measure-round4.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:8fdb1aa3f77de2799e904cbbf9abe20bfd07c80d",
+    "at": "2026-10-30T21:24:23.242Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "tap sum, type 8 saved 142->142.5",
+    "artifact": "evidence/qa-measure-round4.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:8fdb1aa3f77de2799e904cbbf9abe20bfd07c80d",
+    "at": "2026-10-30T21:24:23.681Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "browser 1536x729,1280x720,1920x1080 + tab order",
+    "artifact": "evidence/qa-measure-round4.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:8fdb1aa3f77de2799e904cbbf9abe20bfd07c80d",
+    "at": "2026-10-30T21:24:24.125Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "simulated coarse 820/1180 x18/24",
+    "artifact": "evidence/qa-measure-round4.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:8fdb1aa3f77de2799e904cbbf9abe20bfd07c80d",
+    "at": "2026-10-30T21:24:24.533Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-05"
+    ],
+    "br": [],
+    "by": "pm",
+    "mandatory": false,
+    "command": "npm run typecheck && npm test (85 ไฟล์ / 1017) && npm run build",
+    "artifact": "evidence/final-full-suite.txt",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:8fdb1aa3f77de2799e904cbbf9abe20bfd07c80d",
+    "at": "2026-10-30T21:27:13.918Z"
+  }
+]

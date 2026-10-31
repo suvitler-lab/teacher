@@ -1,0 +1,7 @@
+QA measurements, fixture --gb14 (fictional data), browser pane emulation, resize event dispatched manually. Screenshots could not be saved to file (browser tool returns image inline only).
+AC-01: default mode = ไม่จัดกลุ่ม, no group header row (thead rows=1). Edit stu_1/asg_gb_4 typed 7.5 Enter -> API submissions score 7.5, row total 85/130 -> 87/130 (+2 correct).
+AC-02: mode ตามประเภท, collapsed ใบงาน by user. stu_1 group 34.5/60 (API sum 9+5.5+7.5+7.5+5=34.5 OK). Mouse tap on stu_3 รวม -> group expanded, focus INPUT stu_3/asg_gb_1, in view. Typed 8 Enter -> server 8; group 38/60->38.5/60, total 122/170->122.5/170 (correct). Enter and Space on stu_4/stu_6 sum cell -> expand + focus input same row. aria-label "รวม ใบงาน · <name> · แตะเพื่อกางและแก้คะแนน".
+AC-03 (14 works): 1536x864: col 7.6rem (rem=18px), name 12.8rem, page no scroll, only .gb-scroll vertical, no horizontal page scroll, emptyTh 0, tot rowSpan 2 in group mode. PASS.
+  1280x720 and 1280x800: name 10.7rem, 10 student names clipped (ellipsis), page scrollHeight 852 > innerHeight, AND .gb-scroll scrolls (max-height floor 360px) => stacked vertical scrollbars. FAIL. (both modes)
+  Group mode: col of 1-work group (โครงงาน) 11.41rem > ~9rem because group header text widens it.
+Not measured by QA: 1920, 2560, 2-work, AC-04 (820/1180 coarse).

@@ -1,0 +1,10 @@
+Round 3 (build 04:07 newer than src 03:59). fixture --gb14 fictional, SW unregistered, new login. html font-size forced 16px for desktop runs. No screenshot files (tool inline only).
+AC-03, 19 works ungrouped, 16px: 
+ 1536x729: full student rows visible 8 (target >=7 OK), name 15.36rem, clipped 0, no page scroll (scrollHeight 729), no horizontal page scroll, text<13 = 0, header single row 54px, th สะสม* not empty
+ 1280x720: 7 rows (target >=6 OK), name 12.8rem, clipped 0, no page scroll, no page-X, text<13 0
+ 1920x1080: 15 rows, name 16rem, clipped 0, no page scroll
+Grouped (ตามประเภท, 1920): thead 2 rows, สะสม rowSpan=2 h99 not empty; group header cells widths ok; header "overlaps" found only = sticky name/สะสม columns over scrolled cells (normal). Jump buttons present (แบบฝึกหัด/สอบย่อย/ชิ้นงาน) and minimap present; scrollLeft change not conclusive at 1920 (table 1930 vs 1783 box) so jump scroll NOT verified in the new rows.
+AC-02: collapse ใบงาน, tap sum cell stu_3 -> INPUT focus stu_3/asg_gb_1; typed 6.5 (was 7.5) Enter -> server 6.5; total 142/220 -> 141/220 (correct -1).
+AC-04 SIMULATED coarse (coarse rules re-injected without media; html font-size 14/18/24 as proxy), grouped table, scrollLeft 0:
+ 820x1180 and 1180x820: buttons<44 = 0 at 14/18/24; text<13 = 0; page horizontal scroll none; page vertical scroll only at 24px (both sizes). Header overlaps only sticky columns.
+ Compare with main at 24px: NOT possible (no main build; cannot stash/checkout). 

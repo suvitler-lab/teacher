@@ -3,8 +3,10 @@
 
 export type GroupMode = "none" | "type" | "month";
 export const GROUP_MODES: GroupMode[] = ["none", "type", "month"];
-export const DEFAULT_GROUP_MODE: GroupMode = "type";
-export const GROUP_STORAGE_KEY = "ngankrob.gb.groupMode";
+export const DEFAULT_GROUP_MODE: GroupMode = "none";
+// v2: gb-1a saved its own default ("type") under the old key, so a saved value there cannot be told from a real choice.
+// A new key means everyone starts on the plain table, and only a choice made from now on is remembered.
+export const GROUP_STORAGE_KEY = "ngankrob.gb.groupMode.v2";
 
 export interface GroupableAsg { id: string; type_id: string | null; assigned_date: string | null }
 export interface Group<A extends GroupableAsg> {
@@ -20,6 +22,7 @@ interface StorageLike { getItem(k: string): string | null; setItem(k: string, v:
 export function loadGroupMode(storage?: StorageLike | null): GroupMode {
   try {
     const s = storage === undefined ? globalThis.localStorage : storage;
+    try { (s as { removeItem?: (k: string) => void } | null | undefined)?.removeItem?.("ngankrob.gb.groupMode"); } catch { /* the old gb-1a key is only clutter */ }
     const v = s?.getItem(GROUP_STORAGE_KEY);
     return (GROUP_MODES as string[]).includes(v ?? "") ? (v as GroupMode) : DEFAULT_GROUP_MODE;
   } catch { return DEFAULT_GROUP_MODE; }
@@ -57,33 +60,10 @@ export function buildGroups<A extends GroupableAsg>(
   return [...out.values()];
 }
 
-/** The date one month before `today` (YYYY-MM-DD), day clamped to the target month's length. Pure string/UTC arithmetic. */
-export function oneMonthBefore(today: string): string {
-  const [y, m, d] = today.split("-").map(Number);
-  const py = m === 1 ? y - 1 : y, pm = m === 1 ? 12 : m - 1;
-  const last = new Date(Date.UTC(py, pm, 0)).getUTCDate();
-  return `${py}-${String(pm).padStart(2, "0")}-${String(Math.min(d, last)).padStart(2, "0")}`;
-}
-
 /**
- * Which groups start folded: those whose every piece of work is older than one month (by assigned date, Bangkok
- * `today`). The teacher never lands on a fully folded table: if every group is old, the newest one stays open.
+ * Folded groups = only the ones the teacher folded herself (true = folded, false = open). Nothing folds by itself:
+ * every group starts open, so no score is ever hidden behind a group total the teacher cannot edit.
  */
-// work with no assigned date counts as recent, so it is never folded away by age
-export function defaultCollapsed<A extends GroupableAsg>(groups: Group<A>[], today: string): Set<string> {
-  if (groups.length <= 1) return new Set();
-  const cutoff = oneMonthBefore(today);
-  const newest = (g: Group<A>) => g.items.reduce((m, a) => (((a.assigned_date ?? "9999-12-31") > m) ? (a.assigned_date ?? "9999-12-31") : m), "");
-  const old = groups.filter((g) => newest(g) < cutoff);
-  const set = new Set(old.map((g) => g.key));
-  if (set.size === groups.length) {
-    const keep = groups.reduce((best, g) => (newest(g) > newest(best) ? g : best), groups[0]);
-    set.delete(keep.key);
-  }
-  return set;
-}
-
-/** Folded groups = the default, with the teacher's own taps on top (true = folded, false = open). */
-export function isCollapsed(key: string, defaults: Set<string>, overrides: Map<string, boolean>): boolean {
-  return overrides.has(key) ? overrides.get(key)! : defaults.has(key);
+export function isCollapsed(key: string, overrides: Map<string, boolean>): boolean {
+  return overrides.get(key) === true;
 }

@@ -1,0 +1,9 @@
+Round 4 (build 04:22 newer than src 04:15). fixture --gb14 fictional, SW unregistered, new login. 19 works ungrouped, html font-size 16px. No screenshot files (tool inline only).
+Desktop: 1536x729: 8 full rows, name 15.36rem, clipped 0, page scrollHeight 729=innerHeight, no page-X, text<13 0, thead 1 row, tot header "สะสม*"
+ 1280x720: 7 rows, name 12.8rem, clipped 0, no stacked scroll, no page-X, text<13 0
+ 1920x1080: 15 rows, name 16rem, clipped 0, no stacked scroll
+Tab order (1536): nav links -> ออกระบบ -> ภาคเรียน select (281,14) -> สร้างงาน (490,7) -> ป.6/1 (620,11) -> ป.6/2 -> ป.6/3 -> วิชา (96,55) -> ประเภทงาน (233,55): follows visual order top row left->right then filter row.
+AC-02 grouped (1920): collapse ใบงาน, tap sum stu_3 -> INPUT focus stu_3/asg_gb_1 (7.5); typed 8 Enter -> server 8; total 142/220 -> 142.5/220 correct. tot th rowSpan 2.
+AC-04 SIMULATED coarse (rules re-injected without media; html font-size 18/24 proxy), grouped, scrollLeft 0:
+ 820x1180: 18px: btn<44 0, text<13 0, pageX no, pageSY no, toolbar bands 8, table top y=525, no ctrl taller than 70px; 24px: btn<44 0, text<13 0, pageX no, pageSY YES, bands 11, table top y=730
+ 1180x820: 18px: all 0/no, bands 5, table top 244; 24px: 0/0, pageX no, pageSY YES, bands 9, table top 422 (table occupies little of 820px height at 24px)
