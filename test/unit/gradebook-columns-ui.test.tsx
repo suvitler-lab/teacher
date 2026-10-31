@@ -41,6 +41,7 @@ beforeEach(() => {
   cleanup();
   vi.clearAllMocks();
   localStorage.clear();
+  localStorage.setItem("ngankrob.gb.groupMode.v2", "type");
   vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   route.value = "/gradebook?class=c1&subject=math";
   terms.value = [{ id: "t1", year: 2569, term: 1, name: "1/2569", is_current: true, start_date: null, end_date: null, updated_at: 0 }];
@@ -69,13 +70,19 @@ async function open() {
   render(<GradebookPage />);
   await screen.findByRole("columnheader", { name: /แบบฝึกหัด 1/ });
 }
+/** Groups start open now; the teacher folds ใบงาน herself so the folded-total paths are still covered. */
+async function openFolded() {
+  await open();
+  fireEvent.click(screen.getAllByRole("button").find((b) => b.getAttribute("aria-expanded") === "true" && /ใบงาน/.test(b.textContent ?? ""))!);
+  await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
+}
 const lastCells = (row: number) => [...document.querySelectorAll("table.gb tbody tr")[row].querySelectorAll("td")].map((c) => c.textContent);
 const trigger = () => screen.getByRole("button", { name: /^คอลัมน์ \(/ });
 const item = (name: RegExp) => screen.getByRole("checkbox", { name });
 
 describe("คอลัมน์ (n/N) menu", () => {
   it("shows n/N, hides a type's columns, and leaves สะสม and the other group totals exactly as they were", async () => {
-    await open();
+    await openFolded();
     expect(trigger().textContent).toContain("3/3");
     const before = lastCells(0);                       // [name, รวมใบงาน, แบบฝึกหัด 1, สะสม]
     expect(before.slice(1)).toEqual(["12/20", "5", "17/30"]);
@@ -156,7 +163,7 @@ describe("minimap and jump buttons", () => {
 
   it("with more than fits: stripes per drawn column, a frame, and jump buttons only for types that exist", async () => {
     fakeLayout(700, 1500);
-    await open();
+    await openFolded();
     await waitFor(() => expect(document.querySelector(".gb-mini")).toBeTruthy());
     expect(document.querySelectorAll(".gb-mini > i").length).toBe(2);          // folded ใบงาน + แบบฝึกหัด 1
     expect(document.querySelector(".gb-mini-win")).toBeTruthy();
@@ -175,8 +182,8 @@ describe("minimap and jump buttons", () => {
     fakeLayout(700, 1500);
     const scrollTo = vi.fn();
     (HTMLElement.prototype as any).scrollTo = scrollTo;
-    await open();
-    expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull();   // folded by default
+    await openFolded();
+    expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull();   // folded by the teacher
     await waitFor(() => expect(document.querySelector(".gb-jump")).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: "ไปที่ใบงาน" }));
     await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });

@@ -21,11 +21,11 @@ import { notify, ok, err, withToast } from "../lib/notify";
 import { AssignmentModal } from "../components/AssignmentModal";
 import { Dialog } from "../components/Dialog";
 import {
-  buildGroups, defaultCollapsed, isCollapsed, loadGroupMode, saveGroupMode, type GroupMode, type Group,
+  buildGroups, isCollapsed, loadGroupMode, saveGroupMode, type GroupMode, type Group,
 } from "../lib/gbGroups";
 import {
   loadColumnPrefs, saveColumnPrefs, effectiveHidden, makeIsShown, toggleType, columnCounts, displayGroups, jumpTargets,
-  jumpScrollLeft, minimapSegments, typeKeyOf, type ColumnPrefs,
+  jumpScrollLeft, minimapSegments, typeKeyOf, fitsAll, type ColumnPrefs,
 } from "../lib/gbColumns";
 import { GradebookNav, ColumnsMenu, useScrollInfo, scrollFrameTo, edgeClass } from "../components/GradebookNav";
 import { routeParams, navigate, setNavGuard } from "../router";
@@ -90,6 +90,7 @@ export function GradebookPage() {
   const [colPrefs, setColPrefsState] = useState<ColumnPrefs>(() => loadColumnPrefs()); // which columns are DRAWN (display only)
   const scrollRef = useRef<HTMLDivElement>(null);
   const pendingJump = useRef<string | null>(null);
+  const pendingEdit = useRef<{ aid: string; sid: string } | null>(null);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
   const act = useAction();
@@ -340,12 +341,11 @@ export function GradebookPage() {
   const totAwaiting = tot.awaiting, totMissing = tot.missing;
   const submitRate = classSubmitRate([tot]); // Σ handed in ÷ Σ(handed in + overdue), not-yet-due left out
 
-  // columns: grouped by type / month (or not at all). Old groups start folded; the teacher's own taps win.
+  // columns: grouped by type / month (or not at all). Every group starts open; only the teacher folds one.
   const groups: Group<Assignment>[] = buildGroups(assignments, groupMode,
     (id) => { const t = workTypeById(id); return { name: t?.name ?? "ไม่ระบุประเภท", color: t?.color ?? "violet" }; }, monthShort);
   const flat = groupMode === "none";
-  const foldedByDefault = defaultCollapsed(groups, today);
-  const folded = (g: Group<Assignment>) => !flat && isCollapsed(g.key, foldedByDefault, foldTaps);
+  const folded = (g: Group<Assignment>) => !flat && isCollapsed(g.key, foldTaps);
   const allFolded = !flat && groups.length > 0 && groups.every(folded);
   function setGroupMode(m: GroupMode) { setGroupModeState(m); setFoldTaps(new Map()); saveGroupMode(m); }
   function toggleGroup(key: string) {
@@ -367,6 +367,34 @@ export function GradebookPage() {
   const hasTable = !phone && !!classId && status !== "error" && assignments.length > 0;
   const scrollSig = dgroups.map((x) => `${x.group.key}:${folded(x.group) ? "f" : x.shown.length}`).join("|") + `|${colPrefs.showTotal}|${colPrefs.showBars}|${shownStudents.length}`;
   const scrollInfo = useScrollInfo(scrollRef, hasTable, scrollSig);
+  // Desktop (mouse): size the table to the room left on screen, so the TABLE is the one thing that scrolls up/down
+  // and the page itself does not (two stacked vertical scrollbars were confusing). Touch screens keep the CSS height.
+  useEffect(() => {
+    const sc = scrollRef.current;
+    if (!sc || !hasTable) return;
+    const mq = typeof matchMedia === "function" ? matchMedia("(hover: hover) and (pointer: fine)") : null;
+    const fit = () => {
+      if (!mq?.matches) { sc.style.maxHeight = ""; return; }
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const frame = sc.parentElement as HTMLElement;
+      let below = 0;
+      for (let e = frame.nextElementSibling as HTMLElement | null; e; e = e.nextElementSibling as HTMLElement | null) {
+        const cs = getComputedStyle(e);
+        if (cs.position !== "fixed" && cs.position !== "absolute") below += e.offsetHeight + parseFloat(cs.marginTop || "0") + parseFloat(cs.marginBottom || "0");
+      }
+      const top = frame.getBoundingClientRect().top + window.scrollY;
+      const pad = parseFloat(getComputedStyle(document.querySelector(".main") ?? document.body).paddingBottom || "0")
+        + (parseFloat(getComputedStyle(frame.parentElement as HTMLElement).marginBottom || "0") || 0);
+      sc.style.maxHeight = `${Math.max(12 * rem, window.innerHeight - top - below - pad - 4)}px`;
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    // the room above/below the table can change without a window resize (banner wraps, action bar appears)
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(fit) : null;
+    const frame = sc.parentElement as HTMLElement;
+    for (let e: Element | null = frame.parentElement?.firstElementChild ?? null; e; e = e.nextElementSibling) if (e !== frame) ro?.observe(e);
+    return () => { window.removeEventListener("resize", fit); ro?.disconnect(); };
+  }, [hasTable, scrollSig, groupMode, fitsAll(scrollInfo), msg, hiddenCount]);
   const segments = minimapSegments(dgroups, folded, (a) => workTypeById(a.type_id)?.color ?? "violet");
   const jumps = jumpTargets(assignments, isShown).map((j) => ({ typeKey: j.typeKey, ...typeLabel(j.typeKey) }));
 
@@ -385,7 +413,21 @@ export function GradebookPage() {
     if (g && folded(g)) { pendingJump.current = a.id; setFoldTaps((prev) => new Map(prev).set(g.key, false)); }
     else scrollToAsg(a.id);
   }
+  /** Tap on a folded "รวม {group}" cell: open the group and edit that student's score in its first column. */
+  function openAndEdit(g: Group<Assignment>, sid: string, firstId: string | undefined) {
+    if (!firstId) { toggleGroup(g.key); return; }
+    pendingEdit.current = { aid: firstId, sid };
+    setFoldTaps((prev) => new Map(prev).set(g.key, false));
+  }
   useEffect(() => { // after the opened group has been drawn
+    if (pendingEdit.current) {
+      const { aid, sid } = pendingEdit.current; pendingEdit.current = null;
+      pendingJump.current = null;
+      scrollToAsg(aid);
+      setEditing({ aid, sid });
+      requestAnimationFrame(() => (scrollRef.current?.querySelector(`td[data-aid="${aid}"][data-sid="${sid}"]`) as HTMLElement | null)?.scrollIntoView?.({ block: "nearest", inline: "nearest" }));
+      return;
+    }
     if (!pendingJump.current) return;
     const id = pendingJump.current; pendingJump.current = null;
     scrollToAsg(id);
@@ -394,14 +436,14 @@ export function GradebookPage() {
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
 
   return (
-    <div>
+    <div class="gb-page">
       <PageHeader icon="table" title="สมุดคะแนน"
         sub={<>{classById(classId)?.name} · {activeSubjects.value.find((s) => s.id === subjectId)?.name ?? "ทุกวิชา"}</>}
         actions={<><TermPicker /><button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" /> สร้างงาน</button></>}
       />
 
+      <div class="gb-chips" style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
       <YearBanner />
-      <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
 
       <div class="gb-toolbar">
         <select aria-label="วิชา" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
@@ -428,6 +470,12 @@ export function GradebookPage() {
             onTotal={() => setColPrefs({ ...colPrefs, showTotal: !colPrefs.showTotal })}
             onBars={() => setColPrefs({ ...colPrefs, showBars: !colPrefs.showBars })} />
         )}
+        <div class="gb-summary">
+          <span><span class="muted">งาน</span> <b>{assignments.length}</b></span>
+          <span><span class="muted">อัตราส่ง</span> <b>{submitRate}%</b></span>
+          <span><span class="muted">รอตรวจ</span> <b style="color:var(--text-accent)">{totAwaiting}</b></span>
+          <span><span class="muted">ค้างส่ง</span> <b style="color:var(--text-danger)">{totMissing} ชิ้น</b></span>
+        </div>
         <span class="grow" />
         <Segmented value={rowFilter} onChange={setRowFilter} options={[
           { value: "all", label: "ทุกคน" },
@@ -436,13 +484,7 @@ export function GradebookPage() {
         ]} />
       </div>
 
-      <div class="gb-summary">
-        <span><span class="muted">งาน</span> <b>{assignments.length}</b></span>
-        <span><span class="muted">อัตราส่ง</span> <b>{submitRate}%</b></span>
-        <span><span class="muted">รอตรวจ</span> <b style="color:var(--text-accent)">{totAwaiting}</b></span>
-        <span><span class="muted">ค้างส่ง</span> <b style="color:var(--text-danger)">{totMissing} ชิ้น</b></span>
-      </div>
-
+      {((selAsg && !phone) || hasTable) && <div class="gb-bar2">
       {selAsg && !phone && (
         <div class="gb-actionbar">
           <Icon name="pointer" size={16} />
@@ -489,6 +531,8 @@ export function GradebookPage() {
           </div>
         </div>
       )}
+      {hasTable && <GradebookNav info={scrollInfo} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />}
+      </div>}
 
       {msg && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-bottom:6px">{msg}</div>}
 
@@ -508,13 +552,12 @@ export function GradebookPage() {
           }} />
       ) : (
         <>
-        <GradebookNav info={scrollInfo} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />
         <div class={"gb-frame" + edgeClass(scrollInfo) + (colPrefs.showTotal ? "" : " no-tot")}>
         <div class="gb-scroll" ref={scrollRef} role="region" aria-label="ตารางคะแนน">
           <table class={"gb" + (flat ? "" : " grouped")}>
             <thead>
               {!flat && (
-                <tr role="presentation" class="gh">
+                <tr class="gh">
                   <th class="name-col gh-corner">
                     <button type="button" class="gh-all" onClick={toggleFoldAll}>
                       <Icon name={allFolded ? "arrows-diagonal" : "arrows-diagonal-minimize-2"} size={14} /> {allFolded ? "กางทั้งหมด" : "พับทั้งหมด"}
@@ -531,7 +574,7 @@ export function GradebookPage() {
                       </th>
                     );
                   })}
-                  {colPrefs.showTotal && <th class="tot-col gh-tot" />}
+                  {colPrefs.showTotal && <th scope="col" rowSpan={2} class="tot-col gh-tot" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>}
                 </tr>
               )}
               <tr class="hd">
@@ -560,7 +603,7 @@ export function GradebookPage() {
                     </th>
                   );
                 }))}
-                {colPrefs.showTotal && <th scope="col" class="tot-col" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>}
+                {colPrefs.showTotal && flat && <th scope="col" class="tot-col" title={hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>สะสม{hiddenCount > 0 ? "*" : ""}</th>}
               </tr>
             </thead>
             <tbody>
@@ -578,8 +621,11 @@ export function GradebookPage() {
                         // the group's own total: same rule as สะสม, only over this group's work whose scores are showing
                         const shown = g.items.filter((a) => a.publish_scores);
                         const tot = groupScoreTotal(shown, subFor(shown), today);
+                        const goEdit = () => openAndEdit(g, st.id, cols[0]?.id);
                         return (
-                          <td class="sumc" title={shown.length === 0 ? "ซ่อนคะแนนทุกงานในกลุ่มนี้" : shown.length < g.items.length ? `ไม่รวมงานที่ซ่อนคะแนน (${g.items.length - shown.length} งาน)` : undefined}>
+                          <td class="sumc" tabIndex={0} data-gkey={g.key} aria-label={`รวม ${g.label} · ${fullName(st)} · ${shown.length === 0 ? "ซ่อนคะแนน" : tot ? `${tot.score}/${tot.fullScore}` : "ยังไม่มีคะแนน"} · แตะเพื่อกางและแก้คะแนน`}
+                            title={"แตะเพื่อกางและแก้คะแนน" + (shown.length === 0 ? " · ซ่อนคะแนนทุกงานในกลุ่มนี้" : shown.length < g.items.length ? ` · ไม่รวมงานที่ซ่อนคะแนน (${g.items.length - shown.length} งาน)` : "")}
+                            onClick={goEdit} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); goEdit(); } }}>
                             {shown.length === 0 ? "•••" : tot ? <>{tot.score}<span class="muted">/{tot.fullScore}</span></> : <span class="muted">–</span>}{shown.length > 0 && shown.length < g.items.length ? "*" : ""}
                           </td>
                         );
@@ -588,7 +634,7 @@ export function GradebookPage() {
                         const sub = subOf(a.id, st.id);
                         const isEditing = editing?.aid === a.id && editing?.sid === st.id;
                         return (
-                          <td tabIndex={isEditing ? -1 : 0} aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} onKeyDown={(e) => { if (e.target === e.currentTarget && !isEditing && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setEditing({ aid: a.id, sid: st.id }); } }} class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
+                          <td data-aid={a.id} data-sid={st.id} tabIndex={isEditing ? -1 : 0} aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} onKeyDown={(e) => { if (e.target === e.currentTarget && !isEditing && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setEditing({ aid: a.id, sid: st.id }); } }} class={"cell" + (a.id === selCol ? " sel" : "")} onClick={() => !isEditing && setEditing({ aid: a.id, sid: st.id })}>
                             {isEditing ? (
                               <CellInput initial={sub?.score != null ? String(sub.score) : ""}
                                 onCommit={(initial, v, next) => { commitScore(a.id, st.id, initial, v); setEditing(next ? nextCell(shownStudents, i, a.id) : null); }}
@@ -632,7 +678,7 @@ export function GradebookPage() {
         <span><WorkCell state="scored" score={8} mark="fail" /> ส่งไม่สำเร็จ</span>
         <span><WorkCell state="scored" score={8} mark="unsaved" /> ยังไม่ได้บันทึก</span>
       </div>
-      {!phone && <div class="page-sub" style="margin-top:6px">คลิกหัวคอลัมน์เพื่อเลือกงาน · คลิกช่องเพื่อกรอกคะแนน · Enter ไปคนถัดไป · Esc ยกเลิก · สะสม = คะแนนที่ได้ ÷ เต็มของงานมีคะแนนและค้างส่ง</div>}
+      {!phone && <div class="page-sub gb-help" style="margin-top:6px">คลิกหัวคอลัมน์เพื่อเลือกงาน · คลิกช่องเพื่อกรอกคะแนน · Enter ไปคนถัดไป · Esc ยกเลิก · สะสม = คะแนนที่ได้ ÷ เต็มของงานมีคะแนนและค้างส่ง</div>}
 
       {bulkAsk && selAsg && (
         <BulkConfirm ask={bulkAsk} asg={selAsg} className={classById(classId)?.name ?? ""}

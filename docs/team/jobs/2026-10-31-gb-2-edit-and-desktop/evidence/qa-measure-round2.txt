@@ -1,0 +1,11 @@
+Round 2, after fixes. fixture --gb14 (fictional), rebuilt dist (newer than src), new SW unregister+fixture+login. Emulation + manual resize event. rem=18px. No screenshot files (tool returns inline only).
+AC-03, 19 works (all subjects), ungrouped:
+ 1280x720: name 12.8rem, clipped names 0, page scrollHeight 720 = innerHeight (no stacked scroll), pageX no, col 7.6rem, tot header "สะสม*" TH, box 254px -> 3 full rows visible (<6, observation)
+ 1280x800: same, box 334px, 4 rows
+ 1536x729: name 15.36rem, no page scroll, box 307, 4 rows
+ 1920x1080: name 16rem, no page scroll, box 658, 11 rows
+ 3 works (class ป.6/3) NOT measured (script aborted). 2560 not measured.
+a11y (grouped mode, 1920): th.tot-col TH scope=col rowSpan=2 text "สะสม*"; collapsed sum cell aria-label "รวม ใบงาน · <name> · 42.5/70 · แตะเพื่อกางและแก้คะแนน" (score in label); td role attr null this time (round1 saw role=button) - not investigated.
+AC-01/02 repeat: tap sum cell stu_3 -> INPUT focused stu_3/asg_gb_1; typed 7.5 Enter -> server 7.5 (value was already 7.5, so change not proven this round; round1 proved 7.5/8 saves and totals).
+AC-04 SIMULATED coarse (coarse @media rules re-injected without media; html font-size 14/18/24px as proxy for text size; not real iPad):
+ 820x1180 and 1180x820: buttons<44: 14px=1 (focused cell input 43x44), 18px=0, 24px=0; text<13px: 0 all; page horizontal scroll: none; page vertical scroll at 24px only.

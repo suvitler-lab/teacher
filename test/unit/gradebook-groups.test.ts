@@ -1,7 +1,7 @@
 // gb-1a: column grouping helpers — grouping, default folding, per-device memory (also when storage is broken).
 import { describe, it, expect } from "vitest";
 import {
-  buildGroups, defaultCollapsed, oneMonthBefore, isCollapsed, loadGroupMode, saveGroupMode, GROUP_STORAGE_KEY,
+  buildGroups, isCollapsed, loadGroupMode, saveGroupMode, GROUP_STORAGE_KEY, DEFAULT_GROUP_MODE,
 } from "../../src/lib/gbGroups";
 
 const A = (id: string, type_id: string | null, assigned_date: string) => ({ id, type_id, assigned_date });
@@ -28,48 +28,38 @@ describe("buildGroups", () => {
   it("no work -> no groups", () => { expect(buildGroups([], "type", typeInfo, monthLabel)).toEqual([]); });
 });
 
-describe("oneMonthBefore", () => {
-  it("steps back a month, clamps the day, crosses the year", () => {
-    expect(oneMonthBefore("2026-10-30")).toBe("2026-09-30");
-    expect(oneMonthBefore("2026-03-31")).toBe("2026-02-28");
-    expect(oneMonthBefore("2024-03-31")).toBe("2024-02-29");
-    expect(oneMonthBefore("2026-01-15")).toBe("2025-12-15");
+describe("isCollapsed", () => {
+  it("nothing is folded unless the teacher folded it (no automatic folding by age)", () => {
+    expect(isCollapsed("w", new Map())).toBe(false);
+    expect(isCollapsed("w", new Map([["w", true]]))).toBe(true);
+    expect(isCollapsed("w", new Map([["w", false]]))).toBe(false);
   });
 });
 
-describe("defaultCollapsed", () => {
-  const g = (items: ReturnType<typeof A>[]) => buildGroups(items, "type", typeInfo, monthLabel);
-  it("folds a group whose every work is older than one month, keeps one with any recent work", () => {
-    const groups = g(list);
-    // today 2026-10-30: cutoff 2026-09-30. w has 2026-10-20 (recent) -> open; e 10-02 -> open; none -> open
-    expect([...defaultCollapsed(groups, "2026-10-30")]).toEqual([]);
-    const old = g([A("1", "w", "2026-08-10"), A("2", "w", "2026-08-12"), A("3", "e", "2026-10-02")]);
-    expect([...defaultCollapsed(old, "2026-10-30")]).toEqual(["w"]);
+describe("gb-2 defaults", () => {
+  it("a choice saved under the new key is kept; a value under the gb-1a key never counts", () => {
+    const m = new Map<string, string>([["ngankrob.gb.groupMode", "month"]]);
+    const st = { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) };
+    expect(loadGroupMode(st)).toBe("none");
+    saveGroupMode("type", st);
+    expect(loadGroupMode(st)).toBe("type");
   });
-  it("exactly one month old is not older: it stays open", () => {
-    const groups = g([A("1", "w", "2026-09-30"), A("2", "e", "2026-10-30")]);
-    expect([...defaultCollapsed(groups, "2026-10-30")]).toEqual([]);
+  it("the plain table is the default mode and the key is the v2 one", () => {
+    expect(DEFAULT_GROUP_MODE).toBe("none");
+    expect(GROUP_STORAGE_KEY).toBe("ngankrob.gb.groupMode.v2");
   });
-  it("never folds everything: when all are old the newest group stays open", () => {
-    const groups = g([A("1", "w", "2026-05-01"), A("2", "e", "2026-06-01")]);
-    expect([...defaultCollapsed(groups, "2026-10-30")]).toEqual(["w"]);
-  });
-  it("a single group is never folded", () => {
-    expect([...defaultCollapsed(g([A("1", "w", "2025-01-01")]), "2026-10-30")]).toEqual([]);
-  });
-  it("the teacher's tap wins over the default, both ways", () => {
-    const d = new Set(["w"]);
-    expect(isCollapsed("w", d, new Map())).toBe(true);
-    expect(isCollapsed("w", d, new Map([["w", false]]))).toBe(false);
-    expect(isCollapsed("e", d, new Map([["e", true]]))).toBe(true);
+  it("only a group the teacher folded is folded", () => {
+    expect(isCollapsed("a", new Map([["b", true]]))).toBe(false);
   });
 });
 
 describe("group mode memory (per device)", () => {
   const mem = () => { const m = new Map<string, string>(); return { m, getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) }; };
-  it("defaults to by-type, then remembers the choice", () => {
+  it("defaults to the plain table (no groups), then remembers the choice", () => {
     const s = mem();
-    expect(loadGroupMode(s)).toBe("type");
+    expect(loadGroupMode(s)).toBe("none");
+    s.m.set("ngankrob.gb.groupMode", "type");           // the value gb-1a saved on its own: ignored, not a real choice
+    expect(loadGroupMode(s)).toBe("none");
     saveGroupMode("month", s);
     expect(s.m.get(GROUP_STORAGE_KEY)).toBe("month");
     expect(loadGroupMode(s)).toBe("month");
@@ -78,14 +68,14 @@ describe("group mode memory (per device)", () => {
   });
   it("junk in storage -> default", () => {
     const s = mem(); s.m.set(GROUP_STORAGE_KEY, "{not json");
-    expect(loadGroupMode(s)).toBe("type");
+    expect(loadGroupMode(s)).toBe("none");
     s.m.set(GROUP_STORAGE_KEY, "weekly");
-    expect(loadGroupMode(s)).toBe("type");
+    expect(loadGroupMode(s)).toBe("none");
   });
   it("storage that throws (blocked / full) never breaks loading or saving", () => {
     const bad = { getItem: () => { throw new Error("denied"); }, setItem: () => { throw new Error("quota"); } };
-    expect(loadGroupMode(bad)).toBe("type");
+    expect(loadGroupMode(bad)).toBe("none");
     expect(() => saveGroupMode("none", bad)).not.toThrow();
-    expect(loadGroupMode(null)).toBe("type");
+    expect(loadGroupMode(null)).toBe("none");
   });
 });

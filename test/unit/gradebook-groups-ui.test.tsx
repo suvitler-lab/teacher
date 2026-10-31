@@ -14,6 +14,7 @@ vi.mock("@client/lib/outbox", async (orig) => ({ ...await orig<typeof import("@c
 import { GradebookPage, bulkAffectedCount } from "@client/pages/Gradebook";
 import { classes, currentTermId, selectedTermId, students, subjects, terms, workTypes } from "@client/store";
 import { route } from "@client/router";
+import { pendingOps } from "@client/lib/outbox";
 
 const asg = (id: string, title: string, type_id: string, assigned_date: string, due_date: string | null = null): Assignment => ({
   id, title, publish_scores: true, term_id: "t1", subject_id: "math", type_id, unit: null,
@@ -31,6 +32,8 @@ beforeEach(() => {
   cleanup();
   vi.clearAllMocks();
   localStorage.clear();
+  pendingOps.value = new Map();
+  localStorage.setItem("ngankrob.gb.groupMode.v2", "type");   // the grouped paths are tested by choosing "ตามประเภท"
   vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   route.value = "/gradebook?class=c1&subject=math";
   terms.value = [{ id: "t1", year: 2569, term: 1, name: "1/2569", is_current: true, start_date: null, end_date: null, updated_at: 0 }];
@@ -61,12 +64,22 @@ async function open() {
   render(<GradebookPage />);
   await screen.findByRole("columnheader", { name: /แบบฝึกหัด 1/ });
 }
+/** Groups start open now; the teacher folds ใบงาน herself so the folded-total paths are still covered. */
+async function openFolded() {
+  await open();
+  fireEvent.click(screen.getAllByRole("button").find((b) => b.getAttribute("aria-expanded") === "true" && /ใบงาน/.test(b.textContent ?? ""))!);
+  await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
+}
 const bodyRow = (n: number) => [...document.querySelectorAll("table.gb tbody tr")][n].querySelectorAll("td");
 const text = (n: number) => [...bodyRow(n)].map((c) => c.textContent);
 
 describe("grouped gradebook columns", () => {
-  it("defaults to by-type: the old group is folded to one 'รวม' column holding the BR-05 total; the recent group stays open", async () => {
+  it("every group starts open (nothing folds by age); a group the teacher folds becomes one 'รวม' column holding the BR-05 total", async () => {
     await open();
+    expect(screen.getByRole("columnheader", { name: /^ใบงาน 1/ })).toBeTruthy();
+    expect(screen.queryByRole("columnheader", { name: /รวม ใบงาน/ })).toBeNull();
+    cleanup();
+    await openFolded();
     expect(screen.getByRole("columnheader", { name: /รวม ใบงาน/ })).toBeTruthy();
     expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull();
     // [name, รวมใบงาน, แบบฝึกหัด 1, สะสม]
@@ -77,14 +90,16 @@ describe("grouped gradebook columns", () => {
   });
 
   it("the folded total equals the สะสม rule over the same work (k1: 8/20 + 5/10 = 13/30)", async () => {
-    await open();
+    await openFolded();
     expect(text(0)[3]).toBe("13/30");
   });
 
   it("tap a group header to open it, tap again to fold it back; 'กางทั้งหมด' / 'พับทั้งหมด' do all at once", async () => {
     await open();
     const btn = () => screen.getAllByRole("button").find((b) => b.getAttribute("aria-expanded") !== null && /ใบงาน/.test(b.textContent ?? ""))!;
-    expect(btn().getAttribute("aria-expanded")).toBe("false");
+    expect(btn().getAttribute("aria-expanded")).toBe("true");
+    fireEvent.click(btn());
+    await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
     fireEvent.click(btn());
     await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
     expect(text(0).slice(1, 3)).toEqual(["8", "–"]);
@@ -97,12 +112,19 @@ describe("grouped gradebook columns", () => {
     expect(screen.getByRole("columnheader", { name: /แบบฝึกหัด 1/ })).toBeTruthy();
   });
 
+  it("with nothing saved the table is plain: no group row, every column drawn", async () => {
+    localStorage.clear();
+    await open();
+    expect(document.querySelector("tr.gh")).toBeNull();
+    expect(screen.getByRole("button", { name: "ไม่จัดกลุ่ม" }).getAttribute("aria-pressed")).toBe("true");
+  });
+
   it("'ไม่จัดกลุ่ม' shows every column flat, remembers the choice on this device, and a reload keeps it", async () => {
     await open();
     fireEvent.click(screen.getByRole("button", { name: "ไม่จัดกลุ่ม" }));
     await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
     expect(document.querySelector("tr.gh")).toBeNull();
-    expect(localStorage.getItem("ngankrob.gb.groupMode")).toBe("none");
+    expect(localStorage.getItem("ngankrob.gb.groupMode.v2")).toBe("none");
     cleanup();
     await open();
     await screen.findByRole("columnheader", { name: /^ใบงาน 2/ });
@@ -126,11 +148,49 @@ describe("grouped gradebook columns", () => {
 
   it("the eye in a column header still hides only that column's scores", async () => {
     await open();
-    fireEvent.click(screen.getByRole("button", { name: /^ใบงาน/ }));
     const head = await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
     fireEvent.click(within(head).getByRole("button", { name: "ซ่อนคะแนนของงานนี้" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
     expect(post.mock.calls[0][1]).toMatchObject({ id: "w1", publish_scores: false });
+  });
+});
+
+describe("tap the folded total to edit (gb-2)", () => {
+  it("click on a student's 'รวม' cell opens the group and focuses that student's score in the group's first column", async () => {
+    await openFolded();
+    const cell = bodyRow(1)[1];
+    expect(cell.getAttribute("aria-label")).toMatch(/12\/20 · แตะเพื่อกางและแก้คะแนน/);
+    expect(cell.getAttribute("role")).toBeNull();
+    expect(document.querySelector("tr.gh")!.getAttribute("role")).toBeNull();
+    expect(document.querySelector("th.gh-tot")!.textContent).toContain("สะสม");
+    expect(cell.getAttribute("title")).toMatch(/แตะเพื่อกางและแก้คะแนน/);
+    fireEvent.click(cell);
+    const input = await screen.findByRole("textbox", { name: "คะแนน" });
+    expect(document.activeElement).toBe(input);
+    expect((input as HTMLInputElement).value).toBe("7.5");                      // k2 on ใบงาน 1
+    expect(input.closest("td")!.getAttribute("data-sid")).toBe("k2");
+    expect(input.closest("td")!.getAttribute("data-aid")).toBe("w1");
+    fireEvent.input(input, { target: { value: "9.5" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    await waitFor(() => expect(post).toHaveBeenCalled());
+    expect(JSON.stringify(post.mock.calls)).toContain("9.5");
+    expect(screen.getByRole("columnheader", { name: /^ใบงาน 1/ })).toBeTruthy();
+  });
+
+  it("Enter and Space on the cell do the same; typing a score then saves it", async () => {
+    for (const key of ["Enter", " "]) {
+      cleanup(); post.mockClear();
+      await openFolded();
+      fireEvent.keyDown(bodyRow(0)[1], { key });
+      const input = await screen.findByRole("textbox", { name: "คะแนน" });
+      expect(input.closest("td")!.getAttribute("data-sid")).toBe("k1");
+      expect(document.activeElement).toBe(input);
+    }
+    const input = screen.getByRole("textbox", { name: "คะแนน" });
+    fireEvent.input(input, { target: { value: "9" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    await waitFor(() => expect(post).toHaveBeenCalled());
+    expect(JSON.stringify(post.mock.calls)).toContain("9");
   });
 });
 
