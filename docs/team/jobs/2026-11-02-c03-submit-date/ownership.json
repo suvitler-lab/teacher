@@ -1,0 +1,37 @@
+{
+  "job": "2026-11-02-c03-submit-date",
+  "tasks": {
+    "T-01": {
+      "role": "team-qa-tester",
+      "paths": [
+        "test/api/c03-*.test.ts",
+        "test/unit/c03-*.test.ts",
+        "docs/team/jobs/2026-11-02-c03-submit-date/test-plan.md",
+        "docs/team/jobs/2026-11-02-c03-submit-date/qa-report.md",
+        "docs/team/jobs/2026-11-02-c03-submit-date/evidence/qa/**"
+      ]
+    },
+    "T-02": {
+      "role": "team-backend-dev",
+      "paths": [
+        "worker/routes/submissions.ts",
+        "shared/received-date.ts",
+        "shared/types.ts",
+        "docs/team/jobs/2026-11-02-c03-submit-date/dev-notes/backend.md",
+        "docs/team/jobs/2026-11-02-c03-submit-date/evidence/t02-*"
+      ]
+    },
+    "T-03": {
+      "role": "team-qa-tester",
+      "paths": [
+        "test/api/c03-*.test.ts",
+        "test/unit/c03-*.test.ts",
+        "docs/team/jobs/2026-11-02-c03-submit-date/test-plan.md",
+        "docs/team/jobs/2026-11-02-c03-submit-date/qa-report.md",
+        "docs/team/jobs/2026-11-02-c03-submit-date/evidence/qa/**"
+      ]
+    }
+  },
+  "shared": [],
+  "shared_by_role": {}
+}

@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯ Failed Tests 49 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  3 failed | 100 passed (103)
+      Tests  49 failed | 1181 passed (1230)
+   Duration  55.87s (transform 27.09s, setup 348.04s, import 46.62s, tests 168.51s, environment 163.46s)
+      1  FAIL  |dom| test/unit/c03-received-date.test.ts [ test/unit/c03-received-date.test.ts ]
+     13  FAIL  |workers| test/api/c03-bulk-date.test.ts
+     36  FAIL  |workers| test/api/c03-received-date.test.ts

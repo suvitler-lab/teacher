@@ -1,0 +1,1261 @@
+{
+ "NOW0": 1793636965340,
+ "TODAY": "2026-11-02",
+ "out": [
+  {
+   "id": "Q05-1",
+   "name": "hid + receivedDate yesterday -> noon yesterday, late false (due = yesterday)",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636965502-1",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_1",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636965528
+    }
+   }
+  },
+  {
+   "id": "Q05-2",
+   "name": "old client op without fields -> submitted_at = clientTs, late true (as before)",
+   "ok": true,
+   "detail": {
+    "b": {
+     "opId": "qa-1793636965502-2",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+      "student_id": "stu_2",
+      "status": "submitted",
+      "score": null,
+      "late": true,
+      "submitted_at": 1793636964502,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636965528
+     }
+    },
+    "clientTs": 1793636964502
+   }
+  },
+  {
+   "id": "Q05-3",
+   "name": "EP-02 reads the same submitted_at/late",
+   "ok": true,
+   "detail": {
+    "s1": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_1",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636965528
+    },
+    "s2": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": null,
+     "late": true,
+     "submitted_at": 1793636964502,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636965528
+    }
+   }
+  },
+  {
+   "id": "Q05-4",
+   "name": "grid score edit on submitted cell ignores receivedDate (submitted_at unchanged)",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636965706-3",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": 7,
+     "late": true,
+     "submitted_at": 1793636964502,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gb",
+     "updated_at": 1793636965735
+    }
+   }
+  },
+  {
+   "id": "Q05-5",
+   "name": "dateOnly yesterday -> ok, score stays 7 (op said 9), noon yesterday, late false",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636965873-4",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": 7,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gb",
+     "updated_at": 1793636965902
+    }
+   }
+  },
+  {
+   "id": "Q05-6",
+   "name": "audit row for re-date: update/grid, before 7 late true @clientTs, after 7 late false @noon",
+   "ok": true,
+   "detail": {
+    "n": 3,
+    "row": {
+     "action": "update",
+     "method": "grid",
+     "before": {
+      "s": 7,
+      "at": 1793636964502,
+      "late": true
+     },
+     "after": {
+      "s": 7,
+      "at": 1793509200000,
+      "late": 0
+     }
+    }
+   }
+  },
+  {
+   "id": "Q05-7",
+   "name": "dateOnly back to today -> submitted_at = clientTs of re-date op, late true",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966048-5",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": 7,
+     "late": true,
+     "submitted_at": 1793636965048,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gb",
+     "updated_at": 1793636966074
+    }
+   }
+  },
+  {
+   "id": "Q05-8",
+   "name": "dateOnly to the same Thai day keeps stored ms",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966189-6",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": 7,
+     "late": true,
+     "submitted_at": 1793636965048,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gb",
+     "updated_at": 1793636966214
+    }
+   }
+  },
+  {
+   "id": "Q05-9.0",
+   "name": "receivedDate \"2026-11-03\" -> invalid received_date_future, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-7",
+    "result": "invalid",
+    "reason": "received_date_future"
+   }
+  },
+  {
+   "id": "Q05-9.1",
+   "name": "receivedDate \"2026-10-25\" -> invalid received_date_before_assigned, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-8",
+    "result": "invalid",
+    "reason": "received_date_before_assigned"
+   }
+  },
+  {
+   "id": "Q05-9.2",
+   "name": "receivedDate \"2026-02-30\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-9",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.3",
+   "name": "receivedDate \"30/10/2026\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-10",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.4",
+   "name": "receivedDate \"\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-11",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.5",
+   "name": "receivedDate \" 2026-11-01\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-12",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.6",
+   "name": "receivedDate \"2026-11-01 \" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-13",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.7",
+   "name": "receivedDate \"2569-10-30\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-14",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-9.8",
+   "name": "receivedDate \"2026-11-01T00:00:00\" -> invalid received_date_invalid, no row",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966325-15",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "Q05-10",
+   "name": "hand-in again with a future date on submitted cell -> already_submitted",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636966471-16",
+    "result": "already_submitted",
+    "submission": {
+     "assignment_id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "student_id": "stu_1",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636965528
+    }
+   }
+  },
+  {
+   "id": "Q06-1",
+   "name": "same opId sent 3x (2 devices) -> ok, duplicate, duplicate; 1 audit; same submitted_at",
+   "ok": true,
+   "detail": {
+    "r1": {
+     "opId": "qa-1793636966692-17",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636966716
+     }
+    },
+    "r2": {
+     "opId": "qa-1793636966692-17",
+     "result": "duplicate",
+     "submission": {
+      "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636966716
+     }
+    },
+    "r3": {
+     "opId": "qa-1793636966692-17",
+     "result": "duplicate",
+     "submission": {
+      "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636966716
+     }
+    },
+    "audits": 1
+   }
+  },
+  {
+   "id": "Q06-2",
+   "name": "dateOnly replay -> ok then duplicate, date stays noon 10-28",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "opId": "qa-1793636967036-18",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": 1793163600000,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gb",
+      "updated_at": 1793636967059
+     }
+    },
+    "a2": {
+     "opId": "qa-1793636967036-18",
+     "result": "duplicate",
+     "submission": {
+      "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": 1793163600000,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gb",
+      "updated_at": 1793636967059
+     }
+    }
+   }
+  },
+  {
+   "id": "Q06-3",
+   "name": "op queued 9 days (clamped) keeps receivedDate 10-27 -> noon 10-27",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636967297-19",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793077200000,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636967319
+    }
+   }
+  },
+  {
+   "id": "Q06-4",
+   "name": "retry (new opId, same date) after ok -> already_submitted, unchanged",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636967422-20",
+    "result": "already_submitted",
+    "submission": {
+     "assignment_id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+     "student_id": "stu_2",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793077200000,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636967319
+    }
+   }
+  },
+  {
+   "id": "Q07-1",
+   "name": "older re-date arriving after newer score edit -> superseded, score 8 + date kept",
+   "ok": true,
+   "detail": {
+    "ry": {
+     "opId": "qa-1793636967763-22",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": 8,
+      "late": true,
+      "submitted_at": 1793636907634,
+      "method": "grid",
+      "device_id": "qa-dev-Y",
+      "scan_session_id": "gbY",
+      "updated_at": 1793636967785
+     }
+    },
+    "rx": {
+     "opId": "qa-1793636967930-23",
+     "result": "superseded",
+     "submission": {
+      "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": 8,
+      "late": true,
+      "submitted_at": 1793636907634,
+      "method": "grid",
+      "device_id": "qa-dev-Y",
+      "scan_session_id": "gbY",
+      "updated_at": 1793636967785
+     }
+    },
+    "after": {
+     "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+     "student_id": "stu_1",
+     "status": "submitted",
+     "score": 8,
+     "late": true,
+     "submitted_at": 1793636907634,
+     "method": "grid",
+     "device_id": "qa-dev-Y",
+     "scan_session_id": "gbY",
+     "updated_at": 1793636967785
+    }
+   }
+  },
+  {
+   "id": "Q07-2",
+   "name": "newer re-date wins over older score edit sent later (superseded), score 8 noon yesterday",
+   "ok": true,
+   "detail": {
+    "rx2": {
+     "opId": "qa-1793636968060-24",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": 8,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gbX",
+      "updated_at": 1793636968087
+     }
+    },
+    "ry2": {
+     "opId": "qa-1793636968186-25",
+     "result": "superseded",
+     "submission": {
+      "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": 8,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gbX",
+      "updated_at": 1793636968087
+     }
+    },
+    "af2": {
+     "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+     "student_id": "stu_1",
+     "status": "submitted",
+     "score": 8,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gbX",
+     "updated_at": 1793636968087
+    }
+   }
+  },
+  {
+   "id": "Q07-3",
+   "name": "10 concurrent re-date vs score-edit races: newer op always applied, cell consistent",
+   "ok": true,
+   "detail": [
+    {
+     "redateNewer": true,
+     "res": [
+      "ok",
+      "superseded"
+     ],
+     "score": 4,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": false,
+     "res": [
+      "ok",
+      "ok"
+     ],
+     "score": 9,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": true,
+     "res": [
+      "ok",
+      "superseded"
+     ],
+     "score": 4,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": false,
+     "res": [
+      "ok",
+      "ok"
+     ],
+     "score": 9,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": true,
+     "res": [
+      "ok",
+      "superseded"
+     ],
+     "score": 4,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": false,
+     "res": [
+      "ok",
+      "ok"
+     ],
+     "score": 9,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": true,
+     "res": [
+      "ok",
+      "superseded"
+     ],
+     "score": 4,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": false,
+     "res": [
+      "ok",
+      "ok"
+     ],
+     "score": 9,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": true,
+     "res": [
+      "ok",
+      "superseded"
+     ],
+     "score": 4,
+     "at": 1793163600000,
+     "late": false
+    },
+    {
+     "redateNewer": false,
+     "res": [
+      "ok",
+      "ok"
+     ],
+     "score": 9,
+     "at": 1793163600000,
+     "late": false
+    }
+   ]
+  },
+  {
+   "id": "Q07-4",
+   "name": "two devices re-date same cell at once -> newer (10-29) wins",
+   "ok": true,
+   "detail": {
+    "r": [
+     "ok",
+     "ok"
+    ],
+    "fin": {
+     "assignment_id": "asg_01M6EHG937SARDG9PYN25XFABY",
+     "student_id": "stu_13",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793250000000,
+     "method": "grid",
+     "device_id": "qa-dev-Y",
+     "scan_session_id": "gbY",
+     "updated_at": 1793636974018
+    }
+   }
+  },
+  {
+   "id": "BK-1",
+   "name": "bulk all-submitted + yesterday -> changed 2, noon yesterday, late false; excused/submitted untouched",
+   "ok": true,
+   "detail": {
+    "bk": {
+     "ok": true,
+     "changed": 2,
+     "batchId": "01M6EHGG51F44944WBM0QF7NSN"
+    },
+    "sample": {
+     "assignment_id": "asg_01M6EHGFSQYHPEPM4TDNAHV4BY",
+     "student_id": "stu_62_3",
+     "status": "submitted",
+     "score": null,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "bulk",
+     "device_id": "qa-dev-X",
+     "scan_session_id": null,
+     "updated_at": 1793636974753
+    }
+   }
+  },
+  {
+   "id": "BK-2",
+   "name": "audit bulk rows: one per changed cell, after.submitted_at = noon yesterday",
+   "ok": true,
+   "detail": {
+    "n": 2
+   }
+  },
+  {
+   "id": "BK-3",
+   "name": "bulk-undo restores every cell (status/score/submitted_at to the ms)",
+   "ok": true,
+   "detail": {
+    "un": {
+     "ok": true,
+     "changed": 2
+    },
+    "v": [
+     {
+      "assignment_id": "asg_01M6EHGFSQYHPEPM4TDNAHV4BY",
+      "student_id": "stu_62_3",
+      "status": "void",
+      "score": null,
+      "late": false,
+      "submitted_at": null,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gb",
+      "updated_at": 1793636974519
+     },
+     {
+      "assignment_id": "asg_01M6EHGFSQYHPEPM4TDNAHV4BY",
+      "student_id": "stu_62_3",
+      "status": "void",
+      "score": null,
+      "late": false,
+      "submitted_at": null,
+      "method": "manual",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gb",
+      "updated_at": 1793636974903
+     }
+    ]
+   }
+  },
+  {
+   "id": "BK-4",
+   "name": "re-date a cell after bulk -> undo 409 modified_since, nothing restored",
+   "ok": false,
+   "detail": {
+    "status": 200,
+    "body": {
+     "ok": true,
+     "changed": 2
+    }
+   }
+  },
+  {
+   "id": "BK-5.received_date_not_applicable.clear",
+   "name": "bulk clear \"2026-11-01\" -> 400 received_date_not_applicable",
+   "ok": true,
+   "detail": {
+    "status": 400,
+    "body": {
+     "error": "received_date_not_applicable",
+     "message": "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น"
+    }
+   }
+  },
+  {
+   "id": "BK-5.received_date_not_applicable.full-score",
+   "name": "bulk full-score \"2026-11-01\" -> 400 received_date_not_applicable",
+   "ok": true,
+   "detail": {
+    "status": 400,
+    "body": {
+     "error": "received_date_not_applicable",
+     "message": "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น"
+    }
+   }
+  },
+  {
+   "id": "BK-5.received_date_future.all-submitted",
+   "name": "bulk all-submitted \"2026-11-03\" -> 400 received_date_future",
+   "ok": true,
+   "detail": {
+    "status": 400,
+    "body": {
+     "error": "received_date_future",
+     "message": "วันที่รับงานเป็นวันในอนาคต"
+    }
+   }
+  },
+  {
+   "id": "BK-5.received_date_before_assigned.all-submitted",
+   "name": "bulk all-submitted \"2026-10-25\" -> 400 received_date_before_assigned",
+   "ok": true,
+   "detail": {
+    "status": 400,
+    "body": {
+     "error": "received_date_before_assigned",
+     "message": "วันที่รับงานอยู่ก่อนวันมอบหมายงาน"
+    }
+   }
+  },
+  {
+   "id": "BK-5.received_date_invalid.all-submitted",
+   "name": "bulk all-submitted \"2569-10-30\" -> 400 received_date_invalid",
+   "ok": true,
+   "detail": {
+    "status": 400,
+    "body": {
+     "error": "received_date_invalid",
+     "message": "วันที่รับงานไม่ถูกต้อง (ใช้ ค.ศ. ปปปป-ดด-วว)"
+    }
+   }
+  },
+  {
+   "id": "BK-5.validation.all-submitted",
+   "name": "bulk all-submitted 20261030 -> 422 validation",
+   "ok": true,
+   "detail": {
+    "status": 422,
+    "body": {
+     "error": "validation",
+     "issues": [
+      {
+       "expected": "string",
+       "code": "invalid_type",
+       "path": [
+        "receivedDate"
+       ],
+       "message": "Invalid input: expected string, received number"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "BK-6",
+   "name": "no cell changed by any rejected bulk",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "id": "BK-7",
+   "name": "bulk clear with receivedDate null -> 200 (as before)",
+   "ok": true,
+   "detail": {
+    "ok": true,
+    "changed": 1,
+    "batchId": "01M6EHGH7BPFXYZ968XDWPRS5V"
+   }
+  },
+  {
+   "id": "MID-0",
+   "name": "midnight edge op 0: clientTs 23:59:59 (prev day) received 2026-11-01 -> 1793552399000 late false",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_1",
+    "status": "submitted",
+    "score": null,
+    "late": false,
+    "submitted_at": 1793552399000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "MID-1",
+   "name": "midnight edge op 1: clientTs 00:00:01 received 2026-11-01 -> 1793509200000 late false",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_2",
+    "status": "submitted",
+    "score": null,
+    "late": false,
+    "submitted_at": 1793509200000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "MID-2",
+   "name": "midnight edge op 2: clientTs 23:59:59 (prev day) received 2026-11-02 -> 1793595600000 late true",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_3",
+    "status": "submitted",
+    "score": null,
+    "late": true,
+    "submitted_at": 1793595600000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "MID-3",
+   "name": "midnight edge op 3: clientTs 00:00:01 received 2026-11-02 -> 1793552401000 late true",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_4",
+    "status": "submitted",
+    "score": null,
+    "late": true,
+    "submitted_at": 1793552401000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "MID-4",
+   "name": "midnight edge op 4: clientTs 23:59:59 (prev day) received - -> 1793552399000 late false",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_5",
+    "status": "submitted",
+    "score": null,
+    "late": false,
+    "submitted_at": 1793552399000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "MID-5",
+   "name": "midnight edge op 5: clientTs 00:00:01 received - -> 1793552401000 late true",
+   "ok": true,
+   "detail": {
+    "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+    "student_id": "stu_6",
+    "status": "submitted",
+    "score": null,
+    "late": true,
+    "submitted_at": 1793552401000,
+    "method": "hid",
+    "device_id": "qa-dev-X",
+    "scan_session_id": "scn_qa",
+    "updated_at": 1793636976044
+   }
+  },
+  {
+   "id": "FAR-1",
+   "name": "30000 days back (1944-09-13), no assigned date -> accepted (no ceiling, Q2) at noon",
+   "ok": true,
+   "detail": {
+    "rf": {
+     "opId": "qa-1793636976265-69",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": -798404400000,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636976285
+     }
+    },
+    "noon": -798404400000
+   }
+  },
+  {
+   "id": "FAR-2",
+   "name": "30000 days back with assigned 10-26 -> before_assigned",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636976392-70",
+    "result": "invalid",
+    "reason": "received_date_before_assigned"
+   }
+  },
+  {
+   "id": "FAR-3",
+   "name": "1900-01-01 ok / 1899-12-31 invalid on work with no assigned date",
+   "ok": true,
+   "detail": [
+    {
+     "opId": "qa-1793636976468-71",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+      "student_id": "stu_2",
+      "status": "submitted",
+      "score": null,
+      "late": false,
+      "submitted_at": -2208970800000,
+      "method": "hid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "scn_qa",
+      "updated_at": 1793636976489
+     }
+    },
+    {
+     "opId": "qa-1793636976468-72",
+     "result": "invalid",
+     "reason": "received_date_invalid"
+    }
+   ]
+  },
+  {
+   "id": "TYPE-number",
+   "name": "number -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-33 chars",
+   "name": "33 chars -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-dateOnly string",
+   "name": "dateOnly string -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-dateOnly 1",
+   "name": "dateOnly 1 -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-array",
+   "name": "array -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-object",
+   "name": "object -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-bool",
+   "name": "bool -> 422 whole request, no row",
+   "ok": true,
+   "detail": {
+    "status": 422
+   }
+  },
+  {
+   "id": "TYPE-32",
+   "name": "32-char string (trailing spaces) passes schema, then invalid",
+   "ok": true,
+   "detail": {
+    "results": [
+     {
+      "opId": "qa-1793636977127-87",
+      "result": "invalid",
+      "reason": "received_date_invalid"
+     }
+    ],
+    "serverTime": 1793636977152
+   }
+  },
+  {
+   "id": "TYPE-null",
+   "name": "receivedDate null on hand-in = no date (event time)",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977221-88",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+     "student_id": "stu_14",
+     "status": "submitted",
+     "score": null,
+     "late": true,
+     "submitted_at": 1793636972221,
+     "method": "hid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "scn_qa",
+     "updated_at": 1793636977242
+    }
+   }
+  },
+  {
+   "id": "DO-0",
+   "name": "dateOnly edge 0 -> invalid cell_not_submitted",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-92",
+    "result": "invalid",
+    "reason": "cell_not_submitted"
+   }
+  },
+  {
+   "id": "DO-1",
+   "name": "dateOnly edge 1 -> invalid cell_not_submitted",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-93",
+    "result": "invalid",
+    "reason": "cell_not_submitted"
+   }
+  },
+  {
+   "id": "DO-2",
+   "name": "dateOnly edge 2 -> invalid cell_not_submitted",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-94",
+    "result": "invalid",
+    "reason": "cell_not_submitted"
+   }
+  },
+  {
+   "id": "DO-3",
+   "name": "dateOnly edge 3 -> invalid redate_not_allowed",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-95",
+    "result": "invalid",
+    "reason": "redate_not_allowed"
+   }
+  },
+  {
+   "id": "DO-4",
+   "name": "dateOnly edge 4 -> invalid received_date_invalid",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-96",
+    "result": "invalid",
+    "reason": "received_date_invalid"
+   }
+  },
+  {
+   "id": "DO-5",
+   "name": "dateOnly edge 5 -> invalid redate_not_allowed",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-97",
+    "result": "invalid",
+    "reason": "redate_not_allowed"
+   }
+  },
+  {
+   "id": "DO-6",
+   "name": "dateOnly with score 999 (out of range) -> ok, score stays 6",
+   "ok": true,
+   "detail": {
+    "opId": "qa-1793636977622-98",
+    "result": "ok",
+    "submission": {
+     "assignment_id": "asg_01M6EHGJPE5SRVGXEXC5MMYEE8",
+     "student_id": "stu_4",
+     "status": "submitted",
+     "score": 6,
+     "late": false,
+     "submitted_at": 1793509200000,
+     "method": "grid",
+     "device_id": "qa-dev-X",
+     "scan_session_id": "gb",
+     "updated_at": 1793636977643
+    }
+   }
+  },
+  {
+   "id": "DO-7",
+   "name": "void/excused/empty cells unchanged",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "id": "B50",
+   "name": "50-op batch (44 children, mixed dates): each op judged alone",
+   "ok": true,
+   "detail": {
+    "status": 200,
+    "mism": [],
+    "good": 50,
+    "rows": 21
+   }
+  },
+  {
+   "id": "CLOSED",
+   "name": "closed work: re-date ok, new hand-in with date -> assignment_closed",
+   "ok": true,
+   "detail": [
+    {
+     "opId": "qa-1793636978474-150",
+     "result": "ok",
+     "submission": {
+      "assignment_id": "asg_01M6EHGKE21F3Y8AEENMN3B10X",
+      "student_id": "stu_1",
+      "status": "submitted",
+      "score": 6,
+      "late": false,
+      "submitted_at": 1793509200000,
+      "method": "grid",
+      "device_id": "qa-dev-X",
+      "scan_session_id": "gb",
+      "updated_at": 1793636978503
+     }
+    },
+    {
+     "opId": "qa-1793636978474-151",
+     "result": "assignment_closed"
+    }
+   ]
+  },
+  {
+   "id": "AC20-1",
+   "name": "gradebook: late 20 -> 5, submitted 20 -> 20, score sum 160 -> 160",
+   "ok": true,
+   "detail": {
+    "g0": {
+     "n": 20,
+     "late": 20,
+     "score": 160
+    },
+    "g1": {
+     "n": 20,
+     "late": 5,
+     "score": 160
+    }
+   }
+  },
+  {
+   "id": "AC20-2",
+   "name": "reports/summary: same late change, same score sum",
+   "ok": true,
+   "detail": {
+    "r0": {
+     "n": 20,
+     "late": 20,
+     "score": 160
+    },
+    "r1": {
+     "n": 20,
+     "late": 5,
+     "score": 160
+    }
+   }
+  }
+ ]
+}

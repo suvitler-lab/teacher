@@ -1,0 +1,102 @@
+[
+ {
+  "redateNewer": true,
+  "res": [
+   "ok",
+   "superseded"
+  ],
+  "score": 4,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": false,
+  "res": [
+   "ok",
+   "ok"
+  ],
+  "score": 9,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": true,
+  "res": [
+   "ok",
+   "superseded"
+  ],
+  "score": 4,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": false,
+  "res": [
+   "ok",
+   "ok"
+  ],
+  "score": 9,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": true,
+  "res": [
+   "ok",
+   "superseded"
+  ],
+  "score": 4,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": false,
+  "res": [
+   "ok",
+   "ok"
+  ],
+  "score": 9,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": true,
+  "res": [
+   "ok",
+   "superseded"
+  ],
+  "score": 4,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": false,
+  "res": [
+   "ok",
+   "ok"
+  ],
+  "score": 9,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": true,
+  "res": [
+   "ok",
+   "superseded"
+  ],
+  "score": 4,
+  "at": 1793163600000,
+  "late": false
+ },
+ {
+  "redateNewer": false,
+  "res": [
+   "ok",
+   "ok"
+  ],
+  "score": 9,
+  "at": 1793163600000,
+  "late": false
+ }
+]

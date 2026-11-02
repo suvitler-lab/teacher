@@ -1,0 +1,25 @@
+{
+ "BK4": {
+  "pass": true,
+  "redate": "ok",
+  "undo": [
+   409,
+   {
+    "error": "modified_since",
+    "message": "มีการแก้ไขหลังการล้าง"
+   }
+  ]
+ },
+ "negativeRows": [
+  {
+   "a": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+   "s": "stu_1",
+   "submitted_at": -798404400000
+  },
+  {
+   "a": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+   "s": "stu_2",
+   "submitted_at": -2208970800000
+  }
+ ]
+}

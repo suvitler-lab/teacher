@@ -1,0 +1,42 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/c03-verify-edges.test.ts (5 tests | 1 failed) 656ms
+     × a cell received 30 000 days back (1944-09-13, work without assigned date) is stored — and the backup holding it can still be restored 213ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/c03-verify-edges.test.ts > T-03 no lower limit on the received date (Q2) vs backup/restore > a cell received 30 000 days back (1944-09-13, work without assigned date) is stored — and the backup holding it can still be restored
+AssertionError: expected 422 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 422
+
+ ❯ restoreFrom test/api/backup-helpers.ts:35:24
+     33|     for (let i = 0, seq = 0; i < rows.length; i += 500, seq++) {
+     34|       const r = await call("/api/restore/execute", json({ restoreId: v…
+     35|       expect(r.status).toBe(200);
+       |                        ^
+     36|     }
+     37|   }
+ ❯ test/api/c03-verify-edges.test.ts:106:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 121 passed (122)
+   Start at  23:31:50
+   Duration  8.73s (transform 2.99s, setup 8.70s, import 1.83s, tests 7.76s, environment 4.01s)
+
+EXIT 1

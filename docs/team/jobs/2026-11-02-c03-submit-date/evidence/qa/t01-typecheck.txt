@@ -1,0 +1,5 @@
+
+> ngankrob@0.1.0 typecheck
+> tsc --noEmit
+
+test/unit/c03-received-date.test.ts(5,70): error TS2307: Cannot find module '@shared/received-date' or its corresponding type declarations.

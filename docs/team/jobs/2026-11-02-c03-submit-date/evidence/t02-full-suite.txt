@@ -1,0 +1,16 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+
+ Test Files  103 passed (103)
+      Tests  1272 passed (1272)
+   Start at  23:17:49
+   Duration  55.86s (transform 26.29s, setup 354.92s, import 50.24s, tests 163.31s, environment 163.68s)
+

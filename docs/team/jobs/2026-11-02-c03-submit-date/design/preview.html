@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preview — C-03 วันที่รับงาน / ส่งช้า</title>
+<!-- ไฟล์เดียว: ทุกหน้า/อุปกรณ์/สถานะ อยู่ในไฟล์นี้ · ข้อมูลสมมติ · "วันนี้" ในตัวอย่างคือ 2 พ.ย. 2026 -->
+<style>
+/* ===== tokens (ตรงกับ src/styles/tokens.css โหมดสว่าง) ===== */
+:root{
+  --surface-0:#f4f6fa;--surface-1:#eef1f6;--surface-2:#fff;--surface-3:#fff;
+  --text-primary:#1a1f29;--text-secondary:#59616e;--text-muted:#8b929d;
+  --border:rgba(20,28,46,.10);--border-strong:rgba(20,28,46,.18);
+  --accent:#2f6fde;--accent-hover:#275fc0;--on-accent:#fff;--bg-accent:#e6f0fc;--text-accent:#1a56b0;--border-accent:#9cc2f2;
+  --bg-success:#e3f6ec;--text-success:#12703f;--fill-success:#1c9d61;--border-success:#a6e0c2;
+  --bg-warning:#fbefd6;--text-warning:#8a5a08;--fill-warning:#e79a1c;--on-warning:#3a2600;--border-warning:#f0cf8c;
+  --bg-danger:#fbe6e6;--text-danger:#a32626;--fill-danger:#dc4a4a;--border-danger:#f0b2b2;
+  --radius-sm:8px;--radius:12px;--radius-lg:16px;
+  --font-sans:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --shadow-pop:0 8px 28px rgba(20,28,46,.14),0 2px 6px rgba(20,28,46,.08);--tap:44px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans);background:#dfe3ea;color:var(--text-primary)}
+/* ===== hub ===== */
+.hub{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border-strong);padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.hub h1{font-size:15px;margin:0}
+.hub .g{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.hub .g>span{font-size:12px;color:var(--text-secondary);margin-right:2px}
+.hub button{font:inherit;font-size:14px;min-height:44px;padding:4px 12px;border:1px solid var(--border-strong);border-radius:8px;background:#fff;color:var(--text-primary);cursor:pointer}
+.hub button[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.stage{display:flex;justify-content:center;padding:14px}
+.frame{background:var(--surface-0);box-shadow:0 2px 14px rgba(0,0,0,.2);overflow:hidden;transform-origin:top center;position:relative;border-radius:6px}
+.note{font-size:12px;color:var(--text-secondary);text-align:center;padding:0 16px 14px}
+/* ===== app (จำลอง) ===== */
+.app{width:100%;height:100%;display:flex;font-size:16px;line-height:1.4}
+.rail{width:72px;background:var(--surface-2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;flex:none}
+.rail i{font-style:normal;width:56px;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;border-radius:10px;color:var(--text-secondary);padding:2px}
+.rail i.on{background:var(--bg-accent);color:var(--text-accent);font-weight:600}
+.narrow .rail{display:none}.narrow .tabbar{display:flex}
+.tabbar{display:none;position:absolute;bottom:0;left:0;right:0;background:var(--surface-2);border-top:1px solid var(--border);justify-content:space-around;z-index:5}
+.tabbar i{font-style:normal;min-height:56px;display:flex;align-items:center;font-size:12px;color:var(--text-secondary)}.tabbar i.on{color:var(--text-accent);font-weight:600}
+.page{flex:1;overflow:auto;padding:18px 20px 20px;position:relative}
+.narrow .page{padding:12px 12px 80px}
+h2{font-size:1.25rem;margin:0 0 10px}
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.muted{color:var(--text-secondary);font-size:.9rem}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.b,.b{font:inherit;min-height:var(--tap);padding:6px 16px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer}
+button.b.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:600}
+button.b.pri:hover{background:var(--accent-hover)}
+.chip{display:inline-flex;align-items:center;min-height:26px;padding:1px 10px;border-radius:99px;font-size:.85rem;background:var(--surface-1);color:var(--text-secondary)}
+.chip.ok{background:var(--bg-success);color:var(--text-success)}
+.chip.late{background:var(--bg-warning);color:var(--text-warning)}
+.chip.blue{background:var(--bg-accent);color:var(--text-accent)}
+/* ctxbar + date control */
+.ctxbar{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:center}
+.recv{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border:1px solid var(--border-strong);background:var(--surface-2);border-radius:var(--radius);padding:4px 6px 4px 12px}
+.recv.back{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.recv .lbl{font-size:.9rem}
+.seg{display:flex;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-2)}
+.seg button{font:inherit;font-size:.9rem;min-height:var(--tap);padding:4px 14px;border:0;border-right:1px solid var(--border);background:transparent;color:var(--text-primary);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--on-accent);font-weight:600}
+input[type=date],input[type=number]{font:inherit;min-height:var(--tap);padding:4px 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text-primary)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.banner{display:flex;gap:8px;align-items:center;background:var(--bg-warning);border:1px solid var(--border-warning);color:var(--text-warning);border-radius:var(--radius-sm);padding:8px 12px;margin:10px 0;font-size:.92rem}
+.result{display:flex;gap:12px;align-items:center;border:2px solid var(--border-success);background:var(--bg-success);border-radius:var(--radius);padding:12px 14px;margin:10px 0}
+.result.late{border-color:var(--border-warning);background:var(--bg-warning)}
+.result .big{font-size:1.15rem;font-weight:600}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:8px;min-height:var(--tap);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.list li:last-child{border:0}.list .sp{flex:1}
+/* gradebook */
+.tw{overflow:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2)}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{border-bottom:1px solid var(--border);padding:4px 8px;text-align:center;min-height:var(--tap);height:var(--tap)}
+th{background:var(--surface-1);font-weight:600;font-size:.9rem}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface-2)}
+th:first-child{background:var(--surface-1)}
+.cell{font:inherit;min-width:var(--tap);min-height:var(--tap);border:1px solid transparent;border-radius:8px;background:transparent;cursor:pointer;color:var(--text-success);font-weight:600;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.cell:hover{background:var(--surface-1)}.cell small{font-size:.72rem;font-weight:500}
+.cell.late{color:var(--text-warning)}
+.cell.none{color:var(--text-muted);font-weight:400}
+.pop{position:absolute;z-index:20;width:300px;background:var(--surface-3);border:1px solid var(--border-strong);border-radius:var(--radius);box-shadow:var(--shadow-pop);padding:14px}
+.narrow .pop{position:fixed}
+.pop h3,.dlg h3{margin:0 0 8px;font-size:1rem}
+.pop label,.dlg label{display:block;font-size:.88rem;color:var(--text-secondary);margin:8px 0 3px}
+.pop input,.dlg input{width:100%}
+.scrim{position:absolute;inset:0;background:rgba(20,28,46,.4);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{background:var(--surface-3);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);padding:18px;width:min(420px,100%)}
+.err{color:var(--text-danger);font-size:.85rem;margin-top:4px}
+.hidden{display:none!important}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:24px;background:#1a1f29;color:#fff;border-radius:99px;padding:10px 18px;z-index:40;font-size:.92rem}
+.narrow .toast{bottom:76px}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center}
+.note2{font-size:.82rem;color:var(--text-secondary);margin-top:6px}
+.ann{font-size:.8rem;color:var(--text-secondary);border-left:3px solid var(--border-accent);padding-left:8px;margin:8px 0}
+</style>
+</head>
+<body>
+<div class="hub">
+  <h1>C-03 วันที่รับงาน / ส่งช้า</h1>
+  <div class="g" id="gp"><span>หน้า</span></div>
+  <div class="g" id="gd"><span>อุปกรณ์</span></div>
+  <div class="g"><span>ข้อมูลสมมติ · วันนี้ = 2 พ.ย.</span><button id="reset">เริ่มใหม่</button></div>
+</div>
+<div class="stage"><div class="frame" id="frame"><div class="app" id="app"></div></div></div>
+<p class="note">ภาพจำลองบนเครื่องพัฒนา · อุปกรณ์จริง (iPad/Safari) ต้องลองเอง · ปุ่มทุกอันกดได้จริง · ช่องวันที่เลือกวันอนาคตไม่ได้</p>
+
+<script>
+const TODAY='2026-11-02', YEST='2026-11-01';
+const MON=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const fmt=iso=>{const [y,m,d]=iso.split('-').map(Number);return d+' '+MON[m-1]};
+const PAGES=['สแกน','สมุดคะแนน','คำอธิบายสัญลักษณ์'];
+const DEVICES=[{n:'iPad ตั้ง',w:820,h:1180},{n:'iPad นอน',w:1180,h:820},{n:'คอม',w:1536,h:729},{n:'มือถือ',w:390,h:844}];
+const WORKS=[{id:'w3',name:'ใบงานที่ 3',due:'2026-11-01'},{id:'w2',name:'ใบงานที่ 2',due:'2026-10-25'}];
+const NAMES=['ด.ช. กฤตภาส ใจดี','ด.ญ. ขวัญฤดี สุขสม','ด.ช. ชัยวัฒน์ มั่นคง','ด.ญ. ณัฏฐา รุ่งเรือง','ด.ช. ธนากร แสงทอง','ด.ญ. นภัสวรรณ พึ่งบุญ'];
+let S;
+function init(){
+  S={page:0,dev:0,recvMode:'today',recvDate:TODAY,round:false,recent:[],next:0,toast:'',
+     subs:{}, pop:null, bulk:null};
+  // gradebook seed: [date,score] or null
+  NAMES.forEach((n,i)=>{S.subs[i]={w3:null,w2:['2026-10-24',8]}; });
+  S.subs[0].w3=['2026-11-01',9]; S.subs[1].w3=['2026-11-02',7]; S.subs[2].w2=['2026-10-27',6];
+}
+const isLate=(d,due)=>d>due;
+const badge=(d,due)=>isLate(d,due)?'<span class="chip late">ส่งช้า</span>':'<span class="chip ok">ทันกำหนด</span>';
+const $=s=>document.querySelector(s);
+
+/* ===== render ===== */
+function render(){
+  const dv=DEVICES[S.dev],f=$('#frame'),app=$('#app');
+  f.style.width=dv.w+'px';f.style.height=dv.h+'px';
+  const avail=window.innerWidth-28,sc=dv.w>avail?avail/dv.w:1;
+  f.style.transform=sc<1?`scale(${sc})`:'none';f.style.marginBottom=sc<1?-(dv.h*(1-sc))+'px':'0';
+  app.className='app'+(dv.w<600?' narrow':'');
+  const rail=['สแกน','สมุดคะแนน','งาน','ห้อง','ตั้งค่า'];
+  const nav=(c)=>`<div class="${c}">`+rail.map((r,i)=>`<i class="${i===(S.page===2?1:S.page)?'on':''}">${r}</i>`).join('')+'</div>';
+  app.innerHTML=nav('rail')+`<div class="page" id="pg">${[scanPage,gradePage,legendPage][S.page]()}</div>`+nav('tabbar')+
+    (S.toast?`<div class="toast" role="status">${S.toast}</div>`:'')+(S.bulk?bulkDlg():'');
+  if(S.pop)positionPop();
+  // pages buttons
+  document.querySelectorAll('#gp button').forEach((b,i)=>b.setAttribute('aria-pressed',i===S.page));
+  document.querySelectorAll('#gd button').forEach((b,i)=>b.setAttribute('aria-pressed',i===S.dev));
+}
+function toast(t){S.toast=t;render();setTimeout(()=>{S.toast='';render()},2200)}
+
+/* ---- A: scan ---- */
+function recvControl(){
+  const back=S.recvDate!==TODAY;
+  return `<div class="recv ${back?'back':''}" role="group" aria-label="วันที่รับงาน">
+    <span class="lbl">รับงานเมื่อวันที่</span>
+    <div class="seg">
+      <button data-a="rm" data-v="today" aria-pressed="${S.recvMode==='today'}">วันนี้</button>
+      <button data-a="rm" data-v="yest" aria-pressed="${S.recvMode==='yest'}">เมื่อวาน</button>
+      <button data-a="rm" data-v="pick" aria-pressed="${S.recvMode==='pick'}">เลือกวันที่</button>
+    </div>
+    ${S.recvMode==='pick'?`<input type="date" id="rdate" aria-label="เลือกวันที่รับงาน" value="${S.recvDate}" max="${TODAY}" min="2026-10-01">`:''}
+  </div>`;
+}
+function scanPage(){
+  const w=WORKS[0],back=S.recvDate!==TODAY;
+  const warn=back?`<div class="banner" role="status"><b>กำลังรับงานย้อนหลัง · ${fmt(S.recvDate)}</b><span>— งานที่สแกนจะบันทึกว่าส่งวันที่ ${fmt(S.recvDate)}</span></div>`:'';
+  const last=S.recent[0];
+  const setup=`<div class="card"><div class="ctxbar">
+      <span class="chip blue">ห้อง ป.4/1</span><span class="chip blue">คณิตศาสตร์</span><span class="chip blue">${w.name}</span>
+      <span class="chip">กำหนดส่ง ${fmt(w.due)}</span></div></div>
+    <div class="card"><div class="muted" style="margin-bottom:6px">${S.round?'วันที่รับงานของรอบนี้':'ตั้งค่าก่อนเริ่มรอบ'}</div>${recvControl()}${warn}
+      <div class="note2">ค่าเริ่มต้นคือวันนี้ · เลือกวันอนาคตไม่ได้ · เปลี่ยนได้ระหว่างรอบ มีผลกับงานที่สแกนหลังจากนั้น</div></div>`;
+  if(!S.round)return `<h2>สแกนงาน</h2>${setup}<button class="b pri" data-a="start" style="width:100%">เริ่มรับงาน</button>`;
+  const res=last?`<div class="result ${isLate(last.d,w.due)?'late':''}" aria-live="polite"><div><div class="big">${last.n}</div><div class="muted" style="color:inherit">ส่งวันที่ ${fmt(last.d)}</div></div><div class="sp" style="flex:1"></div>${badge(last.d,w.due)}</div>`:`<div class="card muted">ยังไม่มีงานที่สแกน — กดปุ่มด้านล่างเพื่อจำลองการสแกน</div>`;
+  return `<h2>สแกนงาน · กำลังรับ</h2>${setup}${res}
+    <div class="row" style="margin-bottom:10px"><button class="b pri" data-a="scan">จำลองสแกนคนถัดไป</button><button class="b" data-a="end">จบรอบ</button></div>
+    <div class="card"><b>สแกนล่าสุด</b> <span class="muted">(${S.recent.length})</span>
+      <ul class="list">${S.recent.map(r=>`<li><span>${r.n}</span><span class="sp"></span><span class="muted">${fmt(r.d)}</span>${badge(r.d,w.due)}</li>`).join('')||'<li class="muted">ว่าง</li>'}</ul></div>`;
+}
+
+/* ---- B: gradebook ---- */
+function cellHtml(i,w){
+  const s=S.subs[i][w.id];
+  if(!s)return `<button class="cell none" data-a="open" data-i="${i}" data-w="${w.id}" aria-label="${NAMES[i]} ${w.name} ยังไม่ส่ง">–</button>`;
+  const late=isLate(s[0],w.due);
+  return `<button class="cell ${late?'late':''}" data-a="open" data-i="${i}" data-w="${w.id}" aria-label="${NAMES[i]} ${w.name} ส่งวันที่ ${fmt(s[0])} ${late?'ส่งช้า':'ทันกำหนด'} คะแนน ${s[1]}">${s[1]}<small>${late?'ช้า · ':''}${fmt(s[0])}</small></button>`;
+}
+function gradePage(){
+  return `<h2>สมุดคะแนน · ป.4/1 คณิตศาสตร์</h2>
+  <div class="row" style="margin-bottom:10px"><span class="muted">แตะช่องเพื่อแก้วันที่ส่ง/คะแนน</span><span class="sp" style="flex:1"></span><button class="b" data-a="bulk">ทั้งห้องส่งแล้ว · ${WORKS[0].name}</button></div>
+  <div class="tw"><table><thead><tr><th>นักเรียน</th>${WORKS.map(w=>`<th>${w.name}<br><span class="muted" style="font-weight:400">กำหนด ${fmt(w.due)}</span></th>`).join('')}</tr></thead>
+  <tbody>${NAMES.map((n,i)=>`<tr><td>${n}</td>${WORKS.map(w=>`<td>${cellHtml(i,w)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  ${S.pop?popHtml():''}`;
+}
+function popHtml(){
+  const {i,w,d,sc}=S.pop,wk=WORKS.find(x=>x.id===w);
+  return `<div class="pop" id="pop" role="dialog" aria-label="แก้ไขการส่งงาน">
+    <h3>${NAMES[i]}<br><span class="muted" style="font-weight:400">${wk.name} · กำหนดส่ง ${fmt(wk.due)}</span></h3>
+    <label for="pd">วันที่ส่ง</label>
+    <div class="row"><input id="pd" type="date" value="${d}" max="${TODAY}" min="2026-10-01" style="flex:1;min-width:140px"><span id="pb">${badge(d,wk.due)}</span></div>
+    <div class="err ${d>TODAY||!d?'':'hidden'}" id="pe">เลือกวันอนาคตไม่ได้ — ใช้วันนี้หรือก่อนหน้า</div>
+    <label for="ps">คะแนน (เต็ม 10)</label>
+    <input id="ps" type="number" min="0" max="10" value="${sc}">
+    <div class="row" style="margin-top:12px;justify-content:flex-end"><button class="b" data-a="pcancel">ยกเลิก</button><button class="b pri" data-a="psave">บันทึก</button></div>
+    <div class="note2">ส่งช้า/ทันกำหนด คิดจากวันที่ส่งเทียบกำหนดส่ง — ไม่ต้องตั้งเอง</div></div>`;
+}
+function positionPop(){
+  const p=$('#pop'),b=$(`[data-a=open][data-i="${S.pop.i}"][data-w="${S.pop.w}"]`),pg=$('#pg');
+  if(!p||!b)return;
+  if(DEVICES[S.dev].w<600){p.style.left='45px';p.style.top='140px';p.style.width='300px';return}
+  const pr=pg.getBoundingClientRect(),br=b.getBoundingClientRect(),k=pr.width/pg.offsetWidth||1;
+  let x=(br.left-pr.left)/k+pg.scrollLeft-310+br.width/k, y=(br.bottom-pr.top)/k+pg.scrollTop+4;
+  x=Math.max(8,Math.min(x,pg.offsetWidth-310));
+  if(y+330>pg.scrollHeight+pg.offsetHeight-20)y=Math.max(8,(br.top-pr.top)/k+pg.scrollTop-330);
+  p.style.left=x+'px';p.style.top=y+'px';
+}
+function bulkDlg(){
+  const {d}=S.bulk,wk=WORKS[0],miss=NAMES.filter((_,i)=>!S.subs[i].w3).length;
+  return `<div class="scrim"><div class="dlg" role="dialog" aria-label="ทั้งห้องส่งแล้ว">
+    <h3>ทั้งห้องส่งแล้ว · ${wk.name}</h3>
+    <div class="muted">จะบันทึกว่าส่งแล้ว ${miss} คน (คนที่ส่งแล้วไม่เปลี่ยน)</div>
+    <label for="bd">รับงานเมื่อวันที่</label>
+    <div class="row"><div class="seg"><button data-a="bq" data-v="${TODAY}" aria-pressed="${d===TODAY}">วันนี้</button><button data-a="bq" data-v="${YEST}" aria-pressed="${d===YEST}">เมื่อวาน</button></div>
+    <input id="bd" type="date" value="${d}" max="${TODAY}" min="2026-10-01" style="flex:1;min-width:140px"></div>
+    <div class="row" style="margin-top:10px" id="bb">กำหนดส่ง ${fmt(wk.due)} → ${badge(d,wk.due)}</div>
+    <div class="ann">${isLate(d,wk.due)?'ทั้ง '+miss+' คนจะนับเป็นส่งช้า — ถ้าเก็บงานทันกำหนดแล้วแค่มากรอกทีหลัง ให้เลือกวันที่เก็บจริง':'ทั้ง '+miss+' คนจะนับว่าทันกำหนด'}</div>
+    <div class="row" style="margin-top:12px;justify-content:flex-end"><button class="b" data-a="bcancel">ยกเลิก</button><button class="b pri" data-a="bok">ยืนยัน ${miss} คน · ${fmt(d)}</button></div></div></div>`;
+}
+
+/* ---- C: legend ---- */
+function legendPage(){
+  return `<h2>คำอธิบายสัญลักษณ์</h2><div class="card legend">
+    <span class="chip ok">ทันกำหนด</span><span>วันที่ส่งไม่เกินกำหนดส่ง</span>
+    <span class="chip late">ส่งช้า</span><span>วันที่ส่งหลังกำหนดส่ง (คิดจากวันที่ส่ง ไม่ใช่เวลาที่กรอก)</span>
+    <span class="cell" style="min-height:44px">9<small>1 พ.ย.</small></span><span>ส่งแล้ว · คะแนน · วันที่ส่ง — แตะเพื่อแก้</span>
+    <span class="cell late" style="min-height:44px">7<small>ช้า · 2 พ.ย.</small></span><span>ส่งช้า (ตัวอักษรสีส้ม + คำว่า "ช้า" ไม่พึ่งสีอย่างเดียว)</span>
+    <span class="cell none" style="min-height:44px">–</span><span>ยังไม่ส่ง</span>
+    <span class="recv back" style="padding:4px 10px"><b>รับงานย้อนหลัง · 1 พ.ย.</b></span><span>แถบสีเหลืองตอนสแกน = วันที่รับงานไม่ใช่วันนี้</span></div>
+  <div class="ann">เปลี่ยนวันที่ส่งหรือเลื่อนกำหนดส่ง สถานะ ทันกำหนด/ส่งช้า คำนวณใหม่ให้เอง</div>`;
+}
+
+/* ===== events ===== */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-a]');
+  if(!t){ if(S.pop&&!e.target.closest('#pop')&&e.target.closest('#app')){S.pop=null;render()} return }
+  const a=t.dataset.a;
+  if(a==='rm'){S.recvMode=t.dataset.v;if(t.dataset.v==='today')S.recvDate=TODAY;if(t.dataset.v==='yest')S.recvDate=YEST;if(t.dataset.v==='pick'&&S.recvDate===TODAY)S.recvDate=YEST;render()}
+  else if(a==='start'){S.round=true;render()}
+  else if(a==='end'){S.round=false;S.recent=[];S.next=0;toast('จบรอบแล้ว')}
+  else if(a==='scan'){S.recent.unshift({n:NAMES[S.next%6],d:S.recvDate});S.next++;render()}
+  else if(a==='open'){const i=+t.dataset.i,w=t.dataset.w,s=S.subs[i][w];S.pop={i,w,d:s?s[0]:TODAY,sc:s?s[1]:''};render()}
+  else if(a==='pcancel'){S.pop=null;render()}
+  else if(a==='psave'){const p=S.pop;if(!p.d||p.d>TODAY){return}const sc=+$('#ps').value;S.subs[p.i][p.w]=[p.d,sc];S.pop=null;toast('บันทึกแล้ว · '+fmt(p.d))}
+  else if(a==='bulk'){S.bulk={d:TODAY};render()}
+  else if(a==='bq'){S.bulk.d=t.dataset.v;render()}
+  else if(a==='bcancel'){S.bulk=null;render()}
+  else if(a==='bok'){const d=S.bulk.d;NAMES.forEach((_,i)=>{if(!S.subs[i].w3)S.subs[i].w3=[d,'']});S.bulk=null;toast('บันทึกแล้ว · ทั้งห้องส่งวันที่ '+fmt(d))}
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='rdate'){ if(t.value&&t.value<=TODAY){S.recvDate=t.value;render();const r=$('#rdate');r&&r.focus()} else if(t.value>TODAY){t.value=TODAY} }
+  if(t.id==='pd'){ const ok=t.value&&t.value<=TODAY; S.pop.d=ok?t.value:S.pop.d;
+    $('#pe').classList.toggle('hidden',!!ok); if(ok)$('#pb').innerHTML=badge(t.value,WORKS.find(x=>x.id===S.pop.w).due) }
+  if(t.id==='bd'){ if(t.value&&t.value<=TODAY){S.bulk.d=t.value;render();$('#bd').focus()} else t.value=S.bulk.d }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){S.pop=null;S.bulk=null;render()}});
+
+/* ===== hub ===== */
+PAGES.forEach((p,i)=>{const b=document.createElement('button');b.textContent=p;b.onclick=()=>{S.page=i;S.pop=null;render()};$('#gp').appendChild(b)});
+DEVICES.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.n;b.onclick=()=>{S.dev=i;render()};$('#gd').appendChild(b)});
+$('#reset').onclick=()=>{const p=S.page,d=S.dev;init();S.page=p;S.dev=d;render()};
+window.addEventListener('resize',render);
+init();render();
+</script>
+</body>
+</html>

@@ -8,7 +8,8 @@ import { memberClause } from "../lib/roster";
 import { classInYear, inRoster } from "@shared/roster";
 import { readJson, bad, notFound, conflict, ApiError } from "../lib/http";
 import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
-import { isLateSubmission, clampClientTs } from "../lib/time";
+import { isLateSubmission, clampClientTs, bkkToday } from "../lib/time";
+import { checkReceivedDate, receivedAtMs } from "@shared/received-date";
 import { lateFixForCells } from "../lib/late";
 import { id, ulid } from "@shared/ids";
 import { isHalfStep } from "@shared/grade";
@@ -68,6 +69,9 @@ const opSchema = z.object({
   clientTs: z.number(),
   intent: z.enum(["receive", "grade"]).optional(),
   dataEpoch: z.number().int().optional(),
+  // v3 (c03): only the TYPE is checked here — the value is checked per op, and only where it is used (D-03)
+  receivedDate: z.string().max(32).nullish(),
+  dateOnly: z.boolean().optional(),
 });
 // one opId per op (R-03): two ops sharing an id would both be written, but only the first audited
 const batchSchema = z.object({
@@ -243,6 +247,7 @@ function alreadySubmitted(op: OpIn, cell: any): boolean {
 type OpIn = z.infer<typeof opSchema>;
 interface AsgRow {
   id: string; full_score: number; due_date: string | null; status: string; deleted_at: number | null;
+  assigned_date: string | null; // the floor of a received date (c03 · D-04)
   term_year: number | null; term_end: string | null; // the assignment's term (null year = no term)
 }
 interface World {
@@ -259,7 +264,7 @@ async function loadWorld(env: Env, ops: OpIn[]): Promise<World> {
   const pairs = JSON.stringify([...new Set(ops.map((o) => `${o.assignmentId}\u0000${o.studentId}`))].map((k) => k.split("\u0000")));
   const [aRes, linkRes, sRes, exRes] = await Promise.all([
     env.DB.prepare(
-      `SELECT a.id, a.full_score, a.due_date, a.status, a.deleted_at, t.year AS term_year, t.end_date AS term_end
+      `SELECT a.id, a.full_score, a.due_date, a.status, a.deleted_at, a.assigned_date, t.year AS term_year, t.end_date AS term_end
        FROM assignments a LEFT JOIN terms t ON t.id = a.term_id
        WHERE a.id IN (SELECT value FROM json_each(?1))`,
     ).bind(assignmentIds).all<AsgRow>(),
@@ -299,6 +304,8 @@ async function loadWorld(env: Env, ops: OpIn[]): Promise<World> {
  * the ops before this one (a `[void, grade]` pair is judged on the void, not on what was stored before the request).
  */
 function judge(op: OpIn, w: World, cells: Map<string, any> = w.existing): SubmissionOpResult | null {
+  // a re-date (v3) is gradebook work on a submitted cell only: with a hand-in method it would slip past C-01
+  if (op.dateOnly && (op.method !== "grid" || op.status !== "submitted")) return { opId: op.opId, result: "invalid", reason: "redate_not_allowed" };
   const a = w.assignments.get(op.assignmentId);
   if (!a || a.deleted_at) return { opId: op.opId, result: "invalid", reason: "assignment_missing" };
   if (a.full_score !== op.fullScoreAtScan) return { opId: op.opId, result: "full_score_changed", currentFullScore: a.full_score };
@@ -319,7 +326,8 @@ function judge(op: OpIn, w: World, cells: Map<string, any> = w.existing): Submis
         && !inRoster(student, a.term_year == null ? null : { year: a.term_year, end_date: a.term_end })))) {
     return { opId: op.opId, result: "student_inactive" };
   }
-  if (op.score != null && (op.score < 0 || op.score > a.full_score)) return { opId: op.opId, result: "invalid", reason: "score_out_of_range" };
+  // a re-date writes the stored score, never the op's (AC-13): the op's score is not checked
+  if (!op.dateOnly && op.score != null && (op.score < 0 || op.score > a.full_score)) return { opId: op.opId, result: "invalid", reason: "score_out_of_range" };
   return null;
 }
 
@@ -408,6 +416,22 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         continue;
       }
       const wasSubmitted = before && before.status === "submitted";
+      // v3 (c03): a re-date reaches only a cell that is submitted (as left by the ops before it), so it can never
+      // create a hand-in by accident — decided after superseded / already_submitted
+      if (op.dateOnly && !wasSubmitted) {
+        results[index] = { opId: op.opId, result: "invalid", reason: "cell_not_submitted" };
+        continue;
+      }
+      // the received date is used (and so checked) only by an op that makes the cell submitted for the first time
+      // (any method — Gate 1 Q3) or by a re-date; every other op ignores it, even when wrong (D-03)
+      const firstSubmit = op.status === "submitted" && !wasSubmitted;
+      if (op.dateOnly || (firstSubmit && op.receivedDate != null)) {
+        const problem = checkReceivedDate(op.receivedDate, { today: bkkToday(now), assignedDate: a.assigned_date ?? null });
+        if (problem) {
+          results[index] = { opId: op.opId, result: "invalid", reason: problem };
+          continue;
+        }
+      }
       // submitted_at + late are decided only when a student first becomes
       // "submitted"; later score edits keep the original submit time & lateness.
       let submittedAt: number | null;
@@ -415,8 +439,14 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       if (op.status === "void") {
         submittedAt = null;
         late = 0;
-      } else if (op.status === "submitted" && !wasSubmitted) {
-        submittedAt = clampClientTs(op.clientTs, now);
+      } else if (op.dateOnly) {
+        // the same Thai day as stored keeps the stored instant to the ms (BR-05); late follows the date (BR-01)
+        submittedAt = before.submitted_at != null && op.receivedDate === bkkToday(before.submitted_at)
+          ? before.submitted_at
+          : receivedAtMs(op.receivedDate, eventAt, now);
+        late = isLateSubmission(a.due_date, submittedAt!) ? 1 : 0;
+      } else if (firstSubmit) {
+        submittedAt = receivedAtMs(op.receivedDate, eventAt, now);
         late = isLateSubmission(a.due_date, submittedAt) ? 1 : 0;
       } else {
         submittedAt = before?.submitted_at ?? clampClientTs(op.clientTs, now);
@@ -425,8 +455,9 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       const row: GuardedRow = {
         assignment_id: op.assignmentId,
         student_id: op.studentId,
-        status: op.status,
-        score: op.score,
+        // a re-date keeps the stored status and score — never the op's (AC-13)
+        status: op.dateOnly ? before.status : op.status,
+        score: op.dateOnly ? (before.score ?? null) : op.score,
         late,
         submitted_at: submittedAt,
         method: op.method,
@@ -523,18 +554,35 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
 const bulkSchema = z.object({
   action: z.enum(["all-submitted", "full-score", "clear"]),
   classId: z.string().min(1),
+  // v3 (c03): the received date of "ทั้งห้องส่งแล้ว" — the value is checked in the route (contract order)
+  receivedDate: z.string().max(32).nullish(),
 });
+
+const RECEIVED_DATE_MESSAGES: Record<string, string> = {
+  received_date_invalid: "วันที่รับงานไม่ถูกต้อง (ใช้ ค.ศ. ปปปป-ดด-วว)",
+  received_date_future: "วันที่รับงานเป็นวันในอนาคต",
+  received_date_before_assigned: "วันที่รับงานอยู่ก่อนวันมอบหมายงาน",
+};
 
 submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   const aid = c.req.param("id");
-  const { action, classId } = bulkSchema.parse(await readJson(c));
+  const { action, classId, receivedDate } = bulkSchema.parse(await readJson(c));
+  // v3 order: the date checks that need no database first (not_applicable → invalid → future)
+  if (receivedDate != null && action !== "all-submitted") {
+    throw bad("received_date_not_applicable", "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น");
+  }
+  const today = bkkToday(Date.now());
+  if (receivedDate != null) {
+    const problem = checkReceivedDate(receivedDate, { today, assignedDate: null });
+    if (problem) throw bad(problem, RECEIVED_DATE_MESSAGES[problem]);
+  }
   const epoch = await requestEpoch(c);
   // Round 1 — everything that depends only on the work and the class, asked at once (the database is far away: round
   // trips are what a teacher waits for): the work, who it was given to, its term, the class's year, and the current scores
   const [a, linkRes, termRow, classRow, cur] = await Promise.all([
-    c.env.DB.prepare("SELECT id, term_id, full_score, due_date, deleted_at, status FROM assignments WHERE id = ?")
+    c.env.DB.prepare("SELECT id, term_id, full_score, due_date, assigned_date, deleted_at, status FROM assignments WHERE id = ?")
       .bind(aid)
-      .first<{ id: string; term_id: string | null; full_score: number; due_date: string | null; deleted_at: number | null; status: string }>(),
+      .first<{ id: string; term_id: string | null; full_score: number; due_date: string | null; assigned_date: string | null; deleted_at: number | null; status: string }>(),
     c.env.DB.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>(),
     c.env.DB.prepare("SELECT id, year, end_date FROM terms WHERE id = (SELECT term_id FROM assignments WHERE id = ?)")
       .bind(aid).first<{ id: string; year: number; end_date: string | null }>(),
@@ -554,6 +602,11 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   if (links.length > 0 && !links.some((l) => l.class_id === classId)) {
     throw bad("class_not_assigned", "งานนี้ไม่ได้มอบหมายให้ห้องนี้");
   }
+  // ...then the floor, which needs the work's assigned date (only a real CE date not after today counts — D-04)
+  if (receivedDate != null) {
+    const problem = checkReceivedDate(receivedDate, { today, assignedDate: a.assigned_date ?? null });
+    if (problem) throw bad(problem, RECEIVED_DATE_MESSAGES[problem]);
+  }
 
   // Round 2 — the class as it was for THIS assignment's term: grading last year's work must reach last year's
   // children (finished), and must not touch this year's newcomers in the same-named class
@@ -566,7 +619,9 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   if (list.length === 0) throw bad("no_students");
 
   const now = Date.now();
-  const late = isLateSubmission(a.due_date, now) ? 1 : 0;
+  // the hand-in moment of "ทั้งห้องส่งแล้ว": now, or noon of the chosen day (v3); event_at / updated_at stay now
+  const receivedAt = receivedAtMs(receivedDate, now, now);
+  const late = isLateSubmission(a.due_date, receivedAt) ? 1 : 0;
   const batchId = ulid();
   const deviceId = c.get("deviceId") ?? null;
 
@@ -582,7 +637,7 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
       if (before && (before.status === "submitted" || before.status === "excused")) continue; // already in, or excused (BR-07)
       row = {
         assignment_id: aid, student_id: s.id, status: "submitted",
-        score: before?.score ?? null, late, submitted_at: now,
+        score: before?.score ?? null, late, submitted_at: receivedAt,
         method: "bulk", device_id: deviceId, scan_session_id: null, updated_at: now,
       };
     } else if (action === "full-score") {

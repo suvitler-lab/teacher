@@ -171,7 +171,23 @@ export interface SubmissionOp {
   intent?: "receive" | "grade";
   // the data epoch the op was made in; a restore bumps it and held-over ops are not applied
   dataEpoch?: number;
+  // c03 (v3): the Thai calendar day the work was received, "YYYY-MM-DD" CE (shared/received-date.ts) — used only when
+  // the op makes the cell "submitted" for the first time, or with `dateOnly`. Omitted/null = when the teacher acted.
+  receivedDate?: string | null;
+  // c03 (v3): change only the received date of an already-submitted cell (method "grid" + status "submitted" +
+  // receivedDate); the server keeps the stored status/score
+  dateOnly?: boolean;
 }
+
+/** The `reason` values of an `invalid` result (the field itself stays `string` for older screens). */
+export type SubmissionInvalidReason =
+  | "assignment_missing"
+  | "score_out_of_range"
+  | "received_date_invalid"
+  | "received_date_future"
+  | "received_date_before_assigned"
+  | "cell_not_submitted"
+  | "redate_not_allowed";
 
 export type SubmissionOpResult =
   | { opId: string; result: "ok"; submission: Submission }

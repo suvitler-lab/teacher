@@ -1,0 +1,3 @@
+validate 200 true
+chunk with the 2 pre-1970 rows -> 422 {"ok":false,"error":"invalid_backup","message":"ไฟล์สำรองมีข้อมูลไม่ถูกต้อง — ตรวจไฟล์ก่อนกู้คืน","issues":[{"table":"submissions","rowId":"stu_1","field":"submitted_at","code":"too_small"},{"table":"submissions","rowId":"stu_2","field":"submitted_at","code":"too_small"}]}
+abort 200

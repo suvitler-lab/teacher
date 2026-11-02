@@ -1,0 +1,2595 @@
+{
+ "M": "asg_01M6EHGKXT2DK9845RJWKN82QQ",
+ "d0": {
+  "date": "2026-11-02",
+  "termId": null,
+  "openAssignments": [
+   {
+    "assignment": {
+     "id": "asg_en_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 1 Greetings",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-05",
+     "due_date": "2026-08-05",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 1 เลขยกกำลัง",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-04",
+     "due_date": "2026-08-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 37,
+      "scored": 31,
+      "awaiting": 6,
+      "late": 2,
+      "missing": 6,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_2",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 2 เศษส่วน",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-18",
+     "due_date": "2026-08-23",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 31,
+      "awaiting": 5,
+      "late": 3,
+      "missing": 7,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_2",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_exercise",
+     "title": "Exercise 1 Colours",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-26",
+     "due_date": "2026-08-26",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 42,
+      "scored": 42,
+      "awaiting": 0,
+      "late": 5,
+      "missing": 2,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_3",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 1.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-25",
+     "due_date": "2026-08-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 42,
+      "scored": 34,
+      "awaiting": 8,
+      "late": 2,
+      "missing": 1,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_4",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 3 ทศนิยม",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-02",
+     "due_date": "2026-09-07",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 37,
+      "scored": 34,
+      "awaiting": 3,
+      "late": 2,
+      "missing": 6,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_quiz",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 2",
+     "unit": "บทที่ 2",
+     "full_score": 20,
+     "assigned_date": "2026-09-08",
+     "due_date": "2026-09-08",
+     "note": null,
+     "publish_scores": false,
+     "status": "open",
+     "class_ids": [],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": []
+   },
+   {
+    "assignment": {
+     "id": "asg_en_3",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 2 Family",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-09",
+     "due_date": "2026-09-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_5",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 1.2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-09",
+     "due_date": "2026-09-14",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 41,
+      "scored": 39,
+      "awaiting": 2,
+      "late": 5,
+      "missing": 2,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_6",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 1",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-09-16",
+     "due_date": "2026-09-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 34,
+      "scored": 31,
+      "awaiting": 3,
+      "late": 1,
+      "missing": 9,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_ex3",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัดที่ 3 การย่อยอาหาร",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-15",
+     "due_date": "2026-09-22",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 26,
+      "scored": 26,
+      "awaiting": 0,
+      "late": 2,
+      "missing": 18,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_4",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_quiz",
+     "title": "Quiz Unit 1",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-09-23",
+     "due_date": "2026-09-23",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 36,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 8,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_7",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 4 ร้อยละ",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-23",
+     "due_date": "2026-09-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 34,
+      "scored": 33,
+      "awaiting": 1,
+      "late": 4,
+      "missing": 9,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_ws4",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "ใบงานที่ 7 การวิเคราะห์ระบบนิเวศในท้องถิ่นของเรา",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-25",
+     "due_date": "2026-09-30",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61",
+      "cls_62"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 26,
+      "scored": 24,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 18,
+      "excused": 0
+     },
+     {
+      "classId": "cls_62",
+      "total": 4,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_hw",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_homework",
+     "title": "การบ้าน ฟันและการดูแลรักษา",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-27",
+     "due_date": "2026-10-02",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_63"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_63",
+      "total": 3,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 3,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_8",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 2.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-01",
+     "due_date": "2026-10-06",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 32,
+      "awaiting": 8,
+      "late": 5,
+      "missing": 3,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_5",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_exercise",
+     "title": "Exercise 2 Animals",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-07",
+     "due_date": "2026-10-07",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 41,
+      "scored": 41,
+      "awaiting": 0,
+      "late": 1,
+      "missing": 3,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_proj",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_project",
+     "title": "โมเดลระบบย่อยอาหาร",
+     "unit": "บทที่ 3",
+     "full_score": 20,
+     "assigned_date": "2026-09-27",
+     "due_date": "2026-10-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": []
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_9",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 5 อัตราส่วน",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-06",
+     "due_date": "2026-10-11",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 38,
+      "scored": 34,
+      "awaiting": 4,
+      "late": 1,
+      "missing": 5,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_art_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_art",
+     "type_id": "wt_project",
+     "title": "วาดภาพทิวทัศน์",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-14",
+     "due_date": "2026-10-14",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 14,
+      "scored": 14,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 30,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_10",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 2.2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-13",
+     "due_date": "2026-10-18",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 29,
+      "awaiting": 7,
+      "late": 3,
+      "missing": 7,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_11",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 2",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-16",
+     "due_date": "2026-10-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 38,
+      "scored": 33,
+      "awaiting": 5,
+      "late": 4,
+      "missing": 5,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_6",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 3 Food",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-21",
+     "due_date": "2026-10-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_12",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_project",
+     "title": "ใบงานที่ 7 การวิเคราะห์ระบบนิเวศในท้องถิ่นของเรา",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-20",
+     "due_date": "2026-10-25",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 39,
+      "scored": 34,
+      "awaiting": 5,
+      "late": 3,
+      "missing": 4,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_13",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 6 สมการ",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-27",
+     "due_date": "2026-10-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 16,
+      "scored": 12,
+      "awaiting": 4,
+      "late": 1,
+      "missing": 27,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_14",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 3.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-28",
+     "due_date": "2026-10-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 18,
+      "scored": 12,
+      "awaiting": 6,
+      "late": 0,
+      "missing": 25,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHFZQ5Z70ZCF4XMF7BNE5E",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636957925,
+     "updated_at": 1793636957925,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 1,
+      "awaiting": 1,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636965374,
+     "updated_at": 1793636965374,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 1,
+      "awaiting": 1,
+      "late": 1,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636966578,
+     "updated_at": 1793636966578,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 0,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG937SARDG9PYN25XFABY",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 3",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636967527,
+     "updated_at": 1793636967527,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 12,
+      "scored": 11,
+      "awaiting": 1,
+      "late": 0,
+      "missing": 32,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGFSQYHPEPM4TDNAHV4BY",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 4",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_62"
+     ],
+     "created_at": 1793636974390,
+     "updated_at": 1793636974390,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_62",
+      "total": 4,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 3,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 5",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636975924,
+     "updated_at": 1793636975924,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 7,
+      "scored": 0,
+      "awaiting": 7,
+      "late": 0,
+      "missing": 37,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 6",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": null,
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636976162,
+     "updated_at": 1793636976162,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 0,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGJPE5SRVGXEXC5MMYEE8",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 7",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636977358,
+     "updated_at": 1793636977358,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 1,
+      "scored": 1,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 42,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGK4PYPF91277XS4BJET0",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 8",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636977814,
+     "updated_at": 1793636977814,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 21,
+      "scored": 0,
+      "awaiting": 21,
+      "late": 0,
+      "missing": 23,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGKXT2DK9845RJWKN82QQ",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 metrics",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636978618,
+     "updated_at": 1793636978618,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 20,
+      "scored": 20,
+      "awaiting": 0,
+      "late": 20,
+      "missing": 24,
+      "excused": 0
+     }
+    ]
+   }
+  ],
+  "gradingAssignments": [],
+  "awaitingCount": 104,
+  "missingCount": 543,
+  "attendanceToday": [
+   {
+    "date": "2026-11-02",
+    "classId": "cls_61",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 44
+   },
+   {
+    "date": "2026-11-02",
+    "classId": "cls_62",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 4
+   },
+   {
+    "date": "2026-11-02",
+    "classId": "cls_63",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 3
+   }
+  ],
+  "followUp": [
+   {
+    "studentId": "stu_gb_38",
+    "classId": "cls_61",
+    "missing": 18
+   },
+   {
+    "studentId": "stu_28",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_39",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_40",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_44",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_21",
+    "classId": "cls_61",
+    "missing": 15
+   },
+   {
+    "studentId": "stu_18",
+    "classId": "cls_61",
+    "missing": 15
+   },
+   {
+    "studentId": "stu_23",
+    "classId": "cls_61",
+    "missing": 15
+   }
+  ],
+  "serverTime": 1793636979136
+ },
+ "d1": {
+  "date": "2026-11-02",
+  "termId": null,
+  "openAssignments": [
+   {
+    "assignment": {
+     "id": "asg_en_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 1 Greetings",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-05",
+     "due_date": "2026-08-05",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 1 เลขยกกำลัง",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-04",
+     "due_date": "2026-08-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 37,
+      "scored": 31,
+      "awaiting": 6,
+      "late": 2,
+      "missing": 6,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_2",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 2 เศษส่วน",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-18",
+     "due_date": "2026-08-23",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 31,
+      "awaiting": 5,
+      "late": 3,
+      "missing": 7,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_2",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_exercise",
+     "title": "Exercise 1 Colours",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-26",
+     "due_date": "2026-08-26",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 42,
+      "scored": 42,
+      "awaiting": 0,
+      "late": 5,
+      "missing": 2,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_3",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 1.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-08-25",
+     "due_date": "2026-08-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 42,
+      "scored": 34,
+      "awaiting": 8,
+      "late": 2,
+      "missing": 1,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_4",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 3 ทศนิยม",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-02",
+     "due_date": "2026-09-07",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 37,
+      "scored": 34,
+      "awaiting": 3,
+      "late": 2,
+      "missing": 6,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_quiz",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 2",
+     "unit": "บทที่ 2",
+     "full_score": 20,
+     "assigned_date": "2026-09-08",
+     "due_date": "2026-09-08",
+     "note": null,
+     "publish_scores": false,
+     "status": "open",
+     "class_ids": [],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": []
+   },
+   {
+    "assignment": {
+     "id": "asg_en_3",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 2 Family",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-09",
+     "due_date": "2026-09-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_5",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 1.2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-09",
+     "due_date": "2026-09-14",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 41,
+      "scored": 39,
+      "awaiting": 2,
+      "late": 5,
+      "missing": 2,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_6",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 1",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-09-16",
+     "due_date": "2026-09-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 34,
+      "scored": 31,
+      "awaiting": 3,
+      "late": 1,
+      "missing": 9,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_ex3",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัดที่ 3 การย่อยอาหาร",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-15",
+     "due_date": "2026-09-22",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 26,
+      "scored": 26,
+      "awaiting": 0,
+      "late": 2,
+      "missing": 18,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_4",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_quiz",
+     "title": "Quiz Unit 1",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-09-23",
+     "due_date": "2026-09-23",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 36,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 8,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_7",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 4 ร้อยละ",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-09-23",
+     "due_date": "2026-09-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 34,
+      "scored": 33,
+      "awaiting": 1,
+      "late": 4,
+      "missing": 9,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_ws4",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "ใบงานที่ 7 การวิเคราะห์ระบบนิเวศในท้องถิ่นของเรา",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-25",
+     "due_date": "2026-09-30",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61",
+      "cls_62"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 26,
+      "scored": 24,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 18,
+      "excused": 0
+     },
+     {
+      "classId": "cls_62",
+      "total": 4,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_hw",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_homework",
+     "title": "การบ้าน ฟันและการดูแลรักษา",
+     "unit": "บทที่ 3",
+     "full_score": 10,
+     "assigned_date": "2026-09-27",
+     "due_date": "2026-10-02",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_63"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_63",
+      "total": 3,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 3,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_8",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 2.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-01",
+     "due_date": "2026-10-06",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 32,
+      "awaiting": 8,
+      "late": 5,
+      "missing": 3,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_5",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_exercise",
+     "title": "Exercise 2 Animals",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-07",
+     "due_date": "2026-10-07",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 41,
+      "scored": 41,
+      "awaiting": 0,
+      "late": 1,
+      "missing": 3,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_proj",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_project",
+     "title": "โมเดลระบบย่อยอาหาร",
+     "unit": "บทที่ 3",
+     "full_score": 20,
+     "assigned_date": "2026-09-27",
+     "due_date": "2026-10-09",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": []
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_9",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 5 อัตราส่วน",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-06",
+     "due_date": "2026-10-11",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 38,
+      "scored": 34,
+      "awaiting": 4,
+      "late": 1,
+      "missing": 5,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_art_1",
+     "term_id": "term_demo",
+     "subject_id": "sub_art",
+     "type_id": "wt_project",
+     "title": "วาดภาพทิวทัศน์",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-14",
+     "due_date": "2026-10-14",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 14,
+      "scored": 14,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 30,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_10",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 2.2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-13",
+     "due_date": "2026-10-18",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 36,
+      "scored": 29,
+      "awaiting": 7,
+      "late": 3,
+      "missing": 7,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_11",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_quiz",
+     "title": "สอบย่อย บทที่ 2",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-16",
+     "due_date": "2026-10-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 38,
+      "scored": 33,
+      "awaiting": 5,
+      "late": 4,
+      "missing": 5,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_en_6",
+     "term_id": "term_demo",
+     "subject_id": "sub_eng",
+     "type_id": "wt_worksheet",
+     "title": "Worksheet 3 Food",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-21",
+     "due_date": "2026-10-21",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 40,
+      "scored": 40,
+      "awaiting": 0,
+      "late": 3,
+      "missing": 4,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_12",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_project",
+     "title": "ใบงานที่ 7 การวิเคราะห์ระบบนิเวศในท้องถิ่นของเรา",
+     "unit": null,
+     "full_score": 20,
+     "assigned_date": "2026-10-20",
+     "due_date": "2026-10-25",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 39,
+      "scored": 34,
+      "awaiting": 5,
+      "late": 3,
+      "missing": 4,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_13",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 6 สมการ",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-27",
+     "due_date": "2026-10-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 16,
+      "scored": 12,
+      "awaiting": 4,
+      "late": 1,
+      "missing": 27,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_gb_14",
+     "term_id": "term_demo",
+     "subject_id": "sub_math",
+     "type_id": "wt_exercise",
+     "title": "แบบฝึกหัด 3.1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-28",
+     "due_date": "2026-10-28",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 18,
+      "scored": 12,
+      "awaiting": 6,
+      "late": 0,
+      "missing": 25,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHFZQ5Z70ZCF4XMF7BNE5E",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636957925,
+     "updated_at": 1793636957925,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 1,
+      "awaiting": 1,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG6ZYYAFD0XVXC1TFDXF9",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636965374,
+     "updated_at": 1793636965374,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 1,
+      "awaiting": 1,
+      "late": 1,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG85JWJ9ZFQRVENJ0SKSA",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 2",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636966578,
+     "updated_at": 1793636966578,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 0,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHG937SARDG9PYN25XFABY",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 3",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636967527,
+     "updated_at": 1793636967527,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 12,
+      "scored": 11,
+      "awaiting": 1,
+      "late": 0,
+      "missing": 32,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGFSQYHPEPM4TDNAHV4BY",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 4",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_62"
+     ],
+     "created_at": 1793636974390,
+     "updated_at": 1793636974390,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_62",
+      "total": 4,
+      "submitted": 0,
+      "scored": 0,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 3,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGH9MD4DAFPAY3685ZJ9W",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 5",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636975924,
+     "updated_at": 1793636975924,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 7,
+      "scored": 0,
+      "awaiting": 7,
+      "late": 0,
+      "missing": 37,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGHH2SECC4C1GQA4D0XM7",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 6",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": null,
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636976162,
+     "updated_at": 1793636976162,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 2,
+      "scored": 0,
+      "awaiting": 2,
+      "late": 0,
+      "missing": 42,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGJPE5SRVGXEXC5MMYEE8",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 7",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636977358,
+     "updated_at": 1793636977358,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 1,
+      "scored": 1,
+      "awaiting": 0,
+      "late": 0,
+      "missing": 42,
+      "excused": 1
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGK4PYPF91277XS4BJET0",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 8",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636977814,
+     "updated_at": 1793636977814,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 21,
+      "scored": 0,
+      "awaiting": 21,
+      "late": 0,
+      "missing": 23,
+      "excused": 0
+     }
+    ]
+   },
+   {
+    "assignment": {
+     "id": "asg_01M6EHGKXT2DK9845RJWKN82QQ",
+     "term_id": "term_demo",
+     "subject_id": "sub_sci",
+     "type_id": "wt_worksheet",
+     "title": "QA c03 metrics",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2026-10-26",
+     "due_date": "2026-11-01",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "cls_61"
+     ],
+     "created_at": 1793636978618,
+     "updated_at": 1793636978618,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "cls_61",
+      "total": 44,
+      "submitted": 20,
+      "scored": 20,
+      "awaiting": 0,
+      "late": 5,
+      "missing": 24,
+      "excused": 0
+     }
+    ]
+   }
+  ],
+  "gradingAssignments": [],
+  "awaitingCount": 104,
+  "missingCount": 543,
+  "attendanceToday": [
+   {
+    "date": "2026-11-02",
+    "classId": "cls_61",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 44
+   },
+   {
+    "date": "2026-11-02",
+    "classId": "cls_62",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 4
+   },
+   {
+    "date": "2026-11-02",
+    "classId": "cls_63",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 0,
+    "marked": 0,
+    "total": 3
+   }
+  ],
+  "followUp": [
+   {
+    "studentId": "stu_gb_38",
+    "classId": "cls_61",
+    "missing": 18
+   },
+   {
+    "studentId": "stu_28",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_39",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_40",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_gb_44",
+    "classId": "cls_61",
+    "missing": 16
+   },
+   {
+    "studentId": "stu_21",
+    "classId": "cls_61",
+    "missing": 15
+   },
+   {
+    "studentId": "stu_18",
+    "classId": "cls_61",
+    "missing": 15
+   },
+   {
+    "studentId": "stu_23",
+    "classId": "cls_61",
+    "missing": 15
+   }
+  ],
+  "serverTime": 1793636979547
+ }
+}
