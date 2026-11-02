@@ -3,7 +3,7 @@ import "../styles/report.css";
 import { Icon } from "../components/Icon";
 import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState, NoClasses } from "../components/ui";
 import { StudentDrawer } from "../components/StudentDrawer";
-import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED } from "../store";
+import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED, startClass, rememberClass } from "../store";
 import { api } from "../lib/api";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { computeReport, followUpText, type ReportModel, type ReportPayload } from "../lib/report";
@@ -16,7 +16,7 @@ import { scorePercent, attendancePercent, assignmentFraction } from "@shared/met
 type SortKey = "number" | "submit" | "score" | "att";
 
 export function ReportsPage() {
-  const [classId, setClassId] = useState(viewClasses.value[0]?.id ?? "");
+  const [classId, setClassId] = useState(startClass(null, viewClasses.value));
   const [subjectId, setSubjectId] = useState("");
   const [period, setPeriod] = useState<"term" | "month">("term");
   const [month, setMonth] = useState(currentMonthIso());
@@ -72,6 +72,7 @@ export function ReportsPage() {
     return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); window.removeEventListener("online", visible); };
   }, []);
   // the term changed: the class we were on may not exist in that year
+  useEffect(() => { rememberClass(classId); }, [classId]);
   useEffect(() => {
     if (!viewClasses.value.some((c) => c.id === classId)) setClassId(viewClasses.value[0]?.id ?? "");
   }, [selectedTermId.value]);

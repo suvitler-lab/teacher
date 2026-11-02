@@ -10,7 +10,7 @@ import { StickerSheet } from "../components/StickerSheet";
 import { activeClasses, viewClasses, rosterCount, classById, viewTerm, viewingPastYear, studentsByClass, students as allStudents, qrRotatedAt, loadBootstrap } from "../store";
 import { rosterOf } from "@shared/roster";
 import { computeReport, type ReportPayload, type StudentReport } from "../lib/report";
-import { selectedTermId } from "../store";
+import { selectedTermId, startClass, rememberClass } from "../store";
 import type { Student } from "@shared/types";
 import { attendancePercent, averageAttendancePercent } from "@shared/metrics";
 import { api } from "../lib/api";
@@ -24,7 +24,7 @@ const STATUS_LABEL: Record<string, string> = { active: "กำลังเรี
 
 export function StudentsPage() {
   const params = routeParams();
-  const [classId, setClassId] = useState(params.class || viewClasses.value[0]?.id || "");
+  const [classId, setClassId] = useState(startClass(params.class, viewClasses.value));
   const [edit, setEdit] = useState<Student | "new" | null>(null);
   const [importing, setImporting] = useState(false);
   const [printing, setPrinting] = useState(false);
@@ -47,6 +47,7 @@ export function StudentsPage() {
     : studentsByClass.value.get(classId) ?? [];
   const cls = classById(classId);
   // the term changed: the class we were on may not exist in that year
+  useEffect(() => { rememberClass(classId); }, [classId]);
   useEffect(() => {
     if (!viewClasses.value.some((c) => c.id === classId)) setClassId(viewClasses.value[0]?.id ?? "");
   }, [selectedTermId.value]);

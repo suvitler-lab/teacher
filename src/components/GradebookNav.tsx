@@ -33,6 +33,32 @@ export function useScrollInfo(ref: RefObject<HTMLElement>, active: boolean, sig:
   return info;
 }
 
+/**
+ * What the PAGE needs to know about the scroll position: more to the left / right (edge shadows) and whether every
+ * column fits. It is a small string, so scrolling re-renders the page only when one of those three answers changes —
+ * not on every scroll event (the whole table would be drawn again each time). The minimap reads the full position itself.
+ */
+export function useScrollFlags(ref: RefObject<HTMLElement>, active: boolean, sig: string): string {
+  const [flags, setFlags] = useState("000");
+  useEffect(() => {
+    const el = ref.current;
+    if (!active || !el) return;
+    const measure = () => {
+      const e = edgeState({ scrollLeft: el.scrollLeft, clientWidth: el.clientWidth, scrollWidth: el.scrollWidth, nameW: 0, totW: 0 });
+      setFlags(`${e.left ? 1 : 0}${e.right ? 1 : 0}${fitsAll({ clientWidth: el.clientWidth, scrollWidth: el.scrollWidth }) ? 1 : 0}`);
+    };
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(measure) : null;
+    if (ro) { ro.observe(el); if (el.firstElementChild) ro.observe(el.firstElementChild); }
+    return () => { el.removeEventListener("scroll", measure); window.removeEventListener("resize", measure); ro?.disconnect(); };
+  }, [active, sig]);
+  return flags;
+}
+export const flagsFit = (flags: string) => flags[2] === "1";
+export const edgeClassOf = (flags: string) => (flags[0] === "1" ? " can-l" : "") + (flags[1] === "1" ? " can-r" : "");
+
 /** Scroll the frame to `left`; jumps glide unless the device asks for less motion. */
 export function scrollFrameTo(el: HTMLElement, left: number, smooth: boolean) {
   const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -112,10 +138,12 @@ export function MiniMap({ info, segments, scrollRef }: { info: ScrollInfo; segme
 }
 
 /** "เลื่อนดู": the minimap and one jump button per type that has a column on screen. Not drawn when every column fits. */
-export function GradebookNav({ info, segments, jumps, onJump, scrollRef }: {
-  info: ScrollInfo; segments: Segment[]; scrollRef: RefObject<HTMLElement>;
+export function GradebookNav({ sig, segments, jumps, onJump, scrollRef }: {
+  sig: string; segments: Segment[]; scrollRef: RefObject<HTMLElement>;
   jumps: { typeKey: string; name: string; color: string }[]; onJump: (typeKey: string) => void;
 }) {
+  // the full scroll position lives HERE, so a scroll re-draws this small bar and not the whole table
+  const info = useScrollInfo(scrollRef, true, sig);
   if (fitsAll(info) || segments.length === 0) return null;
   return (
     <div class="gb-nav">
@@ -126,12 +154,6 @@ export function GradebookNav({ info, segments, jumps, onJump, scrollRef }: {
       ))}
     </div>
   );
-}
-
-/** Edge shadows class for the frame: more to the left / right. */
-export function edgeClass(info: ScrollInfo): string {
-  const e = edgeState(info);
-  return (e.left ? " can-l" : "") + (e.right ? " can-r" : "");
 }
 
 /** The "คอลัมน์ (n/N)" button and its panel. Esc closes and gives the focus back to the button. */

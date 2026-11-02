@@ -6,6 +6,7 @@ import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import {
   viewClasses, rosterCount, classById, activeSubjects, activeWorkTypes, studentsByClass, workTypeById, selectedTermId,
   viewingPastYear, upsertAssignment, dropAssignment, captureAssignmentContext, assignmentContextCurrent,
+  startClass, startSubject, rememberClass, rememberSubject,
 } from "../store";
 import type { Assignment, Student } from "@shared/types";
 import { api, ApiError } from "../lib/api";
@@ -25,9 +26,9 @@ import {
 } from "../lib/gbGroups";
 import {
   loadColumnPrefs, saveColumnPrefs, effectiveHidden, makeIsShown, toggleType, columnCounts, displayGroups, jumpTargets,
-  jumpScrollLeft, minimapSegments, typeKeyOf, fitsAll, type ColumnPrefs,
+  jumpScrollLeft, minimapSegments, typeKeyOf, type ColumnPrefs,
 } from "../lib/gbColumns";
-import { GradebookNav, ColumnsMenu, TypeShape, useScrollInfo, scrollFrameTo, edgeClass } from "../components/GradebookNav";
+import { GradebookNav, ColumnsMenu, TypeShape, useScrollFlags, flagsFit, edgeClassOf, scrollFrameTo } from "../components/GradebookNav";
 import { routeParams, navigate, setNavGuard } from "../router";
 import { useAction } from "../lib/useAction";
 
@@ -70,9 +71,9 @@ const monthShort = (ym: string) => (ym ? formatThaiDate(`${ym}-01`).split(" ")[1
 export function GradebookPage() {
   const params = routeParams();
   const phone = useIsPhone();
-  const [classId, setClassId] = useState(params.class || viewClasses.value[0]?.id || "");
+  const [classId, setClassId] = useState(startClass(params.class, viewClasses.value));
   // deep links (Home cards) name the class, subject and assignment they want to land on
-  const [subjectId, setSubjectId] = useState(params.subject ?? activeSubjects.value[0]?.id ?? "");
+  const [subjectId, setSubjectId] = useState(startSubject(params.subject, activeSubjects.value));
   const [typeId, setTypeId] = useState("");
   const [period, setPeriod] = useState<"term" | "month">("term");
   const [month, setMonth] = useState(currentMonthIso());
@@ -108,6 +109,8 @@ export function GradebookPage() {
   // children); until it arrives, this year's class is drawn from the copy the app already holds
   const [roster, setRoster] = useState<Student[] | null>(null);
   const students = roster ?? (viewingPastYear.value ? [] : studentsByClass.value.get(classId) ?? []);
+  useEffect(() => { rememberClass(classId); }, [classId]);
+  useEffect(() => { rememberSubject(subjectId); }, [subjectId]);
   // the term changed: the class we were on may not exist in that year
   useEffect(() => {
     if (!viewClasses.value.some((c) => c.id === classId)) setClassId(viewClasses.value[0]?.id ?? "");
@@ -370,7 +373,7 @@ export function GradebookPage() {
 
   const hasTable = !phone && !!classId && status !== "error" && assignments.length > 0;
   const scrollSig = dgroups.map((x) => `${x.group.key}:${folded(x.group) ? "f" : x.shown.length}`).join("|") + `|${colPrefs.showTotal}|${colPrefs.showBars}|${shownStudents.length}`;
-  const scrollInfo = useScrollInfo(scrollRef, hasTable, scrollSig);
+  const scrollFlags = useScrollFlags(scrollRef, hasTable, scrollSig);
   // Desktop (mouse): size the table to the room left on screen, so the TABLE is the one thing that scrolls up/down
   // and the page itself does not (two stacked vertical scrollbars were confusing). Touch screens keep the CSS height.
   useEffect(() => {
@@ -398,7 +401,7 @@ export function GradebookPage() {
     const frame = sc.parentElement as HTMLElement;
     for (let e: Element | null = frame.parentElement?.firstElementChild ?? null; e; e = e.nextElementSibling) if (e !== frame) ro?.observe(e);
     return () => { window.removeEventListener("resize", fit); ro?.disconnect(); };
-  }, [hasTable, scrollSig, groupMode, fitsAll(scrollInfo), msg, hiddenCount]);
+  }, [hasTable, scrollSig, groupMode, flagsFit(scrollFlags), msg, hiddenCount]);
   const segments = minimapSegments(dgroups, folded, (a) => workTypeById(a.type_id)?.color ?? "violet");
   const jumps = jumpTargets(assignments, isShown).map((j) => ({ typeKey: j.typeKey, ...typeLabel(j.typeKey) }));
 
@@ -535,7 +538,7 @@ export function GradebookPage() {
           </div>
         </div>
       )}
-      {hasTable && <GradebookNav info={scrollInfo} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />}
+      {hasTable && <GradebookNav sig={scrollSig} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />}
       </div>}
 
       {msg && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin-bottom:6px">{msg}</div>}
@@ -556,7 +559,7 @@ export function GradebookPage() {
           }} />
       ) : (
         <>
-        <div class={"gb-frame" + edgeClass(scrollInfo) + (colPrefs.showTotal ? "" : " no-tot")}>
+        <div class={"gb-frame" + edgeClassOf(scrollFlags) + (colPrefs.showTotal ? "" : " no-tot")}>
         <div class="gb-scroll" ref={scrollRef} role="region" aria-label="ตารางคะแนน">
           <table class={"gb" + (flat ? "" : " grouped")} style={`--gb-n:${dgroups.reduce((n, x) => n + (folded(x.group) ? 1 : x.shown.length), 0)}`}>
             <thead>

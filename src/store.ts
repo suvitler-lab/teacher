@@ -140,6 +140,25 @@ export async function loadSelectedTerm() {
   if (validTerm(saved, terms.value)) selectedTermId.value = saved!;
 }
 
+// The class and subject last picked on a page, kept for the session so coming back to a page (or going to another
+// one) does not start over at the first class — which would load the wrong room first and then the right one.
+let pickedClass = "";
+let pickedSubject: string | null = null; // "" = the teacher picked "all subjects"; null = never picked
+export function rememberClass(id: string) { if (id) pickedClass = id; }
+export function rememberSubject(id: string) { pickedSubject = id; }
+/** Where a page starts: what the link asked for, else the last class picked if it is still on offer, else the first. */
+export function startClass(explicit: string | null | undefined, offered: { id: string }[]): string {
+  if (explicit) return explicit;
+  if (pickedClass && offered.some((c) => c.id === pickedClass)) return pickedClass;
+  return offered[0]?.id ?? "";
+}
+export function startSubject(explicit: string | null | undefined, offered: { id: string }[]): string {
+  if (explicit != null) return explicit;
+  if (pickedSubject === "") return "";
+  if (pickedSubject && offered.some((c) => c.id === pickedSubject)) return pickedSubject;
+  return offered[0]?.id ?? "";
+}
+
 export function setSelectedTerm(id: string | null) {
   selectedTermId.value = id;
   void kvSet("termId", id);
@@ -173,6 +192,7 @@ export async function loadBootstrapCached(): Promise<boolean> {
  */
 export async function logout() {
   assignmentContextRevision++;
+  pickedClass = ""; pickedSubject = null; // the next teacher on this device starts fresh
   pauseSync();
   stopAttSync();
   try { await api.post("/api/auth/logout"); } catch { /* offline: still clear locally; app start finishes it */ }

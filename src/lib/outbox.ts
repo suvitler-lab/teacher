@@ -46,9 +46,24 @@ async function refreshCounts() {
   failedCount.value = fl.length;
   const latest = new Map<string, SubmissionOp>();
   for (const it of ob.slice().sort(byCreated)) latest.set(pairKey(it.payload), it.payload);
-  pendingOps.value = latest;
+  // this runs every 15 s and after every send: only publish a NEW value when something changed, or every screen that
+  // reads these signals (the whole gradebook table) is drawn again for nothing
+  if (!sameOps(pendingOps.value, latest)) pendingOps.value = latest;
   // a superseded op isn't a problem cell — the cell simply shows what the server has
-  failedPairKeys.value = new Set(fl.filter((f) => f.reason !== "superseded" && f.reason !== "already_submitted").map((f) => pairKey(f.payload)));
+  const failed = new Set(fl.filter((f) => f.reason !== "superseded" && f.reason !== "already_submitted").map((f) => pairKey(f.payload)));
+  if (!sameKeys(failedPairKeys.value, failed)) failedPairKeys.value = failed;
+}
+
+/** Same cells, and each cell holds the same op (an op id is unique). */
+export function sameOps(a: Map<string, SubmissionOp>, b: Map<string, SubmissionOp>): boolean {
+  if (a.size !== b.size) return false;
+  for (const [k, v] of a) if (b.get(k)?.opId !== v.opId) return false;
+  return true;
+}
+export function sameKeys(a: Set<string>, b: Set<string>): boolean {
+  if (a.size !== b.size) return false;
+  for (const k of a) if (!b.has(k)) return false;
+  return true;
 }
 
 // strictly increasing, so two ops for one student+work can never tie and swap
