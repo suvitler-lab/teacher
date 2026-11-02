@@ -1,0 +1,194 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "node evidence/qa/qa-run.cjs (Chromium CDP, fixture :4201, 4 devices, after vs main@01d5486)",
+    "artifact": "evidence/qa/measure-after.json",
+    "expected": "",
+    "actual": "สมุดคะแนน 1/2 งานทั้งไม่จัดกลุ่ม/ตามประเภท ที่ 820/1180/1536: ช่องว่างขวา 0px, คอลัมน์งานเท่ากัน (820: 189.7x2), ไม่มีแถบเลื่อน; 6 งาน@820/1180 เลื่อนในกรอบ, 6 งาน@1536 ยืดเต็ม (180.8); ไม่มีกรณีว่าง+เลื่อนพร้อมกัน; ชื่อ 12rem(820/1180) 15.4rem(1536) <=18rem",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:02.388Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "qa-run.cjs + qa-feat.cjs run (820,1180)",
+    "artifact": "evidence/qa/measure-after.json",
+    "expected": "",
+    "actual": "14 งาน: กว้าง 136.8px เท่า main (1536: 121.6 เท่า main), เลื่อนในกรอบ docX=0, ชื่อ/สะสม sticky (offset 1px), หัว sticky, ปุ่มกระโดด/แถบย่อ/เมนูคอลัมน์/พับกลุ่ม/แตะรวมแล้วแก้ ผลเหมือน main ทุกค่าที่วัด",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:02.842Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "qa-run.cjs scan-type เทียบ main (state สด)",
+    "artifact": "evidence/qa/measure-after.json",
+    "expected": "",
+    "actual": "820 ตั้ง: ผังกว้าง 691=เนื้อหา 8 คอลัมน์ ชื่อ4ตัวครบ ชื่อ6ตัวครบ ที่ 18px/14px; 24px: 4ตัวครบ 6ตัว>=5; 1180/1536: ตำแหน่ง/ขนาดการ์ดผัง ช่องสแกน แป้น เท่า main 0px; สี 5 สถานะเดิม ไม่มีคิวรอคะแนน มีปุ่มกล้อง/แป้น/สแกนล่าสุด",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:03.224Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "qa-run.cjs 390x844",
+    "artifact": "evidence/qa/measure-after.json",
+    "expected": "",
+    "actual": "มือถือ ไม่เลื่อนแนวนอนทั้งหน้า (docX=0) ผัง 6 คอลัมน์เท่า main; ข้อสังเกต: ลำดับ ผัง/สแกนล่าสุด เปลี่ยนจาก main (ผังขึ้นก่อน) ตามที่เจ้าของงานเลือก Gate1",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:03.658Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "meas.js: font<13px, target<44px (coarse emulated by CDP touch), elementFromPoint overlap",
+    "artifact": "evidence/qa/measure-after.json",
+    "expected": "",
+    "actual": "ข้อความ<13px = 0 ทุกภาพ ทั้ง 14/18/24; ปุ่ม/ช่อง<44 บนจอสัมผัส (820/1180/390) = 0 (1536 เมาส์ไม่ตรวจ); ชื่อยาวตัดด้วย … แถวสมุดคะแนนสูงเท่ากันทุกแถว; ข้อความทับ: ไม่มีจริง (ที่พบคือ sticky/แถบล่างบังเนื้อหาที่เลื่อน เท่า main) ยกเว้นวงแหวนสถิติที่ 24px (B-01 ต่ำ เหมือน before)",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:04.053Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-10"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "qa-run.cjs gradebook pages เท่านั้น after vs main@01d5486 fresh fixture; เทียบ text ทุกเซลล์ thead+tbody",
+    "artifact": "evidence/qa/gb-after-controlled.json",
+    "expected": "",
+    "actual": "32/32 หน้า×อุปกรณ์ ตัวเลขทุกช่องเท่า main (รัน full ครั้งแรกต่าง 4 หน้าเพราะ scan-later เขียน fixture ต่างลำดับ ไม่ใช่ CSS — ยืนยันซ้ำแบบไม่มี scan = 0 diff)",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:04.430Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-04",
+      "AC-05",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "node scripts/shots.cjs --label after --port 4201; shots-sheet.mjs --diff",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "48 ภาพ after, visual-check 48/48 (เปิดดูภาพจริง 9, ที่เหลือ DOM), sheet PASS มี warn 1 (วงแหวน f24 B-01)",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:04.817Z"
+  },
+  {
+    "check": "Q-08",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-11"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "node scripts/shots.cjs --label after --port 4201",
+    "artifact": "evidence/shots/after/index.json",
+    "expected": "",
+    "actual": "exit 0, 48 PNG + thumb ครบ 12 หน้า x 4 อุปกรณ์ ลง evidence/shots/after (นอก git), RESULT: PASS; server ปิดหลังจบ (ไม่มี LISTEN 4201); ไม่ได้ทดสอบกรณีไม่มีเบราว์เซอร์",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-01T20:43:11.064Z"
+  },
+  {
+    "check": "Q-09",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-12"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "typecheck + npm test (85 files/1017) + build",
+    "artifact": "",
+    "expected": "",
+    "actual": "pass, PM ran on final tree 2026-11-02",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-02T03:01:30.866Z"
+  },
+  {
+    "check": "Q-10",
+    "kind": "visual-owner-approved",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-04",
+      "AC-05",
+      "AC-07",
+      "AC-08"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "owner: ภาพรวมผ่านแล้ว; ขอเพิ่ม: ให้เว็บดีไซเนอร์ออกแบบหัวคอลัมน์/แถบสีใหม่ (งานแยก)",
+    "reason": "",
+    "snapshot": "tree:51633959581e9575014a2db42e74add30280e2dd",
+    "at": "2026-11-02T03:01:35.327Z"
+  }
+]

@@ -94,7 +94,7 @@
 .fb.accent .name, .fb.accent .sub, .fb.accent .score { color: var(--text-accent); }
 
 /* ---- page layout: one column on phones / iPad portrait, two on iPad landscape + desktop ---- */
-.sc-layout { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "scan" "mid" "recent" "grid"; }
+.sc-layout { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "scan" "mid" "grid" "recent"; }
 .sc-layout > .scan-input-row { grid-area: scan; margin-bottom: 0; }
 .sc-mid { grid-area: mid; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 .sc-mid:empty { display: none; }
@@ -104,9 +104,6 @@
 /* one column: the scan field is the only sticky element (the round header scrolls away) so the two never stack */
 @media (max-width: 999px) {
   .sc-layout > .scan-input-row { position: sticky; top: 0; z-index: 20; background: var(--surface-0); padding: 6px 0; box-shadow: 0 6px 8px -6px rgba(20, 28, 46, 0.25); }
-}
-@media (min-width: 721px) and (max-width: 999px) {
-  .sc-layout { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); grid-template-areas: "scan scan" "mid mid" "recent grid"; }
 }
 @media (min-width: 1000px) {
   .sc-layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-areas: "scan grid" "mid grid" "recent grid"; grid-template-rows: auto auto 1fr; }

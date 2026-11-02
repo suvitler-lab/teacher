@@ -554,7 +554,7 @@ export function GradebookPage() {
         <>
         <div class={"gb-frame" + edgeClass(scrollInfo) + (colPrefs.showTotal ? "" : " no-tot")}>
         <div class="gb-scroll" ref={scrollRef} role="region" aria-label="ตารางคะแนน">
-          <table class={"gb" + (flat ? "" : " grouped")}>
+          <table class={"gb" + (flat ? "" : " grouped")} style={`--gb-n:${dgroups.reduce((n, x) => n + (folded(x.group) ? 1 : x.shown.length), 0)}`}>
             <thead>
               {!flat && (
                 <tr class="gh">

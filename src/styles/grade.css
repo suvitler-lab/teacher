@@ -24,17 +24,21 @@
   border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--surface-2);
   overscroll-behavior-x: contain;
 }
-/* no min-width:100%: with few columns the table stays as wide as its columns (left-aligned) instead of stretching them */
-table.gb { border-collapse: separate; border-spacing: 0; width: max-content; font-size: var(--fs-sm); }
+/* Fixed layout so every work column is exactly the same width whatever its text (headers, group bars, numbers never size a column).
+   The table is as wide as the frame, but never narrower than "n columns x --gb-col-w + name + total" (--gb-n is set by Gradebook.tsx):
+   few columns -> the columns share the spare room equally and the right edge meets the frame; many -> they stop shrinking at
+   --gb-col-w and the frame scrolls sideways. The name and total columns keep their own fixed widths. */
+table.gb { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: max(100%, calc(var(--gb-n, 1) * var(--gb-col-w) + var(--gb-name-w) + var(--gb-tot-w))); font-size: var(--fs-sm); }
+.gb-frame.no-tot .gb-scroll { --gb-tot-w: 0px; }
 table.gb th, table.gb td { border-bottom: 0.5px solid var(--border); padding: 0; height: var(--row-h); text-align: center; font-weight: 400; background: var(--surface-2); white-space: nowrap; }
 table.gb thead th { position: sticky; top: 0; background: var(--surface-1); z-index: 2; padding: 0; height: auto; }
 table.gb.grouped thead tr.hd th { top: var(--gb-gh); }
 table.gb thead th.col-w { position: sticky; cursor: pointer; vertical-align: top; padding: 0.25rem 0.3rem 0.4rem; border-top: 4px solid var(--border); }
-table.gb th.col-w, table.gb td.cell, table.gb td.sumc, table.gb tr.avg td:not(.name-col):not(.tot-col) { width: var(--gb-col-w); min-width: var(--gb-col-w); max-width: var(--gb-col-w); }
+table.gb thead th.col-w, table.gb td.cell, table.gb td.sumc { overflow: hidden; }
 table.gb thead th.sel, table.gb td.sel { background: var(--bg-accent-muted); }
 table.gb thead th.sumcol { cursor: pointer; background: var(--surface-1); }
 table.gb thead th .ht { font-size: var(--fs-xs); font-weight: 500; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
-table.gb thead th .hs > span { white-space: nowrap; }
+table.gb thead th .hs > span { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 table.gb thead th .hs { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 2px; }
 table.gb thead th .hbar { height: 6px; border-radius: 3px; background: var(--border); margin: 0.25rem 0.1rem 0; overflow: hidden; }
 table.gb thead th .hbar > div { height: 100%; background: var(--fill-success); }
@@ -43,7 +47,7 @@ table.gb thead th .hbar > div { height: 100%; background: var(--fill-success); }
 table.gb .name-col { box-sizing: border-box; text-align: left; padding: 0 0.6rem; position: sticky; left: 0; z-index: 3; width: var(--gb-name-w); min-width: var(--gb-name-w); max-width: var(--gb-name-w); overflow: hidden; text-overflow: ellipsis; border-right: 0.5px solid var(--border-strong); box-shadow: 6px 0 6px -6px rgba(20, 28, 46, 0.25); }
 table.gb thead .name-col { z-index: 6; background: var(--surface-1); vertical-align: middle; }
 /* right: สะสม */
-table.gb .tot-col { position: sticky; right: 0; z-index: 3; width: var(--gb-tot-w); min-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px rgba(20, 28, 46, 0.25); font-variant-numeric: tabular-nums; }
+table.gb .tot-col { position: sticky; right: 0; z-index: 3; box-sizing: border-box; width: var(--gb-tot-w); min-width: var(--gb-tot-w); max-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px rgba(20, 28, 46, 0.25); font-variant-numeric: tabular-nums; }
 table.gb thead .tot-col { z-index: 6; background: var(--surface-1); vertical-align: middle; border-top: 4px solid var(--text-muted); }
 table.gb thead .gh-tot { border-top: 4px solid var(--text-muted); vertical-align: middle; border-bottom: 0.5px solid var(--border-strong); }
 
