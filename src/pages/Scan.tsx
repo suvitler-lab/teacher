@@ -101,6 +101,8 @@ const cameraProblem = signal<{ title: string; hint: string } | null>(null);
 const ended = signal<Session | null>(null); // show a summary after a round ends
 const scannerReady = signal(typeof document !== "undefined" ? document.hasFocus() : true);
 // a class number that several students share: the teacher picks, we never guess
+// A child the teacher marked ยกเว้น for this work came to hand it in: ask before turning the exemption into a hand-in.
+const excusedAsk = signal<{ student: Student; method: "camera" | "hid" | "manual" } | null>(null);
 const choices = signal<{ raw: string; students: Student[]; method: "camera" | "hid" | "manual" } | null>(null);
 
 const activeAssignment = computed(() =>
@@ -295,6 +297,7 @@ function handleScan(raw: string, method: "camera" | "hid" | "manual") {
     return;
   }
   choices.value = null;
+  excusedAsk.value = null; // a new scan replaces an unanswered question
 
   if (r.kind === "not_found") {
     beep.err(); vibrate(120);
@@ -312,7 +315,7 @@ function handleScan(raw: string, method: "camera" | "hid" | "manual") {
   commitStudent(student, method);
 }
 
-function commitStudent(student: Student, method: "camera" | "hid" | "manual") {
+function commitStudent(student: Student, method: "camera" | "hid" | "manual", acceptExcused = false) {
   const s = session.value;
   if (!s) return;
   if (refuseIfClosed()) return;
@@ -337,6 +340,14 @@ function commitStudent(student: Student, method: "camera" | "hid" | "manual") {
     });
     return;
   }
+
+  if (existing && existing.status === "excused" && !acceptExcused) {
+    beep.dup(); vibrate(60);
+    excusedAsk.value = { student, method };
+    setFeedback({ kind: "warning", icon: "alert-triangle", name: fullName(student), sub: "งานนี้ถูกตั้งเป็น “ยกเว้น” ไว้ — จะรับงานจริงไหม?" });
+    return;
+  }
+  excusedAsk.value = null;
 
   const score = s.mode === "full" ? s.fullScore : null;
   const prev = effSub(student.id);
@@ -476,6 +487,7 @@ async function startSession(assignmentId: string, classId: string, mode: ScanMod
   // reset NOW, not after the await below: a scan made while the round is being saved must not be wiped
   recent.value = [];
   feedback.value = null;
+  excusedAsk.value = null;
   pending.value = null;
   alreadyShownAt.clear();
   scanViewLeft = false; // a round is started from the scan page (a restored round stays "not on screen" until it mounts)
@@ -813,6 +825,21 @@ function ScanView() {
 
       {/* while the score pad is open its header already names the child, so the "รับงานแล้ว" card would repeat it */}
       {feedback.value && <FeedbackCard hidden={s.mode === "type" && !!pending.value && feedback.value.awaitScore === pending.value} />}
+      {excusedAsk.value && (
+        <div class="card sc-choose" role="group" aria-label="เด็กที่ได้รับการยกเว้น">
+          <div style="font-weight:500;margin-bottom:8px">{fullName(excusedAsk.value.student)} ถูกตั้งเป็น “ยกเว้น” ในงานนี้ — รับงานจริงไหม?</div>
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <button class="sc-pick" onClick={() => { const q = excusedAsk.value!; excusedAsk.value = null; commitStudent(q.student, q.method, true); }}>
+              <span style="font-weight:500">รับงานนี้</span>
+              <span class="page-sub">เปลี่ยนจากยกเว้นเป็นส่งแล้ว</span>
+            </button>
+            <button class="sc-pick" onClick={() => { excusedAsk.value = null; feedback.value = null; }}>
+              <span style="font-weight:500">ไม่รับ คงยกเว้น</span>
+              <span class="page-sub">ไม่เปลี่ยนอะไร</span>
+            </button>
+          </div>
+        </div>
+      )}
       {choices.value && (
         <div class="card sc-choose" role="group" aria-label="เลือกนักเรียน">
           <div class="row" style="justify-content:space-between;gap:8px;margin-bottom:8px">
@@ -1017,4 +1044,4 @@ function ScorePad() {
 }
 
 // Test seam: the round controller is plain functions over signals, so a test can drive it without rendering.
-export const __scan = { startSession, loadSubs, pollSubs, startPolling, POLL_MS, RESUME_GAP_MS, commitStudent, effSub, session, subsBox, feedback };
+export const __scan = { excusedAsk, startSession, loadSubs, pollSubs, startPolling, POLL_MS, RESUME_GAP_MS, commitStudent, effSub, session, subsBox, feedback };
