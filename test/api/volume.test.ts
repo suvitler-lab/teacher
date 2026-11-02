@@ -59,7 +59,7 @@ describe("reading at school size", () => {
     for (const a of rp.attendance) tally[a.status] = (tally[a.status] ?? 0) + 1;
     expect(tally).toEqual({ present: want.marks.present / VOLUME.classes, late: want.marks.late / VOLUME.classes, absent: want.marks.absent / VOLUME.classes });
 
-    const home = (await (await cost(cookie, "home dashboard", { read: 40_000 }, `/api/dashboard?${q}&date=2026-07-01`)).json()) as any;
+    const home = (await (await cost(cookie, "home dashboard", { read: 12_000 }, `/api/dashboard?${q}&date=2026-07-01`)).json()) as any;
     expect(home.openAssignments).toHaveLength(want.assignments);
     for (const a of home.openAssignments) {
       expect(a.perClass).toHaveLength(VOLUME.classes);

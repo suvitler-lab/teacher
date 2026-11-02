@@ -63,12 +63,11 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
       .bind(...yearBinds, ...member.binds).all<{ id: string; class_id: string | null }>(),
     aids.length
       ? c.env.DB.prepare(
-          `WITH ids AS (SELECT value AS v FROM json_each(?1))
-           SELECT sub.assignment_id, sub.student_id, sub.status, sub.score, sub.late, s.class_id
-           FROM submissions sub
-           JOIN students s ON s.id = sub.student_id ${yearJoin}
-           WHERE sub.assignment_id IN (SELECT v FROM ids) AND ${member.sql}`,
-        ).bind(JSON.stringify(aids), ...yearBinds, ...member.binds).all<any>()
+          // no join to students here: looking each hand-in's child up cost a second row read per hand-in. Who counts in
+          // this term is already answered by the students query beside it, and the rows are filtered against that below.
+          `SELECT assignment_id, student_id, status, score, late FROM submissions
+           WHERE assignment_id IN (SELECT value FROM json_each(?1))`,
+        ).bind(JSON.stringify(aids)).all<any>()
       : Promise.resolve({ results: [] as any[] }),
   ]);
 
@@ -85,7 +84,9 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
 
   // submissions keyed by assignment -> student
   const subByAsg = new Map<string, Map<string, SubLike>>();
+  const inTerm = new Set((stuRes.results ?? []).map((s) => s.id));
   for (const r of subRes.results ?? []) {
+    if (!inTerm.has(r.student_id)) continue; // not one of this term's children (moved away / another year's room)
     let m = subByAsg.get(r.assignment_id);
     if (!m) { m = new Map(); subByAsg.set(r.assignment_id, m); }
     m.set(r.student_id, { status: r.status, score: r.score ?? null, late: r.late });

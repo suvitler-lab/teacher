@@ -546,7 +546,7 @@ function SessionSetup() {
   const [mode, setMode] = useState<ScanMode>("full");
 
   useEffect(() => { loadDashboard(selectedTermId.value); }, [selectedTermId.value]);
-  useEffect(() => startSetupRefresh(async () => { await loadBootstrap(); await loadDashboard(selectedTermId.value); }), []);
+  useEffect(() => startSetupRefresh(() => loadBootstrap()) /* NOT the dashboard: it reads ~10,000 rows per call at school size */, []);
   useEffect(() => {
     if (asg && !asg.class_ids.includes(classId)) setClassId(asg.class_ids[0] ?? "");
   }, [assignmentId]);
