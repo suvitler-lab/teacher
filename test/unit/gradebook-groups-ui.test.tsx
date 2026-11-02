@@ -76,12 +76,12 @@ const text = (n: number) => [...bodyRow(n)].map((c) => c.textContent);
 describe("grouped gradebook columns", () => {
   it("every group starts open (nothing folds by age); a group the teacher folds becomes one 'รวม' column holding the BR-05 total", async () => {
     await open();
-    expect(screen.getByRole("columnheader", { name: /^ใบงาน 1/ })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ })).toBeTruthy();
     expect(screen.queryByRole("columnheader", { name: /รวม ใบงาน/ })).toBeNull();
     cleanup();
     await openFolded();
     expect(screen.getByRole("columnheader", { name: /รวม ใบงาน/ })).toBeTruthy();
-    expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull();
+    expect(screen.queryByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ })).toBeNull();
     // [name, รวมใบงาน, แบบฝึกหัด 1, สะสม]
     expect(text(0)[1]).toBe("8/20");      // missing w2 counts as 0 of 10
     expect(text(1)[1]).toBe("12/20");     // 7.5 + 4.5 exactly
@@ -101,14 +101,14 @@ describe("grouped gradebook columns", () => {
     fireEvent.click(btn());
     await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
     fireEvent.click(btn());
-    await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
+    await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     expect(text(0).slice(1, 3)).toEqual(["8", "–"]);
     fireEvent.click(btn());
-    await waitFor(() => expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ })).toBeNull());
     fireEvent.click(screen.getByRole("button", { name: /พับทั้งหมด/ }));
     await waitFor(() => expect(screen.getByRole("columnheader", { name: /รวม แบบฝึกหัด/ })).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: /กางทั้งหมด/ }));
-    await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
+    await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     expect(screen.getByRole("columnheader", { name: /แบบฝึกหัด 1/ })).toBeTruthy();
   });
 
@@ -122,12 +122,12 @@ describe("grouped gradebook columns", () => {
   it("'ไม่จัดกลุ่ม' shows every column flat, remembers the choice on this device, and a reload keeps it", async () => {
     await open();
     fireEvent.click(screen.getByRole("button", { name: "ไม่จัดกลุ่ม" }));
-    await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
+    await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     expect(document.querySelector("tr.gh")).toBeNull();
     expect(localStorage.getItem("ngankrob.gb.groupMode.v2")).toBe("none");
     cleanup();
     await open();
-    await screen.findByRole("columnheader", { name: /^ใบงาน 2/ });
+    await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 2/ });
     expect(screen.getByRole("button", { name: "ไม่จัดกลุ่ม" }).getAttribute("aria-pressed")).toBe("true");
   });
 
@@ -148,7 +148,7 @@ describe("grouped gradebook columns", () => {
 
   it("the eye in a column header still hides only that column's scores", async () => {
     await open();
-    const head = await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
+    const head = await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     fireEvent.click(within(head).getByRole("button", { name: "ซ่อนคะแนนของงานนี้" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
     expect(post.mock.calls[0][1]).toMatchObject({ id: "w1", publish_scores: false });
@@ -174,7 +174,7 @@ describe("tap the folded total to edit (gb-2)", () => {
     fireEvent.keyDown(input, { key: "Enter" });
     await waitFor(() => expect(post).toHaveBeenCalled());
     expect(JSON.stringify(post.mock.calls)).toContain("9.5");
-    expect(screen.getByRole("columnheader", { name: /^ใบงาน 1/ })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ })).toBeTruthy();
   });
 
   it("Enter and Space on the cell do the same; typing a score then saves it", async () => {

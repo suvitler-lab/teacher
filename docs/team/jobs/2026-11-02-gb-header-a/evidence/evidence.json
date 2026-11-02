@@ -1,0 +1,136 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:09.963Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:10.476Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-04",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:10.988Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:11.532Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-02"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:12.032Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "npm run typecheck; npm test; npm run build",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "re-recorded by PM at final tree: only change since QA = th aria-label text now equals title (B-01) + test + dev-note; typecheck + npm test 86/1024 + build re-run by PM; visuals unaffected (non-visual attribute); QA original: qa-report.md",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:12.534Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "visual-owner-approved",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "owner: ผ่าน (2 พ.ย. หลังดู sheet; ยอมรับข้อต่างจาก preview 4 ข้อ)",
+    "reason": "",
+    "snapshot": "tree:38b130cf2933b44688355b0d1b574083b05e63f4",
+    "at": "2026-11-02T05:35:02.670Z"
+  }
+]

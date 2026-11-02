@@ -27,7 +27,7 @@ import {
   loadColumnPrefs, saveColumnPrefs, effectiveHidden, makeIsShown, toggleType, columnCounts, displayGroups, jumpTargets,
   jumpScrollLeft, minimapSegments, typeKeyOf, fitsAll, type ColumnPrefs,
 } from "../lib/gbColumns";
-import { GradebookNav, ColumnsMenu, useScrollInfo, scrollFrameTo, edgeClass } from "../components/GradebookNav";
+import { GradebookNav, ColumnsMenu, TypeShape, useScrollInfo, scrollFrameTo, edgeClass } from "../components/GradebookNav";
 import { routeParams, navigate, setNavGuard } from "../router";
 import { useAction } from "../lib/useAction";
 
@@ -35,6 +35,8 @@ interface Sub { status: string; score: number | null; late: boolean }
 type SubKey = string; // `${assignmentId}:${studentId}`
 type RowFilter = "all" | "missing" | "awaiting";
 
+/** A work type's paints (tokens.css): the head's tint ground (--hb) and the dark ink of the shape / progress bar on it (--f). Never colour alone: a shape per type, and the type name rides in title / aria-label. */
+const tintVars = (color: string) => `--hb:var(--tint-${color}-bg);--f:var(--tint-${color}-fg)`;
 const TINT_FG: Record<string, string> = {
   aqua: "var(--tint-aqua-fg)", violet: "var(--tint-violet-fg)", orange: "var(--tint-orange-fg)",
   green: "var(--tint-green-fg)", blue: "var(--tint-blue-fg)", magenta: "var(--tint-magenta-fg)", red: "var(--tint-red-fg)",
@@ -566,10 +568,11 @@ export function GradebookPage() {
                   {dgroups.map(({ group: g, shown: cols }) => {
                     const closed = folded(g);
                     return (
-                      <th colSpan={closed ? 1 : cols.length} class="gh-cell" style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
+                      <th colSpan={closed ? 1 : cols.length} class={"gh-cell" + (closed || cols.length === 1 ? " nar" : "")} style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
                         <button type="button" class="gh-btn" aria-expanded={!closed} title={`${g.label} · ${g.items.length} งาน`} onClick={() => toggleGroup(g.key)}>
                           <Icon name={closed ? "chevron-right" : "chevron-down"} size={14} />
-                          <span class="gh-label">{g.label} · {g.items.length} งาน</span>
+                          {groupMode === "type" && <TypeShape color={g.color} />}
+                          <span class="gh-label">{g.label}</span><span class="gh-cnt"> · {g.items.length} งาน</span>
                         </button>
                       </th>
                     );
@@ -587,16 +590,28 @@ export function GradebookPage() {
                   </th>
                 ) : cols.map((a) => {
                   const pct = assignmentRate(countWorkStates(students.map((st) => stateOf(a.id, st.id, a))));
+                  const tl = typeLabel(typeKeyOf(a));
+                  const closedWork = a.status === "closed";
+                  const sel = a.id === selCol;
+                  const eyeShown = sel || !a.publish_scores;   // the eye of a column that shows its scores appears only on the picked column
                   return (
-                    <th scope="col" tabIndex={0} data-aid={a.id} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }} class={"col-w" + (a.id === selCol ? " sel" : "")} style={`border-top-color:${TINT_FG[workTypeById(a.type_id)?.color ?? "violet"]}`} title={a.title} onClick={() => setSelCol(a.id)}>
-                      <div class="ht" style={a.id === selCol ? "font-weight:500" : ""}>{a.title}</div>
+                    <th scope="col" tabIndex={0} data-aid={a.id} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }}
+                      class={"col-w" + (sel ? " sel" : "") + (closedWork ? " closed" : "") + (closedWork || eyeShown ? " x" : "")} style={tintVars(tl.color)} aria-label={`${tl.name}: ${a.title} · เต็ม ${a.full_score}${closedWork ? " · ปิดรับ" : ""}${a.publish_scores ? "" : " · ซ่อนคะแนน"} · ส่งแล้ว ${pct}%`}
+                      title={`${tl.name}: ${a.title} · เต็ม ${a.full_score}${closedWork ? " · ปิดรับ" : ""}${a.publish_scores ? "" : " · ซ่อนคะแนน"} · ส่งแล้ว ${pct}%`} onClick={() => setSelCol(a.id)}>
+                      <div class="ttl">
+                        <span class="tshape-w"><TypeShape color={tl.color} /></span>
+                        <div class="ht" style={sel ? "font-weight:500" : ""}>{a.title}</div>
+                      </div>
                       <div class="hs" title={`คะแนนเต็ม ${a.full_score} · สั่ง ${formatThaiDate(a.assigned_date)} · กำหนดส่ง ${a.due_date ? formatThaiDate(a.due_date) : "ไม่มี"}`}>
-                        <span>เต็ม {a.full_score} · {a.due_date ? "ส่ง " + formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "ไม่มีกำหนด"}</span>
+                        <span>เต็ม {a.full_score}<Icon name="calendar" size={12} title="กำหนดส่ง" class="hs-cal" />{a.due_date ? formatThaiDate(a.due_date).replace(/ \d{4}$/, "") : "—"}</span>
+                      </div>
+                      <div class="hd-corner">
+                        {closedWork && <Icon name="lock" size={14} title="ปิดรับงานแล้ว" class="hd-lock" />}
                         <button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
                           disabled={act.isBusy("publish-all") || act.isBusy(`asg:${a.id}`)}
                           title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
                           onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนแล้ว" : "แสดงคะแนนแล้ว", a); }}>
-                          <Icon name={a.publish_scores ? "eye" : "eye-off"} size={12} />
+                          <Icon name={a.publish_scores ? "eye" : "eye-off"} size={14} />
                         </button>
                       </div>
                       {colPrefs.showBars && <div class="hbar" title={`ส่งแล้ว ${pct}%`}><div style={`width:${pct}%`} /></div>}

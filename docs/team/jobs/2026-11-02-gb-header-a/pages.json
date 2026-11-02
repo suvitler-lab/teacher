@@ -1,0 +1,70 @@
+{
+  "_": "copy of docs/team/pages.json for gb-header-a (gradebook 1/2/6/14 flat + grouped, scan)",
+  "base": "http://127.0.0.1:4101",
+  "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);return 'ok'})()",
+  "pages": [
+    {
+      "name": "gradebook-1",
+      "path": "/?pg=gradebook-1#/gradebook?class=cls_61&subject=sub_art",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_art';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ไม่จัดกลุ่ม');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-2",
+      "path": "/?pg=gradebook-2#/gradebook?class=cls_61&subject=sub_sci",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_sci';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ไม่จัดกลุ่ม');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-2-type",
+      "path": "/?pg=gradebook-2-type#/gradebook?class=cls_61&subject=sub_sci",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_sci';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ตามประเภท');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-6",
+      "path": "/?pg=gradebook-6#/gradebook?class=cls_61&subject=sub_eng",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_eng';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ไม่จัดกลุ่ม');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-14",
+      "path": "/?pg=gradebook-14#/gradebook?class=cls_61&subject=sub_math",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_math';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ไม่จัดกลุ่ม');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-14-mid",
+      "path": "/?pg=gradebook-14-mid#/gradebook?class=cls_61&subject=sub_math",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_math';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ไม่จัดกลุ่ม');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}const f=q('.gb-scroll');if(f)f.scrollLeft=(f.scrollWidth-f.clientWidth)/2;await w(300);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "scan-type",
+      "path": "/?pg=scan-type#/scan",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);if(location.hash!=='#/scan')location.hash='#/scan';await W(()=>q('.sc-asg')||q('input[aria-label=\"รหัสนักเรียน\"]'));const end=btn('button',/^\\s*จบรอบ\\s*$/);if(end){end.click();await W(()=>q('.sc-asg'),50);}const nb=btn('button',/เลือกงานอื่น|เริ่มรอบใหม่|สแกนงานอื่น/);if(!q('.sc-asg')&&nb){nb.click();await W(()=>q('.sc-asg'),50);}btn('.sc-asg',/ใบงาน 6 สมการ/)?.click();await w(300);btn('.sc-mode',/กรอกทีละคน/)?.click();await w(300);btn('button.primary',/เริ่มสแกน/)?.click();const i=await W(()=>q('input[aria-label=\"รหัสนักเรียน\"]'));if(!i)return false;i.focus();await W(()=>q('.sc-cell.missing,.sc-cell.pending'));i.value=q('.sc-cell.missing,.sc-cell.pending').firstElementChild.textContent;i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',keyCode:13,bubbles:true}));await W(()=>q('.sc-pad'),100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&!!document.querySelector('input[aria-label=\"รหัสนักเรียน\"]')&&!document.querySelector('.sc-asg')&&document.querySelectorAll('.sc-cell').length>=44&&!!document.querySelector('.sc-pad')",
+      "wait": 1000
+    },
+    {
+      "name": "gradebook-6-type",
+      "path": "/?pg=gradebook-6-type#/gradebook?class=cls_61&subject=sub_eng",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_eng';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ตามประเภท');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    },
+    {
+      "name": "gradebook-14-type",
+      "path": "/?pg=gradebook-14-type#/gradebook?class=cls_61&subject=sub_math",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const W=async(f,n=150)=>{for(let i=0;i<n&&!f();i++)await w(100);return f()};const q=s=>document.querySelector(s);const btn=(sel,re)=>[...document.querySelectorAll(sel)].find(e=>re.test(e.textContent)&&!e.disabled);const H='#/gradebook?class=cls_61&subject=sub_math';if(location.hash!==H)location.hash=H;await W(()=>q('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)));const g=[...document.querySelectorAll('[aria-label=\"จัดกลุ่มคอลัมน์\"] button')].find(b=>b.textContent.trim()==='ตามประเภท');if(g&&g.getAttribute('aria-pressed')!=='true'){g.click();await w(500);}localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&(!!document.querySelector('.gb-scroll table')||(location.hash.includes('gradebook')&&innerWidth<600&&/ส่งแล้ว/.test(document.body.innerText)))",
+      "wait": 800
+    }
+  ]
+}
