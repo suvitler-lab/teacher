@@ -19,6 +19,7 @@ export interface SubLike {
 export interface AsgLike {
   full_score: number;
   due_date: string | null; // YYYY-MM-DD (Asia/Bangkok)
+  status?: string; // "open" | "closed" — once closed, whoever has not handed in is missing (no due date needed)
 }
 
 const isLate = (s: SubLike) => s.late === true || s.late === 1;
@@ -47,7 +48,7 @@ export function workState(sub: SubLike | undefined | null, asg: AsgLike, today: 
     if (sub!.score != null) return isLate(sub!) ? "late" : "scored";
     return "awaiting";
   }
-  if (asg.due_date && today > asg.due_date) return "missing";
+  if (asg.status === "closed" || (asg.due_date && today > asg.due_date)) return "missing";
   return "pending";
 }
 

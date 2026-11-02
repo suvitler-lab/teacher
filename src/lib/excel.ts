@@ -1,5 +1,5 @@
 import type { ReportModel, ReportPayload } from "./report";
-import { attendancePercent, assignmentFraction } from "@shared/metrics";
+import { attendancePercent, assignmentFraction, workState } from "@shared/metrics";
 
 // "2026-09-30" -> "30/9" (day/month, the order Thai readers expect)
 const dayMonth = (iso: string) => `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}`;
@@ -73,7 +73,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
     for (const a of payload.assignments) {
       const sub = subMap.get(`${a.id}:${st.id}`);
       if (sub && sub.status === "submitted" && sub.late) lateAt.push(row.length + 1);
-      if (!sub || sub.status === "void") row.push(a.due_date && model.today > a.due_date ? "ไม่ส่ง" : "");
+      if (!sub || sub.status === "void") row.push(workState(null, a, model.today) === "missing" ? "ไม่ส่ง" : "");
       else if (sub.status === "excused") row.push("ยกเว้น");
       else if (sub.score == null) row.push("รอตรวจ");
       else row.push(sub.score);

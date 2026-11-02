@@ -52,3 +52,15 @@ describe("Excel numeric + late (C-08)", () => {
     expect(ws.getRow(2).getCell(5).fill?.type).toBeUndefined();
   }, 20_000);
 });
+
+describe("Excel says ไม่ส่ง by the same rule as the screens (C-04)", () => {
+  it("closed work with no due date: not handed in = ไม่ส่ง; open one stays empty", async () => {
+    const p: any = payload();
+    p.assignments = [{ ...asg("a1", 10), due_date: null, status: "closed" }, { ...asg("a2", 20), due_date: null, status: "open" }];
+    p.submissions = [];
+    const ws = (await build(p)).getWorksheet("คะแนนรายงาน")!;
+    expect(ws.getRow(2).getCell(4).value).toBe("ไม่ส่ง");
+    const open = ws.getRow(2).getCell(5).value;
+    expect(open === null || open === "").toBe(true);
+  }, 20_000);
+});
