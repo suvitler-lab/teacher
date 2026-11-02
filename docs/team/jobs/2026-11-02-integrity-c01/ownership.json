@@ -1,0 +1,55 @@
+{
+  "job": "2026-11-02-integrity-c01",
+  "tasks": {
+    "T-01": {
+      "role": "team-backend-dev",
+      "paths": [
+        "test/api/c01-no-overwrite.test.ts",
+        "shared/types.ts",
+        "docs/team/jobs/2026-11-02-integrity-c01/dev-notes/backend-tests.md",
+        "docs/team/jobs/2026-11-02-integrity-c01/evidence/t01-*"
+      ]
+    },
+    "T-02": {
+      "role": "team-backend-dev",
+      "paths": [
+        "worker/routes/submissions.ts",
+        "test/api/server-intent.test.ts",
+        "test/api/volume.test.ts",
+        "docs/team/jobs/2026-11-02-integrity-c01/dev-notes/backend.md",
+        "docs/team/jobs/2026-11-02-integrity-c01/evidence/t02-*"
+      ]
+    },
+    "T-03": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/lib/outbox.ts",
+        "src/pages/Gradebook.tsx",
+        "src/components/Overlays.tsx",
+        "test/unit/c01-outbox-already-submitted.test.ts",
+        "docs/team/jobs/2026-11-02-integrity-c01/dev-notes/frontend-outbox.md"
+      ]
+    },
+    "T-04": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/pages/Scan.tsx",
+        "test/unit/c01-scan-already-submitted.test.ts",
+        "docs/team/jobs/2026-11-02-integrity-c01/pages.json",
+        "test/unit/c01-scan-view-lifecycle.test.tsx",
+        "docs/team/jobs/2026-11-02-integrity-c01/dev-notes/frontend-scan.md"
+      ]
+    },
+    "T-05": {
+      "role": "team-qa-tester",
+      "paths": [
+        "test/api/c01-no-overwrite.test.ts",
+        "docs/team/jobs/2026-11-02-integrity-c01/test-plan.md",
+        "docs/team/jobs/2026-11-02-integrity-c01/qa-report.md",
+        "docs/team/jobs/2026-11-02-integrity-c01/evidence/qa/**"
+      ]
+    }
+  },
+  "shared": [],
+  "shared_by_role": {}
+}

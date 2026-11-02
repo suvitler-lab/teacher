@@ -223,6 +223,23 @@ function isReceive(op: { status: string; method: string }): boolean {
   return op.status === "submitted" && opIntent(op) === "receive";
 }
 
+/**
+ * Is `cell` a cell this hand-in must not touch (BR-01)? A hand-in reaching a cell that is already "submitted" — by
+ * the gradebook, a whole-class button, another device's scan — changes nothing: no write, no audit. The one exception
+ * (BR-02) is the score typed right after this very scan round received the work: the cell was last written by a
+ * hand-in of the same round (scanSessionId), it has no score yet, and this op brings one.
+ * Decided against the cell as read (or as left by the ops before this one in the request); a race with another
+ * device is caught by `cellsGuard` (the batch aborts and is judged again) — never by `stillValid` (D-integrity-c01-02).
+ */
+function alreadySubmitted(op: OpIn, cell: any): boolean {
+  if (!isReceive(op) || !cell || cell.status !== "submitted") return false;
+  const firstScoreSameRound = opIntent({ method: cell.method ?? "" }) === "receive"
+    && cell.scan_session_id === op.scanSessionId
+    && cell.score == null
+    && op.score != null;
+  return !firstScoreSameRound;
+}
+
 type OpIn = z.infer<typeof opSchema>;
 interface AsgRow {
   id: string; full_score: number; due_date: string | null; status: string; deleted_at: number | null;
@@ -306,6 +323,21 @@ function judge(op: OpIn, w: World, cells: Map<string, any> = w.existing): Submis
   return null;
 }
 
+/**
+ * The answer for an op that was NOT written after all (it lost a race between the judge and the write, or its
+ * `already_submitted` rested on a row of the request that did not land), told from the cells as they are now — in the
+ * BR-06 order: a refusal, then something newer in the cell (`superseded`), then a cell already handed in
+ * (`already_submitted`); anything else that still did not land is `superseded` as before.
+ */
+function judgeUnwritten(op: OpIn, w: World, eventAt: number): SubmissionOpResult {
+  const refused = judge(op, w);
+  if (refused) return refused;
+  const cur = w.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
+  const newer = cur != null && cur.event_at != null && cur.event_at > eventAt;
+  if (cur && !newer && alreadySubmitted(op, cur)) return { opId: op.opId, result: "already_submitted", submission: mapSubmission(cur) };
+  return { opId: op.opId, result: "superseded", submission: cur ? mapSubmission(cur) : undefined };
+}
+
 submissionRoutes.post("/api/submissions/batch", async (c) => {
   const { ops } = batchSchema.parse(await readJson(c));
   const now = Date.now();
@@ -326,6 +358,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
     // ops that passed every check made HERE — whether each really landed is only known after the write
     const pending: { index: number; op: OpIn; row: GuardedRow }[] = [];
     const audits: AuditRow[] = [];
+    // ops answered `already_submitted` on the strength of a pending row of this request (not a stored cell)
+    const onPending: { index: number; op: OpIn; eventAt: number; pendingOpId: string; pendingIndex: number }[] = [];
     // effective prior state per pair, updated as we process ops so a "receive"
     // and a later "score" for the same student in one batch keep the first
     // receive time instead of resetting submitted_at.
@@ -361,6 +395,16 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         // the cell already holds something the teacher did LATER (e.g. a whole-class clear made
         // from another screen while this op sat in an offline queue) — this one must not win
         results[index] = { opId: op.opId, result: "superseded", submission: mapSubmission(before) };
+        continue;
+      }
+      if (alreadySubmitted(op, before)) {
+        // the cell is already handed in (BR-01): nothing is written or audited, the reply carries what the cell holds.
+        // If that is a row of THIS request, the answer stands only if that row really lands (checked after the write)
+        results[index] = { opId: op.opId, result: "already_submitted", submission: mapSubmission(before) };
+        if (before.op_id != null) { // only a GuardedRow (pending) has op_id — stored cells do not
+          const wrote = pending.find((p) => p.row === before)!;
+          onPending.push({ index, op, eventAt, pendingOpId: wrote.op.opId, pendingIndex: wrote.index });
+        }
         continue;
       }
       const wasSubmitted = before && before.status === "submitted";
@@ -428,7 +472,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
           .map((r) => [`${r.assignment_id} ${r.student_id}`, r.late]));
       } catch (e) {
         if ((await getEpoch(c.env)) !== epoch) {
-          for (const p of pending) results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
+          // ...and so did the rows an `already_submitted` above was judged on
+          for (const p of [...pending, ...onPending]) results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
           return results;
         }
         if (!(await cellsChanged(c.env, snapshots))) throw e;
@@ -441,22 +486,31 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       // The reply must say what HAPPENED, not what was meant to: an op whose audit row is there landed;
       // any other lost a race between the check above and the write, and is answered with the truth now.
       const landed = await existingOpIds(c.env, pending.map((p) => p.op.opId));
-      const lost = pending.filter((p) => !landed.has(p.op.opId));
-      const fresh = lost.length > 0
-        ? { epoch: await getEpoch(c.env), world: await loadWorld(c.env, lost.map((p) => p.op)) }
+      // Judged again on the cells as they are now: the ops that did not land, and the `already_submitted` answers
+      // that rested on one of those (the row they saw was never written)
+      const again = [
+        ...pending.filter((p) => !landed.has(p.op.opId)).map((p) => ({ index: p.index, op: p.op, eventAt: p.row.event_at })),
+        ...onPending.filter((q) => !landed.has(q.pendingOpId)),
+      ];
+      const fresh = again.length > 0
+        ? { epoch: await getEpoch(c.env), world: await loadWorld(c.env, again.map((q) => q.op)) }
         : null;
       for (const p of pending) {
         if (landed.has(p.op.opId)) {
           const fixed = corrected.get(`${p.op.assignmentId} ${p.op.studentId}`);
           results[p.index] = { opId: p.op.opId, result: "ok", submission: mapSubmission(fixed == null ? p.row : { ...p.row, late: fixed }) };
-        } else if (fresh!.epoch !== epoch) {
-          results[p.index] = { opId: p.op.opId, result: "epoch_changed" };
-        } else {
-          const cur = fresh!.world.existing.get(`${p.op.assignmentId}\u0000${p.op.studentId}`);
-          results[p.index] = judge(p.op, fresh!.world) ?? {
-            opId: p.op.opId, result: "superseded", submission: cur ? mapSubmission(cur) : undefined,
-          };
         }
+      }
+      for (const q of again) {
+        results[q.index] = fresh!.epoch !== epoch
+          ? { opId: q.op.opId, result: "epoch_changed" }
+          : judgeUnwritten(q.op, fresh!.world, q.eventAt);
+      }
+      // an `already_submitted` that rested on a row of this request which DID land: answer with that row as stored
+      // (the `late` lateFixForCells decided, as in the `ok` of the op that wrote it)
+      for (const q of onPending) {
+        const wrote = landed.has(q.pendingOpId) ? results[q.pendingIndex] : undefined;
+        if (wrote?.result === "ok") results[q.index] = { opId: q.op.opId, result: "already_submitted", submission: wrote.submission };
       }
     }
 

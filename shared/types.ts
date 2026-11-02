@@ -181,6 +181,7 @@ export type SubmissionOpResult =
   | { opId: string; result: "full_score_changed"; currentFullScore: number }
   | { opId: string; result: "assignment_closed" }
   | { opId: string; result: "superseded"; submission?: Submission } // the cell already holds something the teacher did LATER
+  | { opId: string; result: "already_submitted"; submission: Submission } // the cell was already submitted (by another device/the teacher): nothing is written, `submission` is its current value
   | { opId: string; result: "epoch_changed" }                        // made before the data was restored
   | { opId: string; result: "invalid"; reason: string };
 

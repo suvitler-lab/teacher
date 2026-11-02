@@ -101,6 +101,9 @@ describe("writing at school size", () => {
   it("scanning: one child, and a whole class or more in one request", async () => {
     const cookie = await login();
     await seedVolume();
+    // a scan hands work IN: the children scanned below (classes 1-3) have not handed a1 in yet — a cell that is
+    // already submitted is never overwritten by a scan (integrity-c01 BR-01: `already_submitted`, nothing written)
+    await env.DB.prepare("DELETE FROM submissions WHERE assignment_id = 'a1' AND student_id IN (SELECT id FROM students WHERE class_id IN ('c1','c2','c3'))").run();
 
     // the everyday case: one scan, one request — must cost almost nothing whatever the size of the term
     const one = (await (await cost(cookie, "one scan", { read: 300, written: 30 }, "/api/submissions/batch", { ops: scanOps(1, 3) })).json()) as any;

@@ -1,0 +1,218 @@
+[
+  {
+    "check": "Q-04",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-12"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "FE shots before/after 5 pages x 4 devices; QA re-verified on current tree (Q-14)",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "after set matches current UI",
+    "actual": "B-01 fix changes no layout; QA recheck 820x1180 identical; 20/20 after viewed",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:44.057Z"
+  },
+  {
+    "check": "Q-10",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-10",
+      "AC-11",
+      "AC-13"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run build; npm run typecheck; npm test",
+    "artifact": "evidence/qa/npm-test.txt",
+    "expected": "baseline 85/1017 + new files all pass",
+    "actual": "build exit 0; typecheck exit 0; 90 files / 1076 tests passed",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:41.025Z"
+  },
+  {
+    "check": "Q-11",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npm test (BR-04) + browser round 2 M1/M2/M4",
+    "artifact": "evidence/qa/browser-results.md",
+    "expected": "BR-04 15/20 = 75%; stale scan leaves 7 / 8 / null",
+    "actual": "tests pass; DB 7 grid, 8 grid, null bulk",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:41.617Z"
+  },
+  {
+    "check": "Q-12",
+    "kind": "multi-device",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-05",
+      "AC-12"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "c01-control.cjs --port 4120; stale scan tab + other-session grid/bulk ops (round 2 M1-M6)",
+    "artifact": "evidence/qa/browser-results.md",
+    "expected": "no overwrite; card shows system score",
+    "actual": "M1 7, M2 8, M3 7 (pad closed), M4 null, M6 10 unchanged; card ส่งไปแล้ว — ไม่บันทึกซ้ำ; no ส่งไม่สำเร็จ",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:42.215Z"
+  },
+  {
+    "check": "Q-13",
+    "kind": "offline-replay",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-12"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "qa.cjs down 1/0 (B-01 retest off-page, O1 on-page)",
+    "artifact": "evidence/qa/browser-results.md",
+    "expected": "queue drains silently, no ส่งไม่สำเร็จ, 7 kept, no 10/10 left on screen",
+    "actual": "off-page: ค้าง 1->0, back on scan no card/recent 0; on-page: ค้าง 2->0, card 7/10, recent rows removed; DB 7. Offline reload not testable in pane (no SW)",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:42.839Z"
+  },
+  {
+    "check": "Q-14",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-12"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "viewed 20/20 after thumbs; recheck shots.cjs --devices 820x1180 on new tree (5 pages, 3 viewed)",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "card 7/10, recent empty, pad closed, long name ok, D29 look",
+    "actual": "all pass; recheck identical to after set; mobile recheck NOT RUN (ready timeout, tool)",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:43.463Z"
+  },
+  {
+    "check": "Q-15",
+    "kind": "reconciliation",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-13"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "DB read after each round-2 scenario",
+    "artifact": "evidence/qa/browser-results.md",
+    "expected": "rejected scans write nothing",
+    "actual": "every stale scan left the stored cell as written by the other session",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:44.633Z"
+  },
+  {
+    "check": "Q-16",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-14"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "git archive 18759a2 -> vite build -> c01-control.cjs --port 4130 --assets <old dist>",
+    "artifact": "evidence/qa/browser-results.md",
+    "expected": "old app no crash, ส่งไม่สำเร็จ 1, server 7, discard works",
+    "actual": "as expected; no page error; DB 7 after retry and discard",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:00:45.250Z"
+  },
+  {
+    "check": "Q-17",
+    "kind": "dry-run",
+    "status": "N/A",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "-",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ไม่มี migration และไม่เปลี่ยนสคีมา/ข้อมูลเดิม; งานนี้ลดการเขียนทับ (รับใน brief ## N/A ที่รับ)",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T07:54:22.387Z"
+  },
+  {
+    "check": "Q-18",
+    "kind": "restore",
+    "status": "N/A",
+    "ac": [
+      "AC-01"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "-",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ไม่มี migration และไม่เปลี่ยนสคีมา/ข้อมูลเดิม; งานนี้ลดการเขียนทับ (รับใน brief ## N/A ที่รับ)",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T07:54:22.991Z"
+  },
+  {
+    "check": "Q-19",
+    "kind": "visual-owner-approved",
+    "status": "PASS",
+    "ac": [
+      "AC-12"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "owner (ตอบเมื่อได้รับ sheet และรายการข้อจำกัด): \"ถ้าคุณเทสผ่าน ผมก็ให้ผ่าน\" — เงื่อนไขเป็นจริง: PM รัน typecheck/npm test 90 ไฟล์ 1076/build ผ่าน, QA 20/20 ภาพ + browser จริง ผ่าน, quality-gate ผ่าน; owner ไม่ได้เปิดดูภาพเอง",
+    "reason": "",
+    "snapshot": "tree:74b30676dd97a1d76d7fd425b038c6683446f804",
+    "at": "2026-11-02T08:09:32.467Z"
+  }
+]

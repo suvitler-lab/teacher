@@ -1,0 +1,6 @@
+  scan-full-stale-820x1180.png 256 KB
+  scan-later-stale-820x1180.png 256 KB
+  scan-type-stale-820x1180.png 256 KB
+  scan-type-820x1180.png 295 KB
+  scan-later-820x1180.png 243 KB
+ERROR: scan-full-stale @ มือถือ: ready ไม่เป็นจริง (getComputedStyle(document.documentElement).fontSize===(matchMedia('(pointer: coarse)').matches?'18px':'16px')&&!!document.querySelector('input[aria-label="รหัสนักเรียน"]')&&!document.querySelector('.sc-asg')&&document.querySelectorAll('.sc-cell').length>=44&&!!document.querySelector('.fb'))

@@ -26,7 +26,7 @@ export const pairKey = (op: { assignmentId: string; studentId: string }) => `${o
 
 // These parked ops do NOT hold back later ones for the same cell: "superseded" means the server already
 // has something the teacher did LATER, and "epoch_changed" ones are all waiting for the same review.
-const NON_BLOCKING = new Set(["superseded", "epoch_changed"]);
+const NON_BLOCKING = new Set(["superseded", "epoch_changed", "already_submitted"]);
 
 type ResultListener = (r: SubmissionOpResult, op: SubmissionOp) => void;
 const listeners = new Set<ResultListener>();
@@ -48,7 +48,7 @@ async function refreshCounts() {
   for (const it of ob.slice().sort(byCreated)) latest.set(pairKey(it.payload), it.payload);
   pendingOps.value = latest;
   // a superseded op isn't a problem cell — the cell simply shows what the server has
-  failedPairKeys.value = new Set(fl.filter((f) => f.reason !== "superseded").map((f) => pairKey(f.payload)));
+  failedPairKeys.value = new Set(fl.filter((f) => f.reason !== "superseded" && f.reason !== "already_submitted").map((f) => pairKey(f.payload)));
 }
 
 // strictly increasing, so two ops for one student+work can never tie and swap
@@ -148,7 +148,7 @@ async function flushPass(): Promise<void> {
           else await backOff([item]);
           continue;
         }
-        if (r.result === "ok" || r.result === "duplicate") {
+        if (r.result === "ok" || r.result === "duplicate" || r.result === "already_submitted") {
           await outboxRemove(item.opId);
         } else {
           // per-item rejection (not_in_class / invalid / full_score_changed / …)

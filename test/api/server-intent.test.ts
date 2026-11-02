@@ -4,7 +4,7 @@
 // class buttons never touch an excused cell.
 import { describe, it, expect, beforeEach } from "vitest";
 import { env } from "cloudflare:test";
-import { call, json, login, seed } from "./helpers";
+import { call, callIn, gateBatch, json, login, seed } from "./helpers";
 
 function op(o: Record<string, unknown> = {}) {
   return {
@@ -148,10 +148,13 @@ describe("Verify 1 R-01 / R-03: the batch route accepts only what a screen sends
   }
 
   it("R-01: the screens' methods still go through", async () => {
+    // integrity-c01 (BR-02, D-integrity-c01-04): the typed number right after the same round's camera hand-in carries
+    // the score the keypad sends — a second scoreless hand-in on a submitted cell is `already_submitted` now (BR-01)
     const rs = await batch(cookie,
       op({ method: "hid" }), op({ studentId: "st2", method: "camera" }),
-      op({ studentId: "st2", method: "manual", clientTs: Date.now() + 1 }), op({ method: "grid", score: 8, clientTs: Date.now() + 2 }));
+      op({ studentId: "st2", method: "manual", score: 8, clientTs: Date.now() + 1 }), op({ method: "grid", score: 8, clientTs: Date.now() + 2 }));
     expect(rs.map((r) => r.result)).toEqual(["ok", "ok", "ok", "ok"]);
+    expect(await cellOf("st2")).toMatchObject({ status: "submitted", score: 8, method: "manual" });
   });
 
   it("R-03: the same opId twice in one request -> 422, nothing written", async () => {
@@ -161,5 +164,52 @@ describe("Verify 1 R-01 / R-03: the batch route accepts only what a screen sends
     expect(res.status).toBe(422);
     expect(await cellOf("st1")).toBeNull();
     expect(await auditOf("same")).toBeNull();
+  });
+});
+
+// integrity-c01 T-02: `already_submitted` judged on a row written earlier in the SAME request — the answer must follow
+// what that row really did (landed -> the stored row; did not land -> judged again on the cell as it is)
+describe("integrity-c01 BR-01 / BR-06: a hand-in after another hand-in of the same cell in one request", () => {
+  let cookie: string;
+  beforeEach(async () => { cookie = await login(); await seed(); });
+
+  it("[R1 hid null, R2 hid 10] on an empty cell -> [ok, already_submitted with R1's row]; one audit; cell = R1", async () => {
+    const t = Date.now() - 30_000;
+    const r1 = op({ scanSessionId: "R1", method: "hid", score: null, clientTs: t });
+    const r2 = op({ scanSessionId: "R2", method: "hid", score: 10, clientTs: t + 5_000 });
+    const [a, b] = await batch(cookie, r1, r2);
+    expect(a.result).toBe("ok");
+    expect(b).toEqual({ opId: r2.opId, result: "already_submitted", submission: a.submission });
+    expect(await cellOf("st1")).toMatchObject({ status: "submitted", score: null, scan_session_id: "R1", submitted_at: t });
+    expect(await auditOf(r1.opId)).not.toBeNull();
+    expect(await auditOf(r2.opId)).toBeNull();
+  });
+
+  it("the earlier hand-in does not land (work closed between the check and the write) -> both assignment_closed, nothing written", async () => {
+    const t = Date.now() - 30_000;
+    const r1 = op({ scanSessionId: "R1", method: "hid", score: null, clientTs: t });
+    const r2 = op({ scanSessionId: "R2", method: "camera", score: 10, clientTs: t + 5_000 });
+    const g = gateBatch();
+    const held = callIn(g.env, "/api/submissions/batch", json({ ops: [r1, r2] }), cookie);
+    await g.ready; // both ops judged: r1 to write, r2 already_submitted on r1's row
+    await closeA1();
+    g.release();
+    const res = (await (await held).json()) as any;
+    expect(res.results).toEqual([
+      { opId: r1.opId, result: "assignment_closed" },
+      { opId: r2.opId, result: "assignment_closed" },
+    ]);
+    expect(await cellOf("st1")).toBeNull();
+    expect(await auditOf(r1.opId)).toBeNull();
+    expect(await auditOf(r2.opId)).toBeNull();
+  });
+
+  it("[hid null, grid 7] of the same cell in one request -> ok, ok (a grade after a hand-in is never already_submitted)", async () => {
+    const t = Date.now() - 30_000;
+    const [a, b] = await batch(cookie,
+      op({ scanSessionId: "R1", method: "hid", score: null, clientTs: t }),
+      op({ scanSessionId: "gb", method: "grid", score: 7, clientTs: t + 5_000 }));
+    expect([a.result, b.result]).toEqual(["ok", "ok"]);
+    expect(await cellOf("st1")).toMatchObject({ status: "submitted", score: 7, submitted_at: t });
   });
 });

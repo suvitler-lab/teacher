@@ -1,0 +1,368 @@
+
+> ngankrob@0.1.0 test
+> vitest run
+
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/c01-no-overwrite.test.ts (35 tests | 20 failed) 5500ms
+     × AC-01 ฉ1: ก = 7 (grid 09:00), R2 hid score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged 173ms
+     × AC-01 ฉ1: ก = 7 (grid 09:00), R2 camera score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged 176ms
+     × AC-01 ฉ1: ก = 7 (grid 09:00), R2 manual score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged 151ms
+     × AC-02 ฉ2: ก = 7, R2 later-mode hid score null -> already_submitted, score stays 7 (not รอตรวจ) 160ms
+     × AC-02 ฉ6: R1 received ก (null) -> gradebook 8 -> R2 full-mode hid 10 -> already_submitted, stays 8 180ms
+     × AC-03 ฉ4: all-submitted (ข = submitted null, bulk) -> R2 full-mode hid 10 -> already_submitted; score null, submitted_at + late from the bulk 167ms
+     × AC-03 ฉ4 (full button too): all-submitted + full-score (ข = 10) -> R2 later-mode hid null -> already_submitted, stays 10 203ms
+     × BR-04: ก's running total stays 15/20 = 75 % after a stale full-mode scan of work 1 (bug on main: 18/20 = 90 %) 179ms
+     × BR-04: ก's running total stays 15/20 = 75 % after a stale later-mode scan of work 1 (bug on main: 8/10 = 80 %) 169ms
+     × BR-04: ก's running total stays 15/20 = 75 % after a stale full-mode AND a stale later-mode scan of work 1 173ms
+     × AC-05 ฉ3: ก = 7 (grid), R2 type mode: hid null then manual 6 (two requests) -> both already_submitted, stays 7 147ms
+     × AC-05 ฉ3: same in ONE request -> [already_submitted, already_submitted], stays 7 145ms
+     × BR-02 (1): R1 received ค, the gradebook gave 5 meanwhile, R1's typed 8 arrives -> already_submitted, stays 5 168ms
+     × BR-02 (2): R1 rescans ค after it already has 8 from R1 -> already_submitted, stays 8 187ms
+     × BR-02 (3): R1 received ค (null) and the same round sends ANOTHER receive without a score -> already_submitted 138ms
+     × AC-09 ฉ5: the queued 09:05 scan reaches the server after the 09:00 grade -> already_submitted, stays 7; a later gradebook op still ok 119ms
+     × AC-10: the same opId sent twice (answer lost on the way) -> already_submitted both times, no audit 120ms
+     × AC-11: R1 (full 10) is checked first but writes last, R2 (later null) lands in between -> R1 already_submitted, cell = R2, one audit 127ms
+     × AC-13: one request [ก, ข, ค] with ก = 7 -> [already_submitted, ok, ok]; ข and ค recorded with audit; ก unchanged 114ms
+     × AC-14: an old app's request (no dataEpoch, no intent) on a submitted cell -> 200, only {opId, result, submission}, data unchanged 134ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-01 ฉ1: ก = 7 (grid 09:00), R2 hid score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-01 ฉ1: ก = 7 (grid 09:00), R2 camera score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-01 ฉ1: ก = 7 (grid 09:00), R2 manual score 10 at 09:00:20 -> already_submitted with the stored 7; 9 fields + audit unchanged
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:72:24
+     70|       const o = op({ method, score: 10, clientTs: t0 + 20_000 });
+     71|       const r = await one(cookie, o);
+     72|       expect(r.result).toBe("already_submitted");
+       |                        ^
+     73|       expect(r.opId).toBe(o.opId);
+     74|       expect(r.submission).toMatchObject({ student_id: KO, status: "su…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-02 ฉ2: ก = 7, R2 later-mode hid score null -> already_submitted, score stays 7 (not รอตรวจ)
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:87:22
+     85|     const o = op({ score: null, clientTs: t0 + 20_000 });
+     86|     const r = await one(cookie, o);
+     87|     expect(r.result).toBe("already_submitted");
+       |                      ^
+     88|     expect(r.submission?.score).toBe(7);
+     89|     expect(await cellOf(KO)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-02 ฉ6: R1 received ก (null) -> gradebook 8 -> R2 full-mode hid 10 -> already_submitted, stays 8
+AssertionError: R2 full: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:103:38
+    101|       const o = op({ scanSessionId: "R2", score, clientTs: t + 60_000 …
+    102|       const r = await one(cookie, o);
+    103|       expect(r.result, `R2 ${mode}`).toBe("already_submitted");
+       |                                      ^
+    104|       expect(r.submission?.score).toBe(8);
+    105|       expect(await cellOf(KO)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-03 ฉ4: all-submitted (ข = submitted null, bulk) -> R2 full-mode hid 10 -> already_submitted; score null, submitted_at + late from the bulk
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:118:22
+    116|     const o = op({ studentId: KHO, score: 10, clientTs: Date.now() });
+    117|     const r = await one(cookie, o);
+    118|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    119|     expect(r.submission?.score ?? null).toBeNull();
+    120|     const after = await cellOf(KHO);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > AC-03 ฉ4 (full button too): all-submitted + full-score (ข = 10) -> R2 later-mode hid null -> already_submitted, stays 10
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:133:43
+    131|     expect(before).toMatchObject({ status: "submitted", score: 10 });
+    132|     const o = op({ studentId: KHO, score: null, clientTs: Date.now() }…
+    133|     expect((await one(cookie, o)).result).toBe("already_submitted");
+       |                                           ^
+    134|     expect(await cellOf(KHO)).toEqual(before);
+    135|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > BR-04: ก's running total stays 15/20 = 75 % after a stale full-mode scan of work 1 (bug on main: 18/20 = 90 %)
+AssertionError: expected { got: 18, full: 20 } to deeply equal { got: 15, full: 20 }
+
+- Expected
++ Received
+
+  {
+    "full": 20,
+-   "got": 15,
++   "got": 18,
+  }
+
+ ❯ test/api/c01-no-overwrite.test.ts:153:17
+    151|       await one(cookie, op({ score, clientTs: t0 + 20_000 }));
+    152|       const t = await total();
+    153|       expect(t).toEqual({ got: 15, full: 20 });
+       |                 ^
+    154|       expect(Math.round((t.got / t.full) * 100)).toBe(75);
+    155|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > BR-04: ก's running total stays 15/20 = 75 % after a stale later-mode scan of work 1 (bug on main: 8/10 = 80 %)
+AssertionError: expected { got: 8, full: 10 } to deeply equal { got: 15, full: 20 }
+
+- Expected
++ Received
+
+  {
+-   "full": 20,
+-   "got": 15,
++   "full": 10,
++   "got": 8,
+  }
+
+ ❯ test/api/c01-no-overwrite.test.ts:153:17
+    151|       await one(cookie, op({ score, clientTs: t0 + 20_000 }));
+    152|       const t = await total();
+    153|       expect(t).toEqual({ got: 15, full: 20 });
+       |                 ^
+    154|       expect(Math.round((t.got / t.full) * 100)).toBe(75);
+    155|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-01: a hand-in reaching a cell that is already submitted changes nothing > BR-04: ก's running total stays 15/20 = 75 % after a stale full-mode AND a stale later-mode scan of work 1
+AssertionError: expected { got: 8, full: 10 } to deeply equal { got: 15, full: 20 }
+
+- Expected
++ Received
+
+  {
+-   "full": 20,
+-   "got": 15,
++   "full": 10,
++   "got": 8,
+  }
+
+ ❯ test/api/c01-no-overwrite.test.ts:172:15
+    170|     await one(cookie, op({ score: null, clientTs: t0 + 30_000 })); // …
+    171|     const t = await total();
+    172|     expect(t).toEqual({ got: 15, full: 20 });
+       |               ^
+    173|     expect(Math.round((t.got / t.full) * 100)).toBe(75);
+    174|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-02: typing the score right after receiving it in the same round still works > AC-05 ฉ3: ก = 7 (grid), R2 type mode: hid null then manual 6 (two requests) -> both already_submitted, stays 7
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:204:46
+    202|     const recv = op({ score: null, clientTs: t0 + 20_000 });
+    203|     const typed = op({ method: "manual", score: 6, clientTs: t0 + 25_0…
+    204|     expect((await one(cookie, recv)).result).toBe("already_submitted");
+       |                                              ^
+    205|     expect((await one(cookie, typed)).result).toBe("already_submitted"…
+    206|     expect(await cellOf(KO)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-02: typing the score right after receiving it in the same round still works > AC-05 ฉ3: same in ONE request -> [already_submitted, already_submitted], stays 7
+AssertionError: expected [ 'ok', 'ok' ] to deeply equal [ 'already_submitted', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "already_submitted",
+-   "already_submitted",
++   "ok",
++   "ok",
+  ]
+
+ ❯ test/api/c01-no-overwrite.test.ts:216:37
+    214|       op({ score: null, clientTs: t0 + 20_000 }),
+    215|       op({ method: "manual", score: 6, clientTs: t0 + 25_000 }));
+    216|     expect(rs.map((r) => r.result)).toEqual(["already_submitted", "alr…
+       |                                     ^
+    217|     expect(await cellOf(KO)).toEqual(before);
+    218|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-02: typing the score right after receiving it in the same round still works > BR-02 (1): R1 received ค, the gradebook gave 5 meanwhile, R1's typed 8 arrives -> already_submitted, stays 5
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:226:22
+    224|     const before = await cellOf(KHO2);
+    225|     const r = await one(cookie, op({ studentId: KHO2, scanSessionId: "…
+    226|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    227|     expect(r.submission?.score).toBe(5);
+    228|     expect(await cellOf(KHO2)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-02: typing the score right after receiving it in the same round still works > BR-02 (2): R1 rescans ค after it already has 8 from R1 -> already_submitted, stays 8
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:238:22
+    236|     const before = await cellOf(KHO2);
+    237|     const r = await one(cookie, op({ studentId: KHO2, scanSessionId: "…
+    238|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    239|     expect(await cellOf(KHO2)).toEqual(before);
+    240|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-02: typing the score right after receiving it in the same round still works > BR-02 (3): R1 received ค (null) and the same round sends ANOTHER receive without a score -> already_submitted
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:247:22
+    245|     const before = await cellOf(KHO2);
+    246|     const r = await one(cookie, op({ studentId: KHO2, scanSessionId: "…
+    247|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    248|     expect(await cellOf(KHO2)).toEqual(before);
+    249|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-07 / BR-01 race / BR-06 per-op: replay, two devices at once, a mixed request > AC-09 ฉ5: the queued 09:05 scan reaches the server after the 09:00 grade -> already_submitted, stays 7; a later gradebook op still ok
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:360:22
+    358|     const queued = op({ scanSessionId: "R2", score: 10, clientTs: t0 +…
+    359|     const r = await one(cookie, queued);
+    360|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    361|     expect(await cellOf(KO)).toEqual(before);
+    362|     // the same device then edits ก in the gradebook: not blocked
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-07 / BR-01 race / BR-06 per-op: replay, two devices at once, a mixed request > AC-10: the same opId sent twice (answer lost on the way) -> already_submitted both times, no audit
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:372:43
+    370|     const before = await cellOf(KO);
+    371|     const x = op({ score: 10, clientTs: t0 + 20_000 });
+    372|     expect((await one(cookie, x)).result).toBe("already_submitted");
+       |                                           ^
+    373|     const again = await one(cookie, x);
+    374|     expect(again.result).toBe("already_submitted");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-07 / BR-01 race / BR-06 per-op: replay, two devices at once, a mixed request > AC-11: R1 (full 10) is checked first but writes last, R2 (later null) lands in between -> R1 already_submitted, cell = R2, one audit
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:390:35
+    388|     g.release();
+    389|     const res = (await (await held).json()) as any;
+    390|     expect(res.results[0].result).toBe("already_submitted");
+       |                                   ^
+    391|     expect(await cellOf(KHO)).toMatchObject({ status: "submitted", sco…
+    392|     expect(await auditActionsOf(KHO)).toEqual(["create"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-07 / BR-01 race / BR-06 per-op: replay, two devices at once, a mixed request > AC-13: one request [ก, ข, ค] with ก = 7 -> [already_submitted, ok, ok]; ข and ค recorded with audit; ก unchanged
+AssertionError: expected [ 'ok', 'ok', 'ok' ] to deeply equal [ 'already_submitted', 'ok', 'ok' ]
+
+- Expected
++ Received
+
+  [
+-   "already_submitted",
++   "ok",
+    "ok",
+    "ok",
+  ]
+
+ ❯ test/api/c01-no-overwrite.test.ts:418:37
+    416|     const rs = await batch(cookie, ...ops);
+    417|     expect(rs.map((r) => r.opId)).toEqual(ops.map((o) => o.opId));
+    418|     expect(rs.map((r) => r.result)).toEqual(["already_submitted", "ok"…
+       |                                     ^
+    419|     expect(await cellOf(KO)).toEqual(before);
+    420|     for (const sid of [KHO, KHO2]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/20]⎯
+
+ FAIL  |workers| test/api/c01-no-overwrite.test.ts > C-01 BR-08: older apps and the rest of the contract > AC-14: an old app's request (no dataEpoch, no intent) on a submitted cell -> 200, only {opId, result, submission}, data unchanged
+AssertionError: expected 'ok' to be 'already_submitted' // Object.is equality
+
+Expected: "already_submitted"
+Received: "ok"
+
+ ❯ test/api/c01-no-overwrite.test.ts:439:22
+    437|     expect(res.status).toBe(200);
+    438|     const r = ((await res.json()) as any).results[0];
+    439|     expect(r.result).toBe("already_submitted");
+       |                      ^
+    440|     expect(Object.keys(r).sort()).toEqual(["opId", "result", "submissi…
+    441|     expect(await cellOf(KO)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/20]⎯
+
+
+ Test Files  1 failed | 88 passed (89)
+      Tests  20 failed | 1048 passed (1068)
+   Start at  13:51:32
+   Duration  53.06s (transform 30.92s, setup 241.79s, import 39.27s, tests 143.81s, environment 138.07s)
+

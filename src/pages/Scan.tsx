@@ -65,6 +65,7 @@ interface Feedback {
   sub: string;
   score?: string;
   awaitScore?: string; // studentId whose score pad is open for this "received" card
+  opId?: string; // the queued op this success card is about (a refused/already-held answer must clear it)
 }
 
 const session = signal<Session | null>(null);
@@ -90,7 +91,7 @@ function resetSubs(aid: string) {
   loadSeq++; // whatever is still in flight for the previous round is now out of date
   subsBox.value = { aid, map: new Map(), status: "loading", serverTime: 0 };
 }
-const recent = signal<{ studentId: string; at: number; score: number | null }[]>([]);
+const recent = signal<{ studentId: string; at: number; score: number | null; opId?: string }[]>([]);
 const feedback = signal<Feedback | null>(null);
 const pending = signal<string | null>(null); // studentId awaiting typed score
 const useCamera = signal(false);
@@ -250,8 +251,8 @@ function updateSub(studentId: string, st: SubState) {
   setSubs(m);
 }
 
-function pushRecent(studentId: string, score: number | null) {
-  recent.value = [{ studentId, at: Date.now(), score }, ...recent.value].slice(0, 30);
+function pushRecent(studentId: string, score: number | null, opId?: string) {
+  recent.value = [{ studentId, at: Date.now(), score, opId }, ...recent.value].slice(0, 30);
 }
 
 function makeOp(studentId: string, status: "submitted" | "void", score: number | null, method: "camera" | "hid" | "manual") {
@@ -338,22 +339,23 @@ function commitStudent(student: Student, method: "camera" | "hid" | "manual") {
 
   const score = s.mode === "full" ? s.fullScore : null;
   const prev = effSub(student.id);
+  const op = makeOp(student.id, "submitted", score, method);
   updateSub(student.id, { status: "submitted", score, at: Date.now() });
-  void enqueueRevertible(makeOp(student.id, "submitted", score, method), student.id, prev);
+  void enqueueRevertible(op, student.id, prev);
 
   if (s.mode === "full") {
-    pushRecent(student.id, s.fullScore);
+    pushRecent(student.id, s.fullScore, op.opId);
     beep.ok(); vibrate(40);
-    setFeedback({ kind: "success", icon: "check", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · ส่งแล้ว`, score: big(s.fullScore, s.fullScore) });
+    setFeedback({ kind: "success", icon: "check", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · ส่งแล้ว`, score: big(s.fullScore, s.fullScore), opId: op.opId });
   } else if (s.mode === "later") {
-    pushRecent(student.id, null);
+    pushRecent(student.id, null, op.opId);
     beep.ok(); vibrate(40);
-    setFeedback({ kind: "success", icon: "check", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว` });
+    setFeedback({ kind: "success", icon: "check", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว`, opId: op.opId });
   } else {
-    pushRecent(student.id, null);
+    pushRecent(student.id, null, op.opId);
     pending.value = student.id;
     beep.ok(); vibrate(40);
-    setFeedback({ kind: "accent", icon: "pencil", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว ใส่คะแนนแล้วกด Enter`, awaitScore: student.id });
+    setFeedback({ kind: "accent", icon: "pencil", name: fullName(student), sub: `เลขที่ ${student.number ?? "-"} · รับงานแล้ว ใส่คะแนนแล้วกด Enter`, awaitScore: student.id, opId: op.opId });
   }
 }
 
@@ -376,10 +378,11 @@ function submitTypedScore(score: number) {
   if (!pid || !s) return;
   const prev = effSub(pid);
   updateSub(pid, { status: "submitted", score, at: Date.now(), late: prev?.status === "submitted" ? prev.late : undefined });
-  void enqueueRevertible(makeOp(pid, "submitted", score, "manual"), pid, prev);
-  pushRecent(pid, score);
+  const op = makeOp(pid, "submitted", score, "manual");
+  void enqueueRevertible(op, pid, prev);
+  pushRecent(pid, score, op.opId);
   const st = studentsById.value.get(pid);
-  setFeedback({ kind: "success", icon: "check", name: st ? fullName(st) : "", sub: "บันทึกคะแนนแล้ว", score: big(score, s.fullScore) });
+  setFeedback({ kind: "success", icon: "check", name: st ? fullName(st) : "", sub: "บันทึกคะแนนแล้ว", score: big(score, s.fullScore), opId: op.opId });
   pending.value = null;
 }
 
@@ -407,7 +410,37 @@ const REJECTED: Record<string, string> = {
 };
 // The server said no. The grid must stop showing that student as submitted, and the
 // teacher must be told why — a green square that the server refused is a lie.
+let scanViewLeft = true; // true while the scan page is not on screen: a late answer updates the cache, never a card/sound
+const alreadyShownAt = new Map<string, number>(); // studentId -> when the repeat card last showed (one card per batch)
 onResult((r: SubmissionOpResult, op) => {
+  if (r.result === "already_submitted") {
+    // the server already holds this cell: its value is the truth (BR-07). Show it like a local repeat scan.
+    const box = subsBox.value;
+    const sub = r.submission;
+    if (sub && box.aid === op.assignmentId) {
+      const m = new Map(box.map);
+      m.set(op.studentId, { status: sub.status, score: sub.score, at: sub.updated_at ?? Date.now(), late: sub.late === true });
+      subsBox.value = { ...box, map: m };
+    }
+    const s = session.value;
+    if (!s || s.assignmentId !== op.assignmentId) return;
+    // state that would be wrong when the teacher comes back: dropped whether or not the page is on screen
+    recent.value = recent.value.filter((x) => x.opId !== op.opId);
+    if (pending.value === op.studentId) pending.value = null;
+    if (feedback.value?.opId === op.opId || feedback.value?.awaitScore === op.studentId) feedback.value = null;
+    if (scanViewLeft) return; // no card / sound / vibration off the scan page
+    const now = Date.now();
+    const last = alreadyShownAt.get(op.studentId);
+    if (last !== undefined && now - last < 3000) return;
+    alreadyShownAt.set(op.studentId, now);
+    const st = studentsById.value.get(op.studentId);
+    beep.dup(); vibrate(60);
+    setFeedback({
+      kind: "warning", icon: "alert-triangle", name: st ? fullName(st) : "",
+      sub: `ส่งไปแล้ว — ไม่บันทึกซ้ำ`, score: sub?.score != null ? big(sub.score, s.fullScore) : undefined,
+    });
+    return;
+  }
   if (r.result === "ok" || r.result === "duplicate") {
     // R-08: what the server stored (its late flag included) shows at once, not at the next poll — only on the copy of
     // the same work; a newer scan still waiting in the queue stays on top (effSub)
@@ -443,6 +476,8 @@ async function startSession(assignmentId: string, classId: string, mode: ScanMod
   recent.value = [];
   feedback.value = null;
   pending.value = null;
+  alreadyShownAt.clear();
+  scanViewLeft = false; // a round is started from the scan page (a restored round stays "not on screen" until it mounts)
   await kvSet("scanSession", s);
   api.post("/api/scan-sessions", { id: s.id, assignmentId: s.assignmentId, classId: s.classId, subjectId: s.subjectId, mode: s.mode, fullScore: s.fullScore }).catch(() => {});
   // switched again while saving: that newer call is loading its own work — this one must not (its answer would
@@ -596,6 +631,7 @@ function ScanView() {
     return () => { window.removeEventListener("focus", on); window.removeEventListener("blur", offf); };
   }, []);
   useEffect(() => startPolling(), []);
+  useEffect(() => { scanViewLeft = false; return () => { scanViewLeft = true; }; }, []);
   useEffect(() => {
     let ctl: any = null;
     if (useCamera.value && videoRef.current) {

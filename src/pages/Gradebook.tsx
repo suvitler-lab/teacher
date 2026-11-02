@@ -149,7 +149,7 @@ export function GradebookPage() {
   // page loaded earlier — e.g. show 14 again after 9 was saved.
   useEffect(() => onResult((r, op) => {
     // ok / duplicate / superseded all come with the row the SERVER now holds — adopt it
-    if ((r.result !== "ok" && r.result !== "duplicate" && r.result !== "superseded") || !r.submission) return;
+    if ((r.result !== "ok" && r.result !== "duplicate" && r.result !== "superseded" && r.result !== "already_submitted") || !r.submission) return;
     const sub = r.submission;
     setSubs((prev) => new Map(prev).set(`${op.assignmentId}:${op.studentId}`, { status: sub.status, score: sub.score, late: sub.late }));
   }), []);
