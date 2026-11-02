@@ -330,10 +330,11 @@ assignmentRoutes.post("/api/scan-sessions", async (c) => {
 assignmentRoutes.post("/api/scan-sessions/:id/end", async (c) => {
   const sid = c.req.param("id");
   await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
-    `UPDATE scan_sessions SET ended_at = ?,
-       scan_count = (SELECT COUNT(*) FROM submissions WHERE scan_session_id = ?)
-     WHERE id = ?`,
+    `UPDATE scan_sessions SET ended_at = ?2,
+       scan_count = (SELECT COUNT(*) FROM submissions
+                     WHERE assignment_id = (SELECT assignment_id FROM scan_sessions WHERE id = ?1) AND scan_session_id = ?1)
+     WHERE id = ?1`,
   )
-    .bind(Date.now(), sid, sid)]);
+    .bind(sid, Date.now())]);
   return c.json({ ok: true });
 });

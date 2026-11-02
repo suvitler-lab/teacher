@@ -86,6 +86,23 @@ describe("reading at school size", () => {
   }, 120_000);
 });
 
+describe("ending a scan round at school size (P11)", () => {
+  it("counting the round's hand-ins reads that one work's rows, not the whole submissions table", async () => {
+    const cookie = await login();
+    await seedVolume();
+    await env.DB.prepare("INSERT INTO scan_sessions (id, assignment_id, class_id, mode, full_score, started_at) VALUES ('scn_end', 'a1', 'c1', 'full', 10, 1)").run();
+    await env.DB.prepare("UPDATE submissions SET scan_session_id = 'scn_end' WHERE assignment_id = 'a1' AND substr(student_id, 1, 4) = 'st1_'").run();
+    const m = metered();
+    const res = await callIn(m.env, "/api/scan-sessions/scn_end/end", json({}), cookie);
+    expect(res.status).toBe(200);
+    const took = `${m.stats.queries} statements, ${m.stats.rowsRead} rows read`;
+    console.log("P11 scan-end:", took);
+    expect((await env.DB.prepare("SELECT scan_count FROM scan_sessions WHERE id = 'scn_end'").first<any>()).scan_count).toBe(VOLUME.perClass);
+    // the table holds 8,000 rows; one work's rows are 200
+    expect(m.stats.rowsRead, took).toBeLessThanOrEqual(400);
+  }, 60_000);
+});
+
 describe("writing at school size", () => {
   // n scans of a1, walking through the school: 40 children of class `cls`, then the next class, …
   const scanOps = (n: number, score: number, cls = 1, prefix = "w") =>
