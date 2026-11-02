@@ -36,16 +36,32 @@ flowchart LR
 | Build/deploy | Vite + Cloudflare plugin, `public/_headers`, `public/sw.js`, `scripts/sw-precache.ts`, `scripts/preflight.cjs`, `wrangler.jsonc` |
 | QA | Vitest DOM + Workers/D1; browser scripts ใช้ fixture server และข้อมูลสมมติ; trial reconciliation เทียบกับกระดาษ |
 
-## ชุดตรวจหลัก (baseline 29 ต.ค. 2569 บน tag `deploy-2026-10-25` = commit `2c3bbde`)
+## ชุดตรวจหลัก
 
-| คำสั่ง | ผล baseline |
+| คำสั่ง | ผลล่าสุด 2 พ.ย. 2569 (branch fix-fill-and-portrait, main `01d5486` + ร่าง CSS) |
 |---|---|
 | `npm run typecheck` | PASS |
-| `npm test` | PASS — 56 ไฟล์ / 570 tests (33 วินาที) · stderr ของ camera.test เป็นการจำลอง WASM ล้มโดยตั้งใจ |
-| `npm run build` | PASS — asset `index-BF_Q-mYw.js` ตรงกับรุ่นที่ deploy · warning chunk exceljs ~940 kB เดิม |
-| `npm audit` | 0 vulnerabilities |
+| `npm test` | PASS — 85 ไฟล์ / 1017 tests · stderr ของ camera.test เป็นการจำลอง WASM ล้มโดยตั้งใจ |
+| `npm run build` | PASS (Build ร่างของ PM 31 ต.ค.) · warning chunk exceljs ~940 kB เดิม |
+| `npm audit` | 0 vulnerabilities (29 ต.ค.) |
+| lint | ไม่มีสคริปต์ lint ในโปรเจกต์ — ใช้ typecheck แทน |
 
-หลักฐาน: `jobs/2026-10-29-program-intake/evidence/baseline.txt` · โปรแกรมปัจจุบัน: `programs/2026-10-program/program.md`
+baseline เดิม 29 ต.ค. (56/570): `jobs/2026-10-29-program-intake/evidence/baseline.txt` · โปรแกรมปัจจุบัน: `programs/2026-10-program/program.md`
+
+## อุปกรณ์เป้าหมาย
+
+ทุกงาน 🖥 ต้องถ่ายภาพและตรวจทุกแถว — shots.mjs อ่านตารางนี้ (หัวข้อต้องเป็น "## อุปกรณ์เป้าหมาย" ตรงตัว ไม่งั้น shots.mjs ใช้ค่าเริ่มต้นของสกิล)
+
+| ชื่อ | กว้าง×สูง | DPR | สัมผัส | หมายเหตุ (เบราว์เซอร์จริง / ข้อจำกัด) |
+|---|---|---|---|---|
+| iPad ตั้ง | 820×1180 | 2 | ใช่ | Safari iPadOS อุปกรณ์หลัก · ฟอนต์เริ่มต้น 18px · ทีมตรวจได้แค่ Chromium emulation ผลเครื่องจริง = NOT RUN จนเจ้าของงานยืนยัน (D09) |
+| iPad นอน | 1180×820 | 2 | ใช่ | Safari iPadOS · ฟอนต์ 18px |
+| คอม | 1536×729 | 2 | ไม่ | Chrome/Edge · ฟอนต์ 16px · DPR 2 ให้ภาพคม (brief fix-fill-and-portrait) |
+| มือถือ | 390×844 | 3 | ใช่ | Safari iOS / Chrome Android |
+
+- หน้าที่ถ่ายเสมอ: `docs/team/pages.json` (สร้างใน fix-fill-and-portrait T-01) — fixture `scripts/fixture-server.cjs` ข้อมูลสมมติ login ด้วยค่าทดสอบของ fixture · เรียกผ่าน `node scripts/shots.cjs --label before|after`
+- เกณฑ์: ตัวอักษร ≥ 13px · ปุ่ม/ช่องกดบนจอสัมผัส ≥ 44px (ยกเว้นช่องผังเลขที่ตาม fs-1) · ทั้งหน้าไม่เลื่อนแนวนอน
+- 🖥 ไฟล์ UI: `src/pages/*.tsx`, `src/components/**`, `src/styles/*.css` (grade.css = สมุดคะแนน, scan.css = หน้าสแกน)
 
 ## คำสั่งและผลล่าสุด (ประวัติ)
 

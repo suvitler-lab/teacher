@@ -124,11 +124,63 @@ async function addGradebook14(DB) {
   for (let k = 0; k < subs.length; k += 80) await DB.batch(subs.slice(k, k + 80));
 }
 
+const LONG_TITLE = "ใบงานที่ 7 การวิเคราะห์ระบบนิเวศในท้องถิ่นของเรา"; // 40 graphemes, fictional
+
+/**
+ * Opt-in (--layout, implies gradebook14): data for column-fill / long-text / status layout checks. All fictional.
+ *  F-2 science in ป.6/1 keeps 2 works of different types, one with a long title
+ *  F-3 ภาษาอังกฤษ with 6 works (3 types)   F-4 ศิลปะ with 1 work
+ *  F-5 children no. 2-5 get short/long/emoji names, asg_gb_12 gets the long title
+ *  F-6 asg_gb_13 has every status at least once; no. 1 and 2 have not handed in
+ */
+async function addLayout(DB) {
+  const rnd = (n) => { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
+  const kids = (await DB.prepare("SELECT id, number FROM students WHERE class_id = 'cls_61' AND status = 'active' ORDER BY number").all()).results;
+  const idOf = (no) => kids.find((k) => k.number === no).id;
+  await DB.batch([
+    DB.prepare("DELETE FROM assignment_classes WHERE class_id = 'cls_61' AND assignment_id IN ('asg_quiz', 'asg_hw', 'asg_proj')"),
+    DB.prepare("UPDATE assignments SET title = ? WHERE id IN ('asg_ws4', 'asg_gb_12')").bind(LONG_TITLE),
+    DB.prepare("INSERT OR REPLACE INTO subjects (id, code, name, color, sort, archived, updated_at) VALUES ('sub_eng', 'อ16101', 'ภาษาอังกฤษ', 'green', 30, 0, 0), ('sub_art', 'ศ16101', 'ศิลปะ', 'orange', 40, 0, 0)"),
+    DB.prepare("UPDATE students SET nickname = 'นวพล' WHERE id = ?").bind(idOf(2)),
+    DB.prepare("UPDATE students SET nickname = 'กมลชนก' WHERE id = ?").bind(idOf(3)),
+    DB.prepare("UPDATE students SET nickname = 'กมลวรรณชนกพร', first_name = 'กมลวรรณชนกพรนภสรอร', last_name = 'วงศสกลนครพนมบรรพตชยกรณ' WHERE id = ?").bind(idOf(4)),
+    DB.prepare("UPDATE students SET nickname = 'ข้าวหอม🌾' WHERE id = ?").bind(idOf(5)),
+  ]);
+  const works = [
+    ["asg_en_1", "sub_eng", "wt_worksheet", "Worksheet 1 Greetings", 10, "2026-08-05"], ["asg_en_2", "sub_eng", "wt_exercise", "Exercise 1 Colours", 10, "2026-08-26"],
+    ["asg_en_3", "sub_eng", "wt_worksheet", "Worksheet 2 Family", 10, "2026-09-09"], ["asg_en_4", "sub_eng", "wt_quiz", "Quiz Unit 1", 20, "2026-09-23"],
+    ["asg_en_5", "sub_eng", "wt_exercise", "Exercise 2 Animals", 10, "2026-10-07"], ["asg_en_6", "sub_eng", "wt_worksheet", "Worksheet 3 Food", 10, "2026-10-21"],
+    ["asg_art_1", "sub_art", "wt_project", "วาดภาพทิวทัศน์", 20, "2026-10-14"],
+  ];
+  const stmts = [];
+  for (const [id, sub, type, title, full, date] of works) {
+    stmts.push(DB.prepare("INSERT OR REPLACE INTO assignments (id, term_id, subject_id, type_id, title, unit, full_score, assigned_date, due_date, note, publish_scores, status, created_at, updated_at, deleted_at) VALUES (?,?,?,?,?,NULL,?,?,?,NULL,1,'open',0,0,NULL)")
+      .bind(id, "term_demo", sub, type, title, full, date, date));
+    stmts.push(DB.prepare("INSERT OR REPLACE INTO assignment_classes (assignment_id, class_id) VALUES (?, 'cls_61')").bind(id));
+  }
+  await DB.batch(stmts);
+  const subs = [];
+  works.forEach(([id, , , , full], j) => kids.forEach((k, i) => {
+    const r = rnd((i + 1) * 17 + j * 5 + 3);
+    if (r > (id === "asg_art_1" ? 0.3 : 0.88)) return;
+    subs.push(DB.prepare("INSERT OR REPLACE INTO submissions (assignment_id, student_id, status, score, late, submitted_at, method, updated_at) VALUES (?,?,'submitted',?,?,1,'grid',1)")
+      .bind(id, k.id, Math.round(full * (0.5 + rnd(i * 3 + j + 40) * 0.5) * 2) / 2, r > 0.8 ? 1 : 0));
+  }));
+  // F-6: asg_gb_13 has every status; no. 1 and 2 have not handed in
+  const nums = [1, 2, 3, 4, 5, 6, 7];
+  subs.push(DB.prepare(`DELETE FROM submissions WHERE assignment_id = 'asg_gb_13' AND student_id IN (${nums.map(() => "?").join(",")})`).bind(...nums.map(idOf)));
+  const gb = (no, status, score, late) => DB.prepare("INSERT OR REPLACE INTO submissions (assignment_id, student_id, status, score, late, submitted_at, method, updated_at) VALUES ('asg_gb_13',?,?,?,?,?,'grid',1)")
+    .bind(idOf(no), status, score, late, status === "excused" ? null : 1);
+  subs.push(gb(3, "submitted", 9, 0), gb(4, "submitted", 6, 1), gb(5, "submitted", null, 0), gb(6, "excused", null, 0));
+  for (let k = 0; k < subs.length; k += 80) await DB.batch(subs.slice(k, k + 80));
+}
+
 async function startFixtureServer({
   port = 5194,
   assetsDir = path.join(root, "dist/client/client"),
   headersFile = path.join(root, "public/_headers"),
   seed = true, // false: an empty school (only the migrations' defaults), for first-run checks
+  layout = false, // true: gradebook14 + layout data sets (see addLayout)
   gradebook14 = false, // true: 14 pieces of work x 44 children for คณิตศาสตร์ in ป.6/1 (gradebook layout checks)
 } = {}) {
   const mf = new Miniflare(convertV4MiniflareOptions({
@@ -149,7 +201,8 @@ async function startFixtureServer({
     const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");
     await DB.batch(sql.split(";").map((s) => s.trim()).filter(Boolean).map((s) => DB.prepare(s)));
   }
-  if (gradebook14 && seed) await addGradebook14(DB);
+  if ((gradebook14 || layout) && seed) await addGradebook14(DB);
+  if (layout && seed) await addLayout(DB);
   const { app } = require(path.join(root, "worker/app.ts"));
   const setup = await app.request("/api/setup", {
     method: "POST", headers: { "Content-Type": "application/json" },
@@ -223,7 +276,12 @@ async function startFixtureServer({
 module.exports = { startFixtureServer, PASSWORD, EMAIL };
 
 if (require.main === module) {
-  startFixtureServer({ gradebook14: process.argv.includes("--gb14") }).then((s) => {
+  const opt = (name) => { const i = process.argv.indexOf(name); return i === -1 ? undefined : process.argv[i + 1]; };
+  const port = opt("--port") ? Number(opt("--port")) : undefined;
+  startFixtureServer({
+    gradebook14: process.argv.includes("--gb14"), layout: process.argv.includes("--layout"),
+    ...(port ? { port } : {}), ...(opt("--assets") ? { assetsDir: path.resolve(opt("--assets")) } : {}),
+  }).then((s) => {
     console.log(`fixture server on ${s.url} — password: ${s.password} — synthetic data only`);
     for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, async () => { await s.close(); process.exit(0); });
   }).catch((e) => { console.error(e); process.exitCode = 1; });

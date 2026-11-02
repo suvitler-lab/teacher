@@ -42,6 +42,20 @@ export function scrollFrameTo(el: HTMLElement, left: number, smooth: boolean) {
 
 const TINT = (c: string) => `var(--tint-${c}-fg)`;
 
+/** The shape that goes with a work-type colour (circle, square, triangle, diamond, star, hexagon, cross): a type is never told by colour alone. */
+const SHAPES: Record<string, string> = {
+  violet: '<circle cx="6" cy="6" r="5.5"/>',
+  blue: '<rect x="1" y="1" width="10" height="10" rx="1.5"/>',
+  orange: '<path d="M6 .5 11.5 11h-11z"/>',
+  green: '<path d="M6 .3 11.7 6 6 11.7.3 6z"/>',
+  magenta: '<path d="M6 .4l1.6 3.8 4 .3-3.1 2.6 1 4L6 8.9 2.5 11l1-4L.4 4.5l4-.3z"/>',
+  aqua: '<path d="M3.2 1.1h5.6L11.6 6 8.8 10.9H3.2L.4 6z"/>',
+  red: '<path d="M4.2.8h3.6v3.4h3.4v3.6H7.8v3.4H4.2V7.8H.8V4.2h3.4z"/>',
+};
+export function TypeShape({ color, class: cls }: { color: string; class?: string }) {
+  return <svg class={"tshape" + (cls ? " " + cls : "")} viewBox="0 0 12 12" aria-hidden="true" focusable="false" dangerouslySetInnerHTML={{ __html: SHAPES[color] ?? SHAPES.violet }} />;
+}
+
 /** Minimap: one stripe per drawn column in its type colour + a frame for what is on screen. Tap / drag to move the table. */
 export function MiniMap({ info, segments, scrollRef }: { info: ScrollInfo; segments: Segment[]; scrollRef: RefObject<HTMLElement> }) {
   const track = useRef<HTMLDivElement | null>(null);

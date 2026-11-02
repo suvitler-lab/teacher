@@ -24,33 +24,67 @@
   border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--surface-2);
   overscroll-behavior-x: contain;
 }
-/* no min-width:100%: with few columns the table stays as wide as its columns (left-aligned) instead of stretching them */
-table.gb { border-collapse: separate; border-spacing: 0; width: max-content; font-size: var(--fs-sm); }
+/* Fixed layout so every work column is exactly the same width whatever its text (headers, group bars, numbers never size a column).
+   The table is as wide as the frame, but never narrower than "n columns x --gb-col-w + name + total" (--gb-n is set by Gradebook.tsx):
+   few columns -> the columns share the spare room equally and the right edge meets the frame; many -> they stop shrinking at
+   --gb-col-w and the frame scrolls sideways. The name and total columns keep their own fixed widths. */
+table.gb { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: max(100%, calc(var(--gb-n, 1) * var(--gb-col-w) + var(--gb-name-w) + var(--gb-tot-w))); font-size: var(--fs-sm); }
+.gb-frame.no-tot .gb-scroll { --gb-tot-w: 0px; }
 table.gb th, table.gb td { border-bottom: 0.5px solid var(--border); padding: 0; height: var(--row-h); text-align: center; font-weight: 400; background: var(--surface-2); white-space: nowrap; }
 table.gb thead th { position: sticky; top: 0; background: var(--surface-1); z-index: 2; padding: 0; height: auto; }
 table.gb.grouped thead tr.hd th { top: var(--gb-gh); }
-table.gb thead th.col-w { position: sticky; cursor: pointer; vertical-align: top; padding: 0.25rem 0.3rem 0.4rem; border-top: 4px solid var(--border); }
-table.gb th.col-w, table.gb td.cell, table.gb td.sumc, table.gb tr.avg td:not(.name-col):not(.tot-col) { width: var(--gb-col-w); min-width: var(--gb-col-w); max-width: var(--gb-col-w); }
+/* Column head ("A: tint head"): the ground is the work type's pale tint (--hb), a shape per type sits before the title (never colour alone),
+   the meta line carries full score + a calendar icon + due date, and the closed lock / eye sit in the top-right corner.
+   The progress bar (menu: คอลัมน์ > แถบความคืบหน้า) is a 5px edge-to-edge line at the bottom, filled in the type's dark ink (--f). */
+table.gb thead th.col-w { position: sticky; cursor: pointer; vertical-align: top; padding: 0.3rem 0.35rem 0; background: var(--hb, var(--surface-1)); text-align: left; }
+table.gb thead th.sumcol { padding: 0.25rem 0.3rem 0.4rem; border-top: 4px solid var(--border); text-align: center; }
+table.gb thead th.col-w, table.gb td.cell, table.gb td.sumc { overflow: hidden; }
 table.gb thead th.sel, table.gb td.sel { background: var(--bg-accent-muted); }
 table.gb thead th.sumcol { cursor: pointer; background: var(--surface-1); }
-table.gb thead th .ht { font-size: var(--fs-xs); font-weight: 500; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
-table.gb thead th .hs > span { white-space: nowrap; }
-table.gb thead th .hs { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 2px; }
-table.gb thead th .hbar { height: 6px; border-radius: 3px; background: var(--border); margin: 0.25rem 0.1rem 0; overflow: hidden; }
-table.gb thead th .hbar > div { height: 100%; background: var(--fill-success); }
+table.gb thead th .ttl { display: flex; gap: 4px; align-items: flex-start; }
+table.gb thead th.x .ttl { padding-right: 22px; }
+table.gb thead th .tshape-w { flex: none; color: var(--f, currentColor); display: block; margin-top: 3px; line-height: 0; }
+.tshape { display: block; flex: none; width: 12px; height: 12px; fill: currentColor; }
+.hs-cal { margin: 0 0.25rem; vertical-align: -1px; }
+table.gb thead th .ht { font-size: var(--fs-xs); font-weight: 500; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; text-align: left; min-width: 0; color: var(--text-primary); }
+table.gb thead th.col-w.closed .ht { color: var(--text-secondary); }
+table.gb thead th .hs > span { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+table.gb thead th .hs { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; display: flex; align-items: center; justify-content: flex-start; margin-top: 2px; padding-bottom: 5px; white-space: nowrap; overflow: hidden; }
+table.gb thead th.sumcol .hs { justify-content: center; margin: 0; padding: 0; }
+table.gb thead th .hbar { height: 5px; margin: 0 -0.35rem; background: rgba(255, 255, 255, 0.7); background: color-mix(in srgb, var(--surface-2) 70%, transparent); overflow: hidden; }
+table.gb thead th .hbar > div { height: 100%; background: var(--f, var(--fill-success)); }
+/* the corner: closed lock above the eye. The eye of a column that shows its scores appears only on the picked column; one that hides them always shows (crossed eye). */
+table.gb thead th .hd-corner { position: absolute; top: 2px; right: 2px; display: flex; flex-direction: column; align-items: center; gap: 2px; width: 24px; }
+table.gb thead th .hd-lock { display: block; width: 16px; text-align: center; }
+table.gb thead th .hs-eye { display: none; position: relative; align-items: center; justify-content: center; height: 24px; width: 24px; min-width: 0; min-height: 0; padding: 0; border: none; background: transparent; color: inherit; cursor: pointer; border-radius: 6px; }
+table.gb thead th.sel .hs-eye, table.gb thead th .hs-eye.off { display: inline-flex; }
+table.gb thead th .hs-eye:hover { background: rgba(255, 255, 255, 0.6); }
+table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
+/* touch: the eye's tappable box grows to a full 44px square (it hangs over the corner and the title's end, which is only a bigger tap target) */
+@media (pointer: coarse) {
+  table.gb thead th .hd-corner { top: 0; right: 0; width: var(--tap); }
+  table.gb thead th .hd-lock { margin-top: 4px; }
+  table.gb thead th .hs-eye { height: var(--tap); width: var(--tap); justify-content: flex-end; align-items: flex-start; padding: 6px 6px 0 0; }
+}
 
 /* left: number + name */
 table.gb .name-col { box-sizing: border-box; text-align: left; padding: 0 0.6rem; position: sticky; left: 0; z-index: 3; width: var(--gb-name-w); min-width: var(--gb-name-w); max-width: var(--gb-name-w); overflow: hidden; text-overflow: ellipsis; border-right: 0.5px solid var(--border-strong); box-shadow: 6px 0 6px -6px rgba(20, 28, 46, 0.25); }
 table.gb thead .name-col { z-index: 6; background: var(--surface-1); vertical-align: middle; }
 /* right: สะสม */
-table.gb .tot-col { position: sticky; right: 0; z-index: 3; width: var(--gb-tot-w); min-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px rgba(20, 28, 46, 0.25); font-variant-numeric: tabular-nums; }
+table.gb .tot-col { position: sticky; right: 0; z-index: 3; box-sizing: border-box; width: var(--gb-tot-w); min-width: var(--gb-tot-w); max-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px rgba(20, 28, 46, 0.25); font-variant-numeric: tabular-nums; }
 table.gb thead .tot-col { z-index: 6; background: var(--surface-1); vertical-align: middle; border-top: 4px solid var(--text-muted); }
 table.gb thead .gh-tot { border-top: 4px solid var(--text-muted); vertical-align: middle; border-bottom: 0.5px solid var(--border-strong); }
 
 /* group header row: a tappable bar in the type colour; the label stays in view while the table slides under it */
 table.gb thead tr.gh th { height: var(--gb-gh); border-bottom: 0.5px solid var(--border-strong); z-index: 4; }
 table.gb thead tr.gh .gh-corner { z-index: 6; padding: 0 0.4rem; }
-table.gb thead tr.gh .gh-cell { text-align: left; padding: 0; }
+table.gb thead tr.gh .gh-cell { text-align: left; padding: 0; border-left: 5px solid currentColor; }
+.gh-btn .tshape { margin: 0 0.1rem; }
+.gh-cnt { font-weight: 500; font-size: var(--fs-xs); white-space: pre; }
+/* a group of ONE column is only 7.6rem wide: drop the count, let the type name wrap to two lines instead of being cut */
+table.gb thead tr.gh .gh-cell.nar .gh-btn { padding: 0 0.4rem; gap: 0.25rem; }
+table.gb thead tr.gh .gh-cell.nar .gh-cnt { display: none; }
+table.gb thead tr.gh .gh-cell.nar .gh-label { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3; padding: 3px 0; font-size: var(--fs-xs); overflow-wrap: anywhere; text-align: left; }
 .gh-btn { position: sticky; left: calc(var(--gb-name-w) + 0.4rem); max-width: 100%; border: none; background: transparent; color: inherit; font-weight: 600; font-size: var(--fs-sm); padding: 0 0.5rem; gap: 0.25rem; justify-content: flex-start; height: var(--gb-gh); min-height: var(--tap); }
 .gh-btn:hover { background: transparent; filter: brightness(0.95); }
 .gh-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -83,14 +117,6 @@ table.gb input.cell-input { width: 3.07rem; height: 2.4rem; text-align: center; 
 .gb-mrow:first-of-type { border-top: none; }
 .gb-mrow .no { width: 22px; text-align: right; color: var(--text-secondary); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
 .gb-mrow input.cell-input { width: 3.73rem; height: 2.27rem; text-align: center; }
-/* the eye in a column header: scores shown to parents (eye) or not announced yet (eye-off, in warning colour).
-   It sits in the header's top-right corner so it adds no height: 1.5rem with a mouse, a full 44px box on a touch screen. */
-table.gb thead th .hs-eye { position: absolute; top: 0; right: 0; display: inline-flex; align-items: flex-start; justify-content: flex-end; height: 1.5rem; width: 1.5rem; min-width: 0; min-height: 0; padding: 0.15rem; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; }
-table.gb thead th .ht { padding-right: 0.9rem; }
-@media (pointer: coarse) { table.gb thead th .hs-eye { height: var(--tap); width: var(--tap); min-height: var(--tap); min-width: var(--tap); padding: 0.3rem 0.3rem 0 0; } }
-table.gb thead th .hs-eye.off { color: var(--text-warning); }
-table.gb thead th .hs-eye:hover { background: var(--surface-2); }
-table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
 
 /* gb-1b: edge shadows, one-column-at-a-time scrolling, minimap + jump buttons, column picker */
 .gb-frame { position: relative; --gb-name-w: clamp(12rem, 16vw, 16rem); --gb-col-w: 7.6rem; --gb-tot-w: 5.2rem; --gb-gh: max(var(--tap), 2.4rem); }
@@ -148,8 +174,7 @@ button[aria-disabled="true"] { opacity: 0.5; cursor: default; }
   .gb-bar2 .gb-mini { height: 2.1rem; }
   .gb-bar2 .gb-jump { min-height: 2.1rem; }
   table.gb thead th .ht { -webkit-line-clamp: 1; min-height: 0; line-height: 1.35; }
-  table.gb thead th.col-w { padding-top: 0.15rem; padding-bottom: 0.25rem; }
-  table.gb thead th .hbar { margin-top: 0.15rem; height: 4px; }
+  table.gb thead th.col-w { padding-top: 0.15rem; }
   table.gb thead .name-col { height: auto; }
 }
 @media (min-width: 1100px) and (max-height: 860px) and (hover: hover) and (pointer: fine) {

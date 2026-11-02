@@ -1,0 +1,611 @@
+{
+  "gradebook-1|820x1180": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 1,
+    "rowsFullyVisible": 16,
+    "rowH": 57.6,
+    "clampedTitles": 0,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2014 ต.ค.",
+      "c": 5.49
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-2|820x1180": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 2,
+    "rowsFullyVisible": 16,
+    "rowH": 57.6,
+    "clampedTitles": 2,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-2-type|820x1180": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 2,
+    "rowsFullyVisible": 15,
+    "rowH": 57.6,
+    "clampedTitles": 2,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-6|820x1180": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 6,
+    "rowsFullyVisible": 16,
+    "rowH": 57.6,
+    "clampedTitles": 5,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-14|820x1180": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 14,
+    "rowsFullyVisible": 16,
+    "rowH": 57.6,
+    "clampedTitles": 4,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2021 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-6-type|820x1180": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 6,
+    "rowsFullyVisible": 15,
+    "rowH": 57.6,
+    "clampedTitles": 5,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-14-type|820x1180": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 14,
+    "rowsFullyVisible": 15,
+    "rowH": 57.6,
+    "clampedTitles": 4,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "ชิ้นงาน/โครงงาน",
+      "c": 4.84
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 1036
+  },
+  "gradebook-1|1180x820": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 1,
+    "rowsFullyVisible": 10,
+    "rowH": 57.6,
+    "clampedTitles": 0,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2014 ต.ค.",
+      "c": 5.49
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-2|1180x820": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 2,
+    "rowsFullyVisible": 10,
+    "rowH": 57.6,
+    "clampedTitles": 0,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-2-type|1180x820": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 2,
+    "rowsFullyVisible": 9,
+    "rowH": 57.6,
+    "clampedTitles": 0,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-6|1180x820": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 6,
+    "rowsFullyVisible": 10,
+    "rowH": 57.6,
+    "clampedTitles": 5,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-14|1180x820": {
+    "table": true,
+    "theadH": 78,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 0,
+    "cols": 14,
+    "rowsFullyVisible": 10,
+    "rowH": 57.6,
+    "clampedTitles": 4,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2021 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-6-type|1180x820": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 6,
+    "rowsFullyVisible": 9,
+    "rowH": 57.6,
+    "clampedTitles": 5,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-14-type|1180x820": {
+    "table": true,
+    "theadH": 124.6,
+    "colHmax": 78,
+    "colHmin": 78,
+    "ghH": 46.5,
+    "cols": 14,
+    "rowsFullyVisible": 9,
+    "rowH": 57.6,
+    "clampedTitles": 4,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 15.3,
+    "worstContrast": {
+      "t": "ชิ้นงาน/โครงงาน",
+      "c": 4.84
+    },
+    "eyeMin": 44,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 676
+  },
+  "gradebook-1|1536x729": {
+    "table": true,
+    "theadH": 51.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 0,
+    "cols": 1,
+    "rowsFullyVisible": 8,
+    "rowH": 51.2,
+    "clampedTitles": 1,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 2014 ต.ค.",
+      "c": 5.49
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 479.4
+  },
+  "gradebook-2|1536x729": {
+    "table": true,
+    "theadH": 51.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 0,
+    "cols": 2,
+    "rowsFullyVisible": 8,
+    "rowH": 51.2,
+    "clampedTitles": 2,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 479.4
+  },
+  "gradebook-2-type|1536x729": {
+    "table": true,
+    "theadH": 96.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 45,
+    "cols": 2,
+    "rowsFullyVisible": 7,
+    "rowH": 51.2,
+    "clampedTitles": 2,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 1030 ก.ย.",
+      "c": 5.18
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 479.4
+  },
+  "gradebook-6|1536x729": {
+    "table": true,
+    "theadH": 51.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 0,
+    "cols": 6,
+    "rowsFullyVisible": 8,
+    "rowH": 51.2,
+    "clampedTitles": 6,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 479.4
+  },
+  "gradebook-14|1536x729": {
+    "table": true,
+    "theadH": 51.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 0,
+    "cols": 14,
+    "rowsFullyVisible": 8,
+    "rowH": 51.2,
+    "clampedTitles": 14,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 2021 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": null,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 479
+  },
+  "gradebook-6-type|1536x729": {
+    "table": true,
+    "theadH": 96.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 45,
+    "cols": 6,
+    "rowsFullyVisible": 7,
+    "rowH": 51.2,
+    "clampedTitles": 6,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "เต็ม 2023 ก.ย.",
+      "c": 5.09
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": false
+    },
+    "legend": null,
+    "scrollH": 479.4
+  },
+  "gradebook-14-type|1536x729": {
+    "table": true,
+    "theadH": 96.4,
+    "colHmax": 51.4,
+    "colHmin": 51.4,
+    "ghH": 45,
+    "cols": 14,
+    "rowsFullyVisible": 7,
+    "rowH": 51.2,
+    "clampedTitles": 14,
+    "hsOverflow": 0,
+    "ghOverflow": 0,
+    "minFontPx": 13.6,
+    "worstContrast": {
+      "t": "ชิ้นงาน/โครงงาน",
+      "c": 4.84
+    },
+    "eyeMin": 24,
+    "ghBtnMinH": 44,
+    "pageScrollX": false,
+    "sticky": {
+      "name": true,
+      "total": true,
+      "scrolled": true
+    },
+    "legend": null,
+    "scrollH": 479
+  },
+  "gradebook-1|390x844": {
+    "table": false
+  },
+  "gradebook-2|390x844": {
+    "table": false
+  },
+  "gradebook-2-type|390x844": {
+    "table": false
+  },
+  "gradebook-6|390x844": {
+    "table": false
+  },
+  "gradebook-14|390x844": {
+    "table": false
+  },
+  "gradebook-6-type|390x844": {
+    "table": false
+  },
+  "gradebook-14-type|390x844": {
+    "table": false
+  }
+}

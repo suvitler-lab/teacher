@@ -1,0 +1,32 @@
+{
+  "job": "2026-10-31-fix-fill-and-portrait",
+  "tasks": {
+    "T-01": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "scripts/shots.cjs",
+        "scripts/fixture-server.cjs",
+        "docs/team/pages.json",
+        ".gitignore",
+        "docs/team/jobs/2026-10-31-fix-fill-and-portrait/pages-font.json",
+        "docs/team/jobs/2026-10-31-fix-fill-and-portrait/dev-notes/shots-tool.md"
+      ]
+    },
+    "T-02": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/styles/grade.css",
+        "docs/team/jobs/2026-10-31-fix-fill-and-portrait/dev-notes/frontend-gradebook.md"
+      ]
+    },
+    "T-03": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/styles/scan.css",
+        "docs/team/jobs/2026-10-31-fix-fill-and-portrait/dev-notes/frontend-scan.md"
+      ]
+    }
+  },
+  "shared": [],
+  "shared_by_role": {}
+}

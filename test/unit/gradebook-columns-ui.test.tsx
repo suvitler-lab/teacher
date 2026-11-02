@@ -183,10 +183,10 @@ describe("minimap and jump buttons", () => {
     const scrollTo = vi.fn();
     (HTMLElement.prototype as any).scrollTo = scrollTo;
     await openFolded();
-    expect(screen.queryByRole("columnheader", { name: /^ใบงาน 1/ })).toBeNull();   // folded by the teacher
+    expect(screen.queryByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ })).toBeNull();   // folded by the teacher
     await waitFor(() => expect(document.querySelector(".gb-jump")).toBeTruthy());
     fireEvent.click(screen.getByRole("button", { name: "ไปที่ใบงาน" }));
-    await screen.findByRole("columnheader", { name: /^ใบงาน 1/ });
+    await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     await waitFor(() => expect(scrollTo).toHaveBeenCalled());
     delete (HTMLElement.prototype as any).scrollTo;
   });
