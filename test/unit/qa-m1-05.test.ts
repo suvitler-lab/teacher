@@ -209,7 +209,7 @@ describe("same data → same number on Gradebook, Reports, report model and Exce
     const s4 = await sheet(p, "ภาพรวมห้อง");
     expect(s4[1].slice(3, 5)).toEqual(["6/10", "60%"]);
     const s1 = await sheet(p, "สรุปรายคน");
-    expect(s1.slice(1).map((r) => r[5])).toEqual(m.students.map((s) => s.percent + "%"));
+    expect(s1.slice(1).map((r) => r[5])).toEqual(m.students.map((s) => s.percent));
     expect(m.students.map((s) => s.percent)).toEqual([100, 100, 100, 100, 100, 100, 0, 0, 0, 0]);
   }, 20_000);
 

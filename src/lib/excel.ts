@@ -27,6 +27,9 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
     alignment: { vertical: "middle", horizontal: "center", wrapText: true },
     border: { bottom: { style: "thin", color: { argb: "FFBBBBBB" } } },
   };
+  // the per-student sheet holds real numbers (a % shown as "60%"), so a teacher can sum / average / sort them
+  const PCT_FMT = '0"%"';
+  const LATE_FILL = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFE3B3" } };
   function styleHeader(row: any) {
     row.eachCell((cell: any) => Object.assign(cell, headerStyle));
     row.height = 28;
@@ -42,10 +45,15 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
     { header: "ค้าง", width: 8 },
     { header: "% ส่ง", width: 9 },
     { header: "คะแนนรวม", width: 12 },
+    { header: "คะแนนเต็มรวม", width: 14 },
+    { header: "ส่งช้า", width: 8 },
   ];
   styleHeader(s1.getRow(1));
+  const lateByStudent = new Map<string, number>();
+  for (const sub of payload.submissions) if (sub.late && sub.status === "submitted") lateByStudent.set(sub.student_id, (lateByStudent.get(sub.student_id) ?? 0) + 1);
   for (const r of model.students) {
-    s1.addRow([r.student.number ?? "", r.student.code ?? "", opts.fullName(r.student), r.submitted, r.missing, r.percent + "%", `${r.score}/${r.fullScore}`]);
+    const row = s1.addRow([r.student.number ?? "", r.student.code ?? "", opts.fullName(r.student), r.submitted, r.missing, r.percent, r.score, r.fullScore, lateByStudent.get(r.student.id) ?? 0]);
+    row.getCell(6).numFmt = PCT_FMT;
   }
 
   // ---- Sheet 2: คะแนนรายงาน ----
@@ -61,15 +69,24 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
   const subMap = new Map(payload.submissions.map((s) => [`${s.assignment_id}:${s.student_id}`, s]));
   for (const st of payload.students) {
     const row: any[] = [st.number ?? "", st.code ?? "", opts.fullName(st)];
+    const lateAt: number[] = []; // 1-based columns (after the 3 name columns) holding work handed in late
     for (const a of payload.assignments) {
       const sub = subMap.get(`${a.id}:${st.id}`);
+      if (sub && sub.status === "submitted" && sub.late) lateAt.push(row.length + 1);
       if (!sub || sub.status === "void") row.push(a.due_date && model.today > a.due_date ? "ไม่ส่ง" : "");
       else if (sub.status === "excused") row.push("ยกเว้น");
       else if (sub.score == null) row.push("รอตรวจ");
       else row.push(sub.score);
     }
-    s2.addRow(row);
+    const added = s2.addRow(row);
+    for (const col of lateAt) {
+      const cell = added.getCell(col);
+      cell.fill = LATE_FILL;
+      cell.note = "ส่งช้า";
+    }
   }
+  s2.addRow([]);
+  s2.addRow(["", "", "สีส้ม = ส่งช้า (ตัวเลขคือคะแนนที่ได้)"]);
 
   // ---- Sheet 3: attendance ----
   // One column per session: a school day (daily mode) or a day+period (per-subject mode).
