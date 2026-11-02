@@ -1,8 +1,9 @@
 import { Dialog } from "./Dialog";
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { activeSubjects, activeWorkTypes, classesForTerm, classById, currentTermId, currentTerm, selectedTermId, viewingPastYear, terms, UNASSIGNED, upsertAssignment, captureAssignmentContext } from "../store";
 import { api } from "../lib/api";
+import { notify, ok } from "../lib/notify";
 import type { Assignment } from "@shared/types";
 import { DateField } from "./ui";
 
@@ -36,6 +37,7 @@ export function AssignmentModal({
   defaultSubjectId,
   onClose,
   onSaved,
+  onReload,
 }: {
   existing?: Assignment;
   copyFrom?: Assignment; // prefill from this, but save as a new assignment
@@ -43,6 +45,7 @@ export function AssignmentModal({
   defaultSubjectId?: string;
   onClose: () => void;
   onSaved: (a: Assignment) => void;
+  onReload?: () => void; // after "undo" from the toast: reload the page's data WITHOUT closing whatever form is open now
 }) {
   const wts = activeWorkTypes.value;
   const base = existing ?? copyFrom; // fields to prefill
@@ -64,6 +67,13 @@ export function AssignmentModal({
   const [note, setNote] = useState(base?.note ?? "");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const inFlight = useRef(false); // state updates are async: a fast double tap must not send twice
+  // the server says people hold the old full score: ask before saving (numbers come from the server)
+  const [ask, setAsk] = useState<{ count: number; from: number; to: number } | null>(null);
+  const saveBtn = useRef<HTMLButtonElement>(null);
+  const hadAsk = useRef(false);
+  // leaving the question (cancel / Esc / outside tap / error) puts focus back on the save button of the form
+  useEffect(() => { if (hadAsk.current && !ask) saveBtn.current?.focus(); hadAsk.current = !!ask; }, [ask]);
 
   function pickType(id: string) {
     setTypeId(id);
@@ -78,28 +88,52 @@ export function AssignmentModal({
     setClassIds((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]));
   }
 
-  async function save() {
+  async function save(raise?: { choice: "adjust" | "keep"; from: number }) {
+    if (inFlight.current) return;
     setErr("");
     if (!title.trim()) return setErr("ใส่ชื่องาน");
     if (!Number.isInteger(fullScore) || fullScore < 1 || fullScore > 100) return setErr("คะแนนเต็ม 1–100");
     if (dueDate && assignedDate && dueDate < assignedDate) return setErr("วันกำหนดส่งต้องไม่ก่อนวันสั่งงาน");
     if (classIds.length === 0) return setErr("เลือกอย่างน้อย 1 ห้อง");
+    inFlight.current = true;
     setBusy(true);
     const ctx = captureAssignmentContext();
     try {
-      const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
+      const res = await api.post<{ assignment: Assignment; raise?: { choice: "adjust" | "keep"; count: number; batchId: string | null } | null }>("/api/assignments", {
         // editing keeps the work's own term (even "none"); new/copy goes into the term the teacher is viewing
         id: existing?.id, term_id: targetTermId, subject_id: subjectId, type_id: typeId,
         title: title.trim(), unit: unit || null, full_score: fullScore,
         assigned_date: assignedDate || null, due_date: dueDate || null, note: note || null,
         publish_scores: publish, status: existing?.status ?? "open", class_ids: classIds,
+        ...(raise ? { raise_choice: raise.choice, raise_from: raise.from } : {}),
       });
-      if (!await upsertAssignment(res.assignment, ctx)) throw new Error("ข้อมูลในเครื่องเปลี่ยนระหว่างบันทึก — โหลดข้อมูลใหม่เพื่อตรวจผล");
+      const stored = await upsertAssignment(res.assignment, ctx);
+      const r = res.raise;
+      // the server already adjusted the cells: the undo toast must exist even if this device could not store the work
+      if (r && r.choice === "adjust" && r.count >= 1 && r.batchId) {
+        const batchId = r.batchId, saved = res.assignment;
+        notify("info", `บันทึกแล้ว · ปรับเป็นเต็มใหม่ ${r.count} คน`, { sticky: true, action: { label: "ย้อนกลับ", run: async () => {
+          try {
+            await api.post(`/api/assignments/${saved.id}/bulk-undo`, { batchId });
+            onReload?.(); // reload the page's data; never closes a form the teacher has open now
+            ok("ย้อนกลับแล้ว");
+          } catch (e: any) {
+            notify("error", e?.code === "modified_since" ? "มีคะแนนถูกแก้หลังปรับ — ย้อนกลับไม่ได้ แก้ในสมุดคะแนนแทน" : "ย้อนกลับไม่สำเร็จ");
+          }
+        } } });
+      }
+      if (!stored) throw new Error("ข้อมูลในเครื่องเปลี่ยนระหว่างบันทึก — โหลดข้อมูลใหม่เพื่อตรวจผล");
+      setAsk(null);
       onSaved(res.assignment);
     } catch (e: any) {
-      if (e.code === "score_over_full") setErr(`ลดคะแนนเต็มไม่ได้ มี ${e.data?.over ?? ""} รายการที่คะแนนเกิน`);
-      else setErr(e.message || "บันทึกไม่สำเร็จ");
+      if (e.code === "raise_choice_required" && e.data?.count >= 1) setAsk({ count: e.data.count, from: e.data.from, to: e.data.to });
+      else {
+        setAsk(null);
+        if (e.code === "score_over_full") setErr(`ลดคะแนนเต็มไม่ได้ มี ${e.data?.over ?? ""} รายการที่คะแนนเกิน`);
+        else setErr(e.message || "บันทึกไม่สำเร็จ");
+      }
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -189,11 +223,25 @@ export function AssignmentModal({
 
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
           <button onClick={onClose} disabled={busy}>ยกเลิก</button>
-          <button class="primary" onClick={save} disabled={busy}>
+          <button ref={saveBtn} class="primary" onClick={() => save()} disabled={busy}>
             {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึกงาน
           </button>
         </div>
       </Dialog>
+      {ask && (
+        <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (!busy && e.target === e.currentTarget) setAsk(null); }}>
+          <Dialog label={`ปรับคนที่ได้เต็ม ${ask.count} คน?`} style="max-width:420px" onClose={() => setAsk(null)} dismissible={!busy}>
+            <h2 style="font-size:1.2rem;margin-bottom:6px">ปรับคนที่ได้เต็ม {ask.count} คน?</h2>
+            <div style="overflow-wrap:anywhere;font-weight:500">{title.trim()}</div>
+            <div class="page-sub" style="margin-bottom:8px">{ask.count} คนได้ {ask.from}/{ask.from} (เต็มเดิม) · ปรับเป็น {ask.to}/{ask.to} หรือคงไว้เป็น {ask.from}/{ask.to}</div>
+            <div class="row wrap" style="justify-content:flex-end;gap:8px;margin-top:12px">
+              <button type="button" onClick={() => setAsk(null)} disabled={busy}>ยกเลิก</button>
+              <button type="button" onClick={() => save({ choice: "keep", from: ask.from })} disabled={busy}>คงไว้ {ask.from}/{ask.to}</button>
+              <button type="button" class="primary" onClick={() => save({ choice: "adjust", from: ask.from })} disabled={busy}>ปรับเป็น {ask.to}/{ask.to}</button>
+            </div>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 }

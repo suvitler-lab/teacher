@@ -13,7 +13,6 @@ import { takeBackup, restoreFrom } from "./backup-helpers";
 
 type Budget = { queries?: number; read?: number; written?: number };
 const MAX_QUERIES = 45; // the Free plan's cap is about 50 per request
-
 /** Run one request against a metered database; fail with the numbers if it is over budget. */
 async function cost(cookie: string, label: string, budget: Budget, path: string, body?: unknown) {
   const m = metered();
@@ -173,6 +172,52 @@ describe("writing at school size", () => {
     expect(again.stats.queries).toBeLessThanOrEqual(MAX_QUERIES);
     expect(again.stats.rowsRead, "same edit again: rows read").toBeLessThanOrEqual(500);
     expect(again.stats.rowsWritten, "same edit again: rows written").toBeLessThanOrEqual(200);
+  }, 120_000);
+
+  // integrity-c02 (EP-05 v2): raising a1's full score 10 → 20 with "ปรับ" when every one of its 200 hand-ins holds 10 —
+  // the worst case: 200 cells, 200 cell history lines and the work line in one batch; then undoing it (EP-04).
+  // a1 already has a history (3 lines per cell — a scan and two gradebook edits, 600 lines), so a query that reads the
+  // work's whole history instead of this batch's own lines shows up in the numbers.
+  it("raising the full score with ปรับ over 200 full holders, and its undo", async () => {
+    const cookie = await login();
+    await seedVolume();
+    const cellsOfA1 = VOLUME.classes * VOLUME.perClass;
+    await env.DB.batch([
+      env.DB.prepare("UPDATE submissions SET score = 10 WHERE assignment_id = 'a1'"),
+      env.DB.prepare(`INSERT INTO audit_logs (op_id, at, actor_id, entity, entity_id, assignment_id, student_id, action, method)
+        SELECT 'hist' || k.n || '_' || s.student_id, 1780000000000 + k.n, 'teacher', 'submission', 'a1:' || s.student_id, 'a1',
+          s.student_id, CASE k.n WHEN 1 THEN 'scan' ELSE 'update' END, CASE k.n WHEN 1 THEN 'camera' ELSE 'grid' END
+        FROM submissions s, (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3) k WHERE s.assignment_id = 'a1'`),
+    ]);
+    const body = {
+      id: "a1", term_id: "t1", subject_id: "s1", type_id: "wt_worksheet", title: "งานที่ 1", full_score: 20,
+      assigned_date: "2026-06-01", due_date: "2026-12-31", class_ids: ["c1", "c2", "c3", "c4", "c5"],
+      raise_choice: "adjust", raise_from: 10,
+    };
+    const m = metered();
+    const res = await callIn(m.env, "/api/assignments", json(body), cookie);
+    expect(res.status).toBe(200);
+    expect(m.stats.measured).toBe(true);
+    const took = `raise 10 → 20 + ปรับ, ${cellsOfA1} cells: ${m.stats.queries} statements, ${m.stats.rowsRead} rows read, ${m.stats.rowsWritten} written`;
+    console.log(`[C-02] ${took}`);
+    const raise = ((await res.json()) as any).raise;
+    expect(raise).toMatchObject({ choice: "adjust", from: 10, to: 20, count: cellsOfA1 });
+    expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM submissions WHERE assignment_id = 'a1' AND score = 20").first<any>()).n).toBe(cellsOfA1);
+    expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM audit_logs WHERE batch_id = ?").bind(raise.batchId).first<any>()).n).toBe(cellsOfA1 + 1);
+    // measured 2026-11-02: 24 statements, 2,062 rows read, 1,832 written (the 200 cells and their 200 history lines,
+    // indexes included). Before its two history queries were held to this batch's own op_ids: 3,260 read — the work's
+    // whole history walked twice. Budgets ~2.4× / ~2.2× the measurement, as above.
+    expect(m.stats.queries, took).toBeLessThanOrEqual(MAX_QUERIES);
+    expect(m.stats.rowsRead, took).toBeLessThanOrEqual(5_000);
+    expect(m.stats.rowsWritten, took).toBeLessThanOrEqual(4_000);
+
+    // EP-04 as it is (not changed by integrity-c02): measured 14 statements, 6,420 rows read, 1,601 written with this
+    // 600-line history (5,220 read with 200 lines — its reads grow with the work's history, not only with the batch)
+    const undo = (await (await cost(cookie, "undo the raise's ปรับ", { read: 15_000, written: 4_000 },
+      "/api/assignments/a1/bulk-undo", { batchId: raise.batchId })).json()) as any;
+    expect(undo.changed).toBe(cellsOfA1);
+    expect((await env.DB.prepare("SELECT COUNT(*) AS n FROM submissions WHERE assignment_id = 'a1' AND score = 10").first<any>()).n).toBe(cellsOfA1);
+    expect((await env.DB.prepare("SELECT full_score FROM assignments WHERE id = 'a1'").first<any>()).full_score).toBe(20);
   }, 120_000);
 
   it("importing a class list", async () => {

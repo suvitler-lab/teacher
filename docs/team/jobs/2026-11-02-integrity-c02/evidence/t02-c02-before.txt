@@ -1,0 +1,502 @@
+
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ❯ |workers| test/api/c02-raise-full-score.test.ts (39 tests | 26 failed) 3662ms
+     × TC-01 AC-01: the server asks first — a raise with no choice is refused 409 with count 3 (ก ข ซ) and nothing lands 112ms
+     × TC-02 AC-01: ปรับ → full 20 · ก ข ซ score 20 (status/late/submitted_at kept) · ค ง จ ฉ ช untouched · adjusted 3 92ms
+     × TC-03 AC-01 / BR-02 example: ก {submitted, 10, late 0, 09:00} → {submitted, 20, late 0, 09:00}; ข keeps late 1 85ms
+     × TC-04 BR-01: a closed assignment is asked too (closing only blocks hand-ins) 98ms
+     × TC-05 BR-01: half-step 9.5 under full 10 is not a full holder (exact match only) 92ms
+     × TC-06 AC-02: คงไว้ → full 20, every cell unchanged (ก ข ซ 10/20), no submission audit, work audit says keep + 3 95ms
+     × TC-09 AC-03: a statement fails while updating an adjusted cell → 5xx, full stays 10, ก ข ซ stay 10, no new audit 92ms
+     × TC-09 AC-03: a statement fails while writing a cell's audit row → 5xx, full stays 10, ก ข ซ stay 10, no new audit 94ms
+     × TC-10 AC-04: 4 new audit rows (work 1 + cells 3) share one batch_id; cell rows a1:<student> 10 → 20 85ms
+     × TC-11 AC-05: dialog said 3 → ฌ scanned full 10 on another device → ปรับ adjusts 4 (ฌ = 20) 83ms
+     × TC-12 AC-05: ฌ lands between the server's check and its write (gate) → still adjusted, result 4 106ms
+     × TC-13 AC-06: another device set full 15 → ปรับ (dialog 10 → 20) is refused 409 Thai, full stays 15, nothing lands 90ms
+     × TC-14 AC-06: same when the change lands between the check and the write (gate) 89ms
+     × TC-15 AC-06: คงไว้ with a stale dialog is refused the same way 88ms
+     × TC-23 AC-12: ซ in c2 with status moved is counted → 3 (a device that knows only ก would say 1) 102ms
+     × TC-23 AC-12: ซ in c2 with status finished is counted → 3 (a device that knows only ก would say 1) 91ms
+     × TC-23 AC-12: ซ in c2 with status inactive is counted → 3 (a device that knows only ก would say 1) 80ms
+     × TC-25 AC-13: after ปรับ — EP-02 shows full 20 and ก 20; a1 c1 47/60 = 78 %, ก cumulative 28/30 = 93 % 88ms
+     × TC-27 AC-14: undo → ก ข ซ back to 10, full stays 20, one audit row per cell; then lowering to 10 saves (BR-09 example) 89ms
+     × TC-28 AC-14: ก edited to 18 in the gradebook after ปรับ → undo 409 modified_since, nothing changes 88ms
+     × TC-29 AC-14: undo twice → the second changes nothing (no extra audit) 85ms
+     × TC-30 AC-15: old app raises a1 10 → 20 (3 holders) → 409 'มี 3 คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้วบันทึกอีกครั้ง', nothing lands 94ms
+     × TC-33 AC-10 (API part): the same ปรับ sent twice → second is 409 stale (full is now 20), no second set of audit rows 92ms
+     × TC-34 AC-10 / BR-05: two ปรับ requests at the same moment → exactly one lands (3 cell audit rows in total) 93ms
+     × TC-35 AC-15 / EP-05: raise_choice without raise_from (or a bad choice) → 422 validation, nothing lands 87ms
+     × TC-36 AC-08 / AC-15 / BR-05: no full holder when read, ฌ scans full 10 before the write (old-app request) → 409 raise_choice_required, nothing lands 101ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-01 / BR-01 / BR-02: raise 10 → 20 and choose ปรับ > TC-01 AC-01: the server asks first — a raise with no choice is refused 409 with count 3 (ก ข ซ) and nothing lands
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:142:24
+    140|     const before = await cells(); const mark = await maxAuditId();
+    141|     const res = await save({ full_score: 20 });
+    142|     expect(res.status).toBe(409);
+       |                        ^
+    143|     const body = (await res.json()) as any;
+    144|     expect(body).toMatchObject({ error: C.confirmError, [C.count]: 3, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-01 / BR-01 / BR-02: raise 10 → 20 and choose ปรับ > TC-02 AC-01: ปรับ → full 20 · ก ข ซ score 20 (status/late/submitted_at kept) · ค ง จ ฉ ช untouched · adjusted 3
+AssertionError: expected { sid: 'st1', score: 10 } to deeply equal { sid: 'st1', score: 20 }
+
+- Expected
++ Received
+
+  {
+-   "score": 20,
++   "score": 10,
+    "sid": "st1",
+  }
+
+ ❯ test/api/c02-raise-full-score.test.ts:156:39
+    154|     for (const sid of HOLDERS) {
+    155|       const c = await cellOf(sid);
+    156|       expect({ sid, score: c.score }).toEqual({ sid, score: 20 }); // …
+       |                                       ^
+    157|       expect({ status: c.status, late: c.late, submitted_at: c.submitt…
+    158|         .toEqual({ status: before[sid].status, late: before[sid].late,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-01 / BR-01 / BR-02: raise 10 → 20 and choose ปรับ > TC-03 AC-01 / BR-02 example: ก {submitted, 10, late 0, 09:00} → {submitted, 20, late 0, 09:00}; ข keeps late 1
+AssertionError: expected { Object (status, score, ...) } to match object { Object (status, score, ...) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "late": 0,
+-   "score": 20,
++   "score": 10,
+    "status": "submitted",
+    "submitted_at": 1793176041557,
+  }
+
+ ❯ test/api/c02-raise-full-score.test.ts:171:30
+    169|   it("TC-03 AC-01 / BR-02 example: ก {submitted, 10, late 0, 09:00} → …
+    170|     await raise(20, C.ADJUST);
+    171|     expect(await cellOf(KO)).toMatchObject({ status: "submitted", scor…
+       |                              ^
+    172|     expect(await cellOf(KHO)).toMatchObject({ status: "submitted", sco…
+    173|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-01 / BR-01 / BR-02: raise 10 → 20 and choose ปรับ > TC-04 BR-01: a closed assignment is asked too (closing only blocks hand-ins)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:177:24
+    175|   it("TC-04 BR-01: a closed assignment is asked too (closing only bloc…
+    176|     const res = await save({ full_score: 20, status: "closed" });
+    177|     expect(res.status).toBe(409);
+       |                        ^
+    178|     expect(((await res.json()) as any)[C.count]).toBe(3);
+    179|     const ok = await save({ full_score: 20, status: "closed" }, choose…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-01 / BR-01 / BR-02: raise 10 → 20 and choose ปรับ > TC-05 BR-01: half-step 9.5 under full 10 is not a full holder (exact match only)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:187:24
+    185|     await env.DB.prepare("UPDATE submissions SET score = 9.5 WHERE ass…
+    186|     const res = await save({ full_score: 20 });
+    187|     expect(res.status).toBe(409);
+       |                        ^
+    188|     expect(((await res.json()) as any)[C.count]).toBe(3);
+    189|     await raise(20, C.ADJUST);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-02 / BR-02: choose คงไว้ > TC-06 AC-02: คงไว้ → full 20, every cell unchanged (ก ข ซ 10/20), no submission audit, work audit says keep + 3
+AssertionError: expected { choice: undefined, count: undefined } to deeply equal { choice: 'keep', count: 3 }
+
+- Expected
++ Received
+
+  {
+-   "choice": "keep",
+-   "count": 3,
++   "choice": undefined,
++   "count": undefined,
+  }
+
+ ❯ test/api/c02-raise-full-score.test.ts:208:72
+    206|     const after = JSON.parse(work[0].after_json);
+    207|     expect(after).toMatchObject({ full_score: 20 });
+    208|     expect({ choice: after.raise?.choice, count: after.raise?.count })…
+       |                                                                        ^
+    209|     expect(work[0].batch_id).toBeTruthy(); // EP-05: keep also gets a …
+    210|     expect(raiseOf(await res.json())).toMatchObject({ choice: C.KEEP, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-03 / BR-04: a failed write leaves nothing half-done > TC-09 AC-03: a statement fails while updating an adjusted cell → 5xx, full stays 10, ก ข ซ stay 10, no new audit
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-03 / BR-04: a failed write leaves nothing half-done > TC-09 AC-03: a statement fails while writing a cell's audit row → 5xx, full stays 10, ก ข ซ stay 10, no new audit
+AssertionError: expected 200 to be greater than or equal to 500
+ ❯ test/api/c02-raise-full-score.test.ts:256:26
+    254|       const res = await raise(20, C.ADJUST);
+    255|       await env.DB.prepare("DROP TRIGGER c02_fail").run();
+    256|       expect(res.status).toBeGreaterThanOrEqual(500); // on 2285c17: 2…
+       |                          ^
+    257|       await nothingChanged(10, before, mark);
+    258|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-04 / BR-04: one batch_id for the work line and the 3 cell lines > TC-10 AC-04: 4 new audit rows (work 1 + cells 3) share one batch_id; cell rows a1:<student> 10 → 20
+AssertionError: expected [] to deeply equal [ 'st1', 'st2', 'st9' ]
+
+- Expected
++ Received
+
+- [
+-   "st1",
+-   "st2",
+-   "st9",
+- ]
++ []
+
+ ❯ test/api/c02-raise-full-score.test.ts:270:54
+    268|     const audits = await auditsAfter(mark);
+    269|     const cellRows = audits.filter((a) => a.entity === "submission");
+    270|     expect(cellRows.map((a) => a.student_id).sort()).toEqual([...HOLDE…
+       |                                                      ^
+    271|     for (const a of cellRows) {
+    272|       expect(a.entity_id).toBe(`a1:${a.student_id}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-05 / BR-05: who is adjusted is decided when writing, not when asking > TC-11 AC-05: dialog said 3 → ฌ scanned full 10 on another device → ปรับ adjusts 4 (ฌ = 20)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:295:24
+    293|   it("TC-11 AC-05: dialog said 3 → ฌ scanned full 10 on another device…
+    294|     const ask = await save({ full_score: 20 });
+    295|     expect(ask.status).toBe(409);
+       |                        ^
+    296|     expect(((await ask.json()) as any)[C.count]).toBe(3);
+    297|     expect((await scan(CHOE, 10, 10)).result).toBe("ok");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-05 / BR-05: who is adjusted is decided when writing, not when asking > TC-12 AC-05: ฌ lands between the server's check and its write (gate) → still adjusted, result 4
+AssertionError: expected undefined to be 4 // Object.is equality
+
+- Expected:
+4
+
++ Received:
+undefined
+
+ ❯ test/api/c02-raise-full-score.test.ts:312:46
+    310|     const res = await pending;
+    311|     expect(res.status).toBe(200);
+    312|     expect(raiseOf(await res.json())?.count).toBe(4);
+       |                                              ^
+    313|     expect(await scoreOf(CHOE)).toBe(20);
+    314|     expect(await fullOf()).toBe(20);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-06 / BR-05: the full score changed while the dialog was open > TC-13 AC-06: another device set full 15 → ปรับ (dialog 10 → 20) is refused 409 Thai, full stays 15, nothing lands
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:323:24
+    321|     const before = await cells(); const mark = await maxAuditId();
+    322|     const res = await raise(20, C.ADJUST, 10);
+    323|     expect(res.status).toBe(409); // on 2285c17: 200, full 20, the sta…
+       |                        ^
+    324|     const body = (await res.json()) as any;
+    325|     expect(body).toMatchObject({ error: C.staleError, currentFullScore…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-06 / BR-05: the full score changed while the dialog was open > TC-14 AC-06: same when the change lands between the check and the write (gate)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:341:24
+    339|     g.release();
+    340|     const res = await pending;
+    341|     expect(res.status).toBe(409);
+       |                        ^
+    342|     expect(((await res.json()) as any).error).toBe(C.staleError);
+    343|     await nothingChanged(15, before, mark);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-06 / BR-05: the full score changed while the dialog was open > TC-15 AC-06: คงไว้ with a stale dialog is refused the same way
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:350:24
+    348|     const before = await cells(); const mark = await maxAuditId();
+    349|     const res = await raise(20, C.KEEP, 10);
+    350|     expect(res.status).toBe(409);
+       |                        ^
+    351|     await nothingChanged(15, before, mark);
+    352|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-12 / BR-01 / BR-05: the count comes from the server, across classes and student statuses > TC-23 AC-12: ซ in c2 with status moved is counted → 3 (a device that knows only ก would say 1)
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-12 / BR-01 / BR-05: the count comes from the server, across classes and student statuses > TC-23 AC-12: ซ in c2 with status finished is counted → 3 (a device that knows only ก would say 1)
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-12 / BR-01 / BR-05: the count comes from the server, across classes and student statuses > TC-23 AC-12: ซ in c2 with status inactive is counted → 3 (a device that knows only ก would say 1)
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:457:26
+    455|       await env.DB.prepare("UPDATE students SET status = ? WHERE id = …
+    456|       const res = await save({ full_score: 20 });
+    457|       expect(res.status).toBe(409);
+       |                          ^
+    458|       expect(((await res.json()) as any)[C.count]).toBe(3);
+    459|       const ok = await raise(20, C.ADJUST);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-13 / BR-03 (💰): what the gradebook / scan screen read back > TC-25 AC-13: after ปรับ — EP-02 shows full 20 and ก 20; a1 c1 47/60 = 78 %, ก cumulative 28/30 = 93 %
+AssertionError: expected { assignment_id: 'a1', …(9) } to match object { status: 'submitted', score: 20 }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "score": 20,
++   "score": 10,
+    "status": "submitted",
+  }
+
+ ❯ test/api/c02-raise-full-score.test.ts:507:65
+    505|     const s = await snapshot();
+    506|     expect(s.assignment.full_score).toBe(20);
+    507|     expect(s.submissions.find((x: any) => x.student_id === KO)).toMatc…
+       |                                                                 ^
+    508|     expect(await classPercent()).toEqual({ sum: 47, whole: 60, pct: 78…
+    509|     expect(await koCumulative()).toEqual({ got: 28, whole: 30, pct: 93…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-14 / BR-09: ย้อนกลับ after ปรับ (EP-04 bulk-undo with the returned batch id) > TC-27 AC-14: undo → ก ข ซ back to 10, full stays 20, one audit row per cell; then lowering to 10 saves (BR-09 example)
+AssertionError: expected 'undefined' to be 'string' // Object.is equality
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ adjusted test/api/c02-raise-full-score.test.ts:525:23
+    523|     expect(res.status).toBe(200);
+    524|     const id = raiseOf(await res.json())?.batchId;
+    525|     expect(typeof id).toBe("string"); // on 2285c17: undefined — there…
+       |                       ^
+    526|     return id as string;
+    527|   }
+ ❯ test/api/c02-raise-full-score.test.ts:530:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-14 / BR-09: ย้อนกลับ after ปรับ (EP-04 bulk-undo with the returned batch id) > TC-28 AC-14: ก edited to 18 in the gradebook after ปรับ → undo 409 modified_since, nothing changes
+AssertionError: expected 'undefined' to be 'string' // Object.is equality
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ adjusted test/api/c02-raise-full-score.test.ts:525:23
+    523|     expect(res.status).toBe(200);
+    524|     const id = raiseOf(await res.json())?.batchId;
+    525|     expect(typeof id).toBe("string"); // on 2285c17: undefined — there…
+       |                       ^
+    526|     return id as string;
+    527|   }
+ ❯ test/api/c02-raise-full-score.test.ts:546:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-14 / BR-09: ย้อนกลับ after ปรับ (EP-04 bulk-undo with the returned batch id) > TC-29 AC-14: undo twice → the second changes nothing (no extra audit)
+AssertionError: expected 'undefined' to be 'string' // Object.is equality
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ adjusted test/api/c02-raise-full-score.test.ts:525:23
+    523|     expect(res.status).toBe(200);
+    524|     const id = raiseOf(await res.json())?.batchId;
+    525|     expect(typeof id).toBe("string"); // on 2285c17: undefined — there…
+       |                       ^
+    526|     return id as string;
+    527|   }
+ ❯ test/api/c02-raise-full-score.test.ts:557:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 AC-15 / BR-10: an app that does not know the question, and no login > TC-30 AC-15: old app raises a1 10 → 20 (3 holders) → 409 'มี 3 คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้วบันทึกอีกครั้ง', nothing lands
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:571:24
+    569|     const before = await cells(); const mark = await maxAuditId();
+    570|     const res = await save({ full_score: 20 }); // exactly what an app…
+    571|     expect(res.status).toBe(409); // on 2285c17: 200 and 10/20 silentl…
+       |                        ^
+    572|     const body = (await res.json()) as any;
+    573|     expect(body.message).toBe("มี 3 คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้ว…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 edge: pressing ปรับ twice / two devices at once > TC-33 AC-10 (API part): the same ปรับ sent twice → second is 409 stale (full is now 20), no second set of audit rows
+AssertionError: expected undefined to be 3 // Object.is equality
+
+- Expected:
+3
+
++ Received:
+undefined
+
+ ❯ test/api/c02-raise-full-score.test.ts:598:48
+    596|     const first = await raise(20, C.ADJUST);
+    597|     expect(first.status).toBe(200);
+    598|     expect(raiseOf(await first.json())?.count).toBe(3);
+       |                                                ^
+    599|     const before = await cells(); const mark = await maxAuditId();
+    600|     const second = await raise(20, C.ADJUST);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 edge: pressing ปรับ twice / two devices at once > TC-34 AC-10 / BR-05: two ปรับ requests at the same moment → exactly one lands (3 cell audit rows in total)
+AssertionError: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+
+- Expected
++ Received
+
+  [
+    200,
+-   409,
++   200,
+  ]
+
+ ❯ test/api/c02-raise-full-score.test.ts:608:41
+    606|     const mark = await maxAuditId();
+    607|     const [a, b] = await Promise.all([raise(20, C.ADJUST), raise(20, C…
+    608|     expect([a.status, b.status].sort()).toEqual([200, 409]);
+       |                                         ^
+    609|     for (const sid of HOLDERS) expect(await scoreOf(sid)).toBe(20);
+    610|     expect((await auditsAfter(mark)).filter((x) => x.entity === "submi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 EP-05 schema + the no-question path re-checked inside the write > TC-35 AC-15 / EP-05: raise_choice without raise_from (or a bad choice) → 422 validation, nothing lands
+AssertionError: expected { …(2) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+    "extra": {
+      "raise_choice": "adjust",
+    },
+-   "status": 422,
++   "status": 200,
+  }
+
+ ❯ test/api/c02-raise-full-score.test.ts:619:45
+    617|     for (const extra of [{ [C.choice]: C.ADJUST }, { [C.expected]: 10 …
+    618|       const res = await save({ full_score: 20 }, extra);
+    619|       expect({ extra, status: res.status }).toEqual({ extra, status: 4…
+       |                                             ^
+    620|     }
+    621|     await nothingChanged(10, before, mark);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/26]⎯
+
+ FAIL  |workers| test/api/c02-raise-full-score.test.ts > C-02 EP-05 schema + the no-question path re-checked inside the write > TC-36 AC-08 / AC-15 / BR-05: no full holder when read, ฌ scans full 10 before the write (old-app request) → 409 raise_choice_required, nothing lands
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ test/api/c02-raise-full-score.test.ts:634:24
+    632|     g.release();
+    633|     const res = await pending;
+    634|     expect(res.status).toBe(409); // on 2285c17: 200 → ฌ silently 10/20
+       |                        ^
+    635|     expect(await res.json()).toMatchObject({ error: C.confirmError, [C…
+    636|     expect(cellsMid[CHOE]).toMatchObject({ status: "submitted", score:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/26]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  26 failed | 13 passed (39)
+   Start at  15:27:19
+   Duration  6.00s (transform 781ms, setup 1.43s, import 33ms, tests 3.66s, environment 0ms)
+

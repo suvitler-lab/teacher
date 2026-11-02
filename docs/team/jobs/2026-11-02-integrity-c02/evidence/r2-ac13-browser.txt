@@ -1,0 +1,8 @@
+AC-13 round 2 (PM, Browser pane, fixture server :5500, after npm run build of the Scan.tsx change)
+- login fixture, page #/scan (work picker, no round started)
+- picker showed "วิทยาศาสตร์ · เต็ม 10" for asg_ws4
+- POST /api/assignments asg_ws4 full_score 77 (as another device would) -> 200
+- no reload, no click; after 87 s the picker shows "วิทยาศาสตร์ · เต็ม 77"   (before the fix: still "เต็ม 15"-style stale value after 86 s)
+- fixture value restored to 10 (POST 200)
+Unit: test/unit/c02-scan-setup-refresh.test.ts 4/4 (60 s tick, hidden/offline skip, resume gap 10 s, no overlap, failure swallowed, cleanup)
+Not checked: real iPad; sleeping/locked screen resume.

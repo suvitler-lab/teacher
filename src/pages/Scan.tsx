@@ -24,6 +24,7 @@ import {
   dropAssignment,
   captureAssignmentContext,
   assignmentContextCurrent,
+  loadBootstrap,
 } from "../store";
 import type { ScanMode, Student, SubmissionOpResult } from "@shared/types";
 import { buildIndex, resolveScan } from "@shared/scan";
@@ -492,6 +493,31 @@ export function ScanPage() {
   return <ScanView />;
 }
 
+/**
+ * The work picker re-reads the work list (full score, open/closed, rooms) while it is on screen — every POLL_MS when seen,
+ * and at once when the page or the network comes back — so a score changed on another device is not offered stale.
+ * Returns the stop function.
+ */
+export function startSetupRefresh(reload: () => Promise<unknown>): () => void {
+  let busy = false;
+  let last = 0;
+  const run = (minGap: number) => {
+    if (document.visibilityState === "hidden" || !navigator.onLine || busy || Date.now() - last < minGap) return;
+    busy = true;
+    last = Date.now();
+    reload().catch(() => { /* offline or signed out: keep what is shown */ }).finally(() => { busy = false; });
+  };
+  const timer = setInterval(() => run(0), POLL_MS);
+  const resume = () => run(RESUME_GAP_MS);
+  document.addEventListener("visibilitychange", resume);
+  window.addEventListener("online", resume);
+  return () => {
+    clearInterval(timer);
+    document.removeEventListener("visibilitychange", resume);
+    window.removeEventListener("online", resume);
+  };
+}
+
 function SessionSetup() {
   const params = routeParams();
   // an earlier academic year's classes are closed: scanning is for this year's work only
@@ -508,6 +534,7 @@ function SessionSetup() {
   const [mode, setMode] = useState<ScanMode>("full");
 
   useEffect(() => { loadDashboard(selectedTermId.value); }, [selectedTermId.value]);
+  useEffect(() => startSetupRefresh(async () => { await loadBootstrap(); await loadDashboard(selectedTermId.value); }), []);
   useEffect(() => {
     if (asg && !asg.class_ids.includes(classId)) setClassId(asg.class_ids[0] ?? "");
   }, [assignmentId]);

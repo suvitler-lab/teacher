@@ -1,0 +1,60 @@
+{
+  "job": "2026-11-02-integrity-c02",
+  "tasks": {
+    "T-01": {
+      "role": "team-qa-tester",
+      "paths": [
+        "test/api/c02-*.test.ts",
+        "test/unit/c02-*.test.ts",
+        "test/unit/c02-*.test.tsx",
+        "docs/team/jobs/2026-11-02-integrity-c02/test-plan.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/qa-report.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/pages.json",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/qa/**",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/shots/before/**"
+      ]
+    },
+    "T-02": {
+      "role": "team-backend-dev",
+      "paths": [
+        "worker/routes/assignments.ts",
+        "test/api/volume.test.ts",
+        "test/api/final-audit.test.ts",
+        "test/api/race-r1.test.ts",
+        "test/api/manage.test.ts",
+        "test/api/guards-in-transaction.test.ts",
+        "test/api/late-flag.test.ts",
+        "test/api/audit-atomic.test.ts",
+        "test/api/school-year.test.ts",
+        "test/api/qa-m1-03.test.ts",
+        "docs/team/jobs/2026-11-02-integrity-c02/dev-notes/backend.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/t02-*"
+      ]
+    },
+    "T-03": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/AssignmentModal.tsx",
+        "test/unit/assignment-modal-raise.test.tsx",
+        "docs/team/jobs/2026-11-02-integrity-c02/dev-notes/frontend.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/t03-*",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/shots/after/**",
+        "src/pages/Gradebook.tsx"
+      ]
+    },
+    "T-04": {
+      "role": "team-qa-tester",
+      "paths": [
+        "test/api/c02-*.test.ts",
+        "test/unit/c02-*.test.ts",
+        "test/unit/c02-*.test.tsx",
+        "docs/team/jobs/2026-11-02-integrity-c02/test-plan.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/qa-report.md",
+        "docs/team/jobs/2026-11-02-integrity-c02/pages.json",
+        "docs/team/jobs/2026-11-02-integrity-c02/evidence/qa/**"
+      ]
+    }
+  },
+  "shared": [],
+  "shared_by_role": {}
+}

@@ -1,0 +1,13 @@
+TC-46 (AC-07) offline replay — Browser pane tab (iPad 820x1180) + Node 'computer' (tc46-server.cjs flags), fixture 4104 current build
+setup: asg_gb_14 full 10, no.4 = 10/10; scan round full mode full 10
+down.flag -> scan no.5 -> badge 'ออฟไลน์ · ค้าง 1', recent 'เลขที่ 5 10/10'
+server state log:
+{"at":"2026-11-02T09:01:58.627Z","up":"http://127.0.0.1:4104"}
+{"at":"2026-11-02T09:02:38.006Z","down":true}
+{"at":"2026-11-02T09:02:51.924Z","login":200,"raise":200,"body":{"choice":"adjust","from":10,"to":20,"count":1,"batchId":"01M6DQYHDF883048Z5M5J8RTW9"}}
+{"at":"2026-11-02T09:02:54.857Z","down":false}
+up -> online: badge 'ออนไลน์'; scan card 'คะแนนเต็มถูกแก้ไข คะแนนเต็มปัจจุบันคือ 20 — เริ่มรอบใหม่เพื่อความถูกต้อง'
+failed panel: 'ส่งไม่สำเร็จ 1 รายการ ด.ช.วรเมธ สุขใจ คะแนนเต็มถูกแก้ไข · คะแนน 10 ลองใหม่ ทิ้ง'
+server DB after replay:
+{"at":"2026-11-02T09:03:16.611Z","full":20,"rows":[{"number":4,"status":"submitted","score":20}]}
+=> no.5 (ฌ) has no row; no.4 adjusted 20; full 20 — PASS. op 20/20 ok = API TC-16 (guard) PASS

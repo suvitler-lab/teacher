@@ -1,0 +1,319 @@
+[
+  {
+    "check": "Q-01",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-12",
+      "AC-13",
+      "AC-14",
+      "AC-15"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": true,
+    "command": "npm run typecheck; npx vitest run; npm run build",
+    "artifact": "evidence/r2-full-suite.txt",
+    "expected": "",
+    "actual": "typecheck PASS · 93 ไฟล์ / 1131 ผ่าน 0 ล้ม · build PASS (รอบแก้ 2)",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:24.635Z"
+  },
+  {
+    "check": "Q-02",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-05",
+      "AC-13"
+    ],
+    "br": [
+      "BR-01",
+      "BR-02",
+      "BR-03",
+      "BR-05"
+    ],
+    "by": "PM",
+    "mandatory": true,
+    "command": "npx vitest run test/api/c02-raise-full-score.test.ts (TC-01..06,11,12,24..26) + browser fixture ป.6/2 ศิลปะ",
+    "artifact": "evidence/r2-c02-files.txt",
+    "expected": "",
+    "actual": "API ผ่าน · เบราว์เซอร์: ก่อน ก 18/20 avg 9 · ปรับ ก 28/30 avg 15.7 (=47/3) ค 7/20 · ย้อนกลับ/คงไว้ ก 18/30 avg 9/20 · กล่องบอก 2 คน (ก ข) ตรง BR-01 [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:25.248Z"
+  },
+  {
+    "check": "Q-03",
+    "kind": "atomicity",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-04"
+    ],
+    "br": [
+      "BR-04"
+    ],
+    "by": "PM",
+    "mandatory": true,
+    "command": "npx vitest run test/api/c02-raise-full-score.test.ts (TC-07..10)",
+    "artifact": "evidence/r2-c02-files.txt",
+    "expected": "",
+    "actual": "PASS ทั้งหมด (ชุด c02 39/39) [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:25.853Z"
+  },
+  {
+    "check": "Q-04",
+    "kind": "concurrency",
+    "status": "PASS",
+    "ac": [
+      "AC-05",
+      "AC-06",
+      "AC-10"
+    ],
+    "br": [
+      "BR-05"
+    ],
+    "by": "PM",
+    "mandatory": false,
+    "command": "c02 TC-11..15, TC-33, TC-34, TC-36 + browser ดับเบิลคลิก ปรับ",
+    "artifact": "evidence/r2-c02-files.txt",
+    "expected": "",
+    "actual": "API PASS · เบราว์เซอร์ดับเบิลคลิก 'ปรับเป็น 20/20' = POST adjust 1 ครั้ง (200 count 2) [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:26.483Z"
+  },
+  {
+    "check": "Q-05",
+    "kind": "reconciliation",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-04",
+      "AC-14"
+    ],
+    "br": [
+      "BR-04",
+      "BR-09"
+    ],
+    "by": "PM",
+    "mandatory": false,
+    "command": "c02 TC-06..10, TC-27..29 + browser ปรับ→ย้อนกลับ",
+    "artifact": "evidence/r2-c02-files.txt",
+    "expected": "",
+    "actual": "API PASS · เบราว์เซอร์: bulk-undo 200 changed 2 → ก ข 10 เต็ม 20 · ลดเป็น 10 หลังย้อนได้ 200 ไม่มีกล่อง [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:27.100Z"
+  },
+  {
+    "check": "Q-06",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [
+      "BR-08"
+    ],
+    "by": "PM",
+    "mandatory": true,
+    "command": "node scripts/shots.cjs --label after --job <abs> --pages <abs>/pages.json --port 4104 --devices <k> (x4); node shots-sheet.mjs <job> --diff",
+    "artifact": "evidence/shots/sheet.html",
+    "expected": "",
+    "actual": "16/16 ภาพเปิดดูจริง · pageScrollsX false ทุกภาพ · visual-check 16/16 ไม่มีไม่ผ่าน · sheet RESULT PASS [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:27.690Z"
+  },
+  {
+    "check": "Q-07",
+    "kind": "offline-replay",
+    "status": "PASS",
+    "ac": [
+      "AC-07"
+    ],
+    "br": [
+      "BR-06"
+    ],
+    "by": "PM",
+    "mandatory": true,
+    "command": "TC-46: Browser pane iPad 820x1180 + scratchpad tc46-server.cjs (fixture 4104, flag down/raise/up)",
+    "artifact": "evidence/qa/tc46-offline.txt",
+    "expected": "",
+    "actual": "ค้าง 1 ขณะออฟไลน์ · ออนไลน์: การ์ด 'คะแนนเต็มถูกแก้ไข คะแนนเต็มปัจจุบันคือ 20' · ส่งไม่สำเร็จ 1 'คะแนนเต็มถูกแก้ไข · คะแนน 10' · DB: เลขที่ 5 ไม่มีแถว เลขที่ 4 = 20 full 20 [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:28.316Z"
+  },
+  {
+    "check": "Q-08",
+    "kind": "multi-device",
+    "status": "PASS",
+    "ac": [
+      "AC-07",
+      "AC-15"
+    ],
+    "br": [
+      "BR-06",
+      "BR-10"
+    ],
+    "by": "PM",
+    "mandatory": false,
+    "command": "TC-46 (สองเครื่อง) + TC-45 แอปเก่า: git archive 2285c17 → scratchpad + junction node_modules → vite build → fixture --assets <old> 4104",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": "bundle เก่า (index-tkpW9Qqi.js ไม่มี raise_choice) · ฟอร์มแสดง 'มี 1 คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้วบันทึกอีกครั้ง' server full 10 คะแนน 10 · หลังล้างคะแนน บันทึกได้ full 20 [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:28.956Z"
+  },
+  {
+    "check": "Q-09",
+    "kind": "reconciliation",
+    "status": "PASS",
+    "ac": [
+      "AC-14"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "browser 4105 1536x729: ปรับ asg_gb_14 -> เปิดแก้ asg_gb_13 พิมพ์ค่า -> ย้อนกลับ; เปลี่ยนห้อง ป.6/2 -> ย้อนกลับ; toast เก่า modified_since (evidence/qa/c02-browser-helpers.js)",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": " [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:29.544Z"
+  },
+  {
+    "check": "Q-10",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-02",
+      "AC-08",
+      "AC-09"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "browser 4105: คงไว้ 10/20 สะสมเลขที่ 4 คาด 78/120 ได้ 78/120; TC-41 ลด 20->10 ข้อความ 2 รายการ ฟอร์มค้างค่า; TC-47 ไม่มีกล่อง",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": " [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:30.137Z"
+  },
+  {
+    "check": "Q-11",
+    "kind": "concurrency",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-05",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "browser 4105 สองแท็บ TC-42: B แก้เต็ม 15 ระหว่างกล่อง A -> 409 ข้อความไทย ฟอร์มค้างค่า; B แก้ช่องระหว่างกล่อง -> ปรับตามข้อมูลตอนเขียน",
+    "artifact": "qa-report.md",
+    "expected": "",
+    "actual": " [รอบแก้ 2: ตรวจซ้ำบนโค้ดปัจจุบัน; ส่วนต่างจากเดิม = Scan.tsx SessionSetup รีเฟรชอัตโนมัติ + เทสต์ใหม่; ผลเบราว์เซอร์เดิมไม่ถูกแตะเพราะ path ไม่ทับกัน]",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:30.718Z"
+  },
+  {
+    "check": "Q-12",
+    "kind": "multi-device",
+    "status": "PASS",
+    "ac": [
+      "AC-13"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "Browser pane :5500 (API change full_score 10->77, wait 87s) + vitest c02-scan-setup-refresh",
+    "artifact": "evidence/r2-ac13-browser.txt",
+    "expected": "",
+    "actual": "หน้าเลือกงานเปลี่ยนเป็น เต็ม 77 เองหลัง 87 วินาที ไม่รีโหลด · unit 4/4",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:31.309Z"
+  },
+  {
+    "check": "Q-13",
+    "kind": "dry-run",
+    "status": "N/A",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "-",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ไม่มี migration และไม่เปลี่ยนสคีมา; การปรับ+ย้อนกลับตรวจด้วยเทสต์ API (อะตอมิก/EP-04) แทน (รับใน brief ## N/A ที่รับ)",
+    "snapshot": "tree:4dcb1f1bc55f6631cabe74331ffd27aba3fc6a4f",
+    "at": "2026-11-02T09:17:02.559Z"
+  },
+  {
+    "check": "Q-14",
+    "kind": "restore",
+    "status": "N/A",
+    "ac": [
+      "AC-03"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "-",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ไม่มี migration และไม่เปลี่ยนสคีมา; การปรับ+ย้อนกลับตรวจด้วยเทสต์ API (อะตอมิก/EP-04) แทน (รับใน brief ## N/A ที่รับ)",
+    "snapshot": "tree:4dcb1f1bc55f6631cabe74331ffd27aba3fc6a4f",
+    "at": "2026-11-02T09:17:03.163Z"
+  },
+  {
+    "check": "Q-15",
+    "kind": "visual-owner-approved",
+    "status": "PASS",
+    "ac": [
+      "AC-10",
+      "AC-11"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": true,
+    "command": "owner reply in chat after Gate V sheet https://claude.ai/artifact/4edjyzoBfR4evVxnvW3aE2",
+    "artifact": "",
+    "expected": "",
+    "actual": "เจ้าของตอบ: \"ผ่าน แก้ข้อสแกนด้วย\" (หน้าตากล่องถาม/ปุ่มย้อนกลับผ่าน; ข้อสแกนแก้แล้วในรอบ 2 ไม่เปลี่ยนหน้าตา)",
+    "reason": "",
+    "snapshot": "tree:dd77b1d5bb2f7463f46853ef6eb304c124333709",
+    "at": "2026-11-02T10:27:38.818Z"
+  }
+]

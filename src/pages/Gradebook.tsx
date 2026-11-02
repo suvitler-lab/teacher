@@ -140,6 +140,8 @@ export function GradebookPage() {
       else setStatus("error");
     }
   }
+  const loadRef = useRef(load); // "undo" toasts outlive the render that made them: always reload the CURRENT class/filters
+  loadRef.current = load;
   useEffect(() => { load(); }, [classId, subjectId, typeId, selectedTermId.value, period, month]);
   // "สร้างงาน" from Home arrives as #/gradebook?new=1: open the form once, then drop the flag so a reload doesn't reopen it
   useEffect(() => { if (params.new === "1") navigate("/gradebook", { class: params.class, subject: params.subject }); }, []);
@@ -702,7 +704,7 @@ export function GradebookPage() {
       )}
 
       {showCreate && <AssignmentModal defaultClassId={classId} defaultSubjectId={subjectId} onClose={() => setShowCreate(false)} onSaved={() => { setShowCreate(false); load(true); }} />}
-      {editAsg && <AssignmentModal existing={editAsg} onClose={() => setEditAsg(null)} onSaved={() => { setEditAsg(null); load(true); }} />}
+      {editAsg && <AssignmentModal existing={editAsg} onReload={() => loadRef.current(true)} onClose={() => setEditAsg(null)} onSaved={() => { setEditAsg(null); load(true); }} />}
       {copyAsg && <AssignmentModal copyFrom={copyAsg} defaultClassId={classId} onClose={() => setCopyAsg(null)} onSaved={() => { setCopyAsg(null); load(true); }} />}
     </div>
   );
