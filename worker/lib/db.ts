@@ -44,6 +44,7 @@ export async function getSettings(env: Env): Promise<Settings> {
     onboarding_done: b("onboarding_done"),
     last_backup_at: map.last_backup_at ?? "",
     period_times: map.period_times ?? "",
+    home_cards: map.home_cards ?? "",
   };
 }
 

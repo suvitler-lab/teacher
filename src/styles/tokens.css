@@ -12,7 +12,7 @@
   /* text */
   --text-primary: #1a1f29;
   --text-secondary: #59616e;
-  --text-muted: #8b929d;
+  --text-muted: #646c79;   /* VP-1: 4.9:1 on the page (was 2.9:1) */
 
   /* borders */
   --border: rgba(20, 28, 46, 0.10);
@@ -25,32 +25,36 @@
   --bg-accent: #e6f0fc;
   --bg-accent-muted: rgba(47, 111, 222, 0.10);
   --text-accent: #1a56b0;
-  --border-accent: #9cc2f2;
+  --border-accent: #6f9fe0;
 
   /* status: success / warning / danger / pending(=accent blue) / purple */
-  --bg-success: #e3f6ec; --text-success: #12703f; --fill-success: #1c9d61; --on-success: #ffffff; --border-success: #a6e0c2;
+  --bg-success: #e3f6ec; --text-success: #12703f; --fill-success: #148352; --on-success: #ffffff; --border-success: #a6e0c2;
   --bg-warning: #fbefd6; --text-warning: #8a5a08; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #f0cf8c;
-  --bg-danger:  #fbe6e6; --text-danger:  #a32626; --fill-danger:  #dc4a4a; --on-danger:  #ffffff; --border-danger:  #f0b2b2;
+  --bg-danger:  #fbe6e6; --text-danger:  #a32626; --fill-danger:  #c93a3a; --on-danger:  #ffffff; --border-danger:  #f0b2b2;
   --bg-pending: var(--bg-accent); --text-pending: var(--text-accent);
   --bg-purple:  #efeafc; --text-purple:  #5a3fb0; --border-purple: #cdbcf0; --fill-purple: #7c5cd6; --on-purple: #ffffff;
 
   /* work-type chip hues: aqua violet orange green blue magenta red */
   --tint-aqua-bg: #d9f2f0;    --tint-aqua-fg: #0d6e6a;
   --tint-violet-bg: #ece7fb;  --tint-violet-fg: #5636b8;
-  --tint-orange-bg: #fce8d8;  --tint-orange-fg: #a5560f;
+  --tint-orange-bg: #fce8d8;  --tint-orange-fg: #9a4f0c;
   --tint-green-bg: #e7f3d7;   --tint-green-fg: #4b7314;
   --tint-blue-bg: #e0edfc;    --tint-blue-fg: #1a56b0;
   --tint-magenta-bg: #f8e2ee; --tint-magenta-fg: #9c2b63;
   --tint-red-bg: #fbe1e1;     --tint-red-fg: #a32626;
 
+  --fill-accent: #2f6fde; /* charts/bars (was used by the attendance bars but never defined) */
+
   /* geometry / type */
+  --radius-xs: 6px;
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
-  --rail-w: max(64px, 4.5rem); /* grows with the text size so the online chip / logout label fit */
+  --rail-w: max(96px, 5.75rem); /* grows with the text size so the labels ("ออกจากระบบ") and the online chip fit without wrapping */
   --font-sans: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
   --shadow-pop: 0 8px 28px rgba(20, 28, 46, 0.14), 0 2px 6px rgba(20, 28, 46, 0.08);
+  --shadow-card: 0 1px 2px rgba(20, 28, 46, 0.06), 0 2px 8px rgba(20, 28, 46, 0.05);
 
   --tap: 44px; /* min touch target */
 
@@ -71,11 +75,11 @@
     --surface-3: #2a303c;
     --text-primary: #eef1f6;
     --text-secondary: #a7afbd;
-    --text-muted: #7b8494;
+    --text-muted: #8d96a6;
     --border: rgba(255, 255, 255, 0.10);
     --border-strong: rgba(255, 255, 255, 0.18);
-    --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
-    --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #315c93;
+    --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220; --fill-accent: #5a92ee; --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
     --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
     --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;
     --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a;
@@ -98,11 +102,11 @@
   --surface-3: #2a303c;
   --text-primary: #eef1f6;
   --text-secondary: #a7afbd;
-  --text-muted: #7b8494;
+  --text-muted: #8d96a6;
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
-  --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220;
-  --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #315c93;
+  --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220; --fill-accent: #5a92ee; --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
   --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
   --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;
   --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a;

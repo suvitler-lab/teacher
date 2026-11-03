@@ -113,7 +113,7 @@ describe("AC-09 / AC-11 Excel", { timeout: 30_000 }, () => {
 describe("AC-09 / AC-11 screens", () => {
   it("Home shows 6/8 · ยกเว้น 2 beside the 75% bar", async () => {
     const d: DashboardPayload = {
-      date: TODAY, termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], serverTime: 0, attendanceToday: [],
+      date: TODAY, termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], dueSoon: [], absentToday: [], serverTime: 0, attendanceToday: [],
       openAssignments: [{ assignment: asg("a1", PAST_DUE, "ใบงาน"), perClass: [{ classId: "c1", total: 10, submitted: 6, scored: 5, awaiting: 1, late: 1, missing: 2, excused: 2 }] }],
     };
     get.mockResolvedValue(d);

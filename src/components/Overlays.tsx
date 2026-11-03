@@ -1,5 +1,6 @@
 import { Dialog } from "./Dialog";
 import { useEffect, useState } from "preact/hooks";
+import { signal } from "@preact/signals";
 import { Icon } from "./Icon";
 import { toasts, dismiss, err } from "../lib/notify";
 import { epochStale } from "../lib/session";
@@ -83,8 +84,12 @@ export function ReloginOverlay() {
   return <ReloginForm />;
 }
 
+/** The list of sends that failed: opened by the floating button or from the home page. */
+export const failedPanelOpen = signal(false);
+
 export function FailedPanel() {
-  const [open, setOpen] = useState(false);
+  const open = failedPanelOpen.value;
+  const setOpen = (v: boolean) => { failedPanelOpen.value = v; };
   const [items, setItems] = useState<FailedItem[]>([]);
   const n = failedCount.value;
 

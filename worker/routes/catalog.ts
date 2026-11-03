@@ -46,6 +46,7 @@ const ALLOWED_SETTINGS = new Set([
   "onboarding_done",
   "last_backup_at",
   "period_times",
+  "home_cards",
 ]);
 
 catalogRoutes.put("/api/settings", async (c) => {

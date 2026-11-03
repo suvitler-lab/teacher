@@ -1,37 +1,26 @@
 import { useEffect, useState } from "preact/hooks";
 import "../styles/home.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, StatCard, StackBar, ProgressBar, Avatar, TermPicker, YearBanner, EmptyState, Drawer, LoadError } from "../components/ui";
+import { PageHeader, StatCard, TermPicker, YearBanner, EmptyState, Drawer, LoadError } from "../components/ui";
+import { Chip } from "../components/home/shared";
+import { TodoCard } from "../components/home/Todo";
+import { ResumeScan } from "../components/home/Resume";
+import { CardSettings } from "../components/home/CardSettings";
+import { CARD_VIEW } from "../components/home/cards";
+import { WIDE_CARDS } from "../components/home/meta";
 import {
-  settings, selectedTermId, currentTerm, startTermOpen, viewingPastYear, classById, subjectById, workTypeById, studentsById,
+  settings, selectedTermId, viewingPastYear, classById, subjectById,
 } from "../store";
 import { navigate } from "../router";
-import { formatThaiDate, formatThaiTimeMs } from "../lib/dates";
-import { fullName } from "../lib/names";
+import { formatThaiDate } from "../lib/dates";
 import { dashboard, dashboardStale, dashboardAt, dashboardStatus, loadDashboard } from "../lib/dashboard";
-import { attendanceProgress, attendancePercent, assignmentRate, assignmentFraction } from "@shared/metrics";
+import { formatThaiTimeMs } from "../lib/dates";
+import { homeCards, hideNames, setHideNames } from "../lib/homePrefs";
+import { visibleOrder, type HomeCardKey } from "../lib/homeCards";
+import { attendanceHeadline } from "../lib/homeLogic";
+import { attendanceProgress, attendancePercent } from "@shared/metrics";
 import { bkkToday } from "@shared/time";
-import { attDraftCount } from "../lib/attSync";
-import { pendingCount, failedCount } from "../lib/outbox";
-import type { AttendanceDay, AssignmentDashboard } from "@shared/types";
-
-function daysUntil(due: string, today: string): number {
-  return Math.round((Date.parse(due) - Date.parse(today)) / 86400000);
-}
-function dueChip(due: string | null, today: string) {
-  if (!due) return null;
-  const d = daysUntil(due, today);
-  if (d < 0) return { cls: "danger", text: `เลยกำหนด ${-d} วัน` };
-  if (d === 0) return { cls: "warning", text: "ครบกำหนดวันนี้" };
-  if (d === 1) return { cls: "warning", text: "ส่งพรุ่งนี้" };
-  return { cls: "muted", text: `ส่ง ${formatThaiDate(due)}` };
-}
-const CHIP: Record<string, string> = {
-  danger: "background:var(--bg-danger);color:var(--text-danger)",
-  warning: "background:var(--bg-warning);color:var(--text-warning)",
-  muted: "background:var(--surface-1);color:var(--text-secondary)",
-  accent: "background:var(--bg-accent);color:var(--text-accent)",
-};
+import type { AssignmentDashboard } from "@shared/types";
 
 type ListKind = "open" | "awaiting" | "missing";
 interface ListRow { a: AssignmentDashboard; classId: string; n: number; total: number }
@@ -54,6 +43,7 @@ export function Home() {
   const s = settings.value;
   const today = bkkToday();
   const [list, setList] = useState<ListKind | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   useEffect(() => { loadDashboard(selectedTermId.value); }, [selectedTermId.value]);
 
@@ -70,155 +60,96 @@ export function Home() {
   const attPct = attendancePercent(att.reduce((c, a) => ({
     present: c.present + a.present, late: c.late + a.late, leave: c.leave + a.leave, sick: c.sick + a.sick, absent: c.absent + a.absent,
   }), { present: 0, late: 0, leave: 0, sick: 0, absent: 0 }));
-  const attSub = att.length === 0 ? "ยังไม่มีนักเรียน"
-    : completeN === att.length ? "วันนี้เช็คครบทุกห้อง"
-    : `ยังเหลือ ${att.length - completeN} ห้อง`;
-
-  const lastBackup = s?.last_backup_at ? Number(s.last_backup_at) : 0;
-  const backupStale = !lastBackup || Date.now() - lastBackup > 7 * 86400000;
+  const pastYear = viewingPastYear.value;
+  const stale = dashboardStale.value;
+  const staleTag = stale ? <> <Chip tone="warning">ข้อมูลเก่า</Chip></> : null;
 
   const rows = list ? listRows(list, open, grading) : [];
-  const LIST_TITLE: Record<ListKind, string> = { open: "งานที่เปิดรับ", awaiting: "งานรอตรวจ", missing: "งานค้างส่ง" };
+  const LIST_TITLE: Record<ListKind, string> = { open: "งานที่เปิดรับ", awaiting: "งานรอตรวจ", missing: "ยังไม่ส่ง" };
   const LIST_HINT: Record<ListKind, string> = {
     open: "ส่งแล้ว / ทั้งห้อง แยกตามห้องและงาน",
     awaiting: "รวมงานที่ปิดรับแล้วแต่ยังตรวจไม่เสร็จ",
     missing: "เฉพาะงานที่ยังเปิดรับ — งานที่ปิดแล้วไม่นับ",
   };
 
+  // the cards the teacher chose, in the order chosen. On a wide screen they sit in two columns:
+  // wide cards (lists) left, the rest right; the order still holds inside each column.
+  const order = visibleOrder(homeCards.value).filter((k) => !(pastYear && k === "att"));
+  const wide = order.filter((k) => WIDE_CARDS.includes(k));
+  const side = order.filter((k) => !WIDE_CARDS.includes(k));
+  const view = (k: HomeCardKey) => { const C = CARD_VIEW[k]; return <C key={k} />; };
+
+  const attLine = pastYear ? "ใช้ห้องของปีนี้" : d ? attendanceHeadline(d.attendanceToday.filter((a) => a.total > 0)) : "เช็คชื่อประจำวัน";
+  const quick = (sub: string) => (pastYear ? "ใช้ห้องของปีนี้" : sub);
+
   return (
-    <div>
+    <div class="hm">
       <PageHeader
         icon="home"
         title={`สวัสดี ${s?.teacher_name || "คุณครู"}`}
         sub={<>
           <span>{s?.school_name}</span>
-          <span>· {formatThaiDate(today)}</span>
-          {dashboardStale.value && dashboardAt.value && (
-            <span class="chip" style={CHIP.warning}><Icon name="cloud-off" size={13} /> ข้อมูล ณ {formatThaiTimeMs(dashboardAt.value)}</span>
-          )}
+          <span class="hm-sep">{formatThaiDate(today)}</span>
+          {stale && dashboardAt.value && <Chip tone="warning" icon="wifi-off">ออฟไลน์ · ข้อมูลเมื่อ {formatThaiTimeMs(dashboardAt.value)}</Chip>}
         </>}
-        actions={<TermPicker />}
+        actions={<>
+          <TermPicker />
+          <button class={"ghost hm-hide" + (hideNames.value ? " on" : "")} aria-pressed={hideNames.value} aria-label="ซ่อนชื่อนักเรียน"
+            title="ซ่อนชื่อนักเรียนทุกการ์ด (ใช้ตอนสะท้อนจอขึ้นทีวี)" onClick={() => setHideNames(!hideNames.value)}>
+            <Icon name={hideNames.value ? "eye-off" : "eye"} size={20} /><span class="hm-btn-t">{hideNames.value ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span>
+          </button>
+          <button class="ghost" aria-label="ปรับหน้าหลัก" onClick={() => setPrefsOpen(true)}><Icon name="layout-grid" size={20} /><span class="hm-btn-t">ปรับหน้าหลัก</span></button>
+        </>}
       />
 
       <YearBanner note="สิ่งที่ค้างของปีนั้นยังตรวจและแก้คะแนนได้" />
-      {/* the current term's last day has passed: the next step is starting the new term (which, at year end, also opens the new year's classes) */}
-      {!viewingPastYear.value && currentTerm.value?.end_date && currentTerm.value.end_date < today && (
-        <div class="hm-backup" style="margin:0 0 10px">
-          <Icon name="calendar-event" size={18} />
-          <span class="grow">ภาคเรียน {currentTerm.value.name} สิ้นสุดเมื่อ {formatThaiDate(currentTerm.value.end_date)} แล้ว — พร้อมเริ่มภาคเรียนถัดไปไหม</span>
-          <button onClick={() => { startTermOpen.value = true; }}>เริ่มภาคเรียนใหม่</button>
+      {hideNames.value && (
+        <div class="hm-banner warn" role="status">
+          <Icon name="eye-off" size={20} />
+          <span class="grow"><b>ซ่อนชื่อนักเรียนอยู่</b> · ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)</span>
+          <button class="ghost" onClick={() => setHideNames(false)}>แสดงชื่อ</button>
         </div>
       )}
-      {(attDraftCount.value + pendingCount.value + failedCount.value) > 0 && (
-        <div class="hm-backup" style="margin:0 0 10px">
-          <Icon name="clock" size={18} />
-          <span class="grow">
-            ยังมีข้อมูลที่ยังไม่ได้ส่งขึ้นระบบ:
-            {attDraftCount.value > 0 ? ` เช็คชื่อ ${attDraftCount.value}` : ""}
-            {pendingCount.value > 0 ? ` · คะแนน ${pendingCount.value}` : ""}
-            {failedCount.value > 0 ? ` · ส่งไม่สำเร็จ ${failedCount.value}` : ""}
-          </span>
-          {attDraftCount.value > 0 && <button onClick={() => navigate("/attendance")}>ดูเช็คชื่อ</button>}
-        </div>
-      )}
+      <TodoCard />
 
       <div class="hm-actions">
-        <a class="hm-action primary" href="#/scan"><Icon name="scan" /><div><div class="t">สแกนส่งงาน</div><div class="s">เครื่องยิง · กล้อง</div></div></a>
-        <a class="hm-action" href="#/attendance"><Icon name="user-check" /><div><div class="t">เช็คชื่อ</div><div class="s">{d ? attSub : "เช็คชื่อประจำวัน"}</div></div></a>
-        <button class="hm-action" onClick={() => navigate("/gradebook", { new: 1 })}><Icon name="circle-plus" /><div><div class="t">สร้างงาน</div><div class="s">หลายห้องพร้อมกัน</div></div></button>
-        <a class="hm-action" href="#/random"><Icon name="arrows-shuffle" /><div><div class="t">สุ่มชื่อ</div><div class="s">เฉพาะคนที่มา</div></div></a>
+        <a class="hm-action primary" href="#/scan"><span class="ic"><Icon name="scan" size={24} /></span><div><div class="t">สแกนส่งงาน</div><div class="s">{quick("ใช้เครื่องอ่าน QR หรือกล้อง")}</div></div></a>
+        <a class="hm-action" href="#/attendance"><span class="ic"><Icon name="user-check" size={24} /></span><div><div class="t">เช็คชื่อ</div><div class="s">{attLine}</div></div></a>
+        <a class="hm-action" href="#/random"><span class="ic"><Icon name="dice-3" size={24} /></span><div><div class="t">สุ่มชื่อ</div><div class="s">{quick("สุ่มเฉพาะคนที่มาเรียน")}</div></div></a>
+        <button class="hm-action" onClick={() => navigate("/gradebook", { new: 1 })}><span class="ic"><Icon name="plus" size={24} /></span><div><div class="t">สร้างงาน</div><div class="s">หลายห้องพร้อมกัน</div></div></button>
       </div>
+      {!pastYear && <ResumeScan />}
 
       {status === "error" && !d ? (
         <LoadError onRetry={() => loadDashboard(selectedTermId.value)}
           text={navigator.onLine ? "โหลดข้อมูลหน้าหลักไม่สำเร็จ" : "ออฟไลน์ — ยังไม่มีข้อมูลของเทอมนี้ในเครื่อง (เลือกเทอมอื่น หรือรอต่อเน็ต)"} />
       ) : !d ? (
-        <div class="card"><EmptyState icon="loader-2" text="กำลังโหลด…" /></div>
+        <div class="card" role="status"><EmptyState icon="loader-2" text="กำลังโหลด…" /></div>
       ) : (<>
-      <div class="stat-row" style="margin-bottom:12px">
-        <StatCard label="งานที่เปิดรับ" value={open.length} icon="clipboard-list" hint="กดดูรายห้อง" onClick={() => setList("open")} />
-        <StatCard label="รอตรวจ" value={d.awaitingCount} unit="ชิ้น" icon="pencil" hint="รวมงานที่ปิดรับแล้ว" onClick={() => setList("awaiting")} />
-        <StatCard label="ค้างส่ง" value={d.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint="เฉพาะงานที่ยังเปิดรับ" onClick={() => setList("missing")} />
-        <StatCard label="มาเรียนวันนี้" value={attPct != null ? `${attPct}%` : "—"} tone="success" icon="user-check"
-          hint={att.length ? `เช็คครบ ${completeN} จาก ${att.length} ห้อง${partialN ? ` · บางส่วน ${partialN}` : ""}` : "—"} onClick={() => navigate("/attendance")} />
-      </div>
-
-      <div class="hm-cols">
-        <div class="card">
-          <div class="hm-cardhead"><span class="row" style="gap:6px"><Icon name="clipboard-list" size={18} />งานที่กำลังเก็บ</span><button class="lk" onClick={() => navigate("/gradebook")}>สมุดคะแนน ›</button></div>
-          {open.length === 0 ? (
-            <EmptyState icon="clipboard-off" text="ยังไม่มีงานที่เปิดรับ" action={<button class="primary" onClick={() => navigate("/gradebook", { new: 1 })}><Icon name="plus" size={16} /> สร้างงาน</button>} />
-          ) : open.map((a) => {
-            const wt = workTypeById(a.assignment.type_id);
-            const subj = subjectById(a.assignment.subject_id);
-            const chip = dueChip(a.assignment.due_date, today);
-            return (
-              <div class="hm-asg">
-                <div class="row" style="justify-content:space-between;gap:8px">
-                  <div style="min-width:0">
-                    <div class="row" style="gap:6px">
-                      {wt && <span class={"chip " + wt.color}>{wt.name}</span>}
-                      <span class="page-sub">{subj?.name} · เต็ม {a.assignment.full_score}</span>
-                    </div>
-                    <div class="ttl">{a.assignment.title}</div>
-                  </div>
-                  {chip && <span class="chip" style={CHIP[chip.cls]}>{chip.text}</span>}
-                </div>
-                {a.perClass.map((p) => {
-                  const cls = classById(p.classId);
-                  const pct = assignmentRate(p); // submitted ÷ (class − excused), as the dashboard and reports
-                  const tone = p.missing > 0 ? "var(--fill-warning)" : "var(--fill-success)";
-                  return (
-                    <div class="hm-prog">
-                      <span>{cls?.name}</span>
-                      <ProgressBar pct={pct} tone={tone} />
-                      <span class="num">{assignmentFraction(p)}</span>
-                      {p.awaiting > 0 ? <span class="chip" style={CHIP.accent}>รอตรวจ {p.awaiting}</span>
-                        : p.missing > 0 ? <span class="chip" style={CHIP.danger}>ค้าง {p.missing}</span>
-                        : <button class="chip" style={CHIP.muted + ";border:none;cursor:pointer"} onClick={() => navigate("/scan", { asg: a.assignment.id, class: p.classId })}><Icon name="scan" size={13} /> สแกน</button>}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+        <div class="stat-row hm-stats">
+          <StatCard label="งานที่เปิดรับ" value={open.length} icon="clipboard-list" tone="neutral" hint={<>กดดูรายห้อง{staleTag}</>} onClick={() => setList("open")} />
+          <StatCard label="รอตรวจ" value={d.awaitingCount} unit="ชิ้น" icon="hourglass-empty" hint={<>รวมงานที่ปิดรับแล้ว{staleTag}</>} onClick={() => setList("awaiting")} />
+          <StatCard label="ยังไม่ส่ง" value={d.missingCount} unit="ชิ้น" valueTone={d.missingCount > 0 ? "danger" : undefined} tone="danger" icon="alert-circle" hint={<>นับเฉพาะงานที่ยังรับอยู่{staleTag}</>} onClick={() => setList("missing")} />
+          {pastYear
+            ? <StatCard label="มาเรียนวันนี้" value="—" tone="success" icon="user-check" hint="ปีเก่า ไม่มีเช็คชื่อวันนี้" onClick={() => navigate("/attendance")} />
+            : <StatCard label="มาเรียนวันนี้" value={attPct != null ? `${attPct}%` : <span class="hm-val-text">ยังไม่ได้เช็คชื่อ</span>} tone="success" icon="user-check"
+              hint={<>{att.length ? `เช็คครบ ${completeN} จาก ${att.length} ห้อง${partialN ? ` · บางส่วน ${partialN}` : ""}` : "ยังไม่มีนักเรียน"}{staleTag}</>} onClick={() => navigate("/attendance")} />}
         </div>
 
-        <div class="hm-side">
-          <div class="card">
-            <div class="hm-cardhead"><span class="row" style="gap:6px"><Icon name="user-check" size={18} />เช็คชื่อวันนี้</span><button class="lk" onClick={() => navigate("/attendance")}>เช็คชื่อ ›</button></div>
-            {att.length === 0 ? <div class="page-sub">ยังไม่มีห้องที่มีนักเรียน</div> : att.map((a) => <AttRow key={a.classId} a={a} />)}
+        {order.length === 0 ? (
+          <div class="card"><EmptyState icon="layout-grid" text="ยังไม่ได้เปิดการ์ดใดไว้" action={<button onClick={() => setPrefsOpen(true)}><Icon name="layout-grid" size={20} /> ปรับหน้าหลัก</button>} /></div>
+        ) : (
+          <div class={"hm-cols" + (wide.length === 0 || side.length === 0 ? " one" : "")}>
+            {wide.length > 0 && <div class="hm-col">{wide.map(view)}</div>}
+            {side.length > 0 && <div class="hm-col">{side.map(view)}</div>}
           </div>
-          <div class="card">
-            <div class="hm-cardhead"><span class="row" style="gap:6px"><Icon name="flag" size={18} />ต้องติดตาม</span><button class="lk" onClick={() => navigate("/reports")}>รายงาน ›</button></div>
-            {d.followUp.length === 0 ? (
-              <div class="page-sub" style="color:var(--text-success)"><Icon name="circle-check" size={14} /> ไม่มีงานค้างส่ง</div>
-            ) : d.followUp.map((f) => {
-              const st = studentsById.value.get(f.studentId);
-              const cls = classById(f.classId);
-              return (
-                <button class="hm-follow" onClick={() => navigate("/students", { class: f.classId, student: f.studentId })}>
-                  <Avatar student={st} />
-                  <div class="grow" style="min-width:0"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{st ? fullName(st) : f.studentId}</div><div class="page-sub">{cls?.name}</div></div>
-                  <span class="chip" style={CHIP.danger}>ค้าง {f.missing}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+        )}
       </>)}
 
-      {backupStale && (
-        <div class="hm-backup">
-          <Icon name="database-export" size={18} />
-          <span class="grow">{lastBackup ? `สำรองข้อมูลล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันที่แล้ว` : "ยังไม่เคยสำรองข้อมูล"} · ควรสำรองสัปดาห์ละครั้ง</span>
-          <button onClick={() => navigate("/settings", { section: "backup" })}>สำรองตอนนี้</button>
-        </div>
-      )}
+      {prefsOpen && <CardSettings onClose={() => setPrefsOpen(false)} />}
 
       {list && (
-        <Drawer title={<><div style="font-weight:500;font-size:1.07rem">{LIST_TITLE[list]} · {list === "open" ? open.length : rows.reduce((n, r) => n + r.n, 0)}</div><div class="page-sub">{LIST_HINT[list]}</div></>} onClose={() => setList(null)}>
+        <Drawer label={LIST_TITLE[list]} title={<><h2 class="hm-drawer-t">{LIST_TITLE[list]} · {list === "open" ? open.length : rows.reduce((n, r) => n + r.n, 0)}</h2><div class="page-sub">{LIST_HINT[list]}</div></>} onClose={() => setList(null)}>
           {rows.length === 0 ? <EmptyState icon="circle-check" text="ไม่มีรายการ" /> : rows.map((r) => {
             const subj = subjectById(r.a.assignment.subject_id);
             return (
@@ -229,56 +160,19 @@ export function Home() {
                   rows: list === "awaiting" ? "awaiting" : list === "missing" ? "missing" : undefined,
                 });
               }}>
-                <span class="chip" style={CHIP.muted}>{classById(r.classId)?.name}</span>
+                <Chip tone="muted">{classById(r.classId)?.name}</Chip>
                 <div class="grow" style="min-width:0">
-                  <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500">{r.a.assignment.title}</div>
+                  <div class="hm-ell" style="font-weight:500">{r.a.assignment.title}</div>
                   <div class="page-sub">{subj?.name}{r.a.assignment.status === "closed" ? " · ปิดรับแล้ว" : ""}{r.a.assignment.due_date ? ` · ส่ง ${formatThaiDate(r.a.assignment.due_date)}` : ""}</div>
                 </div>
                 {list === "open"
-                  ? <span class="chip" style={CHIP.muted}>{r.n}/{r.total}</span>
-                  : <span class="chip" style={list === "missing" ? CHIP.danger : CHIP.accent}>{list === "missing" ? "ค้าง" : "รอตรวจ"} {r.n}</span>}
+                  ? <Chip tone="muted">{r.n}/{r.total}</Chip>
+                  : <Chip tone={list === "missing" ? "danger" : "accent"} icon={list === "missing" ? "alert-circle" : "hourglass-empty"}>{list === "missing" ? "ยังไม่ส่ง" : "รอตรวจ"} {r.n}</Chip>}
               </button>
             );
           })}
         </Drawer>
       )}
     </div>
-  );
-}
-
-function AttRow({ a }: { a: AttendanceDay }) {
-  const cls = classById(a.classId);
-  const p = attendanceProgress(a.marked, a.total);
-  if (p === "none") {
-    return (
-      <button class="hm-att hm-att-link row" style="justify-content:space-between" onClick={() => navigate("/attendance", { class: a.classId })}>
-        <span style="font-weight:500">{cls?.name}</span>
-        <span class="chip" style={CHIP.warning}><Icon name="clock" size={13} /> ยังไม่เช็ค · {a.total} คน</span>
-      </button>
-    );
-  }
-  const parts = [
-    a.present && `มา ${a.present}`, a.late && `สาย ${a.late}`, a.leave && `ลา ${a.leave}`,
-    a.sick && `ป่วย ${a.sick}`, a.absent && `ขาด ${a.absent}`,
-  ].filter(Boolean).join(" · ");
-  return (
-    <button class="hm-att hm-att-link" onClick={() => navigate("/attendance", { class: a.classId })}>
-      <div class="row" style="justify-content:space-between;gap:6px">
-        <span style="font-weight:500">{cls?.name}</span>
-        {p === "partial"
-          ? <span class="chip" style={CHIP.warning}><Icon name="circle-half-2" size={13} /> เช็คบางส่วน {a.marked}/{a.total} · เหลือ {a.total - a.marked} คน</span>
-          : <span class="page-sub" style="font-variant-numeric:tabular-nums">{parts}</span>}
-      </div>
-      {p === "partial" && <div class="page-sub" style="margin-top:2px;font-variant-numeric:tabular-nums">{parts}</div>}
-      <div style="margin-top:4px"><StackBar segments={[
-        { value: a.present, color: "var(--fill-success)" },
-        { value: a.late, color: "var(--fill-warning)" },
-        { value: a.leave, color: "var(--fill-accent)" },
-        { value: a.sick, color: "var(--fill-purple)" },
-        { value: a.absent, color: "var(--fill-danger)" },
-        // the unchecked remainder, so a half-done room looks half done
-        { value: p === "partial" ? a.total - a.marked : 0, color: "var(--border-strong)" },
-      ]} /></div>
-    </button>
   );
 }

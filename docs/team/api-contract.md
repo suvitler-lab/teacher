@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v5 · อัปเดต 2026-11-03 (server-security: กติกาทั่วไปด้านความปลอดภัย — ดู changelog v5) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v6 · อัปเดต 2026-11-04 (ui-redesign รอบ 1: dashboard เพิ่ม `dueSoon`/`absentToday`, settings เพิ่ม `home_cards` — ดู changelog v6) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 
@@ -242,6 +242,20 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 - `409 full_score_changed` → ปิดกล่องถาม แสดง `message` ในฟอร์ม (ค่าที่กรอกคงอยู่) · error อื่น → แสดงในฟอร์มแบบเดิม
 - แอปรุ่นเก่า (ก่อน v2): ไม่ส่ง `raise_choice` → เพิ่มคะแนนเต็มที่มีคนได้เต็มเดิมได้ `409 raise_choice_required` → ฟอร์มแสดง `message` (บันทึกไม่ได้จนอัปเดตแอป — Gate 1 Q3) · กรณีอื่นบันทึกได้เหมือนเดิม
 
+### EP-06 `GET /api/dashboard` — หน้าหลัก (เพิ่มใน v6 · งาน ui-redesign รอบ 1)
+
+- ผู้เรียก: `src/lib/dashboard.ts` → `src/pages/Home.tsx` + `src/components/home/*` · server: `worker/routes/dashboard.ts` · ฟิลด์เดิมทั้งหมดไม่เปลี่ยน (`openAssignments`, `gradingAssignments`, `awaitingCount`, `missingCount`, `attendanceToday`, `followUp`, `serverTime`)
+- เพิ่ม 2 ฟิลด์ใน `DashboardPayload` (`shared/types.ts`) — คิดจากแถวที่ endpoint อ่านอยู่แล้ว **ไม่อ่านแถวเพิ่ม** (งบ volume เดิมผ่าน):
+  - `dueSoon: { assignmentId, classId, studentIds[] }[]` — งานที่ **เปิดรับ** และ `due_date` เป็นวันนี้หรือพรุ่งนี้ (`date` ของคำขอ) ต่อ (งาน, ห้อง): เด็กที่ `workState === "pending"` (ยังไม่ส่ง ไม่ยกเว้น ยังไม่เลยกำหนด) · แถวที่ไม่มีเด็กค้างไม่ถูกส่ง · งานที่ปิดแล้ว/เลยกำหนดไม่อยู่ (เลยกำหนด = `followUp`)
+  - `absentToday: { classId, studentId, status: "late"|"leave"|"sick"|"absent" }[]` — เด็ก `active` ของห้องนั้นที่สถานะเช็คชื่อรายวันของวันนี้ไม่ใช่ `present` · คิวรีเช็คชื่อเปลี่ยนจาก `GROUP BY` เป็นระดับแถว (อ่านแถวเท่าเดิม) แล้วรวมยอดต่อห้องใน JS — ยอดใน `attendanceToday` เท่าเดิมทุกค่า
+- แอปรุ่นเก่า: ไม่อ่านสองฟิลด์นี้ (ไม่กระทบ) · แอปรุ่นใหม่: ถ้าไม่มีสองฟิลด์ (server เก่า หรือสำเนาแคชในเครื่องที่บันทึกก่อนอัปเดต) ถือว่าว่าง การ์ดไม่พัง · ลำดับปล่อย: **server ก่อนแอป** เพื่อให้การ์ดมีข้อมูลตั้งแต่เปิดใช้ (ลำดับเดียวกับ v3/v4)
+
+### EP-07 `PUT /api/settings` — ค่า `home_cards` (เพิ่มใน v6)
+
+- คีย์ใหม่ `home_cards` (string) ใน `ALLOWED_SETTINGS` (`worker/routes/catalog.ts`) และ `getSettings` (`worker/lib/db.ts` ค่าเริ่มต้น `""`) · `Settings.home_cards` (`shared/types.ts`) · ไม่มี migration (ตาราง `settings` เป็น key/value)
+- รูปแบบค่า: JSON `{"v":1,"order":["open","att",…],"hidden":["classes",…]}` — ตัวแปล/ค่าเริ่มต้น/คีย์ที่ไม่รู้จัก/เวอร์ชันอื่น อยู่ที่ฝั่ง client เท่านั้น (`src/lib/homeCards.ts`) server เก็บเป็นข้อความตามที่ส่งมา (ผ่านกติกา body ≤ 1MB และ settings ต้องเป็น object เดิม) · `""` = เลย์เอาต์เริ่มต้น
+- ซิงก์: `GET /api/bootstrap` คืน `settings.home_cards` → ทุกเครื่องของครูเห็นหน้าหลักเดียวกัน · การเขียนผ่าน batch เดียวกับ audit (เดิม) · ไม่เข้าคิวออฟไลน์: ออฟไลน์แก้ไม่ได้ (หน้าจอย้อนกลับและแจ้ง "ออฟไลน์ — ปรับหน้าหลักได้เมื่อออนไลน์")
+
 ## Changelog
 
 | เวอร์ชัน | วันที่ | เปลี่ยนอะไร | งาน | กระทบ |
@@ -251,3 +265,4 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | v3 | 2026-11-02 | EP-01 request เพิ่ม `receivedDate?`, `dateOnly?` · `invalid` เพิ่ม reason `received_date_invalid` / `received_date_future` / `received_date_before_assigned` / `cell_not_submitted` / `redate_not_allowed` · ลำดับการตัดสินใหม่ · EP-03 request เพิ่ม `receivedDate?` (all-submitted) + 400 `received_date_*` / `received_date_not_applicable` · EP-04 ไม่แก้ (เพิ่มเทสต์) · EP-02/EP-05 ไม่เปลี่ยน · ตัวตรวจร่วม `shared/received-date.ts` · ไม่มี migration | 2026-11-02-c03-submit-date | server `worker/routes/submissions.ts` + `shared/received-date.ts` (ใหม่) + type `shared/types.ts` · client (Scan/Gradebook/ข้อความ "ส่งไม่สำเร็จ") ทำในแพ็กเกจ ui-redesign · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ · D-c03-submit-date-01..07 |
 | v5 | 2026-11-03 | กติกาทั่วไป (ทุก endpoint): header no-store/nosniff, Sec-Fetch-Site, 413 `too_large`, rate limit แบบ atomic + /64 + ต่ออีเมล, 429 บน change-password, เปลี่ยนรหัสแล้วเครื่องอื่นหลุด, `restore_failed` ไม่มี `detail`, ขีดความยาวรหัส/deviceId · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-server-security | server `worker/app.ts`, `lib/{auth,http}.ts`, `routes/{auth,reset,backup}.ts` · client: คำเตือนก่อนดาวน์โหลด backup (`RestoreModal.tsx` `BackupWarning`, `Settings.tsx`) · แอปเก่าไม่กระทบ (client ใช้แค่ code ของ `restore_failed`; 429 แสดง message เดิม) |
 | v4 | 2026-11-03 | EP-01: re-date วันเดิม = `ok` ไม่เขียน/ไม่มี audit · `received_date_future` ยอมนาฬิกาเครื่องนำ ≤ 5 นาที (`latest`) · audit `after.late` ซิงก์กับค่าที่บันทึก · op B ที่พึ่งแถวรับงานในคำขอเดียวกันรับ guard ของแถวนั้น · lost op B บนช่องที่ไม่ submitted = `cell_not_submitted` · EP-03: `received_date_future` ใช้ `latest` เดียวกัน · EP-05: `full_score` ไม่บังคับเมื่องานมีอยู่ (คงค่าใน DB) · คนที่ได้เต็มเดิมไม่รวมห้องที่ถูกเอาออกในคำขอเดียวกัน · EP-02/EP-04 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-correctness-lows | server `submissions.ts`, `assignments.ts`, `shared/received-date.ts` · client `Gradebook.tsx` (`saveAsgPatch` ไม่ส่ง `full_score` → **ปล่อย server ก่อนแอป**: server v3 จะตอบ 422) · แอปเก่าไม่กระทบ (ส่ง `full_score` ครบเหมือนเดิม) |
+| v6 | 2026-11-04 | EP-06 (ใหม่ในเอกสาร) `/api/dashboard` เพิ่ม `dueSoon`, `absentToday` · EP-07 `PUT /api/settings` เพิ่มคีย์ `home_cards` + `Settings.home_cards` · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-02-ui-redesign (รอบ 1: เมนู + หน้าหลัก) | server `worker/routes/dashboard.ts`, `catalog.ts`, `lib/db.ts`, `shared/types.ts` · client `src/pages/Home.tsx`, `src/components/home/*`, `src/lib/{homeCards,homePrefs,homeLogic}.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |

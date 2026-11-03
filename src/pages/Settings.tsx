@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import "../styles/settings.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, Segmented } from "../components/ui";
+import { PageHeader, Segmented, Switch } from "../components/ui";
 import { settings, applyTheme, loadBootstrap, revokedTokens, students as allStudents, studentsById } from "../store";
 import type { Settings, DeviceInfo } from "@shared/types";
 import { api } from "../lib/api";
@@ -110,10 +110,6 @@ function DisplayRows() {
       </div>
     </>
   );
-}
-
-function Switch({ on, onToggle, label }: { on: boolean; onToggle: () => void; label: string }) {
-  return <button class={"switch " + (on ? "on" : "")} role="switch" aria-checked={on} aria-label={label} onClick={onToggle}><span class="knob" /></button>;
 }
 
 export function SettingsPage() {

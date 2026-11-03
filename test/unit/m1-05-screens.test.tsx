@@ -43,7 +43,7 @@ const AC04_REPORT = () => reportPayload({
 describe("AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere", () => {
   it("Home: the class progress bar of an open assignment (and AC-04 attendance card)", async () => {
     const d: DashboardPayload = {
-      date: "2026-10-30", termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], serverTime: 0,
+      date: "2026-10-30", termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], dueSoon: [], absentToday: [], serverTime: 0,
       openAssignments: [{ assignment: asg("a1", PAST_DUE, "ใบงาน"), perClass: [{ classId: "c1", total: 10, submitted: 6, scored: 5, awaiting: 1, late: 1, missing: 2, excused: 2 }] }],
       attendanceToday: [{ date: "2026-10-30", classId: "c1", present: 3, late: 1, leave: 1, sick: 0, absent: 1, marked: 6, total: 6 }],
     };

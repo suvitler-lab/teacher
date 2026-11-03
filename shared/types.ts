@@ -24,6 +24,7 @@ export interface Settings {
   onboarding_done: boolean; // the first-run welcome guide was finished or skipped
   last_backup_at: string;
   period_times: string; // JSON: {"1":"08:30",...}
+  home_cards: string; // JSON {"v":1,"order":[card keys],"hidden":[card keys]}; "" = the default home layout
 }
 
 export interface Term {
@@ -255,6 +256,10 @@ export interface DashboardPayload {
   missingCount: number;    // overdue unsubmitted: open work only (closed = no longer being chased)
   attendanceToday: AttendanceDay[];
   followUp: { studentId: ID; classId: ID; missing: number }[];
+  /** open work due today or tomorrow: who has not handed in yet (not excused, not yet overdue), per assignment and class */
+  dueSoon: { assignmentId: ID; classId: ID; studentIds: ID[] }[];
+  /** active children whose status for today is anything but present (absent, late, leave, sick) */
+  absentToday: { classId: ID; studentId: ID; status: "late" | "leave" | "sick" | "absent" }[];
   serverTime: number;
 }
 
