@@ -53,6 +53,13 @@ const CARDS={
   {key:'todo',title:'ใครยังไม่เช็ค',icon:'user-off',ds:'รายเลขที่ แตะแล้วเลื่อนไปช่องนั้น',on:false,zone:'side',sa:true},
   {key:'away',title:'ขาดวันนี้',icon:'user-x',ds:'ขาด ลา ป่วย รายชื่อ (ใช้ตอนยืนหน้าห้อง)',on:false,zone:'side',sa:true},
  ]},
+ settings:{title:'หน้าตั้งค่า (ทั่วไป)',keys:[
+  {key:'status',title:'เครื่องนี้',icon:'device-tablet',ds:'ออนไลน์ · รอส่ง · ที่เก็บข้อมูล',on:true},
+  {key:'backup',title:'สำรองข้อมูลล่าสุด',icon:'database-export',ds:'กี่วันที่แล้ว + ปุ่มสำรองเลย',on:true},
+  {key:'term',title:'ภาคเรียน',icon:'calendar-stats',ds:'ภาคเรียนปัจจุบัน เหลือกี่วัน + เริ่มภาคเรียนใหม่',on:true},
+  {key:'devices',title:'อุปกรณ์ล่าสุด',icon:'devices',ds:'กี่เครื่อง เครื่องไหนใช้ล่าสุด',on:false},
+  {key:'history',title:'แก้ไขล่าสุด',icon:'history',ds:'เมื่อกี้แก้อะไรไป',on:false,sa:true},
+ ]},
  students:{title:'หน้านักเรียน',keys:[
   {key:'sum',title:'สรุปห้อง',icon:'sum',ds:'ส่งงานครบ · มีงานค้าง · มาเรียนเฉลี่ย · QR ใหม่',on:true,zone:'top'},
   {key:'qr',title:'สติกเกอร์ QR',icon:'printer',ds:'เลือก 10/21/40 ดวง ทั้งห้อง หรือเฉพาะ QR ใหม่',on:true,zone:'top'},
@@ -98,19 +105,20 @@ const DEV={
   desk:{w:1536,h:729,label:'คอม 1536×729',u:16,touch:false,shell:'rail'},
   phone:{w:390,h:844,label:'มือถือ 390×844',u:18,touch:true,shell:'tabs'},
 };
-const PAGES={scan:'สแกน',attendance:'เช็คชื่อ',random:'สุ่มชื่อ',gradebook:'คะแนน',reports:'รายงาน',students:'นักเรียน'};
+const PAGES={scan:'สแกน',attendance:'เช็คชื่อ',random:'สุ่มชื่อ',gradebook:'คะแนน',reports:'รายงาน',students:'นักเรียน',settings:'ตั้งค่า'};
 const R3ACT=[]; /* ตัวจัดการ action ของหน้ารอบ 3 (gb/rp/st/se) — onAct เรียกตามลำดับ */
 const SUBS={
   scan:{setup:'ตั้งค่ารอบ',type:'ระหว่างรอบ: กรอกทีละคน',full:'ระหว่างรอบ: ให้เต็ม',summary:'สรุปรอบ',pj:'ฉายจอ'},
   attendance:{tap:'แตะเลือก',scan:'สแกน QR',period:'รายคาบ',pj:'ฉายจอ'},
   random:{pick:'สุ่มคน',group:'จับกลุ่ม',pj:'ฉายจอ'},
+  settings:{general:'ทั่วไป',time:'เวลาเรียน',scan:'การสแกน',catalog:'ข้อมูลพื้นฐาน',devices:'อุปกรณ์และรหัสผ่าน',backup:'สำรองข้อมูล',history:'ประวัติการแก้ไข',term:'เริ่มภาคเรียนใหม่',reset:'ล้างข้อมูล'},
   students:{list:'รายชื่อ',drawer:'รายละเอียดนักเรียน',add:'เพิ่ม/แก้ไข',import:'นำเข้า (ไฟล์/วาง)',stickers:'สติกเกอร์ QR',menu:'เมนูต่อแถว',qrall:'ออก QR ทั้งห้อง'},
   reports:{main:'รายงาน',print:'ตัวอย่างพิมพ์',drawer:'รายละเอียดนักเรียน',sort:'เรียงตามสะสม',pj:'ฉายจอ'},
   gradebook:{table:'ตาราง',cell:'ช่องคะแนน',work:'งานที่เลือก',bulk:'ทั้งห้องส่งแล้ว',close:'ปิดรับงาน',filter:'ตัวกรอง/คอลัมน์',create:'สร้างงาน',edit:'แก้ไขงาน'},
 };
 const SCEN={normal:'วันปกติ (10:40)',offline:'ออฟไลน์ + ค้างส่ง',closed:'งานปิดรับจากอีกเครื่อง',unchecked:'ยังไม่เช็คชื่อ',backdated:'รับงานย้อนหลัง (C-03)',empty:'ไม่มีงาน (ห้องใหม่)'};
-const S={page:'scan',sub:{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main',students:'list'},dev:'ipadP',theme:'light',font:0,scen:'normal',
-  prefs:{scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook'),reports:defPrefs('reports'),students:defPrefs('students')},prefsOpen:false,
+const S={page:'scan',sub:{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main',students:'list',settings:'general'},dev:'ipadP',theme:'light',font:0,scen:'normal',
+  prefs:{scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook'),reports:defPrefs('reports'),students:defPrefs('students'),settings:defPrefs('settings')},prefsOpen:false,
   pj:null,pjPre:false,pjOther:false,pjHint:false,toast:null,menu:null,sheetMenu:false,dlg:null,
   sc:null,at:null,rd:null,gb:null,rp:null,st:null,se:null};
 const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});

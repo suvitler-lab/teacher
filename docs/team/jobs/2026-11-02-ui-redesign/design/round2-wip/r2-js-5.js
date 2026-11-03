@@ -5,7 +5,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const LBL={gradebook:'คะแนน',reports:'รายงาน',students:'นักเรียน',settings:'ตั้งค่า',work:'งาน'};
 window.R2render=()=>render();
 window.R2nav=k=>{
-  if(['home','scan','attendance','random','gradebook','reports','students'].includes(k)){go(k);render();return}
+  if(['home','scan','attendance','random','gradebook','reports','students','settings'].includes(k)){go(k);render();return}
   toast2(`เปิดหน้า “${LBL[k]||k}” (หน้านี้อยู่นอกขอบเขต mockup รอบนี้)`);render();
 };
 function closeAll(){S.prefsOpen=false;S.sheetMenu=false;S.menu=null;S.dlg=null;if(S.sc)S.sc.sheet=null;S.pjOther=false;if(S.gb){if(S.gb.pop||S.gb.sheet)S.gb.refocus='cell';S.gb.pop=null;S.gb.sheet=null;S.gb.form=null}if(S.rp)S.rp.drawer=null;if(S.st){S.st.drawer=null;S.st.form=null;S.st.imp=null}}
@@ -123,7 +123,7 @@ function onCtl(c){
   else if(a==='theme')S.theme=k;
   else if(a==='font')S.font=+k;
   else if(a==='scen'){S.scen=k;initAll();H.S.confirmReset=false}
-  else if(a==='reset'){clearInterval(rdTimer);S.sub={scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main',students:'list'};S.page='home';S.prefs={scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook'),reports:defPrefs('reports'),students:defPrefs('students')};S.pjPref={th:'dark',sz:2};S.toast=null;closeAll();initAll();H.S.page='home';H.S.prefs=H.DEFAULT_PREFS();H.S.showAll=false;H.S.filter='open';H.S.hideNames=false}
+  else if(a==='reset'){clearInterval(rdTimer);S.sub={scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main',students:'list',settings:'general'};S.page='home';S.prefs={scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook'),reports:defPrefs('reports'),students:defPrefs('students'),settings:defPrefs('settings')};S.pjPref={th:'dark',sz:2};S.toast=null;closeAll();initAll();H.S.page='home';H.S.prefs=H.DEFAULT_PREFS();H.S.showAll=false;H.S.filter='open';H.S.hideNames=false}
   else if(a==='sim'){
     if(S.page==='scan'){
       ensureLive();const sc2=S.sc;
@@ -136,6 +136,7 @@ function onCtl(c){
     else if(S.page==='gradebook')gbSim(k);
     else if(S.page==='reports')rpSim(k);
     else if(S.page==='students')stSim(k);
+    else if(S.page==='settings')seSim(k);
   }
   render();
 }
