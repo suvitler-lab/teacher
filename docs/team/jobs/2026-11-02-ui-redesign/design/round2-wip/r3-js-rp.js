@@ -7,7 +7,7 @@ function rpAtt(cid,n){
   return{p:RP_DAYS-a-k-v-l,l,v,k,a,days:RP_DAYS};
 }
 function initRp(){
-  S.rp={cls:'c1',subj:'',period:'term',month:'2026-11',attMode:'daily',sort:'sub',dir:1,drawer:null,followAll:false,updated:'10:32',busy:false,stale:S.scen==='offline',copied:'',printFrom:null};
+  S.rp={cls:'c1',subj:'',period:'term',month:'2026-11',attMode:'daily',sort:'sub',dir:1,drawer:null,followAll:false,worksAll:false,updated:'10:32',busy:false,stale:S.scen==='offline',copied:'',printFrom:null};
 }
 function rpWorks(){
   const r=S.rp;
@@ -64,20 +64,27 @@ function rpCards(M){
       <div class="rp-stat ${M.missing?'danger':''}"><div class="l">งานค้าง</div><div class="v">${M.missing} <small>ชิ้น</small></div><div class="h">นักเรียน ${M.missStu} คน</div></div>
       <div class="rp-stat"><div class="l">คะแนนเฉลี่ย</div><div class="v">${M.avg==null?'—':M.avg+'%'}</div><div class="h">คะแนนสะสม · ค้างส่งนับ 0</div></div>
       <div class="rp-stat"><div class="l">มาเรียน</div><div class="v">${M.attPct==null?'—':M.attPct+'%'}</div><div class="h">จาก ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'} · ขาดรวม ${M.attSum.a} ครั้ง</div></div></div>`,
-    works:()=>`<section class="card rp-card" aria-labelledby="rp-wh"><h2 id="rp-wh">${ic('clipboard-list',20)} อัตราส่งแต่ละงาน <span class="tip">${M.works.length} งาน</span></h2>
-      ${M.works.length?M.works.map(x=>`<button class="rp-wrow" data-a="rpwork" data-k="${x.w.id}" aria-label="${x.w.title} ส่งแล้ว ${x.k.sub} จาก ${x.k.tot}"><span class="t">${x.w.title}</span><span class="bar"><i style="width:${x.due?x.rate:x.rate}%;background:${x.due?rpBarTone(x.rate):'var(--border-strong)'}"></i></span><span class="f">${x.k.sub}/${x.k.tot}${x.k.exc?' · ย '+x.k.exc:''}</span><span class="p">${x.due?x.rate+'%':'เก็บอยู่'}</span></button>`).join(''):'<div class="tip">ไม่มีงานในช่วงนี้</div>'}
-      <div class="gb-legend"><span><i class="lg" style="background:var(--fill-accent)"></i>85% ขึ้นไป</span><span><i class="lg" style="background:var(--fill-warning)"></i>60–84%</span><span><i class="lg" style="background:var(--fill-danger)"></i>ต่ำกว่า 60%</span><span><i class="lg" style="background:var(--border-strong)"></i>ยังไม่ถึงกำหนด</span></div></section>`,
-    att:()=>{const a=M.attSum,den=M.attDen;return `<section class="card rp-card" aria-labelledby="rp-ah"><h2 id="rp-ah">${ic('user-check',20)} การมาเรียน${r.attMode==='period'?' (รายคาบ)':''} <span class="tip">${den} ครั้ง · ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'}</span></h2>
+    works:()=>{const sorted=[...M.works].sort((x,y)=>{const g=q=>!q.due?2:q.rate<85?0:1;return g(x)-g(y)||(g(x)===0?x.rate-y.rate:0)});
+      const lim=6,list=r.worksAll?sorted:sorted.slice(0,lim),low=M.works.filter(x=>x.due&&x.rate<85).length;
+      return `<section class="card rp-card rp-works" aria-labelledby="rp-wh"><div class="rp-ch"><h2 id="rp-wh">${ic('clipboard-list',20)} อัตราส่งแต่ละงาน</h2><span class="tip">${M.works.length} งาน${low?` · ต่ำกว่า 85% ${low} งาน`:''}</span></div>
+      <div class="rp-list${r.worksAll?' scroll':''}">${list.length?list.map(x=>`<button class="rp-wrow" data-a="rpwork" data-k="${x.w.id}" aria-label="${x.w.title} ส่งแล้ว ${x.k.sub} จาก ${x.k.tot}${x.k.exc?' ยกเว้น '+x.k.exc:''}"><span class="t"><b>${x.w.title}</b><small>${x.k.sub}/${x.k.tot}${x.k.exc?' · ยกเว้น '+x.k.exc:''}</small></span><span class="bar"><i style="width:${x.rate}%;background:${x.due?rpBarTone(x.rate):'var(--border-strong)'}"></i></span><span class="p">${x.due?x.rate+'%':'เก็บอยู่'}</span></button>`).join(''):'<div class="tip">ไม่มีงานในช่วงนี้</div>'}</div>
+      ${M.works.length>lim?`<button class="ghost rp-more" data-a="rpworksall" aria-expanded="${r.worksAll}">${r.worksAll?`แสดงเฉพาะที่ต้องสนใจ ${lim} งาน`:`ดูทั้งหมด (${M.works.length})`} ${ic(r.worksAll?'chevron-up':'chevron-down',16)}</button>`:''}
+      <div class="gb-legend"><span><i class="lg" style="background:var(--fill-accent)"></i>85% ขึ้นไป</span><span><i class="lg" style="background:var(--fill-warning)"></i>60–84%</span><span><i class="lg" style="background:var(--fill-danger)"></i>ต่ำกว่า 60%</span><span><i class="lg" style="background:var(--border-strong)"></i>ยังไม่ถึงกำหนด</span></div></section>`},
+    att:()=>{const a=M.attSum,den=M.attDen;return `<section class="card rp-card" aria-labelledby="rp-ah"><div class="rp-ch"><h2 id="rp-ah">${ic('user-check',20)} การมาเรียน${r.attMode==='period'?' (รายคาบ)':''}</h2><span class="tip">${M.attPct==null?'—':M.attPct+'%'} · ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'}</span></div>
       <div class="stack2" aria-hidden="true">${['p','l','v','k','a'].map(q=>a[q]?`<i style="flex:${a[q]};background:var(--fill-${{p:'success',l:'warning',v:'accent',k:'purple',a:'danger'}[q]})"></i>`:'').join('')}</div>
       <div class="legend2">${[['p','มา'],['l','สาย'],['v','ลา'],['k','ป่วย'],['a','ขาด']].map(([q,l])=>`<span><i style="background:var(--fill-${{p:'success',l:'warning',v:'accent',k:'purple',a:'danger'}[q]})"></i>${l} ${a[q]}</span>`).join('')}</div></section>`},
     hist:()=>{const bins=[0,0,0,0,0];M.rows.forEach(x=>{if(x.scorePct==null)return;const p=x.scorePct;bins[p<50?0:p<60?1:p<70?2:p<80?3:4]++});const mx=Math.max(1,...bins);
       return `<section class="card rp-card" aria-labelledby="rp-hh"><h2 id="rp-hh">${ic('chart-histogram',20)} การกระจายคะแนนสะสม</h2><div class="gb-hist">${['<50','50–59','60–69','70–79','80+'].map((l,i)=>`<div><i style="height:${Math.round(bins[i]/mx*48)+2}px"></i><small>${bins[i]}</small><small>${l}</small></div>`).join('')}</div></section>`},
-    follow:()=>{const list=r.followAll?M.follow:M.follow.slice(0,8);
-      return `<section class="card rp-card" aria-labelledby="rp-fh"><div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px"><h2 id="rp-fh">${ic('flag',20)} ต้องติดตาม (${M.follow.length} คน)</h2>${M.follow.length?`<button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button>`:''}</div>
-      ${M.follow.length?list.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><div>${fullName(x.n)}</div><div class="tip">${x.missing.slice(0,3).join(' · ')}${x.missing.length>3?' …':''}</div></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')+(M.follow.length>8?`<button class="ghost" style="width:100%" data-a="rpfollowall">${r.followAll?'แสดงแค่ 8 คน':`ดูทั้งหมด (${M.follow.length})`} ${ic(r.followAll?'chevron-up':'chevron-down',16)}</button>`:''):`<div class="tip" style="color:var(--text-success)">${ic('circle-check',16)} ส่งงานครบทุกคน</div>`}</section>`},
+    follow:()=>{const lim=4,list=M.follow.slice(0,lim);
+      return `<section class="card rp-card rp-follow" aria-labelledby="rp-fh"><div class="rp-ch"><h2 id="rp-fh">${ic('flag',20)} ต้องติดตาม <span class="tip">${M.follow.length} คน</span></h2>${M.follow.length?`<button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button>`:''}</div>
+      ${M.follow.length?`<div class="rp-list">${list.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><b>${fullName(x.n)}</b><small>${x.missing.slice(0,2).join(' · ')}${x.missing.length>2?' …':''}</small></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')}</div>${M.follow.length>lim?`<button class="ghost rp-more" data-a="rpfollowfull">ดูทั้งหมด (${M.follow.length}) ${ic('chevron-right',16)}</button>`:''}`:`<div class="tip" style="color:var(--text-success)">${ic('circle-check',16)} ส่งงานครบทุกคน</div>`}</section>`},
     audit:()=>`<section class="card rp-card" aria-labelledby="rp-au"><h2 id="rp-au">${ic('history',20)} แก้ไขล่าสุด <span class="badge-sa">ข้อเสนอ SA</span></h2>${(S.gb?S.gb.log:[]).slice(0,5).map(x=>`<div class="gb-log"><span class="tip">${x.t}</span> ${x.x}</div>`).join('')}</section>`,
   };
-  return cardOrder('reports').map(k=>def[k]?def[k]():'').join('');
+  const ord=cardOrder('reports'),L=ord.filter(k=>k==='works'),R=ord.filter(k=>k!=='works'&&k!=='stats');
+  const html=k=>def[k]?def[k]():'';
+  const stats=ord.includes('stats')?html('stats'):'';
+  const bento=(L.length||R.length)?`<div class="rp-bento${L.length&&R.length?'':' one'}">${L.length?`<div class="rp-col">${L.map(html).join('')}</div>`:''}${R.length?`<div class="rp-col">${R.map(html).join('')}</div>`:''}</div>`:'';
+  return stats+bento;
 }
 function rpTable(M){
   const r=S.rp,rows=rpSorted(M.rows);
@@ -109,6 +116,7 @@ function rpPrintHtml(M){
 }
 function rpDrawerHtml(){
   const r=S.rp;if(r.drawer==null)return'';
+  if(r.drawer==='all'){const M=rpModel();return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="rp-dh"><div class="drawer-head"><div><h2 class="t" id="rp-dh">ต้องติดตามทั้งหมด (${M.follow.length} คน)</h2><div class="xs">${CL(r.cls).name} · ${r.subj||'ทุกวิชา'} · เรียงตามงานค้างมากสุด</div></div><button class="icon ghost" data-a="closeov" aria-label="ปิด">${ic('x',20)}</button></div><div class="row" style="justify-content:flex-end;margin-bottom:6px"><button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button></div><div class="rp-list scroll tall">${M.follow.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><b>${fullName(x.n)}</b><small>${x.missing.slice(0,2).join(' · ')}${x.missing.length>2?' …':''}</small></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')}</div></div></div>`}
   const n=r.drawer,ws=rpWorks(),x=rpStudent(r.cls,n,ws),a=x.att;
   return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="rp-dh"><div class="drawer-head"><div><h2 class="t" id="rp-dh">${fullName(n)}</h2><div class="xs">“${nick(n)}” · ${CL(r.cls).name} เลขที่ ${n} · รหัส 6${String(n).padStart(3,'0')}</div></div><button class="icon ghost" data-a="closeov" aria-label="ปิด">${ic('x',20)}</button></div>
    <div class="hm-chip muted" style="margin-bottom:8px">${ic('filter',16)}ขอบเขต: ${r.subj||'ทุกวิชา'} · ${r.period==='term'?'ทั้งเทอม':GBMON[r.month]} (ตามตัวกรองหน้านี้)</div>
@@ -141,7 +149,8 @@ function rpAct(a,k,t,e){
   case 'rpexcel':toast2('ดาวน์โหลด สรุปงาน_ป.6-1_ทุกวิชา_ทั้งเทอม.xlsx แล้ว (จำลอง · 4 ชีต)');break;
   case 'rpsort':if(r.sort===k)r.dir=-r.dir;else{r.sort=k;r.dir=1}break;
   case 'rpdrawer':r.drawer=+k;S.sub.reports='main';break;
-  case 'rpfollowall':r.followAll=!r.followAll;break;
+  case 'rpworksall':r.worksAll=!r.worksAll;break;
+  case 'rpfollowfull':r.drawer='all';break;
   case 'rpwork':{if(S.gb){S.gb.sel=k}go('gradebook','table');break}
   case 'rpline':{r.copied=k;toast2(k==='class'?'คัดลอกรายชื่อค้างส่งทั้งห้องไป LINE แล้ว':'คัดลอกรายการค้างส่งของคนนี้แล้ว');setTimeout(()=>{r.copied='';render()},2000);break}
   default:return false;

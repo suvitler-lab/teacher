@@ -167,33 +167,47 @@
 .touch .gb-tile{padding:2px 8px;gap:6px}
 .gb-wl{flex-basis:14em}
 /* ===================== รายงาน (rp-) ===================== */
-.rp-page{display:flex;flex-direction:column;gap:8px;min-width:0}
+.rp-page{display:flex;flex-direction:column;gap:12px;min-width:0}
 .rp-page .pghead{margin-bottom:0}
 .rp-status{display:flex;gap:8px;flex-wrap:wrap}
 .rp-range{margin:-2px 0 0}
-.rp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.phone .rp-stats,.ipadP .rp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-.rp-stat{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;box-shadow:var(--shadow-card);min-height:var(--tap)}
+.rp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.phone .rp-stats,.ipadP .rp-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rp-stat{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;box-shadow:var(--shadow-card);min-height:var(--tap);display:grid;grid-template-columns:1fr;gap:0}
 .rp-stat .l{font-size:var(--fs-sm);color:var(--text-secondary)}
-.rp-stat .v{font-size:calc(var(--u)*1.7);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.rp-stat .v{font-size:calc(var(--u)*1.6);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.15}
 .rp-stat .v small{font-size:var(--fs-sm);font-weight:400}
 .rp-stat.danger .v{color:var(--text-danger)}
-.rp-stat .h{font-size:var(--fs-xs);color:var(--text-muted)}
-.rp-card{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.rp-stat .h{font-size:var(--fs-xs);color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-bento{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;align-items:stretch}
+.rp-bento.one{grid-template-columns:minmax(0,1fr)}
+.phone .rp-bento,.ipadP .rp-bento{grid-template-columns:minmax(0,1fr)}
+.rp-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rp-col>.rp-card:only-child{flex:1}
+.rp-card{padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .rp-card h2{font-size:1rem;display:flex;align-items:center;gap:6px}
-.rp-wrow{display:grid;grid-template-columns:minmax(0,15em) 1fr auto 3.4em;gap:8px;align-items:center;width:100%;min-height:var(--tap);height:auto;padding:4px 6px;border:none;background:transparent;border-radius:8px;text-align:left;font-size:var(--fs-sm)}
+.rp-ch{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:var(--tap)}
+.rp-ch .tip{white-space:nowrap}
+.rp-works{flex:1}
+.rp-list{display:flex;flex-direction:column}
+.rp-list.scroll{max-height:22rem;overflow-y:auto;overscroll-behavior:contain}
+.rp-list.scroll.tall{max-height:none;flex:1}
+.rp-more{width:100%;justify-content:center}
+.rp-wrow{display:grid;grid-template-columns:minmax(0,1fr) 34% 3.4rem;gap:12px;align-items:center;width:100%;min-height:var(--tap);height:var(--tap);padding:2px 8px;border:none;background:transparent;border-radius:8px;text-align:left;font-size:var(--fs-sm)}
 .rp-wrow:hover{background:var(--surface-1)}
-.rp-wrow .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-wrow .t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.rp-wrow .t b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-wrow .t small{font-size:var(--fs-xs);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .rp-wrow .bar{height:10px;border-radius:5px;background:var(--border);overflow:hidden}
 .rp-wrow .bar i{display:block;height:100%;border-radius:5px}
-.rp-wrow .f{font-variant-numeric:tabular-nums;color:var(--text-secondary);font-size:var(--fs-xs);white-space:nowrap}
-.rp-wrow .p{text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
-.phone .rp-wrow{grid-template-columns:minmax(0,7em) 1fr auto}
-.ipadP .rp-wrow{grid-template-columns:minmax(0,10em) 1fr auto 3.4em}
-.phone .rp-wrow .f{display:none}
+.rp-wrow .p{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:var(--fs-sm)}
+.phone .rp-wrow{grid-template-columns:minmax(0,1fr) 28% 3.2rem;gap:8px}
 .legend2{display:flex;gap:4px 12px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--text-secondary)}
 .legend2 i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
-.rp-frow{display:flex;align-items:center;gap:10px;width:100%;min-height:var(--tap);height:auto;padding:6px 8px;border:none;border-top:.5px solid var(--border);background:transparent;text-align:left;border-radius:0}
+.rp-frow{display:flex;align-items:center;gap:10px;width:100%;min-height:var(--tap);height:calc(var(--tap) + 8px);padding:4px 8px;border:none;border-top:.5px solid var(--border);background:transparent;text-align:left;border-radius:0}
+.rp-frow .grow{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.rp-frow .grow b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-frow .grow small{font-size:var(--fs-xs);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rp-frow .no{width:2em;height:2em;border-radius:50%;background:var(--surface-1);display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex:none}
 .rp-tw{overflow-x:auto}
 .rp-t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--fs-sm)}
