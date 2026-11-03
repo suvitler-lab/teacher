@@ -33,10 +33,17 @@ import { bkkToday } from "@shared/time";
 import { workState, countWorkStates } from "@shared/metrics";
 import { ulid } from "@shared/ids";
 import { api } from "../lib/api";
-import { enqueueSubmission, onResult, pendingCount, syncing, online, pendingOps, failedPairKeys, pairKey } from "../lib/outbox";
+import { enqueueSubmission, onResult, pendingCount, syncing, online, pendingOps, failedPairKeys, pairKey, failedCount, listFailed, retryFailed, discardFailed } from "../lib/outbox";
+import type { FailedItem } from "../lib/idb";
 import { kvGet, kvSet } from "../lib/idb";
 import { beep, vibrate } from "../lib/sound";
-import { err } from "../lib/notify";
+import { err, notify } from "../lib/notify";
+import { FAIL_REASON } from "../lib/failReasons";
+import { checkReceivedDate } from "@shared/received-date";
+import { scanLayout } from "../lib/pageCards";
+import { isHiddenCard } from "../lib/cardLayout";
+import { PageCardSettings } from "../components/cards/PageCardSettings";
+import { SCAN_CARD_META, SCAN_LOCKED } from "../components/cards/meta";
 import { installHidScanner } from "../lib/hid";
 import { fullName, shortName, initials } from "../lib/names";
 import { dashboard, loadDashboard } from "../lib/dashboard";
@@ -70,6 +77,8 @@ interface Feedback {
 }
 
 const session = signal<Session | null>(null);
+/** The day the hand-ins of this round were really received. null = today (the normal case). Reset when a round starts or ends. */
+const recvDate = signal<string | null>(null);
 // What the server says about the round on screen. It BELONGS to one assignment: switching to another work
 // must never show (or scan against) the previous work's hand-ins, whatever a slow or failed request does.
 //   loading = asked, no answer yet · ready = we know · unknown = the answer never came (offline) — NOT "nobody has handed in"
@@ -264,6 +273,9 @@ function makeOp(studentId: string, status: "submitted" | "void", score: number |
     opId: ulid(), scanSessionId: s.id, assignmentId: s.assignmentId, studentId,
     // when the teacher acted, on the server's clock: this is what orders it against everything else
     status, score, fullScoreAtScan: s.fullScore, method, clientTs: actionTime(),
+    // the day the work was handed in: the picked day, else the day of this tap — so a scan queued offline and sent
+    // the next day still counts for the day it was made (BR-07). Only for hand-ins, not for taking one back.
+    ...(status === "submitted" ? { receivedDate: recvDate.value ?? bkkToday(actionTime()) } : {}),
     // accepting a hand-in (refused once the work is closed) — not the teacher grading in the gradebook
     intent: "receive" as const,
   };
@@ -301,7 +313,9 @@ function handleScan(raw: string, method: "camera" | "hid" | "manual") {
 
   if (r.kind === "not_found") {
     beep.err(); vibrate(120);
-    setFeedback({ kind: "danger", icon: "x", name: `ไม่พบรหัส ${raw.slice(0, 20)}`, sub: "ตรวจสอบบัตรหรือพิมพ์รหัสใหม่" });
+    const cn = activeClasses.value.find((c) => c.id === s.classId)?.name ?? "ห้องนี้";
+    const isNo = /^\d{1,3}$/.test(raw.trim());
+    setFeedback({ kind: "danger", icon: "x", name: isNo ? `ไม่มีเลขที่ ${raw.trim()} ใน ${cn}` : `ไม่พบรหัส ${raw.slice(0, 20)}`, sub: isNo ? "ตรวจเลขที่ หรือเลือกห้องให้ตรงกับบัตร" : "ตรวจสอบบัตรหรือพิมพ์รหัสใหม่" });
     return;
   }
   if (r.kind === "revoked") {
@@ -410,16 +424,19 @@ function undo(studentId: string) {
   const st = studentsById.value.get(studentId);
   beep.undo();
   setFeedback({ kind: "accent", icon: "arrow-back-up", name: st ? fullName(st) : "", sub: "ยกเลิกการส่งแล้ว" });
+  // taking a hand-in back is one tap away from a slip: say so, and give a few seconds to change one's mind (D16)
+  if (prev && prev.status === "submitted") {
+    const op = makeOp(studentId, "submitted", prev.score, "manual");
+    notify("info", `ยกเลิกการส่งของ ${st ? fullName(st) : "นักเรียน"} แล้ว`, { action: { label: "เลิกทำ", run: () => {
+      if (!session.value || session.value.assignmentId !== op.assignmentId) return;
+      updateSub(studentId, prev);
+      pushRecent(studentId, prev.score, op.opId);
+      void enqueueRevertible(op, studentId, undefined);
+    } } });
+  }
 }
 
-const REJECTED: Record<string, string> = {
-  not_in_class: "ไม่ได้อยู่ในห้อง/งานนี้",
-  student_inactive: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)",
-  assignment_closed: "งานนี้ปิดรับแล้ว",
-  invalid: "ข้อมูลไม่ถูกต้อง",
-  superseded: "มีการแก้ไขที่ใหม่กว่าอยู่แล้ว จึงไม่ใช้ค่านี้",
-  epoch_changed: "ข้อมูลถูกกู้คืนจากไฟล์สำรองไปแล้ว",
-};
+const REJECTED = FAIL_REASON;
 // The server said no. The grid must stop showing that student as submitted, and the
 // teacher must be told why — a green square that the server refused is a lie.
 let scanViewLeft = true; // true while the scan page is not on screen: a late answer updates the cache, never a card/sound
@@ -483,6 +500,7 @@ async function startSession(assignmentId: string, classId: string, mode: ScanMod
   const s: Session = { id: `scn_${ulid()}`, assignmentId: asg.id, classId, subjectId: asg.subject_id, fullScore: asg.full_score, mode };
   session.value = s;
   ended.value = null;
+  recvDate.value = null;
   resetSubs(s.assignmentId); // the previous work's hand-ins must not be on screen, or scanned against, even for an instant
   // reset NOW, not after the await below: a scan made while the round is being saved must not be wiped
   recent.value = [];
@@ -650,6 +668,9 @@ function ScanView() {
   const camCtl = useRef<any>(null);
   const [torch, setTorch] = useState(false);
   const [roomMenu, setRoomMenu] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+  const layout = scanLayout.value;
+  const showRecent = !isHiddenCard(layout, "recent"), showHid = !isHiddenCard(layout, "hid"), showHint = !isHiddenCard(layout, "hint");
 
   // a session restored from storage (e.g. after a reload) has no submissions
   // loaded yet — fetch them so the grid and ring are correct
@@ -693,6 +714,7 @@ function ScanView() {
     if (s) api.post(`/api/scan-sessions/${s.id}/end`).catch(() => {});
     ended.value = s;
     session.value = null;
+    recvDate.value = null;
     kvSet("scanSession", null);
     useCamera.value = false;
   }
@@ -733,7 +755,7 @@ function ScanView() {
           {subsBox.value.status === "unknown" && <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={() => loadSubs(s.assignmentId).catch(() => {})}>ลองอีกครั้ง</button>}
         </div>
       )}
-      <div class="ctxbar">
+      <div class={"ctxbar" + (recvDate.value ? " back" : "")} role="group" aria-label="รอบสแกน">
         <div style="position:relative">
           <button class="ghost" style="color:inherit;height:1.87rem;background:var(--surface-2)" onClick={() => otherClasses.length && setRoomMenu((v) => !v)}>
             <Icon name="users" size={15} /> {cls?.name} {otherClasses.length > 0 && <Icon name="chevron-down" size={14} />}
@@ -755,17 +777,22 @@ function ScanView() {
           {wt && <span class={"chip " + wt.color}>{wt.name}</span>}
         </div>
         <span class="grow" style="min-width:8px" />
-        <span style="font-size:var(--fs-sm)">เต็ม {s.fullScore} · {modeLabel}</span>
+        <button class="icon ghost" style="color:inherit;background:var(--surface-2)" aria-label="ปรับการ์ด" onClick={() => setPrefsOpen(true)}><Icon name="layout-grid" size={18} /></button>
         <button class="ghost" style="color:inherit;background:var(--surface-2)" onClick={endSession}><Icon name="player-stop" size={16} /> จบรอบ</button>
       </div>
+      <div class={"ctxbar ctx2" + (recvDate.value ? " back" : "")}>
+        <span style="font-size:var(--fs-sm)">เต็ม {s.fullScore} · {modeLabel}</span>
+        <ReceivedDateChip assignedDate={asg?.assigned_date ?? null} />
+      </div>
+      {prefsOpen && <PageCardSettings page="scan" title="หน้าสแกน" layout={layout} meta={SCAN_CARD_META} locked={SCAN_LOCKED} onClose={() => setPrefsOpen(false)} />}
 
       <div class="row" style="justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
         <div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">{asg?.title}</div>
         <div class="row" style="gap:6px">
-          <span class="chip" style={scannerReady.value ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-warning);color:var(--text-warning)"}>
+          {showHid && <span class="chip" style={scannerReady.value ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-warning);color:var(--text-warning)"}>
             <Icon name={scannerReady.value ? "circle-check" : "hand-click"} size={13} />
             {scannerReady.value ? "เครื่องยิงพร้อม" : "คลิกหน้านี้ก่อนยิง"}
-          </span>
+          </span>}
           <span class="chip" style={up ? "background:var(--bg-success);color:var(--text-success)" : "background:var(--bg-warning);color:var(--text-warning)"}>
             <Icon name={up ? "cloud-check" : "cloud-off"} size={14} />
             {syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์"}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
@@ -856,10 +883,12 @@ function ScanView() {
           </div>
         </div>
       )}
+      {showHint && !pending.value && <div class="page-sub sc-hint">{s.mode === "full" ? "โหมดให้คะแนนเต็ม: ยิงแล้วได้คะแนนเต็มทันที · แตะช่องที่ส่งแล้วเพื่อยกเลิก" : s.mode === "later" ? "โหมดรับงานก่อน: ยิงแล้วบันทึกว่าส่ง ให้คะแนนทีหลังในสมุดคะแนน" : "โหมดกรอกทีละคน: ยิงแล้วพิมพ์คะแนน กด Enter"}</div>}
       {s.mode === "type" && pending.value && <ScorePad />}
+      <FailedPanel assignmentId={s.assignmentId} />
       </div>
 
-        <div class="card sc-recent" style="padding:0;overflow:hidden">
+        {showRecent && <div class="card sc-recent" style="padding:0;overflow:hidden">
           <div class="row" style="justify-content:space-between;padding:10px 12px;background:var(--surface-1)">
             <span style="font-size:var(--fs-sm)" class="muted">สแกนล่าสุด</span>
             <span style="font-size:var(--fs-sm)" class="muted">รอบนี้ {recent.value.length} คน</span>
@@ -884,7 +913,7 @@ function ScanView() {
               );
             })
           )}
-        </div>
+        </div>}
 
         <div class="card sc-gridcard">
           <div class="row" style="gap:12px;margin-bottom:8px">
@@ -967,6 +996,81 @@ function ScanSummary({ s }: { s: Session }) {
   );
 }
 
+/** "วันที่รับ: วันนี้ ▾" — pick the day the work was really handed in (between the day it was given and today). */
+function ReceivedDateChip({ assignedDate }: { assignedDate: string | null }) {
+  const [open, setOpen] = useState(false);
+  const today = bkkToday();
+  const cur = recvDate.value ?? today;
+  const label = cur === today ? "วันนี้" : thaiShort(cur);
+  const min = assignedDate && assignedDate <= today ? assignedDate : "2020-01-01";
+  function pick(v: string | null) {
+    if (v && v !== today) {
+      const problem = checkReceivedDate(v, { today, assignedDate });
+      if (problem) { err(FAIL_REASON[problem]); return; }
+    }
+    recvDate.value = v && v !== today ? v : null;
+    setOpen(false);
+    if (recvDate.value) notify("info", `กำลังรับงานย้อนหลัง · ${thaiShort(recvDate.value)} — งานที่สแกนต่อจากนี้จะนับเป็นวันนั้น`);
+  }
+  const yest = (() => { const d = new Date(Date.parse(today + "T00:00:00Z") - 864e5).toISOString().slice(0, 10); return d >= min ? d : null; })();
+  return (
+    <span class="sc-date">
+      <button class="ghost sc-datebtn" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <Icon name="calendar-event" size={16} /> วันที่รับ: {label} <Icon name="chevron-down" size={14} />
+      </button>
+      {recvDate.value && <>
+        <span class="sc-backtxt"><Icon name="alert-triangle" size={16} /> รับงานย้อนหลัง</span>
+        <button class="ghost" onClick={() => pick(null)}>กลับเป็นวันนี้</button>
+      </>}
+      {open && (
+        <>
+          <div style="position:fixed;inset:0;z-index:29" onClick={() => setOpen(false)} />
+          <div class="gb-menu sc-datemenu" role="dialog" aria-label="วันที่รับงาน" style="left:0;right:auto">
+            <button onClick={() => pick(null)}>วันนี้</button>
+            {yest && <button onClick={() => pick(yest)}>เมื่อวาน · {thaiShort(yest)}</button>}
+            <label class="page-sub" style="display:flex;flex-direction:column;gap:2px;padding:6px 10px">เลือกวันอื่น
+              <input type="date" min={min} max={today} value={cur} onChange={(e) => { const v = (e.target as HTMLInputElement).value; if (v) pick(v); }} />
+            </label>
+            <div class="page-sub" style="padding:4px 10px">เลือกวันอนาคตหรือก่อนวันมอบหมายไม่ได้ · มีผลกับงานที่สแกนหลังจากนั้น · จบรอบแล้วกลับเป็นวันนี้</div>
+          </div>
+        </>
+      )}
+    </span>
+  );
+}
+const MON = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+function thaiShort(iso: string) { const [y, m, d] = iso.split("-").map(Number); return `${d} ${MON[m - 1]} ${y + 543}`; }
+
+/** Hand-ins of this work the server refused: shown by themselves when there are any (never hidden — a refused scan is a lost hand-in). */
+function FailedPanel({ assignmentId }: { assignmentId: string }) {
+  const [items, setItems] = useState<FailedItem[]>([]);
+  const [ask, setAsk] = useState("");
+  const n = failedCount.value;
+  useEffect(() => { listFailed().then((l) => setItems(l.filter((f) => f.payload.assignmentId === assignmentId))); }, [n, assignmentId]);
+  if (!items.length) return null;
+  const refresh = () => listFailed().then((l) => setItems(l.filter((f) => f.payload.assignmentId === assignmentId)));
+  return (
+    <section class="card sc-failed" aria-labelledby="sc-failed-h">
+      <h2 id="sc-failed-h" style="font-size:1rem;color:var(--text-danger)"><Icon name="cloud-x" size={18} /> ส่งไม่สำเร็จ {items.length} รายการ</h2>
+      {items.map((it) => {
+        const st = studentsById.value.get(it.payload.studentId);
+        return (
+          <div class="row" style="gap:8px;padding:6px 0;border-top:0.5px solid var(--border)" key={it.opId}>
+            <div class="grow" style="min-width:0">
+              <div><b style="font-weight:500">{st ? `เลขที่ ${st.number ?? "-"} ${fullName(st)}` : it.payload.studentId}</b> · {new Date(it.failedAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</div>
+              <div class="page-sub" style="color:var(--text-danger)">{FAIL_REASON[it.reason] ?? it.reason}</div>
+              {ask === it.opId && <div class="page-sub">ทิ้งรายการนี้? ข้อมูลส่งงานของเด็กคนนี้จะหายไป</div>}
+            </div>
+            {ask === it.opId
+              ? <><button class="ghost" onClick={() => setAsk("")}>ไม่ทิ้ง</button><button style="color:var(--text-danger)" onClick={async () => { setAsk(""); await discardFailed(it.opId); refresh(); }}>ทิ้ง</button></>
+              : <><button onClick={async () => { try { await retryFailed(it.opId); refresh(); } catch { err("ลองใหม่ไม่ได้ — เครื่องนี้บันทึกไม่ได้"); } }}>ลองใหม่</button><button class="ghost" onClick={() => setAsk(it.opId)}>ทิ้ง</button></>}
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
 function FeedbackCard({ hidden }: { hidden?: boolean }) {
   const f = feedback.value!;
   return (
@@ -1044,4 +1148,4 @@ function ScorePad() {
 }
 
 // Test seam: the round controller is plain functions over signals, so a test can drive it without rendering.
-export const __scan = { excusedAsk, startSession, loadSubs, pollSubs, startPolling, POLL_MS, RESUME_GAP_MS, commitStudent, effSub, session, subsBox, feedback };
+export const __scan = { recvDate, handleScan, undo, excusedAsk, startSession, loadSubs, pollSubs, startPolling, POLL_MS, RESUME_GAP_MS, commitStudent, effSub, session, subsBox, feedback };

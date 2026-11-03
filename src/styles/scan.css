@@ -153,3 +153,14 @@
 .sc-closed a { color: inherit; text-decoration: underline; }
 .sc-choose { margin-bottom: 12px; border-color: var(--border-warning); }
 .sc-pick { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; height: auto; padding: 8px 14px; }
+
+/* ---- round 2: received-date chip, card hint, failed list ---- */
+.ctxbar.back { background: var(--bg-warning); color: var(--text-warning); border-color: var(--border-warning); }
+.ctx2 { margin-top: 6px; flex-wrap: wrap; gap: 8px; }
+.sc-date { position: relative; display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sc-datebtn { background: var(--surface-2); color: var(--text-primary); }
+.ctxbar.back .sc-datebtn { border: 1.5px solid var(--text-warning); }
+.sc-backtxt { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; }
+.sc-datemenu { min-width: 16rem; }
+.sc-hint { padding: 2px 4px; }
+.sc-failed { border-left: 4px solid var(--fill-danger); margin-bottom: 8px; }

@@ -167,7 +167,8 @@ async function flushPass(): Promise<void> {
           await outboxRemove(item.opId);
         } else {
           // per-item rejection (not_in_class / invalid / full_score_changed / …)
-          await moveOutboxToFailed([item], r.result);
+          // keep the server's detail for `invalid` (received_date_future, cell_not_submitted, …) so the list can say why
+          await moveOutboxToFailed([item], r.result === "invalid" && r.reason ? r.reason : r.result);
           if (!NON_BLOCKING.has(r.result)) failedPairs.add(pairKey(item.payload));
         }
         emit(r, item.payload);

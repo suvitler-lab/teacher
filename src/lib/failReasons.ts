@@ -1,0 +1,21 @@
+/** Why a hand-in was not accepted, in plain Thai. Keys are the outbox's `reason` (a result code, or the detail of `invalid`). */
+export const FAIL_REASON: Record<string, string> = {
+  not_in_class: "ไม่ได้อยู่ในห้องนี้",
+  student_inactive: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)",
+  full_score_changed: "คะแนนเต็มถูกแก้ไข",
+  invalid: "ข้อมูลไม่ถูกต้อง",
+  validation: "ข้อมูลไม่ถูกต้อง",
+  assignment_closed: "งานนี้ปิดรับแล้ว — เปิดรับงานอีกครั้งในสมุดคะแนน แล้วกด \"ลองใหม่\"",
+  assignment_missing: "ไม่พบงานนี้แล้ว (อาจถูกลบ)",
+  score_out_of_range: "คะแนนเกินคะแนนเต็ม หรือติดลบ",
+  received_date_invalid: "วันที่รับงานไม่ถูกต้อง",
+  received_date_future: "วันที่รับงานเป็นวันในอนาคต — แก้วันที่แล้วสแกนใหม่",
+  received_date_before_assigned: "วันที่รับงานอยู่ก่อนวันมอบหมายงาน — แก้วันที่แล้วสแกนใหม่",
+  cell_not_submitted: "ช่องนี้ยังไม่ได้ส่ง จึงแก้วันที่รับไม่ได้",
+  redate_not_allowed: "แก้วันที่รับได้เฉพาะงานที่ส่งแล้วแบบสแกน/ตาราง",
+  blocked_by_earlier_failure: "รอแก้รายการก่อนหน้า",
+  no_response: "เซิร์ฟเวอร์ไม่ตอบรับ",
+  superseded: "มีการแก้ไขที่ใหม่กว่าอยู่ในระบบแล้ว (เช่น ล้างทั้งห้อง) จึงไม่ใช้ค่านี้",
+  already_submitted: "ส่งไปแล้ว — ไม่บันทึกซ้ำ",
+  epoch_changed: "ข้อมูลถูกกู้คืนจากไฟล์สำรองหลังจากรายการนี้ถูกบันทึกไว้ — ตรวจสอบก่อนส่งใหม่",
+};
