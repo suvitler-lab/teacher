@@ -19,8 +19,9 @@ const bodyHtml = lines.slice(iStyleB + 1, iScriptA).join("\n").replace(/<\/?body
 const ev = (s) => { const f = new Function(s.replace(/^const ICONS=/, "return ") + ""); return f(); };
 const icons1 = ev(js1.match(/^const ICONS=.*$/m)[0].replace(/;\s*$/, ""));
 const icons2 = ev(rd(path.join(W, "icons2.js")).trim().replace(/;\s*$/, ""));
+const icons3 = fs.existsSync(path.join(W, "icons3.js")) ? ev(rd(path.join(W, "icons3.js")).trim().replace(/;\s*$/, "")) : {};
 const icons0 = ev(rd(path.join(W, "icons.js")).trim().replace(/;\s*$/, ""));
-const ICONS = Object.assign({}, icons0, icons1, icons2);
+const ICONS = Object.assign({}, icons0, icons1, icons2, icons3);
 const iconsJs = "const ICONS=" + JSON.stringify(ICONS) + ";";
 
 // --- แปลงสคริปต์รอบ 1 เป็น IIFE `H` ---
@@ -45,10 +46,13 @@ const H = "const H=(function(){\n" + js1 + "\n})();\n";
 const r = (f) => rd(path.join(W, f));
 let j1 = r("r2-js-1.js").replace("__ICONS__", "");
 let j2 = r("r2-js-2.js"), j3 = r("r2-js-3.js"), j4 = r("r2-js-4.js"), j5 = r("r2-js-5.js");
+const opt = (f) => (fs.existsSync(path.join(W, f)) ? r(f) : "");
+const jgb = opt("r3-js-gb.js");
 j3 = j3.replace('class="pbar"', 'class="pbar2"').replace('class="stack"', 'class="stack2"');
 let css2 = r("r2-css.css");
 css2 = css2.replace(/^\.stack\{/m, ".stack2{").replace(/\.stack>i/, ".stack2>i").replace(/^\.pbar\{(.*?)\}\.pbar>div/m, ".pbar2{$1}.pbar2>div");
 css2 += "\n.phone .startbar,.phone .savebar{bottom:64px}\n";
+css2 += "\n" + opt("r3-css.css");
 
 const hash = "";
 const out = `<!doctype html>
@@ -56,10 +60,10 @@ const out = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ui-redesign รอบ 2 — สแกน · เช็คชื่อ · สุ่มชื่อ (mockup กดได้จริง · ชื่อสมมติ)</title>
+<title>ui-redesign รอบ 3 — คะแนน · สแกน · เช็คชื่อ · สุ่มชื่อ · หน้าหลัก (mockup กดได้จริง · ชื่อสมมติ)</title>
 <!--
   ไฟล์เดียว เปิดจากดิสก์ได้ ไม่โหลดอะไรจากอินเทอร์เน็ต · ข้อมูลและชื่อนักเรียนสมมติทั้งหมด
-  รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan-type #attendance-tap #random-pick)
+  รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan-type #attendance-tap #random-pick #gradebook-table #gradebook-cell)
   ประกอบโดย design/round2-wip/build.cjs  (อย่าแก้ไฟล์นี้ตรง ๆ — แก้ชิ้นส่วนแล้วรันใหม่)
 -->
 <style>
@@ -76,6 +80,7 @@ ${H}
 ${j2}
 ${j3}
 ${j4}
+${jgb}
 ${j5}
 </script>
 </body>

@@ -18,7 +18,7 @@ function tabsHtml(){
   const t=[{k:'home',l:'หน้าหลัก',i:'home'},{k:'attendance',l:'เช็คชื่อ',i:'user-check'},{k:'scan'},{k:'gradebook',l:'คะแนน',i:'notebook'},{k:'more'}];
   const more=['random','reports','students','settings'].includes(S.page);
   return `<nav class="tabs" aria-label="เมนู">${t.map(x=>x.k==='scan'?`<a class="tab tab-scan${S.page==='scan'?' on':''}" href="#scan" data-a="nav" data-k="scan"><span class="tab-scan-btn">${ic('scan',24)}</span>สแกน</a>`
-   :x.k==='more'?`<button class="tab${(S.sheetMenu||S.page==='random')?' on':''}" data-a="sheetmenu" aria-expanded="${S.sheetMenu}" aria-haspopup="dialog" aria-controls="menu-sheet"><span class="pip" aria-hidden="true"></span>${ic('menu-2',24)}เมนู</button>`
+   :x.k==='more'?`<button class="tab${(S.sheetMenu||more)?' on':''}" data-a="sheetmenu" aria-expanded="${S.sheetMenu}" aria-haspopup="dialog" aria-controls="menu-sheet"><span class="pip" aria-hidden="true"></span>${ic('menu-2',24)}เมนู</button>`
    :`<a class="tab${x.k===S.page?' on':''}" href="#${x.k}" data-a="nav" data-k="${x.k}" ${x.k===S.page?'aria-current="page"':''}><span class="pip" aria-hidden="true"></span>${ic(x.i,24)}${x.l}</a>`).join('')}</nav>`;
 }
 function sheetHtml(){

@@ -36,14 +36,15 @@ function prefsDrawer(p){
      <button class="switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="แสดงการ์ด ${m.title}" data-a="pt" data-k="${k}"><span class="knob"></span></button>
      <span class="mv"><button class="icon ghost" data-a="pm" data-k="${k}" data-d="-1" aria-label="เลื่อน ${m.title} ขึ้น" ${i===0?'disabled':''}>${ic('chevron-up',20)}</button><button class="icon ghost" data-a="pm" data-k="${k}" data-d="1" aria-label="เลื่อน ${m.title} ลง" ${i===P.order.length-1?'disabled':''}>${ic('chevron-down',20)}</button></span></div>`}).join('');
   return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="pd-h"><div class="drawer-head"><div><h2 class="t" id="pd-h">ปรับการ์ด · ${CARDS[p].title}</h2><div class="xs">เปิด/ปิดและเรียงการ์ด · บันทึกทันที ใช้กับทุกเครื่องที่เข้าสู่ระบบ</div></div><button class="icon ghost" aria-label="ปิด" data-a="closeov">${ic('x',20)}</button></div>
-   <div class="lock">${ic('info-circle',16)} ปิดไม่ได้ (เพื่อกันข้อมูลหาย): ${p==='scan'?'ช่องสแกน · ผังเลขที่ · รายการส่งไม่สำเร็จ · แถบวันที่รับงาน':p==='att'?'ปุ่มสถานะ · ช่องเด็ก · แถบบันทึก · การ์ดข้อมูลชนกัน':'เวทีสุ่ม · ปุ่มสุ่ม · แถบเหตุผลที่สุ่มไม่ได้'}</div>${rows}
+   <div class="lock">${ic('info-circle',16)} ปิดไม่ได้ (เพื่อกันข้อมูลหาย): ${p==='scan'?'ช่องสแกน · ผังเลขที่ · รายการส่งไม่สำเร็จ · แถบวันที่รับงาน':p==='att'?'ปุ่มสถานะ · ช่องเด็ก · แถบบันทึก · การ์ดข้อมูลชนกัน':p==='gradebook'?'ตาราง · แผงงานที่เลือก · ค้างในเครื่องนี้ · ตัวกรอง':'เวทีสุ่ม · ปุ่มสุ่ม · แถบเหตุผลที่สุ่มไม่ได้'}</div>${rows}
    <div class="row" style="justify-content:space-between;margin-top:10px;flex-wrap:wrap"><button class="ghost" data-a="preset">${ic('history',20)}คืนค่าเริ่มต้น</button><button class="primary" data-a="closeov">เสร็จ</button></div></div></div>`;
 }
-const prefKey=()=>({scan:'scan',attendance:'att',random:'random'}[S.page]);
+const prefKey=()=>({scan:'scan',attendance:'att',random:'random',gradebook:'gradebook'}[S.page]);
 function overlays(){
   let o='';
   if(S.prefsOpen&&S.page!=='home')o+=prefsDrawer(prefKey());
   if(S.sheetMenu&&isNarrow())o+=sheetHtml();
+  if(S.page==='gradebook'&&S.gb)o+=gbOverlays();
   if(S.page==='scan'&&S.sc.sheet!=null){
     const n=S.sc.sheet,r=S.sc.recent.find(x=>x.n===n),st=S.sc.seats[n],a=AS(S.sc.asg);
     o+=`<div class="sheetov" data-a="closeov"><div class="asheet" role="dialog" aria-modal="true" aria-label="ตัวเลือก เลขที่ ${n}"><div class="hd">เลขที่ ${n} ${nick(n)}</div><div class="tip">${st==='await'?'รับงานแล้ว · รอคะแนน':`ส่งแล้ว · ได้ ${r?r.score:'8'}/${a.full} · ${st==='late'?'ส่งช้า':'ตรงเวลา'}`}${r&&r.recv?' · รับ '+fmtS(r.recv):''}</div>
@@ -65,6 +66,7 @@ function mainHtml(d){
   if(S.page==='home'){syncHome();return H.homeHtml(d)}
   if(S.page==='scan'){const s=curSub();return s==='setup'?setupHtml():s==='summary'?summaryHtml():liveHtml()}
   if(S.page==='attendance')return attHtml();
+  if(S.page==='gradebook')return gbHtml();
   return randomHtml();
 }
 function render(){
@@ -73,8 +75,9 @@ function render(){
   fr.className='frame '+S.dev+(d.touch?' touch':'')+(S.dev==='phone'?' phone narrow':'')+(isWide()?' wide':'');
   const avail=Math.min(window.innerWidth-24,1536);const sc=d.w>avail?avail/d.w:1;
   fr.style.transform=`scale(${sc})`;fit.style.width=(d.w*sc)+'px';fit.style.height=(d.h*sc)+'px';
+  if(S.page==='gradebook'&&S.gb)gbBeforeRender();
   const old=fr.querySelector('#main');const st=old?old.scrollTop:0;
-  const padx=S.dev==='phone'?14:24,pady=S.dev==='phone'?96:40;
+  const padx=S.dev==='phone'?14:(S.page==='gradebook'&&S.dev==='ipadP'?16:24),pady=S.dev==='phone'?96:40;
   if(pjOn()){
     const K=Math.min(d.h/768,d.w/1024);
     fr.innerHTML=pjHtml(K)+(S.toast?`<div class="toast2" role="status">${S.toast.text}</div>`:'');
@@ -87,6 +90,7 @@ function render(){
     fr.innerHTML=shell+`<main class="main" id="main" style="--padx:${padx}px;--pady:${pady}px">${mainHtml(d)}</main>`+(d.shell==='tabs'?tabsHtml():'')+ov;
     const rail=fr.querySelector('.rail');if(rail){fr.classList.remove('hide-gl');if(rail.scrollHeight>rail.clientHeight)fr.classList.add('hide-gl')}
     const nm=fr.querySelector('#main');if(nm)nm.scrollTop=st;
+    if(S.page==='gradebook'&&S.gb)gbAfterRender();
   }
   ctl();
 }
@@ -95,7 +99,7 @@ function ctl(){
   const pg={home:'หน้าหลัก',...PAGES};
   const subs=S.page==='home'?{main:'หน้าหลัก',prefs:'แผงปรับหน้าหลัก',list:'รายการจากตัวเลข',sheet:'เมนูมือถือ'}:SUBS[S.page];
   const cs=S.page==='home'?(H.S.page==='home'?'main':H.S.page):curSub();
-  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],home:[]}[S.page];
+  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],gradebook:[['gb-type','กรอกคะแนนคนถัดไป'],['gb-pick','เลือกงานถัดไป'],['gb-exc','ตั้งยกเว้น เลขที่ 7'],['gb-date','แก้วันที่รับ (AC-16)'],['gb-bulk','ทั้งห้องส่งแล้ว'],['gb-close','ปิดรับงาน'],['gb-keys','ลูกศร → 2 ช่อง (คอม)']],home:[]}[S.page];
   $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
   const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
   {const h=S.page==='home'?'home':S.page+(curSub()?'-'+curSub():'');if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}
@@ -110,11 +114,12 @@ function applySub(){
   }
   if(S.page==='attendance'){if(curSub()==='period')S.at.mode='period';else if(curSub()==='scan')S.at.mode='scan';else if(curSub()==='tap')S.at.mode='tap'}
   if(S.page==='random'){if(curSub()==='group')S.rd.mode='group';else if(curSub()==='pick')S.rd.mode='pick'}
+  if(S.page==='gradebook'&&S.gb)gbApplySub();
   if(curSub()==='pj'&&S.page!=='home')toast2('เปิดโหมดฉายจอแล้ว · คะแนนและเปอร์เซ็นต์รายคนถูกซ่อน');
 }
 function go(page,sub){
   S.page=page;S.menu=null;S.prefsOpen=false;S.sheetMenu=false;S.pjOther=false;S.dlg=null;
   if(page==='home'){if(sub)H.S.page=sub==='main'?'home':sub}
-  else{S.sub[page]=sub||(S.sub[page]==='pj'?{scan:'type',attendance:'tap',random:'pick'}[page]:S.sub[page]);applySub()}
+  else{S.sub[page]=sub||((S.sub[page]==='pj'||page==='gradebook')?{scan:'type',attendance:'tap',random:'pick',gradebook:'table'}[page]:S.sub[page]);applySub()}
 }
-function initAll(){initSc();initAt();initRd()}
+function initAll(){initSc();initAt();initRd();initGb()}

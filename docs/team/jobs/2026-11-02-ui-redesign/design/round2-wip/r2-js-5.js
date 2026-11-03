@@ -5,10 +5,10 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const LBL={gradebook:'คะแนน',reports:'รายงาน',students:'นักเรียน',settings:'ตั้งค่า',work:'งาน'};
 window.R2render=()=>render();
 window.R2nav=k=>{
-  if(['home','scan','attendance','random'].includes(k)){go(k);render();return}
+  if(['home','scan','attendance','random','gradebook'].includes(k)){go(k);render();return}
   toast2(`เปิดหน้า “${LBL[k]||k}” (หน้านี้อยู่นอกขอบเขต mockup รอบนี้)`);render();
 };
-function closeAll(){S.prefsOpen=false;S.sheetMenu=false;S.menu=null;S.dlg=null;if(S.sc)S.sc.sheet=null;S.pjOther=false}
+function closeAll(){S.prefsOpen=false;S.sheetMenu=false;S.menu=null;S.dlg=null;if(S.sc)S.sc.sheet=null;S.pjOther=false;if(S.gb){if(S.gb.pop||S.gb.sheet)S.gb.refocus='cell';S.gb.pop=null;S.gb.sheet=null;S.gb.form=null}}
 function exitPj(){S.sub[S.page]=PJ_DEFAULT_SUB[S.page];S.pjOther=false;S.pjHint=false;if(S.page==='attendance')S.at.mode='tap';render()}
 let rdTimer=null;
 function rdTick(){const R=S.rd;if(!R.run){clearInterval(rdTimer);rdTimer=null;return}R.left=Math.max(0,R.left-1);if(R.left===0){R.run=false;clearInterval(rdTimer);rdTimer=null}render()}
@@ -108,7 +108,7 @@ function onAct(a,k,t,e){
   case 'tsec':R.timerSec=+k;R.left=R.timerSec;R.run=false;break;
   case 'trun':{R.run=!R.run;if(R.run){if(R.left<=0)R.left=R.timerSec;clearInterval(rdTimer);rdTimer=setInterval(rdTick,1000)}break}
   case 'tres':R.left=R.timerSec;R.run=false;break;
-  default:return;
+  default:if(gbAct(a,k,t,e))return;return;
   }
   render();
 }
@@ -117,13 +117,13 @@ function onCtl(c){
   if(a==='page'){go(k)}
   else if(a==='sub'){
     if(S.page==='home'){H.S.page=k==='main'?'home':k;if(k==='sheet')S.dev='phone'}
-    else{S.sub[S.page]=k;if(S.page==='scan'&&k==='summary'){}applySub()}
-    closeAll()}
+    else{closeAll();S.sub[S.page]=k;applySub()}
+    if(S.page==='home')closeAll()}
   else if(a==='dev')S.dev=k;
   else if(a==='theme')S.theme=k;
   else if(a==='font')S.font=+k;
   else if(a==='scen'){S.scen=k;initAll();H.S.confirmReset=false}
-  else if(a==='reset'){clearInterval(rdTimer);S.sub={scan:'type',attendance:'tap',random:'pick'};S.page='home';S.prefs={scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random')};S.pjPref={th:'dark',sz:2};S.toast=null;closeAll();initAll();H.S.page='home';H.S.prefs=H.DEFAULT_PREFS();H.S.showAll=false;H.S.filter='open';H.S.hideNames=false}
+  else if(a==='reset'){clearInterval(rdTimer);S.sub={scan:'type',attendance:'tap',random:'pick',gradebook:'table'};S.page='home';S.prefs={scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook')};S.pjPref={th:'dark',sz:2};S.toast=null;closeAll();initAll();H.S.page='home';H.S.prefs=H.DEFAULT_PREFS();H.S.showAll=false;H.S.filter='open';H.S.hideNames=false}
   else if(a==='sim'){
     if(S.page==='scan'){
       ensureLive();const sc2=S.sc;
@@ -133,6 +133,7 @@ function onCtl(c){
       else if(k==='scan-exc'){sc2.pend=null;sc2.seats[EXC[0]]='exc';scanCommit(EXC[0],'qr')}
     }else if(S.page==='attendance'){S.at.mode='scan';S.sub.attendance='scan';attScanNext()}
     else if(S.page==='random')rdPick();
+    else if(S.page==='gradebook')gbSim(k);
   }
   render();
 }
@@ -162,7 +163,7 @@ document.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-a="p
 ['pointerup','pointercancel','pointerleave'].forEach(ev=>document.addEventListener(ev,()=>holdEnd(false),true));
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    if(S.dlg||S.prefsOpen||S.sheetMenu||S.menu||(S.sc&&S.sc.sheet!=null)){closeAll();render();return}
+    if(S.dlg||S.prefsOpen||S.sheetMenu||S.menu||(S.sc&&S.sc.sheet!=null)||(S.gb&&(S.gb.pop||S.gb.sheet))){closeAll();render();return}
     if(pjOn()){exitPj();return}
     if(S.page==='home'&&H.S.page!=='home'){H.S.page='home';H.S.confirmReset=false;render()}
     return}
@@ -173,7 +174,7 @@ document.addEventListener('keyup',e=>{if((e.key==='Enter'||e.key===' ')&&hold)ho
 window.addEventListener('resize',render);
 function fromHash(){
   const [p,s]=location.hash.replace('#','').split('-');
-  if(!['home','scan','attendance','random'].includes(p))return false;
+  if(!['home','scan','attendance','random','gradebook'].includes(p))return false;
   if(p===S.page&&(!s||s===curSub()))return false;
   const ok=p==='home'||(SUBS[p]&&SUBS[p][s]);
   go(p,ok?s:undefined);return true;
