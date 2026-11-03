@@ -25,7 +25,7 @@ const TODAY = "2026-11-04";
 const baseSettings = (over: Partial<Settings> = {}): Settings => ({
   school_name: "โรงเรียนทดสอบ", teacher_name: "ครูทดสอบ", app_title: "งานครบ", late_after: "08:30", theme: "light", accent: "blue",
   sound_enabled: false, accept_student_code_scan: false, parent_portal_enabled: false, onboarding_done: true,
-  last_backup_at: String(NOW - 2 * 86_400_000), period_times: "", home_cards: "", ...over,
+  last_backup_at: String(NOW - 2 * 86_400_000), period_times: "", home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", ...over,
 });
 
 function payload(over: Partial<DashboardPayload> = {}): DashboardPayload {

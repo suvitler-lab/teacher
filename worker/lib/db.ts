@@ -45,6 +45,9 @@ export async function getSettings(env: Env): Promise<Settings> {
     last_backup_at: map.last_backup_at ?? "",
     period_times: map.period_times ?? "",
     home_cards: map.home_cards ?? "",
+    scan_cards: map.scan_cards ?? "",
+    attendance_cards: map.attendance_cards ?? "",
+    random_cards: map.random_cards ?? "",
   };
 }
 

@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v6 · อัปเดต 2026-11-04 (ui-redesign รอบ 1: dashboard เพิ่ม `dueSoon`/`absentToday`, settings เพิ่ม `home_cards` — ดู changelog v6) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v7 · อัปเดต 2026-11-04 (ui-redesign รอบ 1: dashboard เพิ่ม `dueSoon`/`absentToday`, settings เพิ่ม `home_cards` — ดู changelog v6) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 
@@ -256,6 +256,11 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 - รูปแบบค่า: JSON `{"v":1,"order":["open","att",…],"hidden":["classes",…]}` — ตัวแปล/ค่าเริ่มต้น/คีย์ที่ไม่รู้จัก/เวอร์ชันอื่น อยู่ที่ฝั่ง client เท่านั้น (`src/lib/homeCards.ts`) server เก็บเป็นข้อความตามที่ส่งมา (ผ่านกติกา body ≤ 1MB และ settings ต้องเป็น object เดิม) · `""` = เลย์เอาต์เริ่มต้น
 - ซิงก์: `GET /api/bootstrap` คืน `settings.home_cards` → ทุกเครื่องของครูเห็นหน้าหลักเดียวกัน · การเขียนผ่าน batch เดียวกับ audit (เดิม) · ไม่เข้าคิวออฟไลน์: ออฟไลน์แก้ไม่ได้ (หน้าจอย้อนกลับและแจ้ง "ออฟไลน์ — ปรับหน้าหลักได้เมื่อออนไลน์")
 
+### EP-07 `PUT /api/settings` — ค่า `scan_cards` `attendance_cards` `random_cards` (เพิ่มใน v7)
+
+- คีย์ใหม่ 3 ตัว (string) ใน `ALLOWED_SETTINGS` และ `getSettings` (ค่าเริ่มต้น `""`) · `Settings` ใน `shared/types.ts` เพิ่ม 3 ฟิลด์ — รูปแบบเดียวกับ `home_cards`: JSON `{"v":1,"order":[…],"hidden":[…]}` ของการ์ดหน้าสแกน/เช็คชื่อ/สุ่มชื่อ ตามลำดับ · ค่า `""` = ใช้การ์ดเริ่มต้นของหน้านั้น
+- ไม่มี endpoint ใหม่ · แอปรุ่นเก่าไม่อ่านคีย์เหล่านี้ (ไม่กระทบ) · เทสต์ `test/api/page-cards-settings.test.ts`
+
 ## Changelog
 
 | เวอร์ชัน | วันที่ | เปลี่ยนอะไร | งาน | กระทบ |
@@ -266,3 +271,4 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | v5 | 2026-11-03 | กติกาทั่วไป (ทุก endpoint): header no-store/nosniff, Sec-Fetch-Site, 413 `too_large`, rate limit แบบ atomic + /64 + ต่ออีเมล, 429 บน change-password, เปลี่ยนรหัสแล้วเครื่องอื่นหลุด, `restore_failed` ไม่มี `detail`, ขีดความยาวรหัส/deviceId · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-server-security | server `worker/app.ts`, `lib/{auth,http}.ts`, `routes/{auth,reset,backup}.ts` · client: คำเตือนก่อนดาวน์โหลด backup (`RestoreModal.tsx` `BackupWarning`, `Settings.tsx`) · แอปเก่าไม่กระทบ (client ใช้แค่ code ของ `restore_failed`; 429 แสดง message เดิม) |
 | v4 | 2026-11-03 | EP-01: re-date วันเดิม = `ok` ไม่เขียน/ไม่มี audit · `received_date_future` ยอมนาฬิกาเครื่องนำ ≤ 5 นาที (`latest`) · audit `after.late` ซิงก์กับค่าที่บันทึก · op B ที่พึ่งแถวรับงานในคำขอเดียวกันรับ guard ของแถวนั้น · lost op B บนช่องที่ไม่ submitted = `cell_not_submitted` · EP-03: `received_date_future` ใช้ `latest` เดียวกัน · EP-05: `full_score` ไม่บังคับเมื่องานมีอยู่ (คงค่าใน DB) · คนที่ได้เต็มเดิมไม่รวมห้องที่ถูกเอาออกในคำขอเดียวกัน · EP-02/EP-04 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-correctness-lows | server `submissions.ts`, `assignments.ts`, `shared/received-date.ts` · client `Gradebook.tsx` (`saveAsgPatch` ไม่ส่ง `full_score` → **ปล่อย server ก่อนแอป**: server v3 จะตอบ 422) · แอปเก่าไม่กระทบ (ส่ง `full_score` ครบเหมือนเดิม) |
 | v6 | 2026-11-04 | EP-06 (ใหม่ในเอกสาร) `/api/dashboard` เพิ่ม `dueSoon`, `absentToday` · EP-07 `PUT /api/settings` เพิ่มคีย์ `home_cards` + `Settings.home_cards` · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-02-ui-redesign (รอบ 1: เมนู + หน้าหลัก) | server `worker/routes/dashboard.ts`, `catalog.ts`, `lib/db.ts`, `shared/types.ts` · client `src/pages/Home.tsx`, `src/components/home/*`, `src/lib/{homeCards,homePrefs,homeLogic}.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |
+| v7 | 2026-11-04 | EP-07 `PUT /api/settings` เพิ่มคีย์ `scan_cards` `attendance_cards` `random_cards` + `Settings` | ui-redesign รอบ 2 | เพิ่มอย่างเดียว ไม่กระทบแอปเก่า |

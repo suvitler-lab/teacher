@@ -25,6 +25,9 @@ export interface Settings {
   last_backup_at: string;
   period_times: string; // JSON: {"1":"08:30",...}
   home_cards: string; // JSON {"v":1,"order":[card keys],"hidden":[card keys]}; "" = the default home layout
+  scan_cards: string; // same shape, for the scan page cards
+  attendance_cards: string; // same shape, for the attendance page cards
+  random_cards: string; // same shape, for the random-name page cards
 }
 
 export interface Term {
