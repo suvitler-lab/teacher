@@ -132,7 +132,7 @@ const gbMark=(aid,n)=>{const m=S.gb.marks;return m.fail.some(x=>x[0]===aid&&x[1]
 function gbHead(){
   const g=S.gb,c=CL(g.cls);
   return `<header class="pghead"><div class="hr"><span class="pgtile">${ic('notebook',24)}</span><div><h1>สมุดคะแนน</h1><div class="tip">${c.name} · ${g.subj||'ทุกวิชา'}</div></div></div>
-   <div class="act">${syncBadge()}<button class="pill gb-term" aria-haspopup="listbox" data-a="toast" data-k="เลือกภาคเรียน (ของเดิม)">${ic('calendar-stats',16)}ภาคเรียนที่ 2/2569 · ปัจจุบัน ${ic('chevron-down',16)}</button>${prefsBtn()}<button class="primary" data-a="gbnew">${ic('plus',20)}สร้างงาน</button></div></header>`;
+   <div class="act">${syncBadge()}<button class="pill gb-term" aria-haspopup="listbox" data-a="toast" data-k="เลือกภาคเรียน (ของเดิม)">${ic('calendar-stats',16)}${gbTouch()?'เทอม 2/2569':'ภาคเรียนที่ 2/2569 · ปัจจุบัน'} ${ic('chevron-down',16)}</button>${prefsBtn()}<button class="primary" data-a="gbnew">${ic('plus',20)}สร้างงาน</button></div></header>`;
 }
 function gbToolbar(ws){
   const g=S.gb,rows=ws.length?null:null;
@@ -158,7 +158,7 @@ function gbStrip(ws,zone){
   const awList=ws.map(w=>({w,k:gbCount(g.cls,w)})).filter(x=>x.k.aw>0);
   const clList=g.works.filter(w=>!w.closed&&((!w.due&&dayDiff(TODAY,w.assigned)>=14)||(w.due&&dayDiff(TODAY,w.due)>=7)));
   const tile=(k)=>{
-    if(k==='sum')return `<div class="gb-tile sum" role="group" aria-label="สรุปห้อง"><span>งาน <b>${ws.length}</b></span><span>อัตราส่ง <b>${rate}%</b></span><button class="gb-n" data-a="gbrows" data-k="aw">รอตรวจ <b>${aw}</b></button><button class="gb-n" data-a="gbrows" data-k="miss">ค้างส่ง <b>${miss}</b> ชิ้น</button></div>`;
+    if(k==='sum')return `<div class="gb-tile sum" role="group" aria-label="สรุปห้อง">${gbTouch()?'':`<span>งาน <b>${ws.length}</b></span>`}<span>อัตราส่ง <b>${rate}%</b></span><button class="gb-n" data-a="gbrows" data-k="aw">รอตรวจ <b>${aw}</b></button><button class="gb-n" data-a="gbrows" data-k="miss">ค้างส่ง <b>${miss}</b> ชิ้น</button></div>`;
     if(k==='await')return `<span class="menu"><button class="gb-tile" data-a="menu" data-k="gbc-await" aria-expanded="${S.menu==='gbc-await'}">${ic('hourglass-empty',20)}รอตรวจ ${awList.length} งาน ${ic('chevron-down',16)}</button>${S.menu==='gbc-await'?`<div class="pop gb-list" role="menu">${awList.length?awList.map(x=>`<button role="menuitem" data-a="gbpickaw" data-k="${x.w.id}"><span class="grow">${x.w.title}</span><b>${x.k.aw}</b></button>`).join(''):'<div class="tip" style="padding:8px 10px">ไม่มีงานที่รอตรวจ</div>'}</div>`:''}</span>`;
     if(k==='closing')return `<span class="menu"><button class="gb-tile" data-a="menu" data-k="gbc-closing" aria-expanded="${S.menu==='gbc-closing'}">${ic('lock',20)}ควรปิดรับ ${clList.length} งาน ${ic('chevron-down',16)}</button>${S.menu==='gbc-closing'?`<div class="pop gb-list" role="menu">${clList.length?clList.map(w=>`<div class="gb-li"><span class="grow">${w.title}<div class="tip">${w.due?`เลยกำหนด ${dayDiff(TODAY,w.due)} วัน`:'ไม่มีกำหนด · สั่งมานานแล้ว'}</div></span><button data-a="gbclose" data-k="${w.id}">ปิดรับ</button></div>`).join(''):'<div class="tip" style="padding:8px 10px">ไม่มีงานที่ควรปิดรับ</div>'}</div>`:''}</span>`;
     if(k==='follow'){
@@ -241,7 +241,7 @@ function gbTable(ws){
   const head=`<tr><th class="gb-name gb-corner" scope="col">เลขที่ · ชื่อ</th>${cols.map(c=>c.t==='w'?gbHeadCell(c.w,c.w.id===g.sel):`<th class="gb-colw gb-fold" scope="col"><div class="gb-ht"><b>รวม ${c.label}</b></div><span class="gb-hm">${c.items.length} งาน</span></th>`).join('')}${showTot?'<th class="gb-tot" scope="col"><div class="gb-ht"><b>สะสม</b></div></th>':''}</tr>`;
   const body=rows.map(n=>{
     const t=gbTotal(cid,n,ws),miss=ws.some(w=>gbSt(w,gbCells(cid,w.id)[n])==='miss');
-    return `<tr class="gb-row"><th class="gb-name" scope="row">${miss?'<i class="gb-red" aria-label="มีงานค้าง"></i>':''}${gbNameCell(n)}</th>${cols.map(c=>{
+    return `<tr class="gb-row"><th class="gb-name" scope="row"><div class="gb-nmw">${miss?'<i class="gb-red" aria-label="มีงานค้าง"></i>':''}${gbNameCell(n)}</div></th>${cols.map(c=>{
       if(c.t==='w')return gbCellBtn(c.w,n);
       let sc=0,fs=0;c.items.forEach(w=>{const x=gbCells(cid,w.id)[n],s=gbSt(w,x);if(!w.hid&&(s==='ok'||s==='late')){sc+=x.score;fs+=w.full}});
       return `<td class="gb-sumc"><button class="gbc ok" data-a="gbfold" data-k="${g.group}${c.k}" aria-label="เปิดกลุ่ม ${c.label}">${fs?sc+'/'+fs:'–'}</button></td>`}).join('')}${showTot?`<td class="gb-tot">${t.pct==null?'–':`<b>${t.pct}%</b><small>${t.sc}/${t.fs}${t.star?'*':''}</small>`}</td>`:''}</tr>`}).join('');

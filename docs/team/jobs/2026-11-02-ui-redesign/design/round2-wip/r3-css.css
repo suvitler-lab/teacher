@@ -32,7 +32,7 @@
 /* ---- ตาราง ---- */
 .gb-scroll{overflow:auto;border:.5px solid var(--border);border-radius:var(--radius);background:var(--surface-2);position:relative;overscroll-behavior:contain}
 .gb-t{border-collapse:separate;border-spacing:0;table-layout:fixed;font-variant-numeric:tabular-nums;--nw:calc(var(--u)*12.5);--cw:calc(var(--u)*7.6);--tw:calc(var(--u)*5.2);--rh:calc(var(--u)*2.3)}
-.ipadP .gb-t{--nw:calc(var(--u)*8.5);--cw:calc(var(--u)*5);--tw:calc(var(--u)*4)}
+.ipadP .gb-t{--nw:calc(var(--u)*8);--cw:calc(var(--u)*5);--tw:calc(var(--u)*3.8)}
 .ipadL .gb-t{--nw:calc(var(--u)*10);--cw:calc(var(--u)*6);--tw:calc(var(--u)*4.4)}
 .touch .gb-t{--rh:max(44px,calc(var(--u)*2.4))}
 .gb-t th,.gb-t td{padding:0;border-bottom:.5px solid var(--border);border-right:.5px solid var(--border);vertical-align:middle}
@@ -44,10 +44,10 @@
 .gb-t thead .gb-tot{z-index:7}
 .gb-t td.gb-tot b{display:block;font-size:var(--fs-sm)}
 .gb-t td.gb-tot small,.gb-t .gb-avg small{display:block;font-size:var(--fs-xs);color:var(--text-secondary);font-weight:400}
-.gb-row>*{height:var(--rh)}
-.gb-row .gb-name{display:flex;align-items:center;gap:6px;position:sticky;overflow:hidden;white-space:nowrap}
-.gb-row .gb-name .gb-no{font-weight:600;min-width:1.7em;text-align:right;flex:none}
-.gb-row .gb-name .gb-nm{overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-sm)}
+.gb-row td,.gb-row th{height:var(--rh);line-height:1}
+.gb-nmw{display:flex;align-items:center;gap:6px;height:var(--rh);overflow:hidden;white-space:nowrap}
+.gb-nmw .gb-no{font-weight:600;min-width:1.7em;text-align:right;flex:none}
+.gb-nmw .gb-nm{overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-sm)}
 .gb-red{width:8px;height:8px;border-radius:50%;background:var(--fill-danger);flex:none}
 .gb-avg th,.gb-avg td{background:var(--surface-1);text-align:center;font-size:var(--fs-sm);padding:2px 0}
 .gb-avg th{text-align:left;padding-left:6px;font-weight:500}
@@ -163,3 +163,6 @@
 .phone .gb-wb{margin-left:0;flex-wrap:wrap}
 .phone .gb-strip{flex-wrap:nowrap;overflow-x:auto}
 .phone .gb-strip .menu{flex:none}
+
+.touch .gb-tile{padding:2px 8px;gap:6px}
+.gb-wl{flex-basis:14em}
