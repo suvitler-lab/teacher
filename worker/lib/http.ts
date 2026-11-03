@@ -29,6 +29,10 @@ export function ok<T>(c: Context, data: T, status = 200) {
 export function assertSameOrigin(c: Context) {
   const method = c.req.method;
   if (method === "GET" || method === "HEAD") return;
+  // A browser says where a request came from even when it leaves Origin out (S-08): only this site may write.
+  // ("none" = typed by the user; no header at all = not a browser, which carries no ambient cookie to abuse.)
+  const site = c.req.header("Sec-Fetch-Site");
+  if (site && site !== "same-origin" && site !== "none") throw forbidden("bad_origin");
   const origin = c.req.header("Origin");
   const host = c.req.header("Host");
   if (origin) {

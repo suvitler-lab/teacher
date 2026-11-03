@@ -1,0 +1,52 @@
+import { describe, it, expect } from "vitest";
+import { env } from "cloudflare:test";
+import { call, json, cookieFrom, login, seed } from "C:/Users/User/Desktop/teacher/test/api/helpers";
+const EMAIL = "teacher@example.com";
+const fromIp = (ip: string, init: RequestInit): RequestInit => ({ ...init, headers: { ...(init.headers as any), "CF-Connecting-IP": ip } });
+const wrong = (ip: string, deviceId: string) => call("/api/auth/login", fromIp(ip, json({ email: EMAIL, password: "wrong", deviceId })));
+const cnt = (xs: number[], s: number) => xs.filter((x) => x === s).length;
+
+describe("probe", () => {
+  it("P8 known device id skips the account budget (50 guesses over 10 IPs)", async () => {
+    await login();
+    const rs: number[] = [];
+    for (let n = 1; n <= 10; n++) for (let i = 0; i < 5; i++) rs.push((await wrong(`198.51.100.${n}`, "dev_test")).status);
+    console.log("P8", "401:", cnt(rs, 401), "429:", cnt(rs, 429));
+  });
+  it("P9 signed-out device stays known", async () => {
+    const a = await login();
+    const b = cookieFrom(await call("/api/auth/login", fromIp("10.0.0.2", json({ email: EMAIL, password: "pw123456", deviceId: "dev_phone" }))));
+    expect(b).not.toBe("");
+    const so = await call("/api/devices/dev_phone/signout", json({}), a);
+    const pw = await call("/api/auth/change-password", json({ current: "pw123456", next: "newpass99" }), a);
+    const row = await env.DB.prepare("SELECT revoked FROM devices WHERE id='dev_phone'").first<any>();
+    const rs: number[] = [];
+    for (let n = 1; n <= 8; n++) for (let i = 0; i < 5; i++) rs.push((await wrong(`203.0.113.${n}`, "dev_phone")).status);
+    console.log("P9 signout", so.status, "chpw", pw.status, "device row", JSON.stringify(row), "401:", cnt(rs, 401), "429:", cnt(rs, 429));
+  });
+  it("P10 stranger spends account budget -> teacher on a NEW device locked out", async () => {
+    await login();
+    for (let n = 1; n <= 6; n++) for (let i = 0; i < 5; i++) await wrong(`192.0.2.${n}`, "dev_x" + n);
+    const t = await call("/api/auth/login", fromIp("100.64.0.9", json({ email: EMAIL, password: "pw123456", deviceId: "dev_brandnew" })));
+    console.log("P10 teacher new device right password:", t.status);
+  });
+  it("P11 shared NAT: 5 wrong from same IP blocks the teacher's known device on that IP", async () => {
+    await login();
+    for (let i = 0; i < 5; i++) await wrong("100.64.1.1", "dev_kid");
+    const t = await call("/api/auth/login", fromIp("100.64.1.1", json({ email: EMAIL, password: "pw123456", deviceId: "dev_test" })));
+    console.log("P11 teacher known device same NAT:", t.status);
+  });
+  it("P12 settings PUT null -> status; same-site write; 401 headers", async () => {
+    const a = await login();
+    const s = await call("/api/settings", { method: "PUT", body: "null", headers: { "Content-Type": "application/json" } }, a);
+    const ss = await call("/api/settings", { method: "PUT", body: "{}", headers: { "Content-Type": "application/json", "Sec-Fetch-Site": "same-site" } }, a);
+    const u = await call("/api/students");
+    console.log("P12 settings null:", s.status, "same-site:", ss.status, "unauth:", u.status, u.headers.get("Cache-Control"), u.headers.get("X-Content-Type-Options"));
+  });
+  it("P13 attendance batch accepts a non-date string", async () => {
+    const a = await login(); await seed();
+    const r = await call("/api/attendance/batch", json({ date: "zzzz-not-a-date", classId: "c1", rows: [{ studentId: "st1", status: "present" }] }), a);
+    const r2 = await call("/api/attendance/batch", json({ date: "2026-11-03", classId: "c1", period: 99999999, subjectId: "nope", rows: [{ studentId: "st1", status: "present" }] }), a);
+    console.log("P13 bad date:", r.status, "bad period/subject:", r2.status, (await r2.text()).slice(0, 80));
+  });
+});

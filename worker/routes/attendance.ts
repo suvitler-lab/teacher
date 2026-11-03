@@ -107,10 +107,10 @@ attendanceRoutes.get("/api/attendance/days", async (c) => {
 });
 
 const attBatchSchema = z.object({
-  date: z.string().min(1),
-  classId: z.string().min(1),
-  subjectId: z.string().nullable().optional(),
-  period: z.number().int().nullable().optional(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // S-20: a junk date was saved as is
+  classId: z.string().min(1).max(100),
+  subjectId: z.string().min(1).max(100).nullable().optional(),
+  period: z.number().int().min(0).max(20).nullable().optional(),
   rows: z
     .array(
       z.object({
@@ -179,7 +179,7 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
   // Three independent questions, asked together (the database is far away: round trips are what a teacher waits for):
   // when this school year started, who in this batch really belongs to the named class, and which taps already landed
   const sids = [...new Set(b.rows.map((r) => r.studentId))];
-  const [yearStart, memberRes, applied] = await Promise.all([
+  const [yearStart, memberRes, applied, subject] = await Promise.all([
     schoolYearStart(c.env),
     // every student in the batch must be an active member of the class the batch
     // names — a stale client must not write one room's kids into another room
@@ -190,7 +190,10 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     // A retry of something that already landed (the reply was lost) is NOT applied a second time:
     // no double write, no second audit row — and it must not clobber what happened since.
     existingOpIds(c.env, b.rows.map((r) => r.opId).filter((x): x is string => !!x)),
+    // a subject that does not exist would fail the foreign key as a 500, which the offline queue retries forever (S-20)
+    b.subjectId ? c.env.DB.prepare("SELECT 1 AS k FROM subjects WHERE id = ?").bind(b.subjectId).first() : Promise.resolve({ k: 1 }),
   ]);
+  if (!subject) return c.json({ error: "unknown_subject", message: "ไม่พบวิชานี้ — โหลดข้อมูลใหม่แล้วลองอีกครั้ง" }, 422);
 
   // last year's attendance can be read (reports, Excel) but not written once a new year has started —
   // its classes are archived and its children have finished

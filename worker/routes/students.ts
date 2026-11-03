@@ -44,11 +44,11 @@ function studentForAudit(r: any) {
 
 const studentSchema = z.object({
   id: z.string().optional(),
-  code: z.string().min(1),
-  prefix: z.string().optional().nullable(),
-  first_name: z.string().min(1),
-  last_name: z.string().min(1),
-  nickname: z.string().optional().nullable(),
+  code: z.string().min(1).max(30),
+  prefix: z.string().max(30).optional().nullable(),
+  first_name: z.string().min(1).max(100),
+  last_name: z.string().min(1).max(100),
+  nickname: z.string().max(100).optional().nullable(),
   class_id: z.string().optional().nullable(),
   number: z.number().int().optional().nullable(),
   status: z.enum(["active", "moved", "inactive", "finished"]).optional(),
@@ -141,11 +141,11 @@ const importSchema = z.object({
   students: z
     .array(
       z.object({
-        code: z.string().min(1),
-        prefix: z.string().optional().nullable(),
-        first_name: z.string().min(1),
-        last_name: z.string().optional().nullable(),
-        nickname: z.string().optional().nullable(),
+        code: z.string().min(1).max(30),
+        prefix: z.string().max(30).optional().nullable(),
+        first_name: z.string().min(1).max(100),
+        last_name: z.string().max(100).optional().nullable(),
+        nickname: z.string().max(100).optional().nullable(),
         number: z.number().int().optional().nullable(),
       }),
     )

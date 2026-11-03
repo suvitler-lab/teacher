@@ -1,0 +1,59 @@
+[
+  {
+    "check": "Q-31",
+    "kind": "threat-model",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-05"
+    ],
+    "br": [],
+    "by": "team-security-reviewer",
+    "mandatory": false,
+    "command": "code read routes/auth.ts lib/auth.ts + npx vitest run sec-auth/sec-hardening/sec-backup-warning (3 files 30 tests pass)",
+    "artifact": "",
+    "expected": "known device id must not give unlimited guesses; revoked device re-login works; 429 writes nothing",
+    "actual": "S-15 fixed: login:dev 10/h, revoked on signout/chpw, upsert revoked=0 on success (test L157-166); S-18 pre-read no writes, no new race; S-20/S-21/S-22 fixed; residual Low: leaked device id can lock that device's sign-in 1h (fold into S-16), subjectId '' -> 500",
+    "reason": "",
+    "snapshot": "tree:3b01593a5fc13403848867bfa18c21650f597362",
+    "at": "2026-11-03T06:56:14.587Z"
+  },
+  {
+    "check": "Q-32",
+    "kind": "dependency-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-security-reviewer",
+    "mandatory": false,
+    "command": "npm audit --json ; npm audit --omit=dev --json",
+    "artifact": "",
+    "expected": "no high/critical, no new deps",
+    "actual": "all: moderate 15 high 0 critical 0; runtime(--omit=dev): moderate 9 (build-time font tooling); no lockfile change",
+    "reason": "",
+    "snapshot": "tree:adb58db7f63fb1dd99b4feeb6cfde17220b43898",
+    "at": "2026-11-03T06:47:09.144Z"
+  },
+  {
+    "check": "Q-33",
+    "kind": "pii-handling",
+    "status": "PASS",
+    "ac": [
+      "AC-04"
+    ],
+    "br": [],
+    "by": "team-security-reviewer",
+    "mandatory": false,
+    "command": "code read RestoreModal.tsx BackupWarning + sec-backup-warning.test.tsx",
+    "artifact": "",
+    "expected": "warning before backup download listing PII/PIN/QR",
+    "actual": "warning dialog shown before runBackup; restore_failed no raw SQL; logs message-only; PDPA table unchanged (S-04 b/S-11 pending owner Q5)",
+    "reason": "",
+    "snapshot": "tree:adb58db7f63fb1dd99b4feeb6cfde17220b43898",
+    "at": "2026-11-03T06:47:10.103Z"
+  }
+]

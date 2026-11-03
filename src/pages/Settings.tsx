@@ -9,7 +9,7 @@ import { setSoundEnabled } from "../lib/sound";
 import { runBackup, BackupInconsistentError } from "../lib/backup";
 import { err, ok, withToast } from "../lib/notify";
 import { AuditHistory } from "../components/AuditHistory";
-import { RestoreModal } from "../components/RestoreModal";
+import { RestoreModal, BackupWarning } from "../components/RestoreModal";
 import { ResetModal, type ResetMode } from "../components/ResetModal";
 import { CatalogEditor } from "../components/CatalogEditor";
 import { installHidScanner } from "../lib/hid";
@@ -125,6 +125,7 @@ export function SettingsPage() {
   const [draft, setDraft] = useState<Settings | null>(s ? { ...s } : null);
   const [busy, setBusy] = useState("");
   const [showRestore, setShowRestore] = useState(false);
+  const [backupWarn, setBackupWarn] = useState(false); // S-04: say what is in the file before it is downloaded
   const [resetMode, setResetMode] = useState<ResetMode | null>(null);
   const [restoreInfo, setRestoreInfo] = useState<{ pending: boolean; maintenance: boolean } | null>(null);
 
@@ -286,7 +287,7 @@ export function SettingsPage() {
               )}
               {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:var(--fs-sm)"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
               <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
-                <button onClick={backup} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
+                <button onClick={() => setBackupWarn(true)} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
               <div class="set-row"><div><div style="font-weight:500;font-size:1rem">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
                 <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
               <div class="set-section-title" style="margin-top:16px;color:var(--text-danger)"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</div>
@@ -311,6 +312,7 @@ export function SettingsPage() {
       )}
 
       {resetMode && <ResetModal mode={resetMode} onClose={() => setResetMode(null)} />}
+      {backupWarn && <BackupWarning onClose={() => setBackupWarn(false)} onConfirm={() => { setBackupWarn(false); backup(); }} />}
       {showRestore && <RestoreModal onClose={() => setShowRestore(false)} onDone={() => { setShowRestore(false); loadBootstrap(); }} />}
     </div>
   );

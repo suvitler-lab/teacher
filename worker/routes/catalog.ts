@@ -49,7 +49,8 @@ const ALLOWED_SETTINGS = new Set([
 ]);
 
 catalogRoutes.put("/api/settings", async (c) => {
-  const body = (await readJson(c)) as Record<string, unknown>;
+  // an object of settings — null, an array or a string is a 422, not a 500 (S-20)
+  const body = z.record(z.string(), z.unknown()).parse(await readJson(c));
   // all the settings and the audit line in ONE batch: one round trip to the database, and all-or-nothing
   const allowed = Object.entries(body).filter(([k]) => ALLOWED_SETTINGS.has(k));
   const stmts = allowed.map(([k, v]) => setSettingStmt(c.env, k, boolKey(k) ? Boolean(v) : String(v ?? "")));
@@ -64,12 +65,12 @@ catalogRoutes.put("/api/settings", async (c) => {
 // ---- terms ---------------------------------------------------------------
 const termSchema = z.object({
   id: z.string().optional(),
-  year: z.number().int(),
+  year: z.number().int().min(2400).max(2700),
   term: z.number().int().min(1).max(3),
-  name: z.string().min(1),
+  name: z.string().min(1).max(100),
   is_current: z.boolean().optional(),
-  start_date: z.string().nullable().optional(),
-  end_date: z.string().nullable().optional(),
+  start_date: z.string().regex(/^(\d{4}-\d{2}-\d{2})?$/).nullable().optional(), // empty = not set (as before)
+  end_date: z.string().regex(/^(\d{4}-\d{2}-\d{2})?$/).nullable().optional(), // empty = not set (as before)
 });
 
 const duplicateTermSql = "EXISTS (SELECT 1 FROM terms WHERE year = ?1 AND term = ?2 AND id != ?3)";
@@ -253,8 +254,8 @@ catalogRoutes.post("/api/terms/start", async (c) => {
 // ---- classes -------------------------------------------------------------
 const classSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1),
-  grade: z.string().optional().nullable(),
+  name: z.string().min(1).max(100),
+  grade: z.string().max(50).optional().nullable(),
   sort: z.number().int().optional(),
   archived: z.boolean().optional(),
 });
@@ -284,9 +285,9 @@ catalogRoutes.post("/api/classes", async (c) => {
 // ---- subjects ------------------------------------------------------------
 const subjectSchema = z.object({
   id: z.string().optional(),
-  code: z.string().optional().nullable(),
-  name: z.string().min(1),
-  color: z.string().optional(),
+  code: z.string().max(30).optional().nullable(),
+  name: z.string().min(1).max(100),
+  color: z.string().max(30).optional(),
   sort: z.number().int().optional(),
   archived: z.boolean().optional(),
 });
@@ -310,9 +311,9 @@ catalogRoutes.post("/api/subjects", async (c) => {
 // ---- work types ----------------------------------------------------------
 const workTypeSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1),
-  icon: z.string().optional(),
-  color: z.string().optional(),
+  name: z.string().min(1).max(100),
+  icon: z.string().max(50).optional(),
+  color: z.string().max(30).optional(),
   is_exam: z.boolean().optional(),
   default_full: z.number().int().min(1).max(100).optional(),
   sort: z.number().int().optional(),

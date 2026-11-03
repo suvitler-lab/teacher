@@ -1,4 +1,5 @@
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { ZodError } from "zod";
 import type { Env, Vars } from "./env";
 import { ApiError, assertSameOrigin } from "./lib/http";
@@ -24,16 +25,35 @@ export function createApp() {
 
   // how long the server itself took (shows in the browser's DevTools → Network → Timing), so "slow" can be told apart
   // from "slow network" without guessing
+  // Also: no API answer is ever stored by a browser or proxy cache (children's names, scores, the backup), and none
+  // is sniffed into another content type (S-07). public/_headers covers only the static files.
   api.use("*", async (c, next) => {
     const t0 = Date.now();
     await next();
-    try { c.res.headers.set("Server-Timing", `app;dur=${Date.now() - t0}`); } catch { /* a response whose headers are read-only */ }
+    try {
+      c.res.headers.set("Server-Timing", `app;dur=${Date.now() - t0}`);
+      c.res.headers.set("Cache-Control", "no-store");
+      c.res.headers.set("X-Content-Type-Options", "nosniff");
+    } catch { /* a response whose headers are read-only */ }
   });
 
   // same-origin guard for all writes
   api.use("*", async (c, next) => {
     assertSameOrigin(c);
     await next();
+  });
+
+  // Request bodies are small JSON; refuse an oversized one before reading it (S-09). Sign-in/setup bodies are a
+  // few hundred bytes; a restore chunk (500 rows) is the biggest legitimate body.
+  const tooLarge = (c: Context) => c.json({ error: "too_large", message: "ข้อมูลที่ส่งมาใหญ่เกินไป" }, 413);
+  const authLimit = bodyLimit({ maxSize: 16 * 1024, onError: tooLarge });
+  const restoreLimit = bodyLimit({ maxSize: 8 * 1024 * 1024, onError: tooLarge });
+  const defaultLimit = bodyLimit({ maxSize: 1024 * 1024, onError: tooLarge });
+  api.use("*", async (c, next) => {
+    if (c.req.method === "GET" || c.req.method === "HEAD") return next();
+    const p = c.req.path;
+    const limit = p.startsWith("/api/auth/") || p === "/api/setup" ? authLimit : p.startsWith("/api/restore/") ? restoreLimit : defaultLimit;
+    return limit(c, next);
   });
 
   // The preamble of every request: ONE round trip (the database is far away) for everything the request needs to know
@@ -114,7 +134,8 @@ export function createApp() {
     if (err instanceof ZodError) {
       return c.json({ error: "validation", issues: err.issues }, 422);
     }
-    console.error("unhandled", err);
+    // the message only, cut short: a whole error object can carry request data into the logs (S-10)
+    console.error("unhandled", String((err as Error)?.message ?? err).slice(0, 200));
     return c.json({ error: "internal" }, 500);
   });
 

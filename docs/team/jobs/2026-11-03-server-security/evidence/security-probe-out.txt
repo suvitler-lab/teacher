@@ -1,0 +1,16 @@
+P8 401: 50 429: 0
+ ✓ sec.probe.ts > probe > P8 known device id skips the account budget (50 guesses over 10 IPs) 2800ms
+P9 signout 200 chpw 200 device row {"revoked":0} 401: 40 429: 0
+ ✓ sec.probe.ts > probe > P9 signed-out device stays known 2384ms
+P10 teacher new device right password: 429
+ ✓ sec.probe.ts > probe > P10 stranger spends account budget -> teacher on a NEW device locked out 1749ms
+P11 teacher known device same NAT: 429
+ ✓ sec.probe.ts > probe > P11 shared NAT: 5 wrong from same IP blocks the teacher's known device on that IP 325ms
+P12 settings null: 500 same-site: 403 unauth: 401 no-store nosniff
+P13 bad date: 200 bad period/subject: 500 {"error":"internal"}
+ ✓ sec.probe.ts > probe > P12 settings PUT null -> status; same-site write; 401 headers 65ms
+ ✓ sec.probe.ts > probe > P13 attendance batch accepts a non-date string 126ms
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+ Test Files  3 passed (3)
+      Tests  21 passed (21)

@@ -32,6 +32,33 @@ function explain(e: unknown): { text: string; retry: boolean } {
   return { text: (e as Error)?.message || "กู้คืนไม่สำเร็จ — ไม่มีอะไรถูกเปลี่ยน", retry: true };
 }
 
+/**
+ * Said before every backup download (security review S-04): the file is the whole school's data about children,
+ * unencrypted — once it leaves the app, keeping it safe is up to the teacher.
+ */
+export function BackupWarning({ onConfirm, onClose }: { onConfirm: () => void; onClose: () => void }) {
+  return (
+    <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <Dialog label="ก่อนดาวน์โหลดไฟล์สำรอง" onClose={onClose} style="max-width:480px">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <h2 style="font-size:1.2rem">ก่อนดาวน์โหลดไฟล์สำรอง</h2>
+          <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
+        </div>
+        <div class="imp-warn" style="margin:0 0 10px"><Icon name="alert-triangle" size={15} /> ไฟล์นี้มีข้อมูลส่วนบุคคลของนักเรียน (ผู้เยาว์) และไม่ได้เข้ารหัส</div>
+        <div style="font-size:var(--fs-sm);line-height:1.6;margin-bottom:10px">
+          <div><b style="font-weight:500">ในไฟล์มี:</b> ชื่อ-นามสกุล รหัส เลขที่ ห้อง คะแนน การเข้าเรียน รหัส PIN และรหัส QR ของบัตรนักเรียน</div>
+          <div><b style="font-weight:500">เก็บให้ปลอดภัย:</b> เก็บไว้ในเครื่องหรือไดรฟ์ส่วนตัวที่มีรหัสผ่าน · อย่าส่งทาง LINE อีเมล หรือกลุ่มแชต · ลบไฟล์เก่าที่ไม่ใช้แล้ว</div>
+          <div><b style="font-weight:500">ถ้าไฟล์หลุดไป:</b> ออกบัตร QR ใหม่ให้นักเรียนในหน้านักเรียน</div>
+        </div>
+        <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
+          <button onClick={onClose}>ยกเลิก</button>
+          <button class="primary" onClick={onConfirm}><Icon name="download" size={16} /> เข้าใจแล้ว ดาวน์โหลด</button>
+        </div>
+      </Dialog>
+    </div>
+  );
+}
+
 export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
   const [file, setFile] = useState<BackupFile | null>(null);
   const [restoreId, setRestoreId] = useState("");

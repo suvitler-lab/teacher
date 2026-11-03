@@ -291,7 +291,8 @@ export async function commitRestore(
     const issues = await stagedRestoreIssues(env, restoreId);
     if (issues.length > 0) return { status: 422, body: { ok: false, error: "invalid_backup", message: "ไฟล์สำรองมีข้อมูลไม่ถูกต้อง — ข้อมูลเดิมไม่ถูกเปลี่ยน", issues } };
     console.error("restore commit failed", String(e?.message ?? e).slice(0, 300));
-    return { status: 409, body: { ok: false, error: "restore_failed", detail: String(e?.message ?? e).slice(0, 300) } };
+    // the database's own words stay in the log: they describe the schema, not the teacher's file (S-10)
+    return { status: 409, body: { ok: false, error: "restore_failed" } };
   }
   return { status: 200, body: { ok: true } };
 }
@@ -312,7 +313,8 @@ backupRoutes.post("/api/restore/execute", async (c) => {
     await activeJob(c.env, body.restoreId, now);
     const table = body.table;
     const rows = body.rows ?? [];
-    if (!table || !COLUMNS[table]) throw bad("bad_table");
+    // own keys only: "constructor" / "__proto__" are on every object (S-12)
+    if (!table || !Object.hasOwn(COLUMNS, table)) throw bad("bad_table");
     if (body.seq === undefined) throw bad("seq_required");
     if (rows.length === 0) return c.json({ ok: true, staged: 0 });
     if (rows.length > PAGE) throw bad("chunk_too_large");

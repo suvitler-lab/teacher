@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
-import { requireAuth, clearSession, checkLoginRate, recordLoginFailure, clearLoginFailures, clientKey } from "../lib/auth";
+import { requireAuth, clearSession, reserveAttempt, ipRate } from "../lib/auth";
 import { readJson, tooMany, bad, ApiError } from "../lib/http";
 import { verifyPassword } from "../lib/crypto";
 import { pepperOf } from "../lib/config";
@@ -47,15 +47,16 @@ resetRoutes.post("/api/admin/reset", async (c) => {
   const b = schema.parse(await readJson(c));
   if (b.confirm.trim() !== RESET_PHRASE[b.mode]) throw bad("bad_confirm", `พิมพ์ “${RESET_PHRASE[b.mode]}” ให้ตรง`);
 
-  const key = "reset:" + clientKey(c);
-  if (!(await checkLoginRate(c.env, key))) throw tooMany("ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่");
+  const pep = pepperOf(c.env);
+  // reserved before the check, in one batch, so guesses sent at once cannot all slip under the limit
+  const attempt = await reserveAttempt(c.env, [ipRate("reset:", c)]);
+  if (!attempt) throw tooMany("ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่");
   const row = await c.env.DB.prepare("SELECT id, password_hash AS hash, salt, iterations FROM teacher LIMIT 1")
     .first<{ id: string; hash: string; salt: string; iterations: number }>();
-  if (!row || !(await verifyPassword(b.password, pepperOf(c.env), row))) {
-    await recordLoginFailure(c.env, key);
+  if (!row || !(await verifyPassword(b.password, pep, row))) {
     throw new ApiError(403, "wrong_password", "รหัสผ่านไม่ถูกต้อง"); // 403: still signed in (a 401 would pop the sign-in box)
   }
-  await clearLoginFailures(c.env, key);
+  await attempt.succeeded();
 
   const db = c.env.DB;
   const del = (t: string) => db.prepare(`DELETE FROM ${t}`);
