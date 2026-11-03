@@ -51,3 +51,30 @@
 /* scan mode result list */
 .att-scanrow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); }
 .att-scanrow:first-of-type { border-top: none; }
+
+/* ---- round 2 ---- */
+.att-hide-sm { }
+@media (max-width: 560px) { .att-hide-sm { display: none; } }
+.att-periods { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.att-periods .pill { height: var(--tap); }
+/* the five statuses: big, with an icon and a word (never colour alone) */
+.att-brush { align-items: center; }
+.att-stbtns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1 1 22rem; }
+.stbtn { height: auto; min-height: 4rem; flex-direction: column; gap: 2px; border-radius: 12px; border: 2px solid var(--border-strong); background: var(--surface-2); font-size: var(--fs-sm); padding: 6px 4px; }
+.stbtn.present { color: var(--text-success); } .stbtn.late { color: var(--text-warning); } .stbtn.leave { color: var(--text-accent); }
+.stbtn.sick { color: var(--text-purple); } .stbtn.absent { color: var(--text-danger); }
+.stbtn.on.present { background: var(--bg-success); border-color: var(--text-success); } .stbtn.on.late { background: var(--bg-warning); border-color: var(--text-warning); }
+.stbtn.on.leave { background: var(--bg-accent); border-color: var(--text-accent); } .stbtn.on.sick { background: var(--bg-purple); border-color: var(--text-purple); }
+.stbtn.on.absent { background: var(--bg-danger); border-color: var(--text-danger); }
+.att-allp { height: 4rem; }
+/* four columns of child tiles: number, nickname, status with an icon */
+.att-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 560px) { .att-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .att-stbtns { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.att-tile { flex-direction: row; justify-content: flex-start; gap: 8px; min-height: 4rem; padding: 6px 10px; text-align: left; }
+.att-tile .no { font-size: calc(var(--fs-sm) * 1.25); font-weight: 600; min-width: 1.6em; text-align: center; font-variant-numeric: tabular-nums; }
+.att-tile .tx { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; }
+.att-tile .nm { text-align: left; }
+.att-tile .stt { display: inline-flex; align-items: center; gap: 3px; }
+.att-tile:not(.present):not(.late):not(.leave):not(.sick):not(.absent) { background: var(--surface-2); border: 1.5px dashed var(--border-strong); color: var(--text-secondary); }
+.att-savebar { position: sticky; bottom: 0; z-index: 35; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding: 8px 12px; background: var(--surface-2); border-top: 0.5px solid var(--border); }
+.att-side { padding: 10px 12px; }
