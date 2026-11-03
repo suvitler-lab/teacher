@@ -33,3 +33,12 @@
 /* why nobody can be drawn (not checked yet / nobody came / load failed) */
 .rnd-notice { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 12px; border-radius: 12px; background: var(--bg-warning); color: var(--text-warning); border: 0.5px solid var(--border-warning); font-size: var(--fs-sm); }
 .rnd-notice > i { font-size: 1.2rem; flex: none; }
+
+/* ---- round 2 ---- */
+.rnd-stage { position: relative; }
+.rnd-poolchip { position: absolute; top: 10px; left: 12px; display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; background: var(--surface-1); color: var(--text-secondary); border: 0.5px solid var(--border); }
+.rnd-go { height: 3.2rem; padding: 0 22px; font-size: 1.07rem; }
+.rnd-key { opacity: 0.8; font-weight: 400; font-size: var(--fs-sm); }
+.rnd-card { padding: 10px 12px; }
+.rnd-timer { font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: center; }
+.rnd-timer.done { color: var(--text-danger); }
