@@ -48,6 +48,7 @@ function overlays(){
   if(S.sheetMenu&&isNarrow())o+=sheetHtml();
   if(S.page==='gradebook'&&S.gb)o+=gbOverlays();
   if(S.page==='reports'&&S.rp)o+=rpOverlays();
+  if(S.page==='students'&&S.st)o+=stOverlays();
   if(S.page==='scan'&&S.sc.sheet!=null){
     const n=S.sc.sheet,r=S.sc.recent.find(x=>x.n===n),st=S.sc.seats[n],a=AS(S.sc.asg);
     o+=`<div class="sheetov" data-a="closeov"><div class="asheet" role="dialog" aria-modal="true" aria-label="ตัวเลือก เลขที่ ${n}"><div class="hd">เลขที่ ${n} ${nick(n)}</div><div class="tip">${st==='await'?'รับงานแล้ว · รอคะแนน':`ส่งแล้ว · ได้ ${r?r.score:'8'}/${a.full} · ${st==='late'?'ส่งช้า':'ตรงเวลา'}`}${r&&r.recv?' · รับ '+fmtS(r.recv):''}</div>
@@ -71,6 +72,7 @@ function mainHtml(d){
   if(S.page==='attendance')return attHtml();
   if(S.page==='gradebook')return gbHtml();
   if(S.page==='reports')return rpHtml();
+  if(S.page==='students')return stHtml();
   return randomHtml();
 }
 function render(){
@@ -103,7 +105,7 @@ function ctl(){
   const pg={home:'หน้าหลัก',...PAGES};
   const subs=S.page==='home'?{main:'หน้าหลัก',prefs:'แผงปรับหน้าหลัก',list:'รายการจากตัวเลข',sheet:'เมนูมือถือ'}:SUBS[S.page];
   const cs=S.page==='home'?(H.S.page==='home'?'main':H.S.page):curSub();
-  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],reports:[['rp-refresh','โหลดใหม่'],['rp-sort','เรียงตามสะสม'],['rp-follow','เปิดคนที่ค้างมากสุด'],['rp-stale','สลับอัปเดตไม่สำเร็จ']],gradebook:[['gb-type','กรอกคะแนนคนถัดไป'],['gb-pick','เลือกงานถัดไป'],['gb-exc','ตั้งยกเว้น เลขที่ 7'],['gb-date','แก้วันที่รับ (AC-16)'],['gb-bulk','ทั้งห้องส่งแล้ว'],['gb-close','ปิดรับงาน'],['gb-keys','ลูกศร → 2 ช่อง (คอม)']],home:[]}[S.page];
+  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],students:[['st-dup','สลับเลขที่ซ้ำ'],['st-qr','ออก QR ใหม่ เลขที่ 17'],['st-search','ค้นหา “ฟ้า”'],['st-qrall','ออก QR ทั้งห้อง']],reports:[['rp-refresh','โหลดใหม่'],['rp-sort','เรียงตามสะสม'],['rp-follow','เปิดคนที่ค้างมากสุด'],['rp-stale','สลับอัปเดตไม่สำเร็จ']],gradebook:[['gb-type','กรอกคะแนนคนถัดไป'],['gb-pick','เลือกงานถัดไป'],['gb-exc','ตั้งยกเว้น เลขที่ 7'],['gb-date','แก้วันที่รับ (AC-16)'],['gb-bulk','ทั้งห้องส่งแล้ว'],['gb-close','ปิดรับงาน'],['gb-keys','ลูกศร → 2 ช่อง (คอม)']],home:[]}[S.page];
   $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
   const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
   {const h=S.page==='home'?'home':S.page+(curSub()?'-'+curSub():'');if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}
@@ -120,11 +122,12 @@ function applySub(){
   if(S.page==='random'){if(curSub()==='group')S.rd.mode='group';else if(curSub()==='pick')S.rd.mode='pick'}
   if(S.page==='gradebook'&&S.gb)gbApplySub();
   if(S.page==='reports'&&S.rp)rpApplySub();
+  if(S.page==='students'&&S.st)stApplySub();
   if(curSub()==='pj'&&S.page!=='home')toast2('เปิดโหมดฉายจอแล้ว · คะแนนและเปอร์เซ็นต์รายคนถูกซ่อน');
 }
 function go(page,sub){
   S.page=page;S.menu=null;S.prefsOpen=false;S.sheetMenu=false;S.pjOther=false;S.dlg=null;
   if(page==='home'){if(sub)H.S.page=sub==='main'?'home':sub}
-  else{S.sub[page]=sub||((S.sub[page]==='pj'||page==='gradebook')?{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main'}[page]:S.sub[page]);applySub()}
+  else{S.sub[page]=sub||((S.sub[page]==='pj'||page==='gradebook'||page==='students')?{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main',students:'list'}[page]:S.sub[page]);applySub()}
 }
-function initAll(){initSc();initAt();initRd();initGb();initRp()}
+function initAll(){initSc();initAt();initRd();initGb();initRp();initSt()}
