@@ -337,6 +337,7 @@ function gbBulkCount(kind,w){
 }
 function gbOverlays(){
   const g=S.gb;if(!g)return'';let o='';
+  if(S.dlg&&S.dlg.t==='gbbulk'&&!gbWork(g.sel))S.dlg=null;
   if(S.dlg&&S.dlg.t==='gbbulk'){
     const d=S.dlg,w=gbWork(g.sel),n=gbBulkCount(d.kind,w),T={all:`ทั้งห้องส่งแล้ว ${n} คน?`,full:`ให้เต็ม ${n} คน?`,clear:`ล้างคะแนนทั้งงาน ${n} คน?`}[d.kind];
     const body={all:'ทำเครื่องหมายว่าส่งแล้วให้คนที่ยังไม่ส่ง · คนที่ยกเว้นไม่ถูกแตะ',full:`ให้คะแนนเต็ม ${w.full} กับคนที่ส่งแล้ว · คนที่ยกเว้นไม่ถูกแตะ`,clear:'เอาคะแนนและการส่งของทุกคนออก (ย้อนกลับได้ 5 วินาที) · คนที่ยกเว้นไม่ถูกแตะ'}[d.kind];
@@ -502,7 +503,7 @@ function gbSim(k){
   }else if(k==='gb-pick'){const i=ws.findIndex(w=>w.id===g.sel);g.sel=ws[(i+1)%ws.length].id}
   else if(k==='gb-exc'){const w=gbWork(g.sel),cs=gbCells(g.cls,w.id),before={...cs[7]};cs[7]={k:'exc',score:null,recv:null};const cid=g.cls,aid=w.id;toast2('ตั้ง “ยกเว้น” เลขที่ 7 แล้ว',{label:'เลิกทำ',fn:()=>{gbCells(cid,aid)[7]=before;S.toast=null;render()}})}
   else if(k==='gb-date'){const w=gbWork(g.sel),cs=gbCells(g.cls,w.id);let n=0;for(let i=1;i<=CL(g.cls).total;i++)if(cs[i].k==='sub'){n=i;break}if(!n)return;const before={...cs[n]};const nr=w.due&&w.due<=TODAY?w.due:shift(TODAY,-1);cs[n]={...before,recv:nr};g.foc={aid:w.id,n};const cid=g.cls,aid=w.id;toast2(`แก้วันที่รับเป็น ${fmtS(nr)} แล้ว · ${gbDateText(w,nr).split(' · ')[0]}`,{label:'เลิกทำ',fn:()=>{gbCells(cid,aid)[n]=before;S.toast=null;render()}})}
-  else if(k==='gb-bulk'){S.dlg={t:'gbbulk',kind:'all',recv:TODAY}}
+  else if(k==='gb-bulk'){if(gbWork(g.sel))S.dlg={t:'gbbulk',kind:'all',recv:TODAY}}
   else if(k==='gb-close'){const w=gbWork(g.sel);if(w&&!w.closed)S.dlg={t:'gbclose',aid:w.id};else toast2('งานนี้ปิดรับอยู่แล้ว')}
   else if(k==='gb-keys'){const w=gbWork(g.sel)||ws[0];g.foc={aid:w.id,n:Math.min(CL(g.cls).total,(g.foc.n||1)+2)};g.refocus='cell'}
 }
@@ -512,7 +513,7 @@ function gbApplySub(){
   if(S.scen==='empty'&&sub!=='table'&&sub!=='create'){}
   if(sub==='cell'){const w=gbWork(g.sel)||gbVisible()[0];if(w)gbOpenPop(w.id,12,{})}
   else if(sub==='work')S.menu='gbbulk';
-  else if(sub==='bulk')S.dlg={t:'gbbulk',kind:'all',recv:TODAY};
+  else if(sub==='bulk'){if(gbWork(g.sel))S.dlg={t:'gbbulk',kind:'all',recv:TODAY}}
   else if(sub==='close'){const w=gbWork(g.sel);if(w&&!w.closed)S.dlg={t:'gbclose',aid:w.id}}
   else if(sub==='filter')g.sheet='filter';
   else if(sub==='create')gbOpenForm('create');
