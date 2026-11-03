@@ -11,8 +11,12 @@ import type { Env } from "../env";
  * expression for the due date (NULL = none).
  */
 export function lateSql(due: string): string {
-  return `(CASE WHEN submissions.status = 'submitted' AND submissions.submitted_at IS NOT NULL AND ${due} IS NOT NULL
-  AND date(CAST(submissions.submitted_at AS INTEGER) / 1000 + 7 * 3600, 'unixepoch') > ${due} THEN 1 ELSE 0 END)`;
+  return lateSqlOf("submissions.status", "submissions.submitted_at", due);
+}
+/** The same rule over any SQL expressions for status and submitted_at (e.g. the `after` of an audit line). */
+export function lateSqlOf(status: string, submittedAt: string, due: string): string {
+  return `(CASE WHEN ${status} = 'submitted' AND ${submittedAt} IS NOT NULL AND ${due} IS NOT NULL
+  AND date(CAST(${submittedAt} AS INTEGER) / 1000 + 7 * 3600, 'unixepoch') > ${due} THEN 1 ELSE 0 END)`;
 }
 /** The due date of each row's own work (correlated: rows of several works in one statement). */
 const DUE_OF_ROW = "NULLIF((SELECT a.due_date FROM assignments a WHERE a.id = submissions.assignment_id), '')";

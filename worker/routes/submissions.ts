@@ -9,8 +9,8 @@ import { classInYear, inRoster } from "@shared/roster";
 import { readJson, bad, notFound, conflict, ApiError } from "../lib/http";
 import { existingOpIds, auditInsertStmt, type AuditRow } from "../lib/audit";
 import { isLateSubmission, clampClientTs, bkkToday } from "../lib/time";
-import { checkReceivedDate, receivedAtMs } from "@shared/received-date";
-import { lateFixForCells } from "../lib/late";
+import { checkReceivedDate, receivedAtMs, receivedDateDays } from "@shared/received-date";
+import { lateFixForCells, lateSqlOf } from "../lib/late";
 import { id, ulid } from "@shared/ids";
 import { isHalfStep } from "@shared/grade";
 import type { SubmissionOpResult, Submission } from "@shared/types";
@@ -172,6 +172,7 @@ function guardedAuditStmt(env: Env, audits: AuditRow[], rows: GuardedRow[], epoc
  * Appended to a batch AFTER lateFixForCells: the audit lines `opIds` (whose cells this batch wrote) are made to say
  * the `late` that is really stored — the value lateFix decided from the due date as it is inside the transaction,
  * not the value computed before the write. Found by op_id (UNIQUE index); only lines that differ are written.
+ * One line per cell only (bulk / undo): with several lines on one cell, each would get the cell's LAST late.
  */
 function auditLateSyncStmt(env: Env, opIds: string[]) {
   const stored = `(SELECT s.late FROM submissions s WHERE s.assignment_id = audit_logs.assignment_id AND s.student_id = audit_logs.student_id)`;
@@ -179,6 +180,22 @@ function auditLateSyncStmt(env: Env, opIds: string[]) {
     `UPDATE audit_logs SET after_json = json_set(after_json, '$.late', json(CASE WHEN ${stored} = 1 THEN 'true' ELSE 'false' END))
      WHERE op_id IN (SELECT value FROM json_each(?1)) AND after_json IS NOT NULL
        AND json_extract(after_json, '$.late') IS NOT (CASE WHEN ${stored} = 1 THEN 1 ELSE 0 END)`,
+  ).bind(JSON.stringify(opIds));
+}
+
+/**
+ * EP-01's form of the above (correctness-lows AC-08, review R-01): one request may write several rows to one cell
+ * (`[hid, grid dateOnly]`, `[grid, void]`), so each audit line's `late` is decided from ITS OWN `after` (status,
+ * submitted_at) and the work's due date as it is inside the transaction — the one rule of lib/late.ts — never from the
+ * cell. For the last row of a cell that is exactly what lateFixForCells stored. Kept as 0/1 (EP-01's shape, api-contract v3).
+ */
+function auditRowLateStmt(env: Env, opIds: string[]) {
+  const late = lateSqlOf("json_extract(after_json, '$.status')", "json_extract(after_json, '$.submitted_at')",
+    "NULLIF((SELECT a.due_date FROM assignments a WHERE a.id = audit_logs.assignment_id), '')");
+  return env.DB.prepare(
+    `UPDATE audit_logs SET after_json = json_set(after_json, '$.late', ${late})
+     WHERE op_id IN (SELECT value FROM json_each(?1)) AND after_json IS NOT NULL
+       AND json_extract(after_json, '$.late') IS NOT ${late}`,
   ).bind(JSON.stringify(opIds));
 }
 
@@ -343,6 +360,8 @@ function judgeUnwritten(op: OpIn, w: World, eventAt: number): SubmissionOpResult
   const cur = w.existing.get(`${op.assignmentId}\u0000${op.studentId}`);
   const newer = cur != null && cur.event_at != null && cur.event_at > eventAt;
   if (cur && !newer && alreadySubmitted(op, cur)) return { opId: op.opId, result: "already_submitted", submission: mapSubmission(cur) };
+  // a re-date that did not land on a cell that is not submitted (the row of the request it rested on was refused — AC-09)
+  if (op.dateOnly && !newer && cur?.status !== "submitted") return { opId: op.opId, result: "invalid", reason: "cell_not_submitted" };
   return { opId: op.opId, result: "superseded", submission: cur ? mapSubmission(cur) : undefined };
 }
 
@@ -409,10 +428,9 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         // the cell is already handed in (BR-01): nothing is written or audited, the reply carries what the cell holds.
         // If that is a row of THIS request, the answer stands only if that row really lands (checked after the write)
         results[index] = { opId: op.opId, result: "already_submitted", submission: mapSubmission(before) };
-        if (before.op_id != null) { // only a GuardedRow (pending) has op_id — stored cells do not
-          const wrote = pending.find((p) => p.row === before)!;
-          onPending.push({ index, op, eventAt, pendingOpId: wrote.op.opId, pendingIndex: wrote.index });
-        }
+        // a pending row is found by identity, never by its fields (a stored cell may one day carry an op_id too — AC-01)
+        const wrote = pending.find((p) => p.row === before);
+        if (wrote) onPending.push({ index, op, eventAt, pendingOpId: wrote.op.opId, pendingIndex: wrote.index });
         continue;
       }
       const wasSubmitted = before && before.status === "submitted";
@@ -426,11 +444,19 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       // (any method — Gate 1 Q3) or by a re-date; every other op ignores it, even when wrong (D-03)
       const firstSubmit = op.status === "submitted" && !wasSubmitted;
       if (op.dateOnly || (firstSubmit && op.receivedDate != null)) {
-        const problem = checkReceivedDate(op.receivedDate, { today: bkkToday(now), assignedDate: a.assigned_date ?? null });
+        const problem = checkReceivedDate(op.receivedDate, { ...receivedDateDays(now), assignedDate: a.assigned_date ?? null });
         if (problem) {
           results[index] = { opId: op.opId, result: "invalid", reason: problem };
           continue;
         }
+      }
+      // a re-date to the Thai day the STORED cell already has changes nothing (AC-07): answered `ok` with the cell as it
+      // is — no write, no audit row (so a whole-class undo covering the cell is not "modified since", and the op sent
+      // again is judged again the same way). On a row of this request it is written as before (that row may not land).
+      if (op.dateOnly && before === world.existing.get(pairKey) && before.submitted_at != null
+          && op.receivedDate === bkkToday(before.submitted_at)) {
+        results[index] = { opId: op.opId, result: "ok", submission: mapSubmission(before) };
+        continue;
       }
       // submitted_at + late are decided only when a student first becomes
       // "submitted"; later score edits keep the original submit time & lateness.
@@ -452,6 +478,11 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         submittedAt = before?.submitted_at ?? clampClientTs(op.clientTs, now);
         late = before?.late ?? 0;
       }
+      // a re-date of a cell that a row of THIS request made submitted stands or falls with that row (AC-09): it takes the
+      // row's hand-in guards, so a hand-in refused at write time (work closed, student gone) is not made by the re-date
+      const madeBy = op.dateOnly ? pending.find((p) => p.row === before)?.row : undefined;
+      const receive: 0 | 1 = isReceive(op) || madeBy?.receive === 1 ? 1 : 0;
+      const handIn: 0 | 1 = isReceive(op) || madeBy?.hand_in === 1 ? 1 : 0;
       const row: GuardedRow = {
         assignment_id: op.assignmentId,
         student_id: op.studentId,
@@ -467,8 +498,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
         event_at: eventAt,
         op_id: op.opId,
         expect_full: a.full_score,
-        receive: isReceive(op) ? 1 : 0,
-        hand_in: isReceive(op) ? 1 : 0,
+        receive,
+        hand_in: handIn,
       };
       pending.push({ index, op, row });
       effective.set(pairKey, row);
@@ -498,7 +529,8 @@ submissionRoutes.post("/api/submissions/batch", async (c) => {
       // landed since the judge read it) — RETURNING the cells it corrected, so the reply says what is stored
       let corrected = new Map<string, number>();
       try {
-        const res = await c.env.DB.batch([cellsGuard(c.env, snapshots, epoch), guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch), lateFixForCells(c.env, rows)]);
+        const res = await c.env.DB.batch([cellsGuard(c.env, snapshots, epoch), guardedAuditStmt(c.env, audits, rows, epoch, now), submissionUpsertStmt(c.env, rows, epoch), lateFixForCells(c.env, rows),
+          auditRowLateStmt(c.env, rows.map((r) => r.op_id))]); // ...and each history line says its own row's late (AC-08, R-01)
         corrected = new Map(((res[3]?.results ?? []) as { assignment_id: string; student_id: string; late: number }[])
           .map((r) => [`${r.assignment_id} ${r.student_id}`, r.late]));
       } catch (e) {
@@ -571,9 +603,9 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   if (receivedDate != null && action !== "all-submitted") {
     throw bad("received_date_not_applicable", "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น");
   }
-  const today = bkkToday(Date.now());
+  const days = receivedDateDays(Date.now()); // the server's day, and up to 5 minutes of a device's clock ahead (AC-06)
   if (receivedDate != null) {
-    const problem = checkReceivedDate(receivedDate, { today, assignedDate: null });
+    const problem = checkReceivedDate(receivedDate, { ...days, assignedDate: null });
     if (problem) throw bad(problem, RECEIVED_DATE_MESSAGES[problem]);
   }
   const epoch = await requestEpoch(c);
@@ -604,7 +636,7 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
   }
   // ...then the floor, which needs the work's assigned date (only a real CE date not after today counts — D-04)
   if (receivedDate != null) {
-    const problem = checkReceivedDate(receivedDate, { today, assignedDate: a.assigned_date ?? null });
+    const problem = checkReceivedDate(receivedDate, { ...days, assignedDate: a.assigned_date ?? null });
     if (problem) throw bad(problem, RECEIVED_DATE_MESSAGES[problem]);
   }
 

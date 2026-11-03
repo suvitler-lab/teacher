@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v3 · อัปเดต 2026-11-02 (c03-submit-date: วันที่รับงานใน EP-01/EP-03) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v4 · อัปเดต 2026-11-03 (correctness-lows: ข้อเล็กด้านความถูกต้องของ EP-01/EP-03/EP-05 — ดู changelog v4) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 
@@ -53,7 +53,7 @@
 
 | result | ฟิลด์เพิ่ม | ความหมาย | client (ปัจจุบัน) |
 |---|---|---|---|
-| `ok` | `submission` (ค่าที่บันทึกจริง รวม late หลังแก้) | บันทึกแล้ว + audit 1 แถว | เอาออกจากคิว |
+| `ok` | `submission` (ค่าที่บันทึกจริง รวม late หลังแก้) | บันทึกแล้ว + audit 1 แถว · ยกเว้น v4: แก้วันที่เป็นวันเดิม (no-op) = ไม่เขียน ไม่มี audit `submission` = ค่าปัจจุบันของช่อง | เอาออกจากคิว |
 | `duplicate` | `submission?` (ค่าปัจจุบัน) | opId นี้เคยบันทึกแล้ว (มีแถว audit) | เอาออกจากคิว |
 | `epoch_changed` | — | op ทำก่อนกู้คืนข้อมูล | ไป "ส่งไม่สำเร็จ" (ไม่กั้น op ถัดไป) |
 | `invalid` | `reason`: `assignment_missing` / `score_out_of_range` · v3 เพิ่ม `received_date_invalid` / `received_date_future` / `received_date_before_assigned` / `cell_not_submitted` / `redate_not_allowed` | ข้อมูลไม่ถูกต้อง (ไม่เขียน ไม่มี audit) | ไป "ส่งไม่สำเร็จ" |
@@ -94,11 +94,13 @@
 export type ReceivedDateProblem = "received_date_invalid" | "received_date_future" | "received_date_before_assigned";
 export function isCeDate(v: unknown): v is string;            // /^(19|20)\d{2}-\d{2}-\d{2}$/ และเป็นวันจริง (กฎเดียวกับ ceDate ของ EP-05)
 export function bkkNoonMs(date: string): number;               // 12:00 ไทยของวันนั้น = Date.UTC(y, m-1, d, 5) · "2026-10-30" → 1793336400000
-export function checkReceivedDate(v: unknown, o: { today: string; assignedDate: string | null }): ReceivedDateProblem | null;
+export function checkReceivedDate(v: unknown, o: { today: string; assignedDate: string | null; latest?: string }): ReceivedDateProblem | null;
+export const RECEIVED_DATE_CLOCK_SKEW_MS = 300_000;                // v4: 5 นาที
+export function receivedDateDays(now: number): { today: string; latest: string }; // v4: { bkkToday(now), bkkToday(now + 5 นาที) }
 export function receivedAtMs(receivedDate: string | null | undefined, eventAt: number, now: number): number;
 ```
 
-- `checkReceivedDate` ตรวจเรียง (ตัวแรกที่เข้าชนะ): ไม่ผ่าน `isCeDate` (รวม `""`, ปี พ.ศ. `"2569-10-30"`, `"2026-02-30"`, `"30/10/2026"`) → `received_date_invalid` · `v > today` → `received_date_future` · `assignedDate` ผ่าน `isCeDate` **และ** `assignedDate ≤ today` **และ** `v < assignedDate` → `received_date_before_assigned` · นอกนั้น `null` (ผ่าน) — ไม่มีเพดานจำนวนวันย้อนหลัง (Gate 1 Q2) · `today` = `bkkToday(now)` ของ server ณ ตอนเขียน · วันมอบหมายที่อยู่ในอนาคต/ว่าง/ไม่ใช่ ค.ศ. = ไม่ใช้เป็นพื้น (D-c03-submit-date-04) → "วันนี้" ผ่านเสมอ
+- `checkReceivedDate` ตรวจเรียง (ตัวแรกที่เข้าชนะ): ไม่ผ่าน `isCeDate` (รวม `""`, ปี พ.ศ. `"2569-10-30"`, `"2026-02-30"`, `"30/10/2026"`) → `received_date_invalid` · `v > (latest ?? today)` → `received_date_future` (v4: server ส่ง `latest = bkkToday(now + 5 นาที)` — ช่วง 23:55–23:59 ไทย วันพรุ่งนี้ยังรับได้ เพราะนาฬิกาเครื่องอาจนำ server เล็กน้อย; `receivedAtMs` บีบเป็น `now` จึงไม่มีค่าในอนาคต และวันไทยที่บันทึกคือวันนี้ของ server · หน้าจอไม่ส่ง `latest`) · `assignedDate` ผ่าน `isCeDate` **และ** `assignedDate ≤ today` (วันจริงของ server ไม่ใช่ `latest`) **และ** `v < assignedDate` → `received_date_before_assigned` · นอกนั้น `null` (ผ่าน) — ไม่มีเพดานจำนวนวันย้อนหลัง (Gate 1 Q2) · `today` = `bkkToday(now)` ของ server ณ ตอนเขียน · วันมอบหมายที่อยู่ในอนาคต/ว่าง/ไม่ใช่ ค.ศ. = ไม่ใช้เป็นพื้น (D-c03-submit-date-04) → "วันนี้" ผ่านเสมอ
 - `receivedAtMs` (BR-02): ไม่มีวันที่ → `eventAt` · `receivedDate === bkkToday(eventAt)` → `eventAt` (เวลาจริง) · นอกนั้น → `min(bkkNoonMs(receivedDate), now)` · `eventAt` = `clampClientTs(clientTs, now)` เดิม (ยังใช้เป็น `event_at` ตัดสินใครชนะ — ไม่ใช่วันที่รับงาน)
 
 **op ไหนใช้วันที่** (ตัวอื่นไม่ตรวจและไม่ใช้ `receivedDate` เลย แม้ค่าผิด):
@@ -109,14 +111,16 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | B. แก้วันที่ `dateOnly: true` + `method: grid` + `status: submitted` + `receivedDate` | submitted | วันเดิม (`receivedDate === bkkToday(before.submitted_at)`) → คง `before.submitted_at` · นอกนั้น `receivedAtMs(...)` |
 | C. อื่น ๆ: แก้คะแนนช่องที่ส่งแล้ว (รวมคะแนนแรกในรอบเดียวกัน C-01), void, excused | ใด ๆ | ตามเดิม (`receivedDate` ถูกเพิกเฉย) |
 
+- op B ที่ช่อง **ในฐานข้อมูล** มีวันที่ไทยของ `submitted_at` = `receivedDate` อยู่แล้ว (v4 · no-op): ตอบ `ok` + `submission` = ค่าปัจจุบันของช่อง **ไม่เขียน ไม่มี audit** (ตัดสินหลัง `superseded`/`cell_not_submitted`/`received_date_*`) → ปุ่มย้อนกลับของ EP-03/EP-04 ที่คลุมช่องนี้ยังใช้ได้ · ส่ง opId เดิมซ้ำ = ถูกตัดสินใหม่ (ไม่ใช่ `duplicate` เพราะไม่มีแถว audit) ได้ `ok` แบบเดิมตราบที่ช่องยังเป็นวันนั้น · ถ้า `before` เป็นแถวของคำขอเดียวกัน เขียนตามเดิม
 - op B (แก้วันที่): เขียน `status = before.status`, `score = before.score` (**ไม่ใช้** `score` ใน op — AC-13), `late` คำนวณใหม่ตามกฎเดิม (`lateFixForCells` ใน batch), `method: grid`, `device_id` ของคำขอ, `scan_session_id = op.scanSessionId`, `event_at = eventAt`, `updated_at = now` · audit 1 แถว `action: update`, `method: grid`, `before = mapSubmission(before)` · เป็นงานของครู (`receive = 0`, `hand_in = 0`): ทำได้แม้งานปิดรับ และกับเด็กที่ย้าย/จบแล้วถ้าช่องไม่ void (กฎ D15/D23 เดิมใน `judge`/`stillValid`) · ไม่ถูก `already_submitted` กั้น (เป็น `grid`)
 - `submission` ในผล `ok` = ค่าที่บันทึกจริง (รวม `late` หลัง `lateFixForCells`) → หน้าจอใช้ `late` จากผลได้ทันที
-- audit ของ EP-01 เก็บ `after` เป็นแถวที่เขียน (รูปเดิม: `late` เป็น 0/1, มีฟิลด์ guard ติดมา) — **ไม่เปลี่ยนใน v3** · เทสต์เทียบ `!!after.late`
+- audit ของ EP-01 เก็บ `after` เป็นแถวที่เขียน (รูปเดิม: `late` เป็น 0/1, มีฟิลด์ guard ติดมา) — **ไม่เปลี่ยนใน v3** · เทสต์เทียบ `!!after.late` · v4: ท้าย batch มี `auditRowLateStmt` (แบบ 0/1) ตัดสิน `after.late` ของแต่ละแถว audit ใหม่จาก `after` ของแถวนั้นเอง (status, submitted_at) กับกำหนดส่ง ณ ตอนเขียน (กฎเดียวกับ `lib/late.ts`) — ชนกับการเลื่อนกำหนดส่งก็ถูก และหลาย op ในช่องเดียวกันแต่ละแถวยังบอก late ของแถวที่ตัวเองเขียน
+- v4: op B ที่ `before` เป็นแถวของคำขอเดียวกัน (เช่น `[hid รับงาน, grid dateOnly]` ช่องว่างเดียวกัน) รับเงื่อนไข `receive`/`hand_in` ของแถวนั้น → ถ้าแถวรับงานถูก `stillValid` ตัด (งานถูกปิด/เด็กออกระหว่างอ่านกับเขียน) แถวแก้วันที่ก็ไม่ลงด้วย ไม่สร้างช่อง submitted จากการแก้วันที่
 
 **ลำดับการตัดสินต่อ op (v3 — ตัวแรกที่เข้าชนะ)**: `duplicate` → `epoch_changed` → **`invalid(redate_not_allowed)`** (`dateOnly: true` แต่ `method ≠ grid` หรือ `status ≠ submitted`) → `invalid(assignment_missing)` → `full_score_changed` → `assignment_closed` (เฉพาะรับงาน) → `not_in_class` → `student_inactive` → `invalid(score_out_of_range)` (**ข้ามเมื่อ `dateOnly`**) → `superseded` → `already_submitted` → **`invalid(cell_not_submitted)`** (`dateOnly` และช่องไม่มีแถว/void/excused) → **`invalid(received_date_*)`** (เฉพาะ op A/B: `checkReceivedDate`; op B ไม่มี `receivedDate` → `received_date_invalid`) → `ok`
 
 - `redate_not_allowed` อยู่ใน `judge()` (ใช้ทั้งทางปกติและทาง "lost") · `cell_not_submitted` และ `received_date_*` ตัดสินในลูปหลักหลัง `superseded`/`already_submitted` (ช่องที่มีสิ่งใหม่กว่า = `superseded` ไม่ใช่ `cell_not_submitted` · รับงานซ้ำ = `already_submitted` เสมอแม้วันที่ผิด — BR-04)
-- op ที่ "lost" (ผ่านการตัดสินแต่ไม่ลงเพราะ `stillValid`) ตอบตาม `judgeUnwritten` เดิม (`superseded`/`already_submitted`/refusal)
+- op ที่ "lost" (ผ่านการตัดสินแต่ไม่ลงเพราะ `stillValid`) ตอบตาม `judgeUnwritten` เดิม (`superseded`/`already_submitted`/refusal) · v4: op B ที่ไม่ลงและช่องตอนนี้ไม่ใช่ submitted (และไม่มีสิ่งที่ใหม่กว่า) → `invalid cell_not_submitted`
 - ตัวอย่าง (วันนี้ 2026-11-02 09:00 ไทย · a1 มอบหมาย 10-26 กำหนด 10-30): hid + `"2026-10-30"` ช่องว่าง → `ok` `submitted_at` 1793336400000 `late:false` · `"2026-11-02"` clientTs 09:00 → `submitted_at` = 09:00 `late:true` · `"2026-11-03"` → `invalid received_date_future` · `"2026-10-25"` → `invalid received_date_before_assigned` · `"2569-10-30"` → `invalid received_date_invalid` · grid score 8 + `"2026-10-30"` ช่องว่าง → `ok` เที่ยง 10-30 `late:false` · grid `dateOnly` `"2026-10-30"` บนช่อง submitted 7 (11-02 09:00) → `ok` score 7 เที่ยง 10-30 `late:false` · `dateOnly` บนช่อง void → `invalid cell_not_submitted` · hid + `dateOnly` → `invalid redate_not_allowed`
 - การจัดการฝั่ง client (แอปรุ่นใหม่ — ทำในแพ็กเกจ ui-redesign ไม่ใช่งานนี้): ใส่ `receivedDate` ให้ **ทุก op รับงาน** และทุก op `grid` ที่พิมพ์คะแนนลงช่องว่าง (ค่าที่ครูเลือก หรือ `bkkToday(actionTime())`) · op แก้วันที่ส่ง `score` = คะแนนปัจจุบันของช่อง, `fullScoreAtScan` = เต็มปัจจุบัน · `outbox.ts` ส่ง payload ทั้งก้อนอยู่แล้ว (ฟิลด์ใหม่ติดไปเอง รวม "ลองใหม่" ซึ่งคง `receivedDate` เดิม) · reason ใหม่ทั้ง 5 แสดงใน "ส่งไม่สำเร็จ" เป็นภาษาไทย
 - แอปรุ่นเก่า: ไม่ส่งฟิลด์ใหม่ → พฤติกรรมเดิมทุกฟิลด์ (AC-21) · **ลำดับปล่อย: server v3 ก่อนแอปที่ส่งฟิลด์ใหม่เสมอ** (server เก่าตัด `receivedDate` ทิ้งเงียบ ๆ แล้วลงเวลาตอนนี้ และ `dateOnly` จะกลายเป็นการแก้คะแนนด้วย `score` ใน op)
@@ -132,7 +136,7 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 - Request: `{ "action": "all-submitted | full-score | clear", "classId": "string", "receivedDate": "string ≤ 32 ตัว | null (optional · ใหม่ v3 · ใช้ได้กับ all-submitted เท่านั้น)" }`
 - 200: `{ "ok": true, "changed": number, "batchId": "string" }` (ไม่แตะช่อง excused) — รูปเดิม
 - v3 `all-submitted` + `receivedDate`: ทุกช่องที่ถูกเปลี่ยน (ไม่มีแถว/void — ข้าม submitted/excused เหมือนเดิม) ได้ `submitted_at = receivedAtMs(receivedDate, now, now)` (วันนี้ = `now` เดิม · วันอื่น = 12:00 ไทยของวันนั้น) · `late` จาก `submitted_at` นั้นตามกฎเดิม (`lateFixForCells` + `auditLateSyncStmt` เดิม) · `event_at`/`updated_at` = `now` (ครูทำตอนนี้) · audit `bulk` ช่องละ 1 แถว `after.submitted_at` = ค่าที่เขียน → EP-04 คืนได้ตรงทุก ms · ไม่ส่ง = `now` เหมือนเดิม · จำนวน statement/แถวที่อ่านเท่าเดิม (อ่าน `assigned_date` เพิ่มในคำสั่งเดิม)
-- Errors (ลำดับ v3 — ตัวแรกที่เข้าชนะ): `422 validation` (schema: ชนิด `receivedDate` ผิด) → **`400 received_date_not_applicable`** (มี `receivedDate` ที่ไม่ใช่ null กับ action `full-score`/`clear`) → **`400 received_date_invalid`** → **`400 received_date_future`** → `404 not_found` (งาน) → `409 assignment_closed` (เฉพาะ all-submitted) → `400 class_not_assigned` → **`400 received_date_before_assigned`** (`checkReceivedDate` กับ `assigned_date` ของงาน) → `400 no_students` → (ตอนเขียน) `409 full_score_changed` · `409 modified_since` · `409 epoch_changed` · error ใหม่ไม่มีช่องใดเปลี่ยนและไม่มี audit
+- Errors (ลำดับ v3 — ตัวแรกที่เข้าชนะ): `422 validation` (schema: ชนิด `receivedDate` ผิด) → **`400 received_date_not_applicable`** (มี `receivedDate` ที่ไม่ใช่ null กับ action `full-score`/`clear`) → **`400 received_date_invalid`** → **`400 received_date_future`** (v4: เทียบกับ `latest` = วันไทยของ now + 5 นาที เหมือน EP-01) → `404 not_found` (งาน) → `409 assignment_closed` (เฉพาะ all-submitted) → `400 class_not_assigned` → **`400 received_date_before_assigned`** (`checkReceivedDate` กับ `assigned_date` ของงาน) → `400 no_students` → (ตอนเขียน) `409 full_score_changed` · `409 modified_since` · `409 epoch_changed` · error ใหม่ไม่มีช่องใดเปลี่ยนและไม่มี audit
 - message ภาษาไทยของ error ใหม่: `received_date_not_applicable` "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น" · `received_date_invalid` "วันที่รับงานไม่ถูกต้อง (ใช้ ค.ศ. ปปปป-ดด-วว)" · `received_date_future` "วันที่รับงานเป็นวันในอนาคต" · `received_date_before_assigned` "วันที่รับงานอยู่ก่อนวันมอบหมายงาน"
 
 ### EP-04 `POST /api/assignments/:id/bulk-undo` — ย้อนกลับปุ่มทั้งห้อง
@@ -149,7 +153,7 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 
 ```json
 { "id": "a1 (ไม่ส่ง = สร้างใหม่)", "term_id": "t1 | null", "subject_id": "s1", "type_id": "wt_worksheet",
-  "title": "ใบงานที่ 5", "unit": "string | null", "full_score": "integer 1–100",
+  "title": "ใบงานที่ 5", "unit": "string | null", "full_score": "integer 1–100 (v4: ไม่ส่งได้เมื่องานมีอยู่แล้ว = คงค่าในฐานข้อมูล)",
   "assigned_date": "YYYY-MM-DD (ค.ศ.) | null | \"\"", "due_date": "YYYY-MM-DD | null | \"\"", "note": "string | null",
   "publish_scores": "boolean", "status": "open | closed", "class_ids": ["c1", "c2"],
   "raise_choice": "adjust | keep  (ใหม่ v2 · optional — คำตอบของครูในกล่องถาม)",
@@ -157,7 +161,8 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 ```
 
 - schema: มี `raise_choice` แต่ไม่มี `raise_from` (หรือกลับกัน) = `422 validation` · ค่าอื่นของ `raise_choice` = `422 validation`
-- นิยาม: **เพิ่มคะแนนเต็ม** = มีงานนี้อยู่แล้ว และ `full_score` ใหม่ > `full_score` ในฐานข้อมูล · **คนที่ได้เต็มเดิม** = แถว submissions ของงานนี้ (ทุกห้อง ทุกสถานะนักเรียน ทุก method) ที่ `status = 'submitted'` และ `score = full_score ในฐานข้อมูล ณ ตอนเขียน` (BR-01)
+- v4 (`full_score` ไม่ส่ง): งานที่มีอยู่ → คง `full_score` ที่อยู่ในฐานข้อมูล **ณ ตอนเขียน** (SQL ใน upsert เดียวกัน — เครื่องอื่นแก้ระหว่างนั้นก็ไม่ถูกทับ) ไม่ใช่การเพิ่ม/ลดคะแนนเต็ม (ไม่ถาม ไม่มี guard ลด/เพิ่ม · `raise_choice`/`raise_from` ที่ส่งมาด้วยถูกเพิกเฉยทั้งหมด รวมข้อ 3) · `assignment.full_score` ใน 200 และ `after.full_score` ของ audit งาน = ค่าที่เก็บจริง · งานใหม่ (ไม่มี `id` หรือ `id` ที่ไม่มีอยู่) ไม่ส่ง = `422 validation` · ผู้เรียก: `Gradebook.tsx` `saveAsgPatch` (ปิด/เปิดรับงาน, ซ่อน/แสดงคะแนน) ไม่ส่ง `full_score` · AssignmentModal ส่งเหมือนเดิม
+- นิยาม: **เพิ่มคะแนนเต็ม** = มีงานนี้อยู่แล้ว และ `full_score` ใหม่ > `full_score` ในฐานข้อมูล · **คนที่ได้เต็มเดิม** = แถว submissions ของงานนี้ (ทุกห้อง ทุกสถานะนักเรียน ทุก method) ที่ `status = 'submitted'` และ `score = full_score ในฐานข้อมูล ณ ตอนเขียน` (BR-01) · v4: **ยกเว้น** เด็กที่ห้อง (`students.class_id`) เป็นห้องที่งานผูกอยู่แต่ถูกเอาออกใน `class_ids` ของคำขอเดียวกัน — ไม่นับใน `count` ของ 409/200 และไม่ถูกปรับ (ทุกคำสั่งที่นับ/ปรับรันก่อนเขียนห้องใหม่ใน batch)
 
 #### ผลตามกรณี (ตรวจตามลำดับนี้ ตัวแรกที่เข้าชนะ)
 
@@ -241,3 +246,4 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | v1 | 2026-11-02 | สร้างไฟล์: บันทึก EP-01..EP-04 ตามโค้ด main @ 18759a2 + เพิ่มผล `already_submitted` ใน EP-01 (request ไม่เปลี่ยน, ผลเดิมไม่เปลี่ยน) | 2026-11-02-integrity-c01 | server `worker/routes/submissions.ts`, type `shared/types.ts`, client `outbox.ts` / `Scan.tsx` / `Gradebook.tsx` / `Overlays.tsx` · แอปรุ่นเก่าเห็นใน "ส่งไม่สำเร็จ" (Gate 1 Q3) |
 | v2 | 2026-11-02 | เพิ่ม EP-05 `POST /api/assignments` (บันทึกตามโค้ดเดิม + request `raise_choice`/`raise_from`, ผล `raise`, `409 raise_choice_required`, `409 full_score_changed`) · EP-04 มีผู้เรียกใหม่ (ย้อนกลับการปรับ) โดยไม่เปลี่ยน · EP-01..04 ไม่เปลี่ยน | 2026-11-02-integrity-c02 | server `worker/routes/assignments.ts` · client `AssignmentModal.tsx` · แอปรุ่นเก่าเพิ่มคะแนนเต็มที่มีคนได้เต็มเดิมไม่ได้จนอัปเดต (Gate 1 Q3) · D-integrity-c02-01..07 |
 | v3 | 2026-11-02 | EP-01 request เพิ่ม `receivedDate?`, `dateOnly?` · `invalid` เพิ่ม reason `received_date_invalid` / `received_date_future` / `received_date_before_assigned` / `cell_not_submitted` / `redate_not_allowed` · ลำดับการตัดสินใหม่ · EP-03 request เพิ่ม `receivedDate?` (all-submitted) + 400 `received_date_*` / `received_date_not_applicable` · EP-04 ไม่แก้ (เพิ่มเทสต์) · EP-02/EP-05 ไม่เปลี่ยน · ตัวตรวจร่วม `shared/received-date.ts` · ไม่มี migration | 2026-11-02-c03-submit-date | server `worker/routes/submissions.ts` + `shared/received-date.ts` (ใหม่) + type `shared/types.ts` · client (Scan/Gradebook/ข้อความ "ส่งไม่สำเร็จ") ทำในแพ็กเกจ ui-redesign · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ · D-c03-submit-date-01..07 |
+| v4 | 2026-11-03 | EP-01: re-date วันเดิม = `ok` ไม่เขียน/ไม่มี audit · `received_date_future` ยอมนาฬิกาเครื่องนำ ≤ 5 นาที (`latest`) · audit `after.late` ซิงก์กับค่าที่บันทึก · op B ที่พึ่งแถวรับงานในคำขอเดียวกันรับ guard ของแถวนั้น · lost op B บนช่องที่ไม่ submitted = `cell_not_submitted` · EP-03: `received_date_future` ใช้ `latest` เดียวกัน · EP-05: `full_score` ไม่บังคับเมื่องานมีอยู่ (คงค่าใน DB) · คนที่ได้เต็มเดิมไม่รวมห้องที่ถูกเอาออกในคำขอเดียวกัน · EP-02/EP-04 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-correctness-lows | server `submissions.ts`, `assignments.ts`, `shared/received-date.ts` · client `Gradebook.tsx` (`saveAsgPatch` ไม่ส่ง `full_score` → **ปล่อย server ก่อนแอป**: server v3 จะตอบ 422) · แอปเก่าไม่กระทบ (ส่ง `full_score` ครบเหมือนเดิม) |

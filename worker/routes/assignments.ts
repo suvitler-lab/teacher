@@ -34,7 +34,9 @@ const assignmentSchema = z.object({
   type_id: z.string().min(1),
   title: z.string().min(1),
   unit: z.string().nullable().optional(),
-  full_score: z.number().int().min(1).max(100),
+  // absent = keep the work's stored full score (correctness-lows AC-04: the gradebook closes / hides work without sending
+  // a full score its list may hold stale) — required when the work is new (checked in the route, 422 validation)
+  full_score: z.number().int().min(1).max(100).optional(),
   assigned_date: ymd,
   due_date: ymd,
   note: z.string().nullable().optional(),
@@ -50,9 +52,21 @@ const assignmentSchema = z.object({
   path: ["raise_choice"],
 });
 
+/** A new work has no stored full score to keep: it must send one (the schema's own rule before AC-04). */
+const newWorkFullScore = z.object({ full_score: z.number().int().min(1).max(100) });
+
 // BR-01: the submission rows of work ?1 that hold the full score `full` — every class, every student status, every
-// method; never excused / void / awaiting a score (a NULL score never equals anything)
-const holdsFull = (full: string) => `assignment_id = ?1 AND status = 'submitted' AND score = ${full}`;
+// method; never excused / void / awaiting a score (a NULL score never equals anything) — except the cells of a class
+// THIS save takes the work away from (correctness-lows AC-03 · C-02 R-05): a class the work is given to as the statement
+// runs, that is not in the save's class list `keep` (a JSON array parameter). So every statement using it runs BEFORE the
+// class links are rewritten. `student_id` is left unqualified: it is the row of submissions the condition is about,
+// whatever its alias (students has no such column). The first test does not depend on the row (SQLite runs it once):
+// a save that removes no class reads no student at all.
+const removedClasses = (keep: string) =>
+  `SELECT ac.class_id FROM assignment_classes ac WHERE ac.assignment_id = ?1 AND ac.class_id NOT IN (SELECT value FROM json_each(${keep}))`;
+const holdsFull = (full: string, keep: string) => `assignment_id = ?1 AND status = 'submitted' AND score = ${full}
+  AND (NOT EXISTS (${removedClasses(keep)})
+       OR NOT EXISTS (SELECT 1 FROM students st WHERE st.id = student_id AND st.class_id IN (${removedClasses(keep)})))`;
 /** The work's full score as it is inside the transaction. */
 const FULL_NOW = "(SELECT full_score FROM assignments WHERE id = ?1)";
 /**
@@ -76,7 +90,11 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   const epoch = await requestEpoch(c);
   const aid = b.id ?? id("asg");
   const db = c.env.DB;
-  const choice = b.raise_choice ?? null;
+  // no full score in the request = the stored one is kept (AC-04): never a raise, so an answer sent with it is ignored
+  // like any choice sent with something that is not a raise (case 9 · review R-05)
+  const keepFull = b.full_score === undefined;
+  const choice = keepFull ? null : (b.raise_choice ?? null);
+  const keepClasses = JSON.stringify(b.class_ids); // the classes the work keeps — holdsFull's `keep`
   // One round of reads — everything the checks below need that doesn't depend on anything else (the database is
   // far away, so the number of round trips is what a teacher waits for): the work as it is now, the term, the
   // classes it already had, the classes it is being given to, and how many hold the work's full score now.
@@ -87,9 +105,14 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     db.prepare("SELECT id, name, year FROM classes WHERE id IN (SELECT value FROM json_each(?1))")
       .bind(JSON.stringify(b.class_ids)).all<{ id: string; name: string; year: number | null }>(),
     b.id
-      ? db.prepare(`SELECT COUNT(*) AS n FROM submissions WHERE ${holdsFull(FULL_NOW)}`).bind(aid).first<{ n: number }>()
+      ? db.prepare(`SELECT COUNT(*) AS n FROM submissions WHERE ${holdsFull(FULL_NOW, "?2")}`).bind(aid, keepClasses).first<{ n: number }>()
       : Promise.resolve(null),
   ]);
+
+  // no full score in the request: the work keeps the one it holds — decided in the write itself (AC-04), so it is never
+  // a raise or a lowering, whatever the device's list says. A new work needs one.
+  if (keepFull && !existing) newWorkFullScore.parse({}); // 422 validation, as the schema itself would say it
+  const full: number = b.full_score ?? existing.full_score;
 
   // dates: new or changed ones must be real CE dates (422) — but older work restored with a Buddhist-era date can still
   // be closed / have its scores hidden, which sends the stored dates back unchanged
@@ -113,10 +136,10 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   const scoreOverFull = async () => {
     const over = await c.env.DB.prepare(
       "SELECT COUNT(*) AS n FROM submissions WHERE assignment_id = ? AND score > ?",
-    ).bind(aid, b.full_score).first<{ n: number }>();
+    ).bind(aid, full).first<{ n: number }>();
     return over?.n ?? 0;
   };
-  if (existing && b.full_score < existing.full_score) {
+  if (!keepFull && existing && full < existing.full_score) {
     const over = await scoreOverFull();
     if (over > 0) return c.json({ error: "score_over_full", over }, 409);
   }
@@ -148,25 +171,27 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   const raiseChoiceRequired = (count: number, from: number) => c.json({
     error: "raise_choice_required",
     message: `มี ${count} คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้วบันทึกอีกครั้ง`,
-    count, from, to: b.full_score,
+    count, from, to: full,
   }, 409);
-  const raising = !!existing && b.full_score > existing.full_score;
+  const raising = !keepFull && !!existing && full > existing.full_score;
   if (raising && !choice && (holdersRow?.n ?? 0) > 0) return raiseChoiceRequired(holdersRow!.n, existing.full_score);
   // the question was asked and answered (cases 7 and 8). Past case 3, the old full score is raise_from; a choice sent
   // with anything that is not a raise is ignored (case 9).
-  const raise = raising && choice ? { choice, from: b.raise_from!, to: b.full_score } : null;
+  const raise = raising && choice ? { choice, from: b.raise_from!, to: full } : null;
   const batchId = raise ? ulid() : null;
   const deviceId = c.get("deviceId") ?? null;
 
   // the answer stands only for the full score it was given for (BR-05): checked first in the batch. Without an answer,
   // a raise that finds a holder of the old full score at write time (a scan landed since the look above) is refused.
+  // (a save that keeps the stored full score is never a raise: no guard)
   const raiseGuard = choice
     ? (existing ? [abortIf(c.env, `${FULL_NOW} IS NOT ?2`, aid, b.raise_from)] : [])
-    : [abortIf(c.env, `?2 > ${FULL_NOW} AND EXISTS (SELECT 1 FROM submissions WHERE ${holdsFull(FULL_NOW)})`, aid, b.full_score)];
+    : keepFull ? []
+    : [abortIf(c.env, `?2 > ${FULL_NOW} AND EXISTS (SELECT 1 FROM submissions WHERE ${holdsFull(FULL_NOW, "?3")})`, aid, full, keepClasses)];
   // who holds the old full score is decided by the write itself (BR-05, D-integrity-c02-02) — never from a list read
   // earlier or sent by a device. Placed before anything moves, so it is the count the teacher's answer applies to.
   const holdersNow = raise
-    ? c.env.DB.prepare(`SELECT COUNT(*) AS n FROM submissions WHERE ${holdsFull("?2")}`).bind(aid, raise.from)
+    ? c.env.DB.prepare(`SELECT COUNT(*) AS n FROM submissions WHERE ${holdsFull("?2", "?3")}`).bind(aid, raise.from, keepClasses)
     : null;
   // "adjust" (BR-02, BR-04): one history line per cell with the cell as it was (before the update below sees it), then
   // the cell itself — score = the new full score, method bulk, this device, now; status / late / submitted_at /
@@ -178,11 +203,11 @@ assignmentRoutes.post("/api/assignments", async (c) => {
              assignment_id, student_id, action, before_json, after_json, method)
            SELECT ?3 || ':' || s.student_id, ?4, NULL, ?5, 'teacher', NULL, ?3, 'submission', s.assignment_id || ':' || s.student_id,
              s.assignment_id, s.student_id, 'bulk', ${SUBMISSION_JSON}, NULL, 'bulk'
-           FROM submissions s WHERE ${holdsFull("?2")}`,
-        ).bind(aid, raise.from, batchId, now, deviceId),
+           FROM submissions s WHERE ${holdsFull("?2", "?6")}`,
+        ).bind(aid, raise.from, batchId, now, deviceId, keepClasses),
         cells: c.env.DB.prepare(
-          `UPDATE submissions SET score = ?3, method = 'bulk', device_id = ?4, updated_at = ?5, event_at = ?5 WHERE ${holdsFull("?2")}`,
-        ).bind(aid, raise.from, raise.to, deviceId, now),
+          `UPDATE submissions SET score = ?3, method = 'bulk', device_id = ?4, updated_at = ?5, event_at = ?5 WHERE ${holdsFull("?2", "?6")}`,
+        ).bind(aid, raise.from, raise.to, deviceId, now, keepClasses),
         // ...and each line's `after` is the cell as this batch leaves it (after lateFixForAssignment below)
         after: c.env.DB.prepare(
           `UPDATE audit_logs SET after_json = (SELECT ${SUBMISSION_JSON} FROM submissions s
@@ -197,13 +222,15 @@ assignmentRoutes.post("/api/assignments", async (c) => {
       `INSERT INTO assignments (id, term_id, subject_id, type_id, title, unit, full_score, assigned_date, due_date, note, publish_scores, status, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET term_id=excluded.term_id, subject_id=excluded.subject_id, type_id=excluded.type_id,
-         title=excluded.title, unit=excluded.unit, full_score=excluded.full_score, assigned_date=excluded.assigned_date,
+         title=excluded.title, unit=excluded.unit,
+         full_score=CASE WHEN ?15 = 1 THEN assignments.full_score ELSE excluded.full_score END, assigned_date=excluded.assigned_date,
          due_date=excluded.due_date, note=excluded.note, publish_scores=excluded.publish_scores, status=excluded.status,
-         updated_at=excluded.updated_at`,
+         updated_at=excluded.updated_at
+       RETURNING full_score`, // AC-04: no full score sent = the one stored as this statement runs, and the reply says it
     ).bind(
-      aid, b.term_id ?? null, b.subject_id, b.type_id, b.title, b.unit ?? null, b.full_score,
+      aid, b.term_id ?? null, b.subject_id, b.type_id, b.title, b.unit ?? null, full,
       b.assigned_date ?? null, b.due_date ?? null, b.note ?? null, b.publish_scores === false ? 0 : 1,
-      b.status ?? "open", (existing as any)?.created_at ?? now, now,
+      b.status ?? "open", (existing as any)?.created_at ?? now, now, keepFull ? 1 : 0,
     ),
     c.env.DB.prepare("DELETE FROM assignment_classes WHERE assignment_id = ?").bind(aid),
     ...b.class_ids.map((cid) =>
@@ -224,7 +251,7 @@ assignmentRoutes.post("/api/assignments", async (c) => {
       action: existing ? "update" : "create", device_id: c.get("deviceId"),
       before: existing ? { full_score: (existing as any).full_score, title: (existing as any).title, due_date: (existing as any).due_date ?? null } : null,
       after: {
-        title: b.title, full_score: b.full_score, class_ids: b.class_ids, due_date: b.due_date ?? null,
+        title: b.title, full_score: full, class_ids: b.class_ids, due_date: b.due_date ?? null,
         ...(raise ? { raise: { ...raise, count: 0 } } : {}), // count: filled in by the batch itself, just below
       },
       method: "manual",
@@ -232,34 +259,45 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   ], now);
   // the work line's raise.count, counted in SQL in the same batch: the cells this batch adjusted, or (keep) the
   // holders of the old full score it left as they were
+  // (placed before the class links are rewritten: `keep` counts by holdsFull, which reads the links as they were)
   const auditCount = raise
     ? c.env.DB.prepare(
         `UPDATE audit_logs SET after_json = json_set(after_json, '$.raise.count', ${raise.choice === "adjust"
-          ? `(SELECT COUNT(*) FROM audit_logs WHERE ${ownCellLines("?2", "?3")})`
-          : `(SELECT COUNT(*) FROM submissions WHERE assignment_id = ?2 AND status = 'submitted' AND score = ?3)`})
-         WHERE op_id = ?1`,
-      ).bind(workOpId, aid, raise.choice === "adjust" ? batchId : raise.from)
+          ? `(SELECT COUNT(*) FROM audit_logs WHERE ${ownCellLines("?1", "?3")})`
+          : `(SELECT COUNT(*) FROM submissions WHERE ${holdsFull("?3", "?4")})`})
+         WHERE op_id = ?2`,
+      ).bind(aid, workOpId, ...(raise.choice === "adjust" ? [batchId] : [raise.from, keepClasses]))
+    : null;
+  // no full score sent: the work line says the full score the work really kept (another device may have changed it)
+  const auditFull = keepFull
+    ? c.env.DB.prepare(
+        "UPDATE audit_logs SET after_json = json_set(after_json, '$.full_score', (SELECT full_score FROM assignments WHERE id = ?1)) WHERE op_id = ?2",
+      ).bind(aid, workOpId)
     : null;
 
   const write: D1PreparedStatement[] = [
     // guards first: a restore since this request began, scores that now sit above the new full score, a class that is
     // no longer of the term's year, or a full score other than the one the teacher answered for roll the whole batch
     // back — nothing of it (title, full score, class links, adjusted cells, the audit lines) is half-applied
-    abortIf(c.env, lowersBelowScores, aid, b.full_score),
+    ...(keepFull ? [] : [abortIf(c.env, lowersBelowScores, aid, full)]),
     ...(yearChecked.length > 0 ? [abortIf(c.env, `EXISTS (${classesOffYear})`, JSON.stringify(yearChecked), b.term_id)] : []),
     ...raiseGuard,
   ];
   const holdersAt = holdersNow ? write.push(holdersNow) - 1 : -1;
   if (adjust) write.push(adjust.audit, adjust.cells);
-  write.push(...stmts);
-  if (adjust) write.push(adjust.after);
   write.push(audit);
   if (auditCount) write.push(auditCount);
+  const upsertAt = write.length; // stmts[0]: the work itself
+  write.push(...stmts);
+  if (adjust) write.push(adjust.after);
+  if (auditFull) write.push(auditFull);
 
   let count = 0;
+  let storedFull = full;
   try {
     const results = await batchAtEpoch(c.env, epoch, write);
     if (holdersAt >= 0) count = (results[holdersAt].results?.[0] as { n: number } | undefined)?.n ?? 0;
+    storedFull = (results[upsertAt].results?.[0] as { full_score: number } | undefined)?.full_score ?? full;
   } catch (e) {
     if (e instanceof ApiError) throw e; // epoch_changed
     // fresh look, in the order of EP-05's cases (answered full score, scores, class years, unanswered raise)
@@ -268,22 +306,22 @@ assignmentRoutes.post("/api/assignments", async (c) => {
       if (cur && cur.full_score !== b.raise_from) return fullScoreChanged(cur.full_score);
     }
     const over = await scoreOverFull();
-    if (over > 0 && existing && b.full_score < existing.full_score) return c.json({ error: "score_over_full", over }, 409);
+    if (over > 0 && !keepFull && existing && full < existing.full_score) return c.json({ error: "score_over_full", over }, 409);
     if (yearChecked.length > 0) {
       const off = await c.env.DB.prepare(classesOffYear).bind(JSON.stringify(yearChecked), b.term_id).all<{ name: string }>();
       if ((off.results ?? []).length > 0) return yearMismatch(off.results);
     }
-    if (!choice) {
+    if (!choice && !keepFull) {
       const cur = await c.env.DB.prepare(
-        `SELECT full_score, (SELECT COUNT(*) FROM submissions WHERE ${holdsFull(FULL_NOW)}) AS n FROM assignments WHERE id = ?1`,
-      ).bind(aid).first<{ full_score: number; n: number }>();
-      if (cur && b.full_score > cur.full_score && cur.n > 0) return raiseChoiceRequired(cur.n, cur.full_score);
+        `SELECT full_score, (SELECT COUNT(*) FROM submissions WHERE ${holdsFull(FULL_NOW, "?2")}) AS n FROM assignments WHERE id = ?1`,
+      ).bind(aid, keepClasses).first<{ full_score: number; n: number }>();
+      if (cur && full > cur.full_score && cur.n > 0) return raiseChoiceRequired(cur.n, cur.full_score);
     }
     throw e;
   }
   return c.json({
     ok: true,
-    assignment: mapAssignment({ ...b, id: aid, created_at: (existing as any)?.created_at ?? now, updated_at: now, publish_scores: b.publish_scores === false ? 0 : 1, status: b.status ?? "open", deleted_at: null }, b.class_ids),
+    assignment: mapAssignment({ ...b, id: aid, full_score: storedFull, created_at: (existing as any)?.created_at ?? now, updated_at: now, publish_scores: b.publish_scores === false ? 0 : 1, status: b.status ?? "open", deleted_at: null }, b.class_ids),
     raise: raise ? { ...raise, count, batchId: raise.choice === "adjust" && count > 0 ? batchId : null } : null,
   });
 });

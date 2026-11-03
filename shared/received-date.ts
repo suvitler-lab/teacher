@@ -31,14 +31,27 @@ export function bkkNoonMs(date: string): number {
 }
 
 /**
- * Why `v` cannot be used as the received date — or null if it can. First match wins:
- * not a real CE day → invalid · after `today` → future · before the work was given (only when the assigned date is
- * itself a real CE day not after today — a future / empty / Buddhist-era one is no floor, D-04) → before_assigned.
- * No limit on how far back (Gate 1 Q2) beyond MIN_RECEIVED_DATE. `today` = the server's Bangkok day at the time of writing.
+ * How far a device's clock may run ahead of the server's and its "today" still be accepted (correctness-lows AC-06 ·
+ * C-03 R-03): a scan at 00:00:02 by the app's clock reaching the server at 23:59:59 is not a date in the future.
+ * The day it allows is stored at `now` (receivedAtMs never goes past now), so nothing is ever dated after the server's clock.
  */
-export function checkReceivedDate(v: unknown, o: { today: string; assignedDate: string | null }): ReceivedDateProblem | null {
+export const RECEIVED_DATE_CLOCK_SKEW_MS = 5 * 60_000;
+
+/** The two days the server checks a received date against at `now`: its own Bangkok day, and the latest day allowed. */
+export function receivedDateDays(now: number): { today: string; latest: string } {
+  return { today: bkkToday(now), latest: bkkToday(now + RECEIVED_DATE_CLOCK_SKEW_MS) };
+}
+
+/**
+ * Why `v` cannot be used as the received date — or null if it can. First match wins:
+ * not a real CE day → invalid · after `latest` (default `today`) → future · before the work was given (only when the
+ * assigned date is itself a real CE day not after `today` — a future / empty / Buddhist-era one is no floor, D-04) →
+ * before_assigned. No limit on how far back (Gate 1 Q2) beyond MIN_RECEIVED_DATE. `today` = the server's Bangkok day at
+ * the time of writing; the server passes `latest` = the day 5 minutes on (receivedDateDays), the screens don't.
+ */
+export function checkReceivedDate(v: unknown, o: { today: string; assignedDate: string | null; latest?: string }): ReceivedDateProblem | null {
   if (!isCeDate(v) || v < MIN_RECEIVED_DATE) return "received_date_invalid";
-  if (v > o.today) return "received_date_future";
+  if (v > (o.latest ?? o.today)) return "received_date_future";
   if (isCeDate(o.assignedDate) && o.assignedDate <= o.today && v < o.assignedDate) return "received_date_before_assigned";
   return null;
 }

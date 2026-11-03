@@ -293,9 +293,11 @@ export function GradebookPage() {
       setAssignments((list) => list.map((x) => (x.id === before.id ? ({ ...x, ...patch } as Assignment) : x)));
       let saved: Assignment | null = null;
       try {
+        // no full_score: the list may hold a stale one (another device lowered it), which the server would read as a raise
+        // and refuse — EP-05 keeps the stored full score when it is absent (correctness-lows AC-04)
         const res = await api.post<{ assignment: Assignment }>("/api/assignments", {
           id: before.id, subject_id: before.subject_id, type_id: before.type_id, title: before.title,
-          unit: before.unit, full_score: before.full_score, assigned_date: before.assigned_date,
+          unit: before.unit, assigned_date: before.assigned_date,
           due_date: before.due_date, note: before.note, publish_scores: before.publish_scores, status: before.status,
           class_ids: before.class_ids, term_id: before.term_id, ...patch,
         });

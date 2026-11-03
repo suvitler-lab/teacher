@@ -42,16 +42,22 @@ beforeEach(async () => {
 afterEach(() => { vi.useRealTimers(); });
 
 describe("T-03 Bangkok midnight: the server's 'today' at 23:59:59 and 00:00:01", () => {
-  it("23:59:59 ไทย 11-02: tomorrow 11-03 is still the future; today 11-02 = the real time", async () => {
+  // correctness-lows AC-06 (C-03 R-03): within 5 minutes of midnight, tomorrow is a device clock running ahead, not the
+  // future — accepted and stored at now (still 11-02). The day after tomorrow stays the future.
+  it("23:59:59 ไทย 11-02: tomorrow 11-03 = now (AC-06: ≤ 5 min clock skew); 11-04 is the future; today 11-02 = the real time", async () => {
     vi.setSystemTime(BEFORE_MIDNIGHT);
-    const [a, b] = await batch(
+    await env.DB.prepare("INSERT INTO students (id,code,qr_token,prefix,first_name,last_name,class_id,number,status,updated_at) VALUES ('st3','103','Q-C03V000003','ด.ช.','ค','ทดสอบ','c1',3,'active',0)").run();
+    const [a, b, c] = await batch(
       op({ studentId: "st1", receivedDate: "2026-11-03" }),
       op({ studentId: "st2", receivedDate: "2026-11-02", clientTs: BEFORE_MIDNIGHT - 1000 }),
+      op({ studentId: "st3", receivedDate: "2026-11-04" }),
     );
-    expect(a).toMatchObject({ result: "invalid", reason: "received_date_future" });
+    expect(a.result).toBe("ok");
+    expect(a.submission).toMatchObject({ submitted_at: BEFORE_MIDNIGHT, late: true });
     expect(b.result).toBe("ok");
     expect(b.submission).toMatchObject({ submitted_at: BEFORE_MIDNIGHT - 1000, late: true });
-    expect(await cell("st1")).toBeNull();
+    expect(c).toMatchObject({ result: "invalid", reason: "received_date_future" });
+    expect(await cell("st3")).toBeNull();
   });
 
   it("00:00:01 ไทย 11-03: 11-03 accepted at the real time; an op made at 23:59:59 for 11-02 keeps its real time; a stale 11-03 op made at 23:59:59 never lands before midnight", async () => {
@@ -79,9 +85,9 @@ describe("T-03 Bangkok midnight: the server's 'today' at 23:59:59 and 00:00:01",
     expect(r2.submission).toMatchObject({ score: 6, submitted_at: NOON_1102, late: true });
   });
 
-  it("bulk ทั้งห้องส่งแล้ว: 11-02 at 23:59:59 = now · 11-02 at 00:00:01 = noon 11-02 · 11-03 at 23:59:59 = future (400)", async () => {
+  it("bulk ทั้งห้องส่งแล้ว: 11-02 at 23:59:59 = now · 11-02 at 00:00:01 = noon 11-02 · 11-04 at 23:59:59 = future (400; 11-03 is AC-06)", async () => {
     vi.setSystemTime(BEFORE_MIDNIGHT);
-    expect((await bulk({ action: "all-submitted", receivedDate: "2026-11-03" })).body.error).toBe("received_date_future");
+    expect((await bulk({ action: "all-submitted", receivedDate: "2026-11-04" })).body.error).toBe("received_date_future");
     const r = await bulk({ action: "all-submitted", receivedDate: "2026-11-02" });
     expect(r.status).toBe(200);
     expect((await cell("st1")).submitted_at).toBe(BEFORE_MIDNIGHT);
