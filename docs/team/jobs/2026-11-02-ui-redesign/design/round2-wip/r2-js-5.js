@@ -172,7 +172,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>{if((e.key==='Enter'||e.key===' ')&&hold)holdEnd(false)});
 window.addEventListener('resize',render);
 function fromHash(){
-  const [p,s]=location.hash.replace('#','').split('/');
+  const [p,s]=location.hash.replace('#','').split('-');
   if(!['home','scan','attendance','random'].includes(p))return false;
   if(p===S.page&&(!s||s===curSub()))return false;
   const ok=p==='home'||(SUBS[p]&&SUBS[p][s]);

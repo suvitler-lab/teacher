@@ -98,7 +98,7 @@ function ctl(){
   const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],home:[]}[S.page];
   $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
   const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
-  location.hash=S.page==='home'?'home':S.page+(curSub()&&S.page!=='home'?'/'+curSub():'');
+  {const h=S.page==='home'?'home':S.page+(curSub()?'-'+curSub():'');if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}
 }
 function syncHome(){H.S.dev=S.dev;H.S.theme=S.theme;H.S.font=S.font;H.S.menu9=false;H.S.scen={offline:'offline',unchecked:'morning'}[S.scen]||'normal'}
 function applySub(){

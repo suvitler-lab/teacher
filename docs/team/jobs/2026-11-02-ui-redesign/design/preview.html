@@ -311,7 +311,7 @@ const DEFAULT_PREFS=()=>({v:1,order:CARD_DEFS.map(c=>c.key),hidden:CARD_DEFS.fil
 const S={dev:'ipadP',page:'home',theme:'light',font:0,menu9:false,scen:'normal',prefs:DEFAULT_PREFS(),list:null,filter:'open',toast:'',showAll:false,confirmReset:false,live:'',hideNames:false,expandDue:{}};
 const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});
 
-/* ===== ข้อมูลสมมติ (ชื่อสมมติทั้งหมด · "วันนี้" = อังคาร 4 พ.ย. 2569) =====
+/* ===== ข้อมูลสมมติ (ชื่อสมมติทั้งหมด · "วันนี้" = พุธ 4 พ.ย. 2569) =====
    per[] ต่อห้อง = ClassProgress ของ /api/dashboard: s = ส่งแล้ว (รวมรอตรวจ) · a = รอตรวจ · m = ค้างส่ง (ไม่ส่ง และ เลยกำหนด/ปิดรับแล้ว — shared/metrics.ts workState) · x = ยกเว้น
    คนที่ยังไม่ส่งแต่ยังไม่ถึงกำหนด = (ทั้งห้อง − x) − s − m  (ไม่นับ "ยังไม่ส่ง" ตาม README) */
 const CLASSES=[{id:'c1',name:'ป.6/1',total:44},{id:'c2',name:'ป.6/2',total:42},{id:'c3',name:'ป.6/3',total:43}];
@@ -392,7 +392,7 @@ function termPill(){const sc=scen();return `<button class="pill${sc.past?' on':'
 /* ===== หน้าหลัก ===== */
 function header(d,sc){
   const prefsBtn=d.shell==='tabs'?`<button class="icon ghost" data-a="prefs" aria-label="ปรับหน้าหลัก">${ic('layout-grid',24)}</button>`:`<button class="ghost" data-a="prefs">${ic('layout-grid',20)}ปรับหน้าหลัก</button>`;
-  return `<header class="uh"><div class="uh-l"><span class="uh-ic">${ic('home',24)}</span><div style="min-width:0"><h1 class="uh-title">สวัสดี ครูสมมติ</h1><div class="uh-sub"><span>โรงเรียนตัวอย่างวิทยา</span><span class="sep">อังคาร 4 พ.ย. 2569</span>${sc.offline?CHIP('warning','ออฟไลน์ · ข้อมูลเมื่อ 10:12','wifi-off'):''}</div></div></div>
+  return `<header class="uh"><div class="uh-l"><span class="uh-ic">${ic('home',24)}</span><div style="min-width:0"><h1 class="uh-title">สวัสดี ครูสมมติ</h1><div class="uh-sub"><span>โรงเรียนตัวอย่างวิทยา</span><span class="sep">พุธ 4 พ.ย. 2569</span>${sc.offline?CHIP('warning','ออฟไลน์ · ข้อมูลเมื่อ 10:12','wifi-off'):''}</div></div></div>
   <div class="uh-act">${termPill()}<button class="${d.shell==='tabs'?'icon ':''}ghost${S.hideNames?' on-hide':''}" data-a="hide" aria-pressed="${S.hideNames}" aria-label="ซ่อนชื่อนักเรียน" title="ซ่อนชื่อนักเรียนทุกการ์ด (ใช้ตอนสะท้อนจอขึ้นทีวี)">${ic(S.hideNames?'eye-off':'eye',d.shell==='tabs'?24:20)}${d.shell==='tabs'?'':(S.hideNames?'ซ่อนชื่ออยู่':'ซ่อนชื่อ')}</button>${prefsBtn}</div></header>${S.hideNames?`<div class="banner hidebar" role="status">${ic('eye-off',20)}<span><b>ซ่อนชื่อนักเรียนอยู่</b> · ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)<span class="opt">ข้อเสนอ SA</span></span><button class="ghost" data-a="hide">แสดงชื่อ</button></div>`:''}`;
 }
 function todoCard(sc){

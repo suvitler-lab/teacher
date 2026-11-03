@@ -6,7 +6,7 @@
 <title>ui-redesign รอบ 2 — สแกน · เช็คชื่อ · สุ่มชื่อ (mockup กดได้จริง · ชื่อสมมติ)</title>
 <!--
   ไฟล์เดียว เปิดจากดิสก์ได้ ไม่โหลดอะไรจากอินเทอร์เน็ต · ข้อมูลและชื่อนักเรียนสมมติทั้งหมด
-  รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan/type #attendance/tap #random/pick)
+  รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan-type #attendance-tap #random-pick)
   ประกอบโดย design/round2-wip/build.cjs  (อย่าแก้ไฟล์นี้ตรง ๆ — แก้ชิ้นส่วนแล้วรันใหม่)
 -->
 <style>
@@ -700,7 +700,7 @@ const DEFAULT_PREFS=()=>({v:1,order:CARD_DEFS.map(c=>c.key),hidden:CARD_DEFS.fil
 const S={dev:'ipadP',page:'home',theme:'light',font:0,menu9:false,scen:'normal',prefs:DEFAULT_PREFS(),list:null,filter:'open',toast:'',showAll:false,confirmReset:false,live:'',hideNames:false,expandDue:{}};
 const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});
 
-/* ===== ข้อมูลสมมติ (ชื่อสมมติทั้งหมด · "วันนี้" = อังคาร 4 พ.ย. 2569) =====
+/* ===== ข้อมูลสมมติ (ชื่อสมมติทั้งหมด · "วันนี้" = พุธ 4 พ.ย. 2569) =====
    per[] ต่อห้อง = ClassProgress ของ /api/dashboard: s = ส่งแล้ว (รวมรอตรวจ) · a = รอตรวจ · m = ค้างส่ง (ไม่ส่ง และ เลยกำหนด/ปิดรับแล้ว — shared/metrics.ts workState) · x = ยกเว้น
    คนที่ยังไม่ส่งแต่ยังไม่ถึงกำหนด = (ทั้งห้อง − x) − s − m  (ไม่นับ "ยังไม่ส่ง" ตาม README) */
 const CLASSES=[{id:'c1',name:'ป.6/1',total:44},{id:'c2',name:'ป.6/2',total:42},{id:'c3',name:'ป.6/3',total:43}];
@@ -781,7 +781,7 @@ function termPill(){const sc=scen();return `<button class="pill${sc.past?' on':'
 /* ===== หน้าหลัก ===== */
 function header(d,sc){
   const prefsBtn=d.shell==='tabs'?`<button class="icon ghost" data-a="prefs" aria-label="ปรับหน้าหลัก">${ic('layout-grid',24)}</button>`:`<button class="ghost" data-a="prefs">${ic('layout-grid',20)}ปรับหน้าหลัก</button>`;
-  return `<header class="uh"><div class="uh-l"><span class="uh-ic">${ic('home',24)}</span><div style="min-width:0"><h1 class="uh-title">สวัสดี ครูสมมติ</h1><div class="uh-sub"><span>โรงเรียนตัวอย่างวิทยา</span><span class="sep">อังคาร 4 พ.ย. 2569</span>${sc.offline?CHIP('warning','ออฟไลน์ · ข้อมูลเมื่อ 10:12','wifi-off'):''}</div></div></div>
+  return `<header class="uh"><div class="uh-l"><span class="uh-ic">${ic('home',24)}</span><div style="min-width:0"><h1 class="uh-title">สวัสดี ครูสมมติ</h1><div class="uh-sub"><span>โรงเรียนตัวอย่างวิทยา</span><span class="sep">พุธ 4 พ.ย. 2569</span>${sc.offline?CHIP('warning','ออฟไลน์ · ข้อมูลเมื่อ 10:12','wifi-off'):''}</div></div></div>
   <div class="uh-act">${termPill()}<button class="${d.shell==='tabs'?'icon ':''}ghost${S.hideNames?' on-hide':''}" data-a="hide" aria-pressed="${S.hideNames}" aria-label="ซ่อนชื่อนักเรียน" title="ซ่อนชื่อนักเรียนทุกการ์ด (ใช้ตอนสะท้อนจอขึ้นทีวี)">${ic(S.hideNames?'eye-off':'eye',d.shell==='tabs'?24:20)}${d.shell==='tabs'?'':(S.hideNames?'ซ่อนชื่ออยู่':'ซ่อนชื่อ')}</button>${prefsBtn}</div></header>${S.hideNames?`<div class="banner hidebar" role="status">${ic('eye-off',20)}<span><b>ซ่อนชื่อนักเรียนอยู่</b> · ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)<span class="opt">ข้อเสนอ SA</span></span><button class="ghost" data-a="hide">แสดงชื่อ</button></div>`:''}`;
 }
 function todoCard(sc){
@@ -1375,7 +1375,7 @@ function ctl(){
   const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],home:[]}[S.page];
   $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
   const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
-  location.hash=S.page==='home'?'home':S.page+(curSub()&&S.page!=='home'?'/'+curSub():'');
+  {const h=S.page==='home'?'home':S.page+(curSub()?'-'+curSub():'');if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}
 }
 function syncHome(){H.S.dev=S.dev;H.S.theme=S.theme;H.S.font=S.font;H.S.menu9=false;H.S.scen={offline:'offline',unchecked:'morning'}[S.scen]||'normal'}
 function applySub(){
@@ -1570,7 +1570,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>{if((e.key==='Enter'||e.key===' ')&&hold)holdEnd(false)});
 window.addEventListener('resize',render);
 function fromHash(){
-  const [p,s]=location.hash.replace('#','').split('/');
+  const [p,s]=location.hash.replace('#','').split('-');
   if(!['home','scan','attendance','random'].includes(p))return false;
   if(p===S.page&&(!s||s===curSub()))return false;
   const ok=p==='home'||(SUBS[p]&&SUBS[p][s]);
