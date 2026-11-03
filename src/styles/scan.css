@@ -164,3 +164,5 @@
 .sc-datemenu { min-width: 16rem; }
 .sc-hint { padding: 2px 4px; }
 .sc-failed { border-left: 4px solid var(--fill-danger); margin-bottom: 8px; }
+/* the start button stays in reach while the long list of work scrolls (P-1) */
+.sc-startbar { position: sticky; bottom: 0; z-index: 5; background: var(--surface-2); padding: 10px 0; border-top: 0.5px solid var(--border); }

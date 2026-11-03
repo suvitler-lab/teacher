@@ -562,6 +562,7 @@ function SessionSetup() {
   const classesForAsg = asg ? activeClasses.value.filter((c) => asg.class_ids.includes(c.id)) : [];
   const [classId, setClassId] = useState(params.class || classesForAsg[0]?.id || "");
   const [mode, setMode] = useState<ScanMode>("full");
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => { loadDashboard(selectedTermId.value); }, [selectedTermId.value]);
   useEffect(() => startSetupRefresh(() => loadBootstrap()) /* NOT the dashboard: it reads ~10,000 rows per call at school size */, []);
@@ -569,7 +570,11 @@ function SessionSetup() {
     if (asg && !asg.class_ids.includes(classId)) setClassId(asg.class_ids[0] ?? "");
   }, [assignmentId]);
 
-  const shown = subjectFilter ? open.filter((a) => a.subject_id === subjectFilter) : open;
+  const byDue = (a: { due_date: string | null }, b: { due_date: string | null }) => (a.due_date ?? "9999").localeCompare(b.due_date ?? "9999");
+  const filtered = (subjectFilter ? open.filter((a) => a.subject_id === subjectFilter) : open).slice().sort(byDue);
+  // the picked work always stays in the list, even when it is not among the first five
+  const first = filtered.slice(0, 5);
+  const shown = showAll || filtered.length <= 5 ? filtered : (asg && !first.some((a) => a.id === asg.id) && filtered.some((a) => a.id === asg.id) ? [...first, asg] : first);
   const progressFor = (aid: string, cid: string) => {
     const da = dashboard.value?.openAssignments.find((x) => x.assignment.id === aid);
     return da?.perClass.find((p) => p.classId === cid) ?? null;
@@ -617,6 +622,10 @@ function SessionSetup() {
             })}
           </div>
 
+          {filtered.length > 5 && !showAll && (
+            <button class="ghost" style="width:100%;margin-top:8px" onClick={() => setShowAll(true)}>ดูทั้งหมด ({filtered.length}) <Icon name="chevron-down" size={16} /></button>
+          )}
+
           <div class="sc-step"><span class="sn">2</span>ห้อง</div>
           <div class="chips-row">
             {classesForAsg.map((c) => {
@@ -645,7 +654,7 @@ function SessionSetup() {
               {classesForAsg.find((c) => c.id === classId) && <> · ห้อง <b>{classesForAsg.find((c) => c.id === classId)!.name}</b></>}
             </div>
           )}
-          <div class="row" style="justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px">
+          <div class="row sc-startbar" style="justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px">
             <div class="row page-sub" style="gap:6px">รับได้จาก
               <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="barcode" size={13} /> เครื่องยิง QR</span>
               <span class="chip" style="background:var(--bg-accent);color:var(--text-accent)"><Icon name="camera" size={13} /> กล้อง</span>
@@ -952,14 +961,35 @@ function ScanSummary({ s }: { s: Session }) {
   const cls = activeClasses.value.find((c) => c.id === s.classId);
   const classStudents = studentsByClass.value.get(s.classId) ?? [];
   const submitted = classStudents.filter((st) => effSub(st.id)?.status === "submitted");
+  // handed in but no score yet (the "รับงานก่อน" mode): the teacher still has to grade these
+  const ungraded = submitted.filter((st) => effSub(st.id)?.score == null);
   // excused children are not counted (BR-05): not in the ring's total, not on the "not handed in" list
+  const excused = classStudents.filter((st) => effSub(st.id)?.status === "excused");
   const missing = classStudents.filter((st) => { const st2 = effSub(st.id)?.status; return st2 !== "submitted" && st2 !== "excused"; });
   const counted = submitted.length + missing.length;
+  const waiting = classStudents.filter((st) => markOf2(s.assignmentId, st.id) === "pend").length;
   const [copied, setCopied] = useState(false);
+  const [askClose, setAskClose] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const up = online.value && serverReachable.value;
+  const isOpen = asg?.status === "open";
 
   function copyMissing() {
     const text = `รายชื่อยังไม่ส่ง "${asg?.title}" ${cls?.name}\n` + missing.map((st) => `${st.number ?? "-"}. ${fullName(st)}`).join("\n");
     navigator.clipboard?.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+  }
+  async function closeWork() {
+    if (!asg) return;
+    setClosing(true);
+    try {
+      const res = await api.post<{ assignment: typeof asg }>("/api/assignments", {
+        id: asg.id, subject_id: asg.subject_id, type_id: asg.type_id, title: asg.title, unit: asg.unit, assigned_date: asg.assigned_date,
+        due_date: asg.due_date, note: asg.note, publish_scores: asg.publish_scores, status: "closed", class_ids: asg.class_ids, term_id: asg.term_id,
+      });
+      patchAssignment(asg.id, { status: res.assignment.status });
+      notify("success", "ปิดรับงานแล้ว · ทุกห้อง");
+      setAskClose(false);
+    } catch (e) { err((e as Error).message || "ปิดรับงานไม่สำเร็จ"); } finally { setClosing(false); }
   }
 
   return (
@@ -970,30 +1000,62 @@ function ScanSummary({ s }: { s: Session }) {
           <ProgressRing value={submitted.length} total={counted} label="ส่งแล้ว" />
           <div>
             <div style="font-weight:500">{asg?.title}</div>
-            <div class="page-sub">{cls?.name} · เต็ม {s.fullScore}</div>
-            <div class="row" style="gap:12px;margin-top:6px;font-size:var(--fs-sm)">
+            <div class="page-sub">{cls?.name} · เต็ม {s.fullScore}{excused.length > 0 ? ` · ไม่นับยกเว้น ${excused.length} คน` : ""}</div>
+            <div class="row wrap" style="gap:12px;margin-top:6px;font-size:var(--fs-sm)">
               <span style="color:var(--text-success)"><Icon name="check" size={14} /> ส่งแล้ว {submitted.length}</span>
               <span style="color:var(--text-danger)"><Icon name="alert-circle" size={14} /> ยังไม่ส่ง {missing.length}</span>
             </div>
           </div>
         </div>
+        {waiting > 0 && (
+          <div class="imp-warn" role="status" style="margin:0 0 10px;font-size:var(--fs-sm)"><Icon name="cloud-upload" size={15} />
+            <span class="grow">รอส่งขึ้นระบบ {waiting} คน — จะส่งเองเมื่อมีเน็ต อย่าเพิ่งปิดงาน</span></div>
+        )}
+        {ungraded.length > 0 && (
+          <div style="border-top:0.5px solid var(--border);padding:10px 0">
+            <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">ยังไม่มีคะแนน {ungraded.length} คน</span>
+              <a class="btn-link" href="#/gradebook"><button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)">ไปให้คะแนนในสมุดคะแนน</button></a></div>
+            <div class="row wrap" style="gap:4px">{ungraded.map((st) => <span class="chip" style="background:var(--bg-accent);color:var(--text-accent)">{st.number ?? "-"} {shortName(st)}</span>)}</div>
+          </div>
+        )}
         {missing.length > 0 && (
           <div style="border-top:0.5px solid var(--border);padding-top:10px">
             <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">ยังไม่ส่ง {missing.length} คน</span>
-              <button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)" onClick={copyMissing}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>
+              <button class="ghost" style="height:1.87rem;font-size:var(--fs-xs)" onClick={copyMissing}><Icon name={copied ? "check" : "copy"} size={14} /> {copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</button>
             </div>
             <div class="row wrap" style="gap:4px">
               {missing.map((st) => <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">{st.number ?? "-"} {shortName(st)}</span>)}
             </div>
           </div>
         )}
+        {isOpen && (
+          <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:10px">
+            {askClose ? (
+              <div role="alertdialog" aria-label="ปิดรับงาน">
+                <div style="font-weight:500">ปิดรับ “{asg?.title}” ทุกห้อง?</div>
+                <div class="page-sub">เด็กที่ยังไม่ส่ง จะนับเป็นค้างส่ง · เปิดรับอีกครั้งได้ในสมุดคะแนน</div>
+                <div class="row" style="gap:8px;margin-top:8px"><button class="ghost" autofocus onClick={() => setAskClose(false)}>ยังไม่ปิด</button><button class="primary" disabled={closing} onClick={closeWork}>ปิดรับงาน</button></div>
+              </div>
+            ) : (
+              <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+                <button disabled={!up || waiting > 0} onClick={() => setAskClose(true)}><Icon name="lock" size={16} /> ปิดรับงาน</button>
+                <span class="page-sub">{!up ? "ต้องออนไลน์ถึงปิดรับงานได้" : waiting > 0 ? "รอรายการค้างส่งขึ้นระบบก่อน" : "ปิดทุกห้องของงานนี้ ไม่รับเพิ่มอีก"}</span>
+              </div>
+            )}
+          </div>
+        )}
         <div class="row" style="gap:8px;margin-top:14px">
-          <button class="primary grow" style="justify-content:center" onClick={() => { ended.value = null; startSession(s.assignmentId, s.classId, s.mode); }}><Icon name="scan" size={16} /> สแกนต่อ</button>
+          <button class="primary grow" style="justify-content:center" onClick={() => { ended.value = null; startSession(s.assignmentId, s.classId, s.mode); }}><Icon name="scan" size={16} /> กลับไปสแกนต่อ</button>
           <button class="grow" style="justify-content:center" onClick={() => { ended.value = null; }}><Icon name="list-check" size={16} /> เลือกงานอื่น</button>
         </div>
       </div>
     </div>
   );
+}
+
+function markOf2(assignmentId: string, studentId: string): "pend" | "fail" | null {
+  const k = pairKey({ assignmentId, studentId });
+  return failedPairKeys.value.has(k) ? "fail" : pendingOps.value.has(k) ? "pend" : null;
 }
 
 /** "วันที่รับ: วันนี้ ▾" — pick the day the work was really handed in (between the day it was given and today). */
