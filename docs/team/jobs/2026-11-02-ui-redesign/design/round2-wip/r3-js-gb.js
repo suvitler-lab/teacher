@@ -564,6 +564,7 @@ function gbAfterRender(){
 
 /* ---------- คีย์บอร์ด (คอม) ---------- */
 function gbCellEls(){return null}
+R3ACT.push(gbAct);
 document.addEventListener('keydown',e=>{
   if(S.page!=='gradebook'||!S.gb||S.dlg||S.prefsOpen)return;
   const g=S.gb,tg=e.target;

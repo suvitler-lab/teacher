@@ -53,6 +53,14 @@ const CARDS={
   {key:'todo',title:'ใครยังไม่เช็ค',icon:'user-off',ds:'รายเลขที่ แตะแล้วเลื่อนไปช่องนั้น',on:false,zone:'side',sa:true},
   {key:'away',title:'ขาดวันนี้',icon:'user-x',ds:'ขาด ลา ป่วย รายชื่อ (ใช้ตอนยืนหน้าห้อง)',on:false,zone:'side',sa:true},
  ]},
+ reports:{title:'หน้ารายงาน',keys:[
+  {key:'stats',title:'ตัวเลข 4 ช่อง',icon:'chart-bar',ds:'อัตราส่งงาน · งานค้าง · คะแนนเฉลี่ย · มาเรียน',on:true},
+  {key:'works',title:'อัตราส่งแต่ละงาน',icon:'clipboard-list',ds:'แถบต่องาน แตะเพื่อไปสมุดคะแนน',on:true},
+  {key:'att',title:'การมาเรียน',icon:'user-check',ds:'แถบ มา/สาย/ลา/ป่วย/ขาด ทั้งห้อง',on:true},
+  {key:'follow',title:'ต้องติดตาม',icon:'flag',ds:'ใครค้างมากสุด · คัดลอกไป LINE · ดูทั้งหมดได้',on:true},
+  {key:'hist',title:'การกระจายคะแนนสะสม',icon:'chart-histogram',ds:'ห้องนี้คะแนนเกาะกลุ่มตรงไหน',on:false},
+  {key:'audit',title:'แก้ไขล่าสุด',icon:'history',ds:'ใครแก้อะไรในห้องนี้ล่าสุด',on:false,sa:true},
+ ]},
  gradebook:{title:'หน้าสมุดคะแนน',keys:[
   {key:'sum',title:'สรุปห้อง',icon:'chart-bar',ds:'งาน · อัตราส่ง · รอตรวจ · ค้างส่ง (ตัวเลขกดกรองแถวได้)',on:true,zone:'top'},
   {key:'await',title:'รอตรวจ',icon:'hourglass-empty',ds:'งานไหนรับไว้แล้วยังไม่ให้คะแนน',on:true,zone:'top'},
@@ -84,18 +92,20 @@ const DEV={
   desk:{w:1536,h:729,label:'คอม 1536×729',u:16,touch:false,shell:'rail'},
   phone:{w:390,h:844,label:'มือถือ 390×844',u:18,touch:true,shell:'tabs'},
 };
-const PAGES={scan:'สแกน',attendance:'เช็คชื่อ',random:'สุ่มชื่อ',gradebook:'คะแนน'};
+const PAGES={scan:'สแกน',attendance:'เช็คชื่อ',random:'สุ่มชื่อ',gradebook:'คะแนน',reports:'รายงาน'};
+const R3ACT=[]; /* ตัวจัดการ action ของหน้ารอบ 3 (gb/rp/st/se) — onAct เรียกตามลำดับ */
 const SUBS={
   scan:{setup:'ตั้งค่ารอบ',type:'ระหว่างรอบ: กรอกทีละคน',full:'ระหว่างรอบ: ให้เต็ม',summary:'สรุปรอบ',pj:'ฉายจอ'},
   attendance:{tap:'แตะเลือก',scan:'สแกน QR',period:'รายคาบ',pj:'ฉายจอ'},
   random:{pick:'สุ่มคน',group:'จับกลุ่ม',pj:'ฉายจอ'},
+  reports:{main:'รายงาน',print:'ตัวอย่างพิมพ์',drawer:'รายละเอียดนักเรียน',sort:'เรียงตามสะสม',pj:'ฉายจอ'},
   gradebook:{table:'ตาราง',cell:'ช่องคะแนน',work:'งานที่เลือก',bulk:'ทั้งห้องส่งแล้ว',close:'ปิดรับงาน',filter:'ตัวกรอง/คอลัมน์',create:'สร้างงาน',edit:'แก้ไขงาน'},
 };
 const SCEN={normal:'วันปกติ (10:40)',offline:'ออฟไลน์ + ค้างส่ง',closed:'งานปิดรับจากอีกเครื่อง',unchecked:'ยังไม่เช็คชื่อ',backdated:'รับงานย้อนหลัง (C-03)',empty:'ไม่มีงาน (ห้องใหม่)'};
-const S={page:'scan',sub:{scan:'type',attendance:'tap',random:'pick',gradebook:'table'},dev:'ipadP',theme:'light',font:0,scen:'normal',
-  prefs:{scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook')},prefsOpen:false,
+const S={page:'scan',sub:{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main'},dev:'ipadP',theme:'light',font:0,scen:'normal',
+  prefs:{scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random'),gradebook:defPrefs('gradebook'),reports:defPrefs('reports')},prefsOpen:false,
   pj:null,pjPre:false,pjOther:false,pjHint:false,toast:null,menu:null,sheetMenu:false,dlg:null,
-  sc:null,at:null,rd:null,gb:null};
+  sc:null,at:null,rd:null,gb:null,rp:null,st:null,se:null};
 const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});
 const isWide=()=>S.dev==='ipadL'||S.dev==='desk';
 const isNarrow=()=>S.dev==='phone';

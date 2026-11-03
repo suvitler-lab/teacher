@@ -1,5 +1,5 @@
 /* ===================== โหมดฉายจอ (D27) ===================== */
-const PJPAGE={scan:['สแกนส่งงาน','scan'],attendance:['เช็คชื่อ','user-check'],random:['สุ่มชื่อ','dice-3']};
+const PJPAGE={scan:['สแกนส่งงาน','scan'],attendance:['เช็คชื่อ','user-check'],random:['สุ่มชื่อ','dice-3'],reports:['รายงาน','chart-bar']};
 function pjHtml(K){
   const P=S.pjPref||{th:'dark',sz:2},sz=+P.sz;
   const k=x=>Math.round(x*K);
@@ -17,6 +17,8 @@ function pjHtml(K){
     body=`<div class="row" style="justify-content:space-between;align-items:flex-end;gap:16px"><div style="min-width:0"><div class="s2">${cls.name} · ${dow(A.date)} ${fmtS(A.date)}</div>${lastN?`<div class="big" style="font-size:${k(48)}px">น้อง${nick(lastN)} <span class="okmark" style="font-size:${k(36)}px">${ic('check',k(40))}มาแล้ว</span></div>`:''}</div>
       <div style="text-align:right;flex:none"><div class="stat">มาแล้ว ${here} จาก ${cls.total} คน</div></div></div>
      <div class="seatp" role="group" aria-label="ผังเลขที่">${Array.from({length:cls.total},(_,i)=>i+1).map(n=>{const d=m[n]==='p'||m[n]==='l';return `<div class="${d?'d':''}">${d?`${n}${sz===1?`<small>${nick(n)}</small>`:''}`:n}</div>`}).join('')}</div>`;
+  }else if(S.page==='reports'){
+    body=rpPjBody(k);
   }else{
     const R=S.rd,cur=R.cur,block=rdBlock();
     if(block)body=`<div class="empty">ยังไม่มีรายชื่อ</div>`;
@@ -25,7 +27,7 @@ function pjHtml(K){
     else body=`<div class="empty">พร้อมสุ่ม — กด “${R.mode==='group'?'จับกลุ่ม':'สุ่มคนต่อไป'}”</div>`;
     body+=`<div style="display:flex;justify-content:center"><button class="pjbtn" data-a="rdgo">${ic(R.mode==='group'?'users-group':'dice-3',k(40))}${R.mode==='group'?'จับกลุ่ม':'สุ่มคนต่อไป'}</button></div>`;
   }
-  const other=`<div class="other">${S.pjOther?`<div class="menu4" role="menu">${['scan','attendance','random'].filter(p=>p!==S.page).map(p=>`<button role="menuitem" data-a="pjgo" data-k="${p}">${ic(PJPAGE[p][1],k(32))}${PJPAGE[p][0]}</button>`).join('')}<button role="menuitem" data-a="pjexitnow">${ic('x',k(32))}ออกจากโหมดฉายจอ</button></div>`:''}<button class="pjbtn sec" data-a="pjother" aria-expanded="${S.pjOther}" style="height:${k(64)}px;font-size:${k(26)}px">${ic('arrow-right',k(30))}ไปหน้าอื่น</button></div>`;
+  const other=`<div class="other">${S.pjOther?`<div class="menu4" role="menu">${['scan','attendance','random','reports'].filter(p=>p!==S.page).map(p=>`<button role="menuitem" data-a="pjgo" data-k="${p}">${ic(PJPAGE[p][1],k(32))}${PJPAGE[p][0]}</button>`).join('')}<button role="menuitem" data-a="pjexitnow">${ic('x',k(32))}ออกจากโหมดฉายจอ</button></div>`:''}<button class="pjbtn sec" data-a="pjother" aria-expanded="${S.pjOther}" style="height:${k(64)}px;font-size:${k(26)}px">${ic('arrow-right',k(30))}ไปหน้าอื่น</button></div>`;
   return `<div class="pj" data-th="${P.th}" data-sz="${sz}" style="--k:${K}" role="region" aria-label="โหมดฉายจอ: ${title}"><div class="pjbar"><h1>${ic(icon,k(44))}${title}</h1><div class="row" style="gap:${k(16)}px">${offline()?`<span style="color:var(--pj-warn)">${ic('wifi-off',k(40))}</span>`:''}<span class="live"><i></i>กำลังฉายจอ</span><button class="exit" data-a="pjhold" aria-label="ออกจากโหมดฉายจอ — กดค้าง 1 วินาที">${ic('x',k(34))}</button></div></div>${S.pjHint?`<div class="hint" role="status">กดค้างเพื่อออกจากโหมดฉายจอ</div>`:''}<div class="body">${body}</div>${other}</div>`;
 }
 /* ===================== ปรับการ์ด (ทุกหน้า) ===================== */
@@ -36,15 +38,16 @@ function prefsDrawer(p){
      <button class="switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="แสดงการ์ด ${m.title}" data-a="pt" data-k="${k}"><span class="knob"></span></button>
      <span class="mv"><button class="icon ghost" data-a="pm" data-k="${k}" data-d="-1" aria-label="เลื่อน ${m.title} ขึ้น" ${i===0?'disabled':''}>${ic('chevron-up',20)}</button><button class="icon ghost" data-a="pm" data-k="${k}" data-d="1" aria-label="เลื่อน ${m.title} ลง" ${i===P.order.length-1?'disabled':''}>${ic('chevron-down',20)}</button></span></div>`}).join('');
   return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="pd-h"><div class="drawer-head"><div><h2 class="t" id="pd-h">ปรับการ์ด · ${CARDS[p].title}</h2><div class="xs">เปิด/ปิดและเรียงการ์ด · บันทึกทันที ใช้กับทุกเครื่องที่เข้าสู่ระบบ</div></div><button class="icon ghost" aria-label="ปิด" data-a="closeov">${ic('x',20)}</button></div>
-   <div class="lock">${ic('info-circle',16)} ปิดไม่ได้ (เพื่อกันข้อมูลหาย): ${p==='scan'?'ช่องสแกน · ผังเลขที่ · รายการส่งไม่สำเร็จ · แถบวันที่รับงาน':p==='att'?'ปุ่มสถานะ · ช่องเด็ก · แถบบันทึก · การ์ดข้อมูลชนกัน':p==='gradebook'?'ตาราง · แผงงานที่เลือก · ค้างในเครื่องนี้ · ตัวกรอง':'เวทีสุ่ม · ปุ่มสุ่ม · แถบเหตุผลที่สุ่มไม่ได้'}</div>${rows}
+   <div class="lock">${ic('info-circle',16)} ปิดไม่ได้ (เพื่อกันข้อมูลหาย): ${p==='scan'?'ช่องสแกน · ผังเลขที่ · รายการส่งไม่สำเร็จ · แถบวันที่รับงาน':p==='att'?'ปุ่มสถานะ · ช่องเด็ก · แถบบันทึก · การ์ดข้อมูลชนกัน':p==='gradebook'?'ตาราง · แผงงานที่เลือก · ค้างในเครื่องนี้ · ตัวกรอง':p==='reports'?'ตัวกรอง · ชิปสถานะอัปเดต · ตารางรายบุคคล · ปุ่มพิมพ์/Excel/ฉายจอ':p==='students'?'ค้นหา · รายชื่อ · เลขที่ซ้ำ (เมื่อมี) · ปุ่มเพิ่ม/นำเข้า/สติกเกอร์':p==='settings'?'เมนูหมวด · แถบบันทึก · กู้คืน/ล้างข้อมูล':'เวทีสุ่ม · ปุ่มสุ่ม · แถบเหตุผลที่สุ่มไม่ได้'}</div>${rows}
    <div class="row" style="justify-content:space-between;margin-top:10px;flex-wrap:wrap"><button class="ghost" data-a="preset">${ic('history',20)}คืนค่าเริ่มต้น</button><button class="primary" data-a="closeov">เสร็จ</button></div></div></div>`;
 }
-const prefKey=()=>({scan:'scan',attendance:'att',random:'random',gradebook:'gradebook'}[S.page]);
+const prefKey=()=>({scan:'scan',attendance:'att',random:'random',gradebook:'gradebook',reports:'reports',students:'students',settings:'settings'}[S.page]);
 function overlays(){
   let o='';
   if(S.prefsOpen&&S.page!=='home')o+=prefsDrawer(prefKey());
   if(S.sheetMenu&&isNarrow())o+=sheetHtml();
   if(S.page==='gradebook'&&S.gb)o+=gbOverlays();
+  if(S.page==='reports'&&S.rp)o+=rpOverlays();
   if(S.page==='scan'&&S.sc.sheet!=null){
     const n=S.sc.sheet,r=S.sc.recent.find(x=>x.n===n),st=S.sc.seats[n],a=AS(S.sc.asg);
     o+=`<div class="sheetov" data-a="closeov"><div class="asheet" role="dialog" aria-modal="true" aria-label="ตัวเลือก เลขที่ ${n}"><div class="hd">เลขที่ ${n} ${nick(n)}</div><div class="tip">${st==='await'?'รับงานแล้ว · รอคะแนน':`ส่งแล้ว · ได้ ${r?r.score:'8'}/${a.full} · ${st==='late'?'ส่งช้า':'ตรงเวลา'}`}${r&&r.recv?' · รับ '+fmtS(r.recv):''}</div>
@@ -67,6 +70,7 @@ function mainHtml(d){
   if(S.page==='scan'){const s=curSub();return s==='setup'?setupHtml():s==='summary'?summaryHtml():liveHtml()}
   if(S.page==='attendance')return attHtml();
   if(S.page==='gradebook')return gbHtml();
+  if(S.page==='reports')return rpHtml();
   return randomHtml();
 }
 function render(){
@@ -99,7 +103,7 @@ function ctl(){
   const pg={home:'หน้าหลัก',...PAGES};
   const subs=S.page==='home'?{main:'หน้าหลัก',prefs:'แผงปรับหน้าหลัก',list:'รายการจากตัวเลข',sheet:'เมนูมือถือ'}:SUBS[S.page];
   const cs=S.page==='home'?(H.S.page==='home'?'main':H.S.page):curSub();
-  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],gradebook:[['gb-type','กรอกคะแนนคนถัดไป'],['gb-pick','เลือกงานถัดไป'],['gb-exc','ตั้งยกเว้น เลขที่ 7'],['gb-date','แก้วันที่รับ (AC-16)'],['gb-bulk','ทั้งห้องส่งแล้ว'],['gb-close','ปิดรับงาน'],['gb-keys','ลูกศร → 2 ช่อง (คอม)']],home:[]}[S.page];
+  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],reports:[['rp-refresh','โหลดใหม่'],['rp-sort','เรียงตามสะสม'],['rp-follow','เปิดคนที่ค้างมากสุด'],['rp-stale','สลับอัปเดตไม่สำเร็จ']],gradebook:[['gb-type','กรอกคะแนนคนถัดไป'],['gb-pick','เลือกงานถัดไป'],['gb-exc','ตั้งยกเว้น เลขที่ 7'],['gb-date','แก้วันที่รับ (AC-16)'],['gb-bulk','ทั้งห้องส่งแล้ว'],['gb-close','ปิดรับงาน'],['gb-keys','ลูกศร → 2 ช่อง (คอม)']],home:[]}[S.page];
   $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
   const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
   {const h=S.page==='home'?'home':S.page+(curSub()?'-'+curSub():'');if(location.hash!=='#'+h)history.replaceState(null,'','#'+h)}
@@ -115,11 +119,12 @@ function applySub(){
   if(S.page==='attendance'){if(curSub()==='period')S.at.mode='period';else if(curSub()==='scan')S.at.mode='scan';else if(curSub()==='tap')S.at.mode='tap'}
   if(S.page==='random'){if(curSub()==='group')S.rd.mode='group';else if(curSub()==='pick')S.rd.mode='pick'}
   if(S.page==='gradebook'&&S.gb)gbApplySub();
+  if(S.page==='reports'&&S.rp)rpApplySub();
   if(curSub()==='pj'&&S.page!=='home')toast2('เปิดโหมดฉายจอแล้ว · คะแนนและเปอร์เซ็นต์รายคนถูกซ่อน');
 }
 function go(page,sub){
   S.page=page;S.menu=null;S.prefsOpen=false;S.sheetMenu=false;S.pjOther=false;S.dlg=null;
   if(page==='home'){if(sub)H.S.page=sub==='main'?'home':sub}
-  else{S.sub[page]=sub||((S.sub[page]==='pj'||page==='gradebook')?{scan:'type',attendance:'tap',random:'pick',gradebook:'table'}[page]:S.sub[page]);applySub()}
+  else{S.sub[page]=sub||((S.sub[page]==='pj'||page==='gradebook')?{scan:'type',attendance:'tap',random:'pick',gradebook:'table',reports:'main'}[page]:S.sub[page]);applySub()}
 }
-function initAll(){initSc();initAt();initRd();initGb()}
+function initAll(){initSc();initAt();initRd();initGb();initRp()}

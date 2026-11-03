@@ -20,8 +20,9 @@ const ev = (s) => { const f = new Function(s.replace(/^const ICONS=/, "return ")
 const icons1 = ev(js1.match(/^const ICONS=.*$/m)[0].replace(/;\s*$/, ""));
 const icons2 = ev(rd(path.join(W, "icons2.js")).trim().replace(/;\s*$/, ""));
 const icons3 = fs.existsSync(path.join(W, "icons3.js")) ? ev(rd(path.join(W, "icons3.js")).trim().replace(/;\s*$/, "")) : {};
+const icons4 = fs.existsSync(path.join(W, "icons4.js")) ? ev(rd(path.join(W, "icons4.js")).trim().replace(/;\s*$/, "")) : {};
 const icons0 = ev(rd(path.join(W, "icons.js")).trim().replace(/;\s*$/, ""));
-const ICONS = Object.assign({}, icons0, icons1, icons2, icons3);
+const ICONS = Object.assign({}, icons0, icons1, icons2, icons3, icons4);
 const iconsJs = "const ICONS=" + JSON.stringify(ICONS) + ";";
 
 // --- แปลงสคริปต์รอบ 1 เป็น IIFE `H` ---
@@ -47,7 +48,7 @@ const r = (f) => rd(path.join(W, f));
 let j1 = r("r2-js-1.js").replace("__ICONS__", "");
 let j2 = r("r2-js-2.js"), j3 = r("r2-js-3.js"), j4 = r("r2-js-4.js"), j5 = r("r2-js-5.js");
 const opt = (f) => (fs.existsSync(path.join(W, f)) ? r(f) : "");
-const jgb = opt("r3-js-gb.js");
+const jgb = opt("r3-js-gb.js"), jrp = opt("r3-js-rp.js"), jst = opt("r3-js-st.js"), jset = opt("r3-js-set.js");
 j3 = j3.replace('class="pbar"', 'class="pbar2"').replace('class="stack"', 'class="stack2"');
 let css2 = r("r2-css.css");
 css2 = css2.replace(/^\.stack\{/m, ".stack2{").replace(/\.stack>i/, ".stack2>i").replace(/^\.pbar\{(.*?)\}\.pbar>div/m, ".pbar2{$1}.pbar2>div");
@@ -60,7 +61,7 @@ const out = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ui-redesign รอบ 3 — คะแนน · สแกน · เช็คชื่อ · สุ่มชื่อ · หน้าหลัก (mockup กดได้จริง · ชื่อสมมติ)</title>
+<title>ui-redesign รอบ 3 — คะแนน · รายงาน · นักเรียน · ตั้งค่า · สแกน · เช็คชื่อ · สุ่มชื่อ · หน้าหลัก (mockup กดได้จริง · ชื่อสมมติ)</title>
 <!--
   ไฟล์เดียว เปิดจากดิสก์ได้ ไม่โหลดอะไรจากอินเทอร์เน็ต · ข้อมูลและชื่อนักเรียนสมมติทั้งหมด
   รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan-type #attendance-tap #random-pick #gradebook-table #gradebook-cell)
@@ -81,6 +82,9 @@ ${j2}
 ${j3}
 ${j4}
 ${jgb}
+${jrp}
+${jst}
+${jset}
 ${j5}
 </script>
 </body>
