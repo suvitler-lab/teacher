@@ -685,7 +685,7 @@ submissionRoutes.post("/api/assignments/:id/bulk", async (c) => {
       throw e;
     }
     // what really changed = the rows whose audit landed with this batch (the same guard let both through)
-    changed = (await c.env.DB.prepare("SELECT COUNT(*) AS n FROM audit_logs WHERE batch_id = ? AND action = 'bulk'").bind(batchId).first<{ n: number }>())?.n ?? 0;
+    changed = (await c.env.DB.prepare("SELECT COUNT(*) AS n FROM audit_logs WHERE assignment_id = ? AND batch_id = ? AND action = 'bulk'").bind(aid, batchId).first<{ n: number }>())?.n ?? 0;
     if (changed === 0) {
       // nothing landed. The guards are the same for every row, so either the world changed under this
       // request (say how) — or every row already holds something newer than this action, and that is fine
@@ -713,14 +713,14 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
 
   // idempotency: if this batch was already undone, do nothing
   const undone = () => c.env.DB.prepare(
-    "SELECT 1 AS x FROM audit_logs WHERE batch_id = ? AND action = 'restore' LIMIT 1",
-  ).bind(batchId).first();
+    "SELECT 1 AS x FROM audit_logs WHERE assignment_id = ? AND batch_id = ? AND action = 'restore' LIMIT 1",
+  ).bind(aid, batchId).first();
   if (await undone()) return c.json({ ok: true, changed: 0, alreadyUndone: true });
 
   const bulkAudits = await c.env.DB.prepare(
-    "SELECT student_id, at, before_json, after_json FROM audit_logs WHERE batch_id = ? AND assignment_id = ? AND action = 'bulk'",
+    "SELECT student_id, at, before_json, after_json FROM audit_logs WHERE assignment_id = ? AND batch_id = ? AND action = 'bulk'",
   )
-    .bind(batchId, aid)
+    .bind(aid, batchId)
     .all<{ student_id: string; at: number; before_json: string | null; after_json: string | null }>();
   const rows = bulkAudits.results ?? [];
   if (rows.length === 0) throw notFound("batch");
@@ -784,7 +784,7 @@ submissionRoutes.post("/api/assignments/:id/bulk-undo", async (c) => {
   // to one of these cells, that lands in the gap makes the whole undo roll back instead of being overwritten.
   try {
     await batchAtEpoch(c.env, epoch, [
-      abortIf(c.env, "EXISTS (SELECT 1 FROM audit_logs WHERE batch_id = ?1 AND action = 'restore')", batchId),
+      abortIf(c.env, "EXISTS (SELECT 1 FROM audit_logs WHERE assignment_id = ?2 AND batch_id = ?1 AND action = 'restore')", batchId, aid),
       cellsGuard(c.env, snapshots),
       abortIf(c.env, `NOT EXISTS (SELECT 1 FROM assignments a WHERE a.id = ?2 AND a.deleted_at IS NULL)
         OR EXISTS (SELECT 1 FROM json_each(?1) j CROSS JOIN assignments a ON a.id = ?2

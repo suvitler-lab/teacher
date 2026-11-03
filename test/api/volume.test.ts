@@ -103,6 +103,23 @@ describe("ending a scan round at school size (P11)", () => {
   }, 60_000);
 });
 
+describe("whole-class actions with a long history (P14)", () => {
+  it("a whole-class action and its undo read the work's own history, not the whole audit table", async () => {
+    const cookie = await login();
+    await seedVolume();
+    // a term's worth of other history: 6,000 cell lines of other works
+    await env.DB.prepare(
+      `WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 6000)
+       INSERT INTO audit_logs (op_id, at, entity, entity_id, assignment_id, student_id, action, method)
+       SELECT 'hist' || i, 1000 + i, 'submission', 'a' || (i % 30 + 10) || ':x', 'a' || (i % 30 + 10), 'st1_' || (i % 40 + 1), 'update', 'grid' FROM n`,
+    ).run();
+    const clear = (await (await cost(cookie, "clear a whole class (long history)", { read: 4_000, written: 600 }, "/api/assignments/a6/bulk", { action: "clear", classId: "c1" })).json()) as any;
+    expect(clear.changed).toBe(VOLUME.perClass);
+    const undo = (await (await cost(cookie, "undo it (long history)", { read: 2_000, written: 600 }, "/api/assignments/a6/bulk-undo", { batchId: clear.batchId })).json()) as any;
+    expect(undo.changed).toBe(VOLUME.perClass);
+  }, 120_000);
+});
+
 describe("writing at school size", () => {
   // n scans of a1, walking through the school: 40 children of class `cls`, then the next class, …
   const scanOps = (n: number, score: number, cls = 1, prefix = "w") =>
