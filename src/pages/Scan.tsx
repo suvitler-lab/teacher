@@ -578,9 +578,31 @@ function SessionSetup() {
   // the picked work always stays in the list, even when it is not among the first five
   const first = filtered.slice(0, 5);
   const shown = showAll || filtered.length <= 5 ? filtered : (asg && !first.some((a) => a.id === asg.id) && filtered.some((a) => a.id === asg.id) ? [...first, asg] : first);
+  // The picked work's "ส่งแล้ว x/y" is read fresh from the server (the dashboard is loaded once and goes stale while
+  // the teacher scans). y = the class without the children marked ยกเว้น. Other works keep the dashboard's numbers.
+  const [live, setLive] = useState<{ aid: string; rows: { student_id: string; status: string }[] } | null>(null);
+  const fetchLive = () => {
+    const aid = assignmentId;
+    if (!aid) return Promise.resolve();
+    return api.get<{ submissions: { student_id: string; status: string }[] }>(`/api/assignments/${aid}/submissions`)
+      .then((r) => setLive((cur) => (aid === assignmentIdRef.current ? { aid, rows: r.submissions } : cur)))
+      .catch(() => { /* offline: keep the dashboard's numbers */ });
+  };
+  const assignmentIdRef = useRef(assignmentId);
+  assignmentIdRef.current = assignmentId;
+  useEffect(() => { setLive(null); void fetchLive(); }, [assignmentId]);
+  useEffect(() => startSetupRefresh(fetchLive), [assignmentId]);
   const progressFor = (aid: string, cid: string) => {
+    if (live && live.aid === aid) {
+      const kids = studentsByClass.value.get(cid) ?? [];
+      const by = new Map(live.rows.map((r) => [r.student_id, r.status]));
+      const excused = kids.filter((k) => by.get(k.id) === "excused").length;
+      const submitted = kids.filter((k) => by.get(k.id) === "submitted").length;
+      return { submitted, total: kids.length - excused, excused };
+    }
     const da = dashboard.value?.openAssignments.find((x) => x.assignment.id === aid);
-    return da?.perClass.find((p) => p.classId === cid) ?? null;
+    const p = da?.perClass.find((x) => x.classId === cid);
+    return p ? { submitted: p.submitted, total: p.total, excused: 0 } : null;
   };
 
   return (
@@ -633,7 +655,7 @@ function SessionSetup() {
           <div class="chips-row">
             {classesForAsg.map((c) => {
               const p = progressFor(assignmentId, c.id);
-              return <button class={"pill" + (c.id === classId ? " on" : "")} onClick={() => setClassId(c.id)}>{c.id === classId && <Icon name="check" size={13} />}{c.name}{p && <span class="n">ส่งแล้ว {p.submitted}/{p.total}</span>}</button>;
+              return <button class={"pill" + (c.id === classId ? " on" : "")} onClick={() => setClassId(c.id)}>{c.id === classId && <Icon name="check" size={13} />}{c.name}{p && <span class="n">ส่งแล้ว {p.submitted}/{p.total}{p.excused > 0 ? ` · ยกเว้น ${p.excused}` : ""}</span>}</button>;
             })}
           </div>
 
