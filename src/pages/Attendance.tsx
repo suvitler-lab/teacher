@@ -24,6 +24,8 @@ import { attendanceLayout } from "../lib/pageCards";
 import { isHiddenCard } from "../lib/cardLayout";
 import { PageCardSettings } from "../components/cards/PageCardSettings";
 import { ATT_CARD_META, ATT_LOCKED } from "../components/cards/meta";
+import { ProjectorButton, ProjectorShell } from "../components/Projector";
+import { projectorOn, pjSize } from "../lib/projector";
 
 const STATUSES: AttendanceStatus[] = ["present", "late", "leave", "sick", "absent"];
 const LABELS: Record<AttendanceStatus, string> = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
@@ -85,6 +87,8 @@ export function AttendancePage() {
   const [hit, setHit] = useState<string | null>(null);
   const [pickFrom, setPickFrom] = useState<Student[] | null>(null);
 
+  // on the TV the children's QR cards are the way in: switch to scanning while projecting
+  useEffect(() => { if (projectorOn.value) setMethod("scan"); }, [projectorOn.value]);
   const layout = attendanceLayout.value;
   const showCard = (k: "sum" | "week" | "scans" | "todo" | "away") => !isHiddenCard(layout, k);
   const students = studentsByClass.value.get(classId) ?? [];
@@ -268,11 +272,32 @@ export function AttendancePage() {
     <div>
       <PageHeader icon="user-check" title="เช็คชื่อ"
         sub={<><span>{activeClasses.value.find((c) => c.id === classId)?.name} · {formatThaiDate(date)}</span></>}
-        actions={<><button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><Segmented value={method} onChange={setMethod} options={[
+        actions={<><button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><ProjectorButton /><Segmented value={method} onChange={setMethod} options={[
           { value: "tap", label: <><Icon name="hand-finger" size={15} /> แตะเลือก</> },
           { value: "scan", label: <><Icon name="qrcode" size={15} /> สแกน QR</> },
         ]} /></>}
       />
+      {projectorOn.value && (() => {
+        const here = students.filter((st) => { const x = statusOf(st.id); return x === "present" || x === "late"; });
+        const lastId = scanLog[0]?.id ?? here[here.length - 1]?.id;
+        const last = lastId ? studentsById.value.get(lastId) : null;
+        const cols = students.length > 36 ? 8 : 6;
+        const sz = pjSize.value;
+        return (
+          <ProjectorShell page="attendance">
+            <div class="row" style="justify-content:space-between;align-items:flex-end;gap:16px">
+              <div style="min-width:0">
+                <div class="s2">{activeClasses.value.find((c) => c.id === classId)?.name} · {formatThaiDate(date)}</div>
+                {last ? <div class="big" style="font-size:calc(var(--pj-u)*48)">น้อง{shortName(last)} <span class="okmark" style="font-size:calc(var(--pj-u)*36)"><Icon name="check" size={40} />มาแล้ว</span></div> : <div class="big" style="font-size:calc(var(--pj-u)*48);color:var(--pj-t2)">รอสแกน…</div>}
+              </div>
+              <div style="text-align:right;flex:none"><div class="stat">มาแล้ว {here.length} จาก {students.length} คน</div></div>
+            </div>
+            <div class="seatp" role="group" aria-label="ผังเลขที่" style={`grid-template-columns:repeat(${cols},minmax(0,1fr))`}>
+              {students.map((st) => { const x = statusOf(st.id); const d = x === "present" || x === "late"; return <div class={d ? "d" : ""}>{d ? <>{st.number ?? "-"}{sz === 1 && <small>{shortName(st)}</small>}</> : (st.number ?? "-")}</div>; })}
+            </div>
+          </ProjectorShell>
+        );
+      })()}
       {prefsOpen && <PageCardSettings page="attendance" title="หน้าเช็คชื่อ" layout={layout} meta={ATT_CARD_META} locked={ATT_LOCKED} onClose={() => setPrefsOpen(false)} />}
 
       <div class="att-toolbar">

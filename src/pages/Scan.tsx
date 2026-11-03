@@ -43,6 +43,8 @@ import { checkReceivedDate } from "@shared/received-date";
 import { scanLayout } from "../lib/pageCards";
 import { isHiddenCard } from "../lib/cardLayout";
 import { PageCardSettings } from "../components/cards/PageCardSettings";
+import { ProjectorButton, ProjectorShell } from "../components/Projector";
+import { projectorOn } from "../lib/projector";
 import { SCAN_CARD_META, SCAN_LOCKED } from "../components/cards/meta";
 import { installHidScanner } from "../lib/hid";
 import { fullName, shortName, initials } from "../lib/names";
@@ -557,7 +559,9 @@ function SessionSetup() {
       : selectedTermId.value === UNASSIGNED ? a.term_id == null
       : a.term_id === selectedTermId.value));
   const [subjectFilter, setSubjectFilter] = useState("");
-  const [assignmentId, setAssignmentId] = useState(params.asg || open[0]?.id || "");
+  // the work due soonest is offered first (and picked at the start): it is the one the teacher is most likely collecting
+  const byDue = (a: { due_date: string | null }, b: { due_date: string | null }) => (a.due_date ?? "9999").localeCompare(b.due_date ?? "9999");
+  const [assignmentId, setAssignmentId] = useState(params.asg || open.slice().sort(byDue)[0]?.id || "");
   const asg = open.find((a) => a.id === assignmentId) ?? null;
   const classesForAsg = asg ? activeClasses.value.filter((c) => asg.class_ids.includes(c.id)) : [];
   const [classId, setClassId] = useState(params.class || classesForAsg[0]?.id || "");
@@ -570,7 +574,6 @@ function SessionSetup() {
     if (asg && !asg.class_ids.includes(classId)) setClassId(asg.class_ids[0] ?? "");
   }, [assignmentId]);
 
-  const byDue = (a: { due_date: string | null }, b: { due_date: string | null }) => (a.due_date ?? "9999").localeCompare(b.due_date ?? "9999");
   const filtered = (subjectFilter ? open.filter((a) => a.subject_id === subjectFilter) : open).slice().sort(byDue);
   // the picked work always stays in the list, even when it is not among the first five
   const first = filtered.slice(0, 5);
@@ -678,6 +681,14 @@ function ScanView() {
   const [torch, setTorch] = useState(false);
   const [roomMenu, setRoomMenu] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  // on the TV the score pad would show a child's score: a round in "type a score" mode takes hand-ins first instead
+  useEffect(() => {
+    if (!projectorOn.value || s.mode !== "type") return;
+    pending.value = null;
+    const next = { ...s, mode: "later" as ScanMode };
+    session.value = next; void kvSet("scanSession", next);
+    notify("info", "โหมดกรอกคะแนนถูกสลับเป็น “รับงานก่อน” ระหว่างฉายจอ");
+  }, [projectorOn.value, s.mode]);
   const layout = scanLayout.value;
   const showRecent = !isHiddenCard(layout, "recent"), showHid = !isHiddenCard(layout, "hid"), showHint = !isHiddenCard(layout, "hint");
 
@@ -787,12 +798,14 @@ function ScanView() {
         </div>
         <span class="grow" style="min-width:8px" />
         <button class="icon ghost" style="color:inherit;background:var(--surface-2)" aria-label="ปรับการ์ด" onClick={() => setPrefsOpen(true)}><Icon name="layout-grid" size={18} /></button>
+        <ProjectorButton />
         <button class="ghost" style="color:inherit;background:var(--surface-2)" onClick={endSession}><Icon name="player-stop" size={16} /> จบรอบ</button>
       </div>
       <div class={"ctxbar ctx2" + (recvDate.value ? " back" : "")}>
         <span style="font-size:var(--fs-sm)">เต็ม {s.fullScore} · {modeLabel}</span>
         <ReceivedDateChip assignedDate={asg?.assigned_date ?? null} />
       </div>
+      {projectorOn.value && <ScanProjector s={s} classStudents={classStudents} known={known} />}
       {prefsOpen && <PageCardSettings page="scan" title="หน้าสแกน" layout={layout} meta={SCAN_CARD_META} locked={SCAN_LOCKED} onClose={() => setPrefsOpen(false)} />}
 
       <div class="row" style="justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
@@ -953,6 +966,40 @@ function ScanView() {
         </div>
       </div>
     </div>
+  );
+}
+
+/** What the classroom TV shows for a scan round: the last child's name and a tick, how many are in, numbers only. No scores. */
+function ScanProjector({ s, classStudents, known }: { s: Session; classStudents: Student[]; known: boolean }) {
+  const asg = activeAssignment.value;
+  const cls = activeClasses.value.find((c) => c.id === s.classId);
+  const last = recent.value[0] ? studentsById.value.get(recent.value[0].studentId) : null;
+  const states = classStudents.map((st) => ({ st, sub: effSub(st.id) }));
+  const done = states.filter((x) => x.sub?.status === "submitted").length;
+  const excused = states.filter((x) => x.sub?.status === "excused").length;
+  const total = classStudents.length - excused;
+  const bad = feedback.value && feedback.value.kind === "danger";
+  return (
+    <ProjectorShell page="scan">
+      <div class="row" style="justify-content:space-between;align-items:flex-end;gap:16px">
+        <div style="min-width:0">
+          <div class="s2">{cls?.name} · {asg?.title}</div>
+          {bad ? <div class="big" style="font-size:calc(var(--pj-u)*48)">ไม่รู้จักรหัสนี้</div>
+            : last ? <div class="big" style="font-size:calc(var(--pj-u)*64)">น้อง{shortName(last)} <span class="okmark" style="font-size:calc(var(--pj-u)*40)"><Icon name="check" size={44} />ส่งแล้ว</span></div>
+            : <div class="big" style="font-size:calc(var(--pj-u)*64);color:var(--pj-t2)">รอสแกน…</div>}
+        </div>
+        <div style="text-align:right;flex:none">
+          <div class="stat">{known ? `ส่งแล้ว ${done} จาก ${total} คน` : "กำลังโหลด…"}</div>
+          <div class="pbar" style="margin-top:calc(var(--pj-u)*8)"><div style={`width:${total ? Math.min(100, (done * 100) / total) : 0}%`} /></div>
+        </div>
+      </div>
+      <div class="seatp" role="group" aria-label="ผังเลขที่">
+        {states.map(({ st, sub }) => {
+          const d = sub?.status === "submitted";
+          return <div class={d ? "d" : ""} style={sub?.status === "excused" ? "opacity:.35" : ""}>{d && <Icon name="check" size={26} />}{st.number ?? "-"}</div>;
+        })}
+      </div>
+    </ProjectorShell>
   );
 }
 

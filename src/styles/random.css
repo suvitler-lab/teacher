@@ -26,10 +26,6 @@
 .rnd-group .gh { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: var(--fs-sm); margin-bottom: 4px; }
 .rnd-group .gd { width: 10px; height: 10px; border-radius: 3px; }
 
-.projector .rnd-name { font-size: 4rem; }
-.projector .rnd-badge { width: 5.6rem; height: 5.6rem; font-size: 2.27rem; }
-.projector .rnd-stage { min-height: 320px; }
-
 /* why nobody can be drawn (not checked yet / nobody came / load failed) */
 .rnd-notice { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 12px; border-radius: 12px; background: var(--bg-warning); color: var(--text-warning); border: 0.5px solid var(--border-warning); font-size: var(--fs-sm); }
 .rnd-notice > i { font-size: 1.2rem; flex: none; }

@@ -15,6 +15,8 @@ import { randomLayout } from "../lib/pageCards";
 import { isHiddenCard } from "../lib/cardLayout";
 import { PageCardSettings } from "../components/cards/PageCardSettings";
 import { RANDOM_CARD_META, RANDOM_LOCKED } from "../components/cards/meta";
+import { ProjectorButton, ProjectorShell } from "../components/Projector";
+import { projectorOn } from "../lib/projector";
 
 const GROUP_COLORS = ["var(--tint-blue-fg)", "var(--tint-aqua-fg)", "var(--tint-violet-fg)", "var(--tint-orange-fg)", "var(--tint-green-fg)", "var(--tint-magenta-fg)", "var(--tint-red-fg)", "var(--text-secondary)"];
 
@@ -33,7 +35,6 @@ export function RandomPage() {
   const [display, setDisplay] = useState<{ badge: string; name: string; sub: string } | null>(null);
   const [groups, setGroups] = useState<Student[][]>([]);
   const [rolling, setRolling] = useState(false);
-  const [projector, setProjector] = useState(false);
   const [called, setCalled] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
   const calledRef = useRef<Set<string>>(new Set());
@@ -167,7 +168,7 @@ export function RandomPage() {
   if (!classId) return <><PageHeader icon="arrows-shuffle" title="สุ่มชื่อ" /><NoClasses /></>;
 
   return (
-    <div class={projector ? "projector" : ""}>
+    <div>
       <PageHeader icon="arrows-shuffle" title="สุ่มชื่อ"
         sub={<span>{activeClasses.value.find((c) => c.id === classId)?.name} · {cameToday}</span>}
         actions={<>
@@ -176,10 +177,19 @@ export function RandomPage() {
             { value: "group", label: <><Icon name="users-group" size={15} /> จับกลุ่ม</> },
           ]} />
           <button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button>
-          <button class={projector ? "primary" : ""} onClick={() => setProjector(!projector)} aria-pressed={projector}><Icon name="device-tv" size={16} /> จอใหญ่</button>
+          <ProjectorButton />
         </>}
       />
 
+      {projectorOn.value && (
+        <ProjectorShell page="random">
+          {pool.length === 0 ? <div class="empty">ยังไม่มีรายชื่อ</div>
+            : mode === "group" && groups.length > 0 ? <div class="pgroups">{groups.map((g, i) => <div class="pcard"><b>กลุ่ม {i + 1}</b><div>{g.map((st, k) => `${leaders && on("gopts") && k === 0 ? "★ " : ""}${shortName(st)}`).join(" · ")}</div></div>)}</div>
+            : display ? <div class="pcard" style="margin:auto;width:100%;display:flex;flex-direction:column;align-items:center;gap:calc(var(--pj-u)*12);padding:calc(var(--pj-u)*30)"><span class="rbadge" style="display:inline-flex;align-items:center;justify-content:center;border-radius:50%">{display.badge}</span><div class="big">{display.name}</div></div>
+            : <div class="empty">พร้อมสุ่ม — กด “{mode === "group" ? "จับกลุ่ม" : "สุ่มคนต่อไป"}”</div>}
+          <div style="display:flex;justify-content:center"><button class="pjbtn" onClick={go} disabled={rolling || pool.length === 0}><Icon name="arrows-shuffle" size={40} />{mode === "group" ? "จับกลุ่ม" : "สุ่มคนต่อไป"}</button></div>
+        </ProjectorShell>
+      )}
       {prefsOpen && <PageCardSettings page="random" title="หน้าสุ่มชื่อ" layout={layout} meta={RANDOM_CARD_META} locked={RANDOM_LOCKED} onClose={() => setPrefsOpen(false)} />}
       <div style="margin-bottom:12px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
 
