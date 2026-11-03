@@ -261,3 +261,9 @@ button.hm-chip.muted{color:var(--text-primary)}
 .pj .rbadge{width:calc(var(--k)*var(--nm)*1px);height:calc(var(--k)*var(--nm)*1px);font-size:calc(var(--k)*var(--nm)*.5px);background:var(--pj-card);color:var(--pj-ac);border:calc(var(--k)*3px) solid var(--pj-bd)}
 .pj .empty{font-size:calc(var(--k)*40px);color:var(--pj-t2);text-align:center;margin:auto}
 .pjpre{padding:10px;display:flex;flex-direction:column;gap:6px;min-width:16em}
+
+/* ---- แก้ตามผลตรวจงบความสูง ---- */
+.wide .padbody{flex-wrap:nowrap}
+.wide .padl{flex:1 1 11em}.wide .padr{flex:1 1 13em}
+.pj .s2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wide .main{padding-bottom:24px}

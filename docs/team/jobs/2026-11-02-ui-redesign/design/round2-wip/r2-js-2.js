@@ -113,8 +113,8 @@ function recentHtml(){
   const sc=S.sc,list=sc.recent;
   const item=r=>`${r.state==='await'?badge('accent','รอคะแนน','pencil'):badge(r.state==='late'?'warning':'success',`${r.score}/${r.full}`,r.state==='late'?'clock':'check')}`;
   if(!isWide()){
-    return `<section class="card" aria-labelledby="rh" style="padding:8px 12px"><div class="row" style="justify-content:space-between"><h2 id="rh" style="font-size:var(--fs-sm)">${ic('clock',16)} สแกนล่าสุด <span class="tip">รอบนี้ ${list.length} คน</span></h2></div>
-      ${list.length?`<div class="rstrip" role="list">${list.slice(0,6).map(r=>`<button class="hm-chip muted" role="listitem" data-a="rsheet" data-k="${r.n}" aria-label="เลขที่ ${r.n} ${nick(r.n)} ตัวเลือก">${r.n} ${nick(r.n)} · ${r.state==='await'?'รอคะแนน':r.score+'/'+r.full}${r.recv?' · รับ '+fmtS(r.recv):''}</button>`).join('')}</div>`:'<div class="tip">ยังไม่มีใครสแกนในรอบนี้</div>'}</section>`;
+    return `<section class="card" aria-labelledby="rh" style="padding:8px 12px"><div class="row" style="justify-content:space-between"><h2 id="rh" style="font-size:var(--fs-sm)">${ic('clock',16)} สแกนล่าสุด <span class="tip">${list.length?`รอบนี้ ${list.length} คน`:'ยังไม่มีใครสแกนในรอบนี้'}</span></h2></div>
+      ${list.length?`<div class="rstrip" role="list">${list.slice(0,6).map(r=>`<button class="hm-chip muted" role="listitem" data-a="rsheet" data-k="${r.n}" aria-label="เลขที่ ${r.n} ${nick(r.n)} ตัวเลือก">${r.n} ${nick(r.n)} · ${r.state==='await'?'รอคะแนน':r.score+'/'+r.full}${r.recv?' · รับ '+fmtS(r.recv):''}</button>`).join('')}</div>`:''}</section>`;
   }
   return `<section class="card" aria-labelledby="rh"><div class="row" style="justify-content:space-between"><h2 id="rh" style="font-size:1rem">${ic('clock',20)} สแกนล่าสุด</h2><span class="tip">รอบนี้ ${list.length} คน</span></div>
     ${list.length?list.slice(0,6).map(r=>`<div class="rrow"><span class="hm-chip accent" style="min-width:2.4em;justify-content:center">${r.n}</span><span class="nm">${nick(r.n)}${r.recv?` <span class="tip">· รับ ${fmtS(r.recv)}</span>`:''}</span>${item(r)}<button class="ghost ib" data-a="rsheet" data-k="${r.n}" aria-label="ตัวเลือก เลขที่ ${r.n}">${ic('dots-vertical',20)}</button></div>`).join(''):'<div class="tip" style="padding:8px 0">ยังไม่มีใครสแกนในรอบนี้</div>'}</section>`;
@@ -134,8 +134,8 @@ function liveHtml(){
   const mid=sc.excAsk?`<section class="card" style="border:2px solid var(--border-warning);background:var(--bg-warning);color:var(--text-warning)" role="alertdialog" aria-label="เด็กที่ยกเว้น"><b>เลขที่ ${sc.excAsk} ${nick(sc.excAsk)} ถูกตั้งเป็น "ยกเว้น" งานนี้</b><div class="sb">รับงานแล้วจะเปลี่ยนเป็น "ส่งแล้ว" — ต้องการรับไหม</div><div class="row" style="margin-top:8px"><button class="primary" data-a="excyes">รับงานแล้ว</button><button data-a="excno">ไม่รับ</button></div></section>`
     :sc.pend?padHtml():fbHtml()+(cardOn('scan','hint')?`<div class="hintline">${{full:'โหมดให้คะแนนเต็ม: ยิงแล้วได้คะแนนเต็มทันที · แตะช่องที่ส่งแล้วเพื่อแก้',type:'โหมดกรอกทีละคน: ยิงแล้วพิมพ์คะแนน กด "บันทึก" หรือ Enter',later:'โหมดรับงานก่อน: ยิงแล้วเป็น "รอคะแนน" ไปให้คะแนนทีหลังในสมุดคะแนน'}[sc.mode]}</div>`:'');
   const showRecent=cardOn('scan','recent');
-  const col1=input+mid+failedHtml()+(isWide()&&showRecent?recentHtml():'');
-  const col2=gridHtml()+(!isWide()&&showRecent?recentHtml():'');
+  const col1=input+mid+failedHtml();
+  const col2=gridHtml()+(showRecent?recentHtml():'');
   return `${closedBar}${ctxHtml()}${title}<div class="sc-layout"><div class="sc-left">${col1}</div><div class="sc-right">${isWide()?col2:''}</div>${isWide()?'':''}</div>${isWide()?'':`<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${col2}</div>`}`;
 }
 function summaryHtml(){

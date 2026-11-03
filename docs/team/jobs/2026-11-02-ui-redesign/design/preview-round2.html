@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ui-redesign รอบ 2 — สแกน · เช็คชื่อ · สุ่มชื่อ (mockup กดได้จริง · ชื่อสมมติ)</title>
+<!--
+  ไฟล์เดียว เปิดจากดิสก์ได้ ไม่โหลดอะไรจากอินเทอร์เน็ต · ข้อมูลและชื่อนักเรียนสมมติทั้งหมด
+  รวมหน้าหลัก (รอบ 1) + สแกน + เช็คชื่อ + สุ่มชื่อ + โหมดฉายจอ · สลับหน้าด้วยแถบควบคุมด้านบน เมนูในกรอบ หรือ hash (#scan/type #attendance/tap #random/pick)
+  ประกอบโดย design/round2-wip/build.cjs  (อย่าแก้ไฟล์นี้ตรง ๆ — แก้ชิ้นส่วนแล้วรันใหม่)
+-->
+<style>
+/* ===== tokens (light) ===== */
+.frame{
+  --surface-0:#f4f6fa;--surface-1:#eef1f6;--surface-2:#ffffff;--surface-3:#ffffff;
+  --text-primary:#1a1f29;--text-secondary:#59616e;--text-muted:#646c79; /* VP-1 */
+  --border:rgba(20,28,46,.10);--border-strong:rgba(20,28,46,.18);
+  --accent:#2f6fde;--accent-hover:#275fc0;--on-accent:#fff;--bg-accent:#e6f0fc;--bg-accent-muted:rgba(47,111,222,.10);--text-accent:#1a56b0;--border-accent:#6f9fe0; /* VP-1 */
+  --bg-success:#e3f6ec;--text-success:#12703f;--fill-success:#148352;--border-success:#a6e0c2; /* fill VP-1 */
+  --bg-warning:#fbefd6;--text-warning:#8a5a08;--fill-warning:#e79a1c;--border-warning:#f0cf8c;
+  --bg-danger:#fbe6e6;--text-danger:#a32626;--fill-danger:#c93a3a;--border-danger:#f0b2b2; /* fill VP-1 */
+  --bg-purple:#efeafc;--text-purple:#5a3fb0;--fill-purple:#7c5cd6;--fill-accent:#2f6fde;
+  --tint-aqua-bg:#d9f2f0;--tint-aqua-fg:#0d6e6a;--tint-violet-bg:#ece7fb;--tint-violet-fg:#5636b8;
+  --tint-orange-bg:#fce8d8;--tint-orange-fg:#9a4f0c;--tint-green-bg:#e7f3d7;--tint-green-fg:#4b7314;
+  --tint-blue-bg:#e0edfc;--tint-blue-fg:#1a56b0;--tint-magenta-bg:#f8e2ee;--tint-magenta-fg:#9c2b63;
+  --shadow-pop:0 8px 28px rgba(20,28,46,.14),0 2px 6px rgba(20,28,46,.08);
+  --shadow-card:0 1px 2px rgba(20,28,46,.06),0 2px 8px rgba(20,28,46,.05); /* VP-1 */
+  --ring:0 0 0 3px var(--bg-accent-muted),0 0 0 1.5px var(--accent); /* VP-1 */
+  --scrim:rgba(10,14,22,.45);
+}
+.frame[data-theme=dark]{
+  --surface-0:#14171d;--surface-1:#1b1f27;--surface-2:#232833;--surface-3:#2a303c;
+  --text-primary:#eef1f6;--text-secondary:#a7afbd;--text-muted:#8d96a6; /* VP-1 */
+  --border:rgba(255,255,255,.10);--border-strong:rgba(255,255,255,.18);
+  --accent:#5a92ee;--accent-hover:#6ea1f2;--on-accent:#0b1220;--bg-accent:#1d2b44;--bg-accent-muted:rgba(90,146,238,.16);--text-accent:#9cc2f2;--border-accent:#4a7fc4;
+  --bg-success:#10331f;--text-success:#7fdca6;--fill-success:#1f9d63;--border-success:#26623f;
+  --bg-warning:#3a2a08;--text-warning:#f0c674;--fill-warning:#e79a1c;--border-warning:#6b4e18;
+  --bg-danger:#3a1616;--text-danger:#f0999a;--fill-danger:#dc4a4a;--border-danger:#6b2a2a;
+  --bg-purple:#241a44;--text-purple:#c4b2f0;--fill-purple:#7c5cd6;--fill-accent:#5a92ee;
+  --tint-aqua-bg:#123634;--tint-aqua-fg:#7ad6d0;--tint-violet-bg:#241a44;--tint-violet-fg:#c4b2f0;
+  --tint-orange-bg:#3a2410;--tint-orange-fg:#f0b276;--tint-green-bg:#1e3410;--tint-green-fg:#a6d472;
+  --tint-blue-bg:#16294a;--tint-blue-fg:#9cc2f2;--tint-magenta-bg:#3a162a;--tint-magenta-fg:#f0a0c6;
+  --shadow-pop:0 10px 30px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.35);
+  --shadow-card:0 1px 2px rgba(0,0,0,.4);
+  --scrim:rgba(0,0,0,.6);
+}
+/* geometry: --u = ขนาดตัวอักษรที่ตั้ง (html font-size ของแอปจริง) */
+.frame{
+  --u:18px;--tap:44px;
+  --fs-xs:max(13px,calc(var(--u)*.85));--fs-sm:max(13px,calc(var(--u)*.9));
+  --radius-xs:6px;--radius-sm:8px;--radius:12px;--radius-lg:16px;
+  --rail-w:max(96px,calc(var(--u)*5.75));
+  --row-h:max(var(--tap),calc(var(--u)*3.2));
+  --font-sans:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;background:#d9dde4;color:#1a1f29;line-height:1.6}
+/* ===== แผงควบคุม (ไม่ใช่ส่วนของแอป) ===== */
+.ctl{position:sticky;top:0;z-index:100;background:#1a1f29;color:#fff;padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;align-items:center}
+.ctl .g{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ctl b{opacity:.7;font-weight:400;margin-right:2px;font-size:12px}
+.ctl button{font:inherit;min-height:32px;padding:0 10px;border-radius:6px;background:#39414f;color:#fff;border:1px solid #4b5566;font-size:13px;cursor:pointer}
+.ctl button.on{background:#2f6fde;border-color:#9cc2f2}
+.note{font-size:13px;padding:6px 12px;background:#fff7d6;color:#5a4200;line-height:1.5}
+.stage{padding:12px;display:flex;justify-content:center}
+.fit{position:relative}
+.frame{position:absolute;left:0;top:0;transform-origin:0 0;background:var(--surface-0);color:var(--text-primary);overflow:hidden;display:flex;box-shadow:0 6px 30px rgba(0,0,0,.3);font-family:var(--font-sans);font-size:var(--u);line-height:1.6;border-radius:6px}
+.frame.phone{display:block}
+/* ===== element defaults ตาม base.css ===== */
+:where(.frame) button{font:inherit;color:var(--text-primary);cursor:pointer;border:.5px solid var(--border-strong);background:var(--surface-2);border-radius:var(--radius-sm);height:calc(var(--u)*2.53);padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.3}
+:where(.frame) button:hover{background:var(--surface-1)}
+:where(.frame) button.primary{background:var(--accent);color:var(--on-accent);border-color:transparent}
+:where(.frame) button.primary:hover{background:var(--accent-hover)}
+:where(.frame) button.ghost{border-color:transparent;background:transparent}
+:where(.frame) button.ghost:hover{background:var(--surface-1)}
+:where(.frame) button.icon{width:calc(var(--u)*2.53);height:calc(var(--u)*2.53);padding:0;flex:none}
+:where(.frame) a{color:var(--text-accent);text-decoration:none}
+.frame :focus-visible{outline:none;box-shadow:var(--ring)}
+.frame h1,.frame h2,.frame h3{font-weight:500;margin:0;line-height:1.35}
+.touch button:not(.lk){min-height:var(--tap);min-width:var(--tap)}
+.touch select{min-height:var(--tap)}
+svg{flex:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* ===== rail (iPad / คอม) ===== */
+.rail{width:var(--rail-w);flex:none;background:var(--surface-2);border-right:.5px solid var(--border);display:flex;flex-direction:column;gap:2px;padding:10px 6px;height:100%;overflow-y:auto;overflow-x:hidden}
+.rail-logo{width:calc(var(--u)*2.67);height:calc(var(--u)*2.67);border-radius:11px;margin:0 auto 8px;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;flex:none}
+.rail-gl{font-size:var(--fs-xs);color:var(--text-muted);text-align:center;padding:8px 0 2px;border-top:.5px solid var(--border);margin-top:4px;line-height:1.3;white-space:nowrap}
+.rail-group:first-of-type .rail-gl{border-top:none;margin-top:0;padding-top:2px}
+.rail-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px;min-height:var(--tap);height:auto;font-size:var(--fs-xs);color:var(--text-secondary);border-radius:var(--radius-sm);border:none;background:transparent;text-decoration:none;width:100%;text-align:center;line-height:1.25;position:relative;white-space:nowrap}
+.rail-item:hover{background:var(--surface-1)}
+.rail-item.on{background:var(--bg-accent);color:var(--text-accent);font-weight:500}
+.rail-item.on::before{content:"";position:absolute;left:-6px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--accent)}
+.rail-spacer{flex:1}
+button.rail-item{height:auto;padding:6px 2px}
+.frame:not(.touch) .rail-item{min-height:0;padding:5px 2px}
+.frame:not(.touch) .todo-row button,.frame:not(.touch) .resume button,.frame:not(.touch) .banner button{min-height:40px}
+.frame:not(.touch) .seg button{min-height:32px}
+.frame:not(.touch) button.rail-item{padding:5px 2px}
+.frame:not(.touch) .rail-gl{padding:6px 0 1px}
+.rail-sync{display:flex;justify-content:center;padding:4px 0 6px}
+.rail-sync .sync{flex-direction:column;gap:0;white-space:normal;text-align:center;max-width:100%}
+.hide-gl .rail-gl{font-size:0;padding:4px 0 0;border-top:.5px solid var(--border)}
+/* ===== bottom tabs (มือถือ) ===== */
+.tabs{position:absolute;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface-2);border-top:.5px solid var(--border);padding:6px 4px 10px;align-items:end}
+.tab{position:relative;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:var(--fs-xs);color:var(--text-secondary);background:transparent;border:none;padding:4px 0;min-height:var(--tap);text-decoration:none;line-height:1.25;height:auto;border-radius:var(--radius-sm)}
+.tab.on{color:var(--text-accent);font-weight:500}
+.tab .ti{position:relative;z-index:1}
+.tab .pip{position:absolute;left:50%;top:4px;width:44px;height:28px;margin-left:-22px;border-radius:14px;background:transparent}
+.tab.on .pip{background:var(--bg-accent)}
+.tab-scan{justify-content:flex-end;gap:3px}
+.tab-scan-btn{width:clamp(56px,calc(var(--u)*3.5),64px);height:clamp(56px,calc(var(--u)*3.5),64px);border-radius:50%;margin-top:-18px;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;border:3px solid var(--surface-2);box-shadow:var(--shadow-pop)}
+.tab-scan.on .tab-scan-btn{background:var(--accent-hover)}
+/* ===== sheet เมนูมือถือ ===== */
+.sheet-overlay{position:absolute;inset:0;z-index:160;background:var(--scrim);display:flex;align-items:flex-end}
+.sheet{width:100%;background:var(--surface-2);border-radius:16px 16px 0 0;padding:8px 12px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-pop)}
+.sheet-grab{width:44px;height:4px;border-radius:2px;background:var(--border-strong);margin:4px auto 4px}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:4px 4px 10px;border-bottom:.5px solid var(--border)}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sheet-item{display:flex;align-items:center;gap:12px;min-height:56px;height:auto;padding:0 14px;font-size:1em;border:.5px solid var(--border);background:var(--surface-2);border-radius:var(--radius);color:var(--text-primary);text-decoration:none;justify-content:flex-start}
+.sheet-item.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);font-weight:500}
+.sheet-item.danger{color:var(--text-danger);border-color:transparent}
+.sheet-gl{font-size:var(--fs-xs);color:var(--text-muted);padding:6px 4px 0}
+.sheet-item{font-weight:500}
+/* ===== main ===== */
+.main{flex:1;min-width:0;padding:20px 24px 40px;overflow-y:auto;height:100%;position:relative}
+.phone .main{padding:14px 14px 96px}
+.pad-sm .main{padding:16px 16px 40px}
+.uh{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.uh-l{display:flex;align-items:center;gap:10px;min-width:0}
+.uh-ic{width:calc(var(--u)*2.53);height:calc(var(--u)*2.53);border-radius:11px;flex:none;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center}
+.uh-title{font-size:calc(var(--u)*1.27);font-weight:500;line-height:1.25}
+.uh-sub{font-size:var(--fs-sm);color:var(--text-secondary);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.uh-sub .sep::before{content:"·";margin-right:8px}
+.uh-act .on-hide{background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning)}
+.banner.hidebar{background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning)}
+.rail-item.optitem{outline:1px dashed var(--border-warning);outline-offset:-2px}
+.uh-act{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:calc(var(--u)*2);padding:0 12px;border-radius:999px;border:.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-secondary);font-size:var(--fs-sm);white-space:nowrap;cursor:pointer}
+.pill.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);font-weight:500}
+.touch .pill{min-height:var(--tap)}
+.sync{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-xs);padding:2px 10px;border-radius:999px;white-space:nowrap;min-height:28px}
+.sync.online{background:var(--bg-success);color:var(--text-success)}
+.sync.offline{background:var(--bg-warning);color:var(--text-warning)}
+.sync.saving{background:var(--surface-1);color:var(--text-secondary)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-xs);padding:2px 8px;border-radius:999px;white-space:nowrap;line-height:1.5;min-height:24px}
+.chip.danger{background:var(--bg-danger);color:var(--text-danger)}
+.chip.warning{background:var(--bg-warning);color:var(--text-warning)}
+.chip.muted{background:var(--surface-1);color:var(--text-secondary)}
+.chip.accent{background:var(--bg-accent);color:var(--text-accent)}
+.chip.success{background:var(--bg-success);color:var(--text-success)}
+.chip.violet{background:var(--tint-violet-bg);color:var(--tint-violet-fg)}
+.chip.aqua{background:var(--tint-aqua-bg);color:var(--tint-aqua-fg)}
+.chip.orange{background:var(--tint-orange-bg);color:var(--tint-orange-fg)}
+.chip.green{background:var(--tint-green-bg);color:var(--tint-green-fg)}
+.chip.blue{background:var(--tint-blue-bg);color:var(--tint-blue-fg)}
+.card{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:16px}
+.phone .card{padding:12px 14px}
+.row{display:flex;align-items:center;gap:8px}
+.grow{flex:1;min-width:0}
+.sec{color:var(--text-secondary)}
+.sub{font-size:var(--fs-sm);color:var(--text-secondary)}
+.xs{font-size:var(--fs-xs);color:var(--text-secondary)}
+.num{font-variant-numeric:tabular-nums}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ===== ต้องทำตอนนี้ ===== */
+.todo{padding:0;overflow:hidden;border-left:4px solid var(--fill-warning);border-radius:var(--radius-lg)}
+.todo-h .ic{width:calc(var(--u)*2);height:calc(var(--u)*2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
+.todo-h{display:flex;align-items:center;gap:8px;padding:10px 16px 6px;font-weight:500}
+.todo-h .n{margin-left:auto}
+.todo-row{display:flex;align-items:center;gap:10px;padding:8px 16px;min-height:var(--tap);border-top:.5px solid var(--border);flex-wrap:wrap}
+.todo-row .ic{width:calc(var(--u)*1.9);height:calc(var(--u)*1.9);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.todo-row .ic.warn{background:var(--bg-warning);color:var(--text-warning)}
+.todo-row .ic.acc{background:var(--bg-accent);color:var(--text-accent)}
+.todo-row .ic.dan{background:var(--bg-danger);color:var(--text-danger)}
+.todo-row .t{flex:1 1 12em;min-width:0}
+.todo-row button{height:auto;min-height:calc(var(--u)*2.2);font-size:var(--fs-sm);white-space:nowrap}
+/* ===== ปุ่มลัด ===== */
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.phone .qa,.ipadP .qa{grid-template-columns:repeat(2,minmax(0,1fr))}
+.qa-btn{height:auto;min-height:calc(var(--u)*3.6);display:flex;gap:10px;align-items:center;justify-content:flex-start;padding:10px 12px;border-radius:var(--radius);background:var(--surface-2);border:.5px solid var(--border);box-shadow:var(--shadow-card);text-align:left;color:inherit;text-decoration:none;min-width:0}
+.qa-btn .ic{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);border-radius:10px;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;flex:none}
+.qa-btn .t{font-weight:500;font-size:1em;line-height:1.3}
+.qa-btn .s{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.3}
+.qa-btn.primary{background:var(--accent);border-color:transparent;color:var(--on-accent)}
+.qa-btn.primary .ic{background:rgba(255,255,255,.18);color:var(--on-accent)}
+.qa-btn.primary .s{color:inherit;opacity:.85}
+.qa-btn:hover{background:var(--surface-1)}.qa-btn.primary:hover{background:var(--accent-hover)}
+.resume{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;margin:0 0 12px;border-radius:var(--radius);background:var(--bg-accent);color:var(--text-accent);border:.5px solid var(--border-accent)}
+.resume button{min-height:calc(var(--u)*2.2);height:auto;font-size:var(--fs-sm)}
+/* ===== stat ===== */
+.stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.phone .stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat{min-width:0;overflow-wrap:anywhere;white-space:normal;background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:10px 12px;text-align:left;height:auto;display:block;width:100%;min-width:0;cursor:pointer}
+.stat:hover{background:var(--surface-1)}
+.stat .top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.stat .lbl{font-size:var(--fs-xs);color:var(--text-secondary)}
+.stat .val{font-size:calc(var(--u)*1.6);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.25;margin:2px 0}
+.stat .val small{font-size:var(--fs-xs);font-weight:400;color:var(--text-secondary)}
+.stat .val.na{font-size:1em;font-weight:500;line-height:1.4;padding:calc(var(--u)*.2) 0}
+.stat .hint{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.35}
+.stat .ic{width:calc(var(--u)*2);height:calc(var(--u)*2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.ic.accent{background:var(--bg-accent);color:var(--text-accent)}.ic.neutral{background:var(--surface-1);color:var(--text-secondary)}.ic.success{background:var(--bg-success);color:var(--text-success)}.ic.warning{background:var(--bg-warning);color:var(--text-warning)}.ic.danger{background:var(--bg-danger);color:var(--text-danger)}
+.val.danger{color:var(--text-danger)}
+/* ===== การ์ด grid ===== */
+.cols{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;align-items:start}
+.cols>div{display:flex;flex-direction:column;gap:12px;min-width:0}
+.one .cols{grid-template-columns:minmax(0,1fr)}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.ch h2{font-size:1em;font-weight:500;display:flex;align-items:center;gap:6px}
+.ch h2 svg{color:var(--text-secondary)}
+.lk{font-size:var(--fs-sm);color:var(--text-accent);background:none;border:none;padding:0 6px;height:auto;min-height:var(--tap)}
+.ch .seg{margin-left:auto}
+.seg{display:inline-flex;padding:2px;gap:2px;border-radius:var(--radius-sm);background:var(--surface-1);border:.5px solid var(--border)}
+.seg button{height:calc(var(--u)*1.87);min-height:0;padding:0 10px;border-radius:6px;font-size:var(--fs-sm);border:.5px solid transparent;background:transparent;color:var(--text-secondary)}
+.seg button.on{background:var(--surface-2);color:var(--text-primary);font-weight:500;border-color:var(--border-strong)}
+.touch .seg button{min-height:var(--tap)}
+.asg{padding:10px 0;border-top:.5px solid var(--border)}
+.asg:first-of-type{border-top:none;padding-top:4px}
+.asg .ttl{font-weight:500}
+.prog .chips{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.prog{display:grid;grid-template-columns:3.2em minmax(0,1fr) minmax(3.6em,auto) auto;gap:8px;align-items:center;font-size:var(--fs-xs);margin-top:6px;min-height:28px}
+.prog .n{font-variant-numeric:tabular-nums;color:var(--text-secondary);text-align:right}
+.pbar{height:8px;border-radius:4px;background:var(--border);overflow:hidden}
+.pbar>div{height:100%;border-radius:4px;background:var(--fill-success)}
+.phone .prog{grid-template-columns:3.2em minmax(0,1fr) minmax(3.6em,auto)}.phone .prog>:nth-child(4){grid-column:1/-1;justify-self:end}
+.chipbtn{height:auto;min-height:32px;padding:2px 10px;border-radius:999px;font-size:var(--fs-xs);gap:4px}
+.touch .chipbtn{min-height:var(--tap);min-width:0}
+.chipbtn.danger{background:var(--bg-danger);color:var(--text-danger);border-color:var(--border-danger)}
+.chipbtn.accent{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.chipbtn.muted{background:var(--surface-1);color:var(--text-primary)}
+.namelist{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.lrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:.5px solid var(--border);width:100%;background:none;border-left:none;border-right:none;border-bottom:none;border-radius:0;height:auto;min-height:var(--row-h);text-align:left;justify-content:flex-start}
+.lrow:first-of-type{border-top:none}
+.lrow:hover{background:var(--surface-1)}
+.av{width:calc(var(--u)*2);height:calc(var(--u)*2);border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:500;flex:none;font-size:var(--fs-xs)}
+.stack{display:flex;gap:2px;height:8px;margin-top:6px}.stack>i{display:block;border-radius:2px}
+.att{padding:8px 0;border-top:.5px solid var(--border);width:100%;background:none;border-left:none;border-right:none;border-bottom:none;border-radius:0;height:auto;min-height:var(--row-h);text-align:left;display:block}
+.att:first-of-type{border-top:none}
+.att:hover{background:var(--surface-1)}
+.empty{text-align:center;color:var(--text-secondary);padding:24px 12px}
+.empty .ei{color:var(--text-muted);margin-bottom:4px}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:.5px solid var(--border);align-items:center;flex-wrap:wrap}
+.kv:first-of-type{border-top:none}
+.cls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(13em,1fr));gap:8px}
+.cls{border:.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;background:var(--surface-1)}
+.cls .nm{font-weight:500}
+.cls{display:flex;flex-direction:column;gap:6px;padding:0}
+.cls-main{display:block;width:100%;height:auto;text-align:left;background:transparent;border:none;border-radius:var(--radius-sm) var(--radius-sm) 0 0;padding:8px 10px}
+.cls-main:hover{background:var(--surface-2)}
+.cls>.chipbtn{align-self:flex-end;margin:0 8px 8px}
+/* ===== drawer ===== */
+.drawer-scrim{position:absolute;inset:0;z-index:120;background:var(--scrim);display:flex;justify-content:flex-end}
+.drawer{width:min(420px,100%);background:var(--surface-2);height:100%;overflow-y:auto;border-left:.5px solid var(--border);padding:14px 16px 24px;display:flex;flex-direction:column;gap:6px}
+.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.drawer-head .t{font-weight:500;font-size:calc(var(--u)*1.07);line-height:1.35}
+.pref{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:.5px solid var(--border);min-height:calc(var(--u)*3.4)}
+.pref:first-of-type{border-top:none}
+.pref .ic{width:calc(var(--u)*2);height:calc(var(--u)*2);border-radius:8px;background:var(--bg-accent);color:var(--text-accent);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.pref.off .ic{background:var(--surface-1);color:var(--text-muted)}
+.pref.off .nm,.pref.off .ds{color:var(--text-muted)}
+.pref .nm{font-weight:500;line-height:1.3}.pref .ds{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.3}
+.pref .mv{display:flex;flex-direction:row;gap:4px}
+.pref .mv button{width:32px;height:32px;min-height:0;min-width:0;padding:0;border-radius:8px}
+.touch .pref .mv button{width:var(--tap);height:var(--tap)}
+.pref .mv button:disabled{opacity:.35;cursor:default}
+.switch{position:relative;width:calc(var(--u)*4);height:calc(var(--u)*2.4);min-width:52px;min-height:30px;border-radius:999px;background:var(--border-strong);border:none;padding:0;flex:none;transition:none}
+.switch[aria-checked=true]{background:var(--accent)}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:calc(100% / 1.75 - 6px);aspect-ratio:1;height:calc(100% - 6px);width:auto;border-radius:50%;background:#fff}
+.switch[aria-checked=true]::after{left:auto;right:3px}
+.lock{font-size:var(--fs-xs);color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;z-index:300;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);font-size:1em;border:.5px solid var(--border-success);box-shadow:var(--shadow-pop);background:var(--bg-success);color:var(--text-success);width:min(440px,calc(100% - 24px))}
+.phone .toast{bottom:86px}
+.fab{position:absolute;right:16px;bottom:20px;z-index:140;background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning);box-shadow:var(--shadow-pop);font-weight:500;height:auto;min-height:var(--tap)}
+.phone .fab{bottom:86px}
+.banner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;border-radius:12px;background:var(--bg-accent);color:var(--text-accent);border:.5px solid var(--border-accent);font-size:var(--fs-sm)}
+.banner button{margin-left:auto;height:auto;min-height:calc(var(--u)*2.2);font-size:var(--fs-sm)}
+.opt{font-size:13px;letter-spacing:.02em;background:#fff7d6;color:#5a4200;border:1px solid #e8d48a;border-radius:4px;padding:0 5px;margin-left:6px;font-weight:400;line-height:1.5}
+.skel{height:1em;border-radius:6px;background:linear-gradient(90deg,var(--surface-1),var(--border),var(--surface-1));margin:6px 0}
+/* ===================== รอบ 2: สแกน · เช็คชื่อ · สุ่มชื่อ ===================== */
+.ctl .g.sim{border-left:1px solid #4b5566;padding-left:14px}
+.ctl select{font:inherit;font-size:13px;min-height:32px;border-radius:6px;background:#39414f;color:#fff;border:1px solid #4b5566;padding:0 6px}
+.pghead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.pghead h1{font-size:calc(var(--u)*1.27);display:flex;align-items:center;gap:10px}
+.pghead .act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pgtile{width:calc(var(--u)*2.53);height:calc(var(--u)*2.53);border-radius:11px;background:var(--bg-accent);color:var(--text-accent);display:inline-flex;align-items:center;justify-content:center}
+.hr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ib{width:var(--tap);height:var(--tap);padding:0}
+.bar-sync{position:sticky;bottom:0;z-index:30}
+.tip{font-size:var(--fs-xs);color:var(--text-secondary)}
+.num{font-variant-numeric:tabular-nums}
+/* ---------- สแกน: ตั้งค่ารอบ ---------- */
+.sc-step{display:flex;align-items:center;gap:8px;margin:2px 0 8px;font-weight:500}
+.sc-step .sn{width:1.7em;height:1.7em;border-radius:50%;background:var(--accent);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-sm);flex:none}
+.asg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.narrow .asg-grid{grid-template-columns:minmax(0,1fr)}
+.sc-asg{display:block;height:auto;text-align:left;padding:10px 12px;border-radius:var(--radius);border:1.5px solid var(--border-strong);background:var(--surface-2);min-width:0;position:relative}
+.sc-asg.on{border-color:var(--border-accent);background:var(--bg-accent);box-shadow:var(--ring)}
+.sc-asg .ttl{font-weight:500;overflow-wrap:anywhere;line-height:1.35;margin:2px 0}
+.sc-asg .pc{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.sc-asg .tick{position:absolute;top:8px;right:8px;color:var(--text-accent)}
+.xy{display:inline-flex;gap:4px;align-items:center;font-size:var(--fs-xs);padding:1px 8px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.sc-asg.on .xy{background:var(--surface-2)}
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.narrow .modes{grid-template-columns:minmax(0,1fr)}
+.mode{display:flex;height:auto;min-height:calc(var(--u)*3.6);gap:10px;align-items:center;justify-content:flex-start;text-align:left;padding:8px 12px;border-radius:var(--radius);border:1.5px solid var(--border-strong);background:var(--surface-2)}
+.mode.on{border-color:var(--border-accent);background:var(--bg-accent);color:var(--text-accent);box-shadow:var(--ring)}
+.mode .t{font-weight:500;line-height:1.3}.mode .s{font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.3}
+.mode.opt4{border-style:dashed;opacity:.85}
+.startbar{position:sticky;bottom:0;z-index:25;margin:12px calc(var(--padx,16px)*-1) calc(var(--pady,16px)*-1);padding:10px var(--padx,16px);background:var(--surface-0);border-top:.5px solid var(--border);box-shadow:0 -6px 12px -8px rgba(20,28,46,.25);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.startbar .grow{min-width:12em}
+.startbar button.primary{min-height:calc(var(--u)*3.2);padding:0 22px;font-weight:600}
+/* ---------- สแกน: ระหว่างรอบ ---------- */
+.ctx{background:var(--bg-accent);color:var(--text-accent);border-radius:var(--radius);padding:8px 10px;display:flex;flex-direction:column;gap:6px;border:.5px solid var(--border-accent)}
+.ctx .r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctx button{height:auto;min-height:var(--tap);background:var(--surface-2);color:var(--text-accent);font-weight:500;border-color:var(--border-accent)}
+.ctx.back{background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning)}
+.ctx.back button{color:var(--text-warning);border-color:var(--border-warning)}
+.ctx .backtxt{font-weight:600;display:flex;align-items:center;gap:6px;flex:1 1 14em;min-width:0}
+.menu{position:relative}
+.pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:15em;background:var(--surface-3);border:.5px solid var(--border-strong);border-radius:var(--radius);box-shadow:var(--shadow-pop);padding:6px;display:flex;flex-direction:column;gap:2px;color:var(--text-primary)}
+.pop.right{left:auto;right:0}
+.pop button{justify-content:flex-start;text-align:left;border:none;background:transparent;min-height:var(--tap);font-weight:400;color:var(--text-primary)}
+.pop button.on{background:var(--bg-accent);color:var(--text-accent);font-weight:500}
+.pop .hd{font-size:var(--fs-xs);color:var(--text-muted);padding:4px 10px 0}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:2px}
+.dgrid button{justify-content:center;border:.5px solid var(--border);background:var(--surface-2);padding:0 4px}
+.dgrid button:disabled{opacity:.35}
+.dgrid button.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.sc-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+.sc-title .t{font-weight:500}
+.sc-layout{display:grid;gap:8px;grid-template-columns:minmax(0,1fr);margin-top:8px}
+.wide .sc-layout{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}
+.sc-left,.sc-right{display:flex;flex-direction:column;gap:8px;min-width:0}
+.scanrow{display:flex;gap:8px;position:sticky;top:0;z-index:20;background:var(--surface-0);padding:6px 0;margin:-6px 0 0}
+.scanin{flex:1;display:flex;align-items:center;gap:10px;min-width:0;height:calc(var(--u)*3.6);border:2px solid var(--border-accent);border-radius:var(--radius);padding:0 14px;background:var(--surface-2);box-shadow:var(--ring);color:var(--text-muted)}
+.scanin span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scanin.dis{opacity:.5;box-shadow:none;border-color:var(--border-strong)}
+.scanrow .cam{width:calc(var(--u)*3.6);height:calc(var(--u)*3.6);padding:0}
+.fb{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:var(--radius);border:.5px solid var(--border);min-height:4.4rem}
+.fb .ic{width:2.7rem;height:2.7rem;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.fb .nm{font-size:1.25rem;font-weight:600;line-height:1.3}.fb .sb{font-size:var(--fs-sm)}.fb .sc{font-size:1.5rem;font-weight:600;white-space:nowrap;margin-left:auto}
+.fb.success{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}.fb.success .ic{background:var(--fill-success)}
+.fb.warning{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}.fb.warning .ic{background:var(--fill-warning);color:var(--on-warning)}
+.fb.danger{background:var(--bg-danger);border-color:var(--border-danger);color:var(--text-danger)}.fb.danger .ic{background:var(--fill-danger)}
+.fb.acc{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}.fb.acc .ic{background:var(--accent);color:var(--on-accent)}
+.fb.idle{background:var(--surface-2);color:var(--text-secondary)}.fb.idle .ic{background:var(--text-muted)}
+.hintline{font-size:var(--fs-xs);color:var(--text-secondary);padding:0 4px}
+.padcard{padding:12px 14px}
+.pad .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:var(--tap)}
+.pad .nm{font-size:calc(var(--u)*1.9);font-weight:600;line-height:1.25}
+.pad .no{font-size:calc(var(--u)*1.2);color:var(--text-secondary)}
+.padbody{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.padl{flex:1 1 15em;min-width:0}.padr{flex:1 1 14em;min-width:0}
+.entry{display:flex;align-items:center;gap:8px}
+.entry .box{flex:1;max-width:12em;height:calc(var(--u)*4.9);border:2px solid var(--accent);border-radius:var(--radius);box-shadow:var(--ring);font-size:calc(var(--u)*2.9);font-weight:600;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.entry .full{font-size:calc(var(--u)*1.5);color:var(--text-secondary)}
+.err{color:var(--text-danger);font-size:var(--fs-sm);min-height:1.4em}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick button{height:auto;min-height:calc(var(--u)*3.4);background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);flex-direction:column;gap:0;line-height:1.2}
+.quick small{font-size:var(--fs-xs)}.quick b{font-size:calc(var(--u)*1.2)}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keys button{height:auto;min-height:calc(var(--u)*3.5);font-size:calc(var(--u)*1.45)}
+.pad .save{width:100%;margin-top:8px;min-height:calc(var(--u)*3.5);font-size:calc(var(--u)*1.15);font-weight:600}
+.later{margin-left:auto}
+/* ผังเลขที่ (D29: 8 คอลัมน์ สีเดิม ✓/–) */
+.gcard{padding:12px 14px}
+.ghead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.ring{position:relative;width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);flex:none}
+.ring .cap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:var(--fs-sm);font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:4px 10px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--text-secondary)}
+.legend i{display:inline-block;width:.8em;height:.8em;border-radius:3px;margin-right:4px;vertical-align:-.05em}
+.seat{display:grid;grid-template-columns:repeat(var(--cols,8),minmax(0,1fr));gap:6px}
+.narrow .seat{--cols:6}
+.cell{height:calc(var(--u)*2.9);min-height:var(--tap);border-radius:var(--radius-sm);border:1.5px solid var(--border-strong);background:var(--surface-1);padding:2px 3px 2px 5px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;gap:0;align-items:stretch;position:relative;min-width:0}
+.cell .t{display:flex;justify-content:space-between;align-items:center;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums;font-size:var(--fs-sm)}
+.cell .nm{font-size:var(--fs-xs);font-weight:400;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell.scored{background:var(--bg-success);border-color:var(--border-success);color:var(--text-success)}
+.cell.late{background:var(--bg-warning);border-color:var(--border-warning);color:var(--text-warning)}
+.cell.await{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.cell.miss{background:var(--surface-2);border:1.5px dashed var(--border-danger);color:var(--text-danger)}
+.cell.exc{background:repeating-linear-gradient(135deg,var(--surface-1) 0 5px,var(--surface-0) 5px 10px);color:var(--text-secondary)}
+.cell.cur{outline:3px solid var(--accent);outline-offset:1px}
+.cell .dot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--surface-2)}
+.cell .dot.pend{background:var(--fill-warning)}.cell .dot.fail{background:var(--fill-danger)}
+.rrow{display:flex;align-items:center;gap:10px;min-height:var(--tap);border-top:.5px solid var(--border);padding:2px 0}
+.rrow:first-of-type{border-top:none}
+.rrow .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rstrip{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.rstrip .hm-chip{flex:none}
+.failrow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;padding:8px 0;border-top:.5px solid var(--border)}
+.failrow:first-of-type{border-top:none}
+.failrow .t{flex:1 1 14em;min-width:0}
+.failcard{border-left:4px solid var(--fill-danger);border-radius:var(--radius-lg);padding:10px 14px}
+.hm-chip{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-xs);padding:2px 8px;min-height:1.6rem;border-radius:999px;white-space:nowrap;line-height:1.5;border:.5px solid transparent}
+.hm-chip.danger{background:var(--bg-danger);color:var(--text-danger);border-color:var(--border-danger)}
+.hm-chip.warning{background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning)}
+.hm-chip.accent{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.hm-chip.success{background:var(--bg-success);color:var(--text-success);border-color:var(--border-success)}
+.hm-chip.muted{background:var(--surface-1);color:var(--text-secondary);border-color:var(--border)}
+button.hm-chip{height:auto;min-height:2rem;cursor:pointer}
+.touch button.hm-chip{min-height:var(--tap)}
+button.hm-chip.muted{color:var(--text-primary)}
+.sheetov{position:absolute;inset:0;z-index:150;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center}
+.asheet{width:min(520px,100%);background:var(--surface-2);border-radius:16px 16px 0 0;padding:10px 14px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-pop)}
+.asheet .hd{font-weight:600;font-size:calc(var(--u)*1.1)}
+.asheet button{min-height:calc(var(--u)*3.4);justify-content:flex-start;gap:12px;font-size:1em}
+.asheet button.dan{color:var(--text-danger)}
+.modal{position:absolute;inset:0;z-index:160;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{background:var(--surface-3);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);padding:18px;width:min(440px,100%);display:flex;flex-direction:column;gap:10px}
+.dlg h2{font-size:calc(var(--u)*1.2)}
+.toast2{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;z-index:300;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:var(--radius);border:.5px solid var(--border);box-shadow:var(--shadow-pop);background:var(--surface-3);width:min(460px,calc(100% - 24px))}
+.phone .toast2{bottom:86px}
+.sum{max-width:36rem;margin:0 auto}
+.sum .big{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.sum h2{font-size:calc(var(--u)*1.2)}
+.sumsec{border-top:.5px solid var(--border);padding:10px 0}
+.sumsec:first-of-type{border-top:none}
+.namechips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+/* ---------- เช็คชื่อ ---------- */
+.toolbar{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:calc(var(--u)*2.2);padding:0 12px;border-radius:999px;border:.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-secondary);font-size:var(--fs-sm);white-space:nowrap;cursor:pointer}
+.pill.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent);font-weight:500}
+.touch .pill{min-height:var(--tap)}
+.pill .n{opacity:.75;font-variant-numeric:tabular-nums}
+.chiprow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.datenav{display:flex;align-items:center;gap:4px}
+.datenav .d{min-width:8em;text-align:center;font-weight:500}
+.wk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:8px}
+.wk button{height:auto;min-height:var(--tap);flex-direction:column;gap:0;padding:4px;line-height:1.3;text-align:center;border-radius:var(--radius-sm)}
+.wk button.on{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.wk button:disabled{opacity:.5}
+.wk small{font-size:var(--fs-xs);color:var(--text-secondary)}
+.sumcard{padding:10px 14px}
+.stack2{display:flex;gap:2px;height:10px;margin:6px 0}.stack2>i{display:block;border-radius:3px}
+.brush{margin-bottom:8px}
+.brush .lbl{font-size:var(--fs-sm);color:var(--text-secondary);margin-bottom:4px}
+.stbtns{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;gap:6px}
+.narrow .stbtns{grid-template-columns:repeat(5,minmax(0,1fr))}
+.stbtn{height:auto;min-height:calc(var(--u)*3.6);flex-direction:column;gap:2px;font-weight:500;line-height:1.2;border-radius:var(--radius);border:1.5px solid var(--border-strong);padding:4px 2px}
+.stbtn.p.on{background:var(--bg-success);color:var(--text-success);border-color:var(--border-success)}
+.stbtn.l.on{background:var(--bg-warning);color:var(--text-warning);border-color:var(--border-warning)}
+.stbtn.v.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.stbtn.k.on{background:var(--bg-purple);color:var(--text-purple);border-color:var(--fill-purple)}
+.stbtn.a.on{background:var(--bg-danger);color:var(--text-danger);border-color:var(--border-danger)}
+.stbtn.on{box-shadow:var(--ring)}
+.allp{min-height:calc(var(--u)*3);font-weight:500}
+.tiles{display:grid;grid-template-columns:repeat(var(--tc,4),minmax(0,1fr));gap:8px}
+.narrow .tiles{--tc:3}
+.phone .tiles{--tc:2}
+.tile{height:auto;min-height:calc(var(--u)*3.6);flex-direction:row;justify-content:flex-start;gap:8px;padding:6px 8px;border-radius:var(--radius);border:1.5px dashed var(--border-strong);background:var(--surface-2);text-align:left;min-width:0;position:relative}
+.tile .no{font-size:calc(var(--u)*1.25);font-weight:600;min-width:1.6em;font-variant-numeric:tabular-nums}
+.tile .tx{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.tile .nk{font-size:calc(var(--u)*.95);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .st{font-size:var(--fs-xs);display:flex;align-items:center;gap:3px}
+.tile.p{background:var(--bg-success);border:1.5px solid var(--border-success);color:var(--text-success)}
+.tile.l{background:var(--bg-warning);border:1.5px solid var(--border-warning);color:var(--text-warning)}
+.tile.v{background:var(--bg-accent);border:1.5px solid var(--border-accent);color:var(--text-accent)}
+.tile.k{background:var(--bg-purple);border:1.5px solid var(--fill-purple);color:var(--text-purple)}
+.tile.a{background:var(--bg-danger);border:1.5px solid var(--border-danger);color:var(--text-danger)}
+.tile.flash{outline:3px solid var(--accent);outline-offset:1px}
+.tile.u{color:var(--text-secondary)}
+.savebar{position:sticky;bottom:0;z-index:35;margin:10px calc(var(--padx,16px)*-1) calc(var(--pady,16px)*-1);padding:8px var(--padx,16px);background:var(--surface-2);border-top:.5px solid var(--border);box-shadow:0 -6px 12px -8px rgba(20,28,46,.25);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sync{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-xs);padding:2px 10px;border-radius:999px;white-space:nowrap;min-height:28px}
+.sync.online{background:var(--bg-success);color:var(--text-success)}.sync.offline{background:var(--bg-warning);color:var(--text-warning)}.sync.saving{background:var(--surface-1);color:var(--text-secondary)}
+.scancard{display:flex;flex-direction:column;gap:8px}
+.attgrid{display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
+.wide .attgrid.two{grid-template-columns:minmax(0,1fr) minmax(0,20rem);align-items:start}
+.attside{display:flex;flex-direction:column;gap:8px;min-width:0}
+.numchips{display:flex;gap:4px;flex-wrap:wrap}
+.numchips button{min-width:var(--tap)}
+/* ---------- สุ่มชื่อ ---------- */
+.rstage{border:2px solid var(--border-accent);border-radius:var(--radius-lg);background:var(--surface-2);box-shadow:var(--shadow-card);text-align:center;padding:14px 10px;min-height:calc(var(--u)*11);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative}
+.rstage.idle{border-style:dashed;border-color:var(--border-strong)}
+.rbadge{display:inline-flex;width:calc(var(--u)*4.3);height:calc(var(--u)*4.3);border-radius:50%;background:var(--bg-accent);color:var(--text-accent);font-size:calc(var(--u)*1.7);font-weight:600;align-items:center;justify-content:center}
+.rname{font-size:calc(var(--u)*2.3);font-weight:500;line-height:1.3;overflow-wrap:anywhere}
+.wide .rname{font-size:calc(var(--u)*3)}
+.rstage .poolchip{position:absolute;top:8px;left:8px}
+.rctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.rctl .go{margin-left:auto;min-height:calc(var(--u)*3.2);padding:0 26px;font-size:calc(var(--u)*1.1);font-weight:600}
+.step{display:inline-flex;align-items:center;gap:4px}
+.step b{min-width:2em;text-align:center;font-variant-numeric:tabular-nums}
+.step button{width:var(--tap);padding:0}
+.rcols{display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
+.wide .rcols{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start}
+.rcol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.hist{display:flex;gap:6px;flex-wrap:wrap}
+.hchip{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 10px 0 4px;border-radius:999px;background:var(--surface-1);border:.5px solid var(--border)}
+.hchip i{font-style:normal;width:calc(var(--u)*1.9);height:calc(var(--u)*1.9);border-radius:50%;background:var(--bg-accent);color:var(--text-accent);display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:600}
+.hchip.last{background:var(--bg-accent);border-color:var(--border-accent);color:var(--text-accent)}
+.pbar2{height:10px;border-radius:5px;background:var(--border);overflow:hidden;margin:6px 0}.pbar2>div{height:100%;border-radius:5px;background:var(--fill-accent)}
+.timer{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tring{width:calc(var(--u)*6);height:calc(var(--u)*6);position:relative;flex:none}
+.tring .cap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*1.8);font-weight:600;font-variant-numeric:tabular-nums}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(11em,1fr));gap:8px}
+.grp{border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;background:var(--surface-2)}
+.grp b{display:flex;align-items:center;gap:6px;margin-bottom:2px}.grp b i{width:.7em;height:.7em;border-radius:50%;display:inline-block}
+.grp div{font-size:var(--fs-sm);line-height:1.5}
+.rnotice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:var(--radius);background:var(--bg-warning);color:var(--text-warning);border:.5px solid var(--border-warning);margin-bottom:8px}
+.rnotice .grow{flex:1 1 14em}
+/* ---------- ปรับการ์ด (ใช้ของรอบ 1) ---------- */
+.drawer .lock{font-size:var(--fs-xs);color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.badge-sa{font-size:var(--fs-xs);background:var(--bg-warning);color:var(--text-warning);border:.5px solid var(--border-warning);border-radius:4px;padding:0 5px;margin-left:6px;font-weight:400}
+/* ---------- โหมดฉายจอ (D27) ---------- */
+.pj{position:absolute;inset:0;z-index:200;display:flex;flex-direction:column;overflow:hidden;font-size:calc(var(--k)*30px);line-height:1.25;
+  --pj-bg:#0b1220;--pj-card:#151e33;--pj-t1:#ffffff;--pj-t2:#cdd5e3;--pj-bd:#5b6a8a;--pj-ac:#9cc2f2;--pj-on-ac:#0b1220;--pj-ok:#6ee7a8;--pj-okbg:#0f3a26;--pj-bad:#ff9a9a;--pj-warn:#ffd166;
+  background:var(--pj-bg);color:var(--pj-t1);padding:calc(var(--k)*24px)}
+.pj[data-th=light]{--pj-bg:#ffffff;--pj-card:#eef2f8;--pj-t1:#0b1220;--pj-t2:#2c3648;--pj-bd:#55627a;--pj-ac:#164a9e;--pj-on-ac:#ffffff;--pj-ok:#0d6a3a;--pj-okbg:#dcf3e6;--pj-bad:#9b1c1c;--pj-warn:#7a4b00}
+.pj[data-sz="1"]{--s2:32;--st:56;--nm:72;--bt:64}
+.pj[data-sz="2"]{--s2:40;--st:72;--nm:96;--bt:72}
+.pj[data-sz="3"]{--s2:48;--st:88;--nm:120;--bt:80}
+.pj .pjbar{height:calc(var(--k)*84px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none}
+.pj .pjbar h1{font-size:calc(var(--k)*40px);font-weight:600;display:flex;align-items:center;gap:calc(var(--k)*12px)}
+.pj .live{display:inline-flex;align-items:center;gap:calc(var(--k)*10px);font-size:calc(var(--k)*26px);font-weight:600;border:calc(var(--k)*3px) solid var(--pj-ac);color:var(--pj-ac);border-radius:999px;padding:calc(var(--k)*6px) calc(var(--k)*18px)}
+.pj .live i{width:calc(var(--k)*14px);height:calc(var(--k)*14px);border-radius:50%;background:var(--pj-ac)}
+.pj .exit{width:calc(var(--k)*64px);height:calc(var(--k)*64px);border-radius:50%;border:calc(var(--k)*3px) solid var(--pj-bd);background:var(--pj-card);color:var(--pj-t2);display:inline-flex;align-items:center;justify-content:center;padding:0;position:relative;touch-action:none;user-select:none}
+.pj .exit::after{content:"";position:absolute;inset:calc(var(--k)*-6px);border-radius:50%;background:conic-gradient(var(--pj-ac) calc(var(--p,0)*1%),transparent 0);-webkit-mask:radial-gradient(circle,transparent calc(var(--k)*34px),#000 calc(var(--k)*35px));mask:radial-gradient(circle,transparent calc(var(--k)*34px),#000 calc(var(--k)*35px));pointer-events:none}
+.pj .hint{position:absolute;right:calc(var(--k)*24px);top:calc(var(--k)*100px);background:var(--pj-card);border:calc(var(--k)*3px) solid var(--pj-bd);border-radius:calc(var(--k)*14px);padding:calc(var(--k)*8px) calc(var(--k)*16px);font-size:calc(var(--k)*24px);z-index:3}
+.pj .body{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(var(--k)*14px)}
+.pj .pjbtn{font:inherit;font-size:calc(var(--k)*var(--bt)*.5px);font-weight:600;height:calc(var(--k)*var(--bt)*1px);padding:0 calc(var(--k)*40px);border-radius:calc(var(--k)*20px);background:var(--pj-ac);color:var(--pj-on-ac);border:0;display:inline-flex;align-items:center;gap:calc(var(--k)*12px);cursor:pointer}
+.pj .pjbtn.sec{background:var(--pj-card);color:var(--pj-t1);border:calc(var(--k)*3px) solid var(--pj-bd)}
+.pj .other{position:absolute;right:calc(var(--k)*24px);bottom:calc(var(--k)*24px);display:flex;flex-direction:column;gap:calc(var(--k)*8px);align-items:flex-end}
+.pj .other .menu4{display:flex;flex-direction:column;gap:calc(var(--k)*8px);background:var(--pj-card);border:calc(var(--k)*3px) solid var(--pj-bd);border-radius:calc(var(--k)*16px);padding:calc(var(--k)*10px)}
+.pj .other .menu4 button{height:calc(var(--k)*64px);font-size:calc(var(--k)*28px);background:transparent;color:var(--pj-t1);border:0;justify-content:flex-start;gap:calc(var(--k)*12px);padding:0 calc(var(--k)*20px)}
+.pj .big{font-size:calc(var(--k)*var(--nm)*1px);font-weight:600;line-height:1.15;overflow-wrap:anywhere}
+.pj .stat{font-size:calc(var(--k)*var(--st)*1px);font-weight:600;line-height:1.1}
+.pj .s2{font-size:calc(var(--k)*var(--s2)*1px);color:var(--pj-t2)}
+.pj .pbar{height:calc(var(--k)*28px);border-radius:calc(var(--k)*14px);background:var(--pj-card);border:calc(var(--k)*3px) solid var(--pj-bd);overflow:hidden;margin:0}
+.pj .pbar>div{height:100%;background:var(--pj-ok)}
+.pj .okmark{display:inline-flex;align-items:center;gap:calc(var(--k)*10px);color:var(--pj-ok);font-weight:600}
+.pj .seatp{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:calc(var(--k)*8px)}
+.pj .seatp div{height:calc(var(--k)*64px);border-radius:calc(var(--k)*12px);border:calc(var(--k)*3px) dashed var(--pj-bd);display:flex;align-items:center;justify-content:center;gap:calc(var(--k)*6px);font-size:calc(var(--k)*28px);font-weight:600;color:var(--pj-t2);font-variant-numeric:tabular-nums;min-width:0}
+.pj .seatp div.d{border:calc(var(--k)*3px) solid var(--pj-ok);background:var(--pj-okbg);color:var(--pj-ok)}
+.pj .seatp div small{font-size:calc(var(--k)*20px);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pj .pcard{background:var(--pj-card);border:calc(var(--k)*3px) solid var(--pj-bd);border-radius:calc(var(--k)*20px);padding:calc(var(--k)*20px);text-align:center}
+.pj .pgroups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--k)*14px)}
+.pj .pgroups .pcard{text-align:left;padding:calc(var(--k)*12px) calc(var(--k)*16px)}
+.pj .pgroups b{display:block;font-size:calc(var(--k)*30px);color:var(--pj-ac);margin-bottom:calc(var(--k)*4px)}
+.pj .pgroups div{font-size:calc(var(--k)*28px);line-height:1.45}
+.pj .rbadge{width:calc(var(--k)*var(--nm)*1px);height:calc(var(--k)*var(--nm)*1px);font-size:calc(var(--k)*var(--nm)*.5px);background:var(--pj-card);color:var(--pj-ac);border:calc(var(--k)*3px) solid var(--pj-bd)}
+.pj .empty{font-size:calc(var(--k)*40px);color:var(--pj-t2);text-align:center;margin:auto}
+.pjpre{padding:10px;display:flex;flex-direction:column;gap:6px;min-width:16em}
+
+/* ---- แก้ตามผลตรวจงบความสูง ---- */
+.wide .padbody{flex-wrap:nowrap}
+.wide .padl{flex:1 1 11em}.wide .padr{flex:1 1 13em}
+.pj .s2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wide .main{padding-bottom:24px}
+
+.phone .startbar,.phone .savebar{bottom:64px}
+
+</style>
+</head>
+<body>
+<div class="ctl" id="ctl"></div>
+<div class="note" id="note"></div>
+<div class="stage"><div class="fit" id="fit"><div class="frame" id="frame"></div></div></div>
+<script>
+const ICONS={"home":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12l-2 0l9 -9l9 9l-2 0\" /><path d=\"M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7\" /><path d=\"M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6\" />","scan":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12h14\" /><path d=\"M3 7v-2a2 2 0 0 1 2 -2h2\" /><path d=\"M3 17v2a2 2 0 0 0 2 2h2\" /><path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /><path d=\"M17 21h2a2 2 0 0 0 2 -2v-2\" />","user-check":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h4\" /><path d=\"M15 19l2 2l4 -4\" />","dice-3":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14\" /><path d=\"M8 8.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" /><path d=\"M15 15.5a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" /><path d=\"M11.5 12a.5 .5 0 1 0 1 0a.5 .5 0 1 0 -1 0\" fill=\"currentColor\" />","notebook":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18\" /><path d=\"M13 8l2 0\" /><path d=\"M13 12l2 0\" />","chart-bar":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6\" /><path d=\"M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10\" /><path d=\"M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14\" /><path d=\"M4 20h14\" />","users":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0\" /><path d=\"M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2\" /><path d=\"M16 3.13a4 4 0 0 1 0 7.75\" /><path d=\"M21 21v-2a4 4 0 0 0 -3 -3.85\" />","settings":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065\" /><path d=\"M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\" />","logout":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2\" /><path d=\"M9 12h12l-3 -3\" /><path d=\"M18 15l3 -3\" />","menu-2":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 6l16 0\" /><path d=\"M4 12l16 0\" /><path d=\"M4 18l16 0\" />","layout-grid":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" />","clipboard-list":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2\" /><path d=\"M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2\" /><path d=\"M9 12l.01 0\" /><path d=\"M13 12l2 0\" /><path d=\"M9 16l.01 0\" /><path d=\"M13 16l2 0\" />","hourglass-empty":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1\" /><path d=\"M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1\" />","alert-circle":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\" /><path d=\"M12 8v4\" /><path d=\"M12 16h.01\" />","alert-triangle":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 9v4\" /><path d=\"M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0\" /><path d=\"M12 16h.01\" />","calendar-event":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12\" /><path d=\"M16 3l0 4\" /><path d=\"M8 3l0 4\" /><path d=\"M4 11l16 0\" /><path d=\"M8 15h2v2h-2l0 -2\" />","cloud-check":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M11 18.004h-4.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.388 0 2.585 .82 3.138 2.007\" /><path d=\"M15 19l2 2l4 -4\" />","cloud-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M9.58 5.548c.24 -.11 .492 -.207 .752 -.286c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 .957 -.383 1.824 -1.003 2.454m-2.997 1.033h-11.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.13 -.582 .37 -1.128 .7 -1.62\" /><path d=\"M3 3l18 18\" />","cloud-upload":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1\" /><path d=\"M9 15l3 -3l3 3\" /><path d=\"M12 12l0 9\" />","cloud-x":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M13 18.004h-6.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.37 0 2.556 .8 3.117 1.964\" /><path d=\"M22 22l-5 -5\" /><path d=\"M17 22l5 -5\" />","database-export":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3\" /><path d=\"M4 6v6c0 1.657 3.582 3 8 3c1.118 0 2.183 -.086 3.15 -.241\" /><path d=\"M20 12v-6\" /><path d=\"M4 12v6c0 1.657 3.582 3 8 3c.157 0 .312 -.002 .466 -.005\" /><path d=\"M16 19h6\" /><path d=\"M19 16l3 3l-3 3\" />","history":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 8l0 4l2 2\" /><path d=\"M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5\" />","clock":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\" /><path d=\"M12 7v5l3 3\" />","circle-check":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M9 12l2 2l4 -4\" />","plus":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 5l0 14\" /><path d=\"M5 12l14 0\" />","chevron-up":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M6 15l6 -6l6 6\" />","chevron-down":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M6 9l6 6l6 -6\" />","chevron-right":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M9 6l6 6l-6 6\" />","x":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M18 6l-12 12\" /><path d=\"M6 6l12 12\" />","arrow-right":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12l14 0\" /><path d=\"M13 18l6 -6\" /><path d=\"M13 6l6 6\" />","flag":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9\" /><path d=\"M5 21v-7\" />","eye":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6\" />","eye-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M10.585 10.587a2 2 0 0 0 2.829 2.828\" /><path d=\"M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87\" /><path d=\"M3 3l18 18\" />","refresh":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4\" /><path d=\"M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4\" />","checks":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M7 12l5 5l10 -10\" /><path d=\"M2 12l5 5m5 -5l5 -5\" />","school":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M22 9l-10 -4l-10 4l10 4l10 -4v6\" /><path d=\"M6 10.6v5.4a6 3 0 0 0 12 0v-5.4\" />","keyboard":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M2 8a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2l0 -8\" /><path d=\"M6 10l0 .01\" /><path d=\"M10 10l0 .01\" /><path d=\"M14 10l0 .01\" /><path d=\"M18 10l0 .01\" /><path d=\"M6 14l0 .01\" /><path d=\"M18 14l0 .01\" /><path d=\"M10 14l4 .01\" />","grip-vertical":"<path d=\"M8 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M8 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M8 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M14 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M14 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M14 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" />","sun":"<path d=\"M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0\" /><path d=\"M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7\" />","moon":"<path d=\"M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008\" />","device-desktop":"<path d=\"M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10\" /><path d=\"M7 20h10\" /><path d=\"M9 16v4\" /><path d=\"M15 16v4\" />","device-tablet":"<path d=\"M5 4a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-16\" /><path d=\"M11 17a1 1 0 1 0 2 0a1 1 0 0 0 -2 0\" />","device-mobile":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14\" /><path d=\"M11 4h2\" /><path d=\"M12 17v.01\" />","arrow-back-up":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M9 14l-4 -4l4 -4\" /><path d=\"M5 10h11a4 4 0 1 1 0 8h-1\" />","info-circle":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0\" /><path d=\"M12 9h.01\" /><path d=\"M11 12h1v4h1\" />","clipboard-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5.575 5.597a2 2 0 0 0 -.575 1.403v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2m0 -4v-8a2 2 0 0 0 -2 -2h-2\" /><path d=\"M9 5a2 2 0 0 1 2 -2h2a2 2 0 1 1 0 4h-2\" /><path d=\"M3 3l18 18\" />","loader-2":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 3a9 9 0 1 0 9 9\" />","player-play":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M7 4v16l13 -8l-13 -8\" />","users-group":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1\" /><path d=\"M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M17 10h2a2 2 0 0 1 2 2v1\" /><path d=\"M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0\" /><path d=\"M3 13v-1a2 2 0 0 1 2 -2h2\" />","camera":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2\" /><path d=\"M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0\" />","qrcode":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M7 17l0 .01\" /><path d=\"M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M7 7l0 .01\" /><path d=\"M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4\" /><path d=\"M17 7l0 .01\" /><path d=\"M14 14l3 0\" /><path d=\"M20 14l0 .01\" /><path d=\"M14 14l0 3\" /><path d=\"M14 20l3 0\" /><path d=\"M17 17l3 0\" /><path d=\"M20 17l0 3\" />","file-spreadsheet":"<path d=\"M14 3v4a1 1 0 0 0 1 1h4\" /><path d=\"M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2\" /><path d=\"M8 11h8v7h-8l0 -7\" /><path d=\"M8 15h8\" /><path d=\"M11 11v7\" />","wifi-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 18l.01 0\" /><path d=\"M9.172 15.172a4 4 0 0 1 5.656 0\" /><path d=\"M6.343 12.343a7.963 7.963 0 0 1 3.864 -2.14m4.163 .155a7.965 7.965 0 0 1 3.287 2\" /><path d=\"M3.515 9.515a12 12 0 0 1 3.544 -2.455m3.101 -.92a12 12 0 0 1 10.325 3.374\" /><path d=\"M3 3l18 18\" />","login":"<path d=\"M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2\" /><path d=\"M21 12h-13l3 -3\" /><path d=\"M11 15l-3 -3\" />","mood-empty":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M9 10l.01 0\" /><path d=\"M15 10l.01 0\" /><path d=\"M9 15l6 0\" />","flag-check":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M13.767 15.12a4.983 4.983 0 0 1 -1.767 -1.12a5 5 0 0 0 -7 0v-9a5 5 0 0 1 7 0a5 5 0 0 0 7 0v8.5\" /><path d=\"M5 21v-7\" /><path d=\"M15 19l2 2l4 -4\" />","clipboard-check":"<path d=\"M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2\" /><path d=\"M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2\" /><path d=\"M9 14l2 2l4 -4\" />","calendar-due":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12\" /><path d=\"M16 3v4\" /><path d=\"M8 3v4\" /><path d=\"M4 11h16\" /><path d=\"M11 16a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" />","search":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0\" /><path d=\"M21 21l-6 -6\" />","user-x":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h3.5\" /><path d=\"M22 22l-5 -5\" /><path d=\"M17 22l5 -5\" />","copy":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666\" /><path d=\"M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1\" />","circle-half-2":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M12 3v18\" /><path d=\"M12 14l7 -7\" /><path d=\"M12 19l8.5 -8.5\" /><path d=\"M12 9l4.5 -4.5\" />","calendar-stats":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4\" /><path d=\"M18 14v4h4\" /><path d=\"M14 18a4 4 0 1 0 8 0a4 4 0 1 0 -8 0\" /><path d=\"M15 3v4\" /><path d=\"M7 3v4\" /><path d=\"M3 11h16\" />","chevron-left":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M15 6l-6 6l6 6\" />","presentation":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 4l18 0\" /><path d=\"M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10\" /><path d=\"M12 16l0 4\" /><path d=\"M9 20l6 0\" /><path d=\"M8 12l3 -3l2 2l3 -3\" />","barcode":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 7v-1a2 2 0 0 1 2 -2h2\" /><path d=\"M4 17v1a2 2 0 0 0 2 2h2\" /><path d=\"M16 4h2a2 2 0 0 1 2 2v1\" /><path d=\"M16 20h2a2 2 0 0 0 2 -2v-1\" /><path d=\"M5 11h1v2h-1l0 -2\" /><path d=\"M10 11l0 2\" /><path d=\"M14 11h1v2h-1l0 -2\" /><path d=\"M19 11l0 2\" />","hand-finger":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5\" /><path d=\"M11 11.5v-2a1.5 1.5 0 1 1 3 0v2.5\" /><path d=\"M14 10.5a1.5 1.5 0 0 1 3 0v1.5\" /><path d=\"M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47\" />","thermometer":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M19 5a2.828 2.828 0 0 1 0 4l-8 8h-4v-4l8 -8a2.828 2.828 0 0 1 4 0\" /><path d=\"M16 7l-1.5 -1.5\" /><path d=\"M13 10l-1.5 -1.5\" /><path d=\"M10 13l-1.5 -1.5\" /><path d=\"M7 17l-3 3\" />","file-text":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M14 3v4a1 1 0 0 0 1 1h4\" /><path d=\"M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2\" /><path d=\"M9 9l1 0\" /><path d=\"M9 13l6 0\" /><path d=\"M9 17l6 0\" />","check":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12l5 5l10 -10\" />","backspace":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5l11 0\" /><path d=\"M12 10l4 4m0 -4l-4 4\" />","inbox":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12\" /><path d=\"M4 13h3l3 3h4l3 -3h3\" />","star":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245\" />","stopwatch":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 13a7 7 0 1 0 14 0a7 7 0 0 0 -14 0\" /><path d=\"M14.5 10.5l-2.5 2.5\" /><path d=\"M17 8l1 -1\" /><path d=\"M14 3h-4\" />","dots-vertical":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /><path d=\"M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" />","lock":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6\" /><path d=\"M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0\" /><path d=\"M8 11v-4a4 4 0 1 1 8 0v4\" />","pencil":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4\" /><path d=\"M13.5 6.5l4 4\" />","ban":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /><path d=\"M5.7 5.7l12.6 12.6\" />","trash":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 7l16 0\" /><path d=\"M10 11l0 6\" /><path d=\"M14 11l0 6\" /><path d=\"M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12\" /><path d=\"M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3\" />","camera-rotate":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2\" /><path d=\"M11.245 15.904a3 3 0 0 0 3.755 -2.904m-2.25 -2.905a3 3 0 0 0 -3.75 2.905\" /><path d=\"M14 13h2v2\" /><path d=\"M10 13h-2v-2\" />","bulb":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7\" /><path d=\"M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3\" /><path d=\"M9.7 17l4.6 0\" />","bulb-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7\" /><path d=\"M11.089 7.083a5 5 0 0 1 5.826 5.84m-1.378 2.611a5.012 5.012 0 0 1 -.537 .466a3.5 3.5 0 0 0 -1 3a2 2 0 1 1 -4 0a3.5 3.5 0 0 0 -1 -3a5 5 0 0 1 -.528 -7.544\" /><path d=\"M9.7 17h4.6\" /><path d=\"M3 3l18 18\" />","device-tv":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9\" /><path d=\"M16 3l-4 4l-4 -4\" />","player-stop":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 7a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -10\" />","arrows-shuffle":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M18 4l3 3l-3 3\" /><path d=\"M18 20l3 -3l-3 -3\" /><path d=\"M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5\" /><path d=\"M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3\" />","minus":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12l14 0\" />","selector":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8 9l4 -4l4 4\" /><path d=\"M16 15l-4 4l-4 -4\" />","calendar":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12\" /><path d=\"M16 3v4\" /><path d=\"M8 3v4\" /><path d=\"M4 11h16\" /><path d=\"M11 15h1\" /><path d=\"M12 15v3\" />","user-off":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8.18 8.189a4.01 4.01 0 0 0 2.616 2.627m3.507 -.545a4 4 0 1 0 -5.59 -5.552\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h4c.412 0 .81 .062 1.183 .178m2.633 2.618c.12 .38 .184 .785 .184 1.204v2\" /><path d=\"M3 3l18 18\" />","chevrons-left":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M11 7l-5 5l5 5\" /><path d=\"M17 7l-5 5l5 5\" />","chevrons-right":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M7 7l5 5l-5 5\" /><path d=\"M13 7l5 5l-5 5\" />","arrow-left":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M5 12l14 0\" /><path d=\"M5 12l6 6\" /><path d=\"M5 12l6 -6\" />","player-skip-forward":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 5v14l12 -7l-12 -7\" /><path d=\"M20 5l0 14\" />","rotate-clockwise":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5\" />","crown":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4l4 -6\" />","filter":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227\" />","user-plus":"<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\" /><path d=\"M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0\" /><path d=\"M16 19h6\" /><path d=\"M19 16v6\" /><path d=\"M6 21v-2a4 4 0 0 1 4 -4h4\" />"};
+
+const ic=(n,s=20,cls='')=>`<svg class="ti${cls?' '+cls:''}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const $=s=>document.querySelector(s);
+
+/* ===================== ข้อมูลสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) ===================== */
+const TODAY='2026-11-04';
+const MON=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const DOW=['อา','จ','อ','พ','พฤ','ศ','ส'];
+const shift=(iso,d)=>new Date(Date.parse(iso)+d*864e5).toISOString().slice(0,10);
+const fmt=iso=>{const [y,m,d]=iso.split('-').map(Number);return `${d} ${MON[m-1]} ${y+543}`};
+const fmtS=iso=>{const [,m,d]=iso.split('-').map(Number);return `${d} ${MON[m-1]}`};
+const dow=iso=>DOW[new Date(iso+'T00:00:00Z').getUTCDay()];
+const CLASSES=[{id:'c1',name:'ป.6/1',total:44},{id:'c2',name:'ป.6/2',total:42},{id:'c3',name:'ป.6/3',total:43}];
+const CL=id=>CLASSES.find(c=>c.id===id);
+const NICK=['ฟ้า','ใบบัว','มินนี่','ภูผา','น้ำใส','พลอย','กานต์','ต้นไม้','เมฆา','ข้าวหอม','ปลาทอง','ดวงดาว','แจ๋ว','ไอซ์','นุ่น','บีม','เจ','ต้นกล้า','มะลิ','ธารา','มะม่วง','สายฟ้า','พิมพ์','โอ๊ต','ขนมจีน','เฟิร์น','กัปตัน','น้ำหวาน','ภีม','มาย','อุ้ม','ปั้น','ต้า','แพรว','ก้อง','ฝ้าย','นนท์','ปุยฝ้าย','ชิน','ออม','วิน','ไข่มุก','ตะวัน','เบ๊น'];
+const nick=n=>NICK[(n-1)%NICK.length];
+const fullName=n=>`${n%2?'ด.ช.':'ด.ญ.'} ${nick(n)} สมมติ`;
+const ASGS=[
+  {id:'a2',title:'การบ้าน บทที่ 3 ทศนิยม',type:'การบ้าน',tc:'orange',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-20',due:'2026-10-27',per:{c1:{s:42,x:0},c2:{s:40,x:0}}},
+  {id:'a3',title:'ใบงาน 4 ร้อยละ',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-26',due:'2026-10-30',per:{c1:{s:40,x:0},c2:{s:38,x:0},c3:{s:35,x:0}}},
+  {id:'a12',title:'แบบฝึกหัด 12 แรงและการเคลื่อนที่',type:'แบบฝึกหัด',tc:'aqua',subj:'วิทยาศาสตร์',full:20,assigned:'2026-10-28',due:'2026-11-02',per:{c1:{s:30,x:0}}},
+  {id:'a4',title:'การบ้าน บทที่ 4 เศษส่วน',type:'การบ้าน',tc:'orange',subj:'คณิตศาสตร์',full:10,assigned:'2026-11-02',due:'2026-11-04',per:{c1:{s:30,x:0},c2:{s:35,x:0}}},
+  {id:'a6',title:'ใบงาน 6 สมการ',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,assigned:'2026-11-02',due:'2026-11-05',per:{c1:{s:37,x:1},c2:{s:12,x:0},c3:{s:0,x:0}}},
+  {id:'a7',title:'ชิ้นงาน โมเดลระบบสุริยะ',type:'ชิ้นงาน',tc:'green',subj:'วิทยาศาสตร์',full:30,assigned:'2026-10-29',due:'2026-11-12',per:{c1:{s:8,x:0},c3:{s:3,x:0}}},
+  {id:'a8',title:'ใบงาน 7 อัตราส่วน',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,assigned:'2026-11-03',due:'2026-11-14',per:{c1:{s:0,x:0}}},
+  {id:'a9',title:'กิจกรรม สำรวจพืชในโรงเรียน',type:'กิจกรรม',tc:'blue',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-10',due:null,per:{c2:{s:20,x:0}}},
+];
+const AS=id=>ASGS.find(a=>a.id===id);
+const EXC=[7,30];
+const ord=total=>Array.from({length:total},(_,k)=>((k*17)%total)+1);
+function seatsInit(aid,cid){
+  const a=AS(aid),per=a.per[cid]||{s:0,x:0},total=CL(cid).total,seats={};
+  for(let n=1;n<=total;n++)seats[n]='miss';
+  EXC.slice(0,per.x).forEach(n=>seats[n]='exc');
+  ord(total).filter(n=>seats[n]!=='exc').slice(0,per.s).forEach((n,i)=>{seats[n]=(a.due&&a.due<TODAY&&i%9===4)?'late':(i===7||i===19)&&per.s>10?'await':'scored'});
+  return seats;
+}
+const counts=seats=>{const c={scored:0,late:0,await:0,miss:0,exc:0};Object.values(seats).forEach(v=>c[v]++);c.sub=c.scored+c.late+c.await;c.counted=c.sub+c.miss;return c};
+const nextMiss=seats=>ord(Object.keys(seats).length).find(n=>seats[n]==='miss');
+const isLate=(recv,due)=>!!due&&recv>due;
+
+/* ===================== การ์ดต่อหน้า (ปรับการ์ด) ===================== */
+const CARDS={
+ scan:{title:'หน้าสแกน',keys:[
+  {key:'recent',title:'สแกนล่าสุด',icon:'clock',ds:'รายการที่สแกนในรอบนี้ · ยกเลิกผ่านเมนู',on:true},
+  {key:'hid',title:'ป้ายเครื่องยิง + ทดสอบ',icon:'barcode',ds:'บอกว่าเครื่องยิงพร้อมไหม และปุ่มทดสอบ',on:true},
+  {key:'hint',title:'คำแนะนำโหมด',icon:'info-circle',ds:'บรรทัดช่วยใต้ผลสแกน (เหมาะกับครูที่เพิ่งเริ่มใช้)',on:false},
+ ]},
+ att:{title:'หน้าเช็คชื่อ',keys:[
+  {key:'sum',title:'สรุปวันนี้',icon:'chart-bar',ds:'มา x จาก y คน แถบสี และตัวเลขแต่ละสถานะ',on:true,zone:'top'},
+  {key:'week',title:'แถบสัปดาห์',icon:'calendar',ds:'จันทร์–ศุกร์ ห้องนี้เช็คแล้วหรือยัง',on:true,zone:'top'},
+  {key:'scans',title:'สแกนล่าสุด',icon:'qrcode',ds:'แสดงเฉพาะตอนใช้โหมดสแกน QR',on:true,zone:'side'},
+  {key:'todo',title:'ใครยังไม่เช็ค',icon:'user-off',ds:'รายเลขที่ แตะแล้วเลื่อนไปช่องนั้น',on:false,zone:'side',sa:true},
+  {key:'away',title:'ขาดวันนี้',icon:'user-x',ds:'ขาด ลา ป่วย รายชื่อ (ใช้ตอนยืนหน้าห้อง)',on:false,zone:'side',sa:true},
+ ]},
+ random:{title:'หน้าสุ่มชื่อ',keys:[
+  {key:'hist',title:'เรียกแล้ว',icon:'users',ds:'ชิปคนที่ถูกเรียก เหลือกี่คนในรอบนี้ เริ่มรอบใหม่',on:true},
+  {key:'opts',title:'ตัวเลือก',icon:'list-numbers',ds:'ไม่ซ้ำจนครบ · จำนวนคน/กลุ่มละ',on:true},
+  {key:'timer',title:'จับเวลาตอบ',icon:'stopwatch',ds:'นับถอยหลัง 10/30/60 วินาทีหลังสุ่ม',on:false,sa:true},
+  {key:'pass',title:'ข้าม / เลิกทำ',icon:'arrow-back-up',ds:'ข้ามคนนี้ (ไม่นับว่าเรียกแล้ว) หรือเลิกทำครั้งล่าสุด',on:false,sa:true},
+  {key:'range',title:'ช่วงเลขที่',icon:'selector',ds:'สุ่มเฉพาะเลขที่ x ถึง y',on:false,sa:true},
+  {key:'pair',title:'จับคู่',icon:'users-group',ds:'สุ่ม 2 คน แสดงเป็นคู่ "A คู่กับ B"',on:false,sa:true},
+  {key:'gopts',title:'ตัวเลือกกลุ่ม',icon:'crown',ds:'เลือกจำนวนกลุ่ม · หัวหน้ากลุ่ม · คัดลอก',on:false,sa:true},
+ ]},
+};
+const defPrefs=p=>({order:CARDS[p].keys.map(k=>k.key),hidden:CARDS[p].keys.filter(k=>!k.on).map(k=>k.key)});
+const cardOn=(p,k)=>!S.prefs[p].hidden.includes(k);
+const cardOrder=(p,zone)=>S.prefs[p].order.filter(k=>cardOn(p,k)&&(!zone||(CARDS[p].keys.find(x=>x.key===k).zone===zone)));
+
+/* ===================== สถานะ ===================== */
+const DEV={
+  ipadP:{w:820,h:1180,label:'iPad ตั้ง 820×1180',u:18,touch:true,shell:'rail'},
+  ipadL:{w:1180,h:820,label:'iPad นอน 1180×820',u:18,touch:true,shell:'rail'},
+  desk:{w:1536,h:729,label:'คอม 1536×729',u:16,touch:false,shell:'rail'},
+  phone:{w:390,h:844,label:'มือถือ 390×844',u:18,touch:true,shell:'tabs'},
+};
+const PAGES={scan:'สแกน',attendance:'เช็คชื่อ',random:'สุ่มชื่อ'};
+const SUBS={
+  scan:{setup:'ตั้งค่ารอบ',type:'ระหว่างรอบ: กรอกทีละคน',full:'ระหว่างรอบ: ให้เต็ม',summary:'สรุปรอบ',pj:'ฉายจอ'},
+  attendance:{tap:'แตะเลือก',scan:'สแกน QR',period:'รายคาบ',pj:'ฉายจอ'},
+  random:{pick:'สุ่มคน',group:'จับกลุ่ม',pj:'ฉายจอ'},
+};
+const SCEN={normal:'วันปกติ (10:40)',offline:'ออฟไลน์ + ค้างส่ง',closed:'งานปิดรับจากอีกเครื่อง',unchecked:'ยังไม่เช็คชื่อ',backdated:'รับงานย้อนหลัง (C-03)'};
+const S={page:'scan',sub:{scan:'type',attendance:'tap',random:'pick'},dev:'ipadP',theme:'light',font:0,scen:'normal',
+  prefs:{scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random')},prefsOpen:false,
+  pj:null,pjPre:false,pjOther:false,pjHint:false,toast:null,menu:null,sheetMenu:false,dlg:null,
+  sc:null,at:null,rd:null};
+const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});
+const isWide=()=>S.dev==='ipadL'||S.dev==='desk';
+const isNarrow=()=>S.dev==='phone';
+const offline=()=>S.scen==='offline';
+
+function initSc(){
+  S.sc={asg:'a12',cls:'c1',mode:'type',recv:S.scen==='backdated'?'pick':'today',recvDate:S.scen==='backdated'?'2026-11-02':TODAY,showAll:false,started:true,ended:false,
+    seats:null,recent:[],fb:null,pend:null,entry:'',err:'',lastScore:7.5,sheet:null,undo:null,excAsk:null,closed:S.scen==='closed',failed:[],cur:null,confirmDrop:null,time:'10:42'};
+  S.sc.seats=seatsInit('a12','c1');
+  S.sc.failed=offline()?[
+    {id:1,n:14,asg:'แบบฝึกหัด 12',t:'10:12',reason:'งานปิดรับแล้ว — เปิดรับงานอีกครั้งในสมุดคะแนน แล้วกด "ลองใหม่"'},
+    {id:2,n:33,asg:'แบบฝึกหัด 12',t:'10:18',reason:'วันที่รับงานเป็นวันในอนาคต — แก้วันที่แล้วสแกนใหม่'},
+    {id:3,n:9,asg:'แบบฝึกหัด 12',t:'10:21',reason:'วันที่รับงานอยู่ก่อนวันมอบหมายงาน (28 ต.ค.)'},
+  ]:[];
+  if(offline()){[3,18,25,36].forEach(n=>{if(S.sc.seats[n]==='scored')S.sc.seats[n]='scored'});S.sc.dots={pend:[18,25,36,40,41,42,43],fail:[14,33,9]}}else S.sc.dots={pend:[],fail:[]};
+}
+function initAt(){
+  const mk=(cid,p,l,v,k,a)=>{const m={};let i=0;const o=ord(CL(cid).total);[[p,'p'],[l,'l'],[v,'v'],[k,'k'],[a,'a']].forEach(([n,s])=>{for(let j=0;j<n;j++)m[o[i++]]=s});return m};
+  S.at={cls:'c2',date:TODAY,mode:'tap',brush:'p',cycle:false,period:3,subj:'วิทยาศาสตร์',flash:null,scans:[],scanMsg:'',saving:false,pendN:0,
+    map:S.scen==='unchecked'?{c1:{},c2:{},c3:{}}:{c1:mk('c1',40,2,1,0,1),c2:mk('c2',30,1,0,1,0),c3:{}},per:{}};
+  S.at.map.c2=S.scen==='unchecked'?{}:S.at.map.c2;
+  if(S.sub.attendance==='period'){S.at.mode='period'}
+}
+function initRd(){
+  S.rd={cls:'c1',mode:'pick',count:1,norepeat:true,presentOnly:true,called:[11,3,28],cur:null,groups:null,timerSec:30,left:30,run:false,range:[1,44],useRange:false,byGroups:false,gsize:4,ngroups:5,leaders:true,pair:false,rolling:false,msg:''};
+  S.rd.cur=[28];
+}
+const absentSet=cid=>{const m=S.at.map[cid]||{};return Object.keys(m).filter(n=>m[n]==='a'||m[n]==='v'||m[n]==='k').map(Number)};
+
+const H=(function(){
+
+
+
+/* ===== แผงควบคุม ===== */
+const DEV={
+  ipadP:{w:820,h:1180,label:'iPad ตั้ง 820×1180',u:18,touch:true,shell:'rail',one:true},
+  ipadL:{w:1180,h:820,label:'iPad นอน 1180×820',u:18,touch:true,shell:'rail',one:false},
+  desk:{w:1536,h:729,label:'คอม 1536×729',u:16,touch:false,shell:'rail',one:false},
+  phone:{w:390,h:844,label:'มือถือ 390×844',u:18,touch:true,shell:'tabs',one:true},
+};
+const PAGES={home:'หน้าหลัก',prefs:'แผงปรับหน้าหลัก',sheet:'เมนูมือถือ (sheet)',list:'รายการจากตัวเลข'};
+const SCEN={normal:'วันปกติ (10:40)',morning:'เช้า ยังไม่เช็คชื่อ',empty:'ห้องใหม่ ยังไม่มีงาน',offline:'ออฟไลน์ + ค้างส่ง',termend:'เทอมสิ้นสุด',past:'ดูปีเก่า',loading:'กำลังโหลด'};
+const CARD_DEFS=[
+  {key:'open',title:'งานที่กำลังเก็บ',icon:'clipboard-list',ds:'ความคืบหน้าทุกห้อง เรียงใกล้กำหนดก่อน',span:'wide',on:true},
+  {key:'att',title:'เช็คชื่อวันนี้',icon:'user-check',ds:'ห้องไหนเช็คแล้ว ยังเหลือใคร',span:'side',on:true},
+  {key:'follow',title:'ต้องติดตาม',icon:'flag',ds:'นักเรียนที่ค้างส่งมากที่สุด',span:'side',on:true},
+  {key:'due',title:'ครบกำหนดวันนี้/พรุ่งนี้',icon:'calendar-due',ds:'ใครยังไม่ส่ง จะได้เตือนก่อนเลิกเรียน · คัดลอกไป LINE ได้',span:'side',on:true,sa:true},
+  {key:'absent',title:'ใครไม่มาวันนี้',icon:'user-x',ds:'ขาด ลา ป่วย รายห้อง หลังเช็คชื่อ',span:'side',on:true,sa:true},
+  {key:'classes',title:'ห้องของฉัน',icon:'school',ds:'จำนวนคน อัตราส่ง และมาเรียนรายห้อง',span:'wide',on:false},
+  {key:'queue',title:'ค้างในเครื่องนี้',icon:'device-mobile',ds:'รายการที่ยังไม่ขึ้นระบบ / ส่งไม่สำเร็จ',span:'side',on:false},
+  {key:'backup',title:'สำรองข้อมูล',icon:'database-export',ds:'สำรองล่าสุดและปุ่มดาวน์โหลด',span:'side',on:false},
+  {key:'term',title:'ภาคเรียน',icon:'calendar-stats',ds:'เทอมปัจจุบัน ช่วงวัน สัปดาห์ที่ผ่านไป',span:'side',on:false},
+];
+const DEFAULT_PREFS=()=>({v:1,order:CARD_DEFS.map(c=>c.key),hidden:CARD_DEFS.filter(c=>!c.on).map(c=>c.key)});
+const S={dev:'ipadP',page:'home',theme:'light',font:0,menu9:false,scen:'normal',prefs:DEFAULT_PREFS(),list:null,filter:'open',toast:'',showAll:false,confirmReset:false,live:'',hideNames:false,expandDue:{}};
+const F=()=>({...DEV[S.dev],u:S.font||DEV[S.dev].u});
+
+/* ===== ข้อมูลสมมติ (ชื่อสมมติทั้งหมด · "วันนี้" = อังคาร 4 พ.ย. 2569) =====
+   per[] ต่อห้อง = ClassProgress ของ /api/dashboard: s = ส่งแล้ว (รวมรอตรวจ) · a = รอตรวจ · m = ค้างส่ง (ไม่ส่ง และ เลยกำหนด/ปิดรับแล้ว — shared/metrics.ts workState) · x = ยกเว้น
+   คนที่ยังไม่ส่งแต่ยังไม่ถึงกำหนด = (ทั้งห้อง − x) − s − m  (ไม่นับ "ยังไม่ส่ง" ตาม README) */
+const CLASSES=[{id:'c1',name:'ป.6/1',total:44},{id:'c2',name:'ป.6/2',total:42},{id:'c3',name:'ป.6/3',total:43}];
+const OPEN=[
+  {id:'a4',assigned:'2026-11-02',title:'การบ้าน บทที่ 4 เศษส่วน',type:'การบ้าน',tc:'orange',subj:'คณิตศาสตร์',full:10,due:'2026-11-04',per:[{c:'c1',s:30,a:0,m:0,x:0},{c:'c2',s:35,a:2,m:0,x:0}]},
+  {id:'a6',assigned:'2026-11-02',title:'ใบงาน 6 สมการ',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,due:'2026-11-05',per:[{c:'c1',s:37,a:0,m:0,x:1},{c:'c2',s:12,a:3,m:0,x:0},{c:'c3',s:0,a:0,m:0,x:0}]},
+  {id:'a12',assigned:'2026-10-28',title:'แบบฝึกหัด 12 แรงและการเคลื่อนที่',type:'แบบฝึกหัด',tc:'aqua',subj:'วิทยาศาสตร์',full:20,due:'2026-11-02',per:[{c:'c1',s:30,a:5,m:14,x:0}]},
+  {id:'a3',assigned:'2026-10-26',title:'ใบงาน 4 ร้อยละ',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,due:'2026-10-30',per:[{c:'c1',s:40,a:0,m:4,x:0},{c:'c2',s:38,a:1,m:4,x:0},{c:'c3',s:35,a:0,m:8,x:0}]},
+  {id:'a2',assigned:'2026-10-20',title:'การบ้าน บทที่ 3 ทศนิยม',type:'การบ้าน',tc:'orange',subj:'คณิตศาสตร์',full:10,due:'2026-10-27',per:[{c:'c1',s:42,a:0,m:2,x:0},{c:'c2',s:40,a:0,m:2,x:0}]},
+  {id:'a7',assigned:'2026-10-29',title:'ชิ้นงาน โมเดลระบบสุริยะ',type:'ชิ้นงาน',tc:'green',subj:'วิทยาศาสตร์',full:30,due:'2026-11-12',per:[{c:'c1',s:8,a:8,m:0,x:0},{c:'c3',s:3,a:3,m:0,x:0}]},
+  {id:'a8',assigned:'2026-11-03',title:'ใบงาน 7 อัตราส่วน',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,due:'2026-11-14',per:[{c:'c1',s:0,a:0,m:0,x:0}]},
+  {id:'a9',assigned:'2026-10-10',title:'กิจกรรม สำรวจพืชในโรงเรียน',type:'กิจกรรม',tc:'blue',subj:'วิทยาศาสตร์',full:10,due:null,per:[{c:'c2',s:20,a:20,m:0,x:0}]},
+];
+const GRADING=[{id:'a5',title:'ใบงาน 5 ทศนิยม',type:'ใบงาน',tc:'violet',subj:'คณิตศาสตร์',full:10,due:'2026-10-28',closed:true,per:[{c:'c1',s:44,a:6,m:0,x:0},{c:'c2',s:40,a:0,m:0,x:2}]}];
+// รายชื่อสมมติ (เลขที่ + ชื่อเล่น) สำหรับการ์ด "ครบกำหนด" และ "ใครไม่มาวันนี้" — ของจริงมาจากฟิลด์ใหม่ dueSoon / absentToday ใน /api/dashboard (อ่านแถวเพิ่ม 0)
+const NICK=['ต้น','ฝน','บีม','มิว','ก้อง','แพร','ไอซ์','นุ่น','เจ','มะลิ','ธารา','พลอย','กานต์','เมฆ','ข้าวหอม','ดาว'];
+const names=(n,seed)=>Array.from({length:n},(_,i)=>`${((seed*7+i*5)%44)+1} ${NICK[(seed+i)%NICK.length]}`);
+const DUE_SOON=[{a:'a4',c:'c1',n:14},{a:'a4',c:'c2',n:7},{a:'a6',c:'c1',n:6},{a:'a6',c:'c2',n:30},{a:'a6',c:'c3',n:43}];
+const ABSENT={c1:[{st:'ขาด',who:['8 ก้อง','21 แพร']},{st:'ลา',who:['14 ณัฐ']}],c2:[{st:'ป่วย',who:['3 มิว']},{st:'สาย',who:['27 บีม']}],c3:[]};
+const FOLLOW=[{n:'ด.ช. ภูผา ตัวอย่าง',c:'ป.6/1',m:3,i:'ภผ'},{n:'ด.ญ. ขวัญฤดี ทดสอบ',c:'ป.6/2',m:3,i:'ขฤ'},{n:'ด.ช. ธนากร สมมติ',c:'ป.6/1',m:2,i:'ธน'},{n:'ด.ญ. นภัสวรรณ จำลอง',c:'ป.6/3',m:2,i:'นภ'},{n:'ด.ช. กฤตภาส ตัวอย่าง',c:'ป.6/2',m:2,i:'กภ'}];
+const MON=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const TODAY='2026-11-04';
+const fmt=iso=>{const [y,m,d]=iso.split('-').map(Number);return `${d} ${MON[m-1]} ${y+543}`};
+const days=iso=>Math.round((Date.parse(iso)-Date.parse(TODAY))/864e5);
+function dueChip(d){if(!d)return{cls:'muted',t:'ไม่มีกำหนดส่ง'};const n=days(d);
+  if(n<0)return{cls:'danger',t:`เลยกำหนด ${-n} วัน`,ic:'calendar-event'};if(n===0)return{cls:'warning',t:'ครบกำหนดวันนี้',ic:'clock'};if(n===1)return{cls:'warning',t:'ส่งพรุ่งนี้',ic:'clock'};return{cls:'muted',t:`ส่ง ${fmt(d)}`,ic:'calendar-event'}}
+const den=p=>CLASSES.find(c=>c.id===p.c).total-p.x;
+const notYet=p=>den(p)-p.s-p.m;
+function scen(){
+  const s=S.scen;
+  const att=s==='morning'?[{c:'c1',p:0,l:0,v:0,k:0,a:0,marked:0},{c:'c2',p:0,l:0,v:0,k:0,a:0,marked:0},{c:'c3',p:0,l:0,v:0,k:0,a:0,marked:0}]
+    :[{c:'c1',p:40,l:2,v:1,k:0,a:1,marked:44},{c:'c2',p:30,l:1,v:0,k:1,a:0,marked:32},{c:'c3',p:0,l:0,v:0,k:0,a:0,marked:0}];
+  return{
+    att, open:s==='empty'?[]:OPEN, grading:s==='empty'?[]:GRADING, follow:s==='empty'?[]:FOLLOW,
+    offline:s==='offline', pendingAtt:s==='offline'?1:0, pending:s==='offline'?7:0, failed:s==='offline'?2:0,
+    backupDays:s==='empty'?null:(s==='normal'?3:12), termEnd:s==='termend', past:s==='past', loading:s==='loading',
+    time:s==='morning'?'08:05':'10:40', lateAfter:'08:30',
+    term:s==='termend'?{name:'1/2569',start:'2026-05-16',end:'2026-10-31',ended:true}:{name:'2/2569',start:'2026-11-01',end:'2027-03-31',ended:false},
+  };
+}
+const CHIP=(cls,txt,icn)=>`<span class="chip ${cls}">${icn?ic(icn,16):''}${txt}</span>`;
+const CHIPBTN=(cls,txt,icn,act,k)=>`<button class="chipbtn ${cls}" data-a="${act}" data-k="${k}">${icn?ic(icn,16):''}${txt}</button>`;
+
+/* ===== เมนู ===== */
+function navGroups(){
+  return [
+    {label:'วันนี้',items:[{k:'home',l:'หน้าหลัก',i:'home'}]},
+    {label:'ในห้องเรียน',items:[{k:'scan',l:'สแกน',i:'scan'},{k:'attendance',l:'เช็คชื่อ',i:'user-check'},{k:'random',l:'สุ่มชื่อ',i:'dice-3'}]},
+    {label:'ตรวจงาน',items:[...(S.menu9?[{k:'work',l:'งาน',i:'clipboard-list',opt:true}]:[]),{k:'gradebook',l:'คะแนน',i:'notebook'},{k:'reports',l:'รายงาน',i:'chart-bar'}]},
+    {label:'จัดการ',items:[{k:'students',l:'นักเรียน',i:'users'},{k:'settings',l:'ตั้งค่า',i:'settings'}]},
+  ];
+}
+function railHtml(d){
+  const sc=scen();
+  const items=navGroups().map(g=>`<div class="rail-group" role="group" aria-label="${g.label}"><div class="rail-gl" aria-hidden="true">${g.label}</div>${g.items.map(it=>`<a class="rail-item${it.k==='home'?' on':''}${it.opt?' optitem':''}" href="#" data-a="nav" data-k="${it.k}" ${it.k==='home'?'aria-current="page"':''} ${it.opt?'title="ทางเลือก: หน้าใหม่ที่ทีมไม่แนะนำ"':''}>${ic(it.i,24)}<span>${it.l}</span></a>`).join('')}</div>`).join('');
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="rail-logo">${ic('checks',24)}</div>${items}<div class="rail-spacer"></div><div class="rail-sync">${syncBadge(sc)}</div><button class="rail-item" data-a="logout">${ic('logout',24)}<span>ออกจากระบบ</span></button></nav>`;
+}
+function tabsHtml(){
+  const t=[{k:'home',l:'หน้าหลัก',i:'home'},{k:'attendance',l:'เช็คชื่อ',i:'user-check'},{k:'scan'},{k:'gradebook',l:'คะแนน',i:'notebook'},{k:'more'}];
+  return `<nav class="tabs" aria-label="เมนู">${t.map(x=>x.k==='scan'?`<a class="tab tab-scan" href="#" data-a="nav" data-k="scan"><span class="tab-scan-btn">${ic('scan',24)}</span>สแกน</a>`
+    :x.k==='more'?`<button class="tab${S.page==='sheet'?' on':''}" data-a="sheet" aria-expanded="${S.page==='sheet'}" aria-haspopup="dialog" aria-controls="menu-sheet">${ic('menu-2',24)}เมนู</button>`
+    :`<a class="tab${x.k==='home'?' on':''}" href="#" data-a="nav" data-k="${x.k}" ${x.k==='home'?'aria-current="page"':''}><span class="pip" aria-hidden="true"></span>${ic(x.i,24)}${x.l}</a>`).join('')}</nav>`;
+}
+function sheetHtml(){
+  const sc=scen();
+  const groups=[{label:'ในห้องเรียน',items:[{k:'random',l:'สุ่มชื่อ',i:'dice-3'}]},{label:'ตรวจงาน',items:[...(S.menu9?[{k:'work',l:'งาน',i:'clipboard-list'}]:[]),{k:'reports',l:'รายงาน',i:'chart-bar'}]},{label:'จัดการ',items:[{k:'students',l:'นักเรียน',i:'users'},{k:'settings',l:'ตั้งค่า',i:'settings'}]}];
+  return `<div class="sheet-overlay" data-a="close"><div class="sheet" id="menu-sheet" role="dialog" aria-modal="true" aria-label="เมนู"><div class="sheet-grab"></div>
+    <div class="sheet-top">${termPill()}${syncBadge(sc)}</div>
+    ${groups.map(g=>`<div class="sheet-gl">${g.label}</div><div class="sheet-grid">${g.items.map(x=>`<a class="sheet-item" href="#" data-a="nav" data-k="${x.k}">${ic(x.i,24)}${x.l}</a>`).join('')}</div>`).join('')}
+    <button class="sheet-item danger ghost" data-a="logout">${ic('logout',20)}ออกจากระบบ</button></div></div>`;
+}
+function syncBadge(sc){
+  if(sc.offline)return `<span class="sync offline">${ic('wifi-off',16)}ออฟไลน์ · รอส่ง ${sc.pending}</span>`;
+  return `<span class="sync online">${ic('cloud-check',16)}ออนไลน์</span>`;
+}
+function termPill(){const sc=scen();return `<button class="pill${sc.past?' on':''}" data-a="term" aria-label="ภาคเรียนที่แสดง" aria-haspopup="listbox">${ic('calendar-event',16)}${sc.past?'2/2568':sc.term.name+' · ปัจจุบัน'} ${ic('chevron-down',16)}</button>`}
+
+/* ===== หน้าหลัก ===== */
+function header(d,sc){
+  const prefsBtn=d.shell==='tabs'?`<button class="icon ghost" data-a="prefs" aria-label="ปรับหน้าหลัก">${ic('layout-grid',24)}</button>`:`<button class="ghost" data-a="prefs">${ic('layout-grid',20)}ปรับหน้าหลัก</button>`;
+  return `<header class="uh"><div class="uh-l"><span class="uh-ic">${ic('home',24)}</span><div style="min-width:0"><h1 class="uh-title">สวัสดี ครูสมมติ</h1><div class="uh-sub"><span>โรงเรียนตัวอย่างวิทยา</span><span class="sep">อังคาร 4 พ.ย. 2569</span>${sc.offline?CHIP('warning','ออฟไลน์ · ข้อมูลเมื่อ 10:12','wifi-off'):''}</div></div></div>
+  <div class="uh-act">${termPill()}<button class="${d.shell==='tabs'?'icon ':''}ghost${S.hideNames?' on-hide':''}" data-a="hide" aria-pressed="${S.hideNames}" aria-label="ซ่อนชื่อนักเรียน" title="ซ่อนชื่อนักเรียนทุกการ์ด (ใช้ตอนสะท้อนจอขึ้นทีวี)">${ic(S.hideNames?'eye-off':'eye',d.shell==='tabs'?24:20)}${d.shell==='tabs'?'':(S.hideNames?'ซ่อนชื่ออยู่':'ซ่อนชื่อ')}</button>${prefsBtn}</div></header>${S.hideNames?`<div class="banner hidebar" role="status">${ic('eye-off',20)}<span><b>ซ่อนชื่อนักเรียนอยู่</b> · ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)<span class="opt">ข้อเสนอ SA</span></span><button class="ghost" data-a="hide">แสดงชื่อ</button></div>`:''}`;
+}
+function todoCard(sc){
+  const rows=[];
+  if(sc.failed>0)rows.push({ic:'cloud-x',cl:'dan',t:`<b>ส่งไม่สำเร็จ ${sc.failed} รายการ</b> — ต้องดู`,b:'ดูรายการ'});
+  if(sc.pending+sc.pendingAtt>0)rows.push({ic:'cloud-upload',cl:'warn',t:`<b>ค้างในเครื่องนี้:</b> เช็คชื่อ ${sc.pendingAtt} ห้อง · คะแนน ${sc.pending} รายการ — จะส่งเองเมื่อมีเน็ต`,b:'ดูเช็คชื่อ'});
+  if(sc.termEnd)rows.push({ic:'calendar-event',cl:'warn',t:`<b>ภาคเรียนที่ ${sc.term.name} สิ้นสุดเมื่อ ${fmt(sc.term.end)} แล้ว</b> — พร้อมเริ่มภาคเรียนถัดไปไหม`,b:'เริ่มภาคเรียนใหม่'});
+  if(sc.time>sc.lateAfter)sc.att.filter(a=>a.marked===0).forEach(a=>{const c=CLASSES.find(x=>x.id===a.c);rows.push({ic:'user-check',cl:'warn',t:`<b>${c.name} ยังไม่ได้เช็คชื่อ</b> · ${c.total} คน (เลยเวลา ${sc.lateAfter} แล้ว)`,b:'เช็คชื่อ'})});
+  if(sc.backupDays==null)rows.push({ic:'database-export',cl:'warn',t:`<b>ยังไม่เคยสำรองข้อมูล</b> · ควรสำรองสัปดาห์ละครั้ง`,b:'สำรองตอนนี้'});
+  else if(sc.backupDays>7)rows.push({ic:'database-export',cl:'warn',t:`<b>สำรองข้อมูลล่าสุด ${sc.backupDays} วันที่แล้ว</b> · ควรสำรองสัปดาห์ละครั้ง`,b:'สำรองตอนนี้'});
+  if(!rows.length)return '';
+  return `<section class="card todo" style="margin-bottom:12px" aria-labelledby="todo-h"><div class="todo-h"><span class="ic warn">${ic('alert-triangle',20)}</span><h2 id="todo-h" style="font-size:1em">ต้องทำตอนนี้</h2><span class="chip warning n">${rows.length}</span></div>
+    ${rows.map(r=>`<div class="todo-row"><span class="ic ${r.cl}">${ic(r.ic,20)}</span><span class="t">${r.t}</span><button data-a="todo">${r.b}</button></div>`).join('')}</section>`;
+}
+function attSummary(sc){
+  const complete=sc.att.filter(a=>a.marked===CLASSES.find(c=>c.id===a.c).total).length;
+  const none=sc.att.filter(a=>a.marked===0).length;
+  if(none===sc.att.length)return `ยังไม่ได้เช็คชื่อ ${sc.att.length} ห้อง`;
+  if(complete===sc.att.length)return 'วันนี้เช็คครบทุกห้อง';
+  return `ยังเหลือ ${sc.att.length-complete} ห้อง`;
+}
+function quick(sc,d){
+  const sub=k=>sc.past?'ใช้ห้องของปีนี้':k;
+  return `<div class="qa">
+    <a class="qa-btn primary" href="#" data-a="nav" data-k="scan"><span class="ic">${ic('scan',24)}</span><span><div class="t">สแกนส่งงาน</div><div class="s">${sub('ใช้เครื่องอ่าน QR หรือกล้อง')}</div></span></a>
+    <a class="qa-btn" href="#" data-a="nav" data-k="attendance"><span class="ic">${ic('user-check',24)}</span><span><div class="t">เช็คชื่อ</div><div class="s">${sub(attSummary(sc))}</div></span></a>
+    <a class="qa-btn" href="#" data-a="nav" data-k="random"><span class="ic">${ic('dice-3',24)}</span><span><div class="t">สุ่มชื่อ</div><div class="s">${sub('สุ่มเฉพาะคนที่มาเรียน')}</div></span></a>
+    <button class="qa-btn" data-a="newasg"><span class="ic">${ic('plus',24)}</span><span><div class="t">สร้างงาน</div><div class="s">หลายห้องพร้อมกัน</div></span></button>
+  </div>${S.scen==='normal'&&!sc.past?`<div class="resume">${ic('player-play',20)}<span class="grow"><b>สแกนต่อจากรอบล่าสุด</b> · ใบงาน 6 สมการ · ป.6/2 · กรอกทีละคน<span class="opt">ตัวเลือก M2-01</span></span><button class="primary" data-a="nav" data-k="scan">สแกนต่อ</button></div>`:''}`;
+}
+function stats(sc){
+  const awaiting=[...sc.open,...sc.grading].reduce((n,a)=>n+a.per.reduce((m,p)=>m+p.a,0),0);
+  const missing=sc.open.reduce((n,a)=>n+a.per.reduce((m,p)=>m+p.m,0),0);
+  const complete=sc.att.filter(a=>a.marked===CLASSES.find(c=>c.id===a.c).total).length;
+  const partial=sc.att.filter(a=>a.marked>0&&a.marked<CLASSES.find(c=>c.id===a.c).total).length;
+  const marked=sc.att.filter(a=>a.marked>0);const pres=marked.reduce((n,a)=>n+a.p+a.l,0),tot=marked.reduce((n,a)=>n+a.marked,0);
+  const pct=tot?Math.round(pres/tot*100):null;
+  const stale=sc.offline?' '+CHIP('warning','ข้อมูลเก่า'):'';
+  const st=(act,k,lbl,val,unit,icn,tone,hint,vt)=>`<button class="stat" data-a="${act}" data-k="${k}"><div class="top"><span class="lbl">${lbl}</span><span class="ic ${tone}">${ic(icn,20)}</span></div><div class="val${vt?' '+vt:''}">${val}${unit?`<small> ${unit}</small>`:''}</div><div class="hint">${hint}${stale}</div></button>`;
+  const attHint=`เช็คครบ ${complete} จาก ${sc.att.length} ห้อง${partial?` · บางส่วน ${partial}`:''}`;
+  return `<div class="stat-row">
+    ${st('list','open','งานที่เปิดรับ',sc.open.length,'','clipboard-list','neutral','กดดูรายห้อง')}
+    ${st('list','awaiting','รอตรวจ',awaiting,'ชิ้น','hourglass-empty','accent','รวมงานที่ปิดรับแล้ว')}
+    ${st('list','missing','ยังไม่ส่ง',missing,'ชิ้น','alert-circle','danger','นับเฉพาะงานที่ยังรับอยู่',missing?'danger':'')}
+    ${sc.past?st('nav','attendance','มาเรียนวันนี้','—','','user-check','success','ปีเก่า ไม่มีเช็คชื่อวันนี้','na')
+      :pct==null?st('nav','attendance','มาเรียนวันนี้','ยังไม่ได้เช็คชื่อ','','user-check','success',attHint,'na'):st('nav','attendance','มาเรียนวันนี้',pct+'%','','user-check','success',attHint)}
+  </div>`;
+}
+function progRow(a,p,sc){
+  const c=CLASSES.find(x=>x.id===p.c);const d=den(p);const pct=Math.round(p.s/d*100);const tone=p.m>0?'var(--fill-warning)':'var(--fill-success)';
+  const chips=[];
+  if(p.m>0)chips.push(CHIPBTN('danger',`ยังไม่ส่ง ${p.m}`,'alert-circle','nav','gradebook'));
+  if(p.a>0)chips.push(CHIPBTN('accent',`รอตรวจ ${p.a}`,'hourglass-empty','nav','gradebook'));
+  if(!a.closed&&!sc.past&&notYet(p)>0)chips.push(CHIPBTN('muted',`สแกนห้องนี้`,'scan','nav','scan'));
+  if(!chips.length)chips.push(CHIP('success','ครบแล้ว','circle-check'));
+  return `<div class="prog"><span>${c.name}</span><div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${c.name} ส่งแล้ว ${p.s} จาก ${d}"><div style="width:${pct}%;background:${tone}"></div></div><span class="n">${p.s}/${d}${p.x?`<br><span class="xs">ยกเว้น ${p.x}</span>`:''}</span><span class="chips">${chips.join('')}</span></div>`;
+}
+function cardOpen(sc,d){
+  const list=S.filter==='open'?[...sc.open].sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')):S.filter==='close'?sc.open.filter(shouldClose):sc.grading;
+  const shown=S.showAll?list:list.slice(0,5);
+  const body=!list.length?`<div class="empty"><div class="ei">${ic(S.filter==='open'?'clipboard-off':'circle-check',32)}</div>${S.filter==='open'?'ยังไม่มีงานที่เปิดรับ':S.filter==='close'?'ไม่มีงานที่ควรปิดรับ':'ไม่มีงานรอตรวจ'}${S.filter==='open'?`<div style="margin-top:8px"><button class="primary" data-a="newasg">${ic('plus',20)}สร้างงาน</button></div>`:''}</div>`
+   :shown.map(a=>{const dc=dueChip(a.due);return `<div class="asg"><div class="row" style="justify-content:space-between;align-items:flex-start"><div style="min-width:0"><div class="row" style="gap:6px;flex-wrap:wrap">${CHIP(a.tc,a.type)}<span class="xs">${a.subj} · เต็ม ${a.full}${a.closed?' · ปิดรับแล้ว':''}</span></div><div class="ttl ell">${a.title}</div></div><span class="row" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">${CHIP(dc.cls,a.due?dc.t:`ไม่มีกำหนดส่ง · เปิดมา ${-days(a.assigned)} วัน`,dc.ic)}${S.filter==='close'?`<button class="chipbtn muted" data-a="nav" data-k="gradebook">${ic('x',16)}ปิดรับงาน</button>`:''}</span></div>${a.per.map(p=>progRow(a,p,sc)).join('')}</div>`}).join('');
+  const more=list.length>5&&!S.showAll?`<button class="ghost" style="width:100%;margin-top:4px" data-a="showall">ดูทั้งหมด (${list.length}) ${ic('chevron-down',20)}</button>`:'';
+  return `<section class="card" aria-labelledby="h-open"><div class="ch"><h2 id="h-open">${ic('clipboard-list',20)}งานที่กำลังเก็บ</h2><div class="seg" role="group" aria-label="กรองงาน"><button class="${S.filter==='open'?'on':''}" data-a="filter" data-k="open" aria-pressed="${S.filter==='open'}">เปิดรับ (${sc.open.length})</button><button class="${S.filter==='grading'?'on':''}" data-a="filter" data-k="grading" aria-pressed="${S.filter==='grading'}">ปิดแล้ว-รอตรวจ (${sc.grading.length})</button><button class="${S.filter==='close'?'on':''}" data-a="filter" data-k="close" aria-pressed="${S.filter==='close'}">ควรปิดรับ (${sc.open.filter(shouldClose).length})</button></div></div>${S.filter==='close'?`<div class="xs" style="margin-bottom:6px">${ic('info-circle',16)} ไม่มีกำหนดส่งและเปิดเกิน 14 วัน หรือเลยกำหนดเกิน 7 วัน — เด็กที่ไม่ส่งจะนับ "ค้าง" เมื่อปิดรับ (D31)<span class="opt">ข้อเสนอ SA</span></div>`:''}${body}${more}
+    <div class="row" style="justify-content:flex-end;gap:4px;margin-top:4px"><button class="lk" data-a="newasg">${ic('plus',20)}สร้างงาน</button><button class="lk" data-a="nav" data-k="gradebook">สมุดคะแนน ›</button></div></section>`;
+}
+function cardAtt(sc){
+  const rows=sc.att.map(a=>{const c=CLASSES.find(x=>x.id===a.c);
+    if(a.marked===0)return `<button class="att row" style="justify-content:space-between" data-a="nav" data-k="attendance"><span style="font-weight:500">${c.name}</span>${CHIP('warning',`ยังไม่ได้เช็คชื่อ · ${c.total} คน`,'clock')}</button>`;
+    const partial=a.marked<c.total;const parts=[a.p&&`มา ${a.p}`,a.l&&`สาย ${a.l}`,a.v&&`ลา ${a.v}`,a.k&&`ป่วย ${a.k}`,a.a&&`ขาด ${a.a}`].filter(Boolean).join(' · ');
+    return `<button class="att" data-a="nav" data-k="attendance"><div class="row" style="justify-content:space-between"><span style="font-weight:500">${c.name}</span>${partial?CHIP('warning',`เช็คบางส่วน ${a.marked}/${c.total}`,'circle-half-2'):`<span class="xs num">${parts}</span>`}</div>${partial?`<div class="xs num">${parts} · เหลือ ${c.total-a.marked} คน</div>`:''}
+      <div class="stack" aria-hidden="true"><i style="flex:${a.p};background:var(--fill-success)"></i>${a.l?`<i style="flex:${a.l};background:var(--fill-warning)"></i>`:''}${a.v?`<i style="flex:${a.v};background:var(--fill-accent)"></i>`:''}${a.k?`<i style="flex:${a.k};background:var(--fill-purple)"></i>`:''}${a.a?`<i style="flex:${a.a};background:var(--fill-danger)"></i>`:''}${partial?`<i style="flex:${c.total-a.marked};background:var(--border-strong)"></i>`:''}</div></button>`}).join('');
+  return `<section class="card" aria-labelledby="h-att"><div class="ch"><h2 id="h-att">${ic('user-check',20)}เช็คชื่อวันนี้</h2><button class="lk" data-a="nav" data-k="attendance">เช็คชื่อ ›</button></div>${rows}</section>`;
+}
+function cardFollow(sc){
+  const body=!sc.follow.length?`<div class="sub" style="color:var(--text-success)">${ic('circle-check',16)} ไม่มีใครค้างส่ง</div>`
+    :S.hideNames?`<div class="kv"><span>นักเรียนที่ค้างส่ง</span><b>${sc.follow.length} คน</b></div><div class="xs">ซ่อนชื่ออยู่ — กด "แสดงชื่อ" ด้านบนเพื่อดูรายคน</div>`
+    :sc.follow.map(f=>`<button class="lrow" data-a="nav" data-k="students"><span class="av">${f.i}</span><span class="grow"><div class="ell">${f.n}</div><div class="xs">${f.c}</div></span>${CHIP('danger',`ยังไม่ส่ง ${f.m} ชิ้น`,'alert-circle')}</button>`).join('');
+  return `<section class="card" aria-labelledby="h-fol"><div class="ch"><h2 id="h-fol">${ic('flag',20)}ต้องติดตาม</h2><button class="lk" data-a="nav" data-k="reports">รายงาน ›</button></div>${body}</section>`;
+}
+function cardClasses(sc){
+  const body=!CLASSES.length?`<div class="empty"><div class="ei">${ic('mood-empty',32)}</div>ยังไม่มีนักเรียนในห้อง<div style="margin-top:8px"><button data-a="nav" data-k="students">นำเข้านักเรียน</button></div></div>`
+   :`<div class="cls-grid">${CLASSES.map(c=>{
+    const per=sc.open.flatMap(a=>a.per.filter(p=>p.c===c.id));const s=per.reduce((n,p)=>n+p.s,0),m=per.reduce((n,p)=>n+p.m,0);const rate=s+m?Math.round(s/(s+m)*100):null;
+    const a=sc.att.find(x=>x.c===c.id);const ap=a&&a.marked?Math.round((a.p+a.l)/a.marked*100)+'%':'ยังไม่เช็ค';
+    return `<div class="cls"><button class="cls-main" data-a="nav" data-k="students"><div class="row" style="justify-content:space-between"><span class="nm">${c.name}</span><span class="xs">${c.total} คน</span></div><div class="xs">อัตราส่ง ${rate==null?'—':rate+'%'} · มาเรียนวันนี้ ${ap}</div><div class="pbar" style="margin-top:6px"><div style="width:${rate||0}%"></div></div></button><button class="chipbtn muted" data-a="nav" data-k="attendance">${ic('user-check',16)}เช็คชื่อ</button></div>`}).join('')}</div>`;
+  return `<section class="card" aria-labelledby="h-cls"><div class="ch"><h2 id="h-cls">${ic('school',20)}ห้องของฉัน</h2><button class="lk" data-a="nav" data-k="students">นักเรียน ›</button></div>${body}</section>`;
+}
+function cardQueue(sc){
+  const n=sc.pending+sc.failed+sc.pendingAtt;
+  const body=!n?`<div class="sub" style="color:var(--text-success)">${ic('circle-check',16)} ทุกอย่างขึ้นระบบแล้ว</div>`
+    :`<div class="kv"><span class="row">${ic('cloud-upload',20)} คะแนน/การส่งงาน รอส่ง</span><b class="num">${sc.pending}</b></div><div class="kv"><span class="row">${ic('user-check',20)} เช็คชื่อ รอส่ง</span><span class="row"><b class="num">${sc.pendingAtt}</b><button class="chipbtn muted" data-a="nav" data-k="attendance">ดูเช็คชื่อ</button></span></div><div class="kv"><span class="row" style="color:var(--text-danger)">${ic('cloud-x',20)} ส่งไม่สำเร็จ</span><span class="row"><b class="num" style="color:var(--text-danger)">${sc.failed}</b><button class="chipbtn danger" data-a="todo">ดูรายการ</button></span></div><div class="xs" style="margin-top:6px">${sc.offline?'จะส่งให้เองเมื่อกลับมาออนไลน์':'กำลังส่ง…'} · <button class="lk" style="min-height:0;padding:0" data-a="nav" data-k="settings">ที่เก็บข้อมูลในเครื่อง ›</button></div>`;
+  return `<section class="card" aria-labelledby="h-q"><div class="ch"><h2 id="h-q">${ic('device-mobile',20)}ค้างในเครื่องนี้</h2>${syncBadge(sc)}</div>${body}</section>`;
+}
+function cardBackup(sc){
+  const t=sc.backupDays==null?'ยังไม่เคยสำรองข้อมูล':`สำรองล่าสุด ${sc.backupDays} วันที่แล้ว`;
+  return `<section class="card" aria-labelledby="h-bk"><div class="ch"><h2 id="h-bk">${ic('database-export',20)}สำรองข้อมูล</h2></div><div class="row" style="justify-content:space-between;flex-wrap:wrap"><div><div>${t}</div><div class="xs">ควรสำรองสัปดาห์ละครั้ง · ไฟล์มีข้อมูลนักเรียน เก็บให้ปลอดภัย</div></div><button data-a="nav" data-k="settings">${ic('database-export',20)}สำรองตอนนี้</button></div></section>`;
+}
+function cardTerm(sc){
+  const t=sc.term;const total=Math.round((Date.parse(t.end)-Date.parse(t.start))/6048e5);const wk=Math.max(0,Math.min(total,Math.ceil((Date.parse(TODAY)-Date.parse(t.start))/6048e5)));
+  return `<section class="card" aria-labelledby="h-tm"><div class="ch"><h2 id="h-tm">${ic('calendar-stats',20)}ภาคเรียน</h2><button class="lk" data-a="nav" data-k="settings">ตั้งค่าภาคเรียน ›</button></div><div class="kv"><span>ภาคเรียนปัจจุบัน</span><b>${t.name}</b></div><div class="kv"><span>ช่วงวัน</span><b>${fmt(t.start)} – ${fmt(t.end)}${t.ended?' (สิ้นสุดแล้ว)':''}</b></div><div class="kv"><span>สัปดาห์ที่ผ่านไป</span><b>${t.ended?total:wk} / ${total}</b></div><div class="pbar" style="margin-top:6px" role="progressbar" aria-valuenow="${t.ended?total:wk}" aria-valuemax="${total}" aria-label="สัปดาห์ที่ผ่านไป"><div style="width:${Math.round((t.ended?total:wk)/total*100)}%;background:var(--fill-accent)"></div></div><div class="kv"><span>ห้องในปีนี้</span><b>3 ห้อง · 129 คน</b></div>${t.ended?`<div class="row" style="justify-content:flex-end;margin-top:6px"><button data-a="todo">${ic('calendar-event',20)}เริ่มภาคเรียนใหม่</button></div>`:''}</section>`;
+}
+function cardDue(sc){
+  const rows=sc.open.length?DUE_SOON.filter(r=>sc.open.find(a=>a.id===r.a)):[];
+  const body=!rows.length?`<div class="sub" style="color:var(--text-success)">${ic('circle-check',16)} ไม่มีงานครบกำหนดวันนี้หรือพรุ่งนี้</div>`
+    :rows.map((r,i)=>{const a=sc.open.find(x=>x.id===r.a);const c=CLASSES.find(x=>x.id===r.c);const dc=dueChip(a.due);const open=!!S.expandDue[i];const list=names(r.n,i+3);
+      return `<div class="asg"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:6px"><div style="min-width:0"><div class="ttl ell">${a.title}</div><div class="xs">${c.name} · ${a.subj}</div></div>${CHIP(dc.cls,dc.t,dc.ic)}</div>
+        <div class="row" style="margin-top:6px;flex-wrap:wrap;gap:6px">${CHIP('danger',`ยังไม่ส่ง ${r.n} คน`,'alert-circle')}${S.hideNames?CHIP('muted','ซ่อนชื่ออยู่','eye-off'):`<button class="chipbtn muted" data-a="due-x" data-k="${i}" aria-expanded="${open}">${ic(open?'chevron-up':'chevron-down',16)}${open?'ซ่อนรายชื่อ':'ดูรายชื่อ'}</button>`}<button class="chipbtn muted" data-a="line">${ic('copy',16)}คัดลอกไป LINE</button><button class="chipbtn muted" data-a="nav" data-k="scan">${ic('scan',16)}สแกนห้องนี้</button></div>
+        ${open&&!S.hideNames?`<div class="namelist">${list.map(n=>`<button class="chipbtn muted" data-a="nav" data-k="students">${n}</button>`).join('')}</div>`:''}</div>`}).join('');
+  return `<section class="card" aria-labelledby="h-due"><div class="ch"><h2 id="h-due">${ic('calendar-due',20)}ครบกำหนดวันนี้/พรุ่งนี้<span class="opt">ข้อเสนอ SA</span></h2><button class="lk" data-a="nav" data-k="gradebook">สมุดคะแนน ›</button></div>${body}</section>`;
+}
+function cardAbsent(sc){
+  const rows=sc.att.map(a=>{const c=CLASSES.find(x=>x.id===a.c);
+    if(a.marked===0)return `<div class="kv"><span style="font-weight:500">${c.name}</span>${CHIP('warning','ยังไม่ได้เช็คชื่อ','clock')}</div>`;
+    const groups=ABSENT[a.c]||[];if(!groups.length)return `<div class="kv"><span style="font-weight:500">${c.name}</span>${CHIP('success','มาครบ','circle-check')}</div>`;
+    return `<div class="kv" style="align-items:flex-start"><span style="font-weight:500;min-width:3.2em">${c.name}</span><span class="grow" style="display:flex;flex-direction:column;gap:4px">${groups.map(g=>`<span class="row" style="flex-wrap:wrap;gap:4px"><b class="xs" style="min-width:2.6em">${g.st} ${g.who.length}</b>${S.hideNames?'':g.who.map(w=>`<button class="chipbtn muted" data-a="nav" data-k="students">${w}</button>`).join('')}</span>`).join('')}</span></div>`}).join('');
+  return `<section class="card" aria-labelledby="h-abs"><div class="ch"><h2 id="h-abs">${ic('user-x',20)}ใครไม่มาวันนี้<span class="opt">ข้อเสนอ SA</span></h2><button class="lk" data-a="nav" data-k="attendance">เช็คชื่อ ›</button></div>${rows}${S.hideNames?`<div class="xs" style="margin-top:4px">ซ่อนชื่ออยู่ — แสดงเฉพาะจำนวน</div>`:''}</section>`;
+}
+const shouldClose=a=>!a.closed&&((!a.due&&days(a.assigned)<=-14)||(a.due&&days(a.due)<=-7));
+const CARD_FN={open:cardOpen,att:cardAtt,follow:cardFollow,due:cardDue,absent:cardAbsent,classes:cardClasses,queue:cardQueue,backup:cardBackup,term:cardTerm};
+function cards(sc,d){
+  const vis=S.prefs.order.filter(k=>!S.prefs.hidden.includes(k)&&!(sc.past&&k==='att'));
+  if(!vis.length)return `<div class="card empty"><div class="ei">${ic('layout-grid',32)}</div>ยังไม่ได้เปิดการ์ดใดไว้<div style="margin-top:8px"><button data-a="prefs">${ic('layout-grid',20)}ปรับหน้าหลัก</button></div></div>`;
+  const html=k=>CARD_FN[k](sc,d);
+  if(d.one||S.dev==='phone')return `<div class="cols"><div>${vis.map(html).join('')}</div></div>`;
+  const wide=vis.filter(k=>CARD_DEFS.find(c=>c.key===k).span==='wide'),side=vis.filter(k=>CARD_DEFS.find(c=>c.key===k).span==='side');
+  if(!wide.length||!side.length)return `<div class="cols one"><div>${vis.map(html).join('')}</div></div>`;
+  return `<div class="cols"><div>${wide.map(html).join('')}</div><div>${side.map(html).join('')}</div></div>`;
+}
+function homeHtml(d){
+  const sc=scen();
+  if(sc.loading)return header(d,sc)+quick(sc,d)+`<div class="stat-row" aria-busy="true">${[1,2,3,4].map(()=>`<div class="stat" aria-hidden="true"><div class="skel" style="width:50%"></div><div class="skel" style="height:1.6em;width:35%"></div><div class="skel" style="width:70%"></div></div>`).join('')}</div><div class="cols${d.one||S.dev==='phone'?' one':''}"><div>${[1,2].map(()=>`<div class="card" aria-hidden="true"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:85%"></div><div class="skel" style="width:60%"></div></div>`).join('')}</div><div><div class="card" aria-hidden="true"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:70%"></div></div></div></div><span class="sr-only" role="status">กำลังโหลดหน้าหลัก</span>`;
+  const yearBanner=sc.past?`<div class="banner" role="status">${ic('history',20)}<span><b>ปีการศึกษา 2568</b> · ห้องและนักเรียนของปีนั้น · ยังแก้คะแนนย้อนหลังได้</span><button class="ghost" data-a="todo">กลับไปปีนี้</button></div>`:'';
+  return header(d,sc)+yearBanner+(sc.past?'':todoCard(sc))+quick(sc,d)+stats(sc)+cards(sc,d)+(sc.failed?`<button class="fab" data-a="todo">${ic('alert-triangle',20)}ส่งไม่สำเร็จ ${sc.failed}</button>`:'');
+}
+/* ===== แผงปรับหน้าหลัก ===== */
+function prefsHtml(){
+  const rows=S.prefs.order.map((k,i)=>{const c=CARD_DEFS.find(x=>x.key===k);const on=!S.prefs.hidden.includes(k);
+    return `<div class="pref${on?'':' off'}"><span class="ic">${ic(on?c.icon:'eye-off',20)}</span><span class="grow"><div class="nm">${c.title}${c.sa?'<span class="opt">ข้อเสนอ SA</span>':''}</div><div class="ds">${c.ds}</div></span>
+      <button class="switch" role="switch" aria-checked="${on}" aria-label="แสดงการ์ด ${c.title}" data-a="toggle" data-k="${k}"></button>
+      <span class="mv"><button class="icon ghost" data-a="move" data-k="${k}" data-d="-1" aria-label="เลื่อน ${c.title} ขึ้น" ${i===0?'disabled':''}>${ic('chevron-up',20)}</button><button class="icon ghost" data-a="move" data-k="${k}" data-d="1" aria-label="เลื่อน ${c.title} ลง" ${i===S.prefs.order.length-1?'disabled':''}>${ic('chevron-down',20)}</button></span></div>`}).join('');
+  const reset=S.confirmReset?`<span class="row" style="gap:6px"><span class="xs">คืนค่าเริ่มต้นทั้งหมด?</span><button class="ghost" data-a="reset-no">ไม่</button><button data-a="reset-yes">ใช่ คืนค่า</button></span>`:`<button class="ghost" data-a="reset">${ic('history',20)}คืนค่าเริ่มต้น</button>`;
+  return `<div class="drawer-scrim" data-a="close"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="prefs-h"><div class="drawer-head"><div><h2 class="t" id="prefs-h">ปรับหน้าหลัก</h2><div class="xs">เปิด/ปิดและเรียงการ์ด · บันทึกทันที ใช้กับทุกเครื่องที่เข้าสู่ระบบ</div></div><button class="icon ghost" aria-label="ปิด" data-a="close">${ic('x',20)}</button></div>
+    <div class="lock">${ic('info-circle',16)} ปิดไม่ได้: ต้องทำตอนนี้ · ปุ่มลัด · ตัวเลข 4 ช่อง</div><div class="xs" style="margin-bottom:4px">บนจอกว้าง การ์ดกว้าง (งานที่กำลังเก็บ ห้องของฉัน) อยู่คอลัมน์ซ้าย ที่เหลืออยู่ขวา · ลำดับมีผลในคอลัมน์เดียวกัน</div>${rows}
+    <span class="sr-only" role="status" aria-live="polite" id="prefs-live">${S.live}</span>
+    <div class="row" style="justify-content:space-between;margin-top:10px;flex-wrap:wrap">${reset}<button class="primary" data-a="close">เสร็จ</button></div></div></div>`;
+}
+/* ===== รายการจากตัวเลข (Drawer เดิม) ===== */
+function listHtml(){
+  const sc=scen();const k=S.list||'open';
+  const T={open:['งานที่เปิดรับ','ส่งแล้ว / ทั้งห้อง แยกตามห้องและงาน'],awaiting:['งานรอตรวจ','รวมงานที่ปิดรับแล้วแต่ยังตรวจไม่เสร็จ'],missing:['ยังไม่ส่ง','เฉพาะงานที่ยังเปิดรับ — งานที่ปิดแล้วไม่นับ']}[k];
+  const src=k==='awaiting'?[...sc.open,...sc.grading]:sc.open;
+  const rows=[];src.forEach(a=>a.per.forEach(p=>{const n=k==='open'?p.s:k==='awaiting'?p.a:p.m;if(k==='open'||n>0)rows.push({a,p,n})}));
+  return `<div class="drawer-scrim" data-a="close"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="list-h"><div class="drawer-head"><div><h2 class="t" id="list-h">${T[0]} · ${k==='open'?sc.open.length:rows.reduce((n,r)=>n+r.n,0)}</h2><div class="xs">${T[1]}</div></div><button class="icon ghost" aria-label="ปิด" data-a="close">${ic('x',20)}</button></div>
+    ${!rows.length?`<div class="empty"><div class="ei">${ic('circle-check',32)}</div>ไม่มีรายการ</div>`:rows.map(r=>{const c=CLASSES.find(x=>x.id===r.p.c);return `<button class="lrow" data-a="nav" data-k="gradebook">${CHIP('muted',c.name)}<span class="grow"><div class="ell" style="font-weight:500">${r.a.title}</div><div class="xs">${r.a.subj}${r.a.closed?' · ปิดรับแล้ว':''}${r.a.due?` · ส่ง ${fmt(r.a.due)}`:''}</div></span>${k==='open'?CHIP('muted',`${r.n}/${den(r.p)}`):CHIP(k==='missing'?'danger':'accent',`${k==='missing'?'ยังไม่ส่ง':'รอตรวจ'} ${r.n}`)}</button>`}).join('')}</div></div>`;
+}
+function render(){window.R2render()}
+function toast(t){S.toast=t;render();clearTimeout(toast.h);toast.h=setTimeout(()=>{S.toast='';render()},2200)}
+function act(e,t){const a=t.dataset.a,k=t.dataset.k;
+  if(a==='nav'){window.R2nav(k);return}
+  if(a==='logout'){toast('ออกจากระบบ (จำลอง)');return}
+  if(a==='term'){toast('เปิดตัวเลือกภาคเรียน (ของเดิม)');return}
+  if(a==='prefs'){S.page='prefs';S.confirmReset=false;render();return}
+  if(a==='sheet'){S.page=S.page==='sheet'?'home':'sheet';render();return}
+  if(a==='close'){if(e.target!==t&&!t.classList.contains('icon')&&!t.classList.contains('primary'))return;S.page='home';S.confirmReset=false;render();return}
+  if(a==='list'){S.list=k;S.page='list';render();return}
+  if(a==='filter'){S.filter=k;S.showAll=false;render();return}
+  if(a==='showall'){S.showAll=true;render();return}
+  if(a==='newasg'){toast('เปิดหน้าต่าง "สร้างงาน" (หน้าต่างเดิม)');return}
+  if(a==='todo'){toast('ไปทำรายการนั้น (จำลอง)');return}
+  if(a==='hide'){S.hideNames=!S.hideNames;render();return}
+  if(a==='due-x'){S.expandDue[k]=!S.expandDue[k];render();return}
+  if(a==='line'){toast('คัดลอกรายชื่อไป LINE แล้ว (ข้อความแบบเดียวกับหน้ารายงาน)');return}
+  if(a==='toggle'){const h=S.prefs.hidden;const i=h.indexOf(k);if(i>=0)h.splice(i,1);else h.push(k);S.live=`${CARD_DEFS.find(c=>c.key===k).title}: ${i>=0?'แสดง':'ซ่อน'}`;save();return}
+  if(a==='move'){const o=S.prefs.order,i=o.indexOf(k),j=i+(+t.dataset.d);if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];S.live=`ย้าย ${CARD_DEFS.find(c=>c.key===k).title} ไปลำดับ ${j+1}`;save();return}
+  if(a==='reset'){S.confirmReset=true;render();return}
+  if(a==='reset-no'){S.confirmReset=false;render();return}
+  if(a==='reset-yes'){S.prefs=DEFAULT_PREFS();S.confirmReset=false;S.live='คืนค่าเริ่มต้นแล้ว';save();return}
+}
+function save(){toast('บันทึกแล้ว · ใช้กับทุกเครื่อง')}
+
+return {S,homeHtml,prefsHtml,listHtml,act,DEFAULT_PREFS};
+
+})();
+
+/* ===================== เปลือกแอป (rail / แท็บ / sheet) ===================== */
+const NAV=[
+  {label:'วันนี้',items:[{k:'home',l:'หน้าหลัก',i:'home'}]},
+  {label:'ในห้องเรียน',items:[{k:'scan',l:'สแกน',i:'scan'},{k:'attendance',l:'เช็คชื่อ',i:'user-check'},{k:'random',l:'สุ่มชื่อ',i:'dice-3'}]},
+  {label:'ตรวจงาน',items:[{k:'gradebook',l:'คะแนน',i:'notebook'},{k:'reports',l:'รายงาน',i:'chart-bar'}]},
+  {label:'จัดการ',items:[{k:'students',l:'นักเรียน',i:'users'},{k:'settings',l:'ตั้งค่า',i:'settings'}]},
+];
+function syncBadge(){
+  const n=S.sc&&S.sc.dots?S.sc.dots.pend.length:0;
+  if(offline())return `<span class="sync offline">${ic('wifi-off',16)}ออฟไลน์ · รอส่ง ${n||7}</span>`;
+  return `<span class="sync online">${ic('cloud-check',16)}ออนไลน์</span>`;
+}
+function railHtml(){
+  const g=NAV.map(x=>`<div class="rail-group" role="group" aria-label="${x.label}"><div class="rail-gl" aria-hidden="true">${x.label}</div>${x.items.map(it=>`<a class="rail-item${it.k===S.page?' on':''}" href="#${it.k}" data-a="nav" data-k="${it.k}" ${it.k===S.page?'aria-current="page"':''}>${ic(it.i,24)}<span>${it.l}</span></a>`).join('')}</div>`).join('');
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="rail-logo">${ic('checks',24)}</div>${g}<div class="rail-spacer"></div><div class="rail-sync">${syncBadge()}</div><button class="rail-item" data-a="logout">${ic('logout',24)}<span>ออกจากระบบ</span></button></nav>`;
+}
+function tabsHtml(){
+  const t=[{k:'home',l:'หน้าหลัก',i:'home'},{k:'attendance',l:'เช็คชื่อ',i:'user-check'},{k:'scan'},{k:'gradebook',l:'คะแนน',i:'notebook'},{k:'more'}];
+  const more=['random','reports','students','settings'].includes(S.page);
+  return `<nav class="tabs" aria-label="เมนู">${t.map(x=>x.k==='scan'?`<a class="tab tab-scan${S.page==='scan'?' on':''}" href="#scan" data-a="nav" data-k="scan"><span class="tab-scan-btn">${ic('scan',24)}</span>สแกน</a>`
+   :x.k==='more'?`<button class="tab${(S.sheetMenu||S.page==='random')?' on':''}" data-a="sheetmenu" aria-expanded="${S.sheetMenu}" aria-haspopup="dialog" aria-controls="menu-sheet"><span class="pip" aria-hidden="true"></span>${ic('menu-2',24)}เมนู</button>`
+   :`<a class="tab${x.k===S.page?' on':''}" href="#${x.k}" data-a="nav" data-k="${x.k}" ${x.k===S.page?'aria-current="page"':''}><span class="pip" aria-hidden="true"></span>${ic(x.i,24)}${x.l}</a>`).join('')}</nav>`;
+}
+function sheetHtml(){
+  const groups=[{label:'ในห้องเรียน',items:[{k:'random',l:'สุ่มชื่อ',i:'dice-3'}]},{label:'ตรวจงาน',items:[{k:'reports',l:'รายงาน',i:'chart-bar'}]},{label:'จัดการ',items:[{k:'students',l:'นักเรียน',i:'users'},{k:'settings',l:'ตั้งค่า',i:'settings'}]}];
+  return `<div class="sheet-overlay" data-a="closeov"><div class="sheet" id="menu-sheet" role="dialog" aria-modal="true" aria-label="เมนู"><div class="sheet-grab"></div><div class="sheet-top">${syncBadge()}</div>
+   ${groups.map(g=>`<div class="sheet-gl" style="font-size:var(--fs-xs);color:var(--text-muted);padding:4px 4px 0">${g.label}</div><div class="sheet-grid">${g.items.map(x=>`<a class="sheet-item${x.k===S.page?' on':''}" href="#${x.k}" data-a="nav" data-k="${x.k}">${ic(x.i,24)}${x.l}</a>`).join('')}</div>`).join('')}
+   <button class="sheet-item danger ghost" data-a="logout">${ic('logout',20)}ออกจากระบบ</button></div></div>`;
+}
+const badge=(cls,txt,i)=>`<span class="hm-chip ${cls}">${i?ic(i,16):''}${txt}</span>`;
+const chipBtn=(cls,txt,i,a,k,extra='')=>`<button class="hm-chip ${cls}" data-a="${a}" ${k!=null?`data-k="${k}"`:''} ${extra}>${i?ic(i,16):''}${txt}</button>`;
+function pageHead(icon,title,sub){
+  return `<header class="pghead"><div class="hr"><span class="pgtile">${ic(icon,24)}</span><div><h1>${title}</h1>${sub?`<div class="tip">${sub}</div>`:''}</div></div><div class="act">${syncBadge()}${prefsBtn()}${pjBtn()}</div></header>`;
+}
+const prefsBtn=()=>`<button class="ghost ${isNarrow()?'ib':''}" data-a="prefs" aria-label="ปรับการ์ด">${ic('layout-grid',20)}${isNarrow()?'':'ปรับการ์ด'}</button>`;
+function pjBtn(){
+  const P=S.pjPref||{th:'dark',sz:2};
+  return `<span class="menu"><button class="${isNarrow()?'ib':''}" data-a="pjmenu" aria-haspopup="dialog" aria-expanded="${S.menu==='pj'}" aria-label="โหมดฉายจอ">${ic('presentation',20)}${isNarrow()?'':'โหมดฉายจอ'}</button>
+   ${S.menu==='pj'?`<div class="pop right pjpre" role="dialog" aria-label="ตั้งค่าโหมดฉายจอ"><div class="hd">ธีมหน้าจอ</div><div class="seg"><button class="${P.th==='dark'?'on':''}" data-a="pjth" data-k="dark">เข้ม</button><button class="${P.th==='light'?'on':''}" data-a="pjth" data-k="light">สว่าง</button></div>
+   <div class="hd">ขนาดตัวอักษร</div><div class="seg"><button class="${P.sz==1?'on':''}" data-a="pjsz" data-k="1">มาตรฐาน</button><button class="${P.sz==2?'on':''}" data-a="pjsz" data-k="2">ใหญ่</button><button class="${P.sz==3?'on':''}" data-a="pjsz" data-k="3">ใหญ่มาก</button></div>
+   <button class="primary" data-a="pjstart" style="margin-top:6px">${ic('presentation',20)}เริ่มฉายจอ</button><div class="tip">คะแนนและเปอร์เซ็นต์รายคนจะถูกซ่อน · กดค้างปุ่ม × 1 วินาทีเพื่อออก</div></div>`:''}</span>`;
+}
+
+/* ===================== สแกน ===================== */
+const recvText=()=>S.sc.recvDate===TODAY?'วันนี้':fmtS(S.sc.recvDate);
+const recvBack=()=>S.sc.recvDate!==TODAY;
+function ringSvg(frac,size=72,color='var(--fill-success)'){
+  const r=size/2-6,c=2*Math.PI*r;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--border)" stroke-width="8"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c*frac} ${c}" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`;
+}
+function setupHtml(){
+  const sc=S.sc,a=AS(sc.asg);
+  const list=[...ASGS].sort((x,y)=>(x.due||'9999').localeCompare(y.due||'9999'));
+  const shown=sc.showAll?list:list.slice(0,5);
+  const xy=(aa,cid)=>{const p=aa.per[cid],t=CL(cid).total;return `${CL(cid).name} <b>${p.s}/${t-p.x}</b>`};
+  const cards=shown.map(aa=>`<button class="sc-asg${aa.id===sc.asg?' on':''}" data-a="pickasg" data-k="${aa.id}" aria-pressed="${aa.id===sc.asg}">${aa.id===sc.asg?`<span class="tick">${ic('circle-check',20)}</span>`:''}
+    <div class="row" style="gap:6px;flex-wrap:wrap"><span class="chip ${aa.tc}">${aa.type}</span><span class="tip">${aa.subj} · เต็ม ${aa.full}</span></div><div class="ttl">${aa.title}</div>
+    <div class="pc">${Object.keys(aa.per).map(c=>`<span class="xy">${xy(aa,c)}</span>`).join('')}${aa.due?`<span class="xy">${ic('calendar-event',14)}ส่ง ${fmtS(aa.due)}</span>`:''}</div></button>`).join('');
+  const modes=[['full','circle-check','ให้คะแนนเต็ม','ยิงแล้วได้เต็มทันที'],['type','pencil','กรอกทีละคน','ยิงแล้วพิมพ์คะแนน'],['later','inbox','รับงานก่อน','ตรวจแล้วค่อยให้คะแนน']];
+  return `${pageHead('scan','สแกนส่งงาน','เลือกงาน ห้อง และวิธีให้คะแนน')}
+  <div class="sc-step"><span class="sn">1</span>เลือกงาน <span class="tip" style="margin-left:auto">${ic('refresh',14)} ตัวเลขอัปเดตสดจากงานที่เลือก</span></div>
+  <div class="asg-grid" role="group" aria-label="เลือกงาน">${cards}</div>
+  ${list.length>5&&!sc.showAll?`<button class="ghost" style="width:100%;margin:-4px 0 10px" data-a="showall">ดูทั้งหมด (${list.length}) ${ic('chevron-down',20)}</button>`:''}
+  <div class="sc-step"><span class="sn">2</span>เลือกห้อง</div>
+  <div class="chiprow" style="margin-bottom:12px">${Object.keys(a.per).map(c=>{const p=a.per[c],t=CL(c).total;return `<button class="pill${c===sc.cls?' on':''}" data-a="pickcls" data-k="${c}" aria-pressed="${c===sc.cls}">${CL(c).name} <span class="n">ส่งแล้ว ${p.s}/${t-p.x}${p.x?` · ยกเว้น ${p.x}`:''}</span></button>`}).join('')}</div>
+  <div class="sc-step"><span class="sn">3</span>วิธีให้คะแนน</div>
+  <div class="modes" role="group" aria-label="วิธีให้คะแนน">${modes.map(m=>`<button class="mode${sc.mode===m[0]?' on':''}" data-a="pickmode" data-k="${m[0]}" aria-pressed="${sc.mode===m[0]}">${ic(m[1],24)}<span><div class="t">${m[2]}</div><div class="s">${m[3]}</div></span></button>`).join('')}
+   <button class="mode opt4" data-a="toast" data-k="ตรวจบัตร: ข้อเสนอ ยังไม่รวมในรอบนี้ (สแกนทั้งห้องโดยไม่บันทึกงาน เพื่อเช็กสติกเกอร์ผิดเล่ม)" title="ตัวเลือก">${ic('qrcode',24)}<span><div class="t">ตรวจบัตร <span class="badge-sa">ตัวเลือก</span></div><div class="s">สแกนทั้งห้อง ไม่บันทึกงาน</div></span></button></div>
+  <div class="startbar"><div class="grow"><div style="font-weight:500">รอบนี้: ${a.title}</div><div class="tip">${CL(sc.cls).name} · ${a.subj} · เต็ม ${a.full} · ${{full:'ให้คะแนนเต็ม',type:'กรอกทีละคน',later:'รับงานก่อน'}[sc.mode]}</div></div>
+   <span class="tip">${ic('barcode',16)} เครื่องยิง · ${ic('camera',16)} กล้อง</span><button class="primary" data-a="startround">${ic('player-play',20)}เริ่มสแกน ${CL(sc.cls).name}</button></div>`;
+}
+function ctxHtml(){
+  const sc=S.sc,a=AS(sc.asg);
+  const clsMenu=`<span class="menu"><button data-a="menu" data-k="cls" aria-haspopup="menu" aria-expanded="${S.menu==='cls'}">${CL(sc.cls).name} ${ic('chevron-down',16)}</button>${S.menu==='cls'?`<div class="pop" role="menu"><div class="hd">เปลี่ยนห้อง (งานเดียวกัน)</div>${Object.keys(a.per).map(c=>`<button role="menuitem" class="${c===sc.cls?'on':''}" data-a="swcls" data-k="${c}">${CL(c).name}</button>`).join('')}</div>`:''}</span>`;
+  const modeLbl={full:'ให้คะแนนเต็ม',type:'กรอกทีละคน',later:'รับงานก่อน'}[sc.mode];
+  const modeMenu=`<span class="menu"><button data-a="menu" data-k="mode" aria-haspopup="menu" aria-expanded="${S.menu==='mode'}">เต็ม ${a.full} · ${modeLbl} ${ic('chevron-down',16)}</button>${S.menu==='mode'?`<div class="pop" role="menu"><div class="hd">ใช้กับการสแกนครั้งถัดไป</div>${[['full','ให้คะแนนเต็ม'],['type','กรอกทีละคน'],['later','รับงานก่อน']].map(m=>`<button role="menuitem" class="${sc.mode===m[0]?'on':''}" data-a="swmode" data-k="${m[0]}">${m[1]}</button>`).join('')}</div>`:''}</span>`;
+  const days=[];for(let d=a.assigned;d<=TODAY;d=shift(d,1))days.push(d);
+  const dateMenu=`<span class="menu"><button data-a="menu" data-k="date" aria-haspopup="dialog" aria-expanded="${S.menu==='date'}">${ic('calendar-event',16)}วันที่รับ: ${recvText()} ${ic('chevron-down',16)}</button>${S.menu==='date'?`<div class="pop" role="dialog" aria-label="วันที่รับงาน"><div class="hd">รับงานเมื่อวันที่ (${fmtS(a.assigned)} – วันนี้)</div>
+    <div class="seg" style="margin:2px"><button class="${sc.recvDate===TODAY?'on':''}" data-a="recv" data-k="${TODAY}">วันนี้</button><button class="${sc.recvDate===shift(TODAY,-1)?'on':''}" data-a="recv" data-k="${shift(TODAY,-1)}">เมื่อวาน</button></div>
+    <div class="dgrid">${days.map(d=>`<button class="${d===sc.recvDate?'on':''}" data-a="recv" data-k="${d}" aria-label="${fmt(d)}">${fmtS(d)}</button>`).join('')}</div>
+    <div class="tip" style="padding:4px 8px">เลือกวันอนาคตหรือก่อนวันมอบหมายไม่ได้ · เปลี่ยนได้ระหว่างรอบ มีผลกับงานที่สแกนหลังจากนั้น · จบรอบแล้วกลับเป็นวันนี้</div></div>`:''}</span>`;
+  const back=recvBack();
+  return `<div class="ctx${back?' back':''}" role="group" aria-label="รอบสแกน">
+   <div class="r">${clsMenu}<span class="chip aqua">${a.subj}</span><span class="chip ${a.tc}">${a.type}</span><span style="flex:1"></span>
+     <button class="ib" data-a="prefs" aria-label="ปรับการ์ด" style="padding:0">${ic('layout-grid',20)}</button>${pjBtn()}<button data-a="endround" style="font-weight:600">${ic('flag-check',20)}จบรอบนี้</button></div>
+   <div class="r">${modeMenu}${dateMenu}${back?`<span class="backtxt">${ic('alert-triangle',20)}กำลังรับงานย้อนหลัง · ${fmt(sc.recvDate)}</span><button data-a="recv" data-k="${TODAY}">กลับเป็นวันนี้</button>`:''}</div></div>`;
+}
+function fbHtml(){
+  const f=S.sc.fb||{kind:'idle',title:'พร้อมสแกน',sub:'ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter',icon:'scan'};
+  return `<div class="fb ${f.kind}" role="status" aria-live="polite"><span class="ic">${ic(f.icon||'check',26)}</span><div style="min-width:0"><div class="nm">${f.title}</div><div class="sb">${f.sub||''}</div></div>${f.score?`<div class="sc">${f.score}</div>`:''}</div>`;
+}
+function padHtml(){
+  const sc=S.sc,a=AS(sc.asg),p=sc.pend,full=a.full;
+  const late=isLate(sc.recvDate,a.due);
+  const quick=[[full,`${full}/${full}`,'เต็ม'],[full-1,`${full-1}/${full}`,''],[full-2,`${full-2}/${full}`,''],[full/2,`${full/2}/${full}`,'ครึ่ง'],[sc.lastScore,`${sc.lastScore}/${full}`,'ล่าสุด']];
+  return `<section class="card padcard pad" aria-label="ให้คะแนน เลขที่ ${p.n}"><div class="head"><span class="nm">${nick(p.n)} ${nick(p.n)==='มะม่วง'?'':''}</span><span class="no">เลขที่ ${p.n}</span>${late?badge('warning','ส่งช้า','clock'):badge('success','ทันกำหนด','circle-check')}${recvBack()?badge('muted','รับ '+fmtS(sc.recvDate),'calendar-event'):''}<button class="ghost later" data-a="later">${ic('inbox',20)}ให้คะแนนทีหลัง</button></div>
+   <div class="padbody"><div class="padl"><div class="entry"><div class="box" aria-label="คะแนน" aria-live="polite">${sc.entry||'<span style="color:var(--text-muted)">–</span>'}</div><span class="full">/ ${full}</span></div><div class="err" role="alert">${sc.err}</div>
+     <div class="quick">${quick.map(q=>`<button data-a="quick" data-k="${q[0]}"><b>${q[1]}</b>${q[2]?`<small>${q[2]}</small>`:''}</button>`).join('')}</div></div>
+    <div class="padr"><div class="keys">${[1,2,3,4,5,6,7,8,9].map(k=>`<button data-a="key" data-k="${k}">${k}</button>`).join('')}<button data-a="key" data-k=".5">.5</button><button data-a="key" data-k="0">0</button><button data-a="key" data-k="bk" aria-label="ลบ">${ic('backspace',24)}</button></div>
+     <button class="primary save" data-a="savescore">${ic('check',24)} บันทึก ${sc.entry||'–'}/${full}</button></div></div></section>`;
+}
+function gridHtml(){
+  const sc=S.sc,a=AS(sc.asg),c=counts(sc.seats),total=Object.keys(sc.seats).length;
+  const pend=sc.dots.pend,fail=sc.dots.fail;
+  const sym={scored:'check',late:'clock',await:'pencil',exc:'ban',miss:''};
+  const lab={scored:'ส่งแล้ว',late:'ส่งช้า',await:'รอคะแนน',miss:'ยังไม่ส่ง',exc:'ยกเว้น'};
+  const cells=Array.from({length:total},(_,i)=>i+1).map(n=>{const s=sc.seats[n];
+    return `<button class="cell ${s}${sc.cur===n?' cur':''}" data-a="seat" data-k="${n}" ${sc.closed?'disabled':''} aria-label="เลขที่ ${n} ${nick(n)} ${lab[s]}${pend.includes(n)?' รอส่งขึ้นระบบ':''}${fail.includes(n)?' ส่งไม่สำเร็จ':''}"><span class="t"><span>${n}</span>${sym[s]?ic(sym[s],16):''}</span><span class="nm">${nick(n)}</span>${pend.includes(n)?'<i class="dot pend"></i>':''}${fail.includes(n)?'<i class="dot fail"></i>':''}</button>`}).join('');
+  const leg=[['scored','var(--fill-success)'],['late','var(--fill-warning)'],['await','var(--accent)'],['miss','var(--fill-danger)'],['exc','var(--text-muted)']].filter(l=>c[l[0]]>0).map(l=>`<span><i style="background:${l[1]}"></i>${lab[l[0]]} ${c[l[0]]}</span>`).join('');
+  return `<section class="card gcard" aria-labelledby="gh"><div class="ghead"><div class="ring">${ringSvg(c.counted?c.sub/c.counted:0)}<div class="cap">${c.sub}/${c.counted}</div></div><div style="min-width:0;flex:1"><h2 id="gh" style="font-size:1rem">ผังเลขที่ ${CL(sc.cls).name}</h2><div class="legend">${leg}${pend.length?`<span>${ic('cloud-upload',14)} รอส่งขึ้นระบบ ${pend.length}</span>`:''}</div><div class="tip">แตะช่องว่าง = รับงานให้คนนั้น · แตะช่องที่ส่งแล้ว = แก้/ยกเลิก</div></div></div><div class="seat" role="group" aria-label="ผังเลขที่ ${CL(sc.cls).name}">${cells}</div></section>`;
+}
+function recentHtml(){
+  const sc=S.sc,list=sc.recent;
+  const item=r=>`${r.state==='await'?badge('accent','รอคะแนน','pencil'):badge(r.state==='late'?'warning':'success',`${r.score}/${r.full}`,r.state==='late'?'clock':'check')}`;
+  if(!isWide()){
+    return `<section class="card" aria-labelledby="rh" style="padding:8px 12px"><div class="row" style="justify-content:space-between"><h2 id="rh" style="font-size:var(--fs-sm)">${ic('clock',16)} สแกนล่าสุด <span class="tip">${list.length?`รอบนี้ ${list.length} คน`:'ยังไม่มีใครสแกนในรอบนี้'}</span></h2></div>
+      ${list.length?`<div class="rstrip" role="list">${list.slice(0,6).map(r=>`<button class="hm-chip muted" role="listitem" data-a="rsheet" data-k="${r.n}" aria-label="เลขที่ ${r.n} ${nick(r.n)} ตัวเลือก">${r.n} ${nick(r.n)} · ${r.state==='await'?'รอคะแนน':r.score+'/'+r.full}${r.recv?' · รับ '+fmtS(r.recv):''}</button>`).join('')}</div>`:''}</section>`;
+  }
+  return `<section class="card" aria-labelledby="rh"><div class="row" style="justify-content:space-between"><h2 id="rh" style="font-size:1rem">${ic('clock',20)} สแกนล่าสุด</h2><span class="tip">รอบนี้ ${list.length} คน</span></div>
+    ${list.length?list.slice(0,6).map(r=>`<div class="rrow"><span class="hm-chip accent" style="min-width:2.4em;justify-content:center">${r.n}</span><span class="nm">${nick(r.n)}${r.recv?` <span class="tip">· รับ ${fmtS(r.recv)}</span>`:''}</span>${item(r)}<button class="ghost ib" data-a="rsheet" data-k="${r.n}" aria-label="ตัวเลือก เลขที่ ${r.n}">${ic('dots-vertical',20)}</button></div>`).join(''):'<div class="tip" style="padding:8px 0">ยังไม่มีใครสแกนในรอบนี้</div>'}</section>`;
+}
+function failedHtml(){
+  const f=S.sc.failed;if(!f.length)return '';
+  return `<section class="card failcard" aria-labelledby="fh"><div class="row" style="justify-content:space-between"><h2 id="fh" style="font-size:1rem;color:var(--text-danger)">${ic('cloud-x',20)} ส่งไม่สำเร็จ ${f.length} รายการ</h2><span class="tip">แสดงเองเมื่อมี</span></div>
+   ${f.map(r=>`<div class="failrow"><div class="t"><b>เลขที่ ${r.n} ${nick(r.n)}</b> · ${r.asg} · ${r.t}<div class="tip" style="color:var(--text-danger)">${r.reason}</div>${S.sc.confirmDrop===r.id?`<div class="tip" style="margin-top:4px">ทิ้งรายการนี้? ข้อมูลส่งงานของเลขที่ ${r.n} จะหายไป</div>`:''}</div>
+     ${S.sc.confirmDrop===r.id?`<button class="ghost" data-a="dropno">ไม่ทิ้ง</button><button class="dan" style="color:var(--text-danger)" data-a="dropyes" data-k="${r.id}">ทิ้ง</button>`:`<button data-a="retry" data-k="${r.id}">ลองใหม่</button><button class="ghost" data-a="drop" data-k="${r.id}">ทิ้ง</button>`}</div>`).join('')}</section>`;
+}
+function liveHtml(){
+  const sc=S.sc,a=AS(sc.asg);
+  const closedBar=sc.closed?`<div class="banner" style="background:var(--bg-danger);color:var(--text-danger);border-color:var(--border-danger)" role="alert">${ic('lock',20)}<span><b>งานนี้ปิดรับแล้ว</b> · อีกเครื่องปิดรับงานไปเมื่อสักครู่ — สแกนเพิ่มไม่ได้ ผังด้านล่างแสดงตามที่ระบบเก็บ</span></div>`:'';
+  const hid=cardOn('scan','hid')?`<span class="hm-chip success">${ic('barcode',16)}เครื่องยิงพร้อม</span><button class="hm-chip muted" data-a="hidtest" style="cursor:pointer">ทดสอบ</button>`:'';
+  const title=`<div class="sc-title"><span class="t">${a.title}</span>${hid}</div>`;
+  const input=`<div class="scanrow"><label class="scanin${sc.closed?' dis':''}" aria-label="ช่องสแกน — ยิง QR หรือพิมพ์เลขที่"><span>${ic('scan',24)}</span><span>${sc.closed?'ปิดรับงานแล้ว — สแกนไม่ได้':'ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter'}</span></label><button class="cam ib" style="width:calc(var(--u)*3.6);height:calc(var(--u)*3.6)" data-a="toast" data-k="เปิดกล้อง (ค่านี้จำต่อเครื่อง)" aria-label="เปิดกล้อง">${ic('camera',24)}</button></div>`;
+  const mid=sc.excAsk?`<section class="card" style="border:2px solid var(--border-warning);background:var(--bg-warning);color:var(--text-warning)" role="alertdialog" aria-label="เด็กที่ยกเว้น"><b>เลขที่ ${sc.excAsk} ${nick(sc.excAsk)} ถูกตั้งเป็น "ยกเว้น" งานนี้</b><div class="sb">รับงานแล้วจะเปลี่ยนเป็น "ส่งแล้ว" — ต้องการรับไหม</div><div class="row" style="margin-top:8px"><button class="primary" data-a="excyes">รับงานแล้ว</button><button data-a="excno">ไม่รับ</button></div></section>`
+    :sc.pend?padHtml():fbHtml()+(cardOn('scan','hint')?`<div class="hintline">${{full:'โหมดให้คะแนนเต็ม: ยิงแล้วได้คะแนนเต็มทันที · แตะช่องที่ส่งแล้วเพื่อแก้',type:'โหมดกรอกทีละคน: ยิงแล้วพิมพ์คะแนน กด "บันทึก" หรือ Enter',later:'โหมดรับงานก่อน: ยิงแล้วเป็น "รอคะแนน" ไปให้คะแนนทีหลังในสมุดคะแนน'}[sc.mode]}</div>`:'');
+  const showRecent=cardOn('scan','recent');
+  const col1=input+mid+failedHtml();
+  const col2=gridHtml()+(showRecent?recentHtml():'');
+  return `${closedBar}${ctxHtml()}${title}<div class="sc-layout"><div class="sc-left">${col1}</div><div class="sc-right">${isWide()?col2:''}</div>${isWide()?'':''}</div>${isWide()?'':`<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${col2}</div>`}`;
+}
+function summaryHtml(){
+  const sc=S.sc,a=AS(sc.asg),c=counts(sc.seats);
+  const names=st=>Object.keys(sc.seats).filter(n=>sc.seats[n]===st).map(Number);
+  const aw=names('await'),ms=names('miss');
+  return `<div class="sum"><div class="card"><div class="big"><div class="ring" style="width:7.5rem;height:7.5rem">${ringSvg(c.counted?c.sub/c.counted:0,120)}<div class="cap" style="font-size:1.4rem">${c.sub}/${c.counted}</div></div>
+   <div><h2>จบรอบแล้ว · ${a.title}</h2><div class="tip">${CL(sc.cls).name} · เต็ม ${a.full}${c.exc?` · ไม่นับยกเว้น ${c.exc} คน`:''}</div><div class="legend" style="margin-top:6px"><span><i style="background:var(--fill-success)"></i>ส่งแล้ว ${c.scored+c.late}</span><span><i style="background:var(--accent)"></i>รอคะแนน ${c.await}</span><span><i style="background:var(--fill-danger)"></i>ยังไม่ส่ง ${c.miss}</span><span><i style="background:var(--text-muted)"></i>ยกเว้น ${c.exc}</span>${offline()?`<span>${ic('cloud-upload',14)} รอส่งขึ้นระบบ ${sc.dots.pend.length}</span>`:''}</div></div></div>
+   <div class="sumsec"><div class="row" style="justify-content:space-between"><b>ยังไม่มีคะแนน (${aw.length})</b>${aw.length?`<button data-a="toast" data-k="ไปให้คะแนนในสมุดคะแนน (หน้าอื่นอยู่ใน preview.html รอบ 1)">ให้คะแนนตอนนี้</button>`:''}</div>${aw.length?`<div class="namechips">${aw.map(n=>`<span class="hm-chip accent">${n} ${nick(n)}</span>`).join('')}</div>`:'<div class="tip">ครบทุกคนแล้ว</div>'}</div>
+   <div class="sumsec"><div class="row" style="justify-content:space-between"><b>ยังไม่ส่ง (${ms.length})</b>${ms.length?`<button data-a="copymiss">${ic('copy',20)}คัดลอกรายชื่อ</button>`:''}</div>${ms.length?`<div class="namechips">${ms.slice(0,18).map(n=>`<span class="hm-chip danger">${n} ${nick(n)}</span>`).join('')}${ms.length>18?`<span class="hm-chip muted">และอีก ${ms.length-18} คน</span>`:''}</div>`:'<div class="tip">ไม่มีใครค้าง</div>'}</div>
+   <div class="row" style="flex-wrap:wrap;margin-top:6px"><button class="primary" data-a="backscan">${ic('player-play',20)}กลับไปสแกนต่อ</button><button data-a="closeasg" ${offline()?'disabled':''}>${ic('lock',20)}ปิดรับงาน</button><button class="ghost" data-a="toast" data-k="ไปสมุดคะแนน (หน้าอื่นอยู่ใน preview.html รอบ 1)">ไปที่สมุดคะแนน</button></div>
+   ${offline()?`<div class="tip" style="margin-top:6px">${ic('wifi-off',14)} ต้องออนไลน์ถึงปิดรับงานได้</div>`:''}</div></div>`;
+}
+/* --- กระทำ: รับงาน / คะแนน / ยกเลิก --- */
+function recvOpts(){const r=S.sc.recvDate;return r===TODAY?null:r}
+function scanCommit(n,how){
+  const sc=S.sc,a=AS(sc.asg);
+  if(sc.closed){S.sc.fb={kind:'danger',icon:'lock',title:'งานนี้ปิดรับแล้ว',sub:'สแกนเพิ่มไม่ได้'};return}
+  if(!sc.seats[n]){sc.fb={kind:'danger',icon:'x',title:`ไม่มีเลขที่ ${n} ใน ${CL(sc.cls).name}`,sub:'ตรวจเลขที่ หรือเลือกห้องให้ตรงกับบัตร'};return}
+  if(sc.seats[n]==='exc'){sc.excAsk=n;return}
+  if(['scored','late','await'].includes(sc.seats[n])){sc.fb={kind:'warning',icon:'alert-triangle',title:`เลขที่ ${n} ${nick(n)}`,sub:'ส่งไปแล้ว — ไม่บันทึกซ้ำ'};sc.cur=n;return}
+  sc.cur=n;
+  if(sc.mode==='type'){sc.pend={n};sc.entry='';sc.err='';return}
+  const late=isLate(sc.recvDate,a.due);
+  if(sc.mode==='full'){sc.seats[n]=late?'late':'scored';sc.recent.unshift({n,state:late?'late':'scored',score:a.full,full:a.full,recv:recvOpts()});
+    sc.fb={kind:late?'warning':'success',icon:'check',title:`${nick(n)} · เลขที่ ${n}`,sub:`ส่งแล้ว · ${late?'ส่งช้า':'ทันกำหนด'}${recvBack()?' · รับ '+fmtS(sc.recvDate):''}`,score:`${a.full}/${a.full}`}}
+  else{sc.seats[n]='await';sc.recent.unshift({n,state:'await',score:null,full:a.full,recv:recvOpts()});sc.fb={kind:'acc',icon:'inbox',title:`${nick(n)} · เลขที่ ${n}`,sub:`รับงานแล้ว · รอคะแนน${recvBack()?' · รับ '+fmtS(sc.recvDate):''}`}}
+}
+function scanSave(){
+  const sc=S.sc,a=AS(sc.asg),p=sc.pend;if(!p)return;
+  const v=parseFloat(sc.entry);
+  if(sc.entry===''||isNaN(v)){sc.err='พิมพ์คะแนนก่อน';return}
+  if(v>a.full){sc.err=`คะแนนต้องไม่เกิน ${a.full}`;return}
+  if((v*2)%1!==0){sc.err='ใส่ได้ทีละ 0.5 เช่น 7 หรือ 7.5';return}
+  const late=isLate(sc.recvDate,a.due);
+  const prev=sc.seats[p.n];
+  sc.seats[p.n]=late?'late':'scored';
+  sc.recent=sc.recent.filter(r=>r.n!==p.n);sc.recent.unshift({n:p.n,state:late?'late':'scored',score:v,full:a.full,recv:recvOpts()});
+  sc.lastScore=v;sc.fb={kind:late?'warning':'success',icon:'check',title:`${nick(p.n)} · เลขที่ ${p.n}`,sub:`${p.edit?'แก้คะแนนแล้ว':'ส่งแล้ว'} · ${late?'ส่งช้า':'ทันกำหนด'}${recvBack()?' · รับ '+fmtS(sc.recvDate):''}`,score:`${v}/${a.full}`};
+  sc.pend=null;sc.entry='';sc.err='';
+}
+function scanUndo(n){
+  const sc=S.sc,prev={state:sc.seats[n],rec:sc.recent.find(r=>r.n===n)};
+  sc.seats[n]='miss';sc.recent=sc.recent.filter(r=>r.n!==n);sc.sheet=null;
+  toast2(`ยกเลิกการส่งของเลขที่ ${n} ${nick(n)} แล้ว`,{label:'เลิกทำ',fn:()=>{sc.seats[n]=prev.state;if(prev.rec)sc.recent.unshift(prev.rec);S.toast=null;render()}});
+}
+
+/* ===================== เช็คชื่อ ===================== */
+const ST={p:['มา','check','p'],l:['สาย','clock','l'],v:['ลา','file-text','v'],k:['ป่วย','thermometer','k'],a:['ขาด','x','a']};
+const ST_ORDER=['p','l','v','k','a'];
+const curMap=()=>{const A=S.at;return A.mode==='period'?(A.per[A.cls+'|'+A.period]||(A.per[A.cls+'|'+A.period]={})):A.map[A.cls]};
+function attCounts(m,total){const c={p:0,l:0,v:0,k:0,a:0};Object.values(m).forEach(s=>c[s]++);c.marked=c.p+c.l+c.v+c.k+c.a;c.total=total;c.unmarked=total-c.marked;return c}
+function tileHtml(n,m){
+  const s=m[n],A=S.at;
+  const cls=s?ST[s][2]:'u';
+  return `<button class="tile ${cls}${A.flash===n?' flash':''}" id="t${n}" data-a="tile" data-k="${n}" aria-label="เลขที่ ${n} ${nick(n)} ${s?ST[s][0]:'ยังไม่ได้เช็ค'}"><span class="no">${n}</span><span class="tx"><span class="nk">${nick(n)}</span><span class="st">${s?ic(ST[s][1],16)+ST[s][0]:'แตะเพื่อเช็ค'}</span></span></button>`;
+}
+function attSaveBadge(){
+  const A=S.at;
+  if(offline())return `<span class="sync offline">${ic('wifi-off',16)}ออฟไลน์ · รอส่ง ${A.pendN+4} รายการ — จะส่งเองเมื่อมีเน็ต</span>`;
+  if(A.saving)return `<span class="sync saving">${ic('loader-2',16)}กำลังบันทึก</span>`;
+  return `<span class="sync online">${ic('cloud-check',16)}บันทึกแล้ว</span>`;
+}
+function attHtml(){
+  const A=S.at,cls=CL(A.cls),m=curMap(),c=attCounts(m,cls.total);
+  const chips=CLASSES.map(x=>{const mm=A.map[x.id]||{},k=Object.keys(mm).length;const mark=k===0?'<span style="width:8px;height:8px;border-radius:50%;background:var(--fill-warning)"></span>':k<x.total?ic('circle-half-2',16):ic('check',16);return `<button class="pill${x.id===A.cls?' on':''}" data-a="atcls" data-k="${x.id}" aria-pressed="${x.id===A.cls}">${mark}${x.name} <span class="n">${x.total}</span></button>`}).join('');
+  const tb=`<div class="toolbar"><div class="chiprow" role="group" aria-label="เลือกห้อง">${chips}</div>
+   <div class="datenav"><button class="ib" data-a="date" data-k="-1" aria-label="วันก่อนหน้า">${ic('chevron-left',20)}</button><span class="d">${A.date===TODAY?'วันนี้ ':''}${dow(A.date)} ${fmtS(A.date)}</span><button class="ib" data-a="date" data-k="1" aria-label="วันถัดไป" ${A.date>=TODAY?'disabled':''}>${ic('chevron-right',20)}</button></div>
+   <div class="seg" role="group" aria-label="รายวันหรือรายคาบ"><button class="${A.mode!=='period'?'on':''}" data-a="atper" data-k="0">รายวัน</button><button class="${A.mode==='period'?'on':''}" data-a="atper" data-k="1">รายคาบ</button></div></div>`;
+  let row2='';
+  if(A.mode==='period'){
+    row2=`<div class="toolbar" role="group" aria-label="เลือกคาบ"><div class="chiprow">${[1,2,3,4,5,6,7,8].map(p=>`<button class="pill${p===A.period?' on':''}" data-a="atp" data-k="${p}" aria-pressed="${p===A.period}">คาบ ${p}</button>`).join('')}</div><select aria-label="วิชา" style="width:auto;min-height:var(--tap)" data-a="atsubj"><option>วิทยาศาสตร์</option><option>คณิตศาสตร์</option></select><span class="tip">คาบ ${A.period} เริ่ม ${['08:30','09:20','10:10','11:00','12:50','13:40','14:30','15:20'][A.period-1]}</span></div>`;
+  }else if(cardOn('att','week')){
+    const days=[0,1,2,3,4].map(i=>shift('2026-11-02',i));
+    row2=`<div class="wk" role="group" aria-label="สัปดาห์นี้">${days.map(d=>{const fut=d>TODAY,sel=d===A.date;const mm=d===TODAY?m:(d<TODAY?{}:null);let t,i;
+      if(fut){t='ยังไม่ถึง';i='';}else if(d===TODAY){t=c.marked===0?'ยังไม่เช็ค':c.marked<cls.total?`เช็ค ${c.marked}/${cls.total}`:`มา ${c.p+c.l}`;i=c.marked===0?'':(c.marked<cls.total?ic('circle-half-2',16):ic('check',16))}else{t=`มา ${cls.total-2} · ขาด 2`;i=ic('check',16)}
+      return `<button class="${sel?'on':''}" data-a="atday" data-k="${d}" ${fut?'disabled':''} aria-label="${dow(d)} ${fmtS(d)} ${t}"><span>${dow(d)} ${+d.slice(8)} ${i}</span><small>${t}</small></button>`}).join('')}</div>`;
+  }
+  const sum=cardOn('att','sum')?`<section class="card sumcard" aria-labelledby="sh"><div class="row" style="justify-content:space-between;flex-wrap:wrap"><h2 id="sh" style="font-size:1rem">มาเรียน ${c.p+c.l} จาก ${cls.total} คน${c.marked?` (${Math.round((c.p+c.l)*100/c.marked)}%)`:''}</h2><span class="tip">${c.unmarked?`ยังไม่เช็ค ${c.unmarked} คน`:'ครบทุกคนแล้ว'}</span></div>
+    <div class="stack2" aria-hidden="true">${ST_ORDER.map(s=>c[s]?`<i style="flex:${c[s]};background:var(--fill-${{p:'success',l:'warning',v:'accent',k:'purple',a:'danger'}[s]})"></i>`:'').join('')}${c.unmarked?`<i style="flex:${c.unmarked};background:var(--border-strong)"></i>`:''}</div>
+    <div class="legend">${ST_ORDER.map(s=>`<span>${ic(ST[s][1],14)} ${ST[s][0]} ${c[s]}</span>`).join('')}<span><i style="border:1.5px dashed var(--text-muted);background:none"></i>ยังไม่เช็ค ${c.unmarked}</span></div></section>`:'';
+  const brush=A.mode==='scan'?'':`<div class="brush"><div class="lbl">${A.cycle?'แตะชื่อเพื่อวนสถานะ มา → สาย → ลา → ป่วย → ขาด':'เลือกสถานะ แล้วแตะชื่อเด็ก'}</div><div class="stbtns" role="group" aria-label="สถานะที่จะใช้">${ST_ORDER.map(s=>`<button class="stbtn ${ST[s][2]}${!A.cycle&&A.brush===s?' on':''}" data-a="brush" data-k="${s}" aria-pressed="${!A.cycle&&A.brush===s}">${ic(ST[s][1],24)}${ST[s][0]}</button>`).join('')}<button class="allp" data-a="allp">${ic('user-check',20)}มาทั้งห้อง</button></div>
+    <div class="row" style="margin-top:6px"><button class="hm-chip muted" data-a="cycle" aria-pressed="${A.cycle}" style="cursor:pointer">${ic('refresh',16)}${A.cycle?'ใช้ปุ่มสถานะ':'วนสถานะ'}</button><span class="badge-sa">ตัวเลือก — รอตัดสินที่ Gate 2</span></div></div>`;
+  const scanCard=A.mode==='scan'?`<section class="card scancard" aria-labelledby="qh"><h2 id="qh" style="font-size:1rem">${ic('qrcode',20)} ยิง QR เพื่อเช็คชื่อ</h2><label class="scanin"><span>${ic('scan',24)}</span><span>ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter (หลัง ${'08:30'} = สาย)</span></label><div class="${A.scanMsg?'fb success':'tip'}" role="status" aria-live="polite" style="${A.scanMsg?'min-height:3rem':''}">${A.scanMsg?`<span class="ic">${ic('check',22)}</span><div><div class="nm" style="font-size:1.1rem">${A.scanMsg}</div></div>`:'ยังไม่มีใครสแกนในรอบนี้'}</div></section>`:'';
+  const todoNums=Array.from({length:cls.total},(_,i)=>i+1).filter(n=>!m[n]);
+  const away=Object.keys(m).filter(n=>['a','v','k'].includes(m[n])).map(Number);
+  const cardsSide=cardOrder('att','side').map(k=>{
+    if(k==='scans')return A.mode==='scan'&&A.scans.length?`<section class="card" aria-labelledby="lh"><h2 id="lh" style="font-size:1rem">${ic('qrcode',20)} สแกนล่าสุด</h2>${A.scans.slice(0,5).map(s=>`<div class="rrow"><span class="hm-chip accent">${s.n}</span><span class="nm">${nick(s.n)}</span>${badge(s.late?'warning':'success',s.late?'สาย':'มา',s.late?'clock':'check')}<span class="tip">${s.t}</span></div>`).join('')}</section>`:'';
+    if(k==='todo')return `<section class="card" aria-labelledby="th"><h2 id="th" style="font-size:1rem">${ic('user-off',20)} ใครยังไม่เช็ค <span class="badge-sa">ข้อเสนอ SA</span></h2>${todoNums.length?`<div class="numchips">${todoNums.slice(0,30).map(n=>`<button class="hm-chip muted" data-a="jump" data-k="${n}" aria-label="ไปที่เลขที่ ${n}">${n}</button>`).join('')}${todoNums.length>30?`<span class="tip">+${todoNums.length-30}</span>`:''}</div>`:'<div class="tip" style="color:var(--text-success)">เช็คครบทุกคนแล้ว</div>'}</section>`;
+    if(k==='away')return `<section class="card" aria-labelledby="ah"><h2 id="ah" style="font-size:1rem">${ic('user-x',20)} ขาดวันนี้ <span class="badge-sa">ข้อเสนอ SA</span></h2>${away.length?away.map(n=>`<div class="rrow"><span class="hm-chip accent">${n}</span><span class="nm">${fullName(n)}</span>${badge(m[n]==='a'?'danger':m[n]==='v'?'accent':'warning',ST[m[n]][0],ST[m[n]][1])}</div>`).join(''):'<div class="tip">ไม่มีใครขาด ลา หรือป่วย</div>'}</section>`;
+    return '';}).join('');
+  const warns=[];
+  const tiles=`<div class="tiles" role="group" aria-label="รายชื่อ ${cls.name}">${Array.from({length:cls.total},(_,i)=>tileHtml(i+1,m)).join('')}</div>`;
+  const top=cardOrder('att','top').map(k=>k==='sum'?sum:'').join('');
+  const side=cardsSide.trim();
+  const main=`${brush}${tiles}`;
+  const body=isWide()&&side?`<div class="attgrid two"><div>${main}</div><div class="attside">${scanCard}${cardsSide}</div></div>`:`<div class="attgrid">${scanCard}${top?'':''}${main}${cardsSide?`<div class="attside" style="margin-top:8px">${cardsSide}</div>`:''}</div>`;
+  const conflicts=S.scen==='offline'?`<section class="card" style="border-left:4px solid var(--fill-warning);padding:8px 14px;margin-bottom:8px" role="status"><b>มีเช็คชื่อที่ยังไม่ได้ส่งในที่อื่น</b><div class="rrow"><span class="nm">ป.6/3 · 3 พ.ย. · คาบ 2 — รอส่ง</span><button data-a="toast" data-k="เปิดรายการนั้น (ลิงก์ลึก ?class&date&subject&period)">เปิด</button></div></section>`:'';
+  return `${pageHead('user-check','เช็คชื่อ',`${cls.name} · ${fmt(A.date)}`)}${tb}${row2}${conflicts}${isWide()&&side?'':''}${top}${body}
+  <div class="savebar" role="status" aria-live="polite">${attSaveBadge()}<span class="tip">แตะแล้วบันทึกเอง ไม่ต้องกดบันทึก · ${c.marked}/${cls.total} คน</span></div>`;
+}
+function attTap(n){
+  const A=S.at,m=curMap();
+  const cur=m[n];
+  if(A.cycle){const i=cur?ST_ORDER.indexOf(cur):-1;m[n]=ST_ORDER[(i+1)%5]}
+  else if(cur===A.brush)delete m[n];else m[n]=A.brush;
+  A.flash=n;A.saving=true;A.pendN++;
+  setTimeout(()=>{S.at.saving=false;S.at.flash=null;render()},900);
+}
+function attScanNext(){
+  const A=S.at,m=curMap(),cls=CL(A.cls);
+  const n=ord(cls.total).find(x=>!m[x]);if(!n){A.scanMsg='';return toast2('เช็คครบทุกคนแล้ว')}
+  const late=true;m[n]=late?'l':'p';A.scans.unshift({n,late,t:'10:4'+(A.scans.length%10)});A.scanMsg=`${nick(n)} · เลขที่ ${n} · ${late?'สาย':'มา'}`;A.flash=n;
+  setTimeout(()=>{S.at.flash=null;render()},1200);
+}
+
+/* ===================== สุ่มชื่อ ===================== */
+function rdPool(){
+  const R=S.rd,total=CL(R.cls).total,m=S.at.map[R.cls]||{};
+  const marked=Object.keys(m).length;
+  let pool=Array.from({length:total},(_,i)=>i+1);
+  if(R.presentOnly)pool=pool.filter(n=>m[n]==='p'||m[n]==='l');
+  if(R.useRange)pool=pool.filter(n=>n>=R.range[0]&&n<=R.range[1]);
+  return {pool,marked,total};
+}
+function rdBlock(){const R=S.rd,p=rdPool();if(R.presentOnly&&p.marked===0)return 'unchecked';if(!p.pool.length)return 'nobody';return null}
+function rdPick(){
+  const R=S.rd,{pool}=rdPool();if(rdBlock())return;
+  const k=R.mode==='group'?0:(R.pair?2:R.count);
+  if(R.mode==='group'){
+    let ns=[...pool].sort(()=>Math.random()-.5);const g=R.byGroups?R.ngroups:Math.max(1,Math.round(ns.length/R.gsize));
+    R.groups=Array.from({length:g},()=>[]);ns.forEach((n,i)=>R.groups[i%g].push(n));return;
+  }
+  let avail=R.norepeat?pool.filter(n=>!R.called.includes(n)):pool;
+  if(avail.length<k&&R.norepeat){R.called=[];avail=pool;R.msg='ครบรอบแล้ว — เริ่มรอบใหม่'}else R.msg='';
+  const picks=[...avail].sort(()=>Math.random()-.5).slice(0,Math.min(k,avail.length));
+  R.called.push(...picks);R.cur=picks;R.left=R.timerSec;R.run=false;
+}
+function rdPass(){const R=S.rd;if(!R.cur)return;R.called=R.called.filter(n=>!R.cur.includes(n));rdPick()}
+function rdUndo(){const R=S.rd;if(!R.cur)return;R.called=R.called.filter(n=>!R.cur.includes(n));R.cur=R.called.length?[R.called[R.called.length-1]]:null}
+function randomHtml(){
+  const R=S.rd,cls=CL(R.cls),{pool,marked}=rdPool(),block=rdBlock(),inRound=R.called.length,remain=Math.max(0,pool.length-R.called.filter(n=>pool.includes(n)).length);
+  const chips=CLASSES.map(x=>`<button class="pill${x.id===R.cls?' on':''}" data-a="rdcls" data-k="${x.id}" aria-pressed="${x.id===R.cls}">${x.name} <span class="n">${x.total}</span></button>`).join('');
+  const notice=block?`<div class="rnotice" role="status">${ic('alert-triangle',20)}<div class="grow">${block==='unchecked'?'<b>วันนี้ยังไม่ได้เช็คชื่อห้องนี้</b> — สุ่มเฉพาะคนที่มาไม่ได้':'<b>ไม่มีใครมาเรียนวันนี้</b> หรือไม่มีเลขที่ในช่วงที่เลือก'}</div>${block==='unchecked'?`<button data-a="toast" data-k="ไปหน้าเช็คชื่อ" ><span data-a="nav" data-k="attendance" style="display:contents">ไปเช็คชื่อ</span></button>`:''}<button data-a="rdall">ใช้ทั้งห้อง (${cls.total})</button></div>`:'';
+  const cur=R.cur;
+  let stage;
+  if(block)stage=`<div class="rstage idle" aria-live="polite"><span class="poolchip hm-chip muted">${ic('users',16)}เฉพาะคนที่มา (${pool.length})</span>${ic('mood-empty',40)}<div class="rname" style="font-size:1.3rem;color:var(--text-secondary)">ยังไม่มีรายชื่อให้สุ่ม</div><div class="tip">ดูข้อความด้านบน</div></div>`;
+  else if(R.mode==='group'){
+    stage=R.groups?`<div class="rstage" style="align-items:stretch;text-align:left" aria-live="polite"><span class="hm-chip muted" style="align-self:flex-start">${ic('users',16)}${R.groups.length} กลุ่ม · ${pool.length} คน</span><div class="groups">${R.groups.map((g,i)=>`<div class="grp"><b><i style="background:${['#2f6fde','#148352','#e79a1c','#7c5cd6','#c93a3a','#0d6e6a','#9c2b63','#4b7314'][i%8]}"></i>กลุ่ม ${i+1} (${g.length})</b><div>${g.map((n,j)=>`${R.leaders&&j===0&&cardOn('random','gopts')?ic('crown',14)+' ':''}${n} ${nick(n)}`).join(' · ')}</div></div>`).join('')}</div></div>`:`<div class="rstage idle"><span class="poolchip hm-chip muted">${ic('users',16)}เฉพาะคนที่มา (${pool.length})</span>${ic('users-group',40)}<div class="rname" style="font-size:1.3rem;color:var(--text-secondary)">พร้อมจับกลุ่ม</div><div class="tip">กดปุ่ม หรือกด Space</div></div>`;
+  }else if(cur){
+    stage=`<div class="rstage" aria-live="polite"><span class="poolchip hm-chip muted">${ic('users',16)}${R.presentOnly?'เฉพาะคนที่มา':'ทั้งห้อง'} (${pool.length})</span>${cur.length===1?`<span class="rbadge">${cur[0]}</span><div class="rname">${fullName(cur[0])}</div><div class="tip">“${nick(cur[0])}” · เลขที่ ${cur[0]} · ${cls.name}</div>`
+      :R.pair&&cardOn('random','pair')?`<div class="row" style="gap:18px;flex-wrap:wrap;justify-content:center">${cur.map(n=>`<div><span class="rbadge">${n}</span><div class="rname" style="font-size:calc(var(--u)*1.6)">${nick(n)}</div></div>`).join('<div class="tip" style="font-size:1.2rem">คู่กับ</div>')}</div>`
+      :`<div class="row" style="gap:8px;flex-wrap:wrap;justify-content:center">${cur.map(n=>`<span class="hchip" style="min-height:calc(var(--u)*3)"><i>${n}</i>${nick(n)}</span>`).join('')}</div>`}${R.msg?`<div class="tip" style="color:var(--text-warning)">${R.msg}</div>`:''}</div>`;
+  }else stage=`<div class="rstage idle" aria-live="polite"><span class="poolchip hm-chip muted">${ic('users',16)}${R.presentOnly?'เฉพาะคนที่มา':'ทั้งห้อง'} (${pool.length})</span>${ic('dice-3',40)}<div class="rname" style="font-size:1.3rem;color:var(--text-secondary)">พร้อมสุ่ม</div><div class="tip">กดปุ่ม หรือกด Space</div></div>`;
+  const go=`<button class="primary go" data-a="rdgo" ${block?'disabled':''}>${ic(R.mode==='group'?'users-group':'dice-3',24)}${R.mode==='group'?'จับกลุ่ม':'สุ่มเลย'} <span style="opacity:.8;font-weight:400">(Space)</span></button>`;
+  const seg=`<div class="seg" role="group" aria-label="โหมด"><button class="${R.mode==='pick'?'on':''}" data-a="rdmode" data-k="pick">สุ่มคน</button><button class="${R.mode==='group'?'on':''}" data-a="rdmode" data-k="group">จับกลุ่ม</button></div>`;
+  const cardDefs={
+    hist:()=>R.mode==='pick'?`<section class="card" aria-labelledby="hh"><div class="row" style="justify-content:space-between;flex-wrap:wrap"><h2 id="hh" style="font-size:1rem">${ic('users',20)} เรียกแล้ว ${inRound} · เหลือ ${remain} คนในรอบนี้</h2>${inRound?`<button class="ghost" data-a="rdreset">เริ่มรอบใหม่</button>`:''}</div><div class="pbar2" role="progressbar" aria-valuenow="${inRound}" aria-valuemax="${pool.length}"><div style="width:${pool.length?Math.min(100,inRound*100/pool.length):0}%"></div></div>${inRound?`<div class="hist">${R.called.map((n,i)=>`<span class="hchip${i===R.called.length-1?' last':''}"><i>${n}</i>${nick(n)}</span>`).join('')}</div>`:'<div class="tip">ยังไม่มีใครถูกเรียก</div>'}</section>`:'',
+    opts:()=>`<section class="card" aria-labelledby="oh"><h2 id="oh" style="font-size:1rem">${ic('list-numbers',20)} ตัวเลือก</h2><div class="rctl" style="margin:6px 0 0"><button class="pill${R.presentOnly?' on':''}" data-a="rdpresent" aria-pressed="${R.presentOnly}">${ic(R.presentOnly?'check':'plus',16)}เฉพาะคนที่มา (${pool.length})</button>${R.mode==='pick'?`<button class="pill${R.norepeat?' on':''}" data-a="rdnorep" aria-pressed="${R.norepeat}">${ic(R.norepeat?'check':'plus',16)}ไม่ซ้ำจนครบ</button>`:''}<span class="step" role="group" aria-label="${R.mode==='group'?'กลุ่มละ':'จำนวน'}"><span class="tip">${R.mode==='group'?'กลุ่มละ':'จำนวน'}</span><button class="ib" data-a="rdstep" data-k="-1" aria-label="ลด">${ic('minus',20)}</button><b>${R.mode==='group'?(R.byGroups?R.ngroups:R.gsize):R.count}</b><button class="ib" data-a="rdstep" data-k="1" aria-label="เพิ่ม">${ic('plus',20)}</button></span></div></section>`,
+    timer:()=>`<section class="card" aria-labelledby="tmh"><h2 id="tmh" style="font-size:1rem">${ic('stopwatch',20)} จับเวลาตอบ <span class="badge-sa">ข้อเสนอ SA</span></h2><div class="timer"><div class="tring">${ringSvg(R.timerSec?R.left/R.timerSec:0,96,R.left<=5?'var(--fill-danger)':'var(--accent)')}<div class="cap">${R.left}</div></div><div><div class="seg" role="group" aria-label="เวลา">${[10,30,60].map(s=>`<button class="${R.timerSec===s?'on':''}" data-a="tsec" data-k="${s}">${s} วิ</button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="primary" data-a="trun">${ic(R.run?'player-stop':'player-play',20)}${R.run?'หยุด':'เริ่มจับเวลา'}</button><button class="ghost" data-a="tres">ตั้งใหม่</button></div></div></div></section>`,
+    pass:()=>`<section class="card" aria-labelledby="psh"><h2 id="psh" style="font-size:1rem">${ic('arrow-back-up',20)} ข้าม / เลิกทำ <span class="badge-sa">ข้อเสนอ SA</span></h2><div class="row" style="flex-wrap:wrap;margin-top:6px"><button data-a="rdpass" ${R.cur?'':'disabled'}>${ic('player-skip-forward',20)}ข้ามคนนี้ (ไม่นับว่าเรียกแล้ว)</button><button data-a="rdundo" ${R.cur?'':'disabled'}>${ic('arrow-back-up',20)}เลิกทำครั้งล่าสุด</button></div></section>`,
+    range:()=>`<section class="card" aria-labelledby="rgh"><h2 id="rgh" style="font-size:1rem">${ic('selector',20)} ช่วงเลขที่ <span class="badge-sa">ข้อเสนอ SA</span></h2><div class="rctl" style="margin:6px 0 0"><button class="pill${R.useRange?' on':''}" data-a="rduse" aria-pressed="${R.useRange}">${ic(R.useRange?'check':'plus',16)}ใช้ช่วงเลขที่</button><span class="step"><button class="ib" data-a="rdr" data-k="0,-1">${ic('minus',20)}</button><b>${R.range[0]}</b><button class="ib" data-a="rdr" data-k="0,1">${ic('plus',20)}</button></span><span>ถึง</span><span class="step"><button class="ib" data-a="rdr" data-k="1,-1">${ic('minus',20)}</button><b>${R.range[1]}</b><button class="ib" data-a="rdr" data-k="1,1">${ic('plus',20)}</button></span></div></section>`,
+    pair:()=>`<section class="card" aria-labelledby="prh"><h2 id="prh" style="font-size:1rem">${ic('users-group',20)} จับคู่ <span class="badge-sa">ข้อเสนอ SA</span></h2><div class="rctl" style="margin:6px 0 0"><button class="pill${R.pair?' on':''}" data-a="rdpair" aria-pressed="${R.pair}">${ic(R.pair?'check':'plus',16)}สุ่ม 2 คน แสดงเป็นคู่</button></div></section>`,
+    gopts:()=>R.mode==='group'?`<section class="card" aria-labelledby="gph"><h2 id="gph" style="font-size:1rem">${ic('crown',20)} ตัวเลือกกลุ่ม <span class="badge-sa">ข้อเสนอ SA</span></h2><div class="rctl" style="margin:6px 0 0"><div class="seg"><button class="${!R.byGroups?'on':''}" data-a="rdby" data-k="0">กลุ่มละกี่คน</button><button class="${R.byGroups?'on':''}" data-a="rdby" data-k="1">กี่กลุ่ม</button></div><button class="pill${R.leaders?' on':''}" data-a="rdlead" aria-pressed="${R.leaders}">${ic('crown',16)}หัวหน้ากลุ่ม</button><button data-a="copygrp" ${R.groups?'':'disabled'}>${ic('copy',20)}คัดลอกกลุ่ม</button></div></section>`:'',
+  };
+  const cards=cardOrder('random').map(k=>cardDefs[k]?cardDefs[k]():'').join('');
+  return `${pageHead('dice-3','สุ่มชื่อ',`${cls.name} · มาเรียนวันนี้ ${marked?pool.length+' คน':'ยังไม่ได้เช็คชื่อ'}`)}<div class="chiprow" style="margin-bottom:8px" role="group" aria-label="เลือกห้อง">${chips}</div>${notice}
+   <div class="rcols"><div class="rcol">${stage}<div class="rctl">${seg}${go}</div></div><div class="rcol">${cards||'<div class="card tip">ปิดการ์ดทั้งหมดอยู่ — กด "ปรับการ์ด" เพื่อเปิด</div>'}</div></div>`;
+}
+
+/* ===================== โหมดฉายจอ (D27) ===================== */
+const PJPAGE={scan:['สแกนส่งงาน','scan'],attendance:['เช็คชื่อ','user-check'],random:['สุ่มชื่อ','dice-3']};
+function pjHtml(K){
+  const P=S.pjPref||{th:'dark',sz:2},sz=+P.sz;
+  const k=x=>Math.round(x*K);
+  const [title,icon]=PJPAGE[S.page];
+  let body='';
+  if(S.page==='scan'){
+    const sc=S.sc,a=AS(sc.asg),c=counts(sc.seats),last=sc.recent[0];
+    body=`<div class="row" style="justify-content:space-between;align-items:flex-end;gap:16px">
+      <div style="min-width:0"><div class="s2">${CL(sc.cls).name} · ${a.title}</div>${last?`<div class="big" style="font-size:${k(64)}px">น้อง${nick(last.n)} <span class="okmark" style="font-size:${k(40)}px">${ic('check',k(44))}ส่งแล้ว</span></div>`:`<div class="big" style="font-size:${k(64)}px;color:var(--pj-t2)">รอสแกน…</div>`}</div>
+      <div style="text-align:right;flex:none"><div class="stat">ส่งแล้ว ${c.sub} จาก ${c.counted} คน</div><div class="pbar" style="margin-top:${k(8)}px"><div style="width:${c.counted?c.sub*100/c.counted:0}%"></div></div></div></div>
+     <div class="seatp" role="group" aria-label="ผังเลขที่">${Object.keys(sc.seats).map(n=>{const s=sc.seats[n],d=['scored','late','await'].includes(s);return `<div class="${d?'d':''}" ${s==='exc'?'style="opacity:.35"':''}>${d?ic('check',k(26)):''}${n}</div>`}).join('')}</div>`;
+  }else if(S.page==='attendance'){
+    const A=S.at,m=curMap(),cls=CL(A.cls),c=attCounts(m,cls.total),here=c.p+c.l;
+    const lastN=A.scans[0]?A.scans[0].n:Object.keys(m).filter(n=>m[n]==='p'||m[n]==='l').map(Number).slice(-1)[0];
+    body=`<div class="row" style="justify-content:space-between;align-items:flex-end;gap:16px"><div style="min-width:0"><div class="s2">${cls.name} · ${dow(A.date)} ${fmtS(A.date)}</div>${lastN?`<div class="big" style="font-size:${k(48)}px">น้อง${nick(lastN)} <span class="okmark" style="font-size:${k(36)}px">${ic('check',k(40))}มาแล้ว</span></div>`:''}</div>
+      <div style="text-align:right;flex:none"><div class="stat">มาแล้ว ${here} จาก ${cls.total} คน</div></div></div>
+     <div class="seatp" role="group" aria-label="ผังเลขที่">${Array.from({length:cls.total},(_,i)=>i+1).map(n=>{const d=m[n]==='p'||m[n]==='l';return `<div class="${d?'d':''}">${d?`${n}${sz===1?`<small>${nick(n)}</small>`:''}`:n}</div>`}).join('')}</div>`;
+  }else{
+    const R=S.rd,cur=R.cur,block=rdBlock();
+    if(block)body=`<div class="empty">ยังไม่มีรายชื่อ</div>`;
+    else if(R.mode==='group'&&R.groups)body=`<div class="pgroups">${R.groups.map((g,i)=>`<div class="pcard"><b>กลุ่ม ${i+1}</b><div>${g.map(n=>nick(n)).join(' · ')}</div></div>`).join('')}</div>`;
+    else if(R.mode==='pick'&&cur)body=`<div class="pcard" style="margin:auto;width:100%;display:flex;flex-direction:column;align-items:center;gap:${k(12)}px;padding:${k(30)}px"><span class="rbadge">${cur[0]}</span><div class="big">${cur.length>1?cur.map(n=>nick(n)).join(' · '):'น้อง'+nick(cur[0])}</div><div class="s2">เลขที่ ${cur.join(' · ')} · ${CL(R.cls).name}</div></div>`;
+    else body=`<div class="empty">พร้อมสุ่ม — กด “${R.mode==='group'?'จับกลุ่ม':'สุ่มคนต่อไป'}”</div>`;
+    body+=`<div style="display:flex;justify-content:center"><button class="pjbtn" data-a="rdgo">${ic(R.mode==='group'?'users-group':'dice-3',k(40))}${R.mode==='group'?'จับกลุ่ม':'สุ่มคนต่อไป'}</button></div>`;
+  }
+  const other=`<div class="other">${S.pjOther?`<div class="menu4" role="menu">${['scan','attendance','random'].filter(p=>p!==S.page).map(p=>`<button role="menuitem" data-a="pjgo" data-k="${p}">${ic(PJPAGE[p][1],k(32))}${PJPAGE[p][0]}</button>`).join('')}<button role="menuitem" data-a="pjexitnow">${ic('x',k(32))}ออกจากโหมดฉายจอ</button></div>`:''}<button class="pjbtn sec" data-a="pjother" aria-expanded="${S.pjOther}" style="height:${k(64)}px;font-size:${k(26)}px">${ic('arrow-right',k(30))}ไปหน้าอื่น</button></div>`;
+  return `<div class="pj" data-th="${P.th}" data-sz="${sz}" style="--k:${K}" role="region" aria-label="โหมดฉายจอ: ${title}"><div class="pjbar"><h1>${ic(icon,k(44))}${title}</h1><div class="row" style="gap:${k(16)}px">${offline()?`<span style="color:var(--pj-warn)">${ic('wifi-off',k(40))}</span>`:''}<span class="live"><i></i>กำลังฉายจอ</span><button class="exit" data-a="pjhold" aria-label="ออกจากโหมดฉายจอ — กดค้าง 1 วินาที">${ic('x',k(34))}</button></div></div>${S.pjHint?`<div class="hint" role="status">กดค้างเพื่อออกจากโหมดฉายจอ</div>`:''}<div class="body">${body}</div>${other}</div>`;
+}
+/* ===================== ปรับการ์ด (ทุกหน้า) ===================== */
+function prefsDrawer(p){
+  const P=S.prefs[p],defs=CARDS[p].keys;
+  const rows=P.order.map((k,i)=>{const m=defs.find(x=>x.key===k),on=!P.hidden.includes(k);
+    return `<div class="pref${on?'':' off'}"><span class="ic">${ic(on?m.icon:'eye-off',20)}</span><span class="grow"><div class="nm">${m.title}${m.sa?'<span class="badge-sa">ข้อเสนอ SA</span>':''}</div><div class="ds">${m.ds}</div></span>
+     <button class="switch ${on?'on':''}" role="switch" aria-checked="${on}" aria-label="แสดงการ์ด ${m.title}" data-a="pt" data-k="${k}"><span class="knob"></span></button>
+     <span class="mv"><button class="icon ghost" data-a="pm" data-k="${k}" data-d="-1" aria-label="เลื่อน ${m.title} ขึ้น" ${i===0?'disabled':''}>${ic('chevron-up',20)}</button><button class="icon ghost" data-a="pm" data-k="${k}" data-d="1" aria-label="เลื่อน ${m.title} ลง" ${i===P.order.length-1?'disabled':''}>${ic('chevron-down',20)}</button></span></div>`}).join('');
+  return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="pd-h"><div class="drawer-head"><div><h2 class="t" id="pd-h">ปรับการ์ด · ${CARDS[p].title}</h2><div class="xs">เปิด/ปิดและเรียงการ์ด · บันทึกทันที ใช้กับทุกเครื่องที่เข้าสู่ระบบ</div></div><button class="icon ghost" aria-label="ปิด" data-a="closeov">${ic('x',20)}</button></div>
+   <div class="lock">${ic('info-circle',16)} ปิดไม่ได้ (เพื่อกันข้อมูลหาย): ${p==='scan'?'ช่องสแกน · ผังเลขที่ · รายการส่งไม่สำเร็จ · แถบวันที่รับงาน':p==='att'?'ปุ่มสถานะ · ช่องเด็ก · แถบบันทึก · การ์ดข้อมูลชนกัน':'เวทีสุ่ม · ปุ่มสุ่ม · แถบเหตุผลที่สุ่มไม่ได้'}</div>${rows}
+   <div class="row" style="justify-content:space-between;margin-top:10px;flex-wrap:wrap"><button class="ghost" data-a="preset">${ic('history',20)}คืนค่าเริ่มต้น</button><button class="primary" data-a="closeov">เสร็จ</button></div></div></div>`;
+}
+const prefKey=()=>({scan:'scan',attendance:'att',random:'random'}[S.page]);
+function overlays(){
+  let o='';
+  if(S.prefsOpen&&S.page!=='home')o+=prefsDrawer(prefKey());
+  if(S.sheetMenu&&isNarrow())o+=sheetHtml();
+  if(S.page==='scan'&&S.sc.sheet!=null){
+    const n=S.sc.sheet,r=S.sc.recent.find(x=>x.n===n),st=S.sc.seats[n],a=AS(S.sc.asg);
+    o+=`<div class="sheetov" data-a="closeov"><div class="asheet" role="dialog" aria-modal="true" aria-label="ตัวเลือก เลขที่ ${n}"><div class="hd">เลขที่ ${n} ${nick(n)}</div><div class="tip">${st==='await'?'รับงานแล้ว · รอคะแนน':`ส่งแล้ว · ได้ ${r?r.score:'8'}/${a.full} · ${st==='late'?'ส่งช้า':'ตรงเวลา'}`}${r&&r.recv?' · รับ '+fmtS(r.recv):''}</div>
+     <button data-a="shedit" data-k="${n}">${ic('pencil',24)}แก้คะแนน</button><button class="dan" data-a="shundo" data-k="${n}">${ic('arrow-back-up',24)}ยกเลิกการส่ง</button><button data-a="closeov">${ic('x',24)}ปิด</button></div></div>`;
+  }
+  if(S.dlg){
+    if(S.dlg.t==='close'){const c=counts(S.sc.seats);o+=`<div class="modal"><div class="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dl-h"><h2 id="dl-h">ปิดรับ “${AS(S.sc.asg).title}” ทุกห้อง?</h2><div>ยังไม่ส่ง ${c.miss} คน จะนับเป็นค้าง · ปิดแล้วเปิดรับใหม่ได้ในสมุดคะแนน</div><div class="row" style="justify-content:flex-end"><button data-a="dlgno" autofocus>ยังไม่ปิด</button><button class="primary" data-a="dlgyes">ปิดรับงาน</button></div></div></div>`}
+    if(S.dlg.t==='allp'){o+=`<div class="modal"><div class="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dl-h"><h2 id="dl-h">ให้ “มา” ${S.dlg.n} คนที่ยังไม่เช็ค?</h2><div>คนที่เช็คไว้แล้ว (สาย ลา ป่วย ขาด) ไม่ถูกเปลี่ยน</div><div class="row" style="justify-content:flex-end"><button data-a="dlgno" autofocus>ยกเลิก</button><button class="primary" data-a="dlgyes">ให้ “มา”</button></div></div></div>`}
+  }
+  if(S.toast)o+=`<div class="toast2" role="status"><span class="grow">${S.toast.text}</span>${S.toast.action?`<button data-a="toastact">${S.toast.action.label} (5)</button>`:''}</div>`;
+  return o;
+}
+let toastT=null;
+function toast2(text,action){S.toast={text,action};clearTimeout(toastT);toastT=setTimeout(()=>{S.toast=null;render()},action?5000:2600)}
+/* ===================== render ===================== */
+function curSub(){return S.sub[S.page]}
+function pjOn(){return S.page!=='home'&&curSub()==='pj'}
+function mainHtml(d){
+  if(S.page==='home'){syncHome();return H.homeHtml(d)}
+  if(S.page==='scan'){const s=curSub();return s==='setup'?setupHtml():s==='summary'?summaryHtml():liveHtml()}
+  if(S.page==='attendance')return attHtml();
+  return randomHtml();
+}
+function render(){
+  const d=F(),fr=$('#frame'),fit=$('#fit');
+  fr.style.width=d.w+'px';fr.style.height=d.h+'px';fr.style.setProperty('--u',d.u+'px');fr.dataset.theme=S.theme;
+  fr.className='frame '+S.dev+(d.touch?' touch':'')+(S.dev==='phone'?' phone narrow':'')+(isWide()?' wide':'');
+  const avail=Math.min(window.innerWidth-24,1536);const sc=d.w>avail?avail/d.w:1;
+  fr.style.transform=`scale(${sc})`;fit.style.width=(d.w*sc)+'px';fit.style.height=(d.h*sc)+'px';
+  const old=fr.querySelector('#main');const st=old?old.scrollTop:0;
+  const padx=S.dev==='phone'?14:24,pady=S.dev==='phone'?96:40;
+  if(pjOn()){
+    const K=Math.min(d.h/768,d.w/1024);
+    fr.innerHTML=pjHtml(K)+(S.toast?`<div class="toast2" role="status">${S.toast.text}</div>`:'');
+  }else{
+    const shell=d.shell==='rail'?railHtml():'';
+    let ov=overlays();
+    if(S.page==='home'){syncHome();
+      if(H.S.page==='prefs')ov+=H.prefsHtml();if(H.S.page==='list')ov+=H.listHtml();if(H.S.page==='sheet'&&isNarrow())ov+=sheetHtml();
+      if(H.S.toast)ov+=`<div class="toast" role="status">${ic('circle-check',18)}${H.S.toast}</div>`}
+    fr.innerHTML=shell+`<main class="main" id="main" style="--padx:${padx}px;--pady:${pady}px">${mainHtml(d)}</main>`+(d.shell==='tabs'?tabsHtml():'')+ov;
+    const rail=fr.querySelector('.rail');if(rail){fr.classList.remove('hide-gl');if(rail.scrollHeight>rail.clientHeight)fr.classList.add('hide-gl')}
+    const nm=fr.querySelector('#main');if(nm)nm.scrollTop=st;
+  }
+  ctl();
+}
+function ctl(){
+  const g=(label,obj,cur,act)=>`<div class="g"><b>${label}</b>${Object.entries(obj).map(([k,v])=>`<button class="${k===String(cur)?'on':''}" data-c="${act}" data-k="${k}">${v}</button>`).join('')}</div>`;
+  const pg={home:'หน้าหลัก',...PAGES};
+  const subs=S.page==='home'?{main:'หน้าหลัก',prefs:'แผงปรับหน้าหลัก',list:'รายการจากตัวเลข',sheet:'เมนูมือถือ'}:SUBS[S.page];
+  const cs=S.page==='home'?(H.S.page==='home'?'main':H.S.page):curSub();
+  const sims={scan:[['scan-next','ยิงคนถัดไป'],['scan-dup','ยิงซ้ำ'],['scan-bad','ยิงเลขที่ไม่มี'],['scan-exc','ยิงเด็กที่ยกเว้น']],attendance:[['att-scan','ยิง QR ถัดไป']],random:[['rd-go','สุ่ม']],home:[]}[S.page];
+  $('#ctl').innerHTML=g('หน้า',pg,S.page,'page')+g('จอ',subs,cs,'sub')+g('อุปกรณ์',Object.fromEntries(Object.entries(DEV).map(([k,v])=>[k,v.label])),S.dev,'dev')+g('ธีม',{light:'สว่าง',dark:'มืด'},S.theme,'theme')+g('ตัวอักษร',{0:'ค่าเครื่อง',16:'16',18:'18',24:'24'},S.font,'font')+g('สถานการณ์',SCEN,S.scen,'scen')+(sims&&sims.length?`<div class="g sim"><b>จำลอง</b>${sims.map(s=>`<button data-c="sim" data-k="${s[0]}">${s[1]}</button>`).join('')}</div>`:'')+`<div class="g"><button data-c="reset">เริ่มใหม่</button></div>`;
+  const d=F();$('#note').textContent=`${d.label} · ตัวอักษร ${d.u}px · ${S.theme==='dark'?'มืด':'สว่าง'} · ${SCEN[S.scen]} — ข้อมูลและชื่อสมมติ (วันนี้ = พุธ 4 พ.ย. 2569) · ปุ่มทุกอันกดได้ · ป้าย "ข้อเสนอ SA" / "ตัวเลือก" = ของที่รอตัดสินที่ Gate 2 · ฉายจอ: แนวนอนเหมาะที่สุด (D27)`;
+  location.hash=S.page==='home'?'home':S.page+(curSub()&&S.page!=='home'?'/'+curSub():'');
+}
+function syncHome(){H.S.dev=S.dev;H.S.theme=S.theme;H.S.font=S.font;H.S.menu9=false;H.S.scen={offline:'offline',unchecked:'morning'}[S.scen]||'normal'}
+function applySub(){
+  if(S.page==='scan'){
+    const s=S.sc;const sub=curSub();s.ended=false;
+    if(sub==='type'){s.mode='type';s.started=true;if(!s.pend&&!s.closed){s.pend={n:nextMiss(s.seats)};s.entry='';s.err=''}}
+    if(sub==='full'){s.mode='full';s.pend=null;s.started=true;if(!s.fb){const n=nextMiss(s.seats);scanCommit(n,'qr')}}
+    if(sub==='pj'){if(s.mode==='type'){s.mode='later';toast2('โหมดกรอกคะแนนถูกสลับเป็น “รับงานก่อน” ระหว่างฉายจอ')}s.pend=null}
+  }
+  if(S.page==='attendance'){if(curSub()==='period')S.at.mode='period';else if(curSub()==='scan')S.at.mode='scan';else if(curSub()==='tap')S.at.mode='tap'}
+  if(S.page==='random'){if(curSub()==='group')S.rd.mode='group';else if(curSub()==='pick')S.rd.mode='pick'}
+  if(curSub()==='pj'&&S.page!=='home')toast2('เปิดโหมดฉายจอแล้ว · คะแนนและเปอร์เซ็นต์รายคนถูกซ่อน');
+}
+function go(page,sub){
+  S.page=page;S.menu=null;S.prefsOpen=false;S.sheetMenu=false;S.pjOther=false;S.dlg=null;
+  if(page==='home'){if(sub)H.S.page=sub==='main'?'home':sub}
+  else{S.sub[page]=sub||(S.sub[page]==='pj'?{scan:'type',attendance:'tap',random:'pick'}[page]:S.sub[page]);applySub()}
+}
+function initAll(){initSc();initAt();initRd()}
+
+/* ===================== เหตุการณ์ · hash · เริ่มต้น ===================== */
+S.pjPref={th:'dark',sz:2};
+const PJ_DEFAULT_SUB={scan:'type',attendance:'tap',random:'pick'};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const LBL={gradebook:'คะแนน',reports:'รายงาน',students:'นักเรียน',settings:'ตั้งค่า',work:'งาน'};
+window.R2render=()=>render();
+window.R2nav=k=>{
+  if(['home','scan','attendance','random'].includes(k)){go(k);render();return}
+  toast2(`เปิดหน้า “${LBL[k]||k}” (หน้านี้อยู่นอกขอบเขต mockup รอบนี้)`);render();
+};
+function closeAll(){S.prefsOpen=false;S.sheetMenu=false;S.menu=null;S.dlg=null;if(S.sc)S.sc.sheet=null;S.pjOther=false}
+function exitPj(){S.sub[S.page]=PJ_DEFAULT_SUB[S.page];S.pjOther=false;S.pjHint=false;if(S.page==='attendance')S.at.mode='tap';render()}
+let rdTimer=null;
+function rdTick(){const R=S.rd;if(!R.run){clearInterval(rdTimer);rdTimer=null;return}R.left=Math.max(0,R.left-1);if(R.left===0){R.run=false;clearInterval(rdTimer);rdTimer=null}render()}
+function liveSub(){return ['type','full'].includes(curSub())}
+function ensureLive(){if(S.page==='scan'&&!liveSub()&&curSub()!=='pj'){S.sub.scan=S.sc.mode==='full'?'full':'type'}}
+
+function onAct(a,k,t,e){
+  const sc=S.sc,A=S.at,R=S.rd;
+  switch(a){
+  /* --- เปลือก --- */
+  case 'nav':window.R2nav(k);return;
+  case 'logout':toast2('ออกจากระบบ (จำลอง)');break;
+  case 'toast':toast2(k);break;
+  case 'prefs':S.prefsOpen=true;S.menu=null;break;
+  case 'sheetmenu':S.sheetMenu=!S.sheetMenu;break;
+  case 'closeov':if(e.target!==t&&t.tagName!=='BUTTON')return;closeAll();break;
+  case 'menu':S.menu=S.menu===k?null:k;break;
+  case 'toastact':{const f=S.toast&&S.toast.action;if(f)f.fn();break}
+  case 'dlgno':S.dlg=null;break;
+  /* --- ปรับการ์ด --- */
+  case 'pt':{const h=S.prefs[prefKey()].hidden,i=h.indexOf(k);if(i>=0)h.splice(i,1);else h.push(k);toast2('บันทึกแล้ว · ใช้กับทุกเครื่อง');break}
+  case 'pm':{const o=S.prefs[prefKey()].order,i=o.indexOf(k),j=i+(+t.dataset.d);if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];toast2('บันทึกแล้ว · ใช้กับทุกเครื่อง');break}
+  case 'preset':S.prefs[prefKey()]=defPrefs(prefKey());toast2('คืนค่าเริ่มต้นแล้ว');break;
+  /* --- ฉายจอ --- */
+  case 'pjmenu':S.menu=S.menu==='pj'?null:'pj';break;
+  case 'pjth':S.pjPref={...S.pjPref,th:k};break;
+  case 'pjsz':S.pjPref={...S.pjPref,sz:+k};break;
+  case 'pjstart':S.menu=null;S.sub[S.page]='pj';applySub();break;
+  case 'pjother':S.pjOther=!S.pjOther;break;
+  case 'pjgo':S.pjOther=false;go(k,'pj');break;
+  case 'pjexitnow':exitPj();return;
+  case 'pjhold':return; // จัดการด้วย pointer ด้านล่าง
+  /* --- สแกน: ตั้งค่ารอบ --- */
+  case 'pickasg':{sc.asg=k;const a2=AS(k);if(!a2.per[sc.cls])sc.cls=Object.keys(a2.per)[0];sc.seats=seatsInit(sc.asg,sc.cls);sc.recent=[];sc.fb=null;break}
+  case 'pickcls':sc.cls=k;sc.seats=seatsInit(sc.asg,k);sc.recent=[];sc.fb=null;break;
+  case 'pickmode':sc.mode=k;break;
+  case 'showall':sc.showAll=true;break;
+  case 'startround':{sc.recent=[];sc.fb=null;sc.cur=null;sc.ended=false;sc.pend=sc.mode==='type'&&!sc.closed?{n:nextMiss(sc.seats)}:null;sc.entry='';sc.err='';S.sub.scan=sc.mode==='full'?'full':'type';break}
+  /* --- สแกน: ระหว่างรอบ --- */
+  case 'swcls':sc.cls=k;sc.seats=seatsInit(sc.asg,k);sc.recent=[];sc.fb=null;sc.pend=null;S.menu=null;break;
+  case 'swmode':sc.mode=k;S.menu=null;sc.pend=k==='type'&&!sc.closed?(sc.pend||{n:nextMiss(sc.seats)}):null;if(k!=='type')sc.entry='';S.sub.scan=k==='full'?'full':'type';break;
+  case 'recv':sc.recvDate=k;sc.recv=k===TODAY?'today':'pick';S.menu=null;break;
+  case 'endround':S.sub.scan='summary';S.menu=null;break;
+  case 'backscan':S.sub.scan=sc.mode==='full'?'full':'type';break;
+  case 'closeasg':S.dlg={t:'close'};break;
+  case 'allp':{const m=curMap(),n=CL(A.cls).total-Object.keys(m).length;if(!n){toast2('เช็คครบทุกคนแล้ว');break}S.dlg={t:'allp',n};break}
+  case 'dlgyes':{
+    const d=S.dlg;S.dlg=null;
+    if(d.t==='close'){sc.closed=true;toast2('ปิดรับงานแล้ว · ทุกห้อง')}
+    else if(d.t==='allp'){const m=curMap(),added=[];for(let n=1;n<=CL(A.cls).total;n++)if(!m[n]){m[n]='p';added.push(n)}
+      A.saving=true;setTimeout(()=>{S.at.saving=false;render()},900);
+      toast2(`ให้ “มา” ${added.length} คนแล้ว`,{label:'เลิกทำ',fn:()=>{added.forEach(n=>delete m[n]);S.toast=null;render()}})}
+    break}
+  case 'copymiss':case 'copygrp':toast2('คัดลอกแล้ว');break;
+  case 'seat':{const n=+k,st=sc.seats[n];if(['scored','late','await'].includes(st)){sc.sheet=n;break}scanCommit(n,'tap');break}
+  case 'key':{if(k==='bk')sc.entry=sc.entry.slice(0,-1);else if(k==='.5'){if(!sc.entry.includes('.'))sc.entry=(sc.entry||'0')+'.5'}else if(sc.entry.length<4)sc.entry+=k;sc.err='';break}
+  case 'quick':sc.entry=String(k);sc.err='';break;
+  case 'savescore':scanSave();break;
+  case 'later':{const p=sc.pend;if(!p)break;const a2=AS(sc.asg);sc.seats[p.n]='await';sc.recent=sc.recent.filter(r=>r.n!==p.n);sc.recent.unshift({n:p.n,state:'await',score:null,full:a2.full,recv:recvOpts()});
+    sc.fb={kind:'acc',icon:'inbox',title:`${nick(p.n)} · เลขที่ ${p.n}`,sub:'รับงานแล้ว · รอคะแนน'};sc.pend=null;sc.entry='';break}
+  case 'rsheet':sc.sheet=+k;break;
+  case 'shundo':scanUndo(+k);break;
+  case 'shedit':{const n=+k;sc.sheet=null;sc.pend={n,edit:true};sc.entry='';sc.err='';sc.cur=n;ensureLive();break}
+  case 'excyes':{const n=sc.excAsk;sc.excAsk=null;sc.seats[n]='miss';scanCommit(n,'qr');break}
+  case 'excno':sc.excAsk=null;break;
+  case 'hidtest':toast2('เครื่องยิงตอบสนองปกติ');break;
+  case 'drop':sc.confirmDrop=+k;break;
+  case 'dropno':sc.confirmDrop=null;break;
+  case 'dropyes':{const id=+k,r=sc.failed.find(x=>x.id===id);sc.failed=sc.failed.filter(x=>x.id!==id);sc.confirmDrop=null;if(r)sc.dots.fail=sc.dots.fail.filter(n=>n!==r.n);toast2('ทิ้งรายการแล้ว');break}
+  case 'retry':{const id=+k,r=sc.failed.find(x=>x.id===id);sc.failed=sc.failed.filter(x=>x.id!==id);if(r)sc.dots.fail=sc.dots.fail.filter(n=>n!==r.n);toast2('ส่งใหม่สำเร็จ');break}
+  /* --- เช็คชื่อ --- */
+  case 'atcls':A.cls=k;break;
+  case 'date':A.date=shift(A.date,+k);if(A.date>TODAY)A.date=TODAY;break;
+  case 'atday':A.date=k;break;
+  case 'atper':A.mode=k==='1'?'period':'tap';S.sub.attendance=k==='1'?'period':'tap';break;
+  case 'atp':A.period=+k;break;
+  case 'brush':A.brush=k;A.cycle=false;break;
+  case 'cycle':A.cycle=!A.cycle;break;
+  case 'tile':attTap(+k);break;
+  case 'jump':{const n=+k;A.flash=n;const el=document.getElementById('t'+n);if(el&&el.scrollIntoView)el.scrollIntoView({block:'center'});setTimeout(()=>{S.at.flash=null;render()},1200);break}
+  /* --- สุ่มชื่อ --- */
+  case 'rdcls':R.cls=k;R.called=[];R.cur=null;R.groups=null;break;
+  case 'rdmode':R.mode=k;S.sub.random=k;break;
+  case 'rdgo':rdPick();break;
+  case 'rdnorep':R.norepeat=!R.norepeat;break;
+  case 'rdpresent':R.presentOnly=!R.presentOnly;break;
+  case 'rdall':R.presentOnly=false;break;
+  case 'rdpair':R.pair=!R.pair;break;
+  case 'rdlead':R.leaders=!R.leaders;break;
+  case 'rdstep':{const d=+k;if(R.mode==='group'){if(R.byGroups)R.ngroups=clamp(R.ngroups+d,2,10);else R.gsize=clamp(R.gsize+d,2,8)}else R.count=clamp(R.count+d,1,5);break}
+  case 'rdby':R.byGroups=k==='1';break;
+  case 'rduse':R.useRange=!R.useRange;break;
+  case 'rdr':{const [i,d]=k.split(',').map(Number),tot=CL(R.cls).total;R.range[i]=clamp(R.range[i]+d,1,tot);if(R.range[0]>R.range[1]){if(i===0)R.range[1]=R.range[0];else R.range[0]=R.range[1]}break}
+  case 'rdundo':rdUndo();break;
+  case 'rdpass':rdPass();break;
+  case 'rdreset':R.called=[];R.cur=null;R.groups=null;R.msg='';break;
+  case 'tsec':R.timerSec=+k;R.left=R.timerSec;R.run=false;break;
+  case 'trun':{R.run=!R.run;if(R.run){if(R.left<=0)R.left=R.timerSec;clearInterval(rdTimer);rdTimer=setInterval(rdTick,1000)}break}
+  case 'tres':R.left=R.timerSec;R.run=false;break;
+  default:return;
+  }
+  render();
+}
+function onCtl(c){
+  const a=c.dataset.c,k=c.dataset.k;
+  if(a==='page'){go(k)}
+  else if(a==='sub'){
+    if(S.page==='home'){H.S.page=k==='main'?'home':k;if(k==='sheet')S.dev='phone'}
+    else{S.sub[S.page]=k;if(S.page==='scan'&&k==='summary'){}applySub()}
+    closeAll()}
+  else if(a==='dev')S.dev=k;
+  else if(a==='theme')S.theme=k;
+  else if(a==='font')S.font=+k;
+  else if(a==='scen'){S.scen=k;initAll();H.S.confirmReset=false}
+  else if(a==='reset'){clearInterval(rdTimer);S.sub={scan:'type',attendance:'tap',random:'pick'};S.page='home';S.prefs={scan:defPrefs('scan'),att:defPrefs('att'),random:defPrefs('random')};S.pjPref={th:'dark',sz:2};S.toast=null;closeAll();initAll();H.S.page='home';H.S.prefs=H.DEFAULT_PREFS();H.S.showAll=false;H.S.filter='open';H.S.hideNames=false}
+  else if(a==='sim'){
+    if(S.page==='scan'){
+      ensureLive();const sc2=S.sc;
+      if(k==='scan-next'){if(!sc2.pend){const n=nextMiss(sc2.seats);if(n)scanCommit(n,'qr')}}
+      else if(k==='scan-dup'){const n=Object.keys(sc2.seats).map(Number).find(x=>['scored','late','await'].includes(sc2.seats[x]));if(n)scanCommit(n,'qr')}
+      else if(k==='scan-bad'){sc2.pend=null;scanCommit(99,'qr')}
+      else if(k==='scan-exc'){sc2.pend=null;sc2.seats[EXC[0]]='exc';scanCommit(EXC[0],'qr')}
+    }else if(S.page==='attendance'){S.at.mode='scan';S.sub.attendance='scan';attScanNext()}
+    else if(S.page==='random')rdPick();
+  }
+  render();
+}
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-c]');
+  if(c){onCtl(c);return}
+  if(S.menu&&!e.target.closest('.menu')){S.menu=null;if(!e.target.closest('[data-a]')){render();return}}
+  const t=e.target.closest('[data-a]');if(!t)return;
+  e.preventDefault();
+  const a=t.dataset.a,k=t.dataset.k;
+  if(S.page==='home'&&!['nav','logout','sheetmenu','closeov','toastact','menu','toast'].includes(a)){H.act(e,t);return}
+  onAct(a,k,t,e);
+});
+document.addEventListener('change',e=>{const t=e.target.closest('[data-a="atsubj"]');if(t){S.at.subj=t.value;render()}});
+/* กดค้างปุ่ม × 1 วินาทีเพื่อออกจากโหมดฉายจอ */
+let hold=null;
+function holdStart(btn){
+  holdEnd(true);const t0=performance.now();hold={btn,raf:0,t0};
+  const step=()=>{if(!hold)return;const p=Math.min(100,(performance.now()-hold.t0)/10);btn.style.setProperty('--p',p);if(p>=100){hold=null;exitPj();return}hold.raf=requestAnimationFrame(step)};
+  hold.raf=requestAnimationFrame(step);
+}
+function holdEnd(silent){
+  if(!hold)return;cancelAnimationFrame(hold.raf);const b=hold.btn,short=performance.now()-hold.t0<1000;hold=null;b.style.setProperty('--p',0);
+  if(!silent&&short){S.pjHint=true;render();clearTimeout(holdEnd.h);holdEnd.h=setTimeout(()=>{S.pjHint=false;render()},3000)}
+}
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-a="pjhold"]');if(b)holdStart(b)});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>document.addEventListener(ev,()=>holdEnd(false),true));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(S.dlg||S.prefsOpen||S.sheetMenu||S.menu||(S.sc&&S.sc.sheet!=null)){closeAll();render();return}
+    if(pjOn()){exitPj();return}
+    if(S.page==='home'&&H.S.page!=='home'){H.S.page='home';H.S.confirmReset=false;render()}
+    return}
+  if(e.key===' '&&S.page==='random'&&!S.prefsOpen&&(e.target===document.body)){e.preventDefault();rdPick();render()}
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('[data-a="pjhold"]')&&!e.repeat){e.preventDefault();holdStart(e.target)}
+});
+document.addEventListener('keyup',e=>{if((e.key==='Enter'||e.key===' ')&&hold)holdEnd(false)});
+window.addEventListener('resize',render);
+function fromHash(){
+  const [p,s]=location.hash.replace('#','').split('/');
+  if(!['home','scan','attendance','random'].includes(p))return false;
+  if(p===S.page&&(!s||s===curSub()))return false;
+  const ok=p==='home'||(SUBS[p]&&SUBS[p][s]);
+  go(p,ok?s:undefined);return true;
+}
+window.addEventListener('hashchange',()=>{if(fromHash())render()});
+initAll();
+S.page='home';
+fromHash();
+render();
+
+</script>
+</body>
+</html>
