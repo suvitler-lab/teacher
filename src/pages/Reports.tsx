@@ -1,32 +1,64 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import "../styles/home.css";
 import "../styles/report.css";
 import { Icon } from "../components/Icon";
-import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, StatCard, StackBar, EmptyState, NoClasses } from "../components/ui";
+import { LoadError, TermPicker, YearBanner, PageHeader, ClassChips, Segmented, EmptyState, NoClasses } from "../components/ui";
+import { ReportBody, ReportCards, ReportPrint, ReportProjector, rangeText, sortStudents, nextSort, sortAnnouncement, type SortState, type SortKey } from "../components/reports/ReportParts";
+import { PageCardSettings } from "../components/cards/PageCardSettings";
+import { REPORTS_CARD_META, REPORTS_LOCKED } from "../components/cards/meta";
+import { reportsLayout } from "../lib/pageCards";
+import { ProjectorButton } from "../components/Projector";
+import { projectorOn, pjSize } from "../lib/projector";
+import { navigate } from "../router";
 import { StudentDrawer } from "../components/StudentDrawer";
 import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED, startClass, rememberClass } from "../store";
 import { api } from "../lib/api";
+import { swrPeek, swrFetch } from "../lib/swr";
+import { ok, err } from "../lib/notify";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { computeReport, followUpText, type ReportModel, type ReportPayload } from "../lib/report";
 import { fullName } from "../lib/names";
-import { formatThaiDate, currentMonthIso, monthOptions, formatThaiDateMs, formatThaiTimeMs } from "../lib/dates";
+import { currentMonthIso, monthOptions, formatThaiDateMs, formatThaiTimeMs } from "../lib/dates";
 import { StudentModal } from "./Students";
 import type { Student } from "@shared/types";
-import { scorePercent, attendancePercent, assignmentFraction } from "@shared/metrics";
+import { scorePercent, attendancePercent } from "@shared/metrics";
 
-type SortKey = "number" | "submit" | "score" | "att";
+const HEADS: { key: SortKey; short: string; name: string }[] = [
+  { key: "number", short: "#", name: "เลขที่" }, { key: "submit", short: "ส่ง", name: "ส่งงาน" },
+  { key: "score", short: "สะสม", name: "คะแนนสะสม" }, { key: "att", short: "มา", name: "มาเรียน" },
+];
+
+/** B-06: the month the report opens on is the current one — unless the term is over (or not begun), then the nearest month the term has */
+export function clampMonthToTerm(month: string, term: { start_date: string | null; end_date: string | null } | undefined): string {
+  const first = term?.start_date?.slice(0, 7);
+  const last = term?.end_date?.slice(0, 7);
+  if (last && /^\d{4}-\d{2}$/.test(last) && month > last) return last;
+  if (first && /^\d{4}-\d{2}$/.test(first) && month < first) return first;
+  return month;
+}
+
+/** B-05: the term name may already say "ภาคเรียนที่ 1/2569" — the words are printed exactly once */
+export function termPrintLabel(name: string | undefined): string {
+  const n = (name ?? "").trim();
+  return /^ภาคเรียน/.test(n) ? n : `ภาคเรียนที่ ${n}`.trim();
+}
 
 export function ReportsPage() {
   const [classId, setClassId] = useState(startClass(null, viewClasses.value));
   const [subjectId, setSubjectId] = useState("");
   const [period, setPeriod] = useState<"term" | "month">("term");
-  const [month, setMonth] = useState(currentMonthIso());
+  const [month, setMonth] = useState(() => clampMonthToTerm(currentMonthIso(), terms.value.find((t) => t.id === selectedTermId.value)));
+  const monthPicked = useRef(false); // once the teacher picks a month herself, the term changing does not move it
   const [att, setAtt] = useState<"daily" | "subject">("daily");
   const [payload, setPayload] = useState<ReportPayload | null>(null);
   const [model, setModel] = useState<ReportModel | null>(null);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
   const [msg, setMsg] = useState("");
-  const [sort, setSort] = useState<SortKey>("submit");
+  const [sort, setSort] = useState<SortState>({ key: "submit", dir: "asc" }); // the ones who need a look come first
+  const [sortNote, setSortNote] = useState(""); // said aloud after a sort tap
+  const [printing, setPrinting] = useState(false); // the A4 preview in the page
+  const [prefsOpen, setPrefsOpen] = useState(false);
   const [drawer, setDrawer] = useState<string | null>(null);
   const [editStu, setEditStu] = useState<Student | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,23 +66,33 @@ export function ReportsPage() {
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
   const loading = useRef(false);
   const refresh = useRef(() => {});
+  // "per period" belongs to one subject: with no subject picked it is per day (the button said period, the data said day)
+  const attMode = subjectId ? att : "daily";
 
   async function load(background = false) {
     if (background && loading.current) return;
     const fresh = begin();
     if (!classId) { setStatus("ready"); setPayload(null); setModel(null); setUpdatedAt(null); loading.current = false; setRefreshing(false); return; }
-    const keep = background && !!model;
-    loading.current = true;
-    setRefreshing(true); setRefreshFailed(false);
+    const q = new URLSearchParams({ class: classId });
+    if (selectedTermId.value) q.set("term", selectedTermId.value);
+    if (period === "month") q.set("month", month);
+    if (subjectId) q.set("subject", subjectId);
+    if (attMode === "subject") q.set("att", "subject");
+    const url = `/api/reports/summary?${q}`;
+    // the last answer for this exact class/term/month/subject (saved when the teacher was here or on Students) paints at once;
+    // an explicit refresh / the minute timer always asks the server
+    const hit = background ? null : swrPeek<ReportPayload>(url);
+    const keep = (background && !!model) || !!hit;
     // never keep showing the previous class/term/month while the new one loads (or fails)
     if (!keep) { setStatus("loading"); setPayload(null); setModel(null); setUpdatedAt(null); }
+    if (hit) {
+      setPayload(hit.data); setModel(computeReport(hit.data)); setStatus("ready"); setUpdatedAt(hit.at);
+      if (hit.fresh) { loading.current = false; setRefreshing(false); setRefreshFailed(false); return; }
+    }
+    loading.current = true;
+    setRefreshing(true); setRefreshFailed(false);
     try {
-      const q = new URLSearchParams({ class: classId });
-      if (selectedTermId.value) q.set("term", selectedTermId.value);
-      if (period === "month") q.set("month", month);
-      if (subjectId) q.set("subject", subjectId);
-      if (att === "subject" && subjectId) q.set("att", "subject");
-      const p = await api.get<ReportPayload>(`/api/reports/summary?${q}`);
+      const p = await swrFetch(url, () => api.get<ReportPayload>(url));
       if (!fresh()) return; // the teacher already picked something else
       setPayload(p);
       setModel(computeReport(p));
@@ -62,7 +104,14 @@ export function ReportsPage() {
       if (fresh()) { loading.current = false; setRefreshing(false); }
     }
   }
-  useEffect(() => { load(); }, [classId, subjectId, month, period, att, selectedTermId.value]);
+  useEffect(() => { if (!subjectId && att === "subject") setAtt("daily"); }, [subjectId]);
+  // another term (or the terms arriving late): the default month follows it, so "ช่วงข้อมูล" never runs backwards
+  useEffect(() => {
+    if (monthPicked.current) return;
+    const m = clampMonthToTerm(currentMonthIso(), terms.value.find((t) => t.id === selectedTermId.value));
+    setMonth((cur) => (cur === m ? cur : m));
+  }, [selectedTermId.value, terms.value]);
+  useEffect(() => { load(); }, [classId, subjectId, month, period, attMode, selectedTermId.value]);
   refresh.current = () => { void load(true); };
   useEffect(() => {
     const visible = () => { if (document.visibilityState !== "hidden") refresh.current(); };
@@ -81,7 +130,8 @@ export function ReportsPage() {
   const subj = activeSubjects.value.find((s) => s.id === subjectId);
   const term = terms.value.find((t) => t.id === selectedTermId.value);
   const termLabel = selectedTermId.value === UNASSIGNED ? "ยังไม่ระบุเทอม" : (term?.name ?? "ทั้งเทอม");
-  const periodLabel = period === "term" ? termLabel : (monthOptions().find((m) => m.value === month)?.label ?? month);
+  const monthLabel = monthOptions().find((m) => m.value === month)?.label ?? month;
+  const periodLabel = period === "term" ? termLabel : monthLabel;
 
   async function exportExcel() {
     if (!model || !payload) return;
@@ -92,208 +142,141 @@ export function ReportsPage() {
         className: cls?.name ?? "", subjectName: subj?.name ?? "ทุกวิชา", periodLabel,
         workTypeName: (id) => workTypeById(id)?.name ?? "-", fullName,
       });
-      setMsg("ดาวน์โหลด Excel แล้ว"); setTimeout(() => setMsg(""), 2500);
-    } catch { setMsg("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
+      setMsg(""); ok("ดาวน์โหลด Excel แล้ว");
+    } catch { setMsg(""); err("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
   }
-  function copyLine() {
-    if (!model) return;
+  async function copyLine(): Promise<boolean> {
+    if (!model) return false;
     const lines = followUpText(model.followUp, `${cls?.name ?? ""} ${subj?.name ?? ""}`, formatThaiDateMs(Date.now()));
-    navigator.clipboard?.writeText(lines).then(() => { setMsg("คัดลอกไปวางใน LINE ได้เลย"); setTimeout(() => setMsg(""), 2500); }, () => setMsg("คัดลอกไม่สำเร็จ"));
+    try { await navigator.clipboard.writeText(lines); ok("คัดลอกไปวางใน LINE ได้เลย"); return true; }
+    catch { err("คัดลอกไม่สำเร็จ"); return false; }
   }
+  function sortBy(k: SortKey) { const n = nextSort(sort, k); setSort(n); setSortNote(sortAnnouncement(n)); }
 
   const unitLabel = model?.attendance.unit === "period" ? "คาบ" : "วัน";
-
-  // attendance mix
-  const attMix = model ? model.students.reduce((a, s) => ({
-    present: a.present + s.attendance.present, late: a.late + s.attendance.late, leave: a.leave + s.attendance.leave,
-    sick: a.sick + s.attendance.sick, absent: a.absent + s.attendance.absent,
-  }), { present: 0, late: 0, leave: 0, sick: 0, absent: 0 }) : null;
-  const attTotal = attMix ? attMix.present + attMix.late + attMix.leave + attMix.sick + attMix.absent : 0;
-
-  // score distribution buckets
-  const buckets = [0, 0, 0, 0, 0]; // <50, 50-59, 60-69, 70-79, 80+
-  if (model) for (const s of model.students) {
-    const pct = scorePercent(s.score, s.fullScore); // the same rounded % the table shows
-    if (pct == null) continue;
-    const i = pct < 50 ? 0 : pct < 60 ? 1 : pct < 70 ? 2 : pct < 80 ? 3 : 4;
-    buckets[i]++;
-  }
-  const maxBucket = Math.max(1, ...buckets);
-  const bucketColor = ["var(--fill-danger)", "var(--fill-warning)", "var(--fill-accent)", "var(--fill-accent)", "var(--fill-success)"];
-
-  const sorted = model ? [...model.students].sort((a, b) => {
-    if (sort === "number") return (a.student.number ?? 0) - (b.student.number ?? 0);
-    if (sort === "submit") return a.percent - b.percent;
-    if (sort === "score") return (a.fullScore ? a.score / a.fullScore : 1) - (b.fullScore ? b.score / b.fullScore : 1);
-    const ar = a.attendance.daysMarked ? (a.attendance.present + a.attendance.late) / a.attendance.daysMarked : 1;
-    const br = b.attendance.daysMarked ? (b.attendance.present + b.attendance.late) / b.attendance.daysMarked : 1;
-    return ar - br;
-  }) : [];
-
+  const sorted = model ? sortStudents(model.students, sort) : [];
   const classItems = viewClasses.value.map((c) => ({ id: c.id, name: c.name, count: rosterCount(c.id, selectedTermId.value) }));
+  const clock = updatedAt ? formatThaiTimeMs(updatedAt) : "";
+  // a sortable column head: the whole cell is the button; the arrow says which way (and "arrows" when it is not the sorted one)
+  const th = (h: (typeof HEADS)[number]) => (
+    <th scope="col" class={(h.key === "number" ? "" : "num ") + (h.key === "att" ? "c-att " : "") + (sort.key === h.key ? "on" : "")} aria-sort={sort.key === h.key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}>
+      <button type="button" class="rp-sortbtn" onClick={() => sortBy(h.key)} aria-label={`เรียงตาม${h.name}`}>
+        {h.short}<Icon name={sort.key === h.key ? (sort.dir === "asc" ? "sort-ascending" : "sort-descending") : "arrows-sort"} size={16} />
+      </button>
+    </th>
+  );
+
+  if (printing && model) {
+    const termText = selectedTermId.value === UNASSIGNED ? "ยังไม่ระบุเทอม" : termPrintLabel(term?.name);
+    return <ReportPrint model={model} payload={payload} className={cls?.name ?? ""} subjectName={subj?.name ?? "ทุกวิชา"} termLabel={termText}
+      monthLabel={period === "month" ? monthLabel : null} updatedAt={updatedAt} sort={sort} onClose={() => setPrinting(false)} />;
+  }
 
   return (
-    <div>
+    <div class="rp-page pg">
       <PageHeader icon="chart-bar" title="รายงานสรุป" sub={<span>{cls?.name} · {subj?.name ?? "ทุกวิชา"} · {periodLabel}</span>}
         actions={<>
           <TermPicker />
-          <button onClick={() => load(true)} disabled={!classId || refreshing}><Icon name="refresh" size={16} class={refreshing ? "spin" : undefined} /> โหลดใหม่</button>
-          {msg && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">{msg}</span>}
-          <button onClick={() => window.print()} disabled={status !== "ready" || !model}><Icon name="printer" size={16} /> พิมพ์</button>
-          <button class="primary" onClick={exportExcel} disabled={status !== "ready" || !model}><Icon name="file-spreadsheet" size={16} /> ส่งออก Excel</button>
+          <button class="ghost rp-ibtn" onClick={() => load(true)} disabled={!classId || refreshing} aria-label="โหลดใหม่"><Icon name="refresh" size={20} class={refreshing ? "spin" : undefined} /> <span class="rp-lbl">โหลดใหม่</span></button>
+          <button class="ghost rp-ibtn" onClick={() => setPrinting(true)} disabled={status !== "ready" || !model} aria-label="พิมพ์"><Icon name="printer" size={20} /> <span class="rp-lbl">พิมพ์</span></button>
+          {msg && <span class="hm-chip success" role="status">{msg}</span>}
+          <ProjectorButton />
+          <button class="primary rp-ibtn" onClick={exportExcel} disabled={status !== "ready" || !model} aria-label="ส่งออก Excel"><Icon name="file-spreadsheet" size={20} /> <span class="rp-lbl">ส่งออก Excel</span></button>
+          <button class="ghost rp-ibtn" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={20} /> <span class="rp-lbl">ปรับการ์ด</span></button>
         </>}
       />
 
       <YearBanner note="รายงานและ Excel ตรงกับตอนนั้น" />
-      {classId && <div class="page-sub" role="status" aria-live="polite" style="margin-bottom:8px">
-        {refreshing ? "กำลังอัปเดตรายงาน…" : updatedAt ? `ข้อมูลล่าสุด ${formatThaiTimeMs(updatedAt)} · อัปเดตอัตโนมัติทุก 1 นาทีเมื่อเปิดหน้านี้` : ""}
-        {refreshFailed && <span style="color:var(--text-warning)"> · อัปเดตไม่สำเร็จ — ยังแสดงข้อมูลครั้งก่อน กดโหลดใหม่ได้</span>}
-      </div>}
-      <div style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
-      <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
-        <select aria-label="วิชาของรายงาน" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)} style="width:auto;height:2.13rem">
-          <option value="">ทุกวิชา</option>
-          {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
-        </select>
-        <Segmented value={period} onChange={setPeriod} options={[{ value: "term", label: "ทั้งเทอม" }, { value: "month", label: "รายเดือน" }]} />
-        {period === "month" && (
-          <select aria-label="เดือนของรายงาน" value={month} onInput={(e) => setMonth((e.target as HTMLSelectElement).value)} style="width:auto;height:2.13rem">
-            {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
+
+      <div class="rp-bar">
+        <ClassChips items={classItems} value={classId} onPick={(id) => { setClassId(id); setDrawer(null); }} />
+        <div class="rp-tb">
+          <select class="rp-sel" aria-label="วิชาของรายงาน" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
+            <option value="">ทุกวิชา</option>
+            {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
           </select>
-        )}
-        <span class="grow" />
-        <span class="page-sub">เช็คชื่อ:</span>
-        <Segmented value={att} onChange={setAtt} options={[{ value: "daily", label: "รายวัน" }, { value: "subject", label: "รายคาบ (วิชานี้)", disabled: !subjectId }]} />
+          <Segmented label="ช่วงเวลา" value={period} onChange={setPeriod} options={[{ value: "term", label: "ทั้งเทอม" }, { value: "month", label: "รายเดือน" }]} />
+          {period === "month" && (
+            <select class="rp-sel" aria-label="เดือนของรายงาน" value={month} onInput={(e) => { monthPicked.current = true; setMonth((e.target as HTMLSelectElement).value); }}>
+              {monthOptions().map((m) => <option value={m.value}>{m.label}</option>)}
+            </select>
+          )}
+          <span class="page-sub">เช็คชื่อ:</span>
+          <Segmented label="แบบเช็คชื่อ" value={attMode} onChange={setAtt}
+            options={[{ value: "daily", label: "รายวัน" }, { value: "subject", label: <span title={subjectId ? undefined : "เลือกวิชาก่อน"}>รายคาบ (วิชานี้)</span>, disabled: !subjectId }]} />
+        </div>
       </div>
 
+      {classId && (
+        <div class="rp-status">
+          {refreshing ? <span class="hm-chip muted"><Icon name="loader-2" size={16} class="spin" />กำลังอัปเดตรายงาน…</span>
+            : refreshFailed ? <span class="hm-chip warning" role="status"><Icon name="cloud-off" size={16} />อัปเดตไม่สำเร็จ — ยังแสดงข้อมูลครั้งก่อน{clock ? ` (${clock})` : ""} · กดโหลดใหม่ได้</span>
+            : updatedAt ? <span class="hm-chip success"><Icon name="cloud-check" size={16} />ข้อมูลล่าสุด {clock} · อัปเดตอัตโนมัติทุก 1 นาทีเมื่อเปิดหน้านี้</span> : null}
+        </div>
+      )}
+
       {payload?.range.termDatesMissing && (
-        <div class="row" style="gap:8px;padding:8px 12px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:10px;font-size:var(--fs-sm)">
-          <Icon name="alert-triangle" size={16} /> เทอมนี้ยังไม่ได้ตั้งช่วงวันที่ การนับเช็คชื่ออาจไม่ครบ — ตั้งวันเริ่ม/สิ้นสุดในหน้าตั้งค่า
+        <div class="rp-warn" role="status">
+          <Icon name="alert-triangle" size={20} /> <span class="grow">เทอมนี้ยังไม่ได้ตั้งช่วงวันที่ การนับเช็คชื่ออาจไม่ครบ</span>
+          <button onClick={() => navigate("/settings", { section: "catalog" })}>ตั้งวันที่ภาคเรียน</button>
         </div>
       )}
       {payload?.range.from && (
-        <div class="rp-range"><Icon name="calendar-stats" size={14} /> ช่วงข้อมูล {formatThaiDate(payload.range.from)} – {payload.range.to ? formatThaiDate(payload.range.to) : "ปัจจุบัน"} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
+        <div class="rp-range"><Icon name="calendar-stats" size={16} /> ช่วงข้อมูล {rangeText(payload.range)} · งาน {payload.assignments.length} ชิ้น · เช็คชื่อ {payload.attendanceSessions.length} {payload.range.att === "subject" ? "คาบ" : "วัน"}</div>
       )}
 
       {!classId ? <NoClasses /> : status === "error" ? (
         <LoadError onRetry={() => load()} />
       ) : !model ? (
-        <div class="card"><EmptyState icon="loader-2" text="กำลังโหลด…" /></div>
+        <div class="card" role="status"><div class="uc-empty"><div class="ei"><Icon name="loader-2" size={30} class="spin" /></div><div>กำลังโหลด…</div></div></div>
       ) : model.students.length === 0 ? (
-        <div class="card"><EmptyState text="ห้องนี้ยังไม่มีนักเรียน" /></div>
+        <div class="card"><EmptyState icon="users" text="ห้องนี้ยังไม่มีนักเรียน" action={<button class="primary" onClick={() => navigate("/students", { class: classId })}>ไปหน้านักเรียน</button>} /></div>
       ) : (
-        <>
-          <div class="stat-row" style="margin-bottom:12px">
-            <StatCard label="อัตราส่งงาน" value={`${model.metrics.submitRate}%`} tone="success" icon="checks" hint={`ส่งแล้ว ${model.students.reduce((n, s) => n + s.submitted, 0)} จาก ${model.students.reduce((n, s) => n + s.applicable, 0)} ที่ถึงกำหนด` + (model.students.reduce((n, s) => n + s.pending, 0) > 0 ? ` · ยังไม่ถึงกำหนด ${model.students.reduce((n, s) => n + s.pending, 0)}` : "")} />
-            <StatCard label="งานค้าง" value={model.metrics.missingCount} unit="ชิ้น" valueTone="danger" tone="danger" icon="alert-circle" hint={`นักเรียน ${model.followUp.length} คน`} />
-            <StatCard label="คะแนนเฉลี่ย" value={`${model.metrics.avgScorePercent}%`} icon="star" hint="คะแนนสะสม · ค้างส่งนับ 0" />
-            <StatCard label="มาเรียน" value={model.metrics.attendanceRate == null ? "—" : `${model.metrics.attendanceRate}%`} tone="success" icon="user-check"
-              hint={model.metrics.attendanceRate == null ? "ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้" : `จาก ${model.attendance.sessions} ${unitLabel} · ขาดรวม ${attMix?.absent ?? 0} ครั้ง`} />
-          </div>
-
-          <div class="rp-cols">
-            <div class="card">
-              <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">อัตราการส่งรายงาน</span></div>
-              {model.assignments.length === 0 ? <div class="page-sub">ยังไม่มีงานในช่วงนี้</div> : (
-                <div class="rp-bars">
-                  {model.assignments.map((a) => {
-                    const overdue = a.assignment.due_date && model.today > a.assignment.due_date;
-                    const color = !overdue ? "var(--border-strong)" : a.rate >= 85 ? "var(--fill-accent)" : a.rate >= 60 ? "var(--fill-warning)" : "var(--fill-danger)";
-                    return (
-                      <div>
-                        <span class="lbl" title={a.assignment.title}>{a.assignment.title}</span>
-                        <div class="track"><div style={`width:${a.rate}%;background:${color}`} /></div>
-                        <span class="num">{assignmentFraction(a)}</span>
-                        <span class="pct" style={overdue ? "" : "color:var(--text-secondary);font-weight:400"}>{overdue ? a.rate + "%" : "เก็บอยู่"}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-              <div class="rp-legend">
-                <span><span class="dot" style="background:var(--fill-accent)" />85% ขึ้นไป</span>
-                <span><span class="dot" style="background:var(--fill-warning)" />60–84%</span>
-                <span><span class="dot" style="background:var(--fill-danger)" />ต่ำกว่า 60%</span>
-                <span><span class="dot" style="background:var(--border-strong)" />ยังไม่ถึงกำหนด</span>
-              </div>
+        <ReportBody
+          cards={(max) => <ReportCards model={model} classId={classId} unitLabel={unitLabel} max={max} periodLabel={periodLabel} onOpenStudent={setDrawer} onCopyLine={copyLine} onFullTerm={period === "month" ? () => setPeriod("term") : undefined} />}
+          table={
+          <section class="card rp-card" aria-labelledby="rp-people">
+            <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
+              <h2 id="rp-people" style="font-size:1rem;display:flex;align-items:center;gap:6px"><Icon name="users" size={20} /> รายบุคคล</h2>
+              <span class="rp-tiphint">แตะหัวตารางเพื่อเรียง · แตะชื่อเพื่อดูรายละเอียด</span>
             </div>
-
-            <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
-              <div class="card">
-                <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">การมาเรียน{model.attendance.unit === "period" ? " (รายคาบ)" : ""}</span><span class="page-sub" style="font-variant-numeric:tabular-nums">{attTotal.toLocaleString("th-TH")} ครั้ง · {model.attendance.sessions} {unitLabel}</span></div>
-                {attTotal === 0 && <div class="page-sub">ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้</div>}
-                {attMix && attTotal > 0 && <StackBar segments={[
-                  { value: attMix.present, color: "var(--fill-success)" }, { value: attMix.late, color: "var(--fill-warning)" },
-                  { value: attMix.leave, color: "var(--fill-accent)" }, { value: attMix.sick, color: "var(--fill-purple)" }, { value: attMix.absent, color: "var(--fill-danger)" },
-                ]} />}
-                {attMix && attTotal > 0 && <div class="rp-legend" style="margin-top:6px">
-                  <span><span class="dot" style="background:var(--fill-success)" />มา {attMix.present}</span>
-                  <span><span class="dot" style="background:var(--fill-warning)" />สาย {attMix.late}</span>
-                  <span><span class="dot" style="background:var(--fill-accent)" />ลา {attMix.leave}</span>
-                  <span><span class="dot" style="background:var(--fill-purple)" />ป่วย {attMix.sick}</span>
-                  <span><span class="dot" style="background:var(--fill-danger)" />ขาด {attMix.absent}</span>
-                </div>}
-              </div>
-              <div class="card">
-                <div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-weight:500">การกระจายคะแนนสะสม</span><span class="page-sub">{model.students.length} คน</span></div>
-                <div class="rp-hist">
-                  {buckets.map((n, i) => <div class="col"><span class="n">{n}</span><div class="bar" style={`height:${Math.round((n / maxBucket) * 54)}px;background:${bucketColor[i]}`} /></div>)}
-                </div>
-                <div class="rp-histx"><span>&lt;50</span><span>50–59</span><span>60–69</span><span>70–79</span><span>80+</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rp-cols">
-            <div class="card">
-              <div class="row" style="justify-content:space-between;margin-bottom:6px">
-                <span style="font-weight:500">ต้องติดตาม ({model.followUp.length} คน)</span>
-                <button class="ghost" style="height:1.73rem;font-size:var(--fs-xs)" onClick={copyLine}><Icon name="brand-line" size={14} /> คัดลอกไป LINE</button>
-              </div>
-              {model.followUp.length === 0 ? (
-                <div class="page-sub" style="color:var(--text-success)"><Icon name="circle-check" size={14} /> ส่งงานครบทุกคน</div>
-              ) : model.followUp.slice(0, 8).map((f) => (
-                <button class="rp-follow" onClick={() => setDrawer(f.student.id)}>
-                  <span class="muted num" style="width:16px">{f.student.number ?? "-"}</span>
-                  <div class="grow" style="min-width:0"><div style="font-size:var(--fs-sm)">{fullName(f.student)}</div><div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{f.missing.slice(0, 3).join(" · ")}{f.missing.length > 3 ? " …" : ""}</div></div>
-                  <span class="chip" style="background:var(--bg-danger);color:var(--text-danger)">ค้าง {f.missing.length}</span>
-                </button>
-              ))}
-            </div>
-
-            <div class="card" style="padding:6px 8px">
-              <div class="row" style="justify-content:space-between;padding:4px 4px 6px"><span style="font-weight:500">รายบุคคล</span></div>
-              <table class="rp-table">
-                <colgroup><col style="width:22px" /><col /><col style="width:52px" /><col style="width:78px" /><col style="width:44px" /></colgroup>
-                <thead><tr>
-                  <th class={sort === "number" ? "on" : ""} onClick={() => setSort("number")}>#</th>
-                  <th>ชื่อ</th>
-                  <th class={"num " + (sort === "submit" ? "on" : "")} onClick={() => setSort("submit")}>ส่ง</th>
-                  <th class={"num " + (sort === "score" ? "on" : "")} onClick={() => setSort("score")}>สะสม</th>
-                  <th class={"num " + (sort === "att" ? "on" : "")} onClick={() => setSort("att")}>มา</th>
-                </tr></thead>
-                <tbody>
-                  {sorted.map((s) => {
-                    const scorePct = scorePercent(s.score, s.fullScore);
-                    const attPct = attendancePercent(s.attendance);
-                    return (
-                      <tr onClick={() => setDrawer(s.student.id)}>
-                        <td class="muted">{s.student.number ?? "-"}</td>
-                        <td class="name">{fullName(s.student)}</td>
-                        <td class="num" style={s.missing > 0 ? "color:var(--text-danger)" : ""}>{s.submitted}/{s.applicable}</td>
-                        <td class="num">{scorePct != null ? <><span class="rp-mini"><i style={`width:${scorePct}%;background:${scorePct < 60 ? "var(--fill-warning)" : "var(--fill-success)"}`} /></span>{scorePct}%</> : "—"}</td>
-                        <td class="num">{attPct != null ? attPct + "%" : "—"}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </>
+            <table class="rp-table">
+              <caption class="sr-only">รายบุคคล {cls?.name} {subj?.name ?? "ทุกวิชา"} {periodLabel}</caption>
+              <colgroup><col style="width:2.6rem" /><col /><col style="width:4.4rem" /><col style="width:6.8rem" /><col class="c-att" style="width:3.8rem" /></colgroup>
+              <thead><tr>
+                {th(HEADS[0])}
+                <th scope="col"><span class="rp-thplain">ชื่อ</span></th>
+                {th(HEADS[1])}{th(HEADS[2])}{th(HEADS[3])}
+              </tr></thead>
+              <tbody>
+                {sorted.map((s) => {
+                  const scorePct = scorePercent(s.score, s.fullScore);
+                  const attPct = attendancePercent(s.attendance);
+                  return (
+                    <tr key={s.student.id} class={drawer === s.student.id ? "sel" : ""} onClick={() => setDrawer(s.student.id)}>
+                      <td class="muted">{s.student.number ?? "-"}</td>
+                      <td class="name"><button type="button" class="rp-namebtn" aria-label={`ดูข้อมูล ${fullName(s.student)}`} title={fullName(s.student)}>{fullName(s.student)}</button></td>
+                      <td class={"num" + (s.missing > 0 ? " bad" : "")}>{s.submitted}/{s.applicable}</td>
+                      <td class="num">{scorePct != null ? <><span class="rp-mini"><i class={scorePct < 60 ? "f-mid" : "f-succ"} style={`width:${scorePct}%`} /></span>{scorePct}%</> : "—"}</td>
+                      <td class="num c-att">{attPct != null ? attPct + "%" : "—"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <span class="sr-only" role="status" aria-live="polite">{sortNote}</span>
+          </section>
+          } />
       )}
 
-      {drawer && <StudentDrawer studentId={drawer} classId={classId} onClose={() => setDrawer(null)} onEdit={(s) => { setDrawer(null); setEditStu(s); }} />}
+      {drawer && <StudentDrawer studentId={drawer} classId={classId} from="reports" onClose={() => setDrawer(null)} onEdit={(s) => { setDrawer(null); setEditStu(s); }}
+        data={model && payload ? { model, payload } : undefined}
+        scopeLabel={`${subj?.name ?? "ทุกวิชา"} · ${period === "month" ? monthLabel : "ทั้งเทอม"}`}
+        onFullTerm={subjectId || period === "month" ? () => { setSubjectId(""); setPeriod("term"); } : undefined} />}
+      {prefsOpen && <PageCardSettings page="reports" title="หน้ารายงาน" layout={reportsLayout.value} meta={REPORTS_CARD_META} locked={REPORTS_LOCKED} onClose={() => setPrefsOpen(false)} />}
+      {projectorOn.value && model && model.students.length > 0 && (
+        <ReportProjector model={model} className={cls?.name ?? ""} subjectName={subj?.name ?? "ทุกวิชา"} periodLabel={periodLabel} size={pjSize.value} unitLabel={unitLabel} />
+      )}
       {editStu && <StudentModal student={editStu} classId={classId} onClose={() => setEditStu(null)} onSaved={() => { setEditStu(null); load(); }} />}
     </div>
   );

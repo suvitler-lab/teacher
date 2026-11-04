@@ -1,13 +1,16 @@
 import { useEffect, useState } from "preact/hooks";
+import type { ComponentChildren } from "preact";
 import "../styles/settings.css";
+import "../styles/settings-cards.css";
+import "../styles/home.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, Segmented, Switch } from "../components/ui";
+import { PageHeader, Segmented, Switch, SyncBadge } from "../components/ui";
 import { settings, applyTheme, loadBootstrap, revokedTokens, students as allStudents, studentsById } from "../store";
 import type { Settings, DeviceInfo } from "@shared/types";
 import { api } from "../lib/api";
 import { setSoundEnabled } from "../lib/sound";
 import { runBackup, BackupInconsistentError } from "../lib/backup";
-import { err, ok, withToast } from "../lib/notify";
+import { err, ok, notify, withToast } from "../lib/notify";
 import { AuditHistory } from "../components/AuditHistory";
 import { RestoreModal, BackupWarning } from "../components/RestoreModal";
 import { ResetModal, type ResetMode } from "../components/ResetModal";
@@ -15,7 +18,12 @@ import { CatalogEditor } from "../components/CatalogEditor";
 import { installHidScanner } from "../lib/hid";
 import { buildIndex, resolveScan } from "@shared/scan";
 import { fullName } from "../lib/names";
-import { routeParams, setNavGuard } from "../router";
+import { routeParams, setNavGuard, navigate } from "../router";
+import { SettingsCards } from "../components/settings/SettingsCards";
+import { PageCardSettings } from "../components/cards/PageCardSettings";
+import { SETTINGS_CARD_META, SETTINGS_LOCKED } from "../components/cards/meta";
+import { settingsLayout } from "../lib/pageCards";
+import { useConfirm } from "../components/ConfirmDialog";
 import { isPersisted, isInstalledApp, requestPersist } from "../lib/storage";
 import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../lib/offline";
 import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
@@ -33,6 +41,33 @@ const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: "history", label: "ประวัติการแก้ไข", icon: "history" },
 ];
 
+/** The keys the text form edits and the save bar counts. Switches and the theme save at once; cards and last_backup_at have their own writers. */
+const FORM_KEYS = ["school_name", "teacher_name", "late_after", "period_times"] as const satisfies readonly (keyof Settings)[];
+const THEME_TH: Record<Settings["theme"], string> = { system: "ตามเครื่อง", light: "สว่าง", dark: "มืด" };
+
+/** Where a setting applies: synced to every device, or kept on this one only (display.ts, storage). */
+function Scope({ all }: { all?: boolean }) {
+  return <span class="chip set-scope" title={all ? "ค่านี้ใช้กับทุกเครื่องที่เข้าสู่ระบบ" : "ค่านี้ไม่ซิงก์ไปเครื่องอื่น"} style="background:var(--surface-1);color:var(--text-secondary)"><Icon name={all ? "cloud" : "device-mobile"} size={13} /> {all ? "ทุกเครื่อง" : "เครื่องนี้เท่านั้น"}</span>;
+}
+
+/** The yellow dot on "สำรองข้อมูล" when a backup is due (with words for a screen reader). */
+function WarnDot() {
+  return <><span class="warndot" aria-hidden="true" /><span class="sr-only">ควรสำรองข้อมูล</span></>;
+}
+
+/** One setting: name + hint on the left, the control on the right. */
+function Row({ label, hint, scope, children }: { label: string; hint?: string; scope?: "all" | "device"; children: ComponentChildren }) {
+  return (
+    <div class="set-row">
+      <div class="set-l">
+        <div style="font-weight:500;font-size:1rem">{label}{scope && <Scope all={scope === "all"} />}</div>
+        {hint && <div class="page-sub">{hint}</div>}
+      </div>
+      <div class="set-r">{children}</div>
+    </div>
+  );
+}
+
 // Where unsent work waits on this device — and whether the browser promises to keep it.
 function StorageRow() {
   const [persisted, setPersisted] = useState<boolean | null | undefined>(undefined);
@@ -42,7 +77,7 @@ function StorageRow() {
   return (
     <div class="set-row" style="align-items:flex-start">
       <div>
-        <div style="font-weight:500;font-size:1rem">ที่เก็บข้อมูลในเครื่องนี้</div>
+        <div style="font-weight:500;font-size:1rem">ที่เก็บข้อมูลในเครื่องนี้ <Scope /></div>
         <div class="page-sub">
           {safe
             ? "เบราว์เซอร์มีโอกาสลบข้อมูลของเว็บนี้น้อยลง แต่ไม่ใช่การรับประกัน — งานที่ยังรอส่งควรถูกส่งขึ้นระบบให้เร็วที่สุด (ดูตัวเลข \"รอส่ง\" แล้วต่อเน็ต)"
@@ -69,7 +104,7 @@ function OfflineRow() {
   return (
     <div class="set-row" style="align-items:flex-start">
       <div>
-        <div style="font-weight:500;font-size:1rem">ใช้ออฟไลน์</div>
+        <div style="font-weight:500;font-size:1rem">ใช้ออฟไลน์ <Scope /></div>
         <div class="page-sub">{text[st]}{st === "ready" && offlineNote.value ? " · " + offlineNote.value : ""}</div>
       </div>
       {st === "ready" && <span class="chip" style="background:var(--bg-success);color:var(--text-success)"><Icon name="circle-check" size={13} /> พร้อม</span>}
@@ -88,7 +123,7 @@ function DisplayRows() {
   const def = defaultFont(isCoarse());
   return (
     <>
-      <div class="set-row"><div><div style="font-weight:500">ขนาดตัวอักษร</div><div class="page-sub">ใช้ทั้งแอป · จำไว้ในเครื่องนี้ · ค่าเริ่มต้น {def}</div></div>
+      <div class="set-row"><div><div style="font-weight:500">ขนาดตัวอักษร <Scope /></div><div class="page-sub">ใช้ทั้งแอป · จำไว้ในเครื่องนี้ · ค่าเริ่มต้น {def}</div></div>
         <div class="fs-step">
           <button aria-label="ลดขนาดตัวอักษร" disabled={fs <= FONT_MIN} onClick={() => setFs(setFontSize(fs - 1))}><Icon name="minus" size={24} /></button>
           <div class="v" role="status" aria-live="polite" aria-label={`ขนาดตัวอักษร ${fs}`}>{fs}</div>
@@ -96,7 +131,7 @@ function DisplayRows() {
           <button aria-label={`ใช้ขนาดค่าเริ่มต้น ${def}`} disabled={fs === def} onClick={() => setFs(resetFontSize())}>ค่าเริ่มต้น</button>
         </div>
       </div>
-      <div class="set-row"><div><div style="font-weight:500">ความหนาแน่น</div><div class="page-sub">ระยะห่างระหว่างแถวและปุ่ม (ไม่ต่ำกว่า 44px บนจอสัมผัส)</div></div>
+      <div class="set-row"><div><div style="font-weight:500">ความหนาแน่น <Scope /></div><div class="page-sub">ระยะห่างระหว่างแถวและปุ่ม (ไม่ต่ำกว่า 44px บนจอสัมผัส)</div></div>
         <Segmented label="ความหนาแน่น" value={den} onChange={(v) => setDen(setDensity(v))} options={(["compact", "normal", "roomy"] as Density[]).map((d) => ({ value: d, label: DENSITY_LABEL[d] }))} />
       </div>
       <div class="fs-live" role="group" aria-label="ตัวอย่างสด">
@@ -124,20 +159,18 @@ export function SettingsPage() {
   const [backupWarn, setBackupWarn] = useState(false); // S-04: say what is in the file before it is downloaded
   const [resetMode, setResetMode] = useState<ResetMode | null>(null);
   const [restoreInfo, setRestoreInfo] = useState<{ pending: boolean; maintenance: boolean } | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+  const { ask, node: askNode } = useConfirm();
 
   // keys the teacher edits here — last_backup_at is written by the backup button, not by this form
-  const changed: (keyof Settings)[] = draft
-    ? (Object.keys(draft) as (keyof Settings)[]).filter((k) => k !== "last_backup_at" && (!s || draft[k] !== s[k]))
-    : [];
+  const changed: (typeof FORM_KEYS)[number][] = draft ? FORM_KEYS.filter((k) => !s || draft[k] !== s[k]) : [];
 
   // Unsaved edits: ask before leaving the page (menu, back button, closing the tab).
   useEffect(() => {
     if (changed.length === 0) return;
     setNavGuard((next) =>
       next.split("?")[0] === "/settings" ||
-      confirm(`มีการตั้งค่าที่แก้ไขแล้ว ${changed.length} รายการ ยังไม่ได้บันทึก
-
-ออกจากหน้านี้และทิ้งการแก้ไขเหล่านี้ใช่ไหม?`));
+      ask({ title: "ออกจากหน้านี้?", body: `มีการตั้งค่าที่แก้ไขแล้ว ${changed.length} รายการ ยังไม่ได้บันทึก`, yes: "ออกโดยไม่บันทึก", no: "อยู่ต่อ", danger: true }));
     const beforeUnload = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
     window.addEventListener("beforeunload", beforeUnload);
     return () => { setNavGuard(null); window.removeEventListener("beforeunload", beforeUnload); };
@@ -149,18 +182,40 @@ export function SettingsPage() {
     api.get<{ pending: boolean; maintenance: boolean }>("/api/restore/status").then(setRestoreInfo).catch(() => setRestoreInfo(null));
   }, [section, showRestore]);
 
-  if (!draft) return <div class="empty">กำลังโหลด…</div>;
+  if (!draft || !s) return <div class="empty">กำลังโหลด…</div>;
+  const cur: Settings = s; // switches and the theme are read from the saved settings, not from the form copy, so flipping one never raises the save bar
 
   function set<K extends keyof Settings>(k: K, v: Settings[K]) { setDraft((d) => (d ? { ...d, [k]: v } : d)); }
 
-  // the theme is applied AND saved the moment it is picked (no separate save): otherwise a reload brings the old one back
-  async function chooseTheme(theme: Settings["theme"]) {
-    set("theme", theme);
+  // The theme and the two switches are saved the moment they are used (no save bar). The store changes first, so the
+  // screen answers at once; a failed save puts the old value back and says so.
+  async function chooseTheme(theme: Settings["theme"], withUndo = true) {
+    const was = cur.theme;
+    if (theme === was) return;
+    settings.value = { ...cur, theme };
     applyTheme(theme);
     try {
       await api.put("/api/settings", { theme });
-      if (settings.value) settings.value = { ...settings.value, theme };
-    } catch { err("บันทึกธีมไม่สำเร็จ"); }
+      notify("success", `บันทึกแล้ว · ธีม: ${THEME_TH[theme]}`, withUndo ? { action: { label: "เลิกทำ", run: () => { chooseTheme(was, false); } } } : {});
+    } catch {
+      if (settings.value) settings.value = { ...settings.value, theme: was };
+      applyTheme(was);
+      err("บันทึกธีมไม่สำเร็จ — ยังเป็นค่าเดิม");
+    }
+  }
+
+  async function saveNow(k: "sound_enabled" | "accept_student_code_scan", v: boolean, label: string, withUndo = true) {
+    const was = settings.value ? settings.value[k] : !v;
+    settings.value = { ...cur, ...(settings.value ?? {}), [k]: v };
+    if (k === "sound_enabled") setSoundEnabled(v);
+    try {
+      await api.put("/api/settings", { [k]: v });
+      notify("success", `บันทึกแล้ว · ${label}: ${v ? "เปิด" : "ปิด"}`, withUndo ? { action: { label: "เลิกทำ", run: () => { saveNow(k, was, label, false); } } } : {});
+    } catch {
+      if (settings.value) settings.value = { ...settings.value, [k]: was };
+      if (k === "sound_enabled") setSoundEnabled(was);
+      err("บันทึกไม่สำเร็จ — ยังเป็นค่าเดิม");
+    }
   }
 
   async function save() {
@@ -169,11 +224,10 @@ export function SettingsPage() {
     for (const k of changed) body[k] = draft![k];
     try { if (changed.length) await api.put("/api/settings", body); }
     catch { setBusy(""); err("บันทึกการตั้งค่าไม่สำเร็จ"); return; }
-    settings.value = draft;
-    setSoundEnabled(draft!.sound_enabled);
-    applyTheme(draft!.theme);
+    // only the keys of the form: a card layout or a switch changed meanwhile must not be put back to an old value
+    settings.value = { ...(settings.value ?? cur), ...body } as Settings;
     await loadBootstrap();
-    setDraft({ ...draft! });
+    setDraft(settings.value ? { ...settings.value } : null);
     setBusy("");
     ok("บันทึกการตั้งค่าแล้ว");
   }
@@ -196,117 +250,154 @@ export function SettingsPage() {
   const backupStale = !lastBackup || Date.now() - lastBackup > 7 * 86400000;
 
   return (
-    <div>
-      <PageHeader icon="settings" title="ตั้งค่า" sub={<span>{draft.school_name} · {draft.teacher_name}</span>} />
+    <div class="set-page pg">
+      <PageHeader icon="settings" title="ตั้งค่า" sub={<span>{draft.school_name} · {draft.teacher_name}</span>}
+        actions={<>
+          <SyncBadge />
+          {section === "general" && <button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={20} /> <span class="att-hide-sm">ปรับการ์ด</span></button>}
+        </>} />
 
-      <div class="set-nav-chips">
-        {SECTIONS.map((sec) => <button class={"pill" + (section === sec.key ? " on" : "")} onClick={() => setSection(sec.key)}><Icon name={sec.icon} size={14} /> {sec.label}{sec.key === "backup" && backupStale && <span style="width:6px;height:6px;border-radius:50%;background:var(--fill-warning)" />}</button>)}
+      <div class="set-nav-chips" role="tablist" aria-label="หมวดตั้งค่า">
+        {SECTIONS.map((sec) => (
+          <button class={"pill" + (section === sec.key ? " on" : "")} role="tab" aria-selected={section === sec.key} onClick={() => setSection(sec.key)}>
+            <Icon name={sec.icon} size={20} /> {sec.label}{sec.key === "backup" && backupStale && <WarnDot />}
+          </button>
+        ))}
       </div>
 
       <div class="set-cols">
-        <nav class="set-nav">
+        <nav class="set-nav" aria-label="หมวดตั้งค่า">
           {SECTIONS.map((sec) => (
-            <button class={section === sec.key ? "on" : ""} onClick={() => setSection(sec.key)}>
-              <Icon name={sec.icon} size={16} /> {sec.label}
-              {sec.key === "backup" && backupStale && <span class="warndot" />}
+            <button class={section === sec.key ? "on" : ""} aria-current={section === sec.key ? "page" : undefined} onClick={() => setSection(sec.key)}>
+              <Icon name={sec.icon} size={20} /> <span>{sec.label}</span>
+              {sec.key === "backup" && backupStale && <WarnDot />}
             </button>
           ))}
         </nav>
 
         <div class="set-body">
-          {section === "general" && (
-            <div class="card">
-              <div class="set-section-title"><Icon name="school" /> ทั่วไป</div>
+          {section === "general" && <SettingsCards lastBackup={lastBackup} onBackup={() => setBackupWarn(true)} onRestore={() => setShowRestore(true)} goSection={(x) => { setSection(x); navigate("/settings", { section: x }); }} />}
+          {section === "general" && (<div class="set-forms">
+            <section class="card" aria-labelledby="se-gh">
+              <h2 id="se-gh" class="set-section-title"><Icon name="school" /> ข้อมูลโรงเรียน <Scope all /></h2>
               <div class="modal-grid2">
                 <label class="field"><span>ชื่อโรงเรียน</span><input value={draft.school_name} onInput={(e) => set("school_name", (e.target as HTMLInputElement).value)} /></label>
                 <label class="field"><span>ชื่อครู</span><input value={draft.teacher_name} onInput={(e) => set("teacher_name", (e.target as HTMLInputElement).value)} /></label>
               </div>
-              <div class="set-row"><span>ธีม</span>
-                <Segmented value={draft.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={[{ value: "system", label: "ตามเครื่อง" }, { value: "light", label: "สว่าง" }, { value: "dark", label: "มืด" }]} />
-              </div>
+              <Row label="ธีม" hint="ใช้กับทุกเครื่อง · บันทึกทันที" scope="all">
+                <Segmented label="ธีม" value={cur.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={(Object.keys(THEME_TH) as Settings["theme"][]).map((t) => ({ value: t, label: THEME_TH[t] }))} />
+              </Row>
+            </section>
+            <section class="card" aria-labelledby="se-dh">
+              <h2 id="se-dh" class="set-section-title"><Icon name="device-mobile" /> การแสดงผลบนเครื่องนี้ <Scope /></h2>
               <DisplayRows />
               <OfflineRow />
               <StorageRow />
-            </div>
-          )}
+            </section>
+          </div>)}
 
-          {section === "time" && (
-            <div class="card">
-              <div class="set-section-title"><Icon name="clock" /> เวลาเรียน</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">เริ่มนับสาย (เช็คชื่อรายวัน)</div><div class="page-sub">สแกนหลังเวลานี้ = สาย</div></div>
-                <input type="time" aria-label="เวลาเริ่มนับสาย" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" /></div>
-              <div style="padding-top:10px;border-top:0.5px solid var(--border)">
+          {section === "time" && (<div class="set-forms">
+            <section class="card" aria-labelledby="se-th">
+              <h2 id="se-th" class="set-section-title"><Icon name="clock" /> เวลาเรียน <Scope all /></h2>
+              <Row label="เริ่มนับสาย (เช็คชื่อรายวัน)" hint="สแกนหลังเวลานี้ = สาย">
+                <input type="time" aria-label="เวลาเริ่มนับสาย" value={draft.late_after} onInput={(e) => set("late_after", (e.target as HTMLInputElement).value)} style="width:auto" />
+              </Row>
+              <div class="set-periods-wrap">
                 <div style="font-weight:500;font-size:1rem">เวลาเริ่มคาบ (สำหรับเช็คชื่อรายคาบ)</div>
                 <div class="page-sub" style="margin-bottom:8px">สแกนหลังเวลาเริ่มคาบจะนับเป็นสาย · เว้นว่างได้ถ้าไม่ใช้คาบนั้น</div>
                 <PeriodTimes value={draft.period_times} onChange={(v) => set("period_times", v)} />
               </div>
-            </div>
-          )}
+            </section>
+          </div>)}
 
-          {section === "scan" && (
-            <div class="card">
-              <div class="set-section-title"><Icon name="barcode" /> การสแกน</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">เสียงตอบรับ</div><div class="page-sub">ติ๊ด = สำเร็จ · ตื๊ด = ซ้ำ/ไม่พบ</div></div>
-                <Switch on={draft.sound_enabled} onToggle={() => set("sound_enabled", !draft.sound_enabled)} label="เสียงตอบรับ" /></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">รับบาร์โค้ดบัตรนักเรียนเดิม</div><div class="page-sub">สแกนรหัสนักเรียนตรงๆ ได้ นอกจาก QR ของระบบ</div></div>
-                <Switch on={draft.accept_student_code_scan} onToggle={() => set("accept_student_code_scan", !draft.accept_student_code_scan)} label="รับบาร์โค้ดบัตรเดิม" /></div>
-              <div style="padding-top:10px;border-top:0.5px solid var(--border)"><HidTest allowCode={draft.accept_student_code_scan} /></div>
-              <div style="padding-top:10px;margin-top:10px;border-top:0.5px solid var(--border)"><CameraTest /></div>
-            </div>
-          )}
+          {section === "scan" && (<div class="set-forms">
+            <section class="card" aria-labelledby="se-sh">
+              <h2 id="se-sh" class="set-section-title"><Icon name="barcode" /> การสแกน</h2>
+              <Row label="เสียงตอบรับ" hint="ติ๊ด = สำเร็จ · ตื๊ด = ซ้ำ/ไม่พบ" scope="all">
+                <Switch on={cur.sound_enabled} onToggle={() => saveNow("sound_enabled", !cur.sound_enabled, "เสียงตอบรับ")} label="เสียงตอบรับ" />
+              </Row>
+              <Row label="รับบาร์โค้ดบัตรนักเรียนเดิม" hint="สแกนรหัสนักเรียนตรงๆ ได้ นอกจาก QR ของระบบ" scope="all">
+                <Switch on={cur.accept_student_code_scan} onToggle={() => saveNow("accept_student_code_scan", !cur.accept_student_code_scan, "รับบาร์โค้ดบัตรเดิม")} label="รับบาร์โค้ดบัตรเดิม" />
+              </Row>
+              <div class="set-sub"><HidTest allowCode={cur.accept_student_code_scan} /></div>
+              <div class="set-sub"><CameraTest /></div>
+            </section>
+          </div>)}
 
           {section === "catalog" && (
-            <div class="card">
-              <div class="set-section-title"><Icon name="books" /> ห้องเรียน วิชา และภาคเรียน</div>
+            <section class="card" aria-labelledby="se-ch">
+              <h2 id="se-ch" class="set-section-title"><Icon name="books" /> ห้องเรียน วิชา และภาคเรียน</h2>
               <CatalogEditor />
-            </div>
+            </section>
           )}
 
           {section === "devices" && (<>
             <DeviceCheck />
             <DeviceList />
-            <div class="card">
-              <div class="set-section-title"><Icon name="key" /> รหัสผ่าน</div>
+            <section class="card" aria-labelledby="se-ph">
+              <h2 id="se-ph" class="set-section-title"><Icon name="key" /> บัญชีและรหัสผ่าน</h2>
+              <EmailRow />
               <ChangePassword />
+            </section>
+          </>)}
+
+          {section === "backup" && (<>
+            {(restoreInfo?.pending || restoreInfo?.maintenance) && (
+              <div class="set-banner warn" role="status">
+                <Icon name="alert-triangle" size={20} />
+                <span class="grow">{restoreInfo.maintenance ? "ระบบถูกล็อกจากการกู้คืนครั้งก่อนที่ไม่จบ — ปลดล็อกเพื่อใช้งานต่อ" : "มีงานกู้คืนที่ส่งไฟล์ค้างไว้ (ข้อมูลจริงยังไม่ถูกเปลี่ยน)"}</span>
+                <button onClick={cancelRestore} disabled={busy === "cancel"}>{restoreInfo.maintenance ? "ปลดล็อก" : "ยกเลิกงานนี้"}</button>
+              </div>
+            )}
+            {backupStale && (
+              <div class="set-banner warn" role="status">
+                <Icon name="alert-triangle" size={20} />
+                <span class="grow">{lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</span>
+                <button onClick={() => setBackupWarn(true)} disabled={busy === "backup"}>สำรองเลย</button>
+              </div>
+            )}
+            <div class="set-forms">
+            <section class="card" aria-labelledby="se-bh">
+              <h2 id="se-bh" class="set-section-title"><Icon name="database-export" /> สำรองและกู้คืน</h2>
+              <Row label="ดาวน์โหลดไฟล์สำรอง (JSON)" hint={`สำรองล่าสุด: ${lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}`}>
+                <button class="primary" onClick={() => setBackupWarn(true)} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={20} /> : <Icon name="download" size={20} />} ดาวน์โหลด</button>
+              </Row>
+              <div class="set-pdpa" role="note">
+                <Icon name="alert-triangle" size={20} />
+                <div><b>ไฟล์สำรองมีข้อมูลส่วนบุคคลของนักเรียน (ผู้เยาว์) และไม่ได้เข้ารหัส</b>
+                  <div class="page-sub" style="color:inherit">เก็บในเครื่อง/ไดรฟ์ที่มีรหัสผ่าน · อย่าส่งทาง LINE หรืออีเมล · ถ้าหลุด ออก QR ใหม่ที่หน้านักเรียน · จะมีหน้าต่างเตือนอีกครั้งก่อนดาวน์โหลด</div></div>
+              </div>
+              <Row label="กู้คืนจากไฟล์สำรอง" hint="ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน">
+                <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={20} /> กู้คืน</button>
+              </Row>
+            </section>
+            <section class="card set-danger" aria-labelledby="se-zh">
+              <h2 id="se-zh" class="set-section-title"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</h2>
+              <Row label="ล้างข้อมูลทดลอง" hint="ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก">
+                <button class="dan" onClick={() => setResetMode("data")}><Icon name="trash" size={20} /> ล้างข้อมูล</button>
+              </Row>
+              <Row label="ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น" hint="ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก">
+                <button class="dan" onClick={() => setResetMode("all")}><Icon name="trash-x" size={20} /> ล้างทั้งหมด</button>
+              </Row>
+            </section>
             </div>
           </>)}
 
-          {section === "backup" && (
-            <div class="card">
-              <div class="set-section-title"><Icon name="database-export" /> สำรองข้อมูล</div>
-              {(restoreInfo?.pending || restoreInfo?.maintenance) && (
-                <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:var(--fs-sm);flex-wrap:wrap">
-                  <Icon name="alert-triangle" size={16} />
-                  <span class="grow" style="min-width:180px">{restoreInfo.maintenance ? "ระบบถูกล็อกจากการกู้คืนครั้งก่อนที่ไม่จบ — ปลดล็อกเพื่อใช้งานต่อ" : "มีงานกู้คืนที่ส่งไฟล์ค้างไว้ (ข้อมูลจริงยังไม่ถูกเปลี่ยน)"}</span>
-                  <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={cancelRestore} disabled={busy === "cancel"}>{restoreInfo.maintenance ? "ปลดล็อก" : "ยกเลิกงานนี้"}</button>
-                </div>
-              )}
-              {backupStale && <div class="row" style="gap:8px;padding:8px 10px;border-radius:10px;background:var(--bg-warning);color:var(--text-warning);margin-bottom:8px;font-size:var(--fs-sm)"><Icon name="alert-triangle" size={16} /> {lastBackup ? `สำรองล่าสุด ${Math.round((Date.now() - lastBackup) / 86400000)} วันก่อน` : "ยังไม่เคยสำรอง"} · ควรสำรองสัปดาห์ละครั้ง</div>}
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ดาวน์โหลดไฟล์สำรอง (JSON)</div><div class="page-sub">สำรองล่าสุด: {lastBackup ? formatThaiDateTimeMs(lastBackup) : "ยังไม่เคย"}</div></div>
-                <button onClick={() => setBackupWarn(true)} disabled={busy === "backup"}>{busy === "backup" ? <Icon name="loader-2" class="spin" size={16} /> : <Icon name="download" size={16} />} ดาวน์โหลด</button></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">กู้คืนจากไฟล์สำรอง</div><div class="page-sub">ตรวจไฟล์ก่อน · สำรองข้อมูลปัจจุบันให้อัตโนมัติ · เปลี่ยนทีเดียว ล้มเหลวแล้วไม่มีอะไรเปลี่ยน</div></div>
-                <button onClick={() => setShowRestore(true)}><Icon name="database-import" size={16} /> กู้คืน</button></div>
-              <div class="set-section-title" style="margin-top:16px;color:var(--text-danger)"><Icon name="alert-triangle" /> เริ่มใหม่ (ล้างข้อมูล)</div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ล้างข้อมูลทดลอง</div><div class="page-sub">ลบห้อง นักเรียน งาน คะแนน เช็คชื่อ · เก็บบัญชีและการตั้งค่า · กลับไปหน้าต้อนรับครั้งแรก</div></div>
-                <button onClick={() => setResetMode("data")}><Icon name="trash" size={16} /> ล้างข้อมูล</button></div>
-              <div class="set-row"><div><div style="font-weight:500;font-size:1rem">ล้างทั้งหมด เริ่มใหม่ตั้งแต่ต้น</div><div class="page-sub">ลบทุกอย่างรวมบัญชีครู · กลับไปหน้าตั้งบัญชีครั้งแรก</div></div>
-                <button onClick={() => setResetMode("all")}><Icon name="trash-x" size={16} /> ล้างทั้งหมด</button></div>
+          {section === "history" && <HistorySection />}
+
+          {changed.length > 0 && (
+            <div class="set-savebar" role="region" aria-label="การแก้ไขที่ยังไม่บันทึก">
+              <Icon name="pencil" size={20} style="color:var(--text-accent)" />
+              <span class="grow" style="font-size:var(--fs-sm)" role="status" aria-live="polite">แก้ไขแล้ว {changed.length} รายการ ยังไม่บันทึก</span>
+              <button onClick={() => setDraft(s ? { ...s } : null)}>ยกเลิก</button>
+              <button class="primary" onClick={save} disabled={busy === "save"}>{busy === "save" ? <Icon name="loader-2" class="spin" size={20} /> : <Icon name="device-floppy" size={20} />} บันทึก</button>
             </div>
           )}
-
-          {section === "history" && <HistorySection />}
         </div>
       </div>
 
-      {changed.length > 0 && (
-        <div class="set-savebar">
-          <Icon name="pencil" size={16} style="color:var(--text-accent)" />
-          <span class="grow" style="font-size:var(--fs-sm)">แก้ไขแล้ว {changed.length} รายการ ยังไม่บันทึก</span>
-          <button onClick={() => setDraft(s ? { ...s } : null)}>ยกเลิก</button>
-          <button class="primary" onClick={save} disabled={busy === "save"}>{busy === "save" ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึก</button>
-        </div>
-      )}
-
+      {askNode}
+      {prefsOpen && <PageCardSettings page="settings" title="หน้าตั้งค่า" layout={settingsLayout.value} meta={SETTINGS_CARD_META} locked={SETTINGS_LOCKED} onClose={() => setPrefsOpen(false)} />}
       {resetMode && <ResetModal mode={resetMode} onClose={() => setResetMode(null)} />}
       {backupWarn && <BackupWarning onClose={() => setBackupWarn(false)} onConfirm={() => { setBackupWarn(false); backup(); }} />}
       {showRestore && <RestoreModal onClose={() => setShowRestore(false)} onDone={() => { setShowRestore(false); loadBootstrap(); }} />}
@@ -419,7 +510,7 @@ function DeviceCheck() {
   const icon = { ok: ["circle-check", "var(--text-success)"], warn: ["alert-triangle", "var(--text-warning)"], fail: ["circle-x", "var(--text-danger)"] } as const;
   return (
     <div class="card">
-      <div class="set-section-title"><Icon name="device-mobile-check" /> ตรวจเครื่องนี้</div>
+      <h2 class="set-section-title"><Icon name="device-mobile-check" /> ตรวจเครื่องนี้ <Scope /></h2>
       <div class="page-sub" style="margin-bottom:8px">รันก่อนเข้าห้องทุกครั้งที่เปลี่ยนเครื่อง — ตรวจ HTTPS, เซิร์ฟเวอร์, การใช้ออฟไลน์, ที่เก็บข้อมูล, นาฬิกา และงานค้าง (ตรวจกล้องแบบละเอียดที่ การสแกน › ทดสอบกล้อง)</div>
       <div class="row" style="gap:8px;flex-wrap:wrap">
         <button class="primary" onClick={run} disabled={busy}>{busy ? <Icon name="loader-2" size={16} class="spin" /> : <Icon name="stethoscope" size={16} />} {state ? "ตรวจอีกครั้ง" : "ตรวจเครื่องนี้"}</button>
@@ -445,24 +536,35 @@ function DeviceCheck() {
 
 function DeviceList() {
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
+  const { ask, node: askNode } = useConfirm();
   async function load() { try { const r = await api.get<{ devices: DeviceInfo[] }>("/api/devices"); setDevices(r.devices); } catch { setDevices([]); } }
   useEffect(() => { load(); }, []);
   async function signout(id: string, name: string) {
-    if (!confirm(`ออกจากระบบเครื่อง "${name}"? เครื่องนั้นต้องเข้าสู่ระบบใหม่`)) return;
+    if (!(await ask({ title: `ออกจากระบบเครื่อง "${name}"?`, body: "เครื่องนั้นต้องเข้าสู่ระบบใหม่", yes: "ออกจากระบบ", danger: true }))) return;
     const done = await withToast(() => api.post(`/api/devices/${id}/signout`), "ออกจากระบบเครื่องนี้ไม่สำเร็จ");
     if (done) { ok("ออกจากระบบเครื่องนั้นแล้ว"); load(); }
   }
   return (
     <div class="card">
-      <div class="set-section-title"><Icon name="devices" /> อุปกรณ์ที่เข้าสู่ระบบ</div>
+      {askNode}
+      <h2 class="set-section-title"><Icon name="devices" /> อุปกรณ์ที่เข้าสู่ระบบ</h2>
       {devices.map((d) => (
         <div class="set-row">
-          <div class="row" style="gap:8px;min-width:0"><Icon name="device-mobile" size={18} class="muted" /><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</span></div>
-          <div class="row" style="gap:8px"><span class="page-sub" style="white-space:nowrap">{formatThaiDayMonthMs(d.last_seen)}</span>
-            {!d.current && <button style="height:1.87rem;font-size:var(--fs-xs)" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}</div>
+          <div class="row" style="gap:10px;min-width:0;flex:1 1 12em"><Icon name="device-mobile" size={20} class="muted" /><div style="min-width:0"><div style="overflow-wrap:anywhere">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</div><div class="page-sub">{d.user_agent ? describeAgent(d.user_agent) + " · " : ""}ใช้ล่าสุด {formatThaiDayMonthMs(d.last_seen)}</div></div></div>
+          {!d.current && <button class="ghost" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}
         </div>
       ))}
     </div>
+  );
+}
+
+/** The sign-in e-mail, read only: there is no way to change it in this version (needs a new API). */
+function EmailRow() {
+  const [email, setEmail] = useState<string | null | undefined>(undefined);
+  useEffect(() => { api.get<{ email?: string | null }>("/api/auth/me").then((m) => setEmail(m.email ?? null), () => setEmail(null)); }, []);
+  return (
+    <div class="set-row"><div><div style="font-weight:500">อีเมลเข้าสู่ระบบ</div><div class="page-sub">ใช้ยืนยันตัวตนตอนเข้าสู่ระบบ · เปลี่ยนไม่ได้ในเวอร์ชันนี้</div></div>
+      <span style="overflow-wrap:anywhere">{email === undefined ? "กำลังโหลด…" : email ?? "ยังไม่ได้ตั้ง"}</span></div>
   );
 }
 
@@ -485,8 +587,8 @@ function ChangePassword() {
   );
   return (
     <div class="row" style="gap:6px;flex-wrap:wrap">
-      <input type="password" placeholder="รหัสเดิม" value={cur} onInput={(e) => setCur((e.target as HTMLInputElement).value)} style="width:140px" />
-      <input type="password" placeholder="รหัสใหม่" value={next} onInput={(e) => setNext((e.target as HTMLInputElement).value)} style="width:140px" />
+      <input type="password" aria-label="รหัสเดิม" placeholder="รหัสเดิม" autocomplete="current-password" value={cur} onInput={(e) => setCur((e.target as HTMLInputElement).value)} style="width:140px" />
+      <input type="password" aria-label="รหัสใหม่ (อย่างน้อย 6 ตัว)" placeholder="รหัสใหม่" autocomplete="new-password" value={next} onInput={(e) => setNext((e.target as HTMLInputElement).value)} style="width:140px" />
       <button class="primary" onClick={submit}>บันทึก</button>
       <button onClick={() => { setMsg(""); setOpen(false); }}>ยกเลิก</button>
       {msg && <div style="font-size:var(--fs-xs);color:var(--text-secondary);width:100%">{msg}</div>}
@@ -500,8 +602,8 @@ function HistorySection() {
   return (
     <div class="card">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div class="set-section-title" style="margin:0"><Icon name="history" /> ประวัติการแก้ไข</div>
-        <div class="chips-row">{FILTERS.map((f) => <button class={"pill" + (filter === f.v ? " on" : "")} style="height:1.73rem" onClick={() => setFilter(f.v)}>{f.l}</button>)}</div>
+        <h2 class="set-section-title" style="margin:0"><Icon name="history" /> ประวัติการแก้ไข</h2>
+        <div class="chips-row">{FILTERS.map((f) => <button class={"pill" + (filter === f.v ? " on" : "")} aria-pressed={filter === f.v} onClick={() => setFilter(f.v)}>{f.l}</button>)}</div>
       </div>
       <AuditHistory entity={filter || undefined} />
     </div>

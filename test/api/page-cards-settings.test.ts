@@ -4,7 +4,7 @@ import { call, login, seed } from "./helpers";
 
 // ui-redesign round 2: the scan, attendance and random-name pages each keep their card layout in one setting,
 // the same way the home page does (home_cards), so every device of the one teacher shows the same page.
-const KEYS = ["scan_cards", "attendance_cards", "random_cards"] as const;
+const KEYS = ["scan_cards", "attendance_cards", "random_cards", "gradebook_cards", "reports_cards", "students_cards", "settings_cards"] as const;
 
 describe("page card settings", () => {
   let cookie: string;

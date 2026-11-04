@@ -6,7 +6,7 @@ import { navigate } from "../router";
 import { online } from "../lib/outbox";
 import { serverReachable } from "../lib/session";
 import {
-  projectorOn, pjTheme, pjSize, pjHint, setPjTheme, setPjSize, startProjector, exitProjector, PJ_HOLD_MS,
+  projectorOn, pjTheme, pjSize, pjHint, pjHideNames, setPjHideNames, setPjTheme, setPjSize, startProjector, exitProjector, PJ_HOLD_MS,
   type PjSize,
 } from "../lib/projector";
 
@@ -14,6 +14,7 @@ const PAGES = [
   { path: "/scan", title: "สแกนส่งงาน", icon: "scan" },
   { path: "/attendance", title: "เช็คชื่อ", icon: "user-check" },
   { path: "/random", title: "สุ่มชื่อ", icon: "dice-3" },
+  { path: "/reports", title: "รายงาน", icon: "chart-bar" },
 ] as const;
 
 /** The button in a page header: choose the look, then start. */
@@ -37,6 +38,7 @@ export function ProjectorButton() {
                 <button class={pjSize.value === n ? "primary" : ""} aria-pressed={pjSize.value === n} onClick={() => setPjSize(n)}>{l}</button>
               ))}
             </div>
+            <label class="rnd-opt" style="margin:0"><input type="checkbox" checked={pjHideNames.value} onChange={(e) => setPjHideNames((e.target as HTMLInputElement).checked)} /> ซ่อนชื่อเด็กบนจอ</label>
             <button class="primary" onClick={() => { setOpen(false); startProjector(); }}><Icon name="presentation" size={18} /> เริ่มฉายจอ</button>
             <div class="page-sub">คะแนนและเปอร์เซ็นต์รายคนจะถูกซ่อน · กดค้างปุ่ม × 1 วินาทีเพื่อออก</div>
           </div>
@@ -50,7 +52,7 @@ export function ProjectorButton() {
  * The full-screen frame of projector mode, the same for every page: title, "กำลังฉายจอ", the exit button
  * (hold one second, or Esc), a way to the other projector pages, and the page's own body in between.
  */
-export function ProjectorShell({ page, children }: { page: "scan" | "attendance" | "random"; children: ComponentChildren }) {
+export function ProjectorShell({ page, children }: { page: "scan" | "attendance" | "random" | "reports"; children: ComponentChildren }) {
   const cur = PAGES.find((p) => p.path === "/" + page)!;
   const [other, setOther] = useState(false);
   const [p, setP] = useState(0);
@@ -75,6 +77,25 @@ export function ProjectorShell({ page, children }: { page: "scan" | "attendance"
     };
     hold.current = { raf: requestAnimationFrame(step), t0 };
   }
+  // the page behind the TV view still holds names and scores: nothing outside this view can be tabbed to or read by a screen reader
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const me = root.current;
+    if (!me) return;
+    const opener = document.activeElement as HTMLElement | null;
+    const marked: Element[] = [];
+    for (let node: Element = me; node.parentElement; node = node.parentElement) {
+      for (const sib of Array.from(node.parentElement.children)) {
+        if (sib !== node && !sib.hasAttribute("inert") && sib.tagName !== "SCRIPT") { sib.setAttribute("inert", ""); sib.setAttribute("aria-hidden", "true"); marked.push(sib); }
+      }
+    }
+    // focus moves into the TV view (its frame, not a button: a scanner's Enter must not press "×"); back to the opener on leaving
+    me.focus({ preventScroll: true });
+    return () => {
+      for (const el of marked) { el.removeAttribute("inert"); el.removeAttribute("aria-hidden"); }
+      if (opener && opener !== document.body && opener.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") exitProjector(); };
     window.addEventListener("keydown", onKey);
@@ -82,12 +103,12 @@ export function ProjectorShell({ page, children }: { page: "scan" | "attendance"
   }, []);
 
   return (
-    <div class="pj" data-th={pjTheme.value} data-sz={pjSize.value} role="region" aria-label={`โหมดฉายจอ: ${cur.title}`}>
+    <div class="pj" ref={root} tabIndex={-1} data-th={pjTheme.value} data-sz={pjSize.value} role="region" aria-label={`โหมดฉายจอ: ${cur.title}`}>
       <div class="pjbar">
         <h1><Icon name={cur.icon} size={44} />{cur.title}</h1>
         <div class="row" style="gap:16px">
           {!up && <span class="pj-off" role="status" aria-label="ออฟไลน์"><Icon name="wifi-off" size={32} /></span>}
-          <span class="live"><i />กำลังฉายจอ</span>
+          <span class="live" role="status"><i />กำลังฉายจอ</span>
           <button ref={btn} class="exit" aria-label="ออกจากโหมดฉายจอ — กดค้าง 1 วินาที" style={`--p:${p}`}
             onPointerDown={begin} onPointerUp={() => stop(true)} onPointerCancel={() => stop(false)} onPointerLeave={() => stop(false)}
             onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !e.repeat) { e.preventDefault(); begin(); } }}

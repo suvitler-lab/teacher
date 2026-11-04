@@ -114,3 +114,6 @@ button.uc-stat:hover { background: var(--surface-1); }
   .pill { height: 2.4rem; }
   .seg button { height: 2.27rem; }
 }
+
+/* drawers: the action buttons stay in view while a long list scrolls */
+.drawer-actions { position: sticky; bottom: 0; background: var(--surface-2); padding: 8px 0; border-top: 0.5px solid var(--border); }

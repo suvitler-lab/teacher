@@ -1,17 +1,20 @@
 import { useEffect, useState } from "preact/hooks";
 import "../styles/home.css";
 import { Icon } from "../components/Icon";
-import { PageHeader, StatCard, TermPicker, YearBanner, EmptyState, Drawer, LoadError } from "../components/ui";
+import { PageHeader, StatCard, TermPicker, YearBanner, EmptyState, Drawer } from "../components/ui";
+import { HomeSkeleton, HomeError, NoClassesCard, NoStudentsCard } from "../components/home/States";
 import { Chip } from "../components/home/shared";
 import { TodoCard } from "../components/home/Todo";
 import { ResumeScan } from "../components/home/Resume";
 import { CardSettings } from "../components/home/CardSettings";
 import { CARD_VIEW } from "../components/home/cards";
-import { WIDE_CARDS } from "../components/home/meta";
+import { CARD_WEIGHT } from "../components/home/meta";
+import { PageCols } from "../components/PageCols";
 import {
-  settings, selectedTermId, viewingPastYear, classById, subjectById,
+  settings, selectedTermId, viewingPastYear, classById, subjectById, viewClasses, studentsByClass,
 } from "../store";
 import { navigate } from "../router";
+import { online } from "../lib/outbox";
 import { formatThaiDate } from "../lib/dates";
 import { dashboard, dashboardStale, dashboardAt, dashboardStatus, loadDashboard } from "../lib/dashboard";
 import { formatThaiTimeMs } from "../lib/dates";
@@ -61,6 +64,10 @@ export function Home() {
     present: c.present + a.present, late: c.late + a.late, leave: c.leave + a.leave, sick: c.sick + a.sick, absent: c.absent + a.absent,
   }), { present: 0, late: 0, leave: 0, sick: 0, absent: 0 }));
   const pastYear = viewingPastYear.value;
+  const rooms = viewClasses.value;
+  const noClasses = rooms.length === 0;
+  // classes exist but nobody is in them (judged from the roster, and only once the dashboard agrees)
+  const noStudents = !noClasses && !!d && att.length === 0 && [...open, ...grading].every((a) => a.perClass.every((p) => p.total === 0)) && rooms.every((c) => (studentsByClass.value.get(c.id)?.length ?? 0) === 0);
   const stale = dashboardStale.value;
   const staleTag = stale ? <> <Chip tone="warning">ข้อมูลเก่า</Chip></> : null;
 
@@ -72,18 +79,16 @@ export function Home() {
     missing: "เฉพาะงานที่ยังเปิดรับ — งานที่ปิดแล้วไม่นับ",
   };
 
-  // the cards the teacher chose, in the order chosen. On a wide screen they sit in two columns:
-  // wide cards (lists) left, the rest right; the order still holds inside each column.
+  // the cards the teacher chose, in the order chosen. On a wide screen <PageCols> spreads them over up to three
+  // columns (the next card goes to the shortest column), so the first card is always top-left.
   const order = visibleOrder(homeCards.value).filter((k) => !(pastYear && k === "att"));
-  const wide = order.filter((k) => WIDE_CARDS.includes(k));
-  const side = order.filter((k) => !WIDE_CARDS.includes(k));
-  const view = (k: HomeCardKey) => { const C = CARD_VIEW[k]; return <C key={k} />; };
+  const view = (k: HomeCardKey) => { const C = CARD_VIEW[k]; return <C />; };
 
   const attLine = pastYear ? "ใช้ห้องของปีนี้" : d ? attendanceHeadline(d.attendanceToday.filter((a) => a.total > 0)) : "เช็คชื่อประจำวัน";
   const quick = (sub: string) => (pastYear ? "ใช้ห้องของปีนี้" : sub);
 
   return (
-    <div class="hm">
+    <div class="hm pg">
       <PageHeader
         icon="home"
         title={`สวัสดี ${s?.teacher_name || "คุณครู"}`}
@@ -120,11 +125,14 @@ export function Home() {
       </div>
       {!pastYear && <ResumeScan />}
 
-      {status === "error" && !d ? (
-        <LoadError onRetry={() => loadDashboard(selectedTermId.value)}
-          text={navigator.onLine ? "โหลดข้อมูลหน้าหลักไม่สำเร็จ" : "ออฟไลน์ — ยังไม่มีข้อมูลของเทอมนี้ในเครื่อง (เลือกเทอมอื่น หรือรอต่อเน็ต)"} />
+      {noClasses ? (
+        <NoClassesCard />
+      ) : status === "error" && !d ? (
+        <HomeError online={online.value && navigator.onLine} onRetry={() => loadDashboard(selectedTermId.value, { force: true })} />
       ) : !d ? (
-        <div class="card" role="status"><EmptyState icon="loader-2" text="กำลังโหลด…" /></div>
+        <HomeSkeleton />
+      ) : noStudents ? (
+        <NoStudentsCard />
       ) : (<>
         <div class="stat-row hm-stats">
           <StatCard label="งานที่เปิดรับ" value={open.length} icon="clipboard-list" tone="neutral" hint={<>กดดูรายห้อง{staleTag}</>} onClick={() => setList("open")} />
@@ -139,10 +147,7 @@ export function Home() {
         {order.length === 0 ? (
           <div class="card"><EmptyState icon="layout-grid" text="ยังไม่ได้เปิดการ์ดใดไว้" action={<button onClick={() => setPrefsOpen(true)}><Icon name="layout-grid" size={20} /> ปรับหน้าหลัก</button>} /></div>
         ) : (
-          <div class={"hm-cols" + (wide.length === 0 || side.length === 0 ? " one" : "")}>
-            {wide.length > 0 && <div class="hm-col">{wide.map(view)}</div>}
-            {side.length > 0 && <div class="hm-col">{side.map(view)}</div>}
-          </div>
+          <PageCols keys={order} max={3} weightOf={(k) => CARD_WEIGHT[k]} render={view} />
         )}
       </>)}
 

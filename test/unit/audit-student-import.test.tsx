@@ -26,6 +26,7 @@ beforeEach(() => {
 async function openPaste() {
   render(<StudentsPage />);
   fireEvent.click(screen.getByRole("button", { name: "นำเข้า Excel" }));
+  fireEvent.click(screen.getByRole("tab", { name: "วางข้อความ" })); // the file tab comes first (round 3)
   fireEvent.input(screen.getByRole("textbox", { name: "รายชื่อนักเรียนที่คัดลอกจาก Excel" }), { target: { value: "10501\tด.ช. สมชาย ทดสอบ\t1" } });
 }
 

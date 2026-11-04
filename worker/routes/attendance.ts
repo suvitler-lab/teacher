@@ -50,15 +50,16 @@ attendanceRoutes.get("/api/attendance", async (c) => {
   const period = c.req.query("period") ? Number(c.req.query("period")) : null;
   if (!date || !classId) return c.json({ session: null, rows: [] });
 
-  const session = await c.env.DB.prepare(
-    "SELECT * FROM attendance_sessions WHERE date = ? AND class_id = ? AND IFNULL(subject_id,'') = ? AND IFNULL(period,0) = ?",
-  )
-    .bind(date, classId, subjectId ?? "", period ?? 0)
-    .first<{ id: string }>();
+  // The session and its marks are asked in ONE round trip (the database is far away): the marks name their session by the
+  // same date/class/subject/period test instead of waiting for its id. A batch also reads both from one snapshot.
+  const where = "date = ? AND class_id = ? AND IFNULL(subject_id,'') = ? AND IFNULL(period,0) = ?";
+  const binds = [date, classId, subjectId ?? "", period ?? 0];
+  const [sessionRes, rows] = await c.env.DB.batch([
+    c.env.DB.prepare(`SELECT * FROM attendance_sessions WHERE ${where}`).bind(...binds),
+    c.env.DB.prepare(`SELECT * FROM attendance WHERE session_id = (SELECT id FROM attendance_sessions WHERE ${where} LIMIT 1)`).bind(...binds),
+  ]);
+  const session = (sessionRes.results ?? [])[0] ?? null;
   if (!session) return c.json({ session: null, rows: [] });
-  const rows = await c.env.DB.prepare("SELECT * FROM attendance WHERE session_id = ?")
-    .bind(session.id)
-    .all();
   return c.json({ session, rows: rows.results ?? [] });
 });
 
@@ -77,7 +78,9 @@ attendanceRoutes.get("/api/attendance/days", async (c) => {
   const binds: unknown[] = [from, to];
   if (classId) { clauses.push("s.class_id = ?"); binds.push(classId); }
 
-  const res = await c.env.DB.prepare(
+  // the tallies and the class sizes don't depend on each other: one round trip for both
+  const [res, counts] = await c.env.DB.batch([
+    c.env.DB.prepare(
     `SELECT s.date, s.class_id AS classId,
             SUM(st.id IS NOT NULL AND a.status = 'present') AS present,
             SUM(st.id IS NOT NULL AND a.status = 'late')    AS late,
@@ -91,12 +94,12 @@ attendanceRoutes.get("/api/attendance/days", async (c) => {
      WHERE ${clauses.join(" AND ")}
      GROUP BY s.date, s.class_id
      ORDER BY s.date`,
-  ).bind(...binds).all();
-
-  const counts = await c.env.DB.prepare(
-    "SELECT class_id AS classId, COUNT(*) AS total FROM students WHERE status = 'active' GROUP BY class_id",
-  ).all<{ classId: string; total: number }>();
-  const totalByClass = new Map((counts.results ?? []).map((r) => [r.classId, r.total]));
+    ).bind(...binds),
+    c.env.DB.prepare(
+      "SELECT class_id AS classId, COUNT(*) AS total FROM students WHERE status = 'active' GROUP BY class_id",
+    ),
+  ]);
+  const totalByClass = new Map(((counts.results ?? []) as { classId: string; total: number }[]).map((r) => [r.classId, r.total]));
 
   const days = (res.results ?? []).map((r: any) => ({
     date: r.date, classId: r.classId,
@@ -105,6 +108,10 @@ attendanceRoutes.get("/api/attendance/days", async (c) => {
   }));
   return c.json({ days });
 });
+
+// A row whose status is "none" CLEARS the student's mark (the teacher tapped the same status again): the attendance row
+// is deleted, so the child is simply "not checked yet" again. It goes through the same guards as any other write.
+const CLEAR = "none";
 
 const attBatchSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // S-20: a junk date was saved as is
@@ -115,7 +122,7 @@ const attBatchSchema = z.object({
     .array(
       z.object({
         studentId: z.string().min(1),
-        status: z.enum(["present", "late", "leave", "sick", "absent"]),
+        status: z.enum(["present", "late", "leave", "sick", "absent", CLEAR]),
         time: z.number().nullable().optional(),
         method: z.enum(["camera", "hid", "manual", "grid", "bulk", "import", "restore"]).optional(),
         opId: z.string().optional(),
@@ -147,6 +154,8 @@ async function currentRows(env: Env, sessionId: string, sids: string[]): Promise
 // either it saw an older version (base < updated_at) or it saw nothing at all (base null, e.g.
 // loaded offline / a second device that started from an empty list). Same status is never a
 // clash — which also lets a retry after a lost response (server already has our value) go through.
+// A clear ("none") clashes with any row another device wrote since this client last looked; clearing a row that
+// is not there is never a clash (nothing to lose, and a retry of a clear that already landed goes through).
 function findConflicts(rows: { studentId: string; status: string; baseUpdatedAt?: number | null }[], cur: Map<string, CurRow>) {
   return rows
     .filter((r) => {
@@ -232,6 +241,8 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
     return {
       rows: Object.fromEntries([...cur.entries()].map(([sid, r]) => [sid, r.updated_at])),
       state: Object.fromEntries([...cur.entries()].map(([sid, r]) => [sid, { status: r.status, updatedAt: r.updated_at }])),
+      // students of this batch with NO mark on the server now (a clear that landed, or a mark another device cleared)
+      absent: sids.filter((sid) => !cur.has(sid)),
     };
   };
   if (todo.length === 0) {
@@ -251,6 +262,9 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
      ) THEN json('attendance conflict') ELSE 1 END`,
   );
 
+  const clears = todo.filter((r) => r.status === CLEAR);
+  const writes = todo.filter((r) => r.status !== CLEAR);
+
   for (let attempt = 0; attempt < 3; attempt++) {
     const curMap = await currentRows(c.env, sessionId, sids);
     if (!b.force) {
@@ -258,7 +272,7 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
       if (conflicts.length > 0) return c.json({ error: "conflict", sessionId, conflicts }, 409);
     }
 
-    const upserts = todo.map((r) => ({
+    const upserts = writes.map((r) => ({
       session_id: sessionId,
       student_id: r.studentId,
       status: r.status,
@@ -268,6 +282,8 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
       updated_at: now,
       base: r.baseUpdatedAt ?? null,
     }));
+    // what the in-batch conflict guard looks at: every tap, clears included
+    const guardRows = todo.map((r) => ({ student_id: r.studentId, status: r.status, base: r.baseUpdatedAt ?? null }));
     // the version only ever goes UP (even if a clock stepped back), so "newer than what I saw" is reliable
     const upsertStmt = c.env.DB.prepare(
       `INSERT INTO attendance (session_id, student_id, status, time, method, device_id, updated_at)
@@ -281,12 +297,29 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
          device_id=excluded.device_id, updated_at=MAX(excluded.updated_at, attendance.updated_at + 1)`,
     ).bind(JSON.stringify(upserts));
 
-    const audits: AuditRow[] = todo.map((r) => ({
+    const auditOf = (r: (typeof todo)[number], action: string, after: unknown): AuditRow => ({
       op_id: r.opId, entity: "attendance", entity_id: `${sessionId}:${r.studentId}`, student_id: r.studentId,
-      action: "update", device_id: deviceId,
+      action, device_id: deviceId,
       before: curMap.get(r.studentId) ? { status: curMap.get(r.studentId)!.status } : null,
-      after: { status: r.status }, method: r.method ?? "grid",
-    }));
+      after, method: r.method ?? "grid",
+    });
+    const audits: AuditRow[] = writes.map((r) => auditOf(r, "update", { status: r.status }));
+    // a clear is written to the trail only if there is a mark to take away at the moment the batch runs
+    // (placed BEFORE the delete); the same clear sent twice, or on a child with no mark, leaves no trail
+    const clearAuditStmt = clears.length
+      ? auditInsertStmt(c.env, clears.map((r) => auditOf(r, "void", null)), now, {
+          sql: "EXISTS (SELECT 1 FROM attendance a WHERE a.session_id = ?2 AND a.student_id = json_extract(j.value, '$.student_id'))",
+          binds: [sessionId],
+        })
+      : null;
+    const deleteStmt = clears.length
+      ? c.env.DB.prepare("DELETE FROM attendance WHERE session_id = ?2 AND student_id IN (SELECT value FROM json_each(?1))")
+          .bind(JSON.stringify(clears.map((r) => r.studentId)), sessionId)
+      : null;
+    // a day with nothing left in it is not a day that was checked: reports and Excel count sessions
+    const dropEmptySession = clears.length
+      ? c.env.DB.prepare("DELETE FROM attendance_sessions WHERE id = ?1 AND NOT EXISTS (SELECT 1 FROM attendance WHERE session_id = ?1)").bind(sessionId)
+      : null;
 
     try {
       // a restore since this request began rolls the batch back too: these taps were made on the old data
@@ -296,10 +329,13 @@ attendanceRoutes.post("/api/attendance/batch", async (c) => {
         SELECT 1 FROM json_each(?1) j WHERE NOT EXISTS (
           SELECT 1 FROM students s WHERE s.id = j.value AND s.class_id = ?2 AND s.status = 'active'
         ))`, JSON.stringify(sids), b.classId);
-      const stmts = [epochGuard(c.env, epoch), membershipGuard, upsertStmt, auditInsertStmt(c.env, audits, now)];
-      if (!b.force) stmts.unshift(guard.bind(JSON.stringify(upserts), sessionId));
+      const stmts = [epochGuard(c.env, epoch), membershipGuard];
+      if (clearAuditStmt && deleteStmt) stmts.push(clearAuditStmt, deleteStmt);
+      if (writes.length > 0) stmts.push(upsertStmt, auditInsertStmt(c.env, audits, now));
+      if (dropEmptySession) stmts.push(dropEmptySession);
+      if (!b.force) stmts.unshift(guard.bind(JSON.stringify(guardRows), sessionId));
       await c.env.DB.batch(stmts);
-      return c.json({ ok: true, sessionId, updatedAt: now, changed: upserts.length, ...(await confirmed()) });
+      return c.json({ ok: true, sessionId, updatedAt: now, changed: upserts.length + clears.filter((r) => curMap.has(r.studentId)).length, ...(await confirmed()) });
     } catch (e) {
       // the guard fired (or something else went wrong): look again at what is there NOW
       if ((await getEpoch(c.env)) !== epoch) {

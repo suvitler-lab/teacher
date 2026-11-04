@@ -74,7 +74,9 @@ describe("gradebook column heads (A: tint head)", () => {
     const head = await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     const span = head.querySelector(".hs > span")!;
     expect(span.textContent).toBe("เต็ม 105 ม.ค.");   // full score 10, then the calendar icon, then "5 ม.ค."
-    expect(span.querySelector("i.ti-calendar")).toBeTruthy();
+    expect(span.querySelector("i.ti-calendar-event")).toBeTruthy(); // the due day (5 Jan 2020) has passed: the icon says so
+    expect(span.classList.contains("over")).toBe(true);
+    expect(head.querySelector(".hs2")!.textContent).toMatch(/^ส่งแล้ว \d+\/\d+$/); // third line, shown on touch screens
     const none = screen.getByRole("columnheader", { name: /^แบบฝึกหัด: แบบฝึกหัด 1/ });
     expect(none.querySelector(".hs > span")!.textContent).toBe("เต็ม 10—");
   });

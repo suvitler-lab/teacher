@@ -1,40 +1,104 @@
-/* งานครบ · random name picker */
-.rnd-stage {
-  min-height: 200px; border-radius: 16px; background: var(--surface-2);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  border: 2px solid var(--border-accent); text-align: center; padding: 24px 16px; margin-bottom: 14px;
-}
-.rnd-stage.idle { border-style: dashed; }
-.rnd-badge { width: 4.27rem; height: 4.27rem; border-radius: 50%; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 1.73rem; font-weight: 500; font-variant-numeric: tabular-nums; margin-bottom: 8px; }
-.rnd-name { font-size: 2.27rem; font-weight: 500; line-height: 1.25; }
-.rnd-sub { font-size: 1rem; color: var(--text-secondary); margin-top: 2px; }
-.rnd-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+/* งานครบ · random name picker — follows design/preview-round2.html (สุ่มชื่อ): stage, one big button, cards in a column */
+
+/* kept: the projector menu (Projector.tsx) and the report preview use .rnd-opt */
 .rnd-opt { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); padding: 6px 12px; border-radius: 999px; border: 0.5px solid var(--border-strong); cursor: pointer; }
 .rnd-opt.on { border: 2px solid var(--border-accent); padding: 5px 11px; font-weight: 500; }
-.rnd-count { display: inline-flex; align-items: center; gap: 6px; }
-.rnd-count .step { width: 1.87rem; height: 1.87rem; border-radius: 8px; padding: 0; }
+@media (pointer: coarse) { .rnd-opt { min-height: 44px; } }
 
-/* history */
-.rnd-hist { display: flex; flex-wrap: wrap; gap: 5px; }
-.rnd-chip { display: inline-flex; align-items: center; gap: 5px; height: 1.73rem; padding: 0 10px 0 4px; border-radius: 999px; background: var(--surface-2); border: 0.5px solid var(--border); font-size: var(--fs-xs); }
-.rnd-chip b { width: 1.33rem; height: 1.33rem; border-radius: 50%; font-weight: 500; font-size: var(--fs-xs); display: inline-flex; align-items: center; justify-content: center; background: var(--surface-1); color: var(--text-secondary); }
-.rnd-chip.last b { background: var(--bg-accent); color: var(--text-accent); }
+/* ---- why nobody can be drawn (not checked yet / nobody came / load failed) ---- */
+.rnd-notice { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 48px; padding: 10px 14px; margin-bottom: 8px; border-radius: 12px; background: var(--bg-warning); color: var(--text-warning); border: 0.5px solid var(--border-warning); font-size: var(--fs-sm); }
+.rnd-notice > .grow { flex: 1 1 14em; }
+.rnd-notice .row button { height: var(--tap); }
 
-/* groups */
-.rnd-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
-.rnd-group { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 8px 10px; }
-.rnd-group .gh { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: var(--fs-sm); margin-bottom: 4px; }
-.rnd-group .gd { width: 10px; height: 10px; border-radius: 3px; }
+/* ---- layout: the stage and the big button on the left, the cards in a column on the right (wide screens) ---- */
+.rnd-cols { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+.rnd-left, .rnd-right { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.rnd-right:empty { display: none; }
+@media (min-width: 1000px) {
+  .rnd-cols { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
+}
 
-/* why nobody can be drawn (not checked yet / nobody came / load failed) */
-.rnd-notice { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 12px; border-radius: 12px; background: var(--bg-warning); color: var(--text-warning); border: 0.5px solid var(--border-warning); font-size: var(--fs-sm); }
-.rnd-notice > i { font-size: 1.2rem; flex: none; }
+/* ---- the stage: always the same size, so the button below it never moves ---- */
+.rnd-stage {
+  position: relative; min-height: 15rem; border-radius: 16px; background: var(--surface-2); box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  border: 2px solid var(--border-accent); text-align: center; padding: 56px 12px 16px;
+}
+.rnd-stage.idle { border-style: dashed; border-color: var(--border-strong); }
+@media (min-width: 1000px) { .rnd-stage { min-height: 17rem; } }
+.rnd-stage .rnd-poolchip { position: absolute; top: 8px; left: 8px; height: var(--tap); }
+.rnd-empty-ic { color: var(--text-muted); }
+.rnd-badge { width: 4.3rem; height: 4.3rem; border-radius: 50%; background: var(--bg-accent); color: var(--text-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 1.73rem; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+.rnd-name { font-size: 2.3rem; font-weight: 500; line-height: 1.25; overflow-wrap: anywhere; max-width: 100%; }
+.rnd-name.dim { font-size: 1.11rem; color: var(--text-secondary); }
+@media (min-width: 1000px) { .rnd-name { font-size: 3rem; } .rnd-name.dim { font-size: 1.11rem; } }
+.rnd-sub { font-size: 1rem; color: var(--text-secondary); margin-top: 2px; }
+.rnd-stage .rnd-gobtn { height: var(--tap); margin-top: 6px; }
 
-/* ---- round 2 ---- */
-.rnd-stage { position: relative; }
-.rnd-poolchip { position: absolute; top: 10px; left: 12px; display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; background: var(--surface-1); color: var(--text-secondary); border: 0.5px solid var(--border); }
-.rnd-go { height: 3.2rem; padding: 0 22px; font-size: 1.07rem; }
+/* pairs: two cards side by side with "คู่กับ" between them */
+.rnd-pairs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; }
+.rnd-pair { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; padding: 8px; border-radius: 12px; background: var(--surface-1); border: 0.5px solid var(--border); }
+.rnd-pair .rnd-badge { width: 3.2rem; height: 3.2rem; font-size: 1.3rem; margin: 0; }
+.rnd-pair .nm { font-size: 1.6rem; font-weight: 500; line-height: 1.25; overflow-wrap: anywhere; max-width: 100%; }
+.rnd-with { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-sm); color: var(--text-secondary); padding: 2px 10px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border); }
+@media (max-width: 560px) { .rnd-pairs { grid-template-columns: minmax(0, 1fr); } }
+/* more than two drawn at once */
+.rnd-picked { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+/* ---- the controls under the stage: mode on the left, the big button on the right ---- */
+.rnd-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.rnd-controls .seg button { height: 2.4rem; min-width: 44px; }
+.rnd-go { margin-left: auto; min-width: 14rem; min-height: max(56px, 3.5rem); padding: 0 26px; font-size: 1.1rem; font-weight: 600; }
 .rnd-key { opacity: 0.8; font-weight: 400; font-size: var(--fs-sm); }
-.rnd-card { padding: 10px 12px; }
-.rnd-timer { font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: center; }
-.rnd-timer.done { color: var(--text-danger); }
+@media (max-width: 560px) { .rnd-go { flex: 1 1 100%; margin-left: 0; } }
+
+/* ---- cards ---- */
+.rnd-card { padding: 10px 14px; }
+.rnd-h { font-size: 1rem; font-weight: 500; display: flex; align-items: center; gap: 6px; margin: 0; flex-wrap: wrap; }
+.rnd-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.rnd-ctl .pill { height: var(--tap); }
+.rnd-ctl .seg button { height: 2.4rem; min-width: 44px; }
+.rnd-ctl button { min-height: var(--tap); }
+.rnd-tip { font-size: var(--fs-xs); color: var(--text-secondary); }
+.rnd-step { display: inline-flex; align-items: center; gap: 4px; }
+.rnd-step button { width: var(--tap); height: var(--tap); padding: 0; }
+.rnd-step b { min-width: 2.5rem; text-align: center; font-size: 1.2rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.rnd-num { width: 4.5rem; min-width: 4.5rem; height: var(--tap); text-align: center; font-variant-numeric: tabular-nums; padding: 0 4px; }
+
+/* called so far */
+.rnd-pbar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 6px 0 8px; }
+.rnd-pbar > div { height: 100%; border-radius: 4px; background: var(--fill-accent); }
+.rnd-hist { display: flex; flex-wrap: wrap; gap: 6px; }
+.rnd-chip { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 0 12px 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border); font-size: var(--fs-sm); }
+.rnd-chip b { width: 1.75rem; height: 1.75rem; border-radius: 50%; font-weight: 600; font-size: var(--fs-xs); display: inline-flex; align-items: center; justify-content: center; background: var(--surface-2); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.rnd-chip.last { background: var(--bg-accent); border-color: var(--border-accent); color: var(--text-accent); }
+.rnd-chip.last b { background: var(--surface-2); color: var(--text-accent); }
+
+/* timer: a ring that empties; the number is the only live text */
+.rnd-timerbox { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+.rnd-ring { --p: 100; --c: var(--fill-accent); position: relative; width: 96px; height: 96px; border-radius: 50%; flex: none; background: conic-gradient(var(--c) calc(var(--p) * 1%), var(--border) 0); }
+.rnd-ring.done { --c: var(--fill-warning); }
+.rnd-ring::before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: var(--surface-2); }
+.rnd-timer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.rnd-timer small { font-size: var(--fs-xs); font-weight: 400; margin-left: 2px; }
+.rnd-ring.done .rnd-timer { color: var(--text-warning); }
+.rnd-timeup { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text-warning); }
+
+/* groups: a coloured dot + number (never colour alone), the leader with a star */
+.rnd-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.rnd-group { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 8px 12px; }
+.rnd-group .gh { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 1rem; margin-bottom: 4px; }
+.rnd-group .gd { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.rnd-group .gl { font-size: 1rem; line-height: 1.6; }
+.rnd-group .gl .lead { font-weight: 500; }
+.rnd-group .gl .star { color: var(--text-warning); }
+.rnd-grouphead { display: flex; justify-content: flex-end; }
+
+/* ---- the classroom TV: groups in up to four columns, names in two columns when a group is big ---- */
+.pj .pgroups { grid-template-columns: repeat(var(--g, 3), minmax(0, 1fr)); }
+.pj .pgroups .pnames { font-size: calc(var(--pj-u) * 28); line-height: 1.45; }
+.pj .pgroups .pnames.two { columns: 2; column-gap: calc(var(--pj-u) * 16); }
+.pj .rtimer { font-size: calc(var(--pj-u) * 88); font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.pj .rtimer.done { color: var(--pj-warn); }
+.pj .rbtns { display: flex; justify-content: center; gap: calc(var(--pj-u) * 16); align-items: center; }
+.pj .rbtns .pjbtn.sec { height: calc(var(--pj-u) * 64); font-size: calc(var(--pj-u) * 28); }

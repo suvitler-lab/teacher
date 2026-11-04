@@ -1,4 +1,5 @@
 import { signal } from "@preact/signals";
+import { swrClear } from "./swr";
 
 // true when a request got 401 and we need the teacher to sign in again.
 // Kept in its own module so both the api client and the outbox can use it
@@ -23,3 +24,7 @@ export const epochStale = signal(false);
 // (a classroom wifi can be up while the server cannot be reached). Set by every API call: a network failure or a
 // timeout means no, any answer at all (even an error) means yes.
 export const serverReachable = signal(true);
+
+// Saved read answers (lib/swr.ts) belong to one session and one data epoch: signing out/in, a restore elsewhere
+// or a new epoch drops them all.
+for (const s of [authRequired, syncPaused, dataEpoch, epochStale]) s.subscribe(() => swrClear());

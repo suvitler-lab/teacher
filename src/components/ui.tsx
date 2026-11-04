@@ -54,6 +54,7 @@ export function ClassChips({ items, value, onPick }: {
         <button
           class={"pill" + (c.id === value ? " on" : "")}
           role="tab" aria-selected={c.id === value}
+          aria-label={c.mark ? `${c.name} · ${c.mark === "ok" ? "เช็คครบ" : c.mark === "part" ? "เช็คบางส่วน" : "ยังไม่เช็ค"}${c.count != null ? ` · ${c.count} คน` : ""}` : undefined}
           onClick={() => onPick(c.id)}
         >
           {c.mark === "ok" && <Icon name="check" size={13} />}
@@ -152,7 +153,8 @@ export function StatCard({ label, value, unit, hint, icon, tone = "accent", valu
 
 // ---- progress bar --------------------------------------------------------
 export function ProgressBar({ pct, tone }: { pct: number; tone?: string }) {
-  return <div class="pbar"><div style={`width:${Math.max(0, Math.min(100, pct))}%${tone ? `;background:${tone}` : ""}`} /></div>;
+  const v = Math.max(0, Math.min(100, pct));
+  return <div class="pbar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)}><div style={`width:${v}%${tone ? `;background:${tone}` : ""}`} /></div>;
 }
 
 // ---- progress ring -------------------------------------------------------

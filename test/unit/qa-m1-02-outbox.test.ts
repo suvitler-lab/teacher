@@ -161,7 +161,7 @@ describe("QA M1-02 offline replay: ops queued for a student who was moved while 
     await flush();
     expect(failedCount.value).toBe(1);
     render(h(FailedPanel, {}));
-    fireEvent.click(screen.getByText(/ส่งไม่สำเร็จ 1/));
+    fireEvent.click(screen.getByRole("button", { name: /ส่งไม่สำเร็จ 1/ }));
     await waitFor(() => expect(screen.getByText(/นักเรียนไม่อยู่ในห้องแล้ว \(ย้าย\/ไม่ใช้งาน\/จบปี\)/)).toBeTruthy());
   });
 });

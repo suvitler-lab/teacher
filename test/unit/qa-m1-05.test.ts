@@ -19,7 +19,9 @@ import { computeReport, type ReportPayload } from "@client/lib/report";
 import { buildWorkbookBuffer } from "@client/lib/excel";
 import { GradebookPage } from "@client/pages/Gradebook";
 import { ReportsPage } from "@client/pages/Reports";
-import { assignments, classes, currentTermId, selectedTermId, students, subjects, terms } from "@client/store";
+import { assignments, classes, currentTermId, selectedTermId, settings, students, subjects, terms } from "@client/store";
+import { defaultPageLayout } from "@client/lib/pageCards";
+import { serializeLayout, toggleLayoutCard } from "@client/lib/cardLayout";
 import { route } from "@client/router";
 import { AC01_KIDS, AC01_SUBS, FUTURE_DUE, PAST_DUE, asg, kid } from "./m1-05-fixture";
 
@@ -192,12 +194,14 @@ describe("same data → same number on Gradebook, Reports, report model and Exce
       students: [kid(0), kid(1)], assignments: [B],
       submissions: [sub("b1", "s0", "submitted", 59.5), sub("b1", "s1", "submitted", 59)] as any,
     }));
+    // the score-spread card is off until the teacher turns it on (round 3): turn it on
+    settings.value = { ...(settings.value as object), reports_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("reports"), "hist")) } as never;
     render(h(ReportsPage, {}));
-    await screen.findByText(/เด็ก0/, { selector: "td" });
+    await screen.findByText(/เด็ก0/, { selector: "td, .rp-namebtn" });
     const n = [...document.querySelectorAll(".rp-hist .col .n")].map((e) => e.textContent);
     expect(n).toEqual(["0", "1", "1", "0", "0"]);
-    expect(screen.getByText(/เด็ก0/, { selector: "td" }).closest("tr")!.textContent).toContain("60%");
-    expect(screen.getByText(/เด็ก1/, { selector: "td" }).closest("tr")!.textContent).toContain("59%");
+    expect(screen.getByText(/เด็ก0/, { selector: "td, .rp-namebtn" }).closest("tr")!.textContent).toContain("60%");
+    expect(screen.getByText(/เด็ก1/, { selector: "td, .rp-namebtn" }).closest("tr")!.textContent).toContain("59%");
   });
 
   it("E-16 / AC-08 no excused children: 6 of 10 stays 60% in the model and the Excel sheets", async () => {
@@ -240,7 +244,7 @@ describe("same data → same number on Gradebook, Reports, report model and Exce
     expect(s2[2][3]).toBe(8);
     get.mockResolvedValue(p);
     render(h(ReportsPage, {}));
-    await screen.findByText(/เด็ก0/, { selector: "td" });
+    await screen.findByText(/เด็ก0/, { selector: "td, .rp-namebtn" });
     expect(document.body.textContent).toContain("คะแนนสะสม · ค้างส่งนับ 0");
   }, 20_000);
 

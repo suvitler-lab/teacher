@@ -9,6 +9,7 @@ import type { SubmissionOp, SubmissionOpResult } from "@shared/types";
 import { classifyFailure } from "@shared/failure";
 import { authRequired, syncPaused, dataEpoch, serverReachable } from "./session";
 import { actionTime } from "./clock";
+import { swrClear } from "./swr";
 import { flushAllDrafts, refreshAttDraftCount } from "./attSync";
 
 export const pendingCount = signal(0);
@@ -154,6 +155,7 @@ async function flushPass(): Promise<void> {
       const res = await api.post<{ results: SubmissionOpResult[] }>("/api/submissions/batch", {
         ops: send.map((c) => c.payload),
       });
+      swrClear(); // something was delivered: every saved read answer may be out of date
       const byId = new Map(res.results.map((r) => [r.opId, r]));
       for (const item of send) {
         const r = byId.get(item.opId);

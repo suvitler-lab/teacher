@@ -48,7 +48,7 @@ describe("AC-04: saveAsgPatch sends no full_score", () => {
     render(<GradebookPage />);
     const col = await screen.findByRole("columnheader", { name: /เรขาคณิต/ });
     fireEvent.click(within(col).getByRole("button", { name: "ซ่อนคะแนนของงานนี้" }));
-    await waitFor(() => expect(ok).toHaveBeenCalledWith("ซ่อนคะแนนแล้ว"));
+    await waitFor(() => expect(ok).toHaveBeenCalledWith("ซ่อนคะแนนบนจอแล้ว"));
     expect(post).toHaveBeenCalledTimes(1);
     const [path, body] = post.mock.calls[0];
     expect(path).toBe("/api/assignments");

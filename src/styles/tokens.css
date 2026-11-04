@@ -50,6 +50,8 @@
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
+  --ring-focus: 0 0 0 3px var(--bg-accent-muted); /* one focus frame for a box that holds an input */
+  --rail-icon: 24px; /* menu icons stop growing with the text size here (the menu would be taller than the screen) */
   --rail-w: max(96px, 5.75rem); /* grows with the text size so the labels ("ออกจากระบบ") and the online chip fit without wrapping */
   --font-sans: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
@@ -82,7 +84,7 @@
     --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
     --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
     --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;
-    --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a;
+    --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a; --on-danger: #0b1220;
     --bg-purple:  #241a44; --text-purple:  #c4b2f0; --border-purple: #43356b; --fill-purple: #7c5cd6; --on-purple: #0b1220;
     --tint-aqua-bg: #123634; --tint-aqua-fg: #7ad6d0;
     --tint-violet-bg: #241a44; --tint-violet-fg: #c4b2f0;
@@ -109,7 +111,7 @@
   --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
   --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
   --bg-warning: #3a2a08; --text-warning: #f0c674; --fill-warning: #e79a1c; --on-warning: #3a2600; --border-warning: #6b4e18;
-  --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a;
+  --bg-danger:  #3a1616; --text-danger:  #f0999a; --fill-danger: #dc4a4a; --border-danger: #6b2a2a; --on-danger: #0b1220;
   --bg-purple:  #241a44; --text-purple:  #c4b2f0; --border-purple: #43356b; --fill-purple: #7c5cd6; --on-purple: #0b1220;
   --tint-aqua-bg: #123634; --tint-aqua-fg: #7ad6d0;
   --tint-violet-bg: #241a44; --tint-violet-fg: #c4b2f0;

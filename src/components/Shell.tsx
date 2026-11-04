@@ -8,6 +8,7 @@ import { SyncBadge, TermPicker } from "./ui";
 import { logout } from "../store";
 import { pendingCount, failedCount } from "../lib/outbox";
 import { attDraftCount } from "../lib/attSync";
+import { useConfirm } from "./ConfirmDialog";
 
 interface NavItem { key: string; label: string; icon: string }
 // The eight pages (names kept, D22) in the order a teacher's day goes: today · in the room · after class · manage
@@ -39,20 +40,30 @@ const SHEET_GROUPS = [
 ];
 const SHEET = SHEET_GROUPS.flatMap((g) => g.keys);
 
-async function doLogout() {
+type Ask = ReturnType<typeof useConfirm>["ask"];
+
+/** Signing out with work still waiting on this device asks first (in a dialog, not window.confirm). */
+async function doLogout(ask: Ask) {
   const parts = [
     pendingCount.value > 0 && `คะแนน/การส่งงานรอส่ง ${pendingCount.value} รายการ`,
     failedCount.value > 0 && `ส่งไม่สำเร็จ ${failedCount.value} รายการ`,
     attDraftCount.value > 0 && `เช็คชื่อที่ยังไม่ได้ส่ง ${attDraftCount.value} รายการ`,
   ].filter(Boolean);
-  const list = parts.map((p) => "• " + p).join("\n");
-  if (parts.length > 0 && !confirm("ยังมีข้อมูลค้างในเครื่องนี้:\n" + list + "\n\nจะเก็บไว้และส่งให้เมื่อเข้าสู่ระบบใหม่ ออกจากระบบเลยไหม?")) return;
+  if (parts.length > 0) {
+    const go = await ask({
+      title: "ออกจากระบบเลยไหม?",
+      body: <><p style="margin:0 0 6px">ยังมีข้อมูลค้างในเครื่องนี้:</p><ul style="margin:0 0 6px;padding-left:1.2em">{parts.map((p) => <li>{p}</li>)}</ul><p style="margin:0">จะเก็บไว้และส่งให้เมื่อเข้าสู่ระบบใหม่</p></>,
+      yes: "ออกจากระบบ", no: "อยู่ต่อ", danger: true,
+    });
+    if (!go) return;
+  }
   await logout();
 }
 
 export function Shell({ children }: { children: ComponentChildren }) {
   const active = routeName();
   const [sheet, setSheet] = useState(false);
+  const { ask, node: askNode } = useConfirm();
   void route.value; // subscribe
 
   return (
@@ -76,7 +87,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
         ))}
         <div class="rail-spacer" />
         <div class="rail-sync"><SyncBadge /></div>
-        <button class="rail-item" onClick={doLogout}><Icon name="logout" size={24} /><span>ออกจากระบบ</span></button>
+        <button class="rail-item" onClick={() => doLogout(ask)}><Icon name="logout" size={24} /><span>ออกจากระบบ</span></button>
       </nav>
 
       <main class="main"><UpdateBanner /><EpochBanner />{children}</main>
@@ -135,7 +146,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
                 </div>
               </>
             ))}
-            <button class="sheet-item sheet-out" onClick={() => { setSheet(false); doLogout(); }}>
+            <button class="sheet-item sheet-out" onClick={() => { setSheet(false); doLogout(ask); }}>
               <Icon name="logout" size={20} /> ออกจากระบบ
             </button>
           </Dialog>
@@ -146,6 +157,7 @@ export function Shell({ children }: { children: ComponentChildren }) {
       <StartTermHost />
       <Toasts />
       <ReloginOverlay />
+      {askNode}
     </div>
   );
 }

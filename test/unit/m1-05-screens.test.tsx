@@ -90,7 +90,7 @@ describe("AC-03 per-child submit rate = 2 / (2 + 1) = 67%", () => {
   it("Reports: the child's row reads 2/3", async () => {
     get.mockResolvedValue(AC03_REPORT());
     render(<ReportsPage />);
-    const name = await screen.findByText(/เด็ก0/, { selector: "td" });
+    const name = await screen.findByText(/เด็ก0/, { selector: "td, .rp-namebtn" });
     expect(name.closest("tr")!.children[2].textContent).toBe("2/3");
   });
 
@@ -108,7 +108,7 @@ describe("AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = -", () => {
   it("Reports: the child's row", async () => {
     get.mockResolvedValue(AC04_REPORT());
     render(<ReportsPage />);
-    const name = await screen.findByText(/เด็ก0/, { selector: "td" });
+    const name = await screen.findByText(/เด็ก0/, { selector: "td, .rp-namebtn" });
     expect(name.closest("tr")!.lastElementChild!.textContent).toBe("67%");
   });
 
@@ -118,7 +118,8 @@ describe("AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = -", () => {
     get.mockResolvedValue(AC04_REPORT());
     render(<StudentsPage />);
     await waitFor(() => expect(document.querySelector(".stu-stat.att")?.textContent).toBe("67%"));
-    expect(document.querySelector(".stu-summary")!.textContent).toContain("มาเรียนเฉลี่ย 67%");
+    // the class summary is a card now ("สรุปห้อง"): same number, same rule
+    await waitFor(() => expect(document.querySelector('[aria-labelledby="sk-sum"]')!.textContent).toContain("มาเรียนเฉลี่ย67%"));
   });
 
   it("Students: no attendance checked shows a dash and no average", async () => {
@@ -127,6 +128,7 @@ describe("AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = -", () => {
     get.mockResolvedValue(reportPayload({ students: [kid(0)] }));
     render(<StudentsPage />);
     await waitFor(() => expect(document.querySelector(".stu-stat.att")?.textContent).toBe("—"));
-    expect(document.querySelector(".stu-summary")!.textContent).not.toContain("มาเรียนเฉลี่ย");
+    await waitFor(() => expect(document.querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy());
+    expect(document.querySelector('[aria-labelledby="sk-sum"]')!.textContent).not.toContain("มาเรียนเฉลี่ย");
   });
 });

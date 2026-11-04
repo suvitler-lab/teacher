@@ -131,7 +131,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
 
           <ul class="sty-list" style="margin:6px 0 8px 18px;padding:0;font-size:var(--fs-sm);line-height:1.7">
             <li>นักเรียน <b>{finishing} คน</b> ที่ยังกำลังเรียนในห้องปี {cur.year} จะเป็น “จบปีการศึกษา” (ข้อมูลและคะแนนยังอยู่)</li>
-            <li>ห้องปี {cur.year} ทั้งหมดถูกเก็บ · เช็กชื่อ/สแกนใช้ห้องของปี {year} เท่านั้น</li>
+            <li>ห้องปี {cur.year} ทั้งหมดถูกเก็บ · เช็คชื่อ/สแกนใช้ห้องของปี {year} เท่านั้น</li>
           </ul>
 
           {openWork > 0 && (

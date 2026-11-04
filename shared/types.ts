@@ -28,6 +28,10 @@ export interface Settings {
   scan_cards: string; // same shape, for the scan page cards
   attendance_cards: string; // same shape, for the attendance page cards
   random_cards: string; // same shape, for the random-name page cards
+  gradebook_cards: string; // same shape, for the gradebook page cards
+  reports_cards: string; // same shape, for the reports page cards
+  students_cards: string; // same shape, for the students page cards
+  settings_cards: string; // same shape, for the settings page ("ทั่วไป" section) cards
 }
 
 export interface Term {

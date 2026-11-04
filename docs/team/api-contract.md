@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v7 · อัปเดต 2026-11-04 (ui-redesign รอบ 1: dashboard เพิ่ม `dueSoon`/`absentToday`, settings เพิ่ม `home_cards` — ดู changelog v6) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v9 · อัปเดต 2026-11-04 (เช็คชื่อ: แตะซ้ำเพื่อยกเลิกการเช็ค — `POST /api/attendance/batch` รับ `status: "none"` ดู EP-08 และ changelog v9) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 
@@ -261,6 +261,26 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 - คีย์ใหม่ 3 ตัว (string) ใน `ALLOWED_SETTINGS` และ `getSettings` (ค่าเริ่มต้น `""`) · `Settings` ใน `shared/types.ts` เพิ่ม 3 ฟิลด์ — รูปแบบเดียวกับ `home_cards`: JSON `{"v":1,"order":[…],"hidden":[…]}` ของการ์ดหน้าสแกน/เช็คชื่อ/สุ่มชื่อ ตามลำดับ · ค่า `""` = ใช้การ์ดเริ่มต้นของหน้านั้น
 - ไม่มี endpoint ใหม่ · แอปรุ่นเก่าไม่อ่านคีย์เหล่านี้ (ไม่กระทบ) · เทสต์ `test/api/page-cards-settings.test.ts`
 
+### EP-07 `PUT /api/settings` — ค่า `gradebook_cards` `reports_cards` `students_cards` `settings_cards` (เพิ่มใน v8)
+
+- คีย์ใหม่ 4 ตัว (string) ใน `ALLOWED_SETTINGS` และ `getSettings` (ค่าเริ่มต้น `""`) · `Settings` ใน `shared/types.ts` เพิ่ม 4 ฟิลด์ — รูปแบบเดียวกับ `home_cards`: JSON `{"v":1,"order":[…],"hidden":[…]}` ของการ์ดหน้าคะแนน/รายงาน/นักเรียน/ตั้งค่า (การ์ดของตั้งค่าอยู่บนหมวด "ทั่วไป") · ค่า `""` = การ์ดเริ่มต้นของหน้านั้น
+- ไม่มี endpoint ใหม่ · ไม่มี migration · แอปรุ่นเก่าไม่อ่านคีย์เหล่านี้ · เทสต์ `test/api/page-cards-settings.test.ts` · **ปล่อย server ก่อนแอป** (แอปใหม่ PUT คีย์ที่ server เก่าไม่รู้จักจะถูกทิ้งเงียบ ๆ ทำให้การ์ดไม่ซิงก์)
+
+### EP-08 `POST /api/attendance/batch` — ยกเลิกการเช็ค `status: "none"` (เพิ่มใน v9 · งาน attendance-clear)
+
+- ผู้เรียก: `src/lib/attSync.ts` (`runFlush`) ← `src/pages/Attendance.tsx` (แตะซ้ำบนเด็กที่มีสถานะเท่ากับปุ่มที่เลือก) · server: `worker/routes/attendance.ts` · ไม่มี endpoint ใหม่ ไม่มี migration
+- request: แต่ละแถวใน `rows[]` ส่ง `status` ได้เพิ่มอีกค่า `"none"` = **ยกเลิกการเช็ค** → server **ลบแถว** `(session_id, student_id)` ทำให้เด็กกลับเป็น "ยังไม่เช็ค" (ฟิลด์อื่นเหมือนเดิม: `opId`, `baseUpdatedAt`, `dataEpoch`, `method`; `time` ไม่ใช้) · ส่งปนกับแถวเช็คปกติใน batch เดียวกันได้
+- กติกาที่ยกเลิกต้องผ่านเหมือนการเขียนอื่น: (1) `dataEpoch` ไม่ตรง/กู้คืนระหว่างทาง = `409 epoch_changed` ไม่ลบอะไร (2) เด็กทุกคนใน batch ต้อง `active` และอยู่ห้องที่ batch ระบุ ไม่งั้น `422 not_in_class` ทั้ง batch (ตรวจซ้ำใน transaction เดียวกับการลบ) (3) `date` ก่อนต้นปีการศึกษา = `422 before_school_year` (4) ชนกับอีกเครื่อง: ถ้าในระบบมีแถวนั้นอยู่ และ `baseUpdatedAt` เป็น null หรือเก่ากว่า `updated_at` ของแถว = `409 conflict` (`draft.status = "none"`, `server` = แถวในระบบ) เว้นแต่ `force: true` · การตรวจซ้ำอยู่ใน batch เดียวกับการลบ (เหมือนการเขียนปกติ) (5) แถวไม่มีอยู่แล้ว = สำเร็จ ไม่ใช่ conflict ไม่มี audit (idempotent) · ส่ง `opId` เดิมซ้ำหลังสำเร็จ = ไม่ทำซ้ำ
+- audit: 1 แถวต่อการลบจริง ใน batch เดียวกัน: `entity "attendance"`, `action "void"`, `before {status}`, `after null`, `method` ตามที่ส่ง · ไม่เขียนถ้าไม่มีแถวให้ลบ
+- เมื่อลบแถวสุดท้ายของคาบ/วัน server ลบ `attendance_sessions` ที่ว่างนั้นด้วย (ใน batch เดียวกัน) เพื่อให้รายงาน/Excel ไม่นับวันที่ไม่มีใครถูกเช็คเป็น "วันที่เช็คแล้ว" · เช็คใหม่วันนั้นสร้าง session ใหม่ตามเดิม
+- response 200: ฟิลด์เดิมไม่เปลี่ยน (`ok`, `sessionId`, `updatedAt`, `changed`, `rows`, `state`) **เพิ่ม `absent: string[]`** = นักเรียนใน batch ที่ในระบบ **ไม่มี** แถวแล้ว (ยกเลิกสำเร็จ หรืออีกเครื่องยกเลิกไปแล้ว) — client ถือว่านี่คือการยืนยันของแถว `none` (แถว `none` ที่ server ไม่พูดถึงเลยจะค้างในคิวแล้วส่งใหม่) · `changed` นับเฉพาะแถวที่เปลี่ยนจริง (ยกเลิกแถวที่ไม่มี = 0)
+- ผู้อ่านแถวเช็คชื่อ (`GET /api/attendance`, `/days`, `/api/dashboard`, `/api/reports/summary`, ส่งออก Excel, หน้าสุ่มชื่อ, ประวัตินักเรียน, backup/restore) **ไม่เปลี่ยน** — แถวที่ถูกลบคือ "ยังไม่เช็ค" ตามเดิม; backup/restore ตรวจแล้วรับไฟล์ที่ไม่มีแถว/ไม่มี session ได้
+- แอปรุ่นเก่า: ไม่ส่ง `"none"` (ไม่กระทบ) · แอปรุ่นใหม่กับ server เก่า: `"none"` ถูกปฏิเสธด้วย `422 validation` — client เก็บแถวไว้ในเครื่องและแสดง "บันทึกไม่สำเร็จ · ลองอีกครั้ง" ไม่ทิ้ง → **ปล่อย server ก่อนแอป**
+- เทสต์: `test/api/attendance-clear.test.ts`, `test/unit/attendance-round5.test.tsx`
+
+### หมายเหตุ `scan_sessions.mode` (ตัดสินใจ 4 พ.ย. — D40)
+`scan_sessions.mode` บนเซิร์ฟเวอร์คือ **โหมดตอนเริ่มรอบ** ไม่ใช่โหมดล่าสุด: การสลับโหมดสแกนกลางรอบเป็นการตั้งค่าฝั่ง client มีผลกับสแกนครั้งถัดไป (แต่ละ op ส่งวิธีรับ `method` ของตัวเอง) ไม่มี route แก้ mode ของ session และไม่เพิ่ม
+
 ## Changelog
 
 | เวอร์ชัน | วันที่ | เปลี่ยนอะไร | งาน | กระทบ |
@@ -272,3 +292,5 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | v4 | 2026-11-03 | EP-01: re-date วันเดิม = `ok` ไม่เขียน/ไม่มี audit · `received_date_future` ยอมนาฬิกาเครื่องนำ ≤ 5 นาที (`latest`) · audit `after.late` ซิงก์กับค่าที่บันทึก · op B ที่พึ่งแถวรับงานในคำขอเดียวกันรับ guard ของแถวนั้น · lost op B บนช่องที่ไม่ submitted = `cell_not_submitted` · EP-03: `received_date_future` ใช้ `latest` เดียวกัน · EP-05: `full_score` ไม่บังคับเมื่องานมีอยู่ (คงค่าใน DB) · คนที่ได้เต็มเดิมไม่รวมห้องที่ถูกเอาออกในคำขอเดียวกัน · EP-02/EP-04 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-correctness-lows | server `submissions.ts`, `assignments.ts`, `shared/received-date.ts` · client `Gradebook.tsx` (`saveAsgPatch` ไม่ส่ง `full_score` → **ปล่อย server ก่อนแอป**: server v3 จะตอบ 422) · แอปเก่าไม่กระทบ (ส่ง `full_score` ครบเหมือนเดิม) |
 | v6 | 2026-11-04 | EP-06 (ใหม่ในเอกสาร) `/api/dashboard` เพิ่ม `dueSoon`, `absentToday` · EP-07 `PUT /api/settings` เพิ่มคีย์ `home_cards` + `Settings.home_cards` · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-02-ui-redesign (รอบ 1: เมนู + หน้าหลัก) | server `worker/routes/dashboard.ts`, `catalog.ts`, `lib/db.ts`, `shared/types.ts` · client `src/pages/Home.tsx`, `src/components/home/*`, `src/lib/{homeCards,homePrefs,homeLogic}.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |
 | v7 | 2026-11-04 | EP-07 `PUT /api/settings` เพิ่มคีย์ `scan_cards` `attendance_cards` `random_cards` + `Settings` | ui-redesign รอบ 2 | เพิ่มอย่างเดียว ไม่กระทบแอปเก่า |
+| v8 | 2026-11-04 | EP-07 `PUT /api/settings` เพิ่มคีย์ `gradebook_cards` `reports_cards` `students_cards` `settings_cards` + `Settings` | ui-redesign รอบ 3 (หน้าตั้งค่า) | server `catalog.ts`, `lib/db.ts`, `shared/types.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |
+| v9 | 2026-11-04 | EP-08 (ใหม่ในเอกสาร) `POST /api/attendance/batch` แถวรับ `status: "none"` = ยกเลิกการเช็ค (ลบแถว) + response เพิ่ม `absent[]` + ลบ session ว่าง · ฟิลด์/ผลเดิมไม่เปลี่ยน · ไม่มี migration | attendance-clear (เจ้าของงาน: "ทำเลย") | server `worker/routes/attendance.ts` · client `src/lib/attSync.ts`, `src/pages/Attendance.tsx` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ · D39 |

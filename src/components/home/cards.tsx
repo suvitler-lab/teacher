@@ -1,10 +1,10 @@
 import { useState } from "preact/hooks";
 import type { JSX } from "preact";
 import { Icon } from "../Icon";
-import { Avatar, ProgressBar, StackBar, Segmented } from "../ui";
-import { Chip, ChipButton, CardHead } from "./shared";
+import { Avatar, StackBar, Segmented, EmptyState, SyncBadge } from "../ui";
+import { Chip, ChipButton, CardHead, Bar } from "./shared";
 import {
-  settings, currentTerm, viewClasses, classById, subjectById, workTypeById, studentsById, startTermOpen, studentsByClass,
+  settings, currentTerm, viewClasses, viewingPastYear, classById, subjectById, workTypeById, studentsById, startTermOpen, studentsByClass,
 } from "../../store";
 import { navigate } from "../../router";
 import { formatThaiDate, formatThaiDateMs } from "../../lib/dates";
@@ -24,25 +24,32 @@ import type { HomeCardKey } from "../../lib/homeCards";
 
 const today = () => bkkToday();
 
+/** A card that has nothing to show because nobody is in the rooms yet: say so, and offer the way in. */
+function NoStudents() {
+  return <EmptyState icon="mood-empty" text="ยังไม่มีนักเรียนในห้อง" action={<button onClick={() => navigate("/students")}><Icon name="table-import" size={20} /> นำเข้านักเรียน</button>} />;
+}
+
 // ---- งานที่กำลังเก็บ ----------------------------------------------------------------------------------------------
 type Filter = "open" | "grading" | "close";
 const SHOWN = 5; // how many assignments before "ดูทั้งหมด": 21 pieces of work made this card longer than the screen
 
-function ClassRow({ a, p, open }: { a: AssignmentDashboard; p: ClassProgress; open: boolean }) {
+function ClassRow({ a, p, open, pastYear }: { a: AssignmentDashboard; p: ClassProgress; open: boolean; pastYear: boolean }) {
   const id = a.assignment.id;
-  const notYet = p.total - p.excused - p.submitted - p.missing; // not handed in, but not overdue yet
+  // anyone not handed in yet, overdue or not: an open work can still be scanned (late work is normal).
+  // Not in an old year: the scan page works on this year's rooms, not the ones on screen.
+  const canScan = open && !pastYear && (p.total - p.excused - p.submitted > 0 || p.missing > 0);
   const tone = p.missing > 0 ? "var(--fill-warning)" : "var(--fill-success)";
   const cls = classById(p.classId);
   return (
     <div class="hm-prog">
       <span>{cls?.name}</span>
-      <ProgressBar pct={assignmentRate(p)} tone={tone} />
+      <Bar pct={assignmentRate(p)} tone={tone} label={`${cls?.name ?? ""} ส่งแล้ว ${assignmentFraction(p)}`} />
       <span class="num">{assignmentFraction(p)}</span>
       <span class="hm-chips">
         {p.missing > 0 && <ChipButton tone="danger" icon="alert-circle" onClick={() => navigate("/gradebook", { class: p.classId, subject: a.assignment.subject_id, asg: id, rows: "missing" })}>ยังไม่ส่ง {p.missing}</ChipButton>}
         {p.awaiting > 0 && <ChipButton tone="accent" icon="hourglass-empty" onClick={() => navigate("/gradebook", { class: p.classId, subject: a.assignment.subject_id, asg: id, rows: "awaiting" })}>รอตรวจ {p.awaiting}</ChipButton>}
-        {open && notYet > 0 && <ChipButton icon="scan" onClick={() => navigate("/scan", { asg: id, class: p.classId })}>สแกนห้องนี้</ChipButton>}
-        {p.missing === 0 && p.awaiting === 0 && !(open && notYet > 0) && <Chip tone="success" icon="circle-check">ครบแล้ว</Chip>}
+        {canScan && <ChipButton icon="scan" onClick={() => navigate("/scan", { asg: id, class: p.classId })}>สแกนห้องนี้</ChipButton>}
+        {p.missing === 0 && p.awaiting === 0 && !canScan && <Chip tone="success" icon="circle-check">ครบแล้ว</Chip>}
       </span>
     </div>
   );
@@ -53,6 +60,7 @@ export function OpenCard() {
   const [filter, setFilter] = useState<Filter>("open");
   const [all, setAll] = useState(false);
   const t = today();
+  const pastYear = viewingPastYear.value;
   const closeList = d.openAssignments.filter((a) => shouldClose(a.assignment, t));
   const list = filter === "open"
     ? [...d.openAssignments].sort((x, y) => (x.assignment.due_date ?? "9999").localeCompare(y.assignment.due_date ?? "9999"))
@@ -93,7 +101,7 @@ export function OpenCard() {
                 {filter === "close" && <ChipButton icon="x" onClick={() => navigate("/gradebook", { class: a.perClass[0]?.classId, subject: a.assignment.subject_id, asg: a.assignment.id })}>ปิดรับงาน</ChipButton>}
               </span>
             </div>
-            {a.perClass.map((p) => <ClassRow a={a} p={p} open={isOpen} />)}
+            {a.perClass.map((p) => <ClassRow a={a} p={p} open={isOpen} pastYear={pastYear} />)}
           </div>
         );
       })}
@@ -128,7 +136,7 @@ function AttRow({ a }: { a: AttendanceDay }) {
           : <span class="page-sub num">{parts}</span>}
       </div>
       {p === "partial" && <div class="page-sub num" style="margin-top:2px">{parts}</div>}
-      <div style="margin-top:4px"><StackBar segments={[
+      <div style="margin-top:4px" role="img" aria-label={`${cls?.name ?? ""}: ${parts || "ยังไม่มีสถานะ"}`}><StackBar segments={[
         { value: a.present, color: "var(--fill-success)" },
         { value: a.late, color: "var(--fill-warning)" },
         { value: a.leave, color: "var(--fill-accent)" },
@@ -146,7 +154,7 @@ export function AttCard() {
   return (
     <section class="card" aria-labelledby="hc-att">
       <CardHead id="hc-att" icon="user-check" title="เช็คชื่อวันนี้" link="เช็คชื่อ ›" onLink={() => navigate("/attendance")} />
-      {att.length === 0 ? <div class="page-sub">ยังไม่มีห้องที่มีนักเรียน</div> : att.map((a) => <AttRow key={a.classId} a={a} />)}
+      {att.length === 0 ? <NoStudents /> : att.map((a) => <AttRow key={a.classId} a={a} />)}
     </section>
   );
 }
@@ -184,6 +192,7 @@ export function DueCard() {
   const d = dashboard.value!;
   const [openRow, setOpenRow] = useState<Record<string, boolean>>({});
   const t = today();
+  const pastYear = viewingPastYear.value;
   // a copy of the dashboard saved on this device before the update has no dueSoon / absentToday: treat as empty
   const rows = (d.dueSoon ?? []).flatMap((r) => {
     const a = d.openAssignments.find((x) => x.assignment.id === r.assignmentId);
@@ -218,7 +227,7 @@ export function DueCard() {
                 ? <Chip tone="muted" icon="eye-off">ซ่อนชื่ออยู่</Chip>
                 : <ChipButton icon={open ? "chevron-up" : "chevron-down"} onClick={() => setOpenRow({ ...openRow, [key]: !open })}>{open ? "ซ่อนรายชื่อ" : "ดูรายชื่อ"}</ChipButton>}
               {!hideNames.value && <ChipButton icon="copy" onClick={() => copyLine({ r, a, key })}>คัดลอกไป LINE</ChipButton>}
-              <ChipButton icon="scan" onClick={() => navigate("/scan", { asg: a.assignment.id, class: r.classId })}>สแกนห้องนี้</ChipButton>
+              {!pastYear && <ChipButton icon="scan" onClick={() => navigate("/scan", { asg: a.assignment.id, class: r.classId })}>สแกนห้องนี้</ChipButton>}
             </div>
             {open && !hideNames.value && <div class="hm-names">{r.studentIds.map((id) => <button class="hm-chip hm-chipbtn muted" onClick={() => navigate("/students", { class: r.classId, student: id })}>{label(id)}</button>)}</div>}
           </div>
@@ -238,7 +247,7 @@ export function AbsentCard() {
   return (
     <section class="card" aria-labelledby="hc-abs">
       <CardHead id="hc-abs" icon="user-x" title="ใครไม่มาวันนี้" link="เช็คชื่อ ›" onLink={() => navigate("/attendance")} />
-      {att.length === 0 && <div class="page-sub">ยังไม่มีห้องที่มีนักเรียน</div>}
+      {att.length === 0 && <NoStudents />}
       {att.map((a) => {
         const cls = classById(a.classId);
         if (attendanceProgress(a.marked, a.total) === "none") return <div class="hm-kv"><span style="font-weight:500">{cls?.name}</span><Chip tone="warning" icon="clock">ยังไม่ได้เช็คชื่อ</Chip></div>;
@@ -277,7 +286,7 @@ export function ClassesCard() {
   return (
     <section class="card" aria-labelledby="hc-cls">
       <CardHead id="hc-cls" icon="school" title="ห้องของฉัน" link="นักเรียน ›" onLink={() => navigate("/students")} />
-      {rooms.length === 0 ? <div class="page-sub">ยังไม่มีห้องเรียนในปีนี้</div> : (
+      {rooms.length === 0 ? <EmptyState icon="mood-empty" text="ยังไม่มีห้องเรียน" action={<button class="primary" onClick={() => navigate("/settings", { section: "catalog" })}><Icon name="school" size={20} /> ตั้งค่าห้องเรียน</button>} /> : (
         <div class="hm-clsgrid">
           {rooms.map((c) => {
             const count = studentsByClass.value.get(c.id)?.length ?? 0;
@@ -294,7 +303,7 @@ export function ClassesCard() {
                   <button class="hm-cls-main" onClick={() => navigate("/students", { class: c.id })}>
                     <div class="row" style="justify-content:space-between"><span class="nm">{c.name}</span><span class="page-sub">{count} คน</span></div>
                     <div class="page-sub">อัตราส่ง {rate == null ? "—" : rate + "%"} · มาเรียนวันนี้ {attText}</div>
-                    <div style="margin-top:6px"><ProgressBar pct={rate ?? 0} /></div>
+                    <div style="margin-top:6px"><Bar pct={rate ?? 0} label={`${c.name} อัตราส่ง ${rate == null ? "ยังไม่มีข้อมูล" : rate + "%"}`} /></div>
                   </button>
                 )}
                 {count > 0 && <ChipButton icon="user-check" onClick={() => navigate("/attendance", { class: c.id })}>เช็คชื่อ</ChipButton>}
@@ -312,12 +321,12 @@ export function QueueCard() {
   const n = pendingCount.value + failedCount.value + attDraftCount.value;
   return (
     <section class="card" aria-labelledby="hc-q">
-      <CardHead id="hc-q" icon="device-mobile" title="ค้างในเครื่องนี้" />
+      <CardHead id="hc-q" icon="device-mobile" title="ค้างในเครื่องนี้" extra={<span class="hm-cardhead-x"><SyncBadge /></span>} />
       {n === 0 ? <div class="page-sub" style="color:var(--text-success)"><Icon name="circle-check" size={16} /> ทุกอย่างขึ้นระบบแล้ว</div> : (
         <>
           <div class="hm-kv"><span class="row"><Icon name="cloud-upload" size={20} /> คะแนน/การส่งงาน รอส่ง</span><b class="num">{pendingCount.value}</b></div>
           <div class="hm-kv"><span class="row"><Icon name="user-check" size={20} /> เช็คชื่อ รอส่ง</span>
-            <span class="row"><b class="num">{attDraftCount.value}</b>{attDrafts.value.length > 0 && <ChipButton onClick={() => navigate("/attendance")}>ดูเช็คชื่อ</ChipButton>}</span></div>
+            <span class="row"><b class="num">{attDraftCount.value}</b>{attDrafts.value.length > 0 && <ChipButton onClick={() => navigate("/attendance", { class: attDrafts.value[0]?.ctx.classId })}>ดูเช็คชื่อ</ChipButton>}</span></div>
           <div class="hm-kv"><span class="row" style="color:var(--text-danger)"><Icon name="cloud-x" size={20} /> ส่งไม่สำเร็จ</span>
             <span class="row"><b class="num" style="color:var(--text-danger)">{failedCount.value}</b>{failedCount.value > 0 && <ChipButton tone="danger" onClick={() => { failedPanelOpen.value = true; }}>ดูรายการ</ChipButton>}</span></div>
           <div class="page-sub" style="margin-top:6px">จะส่งให้เองเมื่อกลับมาออนไลน์ · <button class="lk" style="min-height:0;padding:0" onClick={() => navigate("/settings", { section: "general" })}>ที่เก็บข้อมูลในเครื่อง ›</button></div>
@@ -344,6 +353,8 @@ export function BackupCard() {
 
 export function TermCard() {
   const t = currentTerm.value;
+  const rooms = viewClasses.value;
+  const pupils = rooms.reduce((n, c) => n + (studentsByClass.value.get(c.id)?.length ?? 0), 0);
   const ended = !!t?.end_date && t.end_date < today();
   const weeks = t?.start_date && t.end_date ? Math.max(1, Math.round((Date.parse(t.end_date) - Date.parse(t.start_date)) / 604_800_000)) : null;
   const done = weeks && t?.start_date ? Math.max(0, Math.min(weeks, Math.ceil((Date.parse(today()) - Date.parse(t.start_date)) / 604_800_000))) : null;
@@ -357,9 +368,10 @@ export function TermCard() {
           {weeks && done != null && (
             <>
               <div class="hm-kv"><span>สัปดาห์ที่ผ่านไป</span><b class="num">{ended ? weeks : done} / {weeks}</b></div>
-              <ProgressBar pct={Math.round(((ended ? weeks : done) * 100) / weeks)} tone="var(--fill-accent)" />
+              <Bar pct={Math.round(((ended ? weeks : done) * 100) / weeks)} tone="var(--fill-accent)" label="สัปดาห์ที่ผ่านไป" />
             </>
           )}
+          <div class="hm-kv"><span>ห้องในปีนี้</span><b>{rooms.length} ห้อง · {pupils} คน</b></div>
           {ended && <div class="row" style="justify-content:flex-end;margin-top:8px"><button onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button></div>}
         </>
       )}

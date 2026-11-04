@@ -1,5 +1,6 @@
 /* งานครบ · home page (menu + home redesign, round 1). Sizes in rem / var(--fs-*) so the text-size setting scales it all. */
-.hm { max-width: 78rem; }
+/* 600 is only for the four big numbers (400/500 come with base.css) */
+@import "@fontsource/ibm-plex-sans-thai/600.css";
 
 /* header extras */
 .hm-sep::before { content: "·"; margin-right: 8px; }
@@ -15,7 +16,9 @@
 }
 
 /* status labels: icon + words */
-.hm-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 8px; min-height: 1.6rem; border-radius: 999px; white-space: nowrap; line-height: 1.5; border: 0.5px solid transparent; }
+.hm-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 8px; min-height: 1.6rem; border-radius: 999px; white-space: nowrap; line-height: 1.5; border: 0.5px solid transparent; max-width: 100%; }
+/* a long chip ("เช็คบางส่วน 2/44 · เหลือ …") wraps at big text instead of making the phone page wider than the screen */
+@media (max-width: 720px) { .hm-chip { white-space: normal; } }
 .hm-chip.danger { background: var(--bg-danger); color: var(--text-danger); border-color: var(--border-danger); }
 .hm-chip.warning { background: var(--bg-warning); color: var(--text-warning); border-color: var(--border-warning); }
 .hm-chip.accent { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
@@ -37,7 +40,8 @@ button.hm-chipbtn.muted { color: var(--text-primary); }
 .hm-todo { padding: 0; overflow: hidden; margin-bottom: 12px; border-left: 4px solid var(--fill-warning); border-radius: var(--radius-lg); }
 .hm-todo-h { display: flex; align-items: center; gap: 8px; padding: 10px 16px 6px; }
 .hm-todo-h h2 { font-size: 1rem; }
-.hm-todo-h .ic, .hm-todo-row .ic { width: 2rem; height: 2rem; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.hm-todo-h .ic { width: 2rem; height: 2rem; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.hm-todo-row .ic { width: 1.9rem; height: 1.9rem; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .hm-todo-h .ic.warn, .hm-todo-row .ic.warn { background: var(--bg-warning); color: var(--text-warning); }
 .hm-todo-row .ic.dan { background: var(--bg-danger); color: var(--text-danger); }
 .hm-todo-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 16px; min-height: var(--row-h); border-top: 0.5px solid var(--border); }
@@ -59,34 +63,40 @@ button.hm-chipbtn.muted { color: var(--text-primary); }
 .hm-action.primary { background: var(--accent); border-color: transparent; color: var(--on-accent); }
 .hm-action.primary:hover { background: var(--accent-hover); }
 .hm-action.primary .ic { background: rgba(255, 255, 255, 0.18); color: var(--on-accent); }
-.hm-action.primary .s { color: inherit; opacity: 0.9; }
+.hm-action.primary .s { color: inherit; opacity: 0.85; }
 
 .hm-resume { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; margin-bottom: 12px; border-radius: var(--radius); background: var(--bg-accent); color: var(--text-accent); border: 0.5px solid var(--border-accent); }
 .hm-resume button { height: auto; min-height: 2.2rem; }
 
 /* the four numbers: a bigger tile + icon than the other pages' stat cards */
-.hm-stats { margin-bottom: 12px; }
-.hm-stats .uc-stat { padding: 10px 12px; }
-.hm-stats .uc-stat .val { font-size: 1.6rem; font-weight: 500; line-height: 1.25; }
+.hm-stats { margin-bottom: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); } /* phone 2 x 2, anything wider one row of four (as designed) */
+@media (min-width: 721px) { .hm-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.hm-stats .uc-stat { padding: 10px 12px; min-width: 0; overflow-wrap: anywhere; box-shadow: var(--shadow-card); }
+.hm-stats .uc-stat .val { font-size: 1.6rem; font-weight: 600; line-height: 1.25; margin: 2px 0; }
+.hm-stats .uc-stat .val small { font-weight: 400; }
 .hm-stats .uc-stat .ic { width: 2rem; height: 2rem; border-radius: 8px; }
 .hm-stats .uc-stat .ic i { font-size: 1.33rem !important; }
+.hm-stats .uc-stat .val .hm-val-text { font-size: 1rem; font-weight: 500; }
 .hm-val-text { display: inline-block; font-size: 1rem; font-weight: 500; line-height: 1.5; padding: 0.2rem 0; } /* a sentence, not a number: do not blow it up */
 
-/* the chosen cards: one column, or two (wide cards left) on a wide screen */
-.hm-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
-.hm-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-@media (min-width: 1000px) { .hm-cols:not(.one) { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+/* card padding follows the screen: 16 wide, 14 iPad upright, 12 phone */
+@media (min-width: 721px) and (max-width: 999px) { .hm .card:not(.hm-todo) { padding: 14px; } }
+@media (max-width: 720px) { .hm .card:not(.hm-todo) { padding: 12px 14px; } }
+
+/* the chosen cards sit in up to three columns (<PageCols>, rules in base.css .pg-*); the page body is .pg (max 96rem, centred) */
 
 .hm-cardhead { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
 .hm-cardhead h2 { display: flex; align-items: center; gap: 6px; font-size: 1rem; line-height: 1.35; }
 .hm-cardhead h2 .ti { color: var(--text-secondary); }
 .hm-cardhead .seg { margin-left: auto; max-width: 100%; overflow-x: auto; }
-.hm-cardhead .lk { font-size: var(--fs-sm); font-weight: 400; color: var(--text-accent); background: none; border: none; cursor: pointer; }
+.hm-cardhead .lk { font-size: var(--fs-sm); font-weight: 400; color: var(--text-accent); background: none; border: none; cursor: pointer; padding: 0 8px; border-radius: 8px; min-height: 2rem; }
+.hm-cardhead .lk:hover { background: var(--surface-1); }
+.hm-cardhead-x { margin-left: auto; }
 
 .hm-asg { padding: 10px 0; border-top: 0.5px solid var(--border); }
 .hm-asg:first-of-type { border-top: none; padding-top: 4px; }
 .hm-asg .ttl { font-weight: 500; overflow-wrap: anywhere; }
-.hm-prog { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr) minmax(3.6rem, auto) auto; gap: 8px; align-items: center; font-size: var(--fs-xs); margin-top: 6px; min-height: 2rem; }
+.hm-prog { display: grid; grid-template-columns: 3.2rem minmax(0, 26rem) minmax(3.6rem, auto) auto; justify-content: start; gap: 8px; align-items: center; font-size: var(--fs-xs); margin-top: 6px; min-height: 2rem; }
 .hm-prog .num { font-variant-numeric: tabular-nums; color: var(--text-secondary); text-align: right; }
 .hm-prog .pbar { height: 8px; border-radius: 4px; }
 .hm-prog .pbar > div { border-radius: 4px; }
@@ -127,3 +137,8 @@ button.hm-cls-main:hover { background: var(--surface-2); }
 .hm-pref .ds { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; }
 .hm-pref .mv { display: flex; gap: 4px; }
 .hm-new { margin-left: 6px; font-size: var(--fs-xs); font-weight: 400; padding: 0 6px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); }
+
+/* loading: grey blocks where the numbers and cards go (still, no shimmer) */
+.hm-skel { height: 1em; border-radius: 6px; margin: 6px 0; background: linear-gradient(90deg, var(--surface-1), var(--border), var(--surface-1)); }
+.hm-skel.big { height: 1.6em; }
+.hm-slow { text-align: center; padding: 12px 0; }

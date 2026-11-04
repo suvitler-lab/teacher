@@ -32,6 +32,7 @@ export function Toasts() {
           <button class="icon ghost" aria-label="ปิด" style="width:1.73rem;height:1.73rem;color:inherit" onClick={() => dismiss(t.id)}>
             <Icon name="x" size={14} />
           </button>
+          {t.action && t.ms && <span class="toast-bar" aria-hidden="true" style={`animation-duration:${t.ms}ms`} />}
         </div>
       ))}
     </div>
@@ -102,8 +103,8 @@ export function FailedPanel() {
   const REASON = FAIL_REASON;
   return (
     <>
-      <button class="failed-fab" onClick={() => setOpen(true)}>
-        <Icon name="alert-triangle" size={16} /> ส่งไม่สำเร็จ {n}
+      <button class="failed-fab" aria-label={`ส่งไม่สำเร็จ ${n} รายการ`} onClick={() => setOpen(true)}>
+        <Icon name="alert-triangle" size={16} /> <span class="lbl">ส่งไม่สำเร็จ</span> {n}
       </button>
       {open && (
         <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>

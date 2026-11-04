@@ -1,80 +1,139 @@
-/* งานครบ · attendance */
-.att-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
-.att-datenav { display: inline-flex; align-items: center; gap: 2px; }
-.att-datenav button { height: 2rem; }
-
-/* week strip */
-.att-week { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
-/* each day is a card (day + status, stacked): block and natural height, not the inline-flex 38px of a plain button */
-.att-week > button { display: block; height: auto; min-height: var(--row-h); text-align: left; border-radius: 10px; padding: 6px 8px; background: var(--surface-2); border: 0.5px solid var(--border); cursor: pointer; }
-.att-week > button.on { border: 2px solid var(--border-accent); padding: 5px 7px; }
-.att-week .wd { font-size: var(--fs-xs); color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; }
-.att-week .wd.today { color: var(--text-accent); font-weight: 500; }
-.att-week .ws { font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
-
-/* summary card */
-.att-sum { margin-bottom: 10px; }
-.att-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: var(--fs-xs); font-variant-numeric: tabular-nums; margin-top: 6px; }
-.att-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
-
-/* status brush */
-.att-brush { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.att-brush .lbl { font-size: var(--fs-xs); color: var(--text-secondary); }
-.att-brush .bopt { display: inline-flex; align-items: center; gap: 6px; height: 2rem; padding: 0 11px; border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--surface-2); font-size: var(--fs-xs); cursor: pointer; }
-.att-brush .bopt.on { border: 2px solid var(--border-accent); font-weight: 500; padding: 0 10px; }
-.att-brush .bopt .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-.att-tiles.loading { opacity: 0.55; pointer-events: none; }
-.att-offnote { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: var(--fs-xs); color: var(--text-warning); }
-.att-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
-/* a <button> that is a CARD: it must not inherit the one-line control height from base.css — with it the
-   name collapsed to 0px (audit B09). The min-height is a comfortable touch target, not a fixed height. */
-.att-tile {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  height: auto; min-height: 4.27rem; padding: 8px 4px; border-radius: 10px; line-height: 1.3; min-width: 0;
-  border: 0.5px solid var(--border); background: var(--surface-1); cursor: pointer;
-}
-.att-tile .no { font-size: var(--fs-xs); }
-/* a long name wraps to two lines instead of vanishing (the full name is also in the tile's title/aria-label) */
-.att-tile .nm {
-  font-size: var(--fs-sm); font-weight: 500; max-width: 100%; text-align: center; overflow-wrap: anywhere;
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
-}
-.att-tile .stt { font-size: var(--fs-xs); }
-.att-tile.present { background: var(--bg-success); border-color: var(--border-success); color: var(--text-success); }
-.att-tile.late { background: var(--bg-warning); border-color: var(--border-warning); color: var(--text-warning); }
-.att-tile.leave { background: var(--bg-accent); border-color: var(--border-accent); color: var(--text-accent); }
-.att-tile.sick { background: var(--bg-purple); border-color: var(--border-purple); color: var(--text-purple); }
-.att-tile.absent { background: var(--bg-danger); border-color: var(--border-danger); color: var(--text-danger); }
-.att-tile.hit { outline: 2px solid var(--accent); outline-offset: -1px; }
-
-/* scan mode result list */
-.att-scanrow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 0.5px solid var(--border); }
-.att-scanrow:first-of-type { border-top: none; }
-
-/* ---- round 2 ---- */
+/* งานครบ · attendance — follows design/preview-round2.html (เช็คชื่อ): toolbar, week strip, summary, status buttons, tiles, sticky save bar */
+/* kept: other pages use .att-hide-sm and the print rules in shell.css / base.css refer to .att-toolbar and .att-week */
 .att-hide-sm { }
 @media (max-width: 560px) { .att-hide-sm { display: none; } }
-.att-periods { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.att-periods .pill { height: var(--tap); }
-/* the five statuses: big, with an icon and a word (never colour alone) */
-.att-brush { align-items: center; }
-.att-stbtns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1 1 22rem; }
-.stbtn { height: auto; min-height: 4rem; flex-direction: column; gap: 2px; border-radius: 12px; border: 2px solid var(--border-strong); background: var(--surface-2); font-size: var(--fs-sm); padding: 6px 4px; }
+
+/* ---- toolbar: room chips · day · day/period · tap/scan ---- */
+.att-toolbar { display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+.att-toolbar .pill { height: var(--tap); }
+.att-toolbar .seg button { height: 2.4rem; min-width: 44px; }
+.att-datenav { display: inline-flex; align-items: center; gap: 4px; }
+.att-datenav button { height: var(--tap); min-width: var(--tap); }
+.att-datenav .att-today { min-width: 8em; font-weight: 500; }
+.att-periods { display: flex; gap: 6px 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+.att-periods .pill { height: var(--tap); min-width: var(--tap); justify-content: center; }
+.att-periods select { width: auto; min-height: var(--tap); height: var(--tap); }
+.att-tip { font-size: var(--fs-sm); color: var(--text-secondary); }
+
+/* ---- a notice above the work area (loading, period without a start time) ---- */
+.att-warn { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 14px; margin-bottom: 8px; border-radius: var(--radius); background: var(--bg-warning); color: var(--text-warning); border: 0.5px solid var(--border-warning); font-size: var(--fs-sm); }
+.att-warn .grow { flex: 1 1 14em; }
+.att-note { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 6px 12px; border-radius: var(--radius); background: var(--surface-1); color: var(--text-secondary); font-size: var(--fs-sm); }
+
+/* ---- week strip ---- */
+.att-week { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
+/* each day is a card (day + status, stacked): block and natural height, not the inline-flex of a plain button */
+.att-week > button { display: block; height: auto; min-height: max(3.5rem, var(--row-h)); text-align: left; border-radius: 10px; padding: 6px 8px; background: var(--surface-2); border: 0.5px solid var(--border); cursor: pointer; }
+.att-week > button.on { border: 2px solid var(--border-accent); padding: 5px 7px; background: var(--bg-accent); color: var(--text-accent); }
+.att-week > button:disabled { opacity: 0.5; cursor: default; }
+.att-week .wd { font-size: var(--fs-xs); color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.att-week > button.on .wd, .att-week > button.on .ws { color: var(--text-accent); }
+.att-week .wd.today { color: var(--text-accent); font-weight: 500; }
+.att-week .ws { font-size: var(--fs-xs); font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+
+/* ---- cards (summary, scan, last scans, not-checked, away, clashes) ---- */
+.att-card { padding: 10px 14px; }
+.att-card + .att-card { margin-top: 0; }
+.att-h { font-size: 1rem; font-weight: 500; display: flex; align-items: center; gap: 6px; margin: 0; }
+.att-sum { margin-bottom: 8px; }
+.att-sum-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.att-sum-top .att-h { flex: 1 1 auto; }
+.att-pct { font-weight: 400; color: var(--text-secondary); }
+.att-legend { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: var(--fs-xs); font-variant-numeric: tabular-nums; margin-top: 6px; }
+.att-legend > span { display: inline-flex; align-items: center; gap: 4px; }
+.att-legend .present { color: var(--text-success); } .att-legend .late { color: var(--text-warning); } .att-legend .leave { color: var(--text-accent); }
+.att-legend .sick { color: var(--text-purple); } .att-legend .absent { color: var(--text-danger); } .att-legend .none { color: var(--text-secondary); }
+.att-offnote { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: var(--fs-xs); color: var(--text-warning); }
+
+/* ---- status brush: five equal buttons + "all present" ---- */
+.att-brush { margin-bottom: 8px; }
+.att-brush .lbl { display: block; font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px; }
+.att-brushrow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.att-stbtns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1 1 22rem; min-width: 0; }
+.stbtn { height: auto; min-height: max(64px, 4rem); flex-direction: column; gap: 2px; border-radius: 12px; border: 2px solid var(--border-strong); background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-sm); font-weight: 500; line-height: 1.2; padding: 6px 2px; }
 .stbtn.present { color: var(--text-success); } .stbtn.late { color: var(--text-warning); } .stbtn.leave { color: var(--text-accent); }
 .stbtn.sick { color: var(--text-purple); } .stbtn.absent { color: var(--text-danger); }
 .stbtn.on.present { background: var(--bg-success); border-color: var(--text-success); } .stbtn.on.late { background: var(--bg-warning); border-color: var(--text-warning); }
 .stbtn.on.leave { background: var(--bg-accent); border-color: var(--text-accent); } .stbtn.on.sick { background: var(--bg-purple); border-color: var(--text-purple); }
 .stbtn.on.absent { background: var(--bg-danger); border-color: var(--text-danger); }
-.att-allp { height: 4rem; }
-/* four columns of child tiles: number, nickname, status with an icon */
-.att-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 560px) { .att-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .att-stbtns { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-.att-tile { flex-direction: row; justify-content: flex-start; gap: 8px; min-height: 4rem; padding: 6px 10px; text-align: left; }
-.att-tile .no { font-size: calc(var(--fs-sm) * 1.25); font-weight: 600; min-width: 1.6em; text-align: center; font-variant-numeric: tabular-nums; }
-.att-tile .tx { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; }
-.att-tile .nm { text-align: left; }
-.att-tile .stt { display: inline-flex; align-items: center; gap: 3px; }
-.att-tile:not(.present):not(.late):not(.leave):not(.sick):not(.absent) { background: var(--surface-2); border: 1.5px dashed var(--border-strong); color: var(--text-secondary); }
-.att-savebar { position: sticky; bottom: 0; z-index: 35; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding: 8px 12px; background: var(--surface-2); border-top: 0.5px solid var(--border); }
-.att-side { padding: 10px 12px; }
+.stbtn.on { box-shadow: var(--ring-focus); }
+.att-allp { min-height: 3rem; font-weight: 500; }
+@media (max-width: 720px) { .att-allp { flex: 1 1 100%; } }
+
+/* ---- the children: number, nickname, status with icon + word ---- */
+.att-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(160px, 10rem), 1fr)); gap: 8px; }
+.att-tiles.loading { opacity: 0.6; } /* still tappable: a tap while loading says why it waits (a silent block looked like a dead button) */
+/* a <button> that is a CARD: it must not inherit the one-line control height from base.css (audit B09) */
+.att-tile {
+  display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px;
+  height: auto; min-height: max(64px, 4rem); padding: 6px 10px; border-radius: 12px; line-height: 1.3; min-width: 0; text-align: left;
+  border: 1.5px dashed var(--border-strong); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; position: relative;
+}
+.att-tile .no { font-size: 1.1rem; font-weight: 600; min-width: 1.6em; text-align: center; font-variant-numeric: tabular-nums; flex: none; }
+.att-tile .tx { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; flex: 1 1 auto; }
+/* a long name wraps to two lines instead of vanishing (the full name is also in the tile's title/aria-label) */
+.att-tile .nm {
+  font-size: max(13px, 0.95rem); font-weight: 500; max-width: 100%; text-align: left; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+}
+.att-tile .stt { font-size: var(--fs-xs); display: inline-flex; align-items: center; gap: 3px; }
+.att-tile.present { background: var(--bg-success); border: 1.5px solid var(--border-success); color: var(--text-success); }
+.att-tile.late { background: var(--bg-warning); border: 1.5px solid var(--border-warning); color: var(--text-warning); }
+.att-tile.leave { background: var(--bg-accent); border: 1.5px solid var(--border-accent); color: var(--text-accent); }
+.att-tile.sick { background: var(--bg-purple); border: 1.5px solid var(--border-purple); color: var(--text-purple); }
+.att-tile.absent { background: var(--bg-danger); border: 1.5px solid var(--border-danger); color: var(--text-danger); }
+/* a scan, a tap that takes a mark back, "who is not checked yet": a ring so the eye finds the child (an unchecked tile is the dashed one above) */
+.att-tile.hit { outline: 2px solid var(--accent); outline-offset: -1px; box-shadow: var(--ring-focus); }
+
+/* ---- work area + side cards ---- */
+.att-body { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+.att-main, .att-cards, .att-scan { min-width: 0; }
+.att-cards { display: flex; flex-direction: column; gap: 8px; }
+.att-cards:empty { display: none; }
+@media (min-width: 1000px) {
+  /* iPad on its side and computers: the children on the left, the cards in a column on the right */
+  .att-body.two { grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); align-items: start; }
+  .att-body.two .att-main { grid-column: 1; grid-row: 1 / span 2; }
+  .att-body.two .att-scan { grid-column: 2; grid-row: 1; }
+  .att-body.two .att-cards { grid-column: 2; grid-row: 2; }
+  .att-body.two:not(:has(.att-scan)) .att-cards { grid-row: 1; }
+}
+
+/* scan card */
+.att-scancard { display: flex; flex-direction: column; gap: 8px; }
+.att-scanin { display: flex; align-items: center; gap: 10px; min-height: 3.6rem; border: 2px solid var(--border-accent); border-radius: 12px; padding: 0 14px; background: var(--surface-2); box-shadow: var(--ring-focus); color: var(--text-muted); }
+label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; border: 0; background: transparent; box-shadow: none; padding: 0; height: auto; min-height: 3rem; color: var(--text-primary); }
+.att-fb { display: flex; align-items: center; gap: 10px; min-height: 3rem; padding: 6px 12px; border-radius: 12px; font-size: 1.1rem; font-weight: 500; background: var(--bg-success); color: var(--text-success); }
+.att-fb.bad { background: var(--bg-danger); color: var(--text-danger); }
+.att-fb.warn { background: var(--bg-warning); color: var(--text-warning); }
+.att-pick { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* rows inside cards */
+.att-rrow { display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 2px 0; border-top: 0.5px solid var(--border); flex-wrap: wrap; }
+.att-rrow:first-of-type { border-top: none; }
+.att-rrow .nm { flex: 1 1 8rem; min-width: 0; overflow-wrap: anywhere; }
+.att-rrow .nm small { display: block; font-size: var(--fs-xs); color: var(--text-secondary); }
+.att-scanrow .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; }
+.att-numchip { min-width: var(--tap); height: var(--tap); padding: 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border-strong); font-variant-numeric: tabular-nums; cursor: pointer; }
+.att-numchips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.att-badge { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; }
+.att-badge.present { background: var(--bg-success); color: var(--text-success); } .att-badge.late { background: var(--bg-warning); color: var(--text-warning); }
+.att-badge.leave { background: var(--bg-accent); color: var(--text-accent); } .att-badge.sick { background: var(--bg-purple); color: var(--text-purple); }
+.att-badge.absent { background: var(--bg-danger); color: var(--text-danger); }
+.att-no { display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; padding: 0 6px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); font-size: var(--fs-xs); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* clashes, taps to check, drafts elsewhere: always shown, never hidden by a card setting */
+.att-alert { border-left: 4px solid var(--fill-warning); padding: 8px 14px; margin-bottom: 8px; }
+.att-alert .att-h { color: var(--text-warning); }
+.att-alert .att-rrow { min-height: 3.5rem; }
+
+/* ---- save bar: sticks to the bottom (above the tab bar on a phone) ---- */
+.att-savebar { position: sticky; bottom: 0; z-index: 35; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 56px; margin: 10px -4px 0; padding: 8px 12px; background: var(--surface-2); border-top: 0.5px solid var(--border); box-shadow: 0 -2px 8px rgba(20, 28, 46, 0.08); }
+.att-savebar .att-count { margin-left: auto; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+.att-savebar .att-hint { font-size: var(--fs-xs); color: var(--text-secondary); }
+/* the floating "ส่งไม่สำเร็จ n" button sits at the bottom right: keep the count out from under it */
+.att-savebar.has-fab { padding-right: 10rem; }
+@media (max-width: 720px) {
+  .att-savebar { bottom: calc(58px + env(safe-area-inset-bottom)); }
+  .att-savebar .att-hint { display: none; }
+}

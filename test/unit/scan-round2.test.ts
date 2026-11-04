@@ -61,12 +61,69 @@ describe("scan round 2", () => {
   it("taking it back offers 'เลิกทำ', and using it puts the hand-in back", async () => {
     __scan.commitStudent(stu, "manual");
     __scan.undo("st1");
-    const t = toasts.value.find((x) => x.action?.label === "เลิกทำ");
+    const t = toasts.value.find((x) => /^เลิกทำ/.test(x.action?.label ?? ""));
     expect(t).toBeTruthy();
     t!.action!.run();
     const last = enqueue.mock.calls.at(-1)![0] as any;
     expect(last).toMatchObject({ status: "submitted", studentId: "st1" });
     expect(__scan.effSub("st1")?.status).toBe("submitted");
+  });
+
+  // R-03: "เลิกทำ" after "ยกเลิกการส่ง" must put the hand-in back on the day it was ORIGINALLY received
+  describe("R-03 undo keeps the original received day", () => {
+    const row = (submittedAt: number) => ({ assignment_id: "A", student_id: "st1", status: "submitted", score: 10, late: false, submitted_at: submittedAt, updated_at: 5 });
+    const pressUndo = () => { const t = toasts.value.find((x) => /^เลิกทำ/.test(x.action?.label ?? "")); expect(t).toBeTruthy(); t!.action!.run(); };
+
+    it("a hand-in loaded from the server comes back on its stored day, not today", async () => {
+      const threeDaysAgo = Date.now() - 3 * 86_400_000;
+      get.mockResolvedValue({ submissions: [row(threeDaysAgo)], serverTime: 100 });
+      await __scan.loadSubs("A");
+      enqueue.mockClear();
+      __scan.undo("st1");
+      pressUndo();
+      const ops = enqueue.mock.calls.map((c) => c[0] as any);
+      expect(ops[0]).toMatchObject({ status: "void" });
+      expect(ops[1]).toMatchObject({ status: "submitted", receivedDate: bkkToday(threeDaysAgo) });
+      expect(ops[1].receivedDate).not.toBe(bkkToday());
+    });
+
+    it("a back-dated round does not move it to the round's day", async () => {
+      const fiveDaysAgo = Date.now() - 5 * 86_400_000;
+      get.mockResolvedValue({ submissions: [row(fiveDaysAgo)], serverTime: 100 });
+      await __scan.loadSubs("A");
+      __scan.recvDate.value = bkkToday(Date.now() - 86_400_000);
+      enqueue.mockClear();
+      __scan.undo("st1");
+      pressUndo();
+      expect((enqueue.mock.calls.at(-1)![0] as any).receivedDate).toBe(bkkToday(fiveDaysAgo));
+    });
+
+    it("a hand-in taken in this round under a picked day is put back on that day", async () => {
+      __scan.recvDate.value = "2026-10-30";
+      __scan.commitStudent(stu, "manual");
+      __scan.recvDate.value = null;
+      __scan.undo("st1");
+      pressUndo();
+      expect((enqueue.mock.calls.at(-1)![0] as any).receivedDate).toBe("2026-10-30");
+    });
+  });
+
+  // B-04 / R-08: one child is one row and counted once, even when scanned and then scored
+  it("in type-the-score mode a child scanned and then scored is ONE row", async () => {
+    await __scan.startSession("A", "c1", "type");
+    __scan.commitStudent(stu, "manual");
+    expect(__scan.recent.value).toHaveLength(1);
+    expect(__scan.pending.value).toBe("st1");
+    __scan.submitTypedScore(8.5);
+    expect(__scan.recent.value).toHaveLength(1);
+    expect(__scan.recent.value[0]).toMatchObject({ studentId: "st1", score: 8.5 });
+  });
+
+  // R-07: the "ล่าสุด 8" shortcut belongs to the round it was typed in
+  it("a new round forgets the last typed score", async () => {
+    __scan.lastScore.value = 8;
+    await __scan.startSession("A", "c1", "type");
+    expect(__scan.lastScore.value).toBeNull();
   });
 
   it("an unknown class number names the room it was looked up in", async () => {

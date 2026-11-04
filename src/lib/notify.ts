@@ -6,6 +6,8 @@ export interface Toast {
   message: string;
   action?: { label: string; run: () => void };
   sticky?: boolean;
+  /** how long it stays (ms); drives the countdown line under a message that has a button */
+  ms?: number;
 }
 
 export const toasts = signal<Toast[]>([]);
@@ -13,8 +15,10 @@ let seq = 1;
 
 export function notify(kind: Toast["kind"], message: string, opts: { action?: Toast["action"]; sticky?: boolean } = {}) {
   const id = seq++;
-  toasts.value = [...toasts.value, { id, kind, message, action: opts.action, sticky: opts.sticky }];
-  if (!opts.sticky) setTimeout(() => dismiss(id), 4000);
+  // a message with a button ("เลิกทำ") stays 5 seconds so the button can be reached; a plain one 4
+  const ms = opts.action ? 5000 : 4000;
+  toasts.value = [...toasts.value, { id, kind, message, action: opts.action, sticky: opts.sticky, ms: opts.sticky ? undefined : ms }];
+  if (!opts.sticky) setTimeout(() => dismiss(id), ms);
   return id;
 }
 

@@ -50,6 +50,10 @@ const ALLOWED_SETTINGS = new Set([
   "scan_cards",
   "attendance_cards",
   "random_cards",
+  "gradebook_cards",
+  "reports_cards",
+  "students_cards",
+  "settings_cards",
 ]);
 
 catalogRoutes.put("/api/settings", async (c) => {

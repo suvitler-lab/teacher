@@ -1,7 +1,7 @@
 import { signal, computed } from "@preact/signals";
 import { settings } from "../store";
 import { api } from "./api";
-import { err } from "./notify";
+import { err, ok } from "./notify";
 import { parseHomeCards, serializeHomeCards, type HomeCardPrefs } from "./homeCards";
 
 /** The card layout the teacher chose (the same on every device: it lives in the settings). */
@@ -23,6 +23,7 @@ export function saveHomeCards(next: HomeCardPrefs): Promise<boolean> {
   const run = async (): Promise<boolean> => {
     try {
       await api.put("/api/settings", { home_cards: text });
+      ok("บันทึกแล้ว · ใช้ทุกเครื่อง");
       return true;
     } catch {
       // only undo our own change: a later tap has already replaced it

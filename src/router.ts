@@ -8,20 +8,30 @@ function current(): string {
 export const route = signal<string>(current());
 
 let lastRoute = route.value;
-let guard: ((next: string) => boolean) | null = null;
+export type NavGuard = (next: string) => boolean | Promise<boolean>;
+let guard: NavGuard | null = null;
+let skipGuard = false;
 
-/** While set, leaving the current page asks first: return false to stay where you are. */
-export function setNavGuard(fn: ((next: string) => boolean) | null) {
+/**
+ * While set, leaving the current page asks first: return false to stay where you are. A guard may answer later
+ * (a dialog instead of confirm()): the page stays put meanwhile, and goes on to the wanted address if the answer is true.
+ */
+export function setNavGuard(fn: NavGuard | null) {
   guard = fn;
 }
 
 window.addEventListener("hashchange", () => {
   const next = current();
-  if (guard && next !== lastRoute && !guard(next)) {
-    // stay: put the address back (fires hashchange once more, now equal to lastRoute)
-    location.hash = lastRoute;
-    return;
+  if (guard && next !== lastRoute && !skipGuard) {
+    const answer = guard(next);
+    if (answer !== true) {
+      // stay: put the address back (fires hashchange once more, now equal to lastRoute)
+      location.hash = lastRoute;
+      if (answer !== false) answer.then((go) => { if (go) { skipGuard = true; location.hash = next; } });
+      return;
+    }
   }
+  skipGuard = false;
   lastRoute = next;
   route.value = next;
 });

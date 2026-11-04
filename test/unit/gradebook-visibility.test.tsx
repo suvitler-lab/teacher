@@ -46,9 +46,11 @@ beforeEach(() => {
 async function openTable() {
   render(<GradebookPage />);
   await screen.findByRole("columnheader", { name: /เศษส่วน/ });
+  // "ซ่อน/แสดงคะแนนทั้งหมด" lives in the ⋮ menu of the picked work (round 3); it stays open while the columns are saved
+  fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" }));
 }
-const hideAll = () => screen.getByRole("button", { name: "ซ่อนคะแนนทั้งหมด" }) as HTMLButtonElement;
-const showAll = () => screen.getByRole("button", { name: "แสดงคะแนนทั้งหมด" }) as HTMLButtonElement;
+const hideAll = () => screen.getByRole("menuitem", { name: "ซ่อนคะแนนทั้งหมด" }) as HTMLButtonElement;
+const showAll = () => screen.getByRole("menuitem", { name: "แสดงคะแนนทั้งหมด" }) as HTMLButtonElement;
 const cells = () => within(screen.getByRole("table")).getAllByRole("row")[1].querySelectorAll("td");
 
 describe("gradebook score visibility", () => {
@@ -82,7 +84,7 @@ describe("gradebook score visibility", () => {
     await openTable();
     const fractions = screen.getByRole("columnheader", { name: /เศษส่วน/ });
     fireEvent.click(within(fractions).getByRole("button", { name: "ซ่อนคะแนนของงานนี้" }));
-    await waitFor(() => expect(ok).toHaveBeenCalledWith("ซ่อนคะแนนแล้ว"));
+    await waitFor(() => expect(ok).toHaveBeenCalledWith("ซ่อนคะแนนบนจอแล้ว"));
     expect(post).toHaveBeenCalledTimes(1);
     expect(post.mock.calls[0][1]).toMatchObject({ id: "fractions", publish_scores: false });
     expect([...cells()].slice(1).map((c) => c.textContent)).toEqual(["7", "•••", "7/10"]);

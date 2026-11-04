@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { h } from "preact";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/preact";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/preact";
 import type { Student } from "@shared/types";
 
 // ui-redesign round 2 (attendance page): five status buttons, a confirmed "all present", page cards, period links.
@@ -23,7 +23,7 @@ const kid = (n: number): Student => ({
 const baseSettings = (over: Record<string, string> = {}) => ({
   school_name: "", teacher_name: "", app_title: "", late_after: "08:30", theme: "light", accent: "blue", sound_enabled: false,
   accept_student_code_scan: false, parent_portal_enabled: false, onboarding_done: true, last_backup_at: "", period_times: "{}",
-  home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", ...over,
+  home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", gradebook_cards: "", reports_cards: "", students_cards: "", settings_cards: "", ...over,
 }) as never;
 
 let rows: { student_id: string; status: string; updated_at: number }[] = [];
@@ -48,10 +48,12 @@ const tile = (n: number) => document.getElementById("att-t-s" + n) as HTMLElemen
 describe("attendance page", () => {
   it("shows the five status buttons, each with a word, and four tiles that start unchecked", async () => {
     render(h(AttendancePage, {}));
-    for (const w of ["มา", "สาย", "ลา", "ป่วย", "ขาด"]) expect(screen.getByRole("button", { name: w })).toBeTruthy();
+    // the five statuses are one radio group (arrow keys move between them), each with a word
+    expect(screen.getByRole("radiogroup")).toBeTruthy();
+    for (const w of ["มา", "สาย", "ลา", "ป่วย", "ขาด"]) expect(screen.getByRole("radio", { name: w })).toBeTruthy();
     await waitFor(() => expect(tile(1)).toBeTruthy());
     expect(tile(1).textContent).toContain("แตะเพื่อเช็ค");
-    expect(screen.getByRole("button", { name: "มา" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("radio", { name: "มา" }).getAttribute("aria-checked")).toBe("true");
   });
 
   it("a tap puts the chosen status on the child (default มา, then ขาด)", async () => {
@@ -59,7 +61,7 @@ describe("attendance page", () => {
     await loaded();
     await act(async () => { fireEvent.click(tile(1)); });
     await waitFor(() => expect(tile(1).getAttribute("aria-label")).toContain("มา"));
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "ขาด" })); });
+    await act(async () => { fireEvent.click(screen.getByRole("radio", { name: "ขาด" })); });
     await act(async () => { fireEvent.click(tile(2)); });
     await waitFor(() => expect(tile(2).getAttribute("aria-label")).toContain("ขาด"));
     expect(tile(3).getAttribute("aria-label")).toContain("ยังไม่เช็ค");
@@ -72,9 +74,11 @@ describe("attendance page", () => {
     const all = await screen.findByRole("button", { name: /มาทั้งห้อง/ });
     await waitFor(() => expect((all as HTMLButtonElement).disabled).toBe(false));
     await act(async () => { fireEvent.click(all); });
-    expect(screen.getByText(/ให้ “มา” 3 คนที่ยังไม่เช็ค/)).toBeTruthy();
+    // the question is a real dialog (focus starts on the safe answer), with the number of children in it
+    const dlg = await screen.findByRole("alertdialog");
+    expect(within(dlg).getByText(/ให้ “มา” 3 คนที่ยังไม่เช็ค/)).toBeTruthy();
     expect(tile(2).getAttribute("aria-label")).toContain("ยังไม่เช็ค");   // nothing changed before the answer
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "ให้ “มา”" })); });
+    await act(async () => { fireEvent.click(within(dlg).getByRole("button", { name: "มาทั้งห้อง 3 คน" })); });
     await waitFor(() => expect(tile(2).getAttribute("aria-label")).toContain("มา"));
     expect(tile(4).getAttribute("aria-label")).toContain("มา");
     expect(tile(1).getAttribute("aria-label")).toContain("ขาด");              // already checked: kept
@@ -82,12 +86,12 @@ describe("attendance page", () => {
 
   it("the summary card is on by default and disappears when the teacher turns it off", async () => {
     const { unmount } = render(h(AttendancePage, {}));
-    expect(await screen.findByText(/มาเรียน \d+ จาก 4 คน/)).toBeTruthy();
+    expect(await screen.findByText(/ยังไม่ได้เช็คชื่อ · 4 คน|มาเรียน \d+ จาก 4 คน/)).toBeTruthy();
     unmount();
     settings.value = baseSettings({ attendance_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("attendance"), "sum")) });
     render(h(AttendancePage, {}));
     await waitFor(() => expect(tile(1)).toBeTruthy());
-    expect(screen.queryByText(/มาเรียน \d+ จาก 4 คน/)).toBeNull();
+    expect(screen.queryByText(/ยังไม่ได้เช็คชื่อ · 4 คน|มาเรียน \d+ จาก 4 คน/)).toBeNull();
   });
 
   it("the 'who is not checked yet' card is off by default and lists the unchecked numbers when on", async () => {

@@ -26,6 +26,9 @@ const METHOD_LABEL: Record<string, string> = {
   camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน",
 };
 
+const STATUS_LABEL: Record<string, string> = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
+const ACTION_LABEL: Record<string, string> = { create: "เพิ่มข้อมูล", update: "แก้ไข", void: "ยกเลิก/ลบ", delete: "ลบ", move: "ย้ายห้อง", import: "นำเข้า", restore: "กู้คืน" };
+
 function describe(r: AuditRow): string {
   if (r.entity === "submission") {
     const b = r.before?.score, a = r.after?.score;
@@ -34,10 +37,12 @@ function describe(r: AuditRow): string {
     if (a != null) return `ให้คะแนน ${a}`;
     return "รับงาน";
   }
-  if (r.entity === "attendance") return `สถานะ: ${r.after?.status ?? "-"}`;
+  if (r.entity === "attendance" && r.action === "void") return "ยกเลิกการเช็ค";
+  if (r.entity === "attendance") return `สถานะ: ${STATUS_LABEL[String(r.after?.status)] ?? r.after?.status ?? "-"}`;
   if (r.entity === "qr") return "ออก QR ใหม่";
   if (r.entity === "assignment") return r.action === "void" ? "ลบงาน" : r.action === "create" ? "สร้างงาน" : "แก้ไขงาน";
-  return r.action;
+
+  return ACTION_LABEL[r.action] ?? r.action;
 }
 
 export function AuditHistory({ entity }: { entity?: string }) {

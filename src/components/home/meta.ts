@@ -1,4 +1,5 @@
 import type { HomeCardKey } from "../../lib/homeCards";
+import { W } from "../../lib/pageColumns";
 
 /** What each card is called and does, for the "ปรับหน้าหลัก" list. `fresh` = a card added after the first design round. */
 export const CARD_META: Record<HomeCardKey, { title: string; icon: string; desc: string; fresh?: boolean }> = {
@@ -13,5 +14,7 @@ export const CARD_META: Record<HomeCardKey, { title: string; icon: string; desc:
   term: { title: "ภาคเรียน", icon: "calendar-stats", desc: "เทอมปัจจุบัน ช่วงวัน สัปดาห์ที่ผ่านไป" },
 };
 
-/** Cards that sit in the wide column on a wide screen (they hold lists); the rest go in the narrow column beside them. */
-export const WIDE_CARDS: readonly HomeCardKey[] = ["open", "classes"];
+/** Rough height of each card (~ height / 8rem) so the columns on a wide screen come out level. Static on purpose: cards must not jump when they load. */
+export const CARD_WEIGHT: Record<HomeCardKey, number> = {
+  open: W.L, att: W.M, follow: W.M, due: W.M, absent: W.S, classes: W.L, queue: W.S, backup: W.S, term: W.S,
+};

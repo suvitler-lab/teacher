@@ -1,3 +1,5 @@
+import { swrClear } from "./swr";
+
 export class ApiError extends Error {
   status: number;
   code: string;
@@ -23,6 +25,8 @@ async function request<T>(method: string, path: string, body?: unknown, options:
   options.signal?.addEventListener("abort", abort, { once: true });
   if (options.signal?.aborted) abort();
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? (method === "GET" ? 8000 : 15000));
+  // a write (even one that may or may not land) makes every saved read answer suspect
+  if (method !== "GET") swrClear();
   const init: RequestInit = {
     method,
     headers,
@@ -45,6 +49,7 @@ async function request<T>(method: string, path: string, body?: unknown, options:
       : "เครือข่ายตอบช้าเกินไป — ยังไม่ทราบผล ตรวจข้อมูลล่าสุดก่อนทำซ้ำ");
     throw new ApiError(0, "network", "ต่ออินเทอร์เน็ตไม่ได้");
   } finally {
+    if (method !== "GET") swrClear(); // reads that started while the write was on its way must not be remembered either
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", abort);
   }

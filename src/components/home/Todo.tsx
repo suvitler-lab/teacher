@@ -3,14 +3,15 @@ import { classById, currentTerm, settings, startTermOpen, viewingPastYear } from
 import { navigate } from "../../router";
 import { dashboard } from "../../lib/dashboard";
 import { pendingCount, failedCount } from "../../lib/outbox";
-import { attDraftCount } from "../../lib/attSync";
+import { attDraftCount, attDrafts } from "../../lib/attSync";
 import { failedPanelOpen } from "../Overlays";
 import { todoRows, uncheckedRooms, type TodoRow } from "../../lib/homeLogic";
 import { bkkParts, bkkToday } from "@shared/time";
 
 function run(r: TodoRow) {
   if (r.action === "failed") failedPanelOpen.value = true;
-  else if (r.action === "queue") navigate(attDraftCount.value > 0 ? "/attendance" : "/gradebook");
+  // the roll-call that is waiting to be sent: open that room, not the room list
+  else if (r.action === "queue") navigate(attDraftCount.value > 0 ? "/attendance" : "/gradebook", { class: attDrafts.value[0]?.ctx.classId });
   else if (r.action === "term") startTermOpen.value = true;
   else if (r.action === "room") navigate("/attendance", { class: r.classId });
   else navigate("/settings", { section: "backup" });

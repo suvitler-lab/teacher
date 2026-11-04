@@ -48,6 +48,10 @@ export async function getSettings(env: Env): Promise<Settings> {
     scan_cards: map.scan_cards ?? "",
     attendance_cards: map.attendance_cards ?? "",
     random_cards: map.random_cards ?? "",
+    gradebook_cards: map.gradebook_cards ?? "",
+    reports_cards: map.reports_cards ?? "",
+    students_cards: map.students_cards ?? "",
+    settings_cards: map.settings_cards ?? "",
   };
 }
 

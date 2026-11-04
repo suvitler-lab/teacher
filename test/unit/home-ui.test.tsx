@@ -15,7 +15,7 @@ import { route } from "@client/router";
 import { dashboard } from "@client/lib/dashboard";
 import { failedCount } from "@client/lib/outbox";
 import { setHideNames } from "@client/lib/homePrefs";
-import { serializeHomeCards, defaultHomeCards, moveCard, toggleCard } from "@client/lib/homeCards";
+import { serializeHomeCards, defaultHomeCards, moveCard, toggleCard, visibleOrder } from "@client/lib/homeCards";
 import type { DashboardPayload, Settings } from "@shared/types";
 import { asg, kid } from "./m1-05-fixture";
 
@@ -25,7 +25,7 @@ const TODAY = "2026-11-04";
 const baseSettings = (over: Partial<Settings> = {}): Settings => ({
   school_name: "โรงเรียนทดสอบ", teacher_name: "ครูทดสอบ", app_title: "งานครบ", late_after: "08:30", theme: "light", accent: "blue",
   sound_enabled: false, accept_student_code_scan: false, parent_portal_enabled: false, onboarding_done: true,
-  last_backup_at: String(NOW - 2 * 86_400_000), period_times: "", home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", ...over,
+  last_backup_at: String(NOW - 2 * 86_400_000), period_times: "", home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", gradebook_cards: "", reports_cards: "", students_cards: "", settings_cards: "", ...over,
 });
 
 function payload(over: Partial<DashboardPayload> = {}): DashboardPayload {
@@ -78,10 +78,33 @@ describe("home page cards", () => {
     render(<Home />);
     await screen.findByRole("heading", { level: 2, name: "ห้องของฉัน" });
     expect(h2("ต้องติดตาม")).toBeNull();
-    // both columns together hold the cards: the wide column (open, classes) and the narrow one (att, due, absent)
-    const names = [...document.querySelectorAll(".hm-cols h2")].map((e) => e.textContent);
+    // all the cards sit in the page columns (PageCols), in the saved order
+    const names = [...document.querySelectorAll(".pg-cols h2")].map((e) => e.textContent);
     expect(names).toContain("เช็คชื่อวันนี้");
     expect(names.indexOf("งานที่กำลังเก็บ")).toBeLessThan(names.indexOf("ห้องของฉัน")); // wide column order kept
+  });
+
+  it("wide-screen layout: one visible card = one column; a wide region spreads the cards over three, the first one top-left", async () => {
+    let only = defaultHomeCards();
+    for (const k of visibleOrder(only)) if (k !== "open") only = toggleCard(only, k);
+    settings.value = baseSettings({ home_cards: serializeHomeCards(only) });
+    const { unmount } = render(<Home />);
+    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    expect(document.querySelector(".hm.pg")).not.toBeNull();
+    expect(document.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("1");
+    expect(document.querySelectorAll(".pg-col")).toHaveLength(1);
+    unmount();
+
+    // a 96rem-wide region (jsdom has no layout: report the width by hand)
+    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 96 * 16, height: 100, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => ({}) });
+    settings.value = baseSettings();
+    render(<Home />);
+    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await waitFor(() => expect(document.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("3"));
+    const cols = [...document.querySelectorAll(".pg-col")];
+    expect(cols).toHaveLength(3);
+    expect(cols[0].querySelector("h2")!.textContent).toContain("งานที่กำลังเก็บ");
+    rect.mockRestore();
   });
 
   it("the settings panel lists all nine cards and saves every change at once (and tells the other devices through the settings)", async () => {

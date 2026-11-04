@@ -24,7 +24,7 @@ async function open(due: string, subs = AC01_SUBS("a1")) {
   render(<ScanPage />);
   await waitFor(() => expect(document.querySelectorAll(".sc-cell.scored").length).toBe(4));
 }
-const legendRows = () => [...(document.querySelector(".pring")!.nextElementSibling as HTMLElement).children] as HTMLElement[];
+const legendRows = () => [...document.querySelector(".sc-legend")!.children] as HTMLElement[];
 const legend = () => legendRows().map((r) => r.textContent!.trim());
 const ring = () => document.querySelector(".pring .cap span")!.textContent;
 
