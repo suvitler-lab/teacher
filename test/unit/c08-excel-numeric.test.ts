@@ -34,11 +34,12 @@ describe("Excel numeric + late (C-08)", () => {
     expect(ws.getRow(3).getCell(7).value).toBe(10);
     expect(ws.getRow(3).getCell(8).value).toBe(30);
   }, 20_000);
-  it("first sheet: one numbers-only column per work, empty where nothing was scored, late only coloured", async () => {
+  it("first sheet: one numbers-only column per work (all types), empty where nothing was scored, late only coloured", async () => {
     const wb = await build(payload());
-    expect(wb.worksheets[0].name).toBe("คะแนนรายใบงาน");
-    const ws = wb.getWorksheet("คะแนนรายใบงาน")!;
+    expect(wb.worksheets[0].name).toBe("คะแนนทุกงาน");
+    const ws = wb.getWorksheet("คะแนนทุกงาน")!;
     expect(ws.getRow(1).getCell(4).value).toContain("เต็ม 10");
+    expect(ws.getRow(1).getCell(4).value).toContain("[");  // the work type is in the header
     expect(ws.getRow(1).getCell(5).value).toContain("เต็ม 20");
     expect(ws.getRow(2).getCell(4).value).toBe(7.5); // late, still a number
     expect((ws.getRow(2).getCell(4).fill as any).fgColor.argb).toBe("FFFFE3B3");
@@ -47,6 +48,21 @@ describe("Excel numeric + late (C-08)", () => {
     expect(ws.getRow(3).getCell(5).value ?? null).toBeNull(); // not handed in: empty, not a word
     expect(ws.getRow(2).getCell(6).value).toBe(22.5); // total
     expect(ws.getRow(2).getCell(4).note).toBeUndefined();
+  }, 20_000);
+  it("first sheet groups the columns by work type with a subtotal per type and a grand total", async () => {
+    const p: any = payload();
+    p.assignments = [{ ...asg("a1", 10), type_id: "w" }, { ...asg("a2", 20), type_id: "e" }, { ...asg("a3", 10), type_id: "w" }];
+    p.submissions = [sub("a1", "s0", 6), sub("a3", "s0", 4), sub("a2", "s0", 15)];
+    const buf = await buildWorkbookBuffer(computeReport(p as ReportPayload), p as ReportPayload, { ...opts, workTypeName: (id: string | null) => (id === "w" ? "แบบฝึกหัด" : "สอบ") });
+    const wb = new ExcelJS.Workbook(); await wb.xlsx.load(buf);
+    const ws = wb.getWorksheet("คะแนนทุกงาน")!;
+    const head = (ws.getRow(1).values as any[]).slice(4).map(String);
+    expect(head[0]).toContain("[แบบฝึกหัด]"); expect(head[1]).toContain("[แบบฝึกหัด]"); expect(head[2]).toBe("รวมแบบฝึกหัด");
+    expect(head[3]).toContain("[สอบ]"); expect(head.at(-1)).toBe("คะแนนรวมทั้งหมด");
+    expect((ws.getRow(2).values as any[]).slice(4)).toEqual([6, 4, 10, 15, 25]);
+    const byType = wb.getWorksheet("คะแนนรวมตามประเภท")!;
+    expect((byType.getRow(1).values as any[]).slice(4).map(String)).toEqual(["แบบฝึกหัด (เต็ม 20)", "สอบ (เต็ม 20)", "รวมทั้งหมด"]);
+    expect((byType.getRow(2).values as any[]).slice(4)).toEqual([10, 15, 25]);
   }, 20_000);
   it("score sheet marks only late hand-ins (fill only, no comment), scores stay numbers", async () => {
     const ws = (await build(payload())).getWorksheet("คะแนนรายงาน")!;
