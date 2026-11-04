@@ -34,7 +34,7 @@
 .set-danger .set-section-title { color: var(--text-danger); }
 .set-body button.dan { color: var(--text-danger); border-color: var(--border-danger); }
 
-.set-nav-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; scroll-snap-type: x proximity; }
+.set-nav-chips { position: relative; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 10px; scroll-snap-type: x proximity; }
 .set-nav-chips .pill { scroll-snap-align: center; }
 @media (min-width: 721px) { .set-nav-chips { display: none; } } /* the side menu does this job on wide screens; showing both was the same menu twice */
 

@@ -127,6 +127,10 @@ export function createApp() {
 
   api.onError((err, c) => {
     if (err instanceof ApiError) {
+      if (err.retryAfter !== undefined) {
+        c.header("Retry-After", String(err.retryAfter));
+        return c.json({ error: err.code, message: err.message, retryAfter: err.retryAfter }, err.status as 400);
+      }
       return c.json({ error: err.code, message: err.message }, err.status as 400);
     }
     // validation errors are the client's fault (422) — never a 500 that would

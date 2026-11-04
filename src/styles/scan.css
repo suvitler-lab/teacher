@@ -54,7 +54,7 @@
 .sc-startbar .sb-go { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .sc-startbar .sb-go .primary { min-height: 3.5rem; padding: 0 22px; font-weight: 600; font-size: 1.07rem; gap: 8px; }
 @media (max-width: 720px) {
-  .sc-startbar { margin: 12px -14px 0; padding: 8px 14px; bottom: calc(56px + env(safe-area-inset-bottom)); }
+  .sc-startbar { margin: 12px -14px 0; padding: 8px 14px; bottom: calc(80px + env(safe-area-inset-bottom)); }
   .sc-startbar .sb-go { width: 100%; margin-left: 0; flex-direction: column; align-items: stretch; gap: 4px; }
   .sc-startbar .sb-src { display: none; }
 }
@@ -288,7 +288,7 @@ button.sc-chip.muted { color: var(--text-primary); }
 .sc-page .sc-sumbar button { min-height: 3rem; }
 .sc-sumbar .sb-close { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 @media (max-width: 720px) {
-  .sc-sumbar { position: sticky; bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 25; background: var(--surface-0); padding: 8px 0; border-top: 0.5px solid var(--border); }
+  .sc-sumbar { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom)); z-index: 25; background: var(--surface-0); padding: 8px 0; border-top: 0.5px solid var(--border); }
 }
 
 .progress-bar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 8px 0; }

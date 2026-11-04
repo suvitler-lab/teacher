@@ -305,3 +305,7 @@ table.gb thead th .hs .over, table.gb thead th .hs .over .hs-cal { color: var(--
 @media (hover: hover) and (pointer: fine) { .gb-tile.sum { min-height: 2.5rem; } }
 .gb-menu [role="menuitem"] { min-height: var(--tap); }
 @media (hover: hover) and (pointer: fine) { .gb-menu [role="menuitem"] { min-height: 2.27rem; } }
+
+/* "ส่งออก Excel" in the toolbar: 44px target; up to 900px (iPad upright, phones) the label folds away so the toolbar stays on one row (aria-label + title keep the name) */
+.gb-toolbar .gb-export { min-height: var(--tap, 44px); min-width: var(--tap, 44px); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin-left: auto; }
+@media (max-width: 900px) { .gb-toolbar .gb-export { padding: 0 11px; } .gb-toolbar .gb-export .gb-export-lbl { display: none; } }

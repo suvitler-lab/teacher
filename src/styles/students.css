@@ -40,7 +40,7 @@ button.stu-tile:hover { background: var(--surface-1); }
 .stu-tile .ok { color: var(--text-success); } .stu-tile .bad { color: var(--text-danger); }
 .stu-qrcard { padding: 8px 12px; }
 .stu-qrcard .hm-cardhead { margin-bottom: 2px; }
-@media (max-width: 560px) { .stu-tiles { overflow-x: auto; flex-wrap: nowrap; } .stu-tile { flex: 0 0 11rem; } }
+@media (max-width: 560px) { .stu-tiles { flex-wrap: wrap; } .stu-tile { flex: 1 1 10rem; } } /* wrap instead of a hidden sideways scroll */
 @container stut (max-width: 26rem) { .pg-aside .stu-tiles { flex-direction: column; overflow: visible; } .pg-aside .stu-tile { flex: none; } }
 .stu-stats { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: var(--fs-sm); }
 .stu-stats .hm-chip { min-height: 2rem; }

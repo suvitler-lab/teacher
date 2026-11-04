@@ -63,7 +63,7 @@ button.hm-chipbtn.muted { color: var(--text-primary); }
 .hm-action.primary { background: var(--accent); border-color: transparent; color: var(--on-accent); }
 .hm-action.primary:hover { background: var(--accent-hover); }
 .hm-action.primary .ic { background: rgba(255, 255, 255, 0.18); color: var(--on-accent); }
-.hm-action.primary .s { color: inherit; opacity: 0.85; }
+.hm-action.primary .s { color: inherit; opacity: 1; }
 
 .hm-resume { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; margin-bottom: 12px; border-radius: var(--radius); background: var(--bg-accent); color: var(--text-accent); border: 0.5px solid var(--border-accent); }
 .hm-resume button { height: auto; min-height: 2.2rem; }

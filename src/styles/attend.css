@@ -134,6 +134,6 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
 /* the floating "ส่งไม่สำเร็จ n" button sits at the bottom right: keep the count out from under it */
 .att-savebar.has-fab { padding-right: 10rem; }
 @media (max-width: 720px) {
-  .att-savebar { bottom: calc(58px + env(safe-area-inset-bottom)); }
+  .att-savebar { bottom: calc(80px + env(safe-area-inset-bottom)); } /* above the phone tab bar (79px with the raised scan button) */
   .att-savebar .att-hint { display: none; }
 }

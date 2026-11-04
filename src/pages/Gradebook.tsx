@@ -11,7 +11,8 @@ import {
 } from "../store";
 import type { Assignment, Student } from "@shared/types";
 import { api, ApiError } from "../lib/api";
-import { enqueueSubmission, onResult, pendingOps, failedPairKeys, flush } from "../lib/outbox";
+import { enqueueSubmission, onResult, pendingOps, failedPairKeys, flush, online } from "../lib/outbox";
+import { exportTermExcel } from "../lib/reportExport";
 import { actionTime } from "../lib/clock";
 import { ulid } from "@shared/ids";
 import { decideCellCommit } from "@shared/grade";
@@ -117,6 +118,7 @@ export function GradebookPage() {
   const [copyAsg, setCopyAsg] = useState<Assignment | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [bulkMenu, setBulkMenu] = useState(false);
+  const [exporting, setExporting] = useState(false); // building the Excel file
   const [bulkAsk, setBulkAsk] = useState<{ action: BulkAction; count: number } | null>(null);
   const longPress = useRef<{ timer: number; fired: boolean }>({ timer: 0, fired: false }); // a held cell opens the editor
   const startHold = (aid: string, sid: string) => { clearTimeout(longPress.current.timer); longPress.current.fired = false; longPress.current.timer = window.setTimeout(() => { longPress.current.fired = true; setEditing(null); setCellPanel({ aid, sid }); }, 450); };
@@ -632,6 +634,18 @@ export function GradebookPage() {
     more: (aid, sid) => { setEditing(null); setCellPanel({ aid, sid }); },
   };
 
+  /** The same workbook as the report page, for the class + subject on screen over the whole selected term. */
+  async function exportExcel() {
+    if (!classId || exporting || !online.value) return;
+    setExporting(true);
+    try {
+      await exportTermExcel(classId, subjectId, selectedTermId.value);
+      ok("ดาวน์โหลด Excel แล้ว");
+    } catch { err("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
+    finally { setExporting(false); }
+  }
+  const exportTitle = !classId ? "ยังไม่มีห้อง — เลือกห้องก่อนส่งออก" : !online.value ? "ต้องออนไลน์จึงส่งออก Excel ได้" : exporting ? "กำลังสร้างไฟล์ Excel…" : "ส่งออกคะแนนทั้งเทอมเป็น Excel (ไฟล์เดียวกับหน้ารายงานสรุป)";
+
   const filterSheet = phone || (typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches); // touch: the filter is a sheet from the bottom, with a mouse a popover
   function resetFilters() {
     setTypeId(""); setPeriod("term"); setMonth(currentMonthIso()); setGroupMode("none"); setColPrefs({ hiddenTypes: [], showTotal: true, showBars: true });
@@ -713,6 +727,9 @@ export function GradebookPage() {
           { value: "awaiting", label: `รอตรวจ ${totAwaiting}` },
         ]} />
         {hasTable && <GradebookNav sig={scrollSig} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />}
+        <button type="button" class="gb-export" onClick={exportExcel} disabled={!classId || !online.value || exporting} aria-busy={exporting} aria-label="ส่งออก Excel" title={exportTitle}>
+          <Icon name={exporting ? "loader-2" : "file-spreadsheet"} size={20} class={exporting ? "spin" : undefined} /> <span class="gb-export-lbl">{exporting ? "กำลังสร้าง…" : "ส่งออก Excel"}</span>
+        </button>
       </div>
 
       {status === "ready" && waitingHere > 0 && (

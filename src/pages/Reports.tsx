@@ -11,12 +11,13 @@ import { ProjectorButton } from "../components/Projector";
 import { projectorOn, pjSize } from "../lib/projector";
 import { navigate } from "../router";
 import { StudentDrawer } from "../components/StudentDrawer";
-import { viewClasses, activeSubjects, rosterCount, classById, workTypeById, selectedTermId, terms, UNASSIGNED, startClass, rememberClass } from "../store";
+import { viewClasses, activeSubjects, rosterCount, classById, selectedTermId, terms, UNASSIGNED, startClass, rememberClass } from "../store";
 import { api } from "../lib/api";
 import { swrPeek, swrFetch } from "../lib/swr";
 import { ok, err } from "../lib/notify";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import { computeReport, followUpText, type ReportModel, type ReportPayload } from "../lib/report";
+import { reportSummaryUrl, termPeriodLabel, downloadReportExcel } from "../lib/reportExport";
 import { fullName } from "../lib/names";
 import { currentMonthIso, monthOptions, formatThaiDateMs, formatThaiTimeMs } from "../lib/dates";
 import { StudentModal } from "./Students";
@@ -73,12 +74,7 @@ export function ReportsPage() {
     if (background && loading.current) return;
     const fresh = begin();
     if (!classId) { setStatus("ready"); setPayload(null); setModel(null); setUpdatedAt(null); loading.current = false; setRefreshing(false); return; }
-    const q = new URLSearchParams({ class: classId });
-    if (selectedTermId.value) q.set("term", selectedTermId.value);
-    if (period === "month") q.set("month", month);
-    if (subjectId) q.set("subject", subjectId);
-    if (attMode === "subject") q.set("att", "subject");
-    const url = `/api/reports/summary?${q}`;
+    const url = reportSummaryUrl({ classId, termId: selectedTermId.value, month: period === "month" ? month : null, subjectId, attBySubject: attMode === "subject" });
     // the last answer for this exact class/term/month/subject (saved when the teacher was here or on Students) paints at once;
     // an explicit refresh / the minute timer always asks the server
     const hit = background ? null : swrPeek<ReportPayload>(url);
@@ -129,7 +125,7 @@ export function ReportsPage() {
   const cls = classById(classId);
   const subj = activeSubjects.value.find((s) => s.id === subjectId);
   const term = terms.value.find((t) => t.id === selectedTermId.value);
-  const termLabel = selectedTermId.value === UNASSIGNED ? "ยังไม่ระบุเทอม" : (term?.name ?? "ทั้งเทอม");
+  const termLabel = termPeriodLabel(selectedTermId.value);
   const monthLabel = monthOptions().find((m) => m.value === month)?.label ?? month;
   const periodLabel = period === "term" ? termLabel : monthLabel;
 
@@ -137,11 +133,7 @@ export function ReportsPage() {
     if (!model || !payload) return;
     setMsg("กำลังสร้างไฟล์ Excel…");
     try {
-      const { exportExcel } = await import("../lib/excel");
-      await exportExcel(model, payload, {
-        className: cls?.name ?? "", subjectName: subj?.name ?? "ทุกวิชา", periodLabel,
-        workTypeName: (id) => workTypeById(id)?.name ?? "-", fullName,
-      });
+      await downloadReportExcel(model, payload, { className: cls?.name ?? "", subjectName: subj?.name ?? "ทุกวิชา", periodLabel });
       setMsg(""); ok("ดาวน์โหลด Excel แล้ว");
     } catch { setMsg(""); err("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
   }
