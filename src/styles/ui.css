@@ -115,5 +115,13 @@ button.uc-stat:hover { background: var(--surface-1); }
   .seg button { height: 2.27rem; }
 }
 
+/* touch (pointer: coarse): a thumb needs 44px (B2-2). Same look, a bigger box; a mouse keeps the compact sizes above.
+   The term picker is a label (not a button) around a select, so base.css's button floor never reached its box. */
+@media (pointer: coarse) {
+  .pill { height: auto; min-height: var(--tap); }
+  label.pill select { min-height: var(--tap); }
+  .seg button { height: auto; min-height: var(--tap); }
+}
+
 /* drawers: the action buttons stay in view while a long list scrolls */
 .drawer-actions { position: sticky; bottom: 0; background: var(--surface-2); padding: 8px 0; border-top: 0.5px solid var(--border); }

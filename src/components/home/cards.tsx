@@ -178,7 +178,7 @@ export function FollowCard() {
         return (
           <button class="hm-follow" onClick={() => navigate("/students", { class: f.classId, student: f.studentId })}>
             <Avatar student={st} />
-            <div class="grow" style="min-width:0"><div class="hm-ell">{st ? fullName(st) : f.studentId}</div><div class="page-sub">{cls?.name}</div></div>
+            <div class="grow" style="min-width:0"><div class="hm-ell" title={st ? fullName(st) : f.studentId}>{st ? fullName(st) : f.studentId}</div><div class="page-sub">{cls?.name}</div></div>
             <Chip tone="danger" icon="alert-circle">ยังไม่ส่ง {f.missing} ชิ้น</Chip>
           </button>
         );

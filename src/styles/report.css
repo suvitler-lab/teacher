@@ -135,7 +135,7 @@ th.on .rp-sortbtn { font-weight: 500; }
 /* a mouse screen: shorter rows (36 children fit better); a touch screen keeps its 44px rows below */
 @media (pointer: fine) { table.rp-table td { height: 2.2rem; } }
 @media (pointer: coarse) {
-  .rp-sortbtn, .rp-namebtn, .rp-thplain { min-height: 44px; }
+  .rp-sortbtn, .rp-namebtn, .rp-thplain, .rp-sel { min-height: 44px; }
   .rp-work { min-height: 44px; }
   table.rp-table td { height: max(44px, 2.45rem); }
 }

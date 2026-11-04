@@ -12,6 +12,8 @@ vi.mock("@client/lib/api", async (orig) => {
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/preact";
 import { CatalogEditor } from "@client/components/CatalogEditor";
 import { classes, subjects, workTypes, terms, currentTermId } from "@client/store";
+import { ApiError } from "@client/lib/api";
+import { toasts } from "@client/lib/notify";
 import type { Class, Subject, WorkType } from "@shared/types";
 
 const cls = (o: Partial<Class>): Class => ({ id: "c1", name: "ป.6/1", grade: "ป.6", sort: 10, archived: false, year: 2569, updated_at: 0, ...o });
@@ -27,7 +29,7 @@ function bootstrapOf() {
 }
 
 beforeEach(() => {
-  get.mockReset(); post.mockReset();
+  get.mockReset(); post.mockReset(); toasts.value = [];
   post.mockResolvedValue({ ok: true });
   terms.value = [{ id: "t1", year: 2569, term: 1, name: "1/2569", is_current: true, start_date: null, end_date: null, updated_at: 0 } as any];
   currentTermId.value = "t1";
@@ -114,6 +116,46 @@ describe("catalog editor", () => {
     expect((screen.getByRole("button", { name: "เลื่อน วิทย์ ขึ้น" }) as HTMLButtonElement).disabled).toBe(true);
     expect((screen.getByRole("button", { name: "เลื่อน คณิต ลง" }) as HTMLButtonElement).disabled).toBe(true);
     expect((screen.getByRole("button", { name: "เลื่อน วิทย์ ลง" }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("a name that is already taken is told in the server's own Thai sentence — for a class, a subject and a work type", async () => {
+    const taken = (what: string, name: string) => new ApiError(409, "duplicate_name", `มี${what}ชื่อ "${name}" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`);
+    const toastText = () => toasts.value.map((t) => t.message);
+    render(<CatalogEditor />);
+
+    post.mockRejectedValueOnce(taken("ห้อง", "ป.6/1"));
+    fireEvent.input(screen.getByPlaceholderText("เพิ่มห้อง เช่น ป.6/3"), { target: { value: "ป.6/1" } });
+    fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
+    await waitFor(() => expect(toastText()).toContain('มีห้องชื่อ "ป.6/1" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน'));
+    expect((screen.getByPlaceholderText("เพิ่มห้อง เช่น ป.6/3") as HTMLInputElement).value).toBe("ป.6/1"); // what was typed stays
+
+    tab("วิชา");
+    post.mockRejectedValueOnce(taken("วิชา", "คณิต"));
+    fireEvent.input(screen.getByPlaceholderText("ชื่อวิชา"), { target: { value: "คณิต" } });
+    fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
+    await waitFor(() => expect(toastText().some((m) => m.includes('มีวิชาชื่อ "คณิต"'))).toBe(true));
+
+    tab("ประเภทงาน");
+    post.mockRejectedValueOnce(taken("ประเภทงาน", "ใบงาน"));
+    fireEvent.input(screen.getByPlaceholderText("เพิ่มประเภทงาน"), { target: { value: "ใบงาน" } });
+    fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
+    await waitFor(() => expect(toastText().some((m) => m.includes('มีประเภทงานชื่อ "ใบงาน"'))).toBe(true));
+    expect(toasts.value.every((t) => t.kind === "error")).toBe(true);
+  });
+
+  it("renaming a work type to a taken name keeps the editor open and says so; other failures keep the generic message", async () => {
+    render(<CatalogEditor />);
+    tab("ประเภทงาน");
+    fireEvent.click(screen.getAllByRole("button", { name: "แก้ไข" })[0]);
+    fireEvent.input(screen.getByLabelText("ชื่อประเภทงาน ใบงาน"), { target: { value: "สอบ" } });
+    post.mockRejectedValueOnce(new ApiError(409, "duplicate_name", 'มีประเภทงานชื่อ "สอบ" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน'));
+    fireEvent.click(screen.getByRole("button", { name: "บันทึก" }));
+    await waitFor(() => expect(toasts.value.map((t) => t.message).join("|")).toContain('มีประเภทงานชื่อ "สอบ"'));
+    expect((screen.getByLabelText("ชื่อประเภทงาน ใบงาน") as HTMLInputElement).value).toBe("สอบ");
+
+    post.mockRejectedValueOnce(new ApiError(500, "internal", "เกิดข้อผิดพลาด"));
+    fireEvent.click(screen.getByRole("button", { name: "บันทึก" }));
+    await waitFor(() => expect(toasts.value.map((t) => t.message)).toContain("บันทึกประเภทงานไม่สำเร็จ"));
   });
 
   it("a failed save says so and leaves the editor open with what was typed", async () => {

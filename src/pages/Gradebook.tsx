@@ -41,7 +41,7 @@ import {
   jumpScrollLeft, minimapSegments, typeKeyOf, type ColumnPrefs,
 } from "../lib/gbColumns";
 import { GradebookNav, ColumnsMenu, TypeShape, useScrollFlags, flagsFit, edgeClassOf, scrollFrameTo } from "../components/GradebookNav";
-import { routeParams, navigate, setNavGuard } from "../router";
+import { routeParams, routeName, navigate, setNavGuard } from "../router";
 import { useAction } from "../lib/useAction";
 import { menuKeys, focusFirstItem } from "../lib/menuKeys";
 
@@ -137,6 +137,11 @@ export function GradebookPage() {
   const [colPrefs, setColPrefsState] = useState<ColumnPrefs>(() => loadColumnPrefs()); // which columns are DRAWN (display only)
   const scrollRef = useRef<HTMLDivElement>(null);
   const pendingJump = useRef<string | null>(null);
+  // B-F7: a link (Reports, Scan, Home) may ask for a work while this page is already open. `wantAsg` = the work it named, until it is on
+  // screen; `wantFixed` = the link also named the subject (so only the filters may be widened, never its choice); `revealId` = scroll to it once drawn
+  const wantAsg = useRef<string | null>(params.asg ?? null);
+  const wantFixed = useRef(params.subject != null);
+  const revealId = useRef<string | null>(null);
   const pendingEdit = useRef<{ aid: string; sid: string } | null>(null);
   const [status, setStatus] = useState<LoadStatus>("loading");
   const begin = useLoadGuard();
@@ -180,13 +185,28 @@ export function GradebookPage() {
       const m = new Map<SubKey, Sub>();
       for (const s of res.submissions) m.set(`${s.assignment_id}:${s.student_id}`, { status: s.status, score: s.score, late: s.late, submittedAt: s.submitted_at ?? null });
       setSubs(m);
-      if (res.assignments.length && !res.assignments.find((a) => a.id === selCol)) setSelCol(res.assignments[0].id);
+      const wanted = settleWanted(res.assignments);
+      if (wanted === "none" && res.assignments.length && !res.assignments.find((a) => a.id === selCol)) setSelCol(res.assignments[0].id);
       setStatus("ready");
     } catch {
       if (!fresh()) return;
       if (keep) err("โหลดข้อมูลใหม่ไม่สำเร็จ — ที่เห็นอาจไม่ล่าสุด");
       else setStatus("error");
     }
+  }
+  /**
+   * Put the work a link asked for on screen. "found" = it is in `list` (now the picked column); "widening" = a filter hides it, one filter
+   * was lifted and the page reloads; "none" = it is not to be had (deleted, other class) so the page falls back to its first work.
+   */
+  function settleWanted(list: Assignment[]): "found" | "widening" | "none" {
+    const id = wantAsg.current;
+    if (!id) return "none";
+    if (list.some((a) => a.id === id)) { wantAsg.current = null; revealId.current = id; setSelCol(id); return "found"; }
+    if (subjectId && !wantFixed.current) { setSubjectId(""); return "widening"; }
+    if (typeId) { setTypeId(""); return "widening"; }
+    if (period === "month") { setPeriod("term"); return "widening"; }
+    wantAsg.current = null;
+    return "none";
   }
   const loadRef = useRef(load); // "undo" toasts outlive the render that made them: always reload the CURRENT class/filters
   loadRef.current = load;
@@ -242,6 +262,15 @@ export function GradebookPage() {
   }
   function clearUnsaved(k: string) { setUnsaved((prev) => { if (!prev.has(k)) return prev; const m = new Map(prev); m.delete(k); return m; }); }
 
+  /** B-F8: a typed score the cell refuses (over the full mark, not a half step) is said once here; true = refused, so the editor stays where it is. */
+  function refuseScore(aid: string, sid: string, initial: string, raw: string): boolean {
+    const a = assignments.find((x) => x.id === aid);
+    if (!a) return false;
+    const d = decideCellCommit(initial, raw, subOf(aid, sid) as any, a.full_score);
+    if (d.kind !== "error") return false;
+    setMsg(d.message);
+    return true;
+  }
   async function commitScore(aid: string, sid: string, initial: string, raw: string) {
     const a = assignments.find((x) => x.id === aid);
     if (!a) return;
@@ -520,6 +549,38 @@ export function GradebookPage() {
     const colLeft = th.getBoundingClientRect().left - sc.getBoundingClientRect().left + sc.scrollLeft;
     scrollFrameTo(sc, jumpScrollLeft(colLeft, (sc.querySelector("th.name-col") as HTMLElement | null)?.offsetWidth ?? 0, sc.scrollWidth, sc.clientWidth), true);
   }
+  /** Scroll to a work's column, opening its folded group first. */
+  function revealWork(id: string) {
+    const a = assignments.find((x) => x.id === id);
+    if (!a) return;
+    const g = groups.find((x) => x.items.includes(a));
+    if (g && folded(g) && isShown(a)) { pendingJump.current = id; setFoldTaps((prev) => new Map(prev).set(g.key, false)); }
+    else scrollToAsg(id);
+  }
+  // B-F7: the address changed while this page is open (`#/gradebook?class=..&asg=..` from a link): follow it, not only the first entry
+  const deepKey = `${params.class ?? ""}|${params.subject ?? ""}|${params.asg ?? ""}|${params.rows ?? ""}`;
+  const deepSeen = useRef(deepKey);
+  useEffect(() => {
+    if (deepKey === deepSeen.current) return;
+    deepSeen.current = deepKey;
+    if (routeName() !== "gradebook" || !(params.class || params.subject || params.asg || params.rows)) return;
+    const p = routeParams();
+    const classChanged = !!p.class && p.class !== classId, subjectChanged = p.subject != null && p.subject !== subjectId;
+    if (classChanged) setClassId(p.class);
+    if (subjectChanged) setSubjectId(p.subject);
+    if (p.asg || p.rows) setRowFilter((p.rows as RowFilter) || "all");
+    if (!p.asg) return;
+    wantAsg.current = p.asg;
+    wantFixed.current = p.subject != null;
+    // same class and subject: the works are already here; otherwise the reload that follows settles it
+    if (!classChanged && !subjectChanged && status === "ready") { if (settleWanted(assignments) === "found") revealWork(p.asg); }
+  }, [deepKey]);
+  useEffect(() => { // a work asked for by a link has been loaded and drawn
+    const id = revealId.current;
+    if (!id || status !== "ready" || !assignments.some((a) => a.id === id)) return;
+    revealId.current = null;
+    revealWork(id);
+  }, [assignments, status]);
   /** Jump button: go to the first column of that type; a folded group is opened first (the column must exist to be reached). */
   function jumpToType(typeKey: string) {
     const a = assignments.find((x) => typeKeyOf(x) === typeKey && isShown(x));
@@ -629,7 +690,11 @@ export function GradebookPage() {
       if (isEditing) { if (e.target === e.currentTarget) { setEditing(null); setCellPanel({ aid, sid }); } return; }
       if (matrix.sub(aid, sid)?.status === "excused") setCellPanel({ aid, sid }); else { setEditSeed(null); setEditing({ aid, sid }); }
     },
-    commit: (aid, sid, row, initial, v, next) => { commitScore(aid, sid, initial, v); const nx = next ? nextCell(shownStudents, row, aid) : null; setEditSeed(null); setEditing(nx); if (nx) setFocCell(nx); else focusCell(aid, sid); },
+    commit: (aid, sid, row, initial, v, next) => {
+      // B-F8: Enter on a value the cell refuses (over the full mark, not a half step) says why and stays here — it must not move on to the next child
+      if (next && refuseScore(aid, sid, initial, v)) return false;
+      commitScore(aid, sid, initial, v); const nx = next ? nextCell(shownStudents, row, aid) : null; setEditSeed(null); setEditing(nx); if (nx) setFocCell(nx); else focusCell(aid, sid); return true;
+    },
     cancel: (aid, sid) => { setEditing(null); setEditSeed(null); focusCell(aid, sid); },
     more: (aid, sid) => { setEditing(null); setCellPanel({ aid, sid }); },
   };
@@ -823,7 +888,7 @@ export function GradebookPage() {
         <div class="card">{status === "loading" ? <EmptyState icon="loader-2" text="กำลังโหลด…" /> : <EmptyState icon="clipboard-off" text="ยังไม่มีงานในเงื่อนไขนี้" action={<button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" size={16} /> สร้างงาน</button>} />}</div>
       ) : phone ? (
         <GradebookMobile assignments={assignments} selAsg={selAsg} setSelCol={setSelCol} students={shownStudents}
-          subOf={subOf} markOf={markOf} stateOf={stateOf} editing={editing} setEditing={setEditing} commitScore={commitScore} bulk={bulk} openPanel={(aid, sid) => setCellPanel({ aid, sid })}
+          subOf={subOf} markOf={markOf} stateOf={stateOf} editing={editing} setEditing={setEditing} commitScore={commitScore} refuseScore={refuseScore} bulk={bulk} openPanel={(aid, sid) => setCellPanel({ aid, sid })}
           manage={{
             edit: () => setEditAsg(selAsg!),
             copy: () => setCopyAsg(selAsg!),
@@ -1040,11 +1105,12 @@ function nextCell(students: any[], i: number, aid: string) {
   return null;
 }
 
-function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, markOf, stateOf, editing, setEditing, commitScore, bulk, manage, openPanel }: {
+function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, markOf, stateOf, editing, setEditing, commitScore, refuseScore, bulk, manage, openPanel }: {
   assignments: Assignment[]; selAsg: Assignment | null; setSelCol: (id: string) => void;
   students: any[]; subOf: (aid: string, sid: string) => Sub | undefined; markOf: (aid: string, sid: string) => "pend" | "fail" | "unsaved" | null; stateOf: (aid: string, sid: string, a: Assignment) => WorkState;
   editing: { aid: string; sid: string } | null; setEditing: (v: { aid: string; sid: string } | null) => void;
   commitScore: (aid: string, sid: string, initial: string, raw: string) => void;
+  refuseScore: (aid: string, sid: string, initial: string, raw: string) => boolean;
   bulk: (a: "all-submitted" | "full-score" | "clear") => void;
   /** a tap on a child opens the cell editor (a sheet on a phone): status, score and received day in one place */
   openPanel: (aid: string, sid: string) => void;
@@ -1089,10 +1155,10 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
         return (
           <div class="gb-mrow">
             <span class="no">{st.number ?? i + 1}</span>
-            <span class="grow" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{fullName(st)}</span>
+            <span class="grow" title={fullName(st)} style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{fullName(st)}</span>
             {isEditing ? (
               <CellInput initial={sub?.score != null ? String(sub.score) : ""}
-                onCommit={(initial, v) => { commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
+                onCommit={(initial, v, next) => { if (next && refuseScore(selAsg.id, st.id, initial, v)) return false; commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
             ) : (
               <button aria-label={`กรอกคะแนน ${fullName(st)} · ${selAsg.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} style="background:transparent;border:none;padding:0" onClick={() => openPanel(selAsg.id, st.id)}>
                 <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} hidden={!selAsg.publish_scores} />

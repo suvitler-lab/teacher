@@ -8,6 +8,7 @@ import type { Student } from "@shared/types";
 import { initials } from "../lib/names";
 import { terms, selectedTermId, setSelectedTerm, UNASSIGNED, viewingPastYear, viewTerm, currentTermId } from "../store";
 import { online, syncing, pendingCount } from "../lib/outbox";
+import { attDraftCount } from "../lib/attSync";
 import { serverReachable } from "../lib/session";
 import { thaiMonthsFull } from "../lib/dates";
 import { navigate } from "../router";
@@ -259,10 +260,12 @@ export function SyncBadge() {
   const up = online.value && serverReachable.value;
   const cls = syncing.value ? "saving" : up ? "online" : "offline";
   const label = syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์";
+  // one total: scores / submissions in the queue plus attendance still sitting in drafts (both live signals)
+  const waiting = pendingCount.value + attDraftCount.value;
   return (
     <span class={"sync " + cls}>
       <Icon name={syncing.value ? "loader-2" : up ? "cloud-check" : "wifi-off"} size={16} class={syncing.value ? "spin" : undefined} />
-      {label}{pendingCount.value > 0 ? ` · รอส่ง ${pendingCount.value}` : ""}
+      {label}{waiting > 0 ? ` · รอส่ง ${waiting}` : ""}
     </span>
   );
 }

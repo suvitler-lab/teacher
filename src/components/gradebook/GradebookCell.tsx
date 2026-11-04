@@ -17,7 +17,8 @@ export interface CellHandlers {
   pointerDown(e: PointerEvent, aid: string, sid: string): void;
   endHold(): void;
   click(e: MouseEvent, aid: string, sid: string, isEditing: boolean): void;
-  commit(aid: string, sid: string, row: number, initial: string, v: string, next: boolean): void;
+  /** false = the score was refused: the input stays open on this cell */
+  commit(aid: string, sid: string, row: number, initial: string, v: string, next: boolean): boolean;
   cancel(aid: string, sid: string): void;
   /** open the full cell editor (status · score · received day) */
   more(aid: string, sid: string): void;

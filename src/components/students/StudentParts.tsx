@@ -121,7 +121,7 @@ export function StudentsCards({ keys, max, ...p }: CardsProps & { keys: Students
           : p.former.length === 0 ? <div class="page-sub">ไม่มี</div> : p.former.map((st) => (
             <div class="stu-former" key={st.id}>
               <Avatar student={st} />
-              <span class="grow">{fullName(st)} <span class="page-sub">· {st.status === "moved" ? "ย้ายออก" : "ไม่ใช้งาน"}{st.left_at ? ` ${formatThaiDate(st.left_at)}` : ""}</span></span>
+              <span class="grow" title={fullName(st)}>{fullName(st)} <span class="page-sub">· {st.status === "moved" ? "ย้ายออก" : "ไม่ใช้งาน"}{st.left_at ? ` ${formatThaiDate(st.left_at)}` : ""}</span></span>
               <button onClick={() => p.onEdit(st)}><Icon name="edit" size={16} /> แก้ไข</button>
               <button onClick={() => p.onReactivate(st)}><Icon name="user-check" size={16} /> กลับมาใช้งาน</button>
             </div>

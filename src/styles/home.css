@@ -26,6 +26,7 @@
 .hm-chip.muted { background: var(--surface-1); color: var(--text-secondary); border-color: var(--border); }
 button.hm-chipbtn { height: auto; min-height: 2rem; cursor: pointer; padding: 2px 10px; }
 button.hm-chipbtn.muted { color: var(--text-primary); }
+@media (pointer: coarse) { button.hm-chipbtn { min-height: var(--tap); } } /* a chip you can press is a 44px target on touch */
 .hm-todo-n { margin-left: auto; }
 
 /* banners */

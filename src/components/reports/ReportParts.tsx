@@ -198,9 +198,11 @@ export function ReportCards({ model, classId, unitLabel, max, periodLabel, onOpe
           {model.followUp.length === 0 ? (
             <div class="page-sub" style="color:var(--text-success)"><Icon name="circle-check" size={16} /> ส่งงานครบทุกคน</div>
           ) : list.map((f) => (
-            <button class="rp-follow" key={f.student.id} onClick={() => onOpenStudent(f.student.id)}>
+            // the name and the list of works are cut with "…" on a narrow screen: the full text rides in title (hover / long-press) and, where the list itself is shortened, in the button's name
+            <button class="rp-follow" key={f.student.id} onClick={() => onOpenStudent(f.student.id)}
+              aria-label={f.missing.length > 3 ? `${fullName(f.student)} ค้างส่ง ${f.missing.length} งาน: ${f.missing.join(" · ")}` : undefined}>
               <span class="no">{f.student.number ?? "-"}</span>
-              <span class="who"><span class="nm">{fullName(f.student)}</span><span class="what">{f.missing.slice(0, 3).join(" · ")}{f.missing.length > 3 ? " …" : ""}</span></span>
+              <span class="who"><span class="nm" title={fullName(f.student)}>{fullName(f.student)}</span><span class="what" title={f.missing.join(" · ")}>{f.missing.slice(0, 3).join(" · ")}{f.missing.length > 3 ? " …" : ""}</span></span>
               <span class="chip"><Icon name="alert-circle" size={16} /> ค้าง {f.missing.length}</span>
             </button>
           ))}
@@ -381,7 +383,7 @@ export function ReportProjector({ model, className, subjectName, periodLabel, si
         <div class={"rp-pj-works" + (shown.length > (size === 3 ? 3 : 4) ? " two" : "")}>
           {shown.map((a) => (
             <div class="rp-pj-work" key={a.assignment.id}>
-              <div class="rp-pj-line"><span class="rp-pj-title">{a.assignment.title}</span><span class="rp-pj-frac">ส่งแล้ว {a.submitted} จาก {a.total - a.excused}</span></div>
+              <div class="rp-pj-line"><span class="rp-pj-title" title={a.assignment.title}>{a.assignment.title}</span><span class="rp-pj-frac">ส่งแล้ว {a.submitted} จาก {a.total - a.excused}</span></div>
               <div class="pbar"><div style={`width:${a.rate}%`} /></div>
             </div>
           ))}

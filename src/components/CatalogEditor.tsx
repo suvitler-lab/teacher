@@ -33,11 +33,21 @@ export function CatalogEditor() {
   );
 }
 
+/**
+ * Save one row. A name that is already taken (server 409 duplicate_name) is told to the teacher in the server's own
+ * Thai sentence — it names the clashing name; any other failure gets the generic message of the editor.
+ */
 function useSave(endpoint: string, failMsg: string) {
   return async (body: unknown) => {
-    const done = await withToast(() => api.post(endpoint, body), failMsg);
-    if (done) { await loadBootstrap(); ok("บันทึกแล้ว"); }
-    return done;
+    try {
+      await api.post(endpoint, body);
+    } catch (e: any) {
+      err(e?.code === "duplicate_name" && e.message ? e.message : failMsg);
+      return false;
+    }
+    await loadBootstrap();
+    ok("บันทึกแล้ว");
+    return true;
   };
 }
 

@@ -4,6 +4,7 @@ import { requireAuth } from "../lib/auth";
 import { mapAssignment, mapStudent } from "../lib/rows";
 import { classInYear } from "@shared/roster";
 import { memberClause } from "../lib/roster";
+import { bkkToday } from "../lib/time";
 
 export const reportRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 reportRoutes.use("/api/reports/summary", requireAuth);
@@ -38,8 +39,8 @@ reportRoutes.get("/api/reports/summary", async (c) => {
   // Round 1: the term (its dates scope attendance; its year and end date say who was in the class), the class's year, the work.
   const [termRow, classRow, aRes] = await Promise.all([
     hasTerm
-      ? db.prepare("SELECT id, year, start_date, end_date FROM terms WHERE id = ?").bind(termId)
-          .first<{ id: string; year: number; start_date: string | null; end_date: string | null }>()
+      ? db.prepare("SELECT id, year, start_date, end_date, is_current FROM terms WHERE id = ?").bind(termId)
+          .first<{ id: string; year: number; start_date: string | null; end_date: string | null; is_current: number }>()
       : Promise.resolve(null),
     db.prepare("SELECT year FROM classes WHERE id = ?").bind(classId).first<{ year: number | null }>(),
     db.prepare(
@@ -49,9 +50,12 @@ reportRoutes.get("/api/reports/summary", async (c) => {
   ]);
   const termStart = termRow?.start_date ?? null;
   const termEnd = termRow?.end_date ?? null;
+  // The CURRENT term keeps counting attendance after its end date (the teacher goes on checking until a new term is started),
+  // so a day that was recorded never disappears from the report, the Excel file or the Students page. A past term stops at its end.
+  const attTermEnd = termEnd && termRow?.is_current === 1 && bkkToday() > termEnd ? bkkToday() : termEnd;
   // attendance window = term range ∩ month (whichever bounds exist)
   const attFrom = [termStart, monthFrom].filter(Boolean).sort().pop() ?? null; // latest lower bound
-  const attTo = [termEnd, monthTo].filter(Boolean).sort()[0] ?? null;          // earliest upper bound
+  const attTo = [attTermEnd, monthTo].filter(Boolean).sort()[0] ?? null;          // earliest upper bound
   // a term was selected but has no dates and no month picked → tell the UI to set them
   const termDatesMissing = hasTerm && !termStart && !termEnd && !month;
 

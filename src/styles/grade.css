@@ -223,6 +223,8 @@ td.cell { position: relative; }
 .gb-tile.sum { gap: 14px; font-size: var(--fs-sm); height: auto; min-height: 2.13rem; padding: 4px 10px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--surface-2); flex-wrap: wrap; }
 .gb-tile.sum b { font-weight: 500; }
 .gb-tile.sum .gb-n { border: none; background: none; padding: 0; height: auto; min-height: 0; text-decoration: underline dotted; cursor: pointer; font: inherit; color: inherit; }
+/* touch: the "รอตรวจ n / ค้างส่ง n" numbers of the summary tile are buttons — a 44px target (after the rule above, which zeroes min-height) */
+@media (pointer: coarse) { .gb-tile.sum .gb-n { display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap); } }
 .gb-list { min-width: 16rem; max-height: 50vh; overflow: auto; }
 .gb-list .gc-row { padding: 6px 10px; }
 .gb-filter { min-width: 18rem; max-width: min(24rem, 92vw); padding: 12px; gap: 10px; align-items: stretch; }

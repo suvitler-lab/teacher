@@ -52,6 +52,8 @@ const assignmentSchema = z.object({
   path: ["raise_choice"],
 });
 
+const MAX_TITLE = 200;
+
 /** A new work has no stored full score to keep: it must send one (the schema's own rule before AC-04). */
 const newWorkFullScore = z.object({ full_score: z.number().int().min(1).max(100) });
 
@@ -86,6 +88,8 @@ const SUBMISSION_JSON = `json_object('assignment_id', s.assignment_id, 'student_
 
 assignmentRoutes.post("/api/assignments", async (c) => {
   const b = assignmentSchema.parse(await readJson(c));
+  // the app's own title field stops at the same number (src/components/AssignmentModal.tsx)
+  if (b.title.length > MAX_TITLE) throw new ApiError(422, "title_too_long", `ชื่องานยาวเกินไป — ไม่เกิน ${MAX_TITLE} ตัวอักษร`);
   const now = Date.now();
   const epoch = await requestEpoch(c);
   const aid = b.id ?? id("asg");
@@ -98,7 +102,7 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   // One round of reads — everything the checks below need that doesn't depend on anything else (the database is
   // far away, so the number of round trips is what a teacher waits for): the work as it is now, the term, the
   // classes it already had, the classes it is being given to, and how many hold the work's full score now.
-  const [existing, term, prevRows, classRows, holdersRow] = await Promise.all([
+  const [existing, term, prevRows, classRows, holdersRow, workType] = await Promise.all([
     db.prepare("SELECT * FROM assignments WHERE id = ?").bind(aid).first<any>(),
     b.term_id ? db.prepare("SELECT year FROM terms WHERE id = ?").bind(b.term_id).first<{ year: number }>() : Promise.resolve(null),
     db.prepare("SELECT class_id FROM assignment_classes WHERE assignment_id = ?").bind(aid).all<{ class_id: string }>(),
@@ -107,7 +111,14 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     b.id
       ? db.prepare(`SELECT COUNT(*) AS n FROM submissions WHERE ${holdsFull(FULL_NOW, "?2")}`).bind(aid, keepClasses).first<{ n: number }>()
       : Promise.resolve(null),
+    db.prepare("SELECT archived FROM work_types WHERE id = ?").bind(b.type_id).first<{ archived: number }>(),
   ]);
+
+  // a work type the teacher has put away is not for new work (the screens hide it). A work that already has the type
+  // keeps it when it is edited — only a new work, or a work being moved to the type, is refused.
+  if (workType?.archived === 1 && (!existing || existing.type_id !== b.type_id)) {
+    throw new ApiError(422, "work_type_archived", "ประเภทงานนี้ถูกเก็บไปแล้ว — เลือกประเภทงานอื่น หรือนำกลับมาใช้ที่ ตั้งค่า > ข้อมูลพื้นฐาน");
+  }
 
   // no full score in the request: the work keeps the one it holds — decided in the write itself (AC-04), so it is never
   // a raise or a lowering, whatever the device's list says. A new work needs one.

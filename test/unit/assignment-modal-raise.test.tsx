@@ -48,6 +48,48 @@ function openAndRaise() {
   fireEvent.click(screen.getByRole("button", { name: /บันทึกงาน/ }));
 }
 
+describe("AssignmentModal field checks", () => {
+  it("a full score that is not a whole number 1–100 says so (whole numbers only), and nothing is sent", () => {
+    render(<AssignmentModal existing={asg} onClose={onClose} onSaved={onSaved} />);
+    for (const bad of ["10.5", "0", "101"]) {
+      fireEvent.input(screen.getByLabelText("คะแนนเต็ม"), { target: { value: bad } });
+      fireEvent.click(screen.getByRole("button", { name: /บันทึกงาน/ }));
+      expect(screen.getByText("คะแนนเต็มเป็นจำนวนเต็ม 1–100"), bad).toBeTruthy();
+    }
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it("the title field stops at 200 characters and a longer pasted title is refused in Thai", () => {
+    render(<AssignmentModal existing={asg} onClose={onClose} onSaved={onSaved} />);
+    const title = screen.getByPlaceholderText(/เช่น ใบงานที่ 5/) as HTMLInputElement;
+    expect(title.maxLength).toBe(200);
+    fireEvent.input(title, { target: { value: "ก".repeat(201) } });
+    fireEvent.click(screen.getByRole("button", { name: /บันทึกงาน/ }));
+    expect(screen.getByText("ชื่องานยาวเกินไป — ไม่เกิน 200 ตัวอักษร")).toBeTruthy();
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it("a copy of work whose type was put away starts on a type that can still be used", async () => {
+    workTypes.value = [
+      { id: "w0", name: "เก่า", icon: "file-text", color: "red", is_exam: false, default_full: 10, sort: 5, archived: true, updated_at: 0 } as any,
+      ...workTypes.value,
+    ];
+    post.mockResolvedValue({ assignment: { ...asg, id: "n1" } });
+    render(<AssignmentModal copyFrom={{ ...asg, type_id: "w0" }} defaultClassId="c1" onClose={onClose} onSaved={onSaved} />);
+    fireEvent.click(screen.getByRole("button", { name: /บันทึกงาน/ }));
+    await waitFor(() => expect(post).toHaveBeenCalled());
+    expect(bodyOf(0).type_id).toBe("w1");
+  });
+
+  it("the server's Thai refusal of an archived type is shown as it is", async () => {
+    post.mockRejectedValueOnce(new ApiError(422, "work_type_archived", "ประเภทงานนี้ถูกเก็บไปแล้ว — เลือกประเภทงานอื่น"));
+    render(<AssignmentModal defaultClassId="c1" onClose={onClose} onSaved={onSaved} />);
+    fireEvent.input(screen.getByPlaceholderText(/เช่น ใบงานที่ 5/), { target: { value: "งานใหม่" } });
+    fireEvent.click(screen.getByRole("button", { name: /บันทึกงาน/ }));
+    expect(await screen.findByText("ประเภทงานนี้ถูกเก็บไปแล้ว — เลือกประเภทงานอื่น")).toBeTruthy();
+  });
+});
+
 describe("AssignmentModal raise-full-score question", () => {
   it("first request has no raise_choice; 409 opens the question with server numbers", async () => {
     post.mockRejectedValueOnce(raiseRequired());

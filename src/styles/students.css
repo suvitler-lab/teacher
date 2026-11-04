@@ -102,7 +102,7 @@ button.stu-tile:hover { background: var(--surface-1); }
   .stu-lrow .who > .page-sub { flex: 0 100 auto; min-width: 0; }
 }
 @container stu (max-width: 34rem) { .stu-lrow .who { flex-direction: column; align-items: stretch; gap: 0; } }
-@media (pointer: coarse) { .stu-lrow { min-height: 56px; } }
+@media (pointer: coarse) { .stu-lrow { min-height: 56px; } .stu-hbtn { min-height: 44px; } }
 
 /* print toolbar (sticker sheet) */
 .print-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }

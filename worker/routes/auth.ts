@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
-import { readJson, bad, unauthorized, tooMany, ApiError } from "../lib/http";
+import { readJson, bad, unauthorized, notFound, tooMany, ApiError } from "../lib/http";
 import { hashPassword, verifyPassword, sha256Hex, timingSafeEqual } from "../lib/crypto";
 import {
   createSession,
@@ -28,7 +28,7 @@ function upsertDeviceStmt(env: Env, deviceId: string, name: string, ua: string, 
   return env.DB.prepare(
     `INSERT INTO devices (id, name, user_agent, first_seen, last_seen)
      VALUES (?, ?, ?, ?, ?)
-     ON CONFLICT(id) DO UPDATE SET name = excluded.name, user_agent = excluded.user_agent, last_seen = excluded.last_seen, revoked = 0`,
+     ON CONFLICT(id) DO UPDATE SET user_agent = excluded.user_agent, last_seen = excluded.last_seen, revoked = 0`,
   )
     .bind(deviceId, name, ua, now, now);
 }
@@ -187,6 +187,20 @@ authRoutes.post("/api/devices/:id/signout", requireAuth, async (c) => {
     ]),
   ]);
   return c.json({ ok: true });
+});
+
+// v9.2: rename a device (any signed-in device may name any device — one teacher, many screens). The stored name wins on
+// the next sign-in (upsertDeviceStmt keeps it), so a name given from another screen is not undone by that screen.
+const DEVICE_NAME_MAX = 40;
+authRoutes.post("/api/devices/:id/rename", requireAuth, async (c) => {
+  const body = z.object({ name: z.string() }).parse(await readJson(c));
+  const name = body.name.trim();
+  if (name.length < 1 || name.length > DEVICE_NAME_MAX) {
+    throw new ApiError(422, "bad_device_name", `ชื่อเครื่องต้องยาว 1–${DEVICE_NAME_MAX} ตัวอักษร`);
+  }
+  const res = await c.env.DB.prepare("UPDATE devices SET name = ? WHERE id = ?").bind(name, c.req.param("id")).run();
+  if (!res.meta.changes) throw notFound("ไม่พบเครื่องนี้");
+  return c.json({ ok: true, name });
 });
 
 const changePwSchema = z.object({ current: z.string().min(1).max(256), next: z.string().min(6).max(256) });

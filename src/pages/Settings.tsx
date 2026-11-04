@@ -29,6 +29,8 @@ import { offlineState, offlineNote, applyUpdate, type OfflineState } from "../li
 import { collectDeviceFacts, judgeDevice, worst, VERDICT, deviceReportText, describeAgent, type Check, type DeviceFacts } from "../lib/deviceCheck";
 import { getFontSize, getDensity, setFontSize, resetFontSize, setDensity, defaultFont, isCoarse, FONT_MIN, FONT_MAX, DENSITY_LABEL, type Density } from "../lib/display";
 import { formatThaiDateTimeMs, formatThaiDayMonthMs } from "../lib/dates";
+import { nameField, schoolLabel, teacherLabel } from "../lib/orgNames";
+import { DEVICE_NAME_MAX, cleanDeviceName, setDeviceName } from "../lib/device";
 
 type Section = "general" | "time" | "scan" | "catalog" | "devices" | "backup" | "history";
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -44,6 +46,9 @@ const SECTIONS: { key: Section; label: string; icon: string }[] = [
 /** The keys the text form edits and the save bar counts. Switches and the theme save at once; cards and last_backup_at have their own writers. */
 const FORM_KEYS = ["school_name", "teacher_name", "late_after", "period_times"] as const satisfies readonly (keyof Settings)[];
 const THEME_TH: Record<Settings["theme"], string> = { system: "ตามเครื่อง", light: "สว่าง", dark: "มืด" };
+
+/** The settings as the text form holds them: the built-in school / teacher names show as placeholders (empty), not as text. */
+const formOf = (s: Settings): Settings => ({ ...s, school_name: nameField(s.school_name), teacher_name: nameField(s.teacher_name) });
 
 /** Where a setting applies: synced to every device, or kept on this one only (display.ts, storage). */
 function Scope({ all }: { all?: boolean }) {
@@ -153,7 +158,7 @@ export function SettingsPage() {
   const [section, setSection] = useState<Section>((params.section as Section) || "general");
   // a link to another section (#/settings?section=backup) while this page is already open must switch to it
   useEffect(() => { if (params.section && SECTIONS.some((x) => x.key === params.section)) setSection(params.section as Section); }, [params.section]);
-  const [draft, setDraft] = useState<Settings | null>(s ? { ...s } : null);
+  const [draft, setDraft] = useState<Settings | null>(s ? formOf(s) : null);
   const [busy, setBusy] = useState("");
   const [showRestore, setShowRestore] = useState(false);
   const [backupWarn, setBackupWarn] = useState(false); // S-04: say what is in the file before it is downloaded
@@ -163,7 +168,7 @@ export function SettingsPage() {
   const { ask, node: askNode } = useConfirm();
 
   // keys the teacher edits here — last_backup_at is written by the backup button, not by this form
-  const changed: (typeof FORM_KEYS)[number][] = draft ? FORM_KEYS.filter((k) => !s || draft[k] !== s[k]) : [];
+  const changed: (typeof FORM_KEYS)[number][] = draft ? FORM_KEYS.filter((k) => !s || draft[k] !== formOf(s)[k]) : [];
 
   // Unsaved edits: ask before leaving the page (menu, back button, closing the tab).
   useEffect(() => {
@@ -227,7 +232,7 @@ export function SettingsPage() {
     // only the keys of the form: a card layout or a switch changed meanwhile must not be put back to an old value
     settings.value = { ...(settings.value ?? cur), ...body } as Settings;
     await loadBootstrap();
-    setDraft(settings.value ? { ...settings.value } : null);
+    setDraft(settings.value ? formOf(settings.value) : null);
     setBusy("");
     ok("บันทึกการตั้งค่าแล้ว");
   }
@@ -251,7 +256,7 @@ export function SettingsPage() {
 
   return (
     <div class="set-page pg">
-      <PageHeader icon="settings" title="ตั้งค่า" sub={<span>{draft.school_name} · {draft.teacher_name}</span>}
+      <PageHeader icon="settings" title="ตั้งค่า" sub={<span>{schoolLabel(s.school_name)} · {teacherLabel(s.teacher_name)}</span>}
         actions={<>
           <SyncBadge />
           {section === "general" && <button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={20} /> <span class="att-hide-sm">ปรับการ์ด</span></button>}
@@ -281,8 +286,8 @@ export function SettingsPage() {
             <section class="card" aria-labelledby="se-gh">
               <h2 id="se-gh" class="set-section-title"><Icon name="school" /> ข้อมูลโรงเรียน <Scope all /></h2>
               <div class="modal-grid2">
-                <label class="field"><span>ชื่อโรงเรียน</span><input value={draft.school_name} onInput={(e) => set("school_name", (e.target as HTMLInputElement).value)} /></label>
-                <label class="field"><span>ชื่อครู</span><input value={draft.teacher_name} onInput={(e) => set("teacher_name", (e.target as HTMLInputElement).value)} /></label>
+                <label class="field"><span>ชื่อโรงเรียน</span><input value={draft.school_name} placeholder="เช่น โรงเรียนบ้านตัวอย่าง" onInput={(e) => set("school_name", (e.target as HTMLInputElement).value)} /></label>
+                <label class="field"><span>ชื่อครู</span><input value={draft.teacher_name} placeholder="เช่น ครูสมชาย" onInput={(e) => set("teacher_name", (e.target as HTMLInputElement).value)} /></label>
               </div>
               <Row label="ธีม" hint="ใช้กับทุกเครื่อง · บันทึกทันที" scope="all">
                 <Segmented label="ธีม" value={cur.theme} onChange={(v) => chooseTheme(v as Settings["theme"])} options={(Object.keys(THEME_TH) as Settings["theme"][]).map((t) => ({ value: t, label: THEME_TH[t] }))} />
@@ -389,7 +394,7 @@ export function SettingsPage() {
             <div class="set-savebar" role="region" aria-label="การแก้ไขที่ยังไม่บันทึก">
               <Icon name="pencil" size={20} style="color:var(--text-accent)" />
               <span class="grow" style="font-size:var(--fs-sm)" role="status" aria-live="polite">แก้ไขแล้ว {changed.length} รายการ ยังไม่บันทึก</span>
-              <button onClick={() => setDraft(s ? { ...s } : null)}>ยกเลิก</button>
+              <button onClick={() => setDraft(s ? formOf(s) : null)}>ยกเลิก</button>
               <button class="primary" onClick={save} disabled={busy === "save"}>{busy === "save" ? <Icon name="loader-2" class="spin" size={20} /> : <Icon name="device-floppy" size={20} />} บันทึก</button>
             </div>
           )}
@@ -536,6 +541,9 @@ function DeviceCheck() {
 
 function DeviceList() {
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
+  const [editId, setEditId] = useState<string | null>(null); // the device whose name is being typed
+  const [nameDraft, setNameDraft] = useState("");
+  const [renaming, setRenaming] = useState(false);
   const { ask, node: askNode } = useConfirm();
   async function load() { try { const r = await api.get<{ devices: DeviceInfo[] }>("/api/devices"); setDevices(r.devices); } catch { setDevices([]); } }
   useEffect(() => { load(); }, []);
@@ -544,14 +552,51 @@ function DeviceList() {
     const done = await withToast(() => api.post(`/api/devices/${id}/signout`), "ออกจากระบบเครื่องนี้ไม่สำเร็จ");
     if (done) { ok("ออกจากระบบเครื่องนั้นแล้ว"); load(); }
   }
+  function startRename(d: DeviceInfo) { setEditId(d.id); setNameDraft(d.name); }
+  // names may repeat (two "Chrome · Windows" are told apart by the teacher giving them names); empty / over 40 is refused
+  async function rename(d: DeviceInfo) {
+    if (renaming) return;
+    const name = cleanDeviceName(nameDraft);
+    if (!name) { err(`ชื่อเครื่องต้องยาว 1–${DEVICE_NAME_MAX} ตัวอักษร`); return; }
+    if (name === d.name) { setEditId(null); return; }
+    setRenaming(true);
+    try {
+      await api.post(`/api/devices/${d.id}/rename`, { name });
+      if (d.current) setDeviceName(name); // this screen's own copy (sent at the next sign-in)
+      setEditId(null);
+      ok("เปลี่ยนชื่อเครื่องแล้ว");
+      await load();
+    } catch (e: any) {
+      err(e?.message || "เปลี่ยนชื่อเครื่องไม่สำเร็จ");
+    } finally { setRenaming(false); }
+  }
   return (
     <div class="card">
       {askNode}
       <h2 class="set-section-title"><Icon name="devices" /> อุปกรณ์ที่เข้าสู่ระบบ</h2>
       {devices.map((d) => (
         <div class="set-row">
-          <div class="row" style="gap:10px;min-width:0;flex:1 1 12em"><Icon name="device-mobile" size={20} class="muted" /><div style="min-width:0"><div style="overflow-wrap:anywhere">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</div><div class="page-sub">{d.user_agent ? describeAgent(d.user_agent) + " · " : ""}ใช้ล่าสุด {formatThaiDayMonthMs(d.last_seen)}</div></div></div>
-          {!d.current && <button class="ghost" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}
+          <div class="row" style="gap:10px;min-width:0;flex:1 1 12em"><Icon name="device-mobile" size={20} class="muted" />
+            <div style="min-width:0;flex:1">
+              {editId === d.id ? (
+                <div class="row" style="gap:6px;flex-wrap:wrap">
+                  <input value={nameDraft} maxLength={DEVICE_NAME_MAX} aria-label={`ชื่อเครื่อง ${d.name}`} autofocus
+                    onInput={(e) => setNameDraft((e.target as HTMLInputElement).value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); rename(d); } else if (e.key === "Escape") { e.stopPropagation(); setEditId(null); } }}
+                    style="width:auto;flex:1;min-width:9em" />
+                  <button class="primary" onClick={() => rename(d)} disabled={renaming || !cleanDeviceName(nameDraft)}>บันทึกชื่อ</button>
+                  <button onClick={() => setEditId(null)} disabled={renaming}>ยกเลิก</button>
+                </div>
+              ) : (
+                <div style="overflow-wrap:anywhere">{d.name} {d.current && <span class="chip" style="background:var(--bg-success);color:var(--text-success)">เครื่องนี้</span>}</div>
+              )}
+              <div class="page-sub">{d.user_agent ? describeAgent(d.user_agent) + " · " : ""}ใช้ล่าสุด {formatThaiDayMonthMs(d.last_seen)}</div>
+            </div>
+          </div>
+          <div class="row" style="gap:6px;flex-wrap:wrap">
+            {editId !== d.id && <button class="ghost" aria-label={`เปลี่ยนชื่อเครื่อง ${d.name}`} onClick={() => startRename(d)}><Icon name="pencil" size={16} /> เปลี่ยนชื่อ</button>}
+            {!d.current && <button class="ghost" onClick={() => signout(d.id, d.name)}>ออกจากระบบ</button>}
+          </div>
         </div>
       ))}
     </div>

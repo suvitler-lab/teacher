@@ -104,7 +104,7 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
       <div class="sd-id">
         <Avatar student={student} size={44} tone="accent" />
         <div style="min-width:0">
-          <h2 class="sd-name">{student ? fullName(student) : studentId}</h2>
+          <h2 class="sd-name" title={student ? fullName(student) : undefined}>{student ? fullName(student) : studentId}</h2>
           <div class="page-sub">{student?.nickname ? `“${student.nickname}” · ` : ""}{cls?.name} เลขที่ {student?.number ?? "-"} · รหัส {student?.code}</div>
         </div>
       </div>
@@ -134,7 +134,7 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
       ) : missing.map((m) => (
         <div class="sd-mrow">
           <Icon name="alert-circle" size={16} class="sd-bad" />
-          <span class="grow sd-mtitle">{m.title}</span>
+          <span class="grow sd-mtitle" title={m.title}>{m.title}</span>
           {(m.type || m.subject) && <span class="chip sd-mtag">{m.type ?? m.subject}</span>}
           {m.due && <span class="page-sub sd-mdue"><Icon name="calendar" size={16} /> {formatThaiDate(m.due)}</span>}
         </div>

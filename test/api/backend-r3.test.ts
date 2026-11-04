@@ -38,7 +38,7 @@ describe("reports term date range", () => {
   beforeEach(async () => { cookie = await login(); await seed(); });
 
   it("scopes attendance to the term's start/end dates", async () => {
-    await call("/api/terms", json({ id: "t1", year: 2569, term: 1, name: "1/2569", start_date: "2026-09-05", end_date: "2026-09-20", is_current: true }), cookie);
+    await call("/api/terms", json({ id: "t1", year: 2569, term: 1, name: "1/2569", start_date: "2026-09-05", end_date: "2026-09-20", is_current: false }), cookie); // a PAST term stops at its end date (the current term does not: reports-term-end.test.ts)
     // one inside the window, one before it
     await call("/api/attendance/batch", json({ date: "2026-09-10", classId: "c1", rows: [{ studentId: "st1", status: "present" }] }), cookie);
     await call("/api/attendance/batch", json({ date: "2026-09-01", classId: "c1", rows: [{ studentId: "st1", status: "present" }] }), cookie);

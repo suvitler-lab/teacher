@@ -259,10 +259,25 @@ catalogRoutes.post("/api/terms/start", async (c) => {
   return c.json({ ok: true, termId: tid, newYear, classes: opened, finished });
 });
 
+// ---- names that must stay apart -------------------------------------------
+/** Two names are the same when they differ only by spaces at the ends or by upper/lower case (Latin letters). */
+const sameName = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+/** 409 duplicate_name — the teacher reads this message as it is, so it says what to do. */
+const duplicateName = (what: string, name: string) => conflict("duplicate_name", `มี${what}ชื่อ "${name}" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`);
+/**
+ * A row that is (or becomes) active may not take the name of another active row. Only checked when the write could
+ * CREATE a clash: a new row, a changed name, or an archived row coming back — so saving an unchanged row (a re-order,
+ * a colour) never fails because of a clash an older version let in.
+ */
+function clashes(existing: { name: string; archived: number } | null, b: { name: string; archived?: boolean }): boolean {
+  if (b.archived) return false;
+  return !existing || existing.archived === 1 || !sameName(existing.name, b.name);
+}
+
 // ---- classes -------------------------------------------------------------
 const classSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1).max(100),
+  name: z.string().trim().min(1).max(100),
   grade: z.string().max(50).optional().nullable(),
   sort: z.number().int().optional(),
   archived: z.boolean().optional(),
@@ -273,10 +288,16 @@ catalogRoutes.post("/api/classes", async (c) => {
   const now = Date.now();
   const cid = b.id ?? id("cls");
   // a class belongs to one academic year: a new class is filed under the current year, an existing one keeps its own
-  const existing = await c.env.DB.prepare("SELECT * FROM classes WHERE id = ?").bind(cid).first<{ year: number | null }>();
+  const existing = await c.env.DB.prepare("SELECT * FROM classes WHERE id = ?").bind(cid).first<{ name: string; archived: number; year: number | null }>();
   const cur = await currentYear(c.env);
   if (existing && existing.year != null && cur != null && existing.year !== cur && !b.archived) {
     throw conflict("class_of_past_year", "ห้องนี้เป็นของปีการศึกษาที่ผ่านมา นำกลับมาใช้ไม่ได้ — เพิ่มห้องใหม่ในปีนี้แทน");
+  }
+  // one name per active room within an academic year (another year's room may share it)
+  if (clashes(existing, b)) {
+    const rows = await c.env.DB.prepare("SELECT name FROM classes WHERE archived = 0 AND id != ? AND year IS ?")
+      .bind(cid, existing ? existing.year : cur).all<{ name: string }>();
+    if ((rows.results ?? []).some((r) => sameName(r.name, b.name))) throw duplicateName("ห้อง", b.name);
   }
   await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO classes (id, name, grade, sort, archived, year, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -294,7 +315,7 @@ catalogRoutes.post("/api/classes", async (c) => {
 const subjectSchema = z.object({
   id: z.string().optional(),
   code: z.string().max(30).optional().nullable(),
-  name: z.string().min(1).max(100),
+  name: z.string().trim().min(1).max(100),
   color: z.string().max(30).optional(),
   sort: z.number().int().optional(),
   archived: z.boolean().optional(),
@@ -304,7 +325,11 @@ catalogRoutes.post("/api/subjects", async (c) => {
   const b = subjectSchema.parse(await readJson(c));
   const now = Date.now();
   const sid = b.id ?? id("sub");
-  const existing = await c.env.DB.prepare("SELECT * FROM subjects WHERE id = ?").bind(sid).first();
+  const existing = await c.env.DB.prepare("SELECT * FROM subjects WHERE id = ?").bind(sid).first<{ name: string; archived: number }>();
+  if (clashes(existing, b)) {
+    const rows = await c.env.DB.prepare("SELECT name FROM subjects WHERE archived = 0 AND id != ?").bind(sid).all<{ name: string }>();
+    if ((rows.results ?? []).some((r) => sameName(r.name, b.name))) throw duplicateName("วิชา", b.name);
+  }
   await batchAtEpoch(c.env, await requestEpoch(c), [c.env.DB.prepare(
     `INSERT INTO subjects (id, code, name, color, sort, archived, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET code=excluded.code, name=excluded.name, color=excluded.color, sort=excluded.sort, archived=excluded.archived, updated_at=excluded.updated_at`,
@@ -319,7 +344,7 @@ catalogRoutes.post("/api/subjects", async (c) => {
 // ---- work types ----------------------------------------------------------
 const workTypeSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1).max(100),
+  name: z.string().trim().min(1).max(100),
   icon: z.string().max(50).optional(),
   color: z.string().max(30).optional(),
   is_exam: z.boolean().optional(),
@@ -332,7 +357,11 @@ catalogRoutes.post("/api/work-types", async (c) => {
   const b = workTypeSchema.parse(await readJson(c));
   const now = Date.now();
   const wid = b.id ?? id("wt");
-  const existing = await c.env.DB.prepare("SELECT * FROM work_types WHERE id = ?").bind(wid).first();
+  const existing = await c.env.DB.prepare("SELECT * FROM work_types WHERE id = ?").bind(wid).first<{ name: string; archived: number }>();
+  if (clashes(existing, b)) {
+    const rows = await c.env.DB.prepare("SELECT name FROM work_types WHERE archived = 0 AND id != ?").bind(wid).all<{ name: string }>();
+    if ((rows.results ?? []).some((r) => sameName(r.name, b.name))) throw duplicateName("ประเภทงาน", b.name);
+  }
   const after = {
     id: wid, name: b.name, icon: b.icon ?? "file-text", color: b.color ?? "violet", is_exam: b.is_exam ? 1 : 0,
     default_full: b.default_full ?? 10, sort: b.sort ?? 0, archived: b.archived ? 1 : 0, updated_at: now,

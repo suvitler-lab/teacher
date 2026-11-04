@@ -4,6 +4,7 @@ import { Icon } from "../components/Icon";
 import { api, ApiError } from "../lib/api";
 import { classes, subjects, terms, settings, loadBootstrap, onboardingOn, setSelectedTerm } from "../store";
 import { navigate } from "../router";
+import { nameField } from "../lib/orgNames";
 import { bkkToday } from "@shared/time";
 
 const STEPS = ["โรงเรียน", "ภาคเรียน", "ห้องเรียน", "วิชา", "เสร็จแล้ว"];
@@ -60,8 +61,8 @@ export function Onboarding() {
   const [err, setErr] = useState("");
 
   // 1 school
-  const [school, setSchool] = useState(s?.school_name === "โรงเรียนบ้านตัวอย่าง" ? "" : s?.school_name ?? "");
-  const [teacher, setTeacher] = useState(s?.teacher_name === "ครูผู้สอน" ? "" : s?.teacher_name ?? "");
+  const [school, setSchool] = useState(nameField(s?.school_name));
+  const [teacher, setTeacher] = useState(nameField(s?.teacher_name));
   // 2 term
   const [year, setYear] = useState(suggestedTerm().year);
   const [term, setTerm] = useState(suggestedTerm().term);
@@ -86,7 +87,8 @@ export function Onboarding() {
   }
 
   const saveSchool = () => run(async () => {
-    await api.put("/api/settings", { school_name: school.trim() || "โรงเรียน", teacher_name: teacher.trim() || "ครูผู้สอน" });
+    // left empty stays empty: the words "โรงเรียน" / "ครูผู้สอน" are only put in when a name is shown (lib/orgNames.ts)
+    await api.put("/api/settings", { school_name: school.trim(), teacher_name: teacher.trim() });
     await loadBootstrap();
   }, 1);
 

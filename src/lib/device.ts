@@ -25,6 +25,15 @@ export function deviceName(): string {
   }
 }
 
+/** A device name is 1–40 characters once trimmed (the server holds the same rule). */
+export const DEVICE_NAME_MAX = 40;
+
+/** The trimmed name, or "" when it is empty or too long. */
+export function cleanDeviceName(raw: string): string {
+  const v = raw.trim();
+  return v.length >= 1 && v.length <= DEVICE_NAME_MAX ? v : "";
+}
+
 export function setDeviceName(name: string) {
   try {
     localStorage.setItem(NAME_KEY, name);

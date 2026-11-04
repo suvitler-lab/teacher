@@ -181,8 +181,12 @@ export function AttendancePage() {
     });
   }
 
+  // A child whose tap clashed with another device is neither "saved as the tap" nor "as the system holds it" until the
+  // teacher picks a side: it has NO status here (the tile says "รอเลือก", the summary counts it as "ต้องตรวจสอบ").
+  const heldIds = new Set((draft?.conflicts ?? []).map((c) => c.studentId));
   // a draft row beats the server's; a draft row that CLEARS a mark means "not checked" whatever the server still holds
   const statusOf = (sid: string): AttendanceStatus | undefined => {
+    if (heldIds.has(sid)) return undefined;
     const d = draft?.rows[sid];
     if (d) return d.status === CLEARED ? undefined : (d.status as AttendanceStatus);
     return server.get(sid)?.status;
@@ -456,7 +460,8 @@ export function AttendancePage() {
   const counts = STATUSES.map((s) => students.filter((st) => statusOf(st.id) === s).length);
   const marked = counts.reduce((a, b) => a + b, 0);
   const presentPct = attendancePercent({ present: counts[0], late: counts[1], leave: counts[2], sick: counts[3], absent: counts[4] });
-  const unmarked = students.length - marked;
+  const heldN = students.filter((st) => heldIds.has(st.id)).length; // waiting for the teacher to pick: "ต้องตรวจสอบ", not in any status
+  const unmarked = students.length - marked - heldN;
   const days = weekDays(date);
   const className = activeClasses.value.find((c) => c.id === classId)?.name ?? "";
   const classItems = activeClasses.value.map((c) => {
@@ -539,12 +544,13 @@ export function AttendancePage() {
         <h2 class="att-h" id="att-sum-h">
           {marked === 0 ? `ยังไม่ได้เช็คชื่อ · ${students.length} คน` : <>มาเรียน {counts[0] + counts[1]} จาก {students.length} คน {presentPct != null ? <span class="att-pct" title="คิดจากคนที่เช็คแล้ว ตามนิยามเปอร์เซ็นต์มาเรียนของระบบ">({presentPct}% ของที่เช็คแล้ว)</span> : null}</>}
         </h2>
-        <span class="att-tip">{unmarked > 0 ? `ยังไม่เช็ค ${unmarked} คน` : "ครบทุกคนแล้ว"}</span>
+        <span class="att-tip">{[unmarked > 0 && `ยังไม่เช็ค ${unmarked} คน`, heldN > 0 && `ต้องตรวจสอบ ${heldN} คน`].filter(Boolean).join(" · ") || "ครบทุกคนแล้ว"}</span>
       </div>
       <StackBar segments={STATUSES.map((s, i) => ({ value: counts[i], color: STACK_COLOR[s] }))} />
       {offline && <div class="att-offnote"><Icon name="cloud-off" size={14} /> ออฟไลน์ — แสดงเฉพาะที่แตะไว้ในเครื่องนี้ ระบบจะส่งและตรวจกับข้อมูลในระบบให้เมื่อต่อเน็ตได้</div>}
       <div class="att-legend">
         {STATUSES.map((s, i) => <span class={s}><Icon name={ST_ICON[s]} size={14} /> {LABELS[s]} {counts[i]}</span>)}
+        {heldN > 0 && <span class="held"><Icon name="alert-triangle" size={14} /> ต้องตรวจสอบ {heldN}</span>}
         {unmarked > 0 && <span class="none"><Icon name="circle-dashed" size={14} /> ยังไม่เช็ค {unmarked}</span>}
       </div>
     </section>
@@ -568,7 +574,7 @@ export function AttendancePage() {
       );
     }
     if (k === "todo") {
-      const todo = students.filter((st) => !statusOf(st.id));
+      const todo = students.filter((st) => !statusOf(st.id) && !heldIds.has(st.id));
       return (
         <section class="card att-card" aria-labelledby="att-todo-h">
           <h2 class="att-h" id="att-todo-h"><Icon name="user-off" size={20} /> ใครยังไม่เช็ค {todo.length} คน</h2>
@@ -738,12 +744,13 @@ export function AttendancePage() {
           <div class={"att-tiles" + (loaded ? "" : " loading")} role="group" aria-label={`รายชื่อ ${className}`} aria-busy={!loaded}>
             {students.map((st) => {
               const s = statusOf(st.id);
+              const held = heldIds.has(st.id);
               const t = s === "late" ? timeOf(st.id) : undefined;
               return (
-                <button id={"att-t-" + st.id} class={"att-tile " + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)} title={fullName(st)} aria-label={`เลขที่ ${st.number} ${fullName(st)} ${s ? LABELS[s] : "ยังไม่เช็ค"}`}>
+                <button id={"att-t-" + st.id} class={"att-tile " + (held ? "held " : "") + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)} title={fullName(st)} aria-label={`เลขที่ ${st.number} ${fullName(st)} ${held ? "รอเลือกข้อมูล" : s ? LABELS[s] : "ยังไม่เช็ค"}`}>
                   <span class="no">{st.number ?? "-"}</span>
                   <span class="tx"><span class="nm">{shortName(st)}</span>
-                    <span class="stt">{s ? <><Icon name={ST_ICON[s]} size={16} /> {LABELS[s]}{t ? ` ${formatThaiTimeMs(t)}` : ""}</> : "แตะเพื่อเช็ค"}</span></span>
+                    <span class="stt">{held ? <><Icon name="alert-triangle" size={16} /> รอเลือก</> : s ? <><Icon name={ST_ICON[s]} size={16} /> {LABELS[s]}{t ? ` ${formatThaiTimeMs(t)}` : ""}</> : "แตะเพื่อเช็ค"}</span></span>
                 </button>
               );
             })}

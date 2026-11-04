@@ -7,6 +7,9 @@ import { notify, ok } from "../lib/notify";
 import type { Assignment } from "@shared/types";
 import { DateField } from "./ui";
 
+/** The longest work title the server takes (worker/routes/assignments.ts). */
+const MAX_TITLE = 200;
+
 function todayBkk(): string {
   return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
 }
@@ -53,7 +56,9 @@ export function AssignmentModal({
   const targetTermId = existing ? existing.term_id : newWorkTerm();
   const classChoices = classesForTerm(targetTermId);
   const movedToCurrent = !existing && viewingPastYear.value;
-  const [typeId, setTypeId] = useState(base?.type_id ?? wts.find((w) => !w.is_exam)?.id ?? wts[0]?.id ?? "");
+  // a copy of work whose type has been put away starts on a type that can still be used (the server refuses new work of an archived type)
+  const baseType = base && (existing || wts.some((w) => w.id === base.type_id)) ? base.type_id : undefined;
+  const [typeId, setTypeId] = useState(baseType ?? wts.find((w) => !w.is_exam)?.id ?? wts[0]?.id ?? "");
   const [title, setTitle] = useState(base?.title ?? "");
   const [subjectId, setSubjectId] = useState(base?.subject_id ?? defaultSubjectId ?? activeSubjects.value[0]?.id ?? "");
   const wt = wts.find((w) => w.id === typeId);
@@ -92,7 +97,8 @@ export function AssignmentModal({
     if (inFlight.current) return;
     setErr("");
     if (!title.trim()) return setErr("ใส่ชื่องาน");
-    if (!Number.isInteger(fullScore) || fullScore < 1 || fullScore > 100) return setErr("คะแนนเต็ม 1–100");
+    if (title.trim().length > MAX_TITLE) return setErr(`ชื่องานยาวเกินไป — ไม่เกิน ${MAX_TITLE} ตัวอักษร`);
+    if (!Number.isInteger(fullScore) || fullScore < 1 || fullScore > 100) return setErr("คะแนนเต็มเป็นจำนวนเต็ม 1–100");
     if (dueDate && assignedDate && dueDate < assignedDate) return setErr("วันกำหนดส่งต้องไม่ก่อนวันสั่งงาน");
     if (classIds.length === 0) return setErr("เลือกอย่างน้อย 1 ห้อง");
     inFlight.current = true;
@@ -161,7 +167,7 @@ export function AssignmentModal({
 
         <label class="field">
           <span>ชื่องาน / เรื่อง</span>
-          <input value={title} onInput={(e) => setTitle((e.target as HTMLInputElement).value)} placeholder="เช่น ใบงานที่ 5 เรื่อง ระบบหายใจ" />
+          <input value={title} maxLength={MAX_TITLE} onInput={(e) => setTitle((e.target as HTMLInputElement).value)} placeholder="เช่น ใบงานที่ 5 เรื่อง ระบบหายใจ" />
         </label>
 
         <div class="modal-grid3">
@@ -173,7 +179,7 @@ export function AssignmentModal({
           </label>
           <label class="field">
             <span>คะแนนเต็ม</span>
-            <input type="number" min={1} max={100} value={fullScore} onInput={(e) => setFullScore(Number((e.target as HTMLInputElement).value))} />
+            <input type="number" min={1} max={100} step={1} value={fullScore} onInput={(e) => setFullScore(Number((e.target as HTMLInputElement).value))} />
           </label>
           <label class="field">
             <span>หน่วย/บท</span>

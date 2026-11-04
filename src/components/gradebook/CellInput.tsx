@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
 /** The quick score input inside a grid cell (and the phone list row). Enter = next child, Esc = cancel, Alt+Enter = full editor. */
-export function CellInput({ initial, seed = null, onCommit, onCancel, onMore }: { initial: string; seed?: string | null; onCommit: (initial: string, v: string, next: boolean) => void; onCancel: () => void; onMore?: () => void }) {
+export function CellInput({ initial, seed = null, onCommit, onCancel, onMore }: { initial: string; seed?: string | null; onCommit: (initial: string, v: string, next: boolean) => boolean | void; onCancel: () => void; onMore?: () => void }) {
   const ref = useRef<HTMLInputElement>(null);
   const [v, setV] = useState(seed ?? initial);
   const done = useRef(false);
@@ -21,7 +21,12 @@ export function CellInput({ initial, seed = null, onCommit, onCancel, onMore }: 
     done.current = true;
     latest.current.onCommit(initial, latest.current.v, false);
   }, []);
-  function finish(next: boolean) { if (done.current) return; done.current = true; onCommit(initial, v, next); }
+  // B-F8: a refused value (the owner answers `false`) keeps the editor on THIS cell with the typed text selected, so it can be corrected at once
+  function finish(next: boolean) {
+    if (done.current) return;
+    done.current = true;
+    if (onCommit(initial, v, next) === false) { done.current = false; ref.current?.focus(); ref.current?.select(); }
+  }
   return (
     <input ref={ref} class="cell-input" aria-label="คะแนน" inputMode="decimal" value={v}
       onInput={(e) => setV((e.target as HTMLInputElement).value)}

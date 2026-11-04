@@ -42,7 +42,7 @@
 .att-legend { display: flex; gap: 4px 14px; flex-wrap: wrap; font-size: var(--fs-xs); font-variant-numeric: tabular-nums; margin-top: 6px; }
 .att-legend > span { display: inline-flex; align-items: center; gap: 4px; }
 .att-legend .present { color: var(--text-success); } .att-legend .late { color: var(--text-warning); } .att-legend .leave { color: var(--text-accent); }
-.att-legend .sick { color: var(--text-purple); } .att-legend .absent { color: var(--text-danger); } .att-legend .none { color: var(--text-secondary); }
+.att-legend .sick { color: var(--text-purple); } .att-legend .absent { color: var(--text-danger); } .att-legend .none { color: var(--text-secondary); } .att-legend .held { color: var(--text-warning); font-weight: 600; }
 .att-offnote { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: var(--fs-xs); color: var(--text-warning); }
 
 /* ---- status brush: five equal buttons + "all present" ---- */
@@ -82,6 +82,8 @@
 .att-tile.leave { background: var(--bg-accent); border: 1.5px solid var(--border-accent); color: var(--text-accent); }
 .att-tile.sick { background: var(--bg-purple); border: 1.5px solid var(--border-purple); color: var(--text-purple); }
 .att-tile.absent { background: var(--bg-danger); border: 1.5px solid var(--border-danger); color: var(--text-danger); }
+/* a clash with another device that waits for the teacher: not a status — a thick warning outline + icon + the word "รอเลือก" (never colour alone) */
+.att-tile.held { background: var(--surface-2); border: 2.5px solid var(--border-warning); color: var(--text-warning); }
 /* a scan, a tap that takes a mark back, "who is not checked yet": a ring so the eye finds the child (an unchecked tile is the dashed one above) */
 .att-tile.hit { outline: 2px solid var(--accent); outline-offset: -1px; box-shadow: var(--ring-focus); }
 

@@ -1,3 +1,4 @@
+import { schoolLabel } from "../lib/orgNames";
 import { useEffect, useState } from "preact/hooks";
 import "../styles/home.css";
 import { Icon } from "../components/Icon";
@@ -93,7 +94,7 @@ export function Home() {
         icon="home"
         title={`สวัสดี ${s?.teacher_name || "คุณครู"}`}
         sub={<>
-          <span>{s?.school_name}</span>
+          <span>{schoolLabel(s?.school_name)}</span>
           <span class="hm-sep">{formatThaiDate(today)}</span>
           {stale && dashboardAt.value && <Chip tone="warning" icon="wifi-off">ออฟไลน์ · ข้อมูลเมื่อ {formatThaiTimeMs(dashboardAt.value)}</Chip>}
         </>}
@@ -167,7 +168,7 @@ export function Home() {
               }}>
                 <Chip tone="muted">{classById(r.classId)?.name}</Chip>
                 <div class="grow" style="min-width:0">
-                  <div class="hm-ell" style="font-weight:500">{r.a.assignment.title}</div>
+                  <div class="hm-ell" style="font-weight:500" title={r.a.assignment.title}>{r.a.assignment.title}</div>
                   <div class="page-sub">{subj?.name}{r.a.assignment.status === "closed" ? " · ปิดรับแล้ว" : ""}{r.a.assignment.due_date ? ` · ส่ง ${formatThaiDate(r.a.assignment.due_date)}` : ""}</div>
                 </div>
                 {list === "open"
