@@ -50,7 +50,7 @@
 .att-brush .lbl { display: block; font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: 4px; }
 .att-brushrow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .att-stbtns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; flex: 1 1 22rem; min-width: 0; }
-.stbtn { height: auto; min-height: max(64px, 4rem); flex-direction: column; gap: 2px; border-radius: 12px; border: 2px solid var(--border-strong); background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-sm); font-weight: 500; line-height: 1.2; padding: 6px 2px; }
+.stbtn { height: auto; min-height: max(64px, 4rem); flex-direction: column; gap: 2px; border-radius: 12px; border: 2px solid var(--border-control); background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-sm); font-weight: 500; line-height: 1.2; padding: 6px 2px; }
 .stbtn.present { color: var(--text-success); } .stbtn.late { color: var(--text-warning); } .stbtn.leave { color: var(--text-accent); }
 .stbtn.sick { color: var(--text-purple); } .stbtn.absent { color: var(--text-danger); }
 .stbtn.on.present { background: var(--bg-success); border-color: var(--text-success); } .stbtn.on.late { background: var(--bg-warning); border-color: var(--text-warning); }
@@ -67,7 +67,7 @@
 .att-tile {
   display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px;
   height: auto; min-height: max(64px, 4rem); padding: 6px 10px; border-radius: 12px; line-height: 1.3; min-width: 0; text-align: left;
-  border: 1.5px dashed var(--border-strong); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; position: relative;
+  border: 1.5px dashed var(--border-control); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; position: relative;
 }
 .att-tile .no { font-size: 1.1rem; font-weight: 600; min-width: 1.6em; text-align: center; font-variant-numeric: tabular-nums; flex: none; }
 .att-tile .tx { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; flex: 1 1 auto; }
@@ -114,7 +114,7 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
 .att-rrow .nm { flex: 1 1 8rem; min-width: 0; overflow-wrap: anywhere; }
 .att-rrow .nm small { display: block; font-size: var(--fs-xs); color: var(--text-secondary); }
 .att-scanrow .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; }
-.att-numchip { min-width: var(--tap); height: var(--tap); padding: 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border-strong); font-variant-numeric: tabular-nums; cursor: pointer; }
+.att-numchip { min-width: var(--tap); height: var(--tap); padding: 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border-control); font-variant-numeric: tabular-nums; cursor: pointer; }
 .att-numchips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
 .att-badge { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); padding: 2px 10px; border-radius: 999px; }
 .att-badge.present { background: var(--bg-success); color: var(--text-success); } .att-badge.late { background: var(--bg-warning); color: var(--text-warning); }

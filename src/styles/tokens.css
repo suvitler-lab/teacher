@@ -17,6 +17,7 @@
   /* borders */
   --border: rgba(20, 28, 46, 0.10);
   --border-strong: rgba(20, 28, 46, 0.18);
+  --border-control: var(--border-strong); /* edges of buttons, inputs, chips, switches (dark mode: 3:1 on the card surfaces) */
 
   /* accent (blue) */
   --accent: #2f6fde;
@@ -80,6 +81,7 @@
     --text-muted: #8d96a6;
     --border: rgba(255, 255, 255, 0.10);
     --border-strong: rgba(255, 255, 255, 0.18);
+    --border-control: #747e91;
     --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220; --fill-accent: #5a92ee; --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
     --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
     --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;
@@ -107,6 +109,7 @@
   --text-muted: #8d96a6;
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
+  --border-control: #747e91;
   --accent: #5a92ee; --accent-hover: #6ea1f2; --on-accent: #0b1220; --fill-accent: #5a92ee; --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
   --bg-accent: #1d2b44; --bg-accent-muted: rgba(90, 146, 238, 0.16); --text-accent: #9cc2f2; --border-accent: #4a7fc4;
   --bg-success: #10331f; --text-success: #7fdca6; --fill-success: #1f9d63; --border-success: #26623f;

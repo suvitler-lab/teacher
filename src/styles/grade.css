@@ -272,7 +272,7 @@ td.cell { position: relative; }
 @media (hover: hover) and (pointer: fine) { .gb-toolbar .seg button, .gb-toolbar button { min-height: 2.5rem; } }
 .gb-scrim { position: fixed; inset: 0; z-index: 59; background: rgba(0, 0, 0, 0.35); }
 .gb-filter .gb-checks { display: flex; flex-wrap: wrap; gap: 6px; }
-.gb-filter .gb-checks button { min-height: var(--tap); gap: 6px; border: 1.5px solid var(--border-strong); background: var(--surface-2); font-size: var(--fs-sm); }
+.gb-filter .gb-checks button { min-height: var(--tap); gap: 6px; border: 1.5px solid var(--border-control); background: var(--surface-2); font-size: var(--fs-sm); }
 .gb-filter .gb-checks button.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
 .gb-filter.sheet {
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; margin: 0 auto; z-index: 60; width: 100%; max-width: 440px; min-width: 0;

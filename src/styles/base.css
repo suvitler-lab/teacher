@@ -27,7 +27,7 @@ button {
   font-family: inherit;
   font-size: 1rem;
   cursor: pointer;
-  border: 0.5px solid var(--border-strong);
+  border: 0.5px solid var(--border-control);
   background: var(--surface-2);
   color: var(--text-primary);
   border-radius: var(--radius-sm);
@@ -62,7 +62,7 @@ input, select, textarea {
   font-size: 1rem;
   color: var(--text-primary);
   background: var(--surface-2);
-  border: 0.5px solid var(--border-strong);
+  border: 0.5px solid var(--border-control);
   border-radius: var(--radius-sm);
   height: 2.53rem;
   padding: 0 12px;
@@ -131,7 +131,7 @@ label { font-size: var(--fs-sm); color: var(--text-secondary); }
 .type-chip, .cls-chip {
   height: 2.13rem; border-radius: 999px; font-size: var(--fs-sm); padding: 0 12px;
   display: inline-flex; align-items: center; gap: 6px;
-  border: 0.5px solid var(--border-strong); background: transparent; color: var(--text-secondary);
+  border: 0.5px solid var(--border-control); background: transparent; color: var(--text-secondary);
 }
 .type-chip.on {
   border-color: transparent; font-weight: 500;
@@ -147,7 +147,7 @@ label { font-size: var(--fs-sm); color: var(--text-secondary); }
 
 .switch {
   width: 4rem; height: 2.4rem; border-radius: 999px; padding: 0; position: relative;
-  border: none; background: var(--border-strong); flex: none;
+  border: none; background: var(--border-control); flex: none;
 }
 .switch.on { background: var(--accent); }
 /* an off switch is outlined so it reads without the colour (3:1 in both themes) */

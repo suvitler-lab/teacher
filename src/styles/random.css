@@ -1,7 +1,7 @@
 /* งานครบ · random name picker — follows design/preview-round2.html (สุ่มชื่อ): stage, one big button, cards in a column */
 
 /* kept: the projector menu (Projector.tsx) and the report preview use .rnd-opt */
-.rnd-opt { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); padding: 6px 12px; border-radius: 999px; border: 0.5px solid var(--border-strong); cursor: pointer; }
+.rnd-opt { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); padding: 6px 12px; border-radius: 999px; border: 0.5px solid var(--border-control); cursor: pointer; }
 .rnd-opt.on { border: 2px solid var(--border-accent); padding: 5px 11px; font-weight: 500; }
 @media (pointer: coarse) { .rnd-opt { min-height: 44px; } }
 
