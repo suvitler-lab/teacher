@@ -29,6 +29,13 @@ const GBW0=[
   {id:'s2',t:'pj',title:'ชิ้นงาน โมเดลระบบสุริยะ',subj:'วิทยาศาสตร์',full:30,assigned:'2026-10-29',due:'2026-11-12',closed:false,rate:18,aw:3},
   {id:'s3',t:'qz',title:'สอบย่อย บทที่ 2',subj:'วิทยาศาสตร์',full:20,assigned:'2026-11-03',due:'2026-11-06',closed:false,rate:0,aw:0},
   {id:'s4',t:'ac',title:'กิจกรรม สำรวจพืช',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-10',due:null,closed:false,rate:40,aw:0},
+  {id:'m13',t:'hw',title:'การบ้าน บทที่ 2 เลขยกกำลัง',subj:'คณิตศาสตร์',full:10,assigned:'2026-09-28',due:'2026-10-05',closed:true,rate:92,aw:0},
+  {id:'m14',t:'ex',title:'แบบฝึกหัด 4 คูณหาร',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-14',due:'2026-10-19',closed:true,rate:88,aw:0},
+  {id:'m15',t:'wk',title:'ใบงาน 5 ตัวประกอบ',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-19',due:'2026-10-26',closed:true,rate:58,aw:0},
+  {id:'s5',t:'wk',title:'ใบงาน แรงเสียดทานและแรงโน้มถ่วง',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-05',due:'2026-10-12',closed:true,rate:93,aw:0},
+  {id:'s6',t:'hw',title:'การบ้าน สารและการเปลี่ยนแปลง',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-14',due:'2026-10-21',closed:true,rate:74,aw:0},
+  {id:'s7',t:'ex',title:'แบบฝึกหัด 10 วัฏจักรของน้ำ',subj:'วิทยาศาสตร์',full:10,assigned:'2026-09-21',due:'2026-09-28',closed:true,rate:97,aw:0},
+  {id:'s8',t:'wk',title:'ใบงาน 9 ห่วงโซ่อาหาร',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-26',due:'2026-11-01',closed:false,rate:62,aw:0},
 ];
 const GBEXC={c1:{m7:[7],m10:[30],s1:[7]}};
 const dayDiff=(a,b)=>Math.round((Date.parse(a)-Date.parse(b))/864e5);

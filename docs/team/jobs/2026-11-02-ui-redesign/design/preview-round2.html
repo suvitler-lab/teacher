@@ -717,33 +717,47 @@ button.hm-chip.muted{color:var(--text-primary)}
 .touch .gb-tile{padding:2px 8px;gap:6px}
 .gb-wl{flex-basis:14em}
 /* ===================== รายงาน (rp-) ===================== */
-.rp-page{display:flex;flex-direction:column;gap:8px;min-width:0}
+.rp-page{display:flex;flex-direction:column;gap:12px;min-width:0}
 .rp-page .pghead{margin-bottom:0}
 .rp-status{display:flex;gap:8px;flex-wrap:wrap}
 .rp-range{margin:-2px 0 0}
-.rp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.phone .rp-stats,.ipadP .rp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-.rp-stat{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;box-shadow:var(--shadow-card);min-height:var(--tap)}
+.rp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.phone .rp-stats,.ipadP .rp-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rp-stat{background:var(--surface-2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;box-shadow:var(--shadow-card);min-height:var(--tap);display:grid;grid-template-columns:1fr;gap:0}
 .rp-stat .l{font-size:var(--fs-sm);color:var(--text-secondary)}
-.rp-stat .v{font-size:calc(var(--u)*1.7);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.rp-stat .v{font-size:calc(var(--u)*1.6);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.15}
 .rp-stat .v small{font-size:var(--fs-sm);font-weight:400}
 .rp-stat.danger .v{color:var(--text-danger)}
-.rp-stat .h{font-size:var(--fs-xs);color:var(--text-muted)}
-.rp-card{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.rp-stat .h{font-size:var(--fs-xs);color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-bento{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;align-items:stretch}
+.rp-bento.one{grid-template-columns:minmax(0,1fr)}
+.phone .rp-bento,.ipadP .rp-bento{grid-template-columns:minmax(0,1fr)}
+.rp-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rp-col>.rp-card:only-child{flex:1}
+.rp-card{padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .rp-card h2{font-size:1rem;display:flex;align-items:center;gap:6px}
-.rp-wrow{display:grid;grid-template-columns:minmax(0,15em) 1fr auto 3.4em;gap:8px;align-items:center;width:100%;min-height:var(--tap);height:auto;padding:4px 6px;border:none;background:transparent;border-radius:8px;text-align:left;font-size:var(--fs-sm)}
+.rp-ch{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:var(--tap)}
+.rp-ch .tip{white-space:nowrap}
+.rp-works{flex:1}
+.rp-list{display:flex;flex-direction:column}
+.rp-list.scroll{max-height:22rem;overflow-y:auto;overscroll-behavior:contain}
+.rp-list.scroll.tall{max-height:none;flex:1}
+.rp-more{width:100%;justify-content:center}
+.rp-wrow{display:grid;grid-template-columns:minmax(0,1fr) 34% 3.4rem;gap:12px;align-items:center;width:100%;min-height:var(--tap);height:var(--tap);padding:2px 8px;border:none;background:transparent;border-radius:8px;text-align:left;font-size:var(--fs-sm)}
 .rp-wrow:hover{background:var(--surface-1)}
-.rp-wrow .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-wrow .t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.rp-wrow .t b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-wrow .t small{font-size:var(--fs-xs);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .rp-wrow .bar{height:10px;border-radius:5px;background:var(--border);overflow:hidden}
 .rp-wrow .bar i{display:block;height:100%;border-radius:5px}
-.rp-wrow .f{font-variant-numeric:tabular-nums;color:var(--text-secondary);font-size:var(--fs-xs);white-space:nowrap}
-.rp-wrow .p{text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
-.phone .rp-wrow{grid-template-columns:minmax(0,7em) 1fr auto}
-.ipadP .rp-wrow{grid-template-columns:minmax(0,10em) 1fr auto 3.4em}
-.phone .rp-wrow .f{display:none}
+.rp-wrow .p{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:var(--fs-sm)}
+.phone .rp-wrow{grid-template-columns:minmax(0,1fr) 28% 3.2rem;gap:8px}
 .legend2{display:flex;gap:4px 12px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--text-secondary)}
 .legend2 i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
-.rp-frow{display:flex;align-items:center;gap:10px;width:100%;min-height:var(--tap);height:auto;padding:6px 8px;border:none;border-top:.5px solid var(--border);background:transparent;text-align:left;border-radius:0}
+.rp-frow{display:flex;align-items:center;gap:10px;width:100%;min-height:var(--tap);height:calc(var(--tap) + 8px);padding:4px 8px;border:none;border-top:.5px solid var(--border);background:transparent;text-align:left;border-radius:0}
+.rp-frow .grow{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.rp-frow .grow b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-frow .grow small{font-size:var(--fs-xs);color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rp-frow .no{width:2em;height:2em;border-radius:50%;background:var(--surface-1);display:inline-flex;align-items:center;justify-content:center;font-weight:600;flex:none}
 .rp-tw{overflow-x:auto}
 .rp-t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--fs-sm)}
@@ -1787,6 +1801,13 @@ const GBW0=[
   {id:'s2',t:'pj',title:'ชิ้นงาน โมเดลระบบสุริยะ',subj:'วิทยาศาสตร์',full:30,assigned:'2026-10-29',due:'2026-11-12',closed:false,rate:18,aw:3},
   {id:'s3',t:'qz',title:'สอบย่อย บทที่ 2',subj:'วิทยาศาสตร์',full:20,assigned:'2026-11-03',due:'2026-11-06',closed:false,rate:0,aw:0},
   {id:'s4',t:'ac',title:'กิจกรรม สำรวจพืช',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-10',due:null,closed:false,rate:40,aw:0},
+  {id:'m13',t:'hw',title:'การบ้าน บทที่ 2 เลขยกกำลัง',subj:'คณิตศาสตร์',full:10,assigned:'2026-09-28',due:'2026-10-05',closed:true,rate:92,aw:0},
+  {id:'m14',t:'ex',title:'แบบฝึกหัด 4 คูณหาร',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-14',due:'2026-10-19',closed:true,rate:88,aw:0},
+  {id:'m15',t:'wk',title:'ใบงาน 5 ตัวประกอบ',subj:'คณิตศาสตร์',full:10,assigned:'2026-10-19',due:'2026-10-26',closed:true,rate:58,aw:0},
+  {id:'s5',t:'wk',title:'ใบงาน แรงเสียดทานและแรงโน้มถ่วง',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-05',due:'2026-10-12',closed:true,rate:93,aw:0},
+  {id:'s6',t:'hw',title:'การบ้าน สารและการเปลี่ยนแปลง',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-14',due:'2026-10-21',closed:true,rate:74,aw:0},
+  {id:'s7',t:'ex',title:'แบบฝึกหัด 10 วัฏจักรของน้ำ',subj:'วิทยาศาสตร์',full:10,assigned:'2026-09-21',due:'2026-09-28',closed:true,rate:97,aw:0},
+  {id:'s8',t:'wk',title:'ใบงาน 9 ห่วงโซ่อาหาร',subj:'วิทยาศาสตร์',full:10,assigned:'2026-10-26',due:'2026-11-01',closed:false,rate:62,aw:0},
 ];
 const GBEXC={c1:{m7:[7],m10:[30],s1:[7]}};
 const dayDiff=(a,b)=>Math.round((Date.parse(a)-Date.parse(b))/864e5);
@@ -2373,7 +2394,7 @@ function rpAtt(cid,n){
   return{p:RP_DAYS-a-k-v-l,l,v,k,a,days:RP_DAYS};
 }
 function initRp(){
-  S.rp={cls:'c1',subj:'',period:'term',month:'2026-11',attMode:'daily',sort:'sub',dir:1,drawer:null,followAll:false,updated:'10:32',busy:false,stale:S.scen==='offline',copied:'',printFrom:null};
+  S.rp={cls:'c1',subj:'',period:'term',month:'2026-11',attMode:'daily',sort:'sub',dir:1,drawer:null,followAll:false,worksAll:false,updated:'10:32',busy:false,stale:S.scen==='offline',copied:'',printFrom:null};
 }
 function rpWorks(){
   const r=S.rp;
@@ -2430,20 +2451,27 @@ function rpCards(M){
       <div class="rp-stat ${M.missing?'danger':''}"><div class="l">งานค้าง</div><div class="v">${M.missing} <small>ชิ้น</small></div><div class="h">นักเรียน ${M.missStu} คน</div></div>
       <div class="rp-stat"><div class="l">คะแนนเฉลี่ย</div><div class="v">${M.avg==null?'—':M.avg+'%'}</div><div class="h">คะแนนสะสม · ค้างส่งนับ 0</div></div>
       <div class="rp-stat"><div class="l">มาเรียน</div><div class="v">${M.attPct==null?'—':M.attPct+'%'}</div><div class="h">จาก ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'} · ขาดรวม ${M.attSum.a} ครั้ง</div></div></div>`,
-    works:()=>`<section class="card rp-card" aria-labelledby="rp-wh"><h2 id="rp-wh">${ic('clipboard-list',20)} อัตราส่งแต่ละงาน <span class="tip">${M.works.length} งาน</span></h2>
-      ${M.works.length?M.works.map(x=>`<button class="rp-wrow" data-a="rpwork" data-k="${x.w.id}" aria-label="${x.w.title} ส่งแล้ว ${x.k.sub} จาก ${x.k.tot}"><span class="t">${x.w.title}</span><span class="bar"><i style="width:${x.due?x.rate:x.rate}%;background:${x.due?rpBarTone(x.rate):'var(--border-strong)'}"></i></span><span class="f">${x.k.sub}/${x.k.tot}${x.k.exc?' · ย '+x.k.exc:''}</span><span class="p">${x.due?x.rate+'%':'เก็บอยู่'}</span></button>`).join(''):'<div class="tip">ไม่มีงานในช่วงนี้</div>'}
-      <div class="gb-legend"><span><i class="lg" style="background:var(--fill-accent)"></i>85% ขึ้นไป</span><span><i class="lg" style="background:var(--fill-warning)"></i>60–84%</span><span><i class="lg" style="background:var(--fill-danger)"></i>ต่ำกว่า 60%</span><span><i class="lg" style="background:var(--border-strong)"></i>ยังไม่ถึงกำหนด</span></div></section>`,
-    att:()=>{const a=M.attSum,den=M.attDen;return `<section class="card rp-card" aria-labelledby="rp-ah"><h2 id="rp-ah">${ic('user-check',20)} การมาเรียน${r.attMode==='period'?' (รายคาบ)':''} <span class="tip">${den} ครั้ง · ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'}</span></h2>
+    works:()=>{const sorted=[...M.works].sort((x,y)=>{const g=q=>!q.due?2:q.rate<85?0:1;return g(x)-g(y)||(g(x)===0?x.rate-y.rate:0)});
+      const lim=6,list=r.worksAll?sorted:sorted.slice(0,lim),low=M.works.filter(x=>x.due&&x.rate<85).length;
+      return `<section class="card rp-card rp-works" aria-labelledby="rp-wh"><div class="rp-ch"><h2 id="rp-wh">${ic('clipboard-list',20)} อัตราส่งแต่ละงาน</h2><span class="tip">${M.works.length} งาน${low?` · ต่ำกว่า 85% ${low} งาน`:''}</span></div>
+      <div class="rp-list${r.worksAll?' scroll':''}">${list.length?list.map(x=>`<button class="rp-wrow" data-a="rpwork" data-k="${x.w.id}" aria-label="${x.w.title} ส่งแล้ว ${x.k.sub} จาก ${x.k.tot}${x.k.exc?' ยกเว้น '+x.k.exc:''}"><span class="t"><b>${x.w.title}</b><small>${x.k.sub}/${x.k.tot}${x.k.exc?' · ยกเว้น '+x.k.exc:''}</small></span><span class="bar"><i style="width:${x.rate}%;background:${x.due?rpBarTone(x.rate):'var(--border-strong)'}"></i></span><span class="p">${x.due?x.rate+'%':'เก็บอยู่'}</span></button>`).join(''):'<div class="tip">ไม่มีงานในช่วงนี้</div>'}</div>
+      ${M.works.length>lim?`<button class="ghost rp-more" data-a="rpworksall" aria-expanded="${r.worksAll}">${r.worksAll?`แสดงเฉพาะที่ต้องสนใจ ${lim} งาน`:`ดูทั้งหมด (${M.works.length})`} ${ic(r.worksAll?'chevron-up':'chevron-down',16)}</button>`:''}
+      <div class="gb-legend"><span><i class="lg" style="background:var(--fill-accent)"></i>85% ขึ้นไป</span><span><i class="lg" style="background:var(--fill-warning)"></i>60–84%</span><span><i class="lg" style="background:var(--fill-danger)"></i>ต่ำกว่า 60%</span><span><i class="lg" style="background:var(--border-strong)"></i>ยังไม่ถึงกำหนด</span></div></section>`},
+    att:()=>{const a=M.attSum,den=M.attDen;return `<section class="card rp-card" aria-labelledby="rp-ah"><div class="rp-ch"><h2 id="rp-ah">${ic('user-check',20)} การมาเรียน${r.attMode==='period'?' (รายคาบ)':''}</h2><span class="tip">${M.attPct==null?'—':M.attPct+'%'} · ${RP_DAYS} ${r.attMode==='daily'?'วัน':'คาบ'}</span></div>
       <div class="stack2" aria-hidden="true">${['p','l','v','k','a'].map(q=>a[q]?`<i style="flex:${a[q]};background:var(--fill-${{p:'success',l:'warning',v:'accent',k:'purple',a:'danger'}[q]})"></i>`:'').join('')}</div>
       <div class="legend2">${[['p','มา'],['l','สาย'],['v','ลา'],['k','ป่วย'],['a','ขาด']].map(([q,l])=>`<span><i style="background:var(--fill-${{p:'success',l:'warning',v:'accent',k:'purple',a:'danger'}[q]})"></i>${l} ${a[q]}</span>`).join('')}</div></section>`},
     hist:()=>{const bins=[0,0,0,0,0];M.rows.forEach(x=>{if(x.scorePct==null)return;const p=x.scorePct;bins[p<50?0:p<60?1:p<70?2:p<80?3:4]++});const mx=Math.max(1,...bins);
       return `<section class="card rp-card" aria-labelledby="rp-hh"><h2 id="rp-hh">${ic('chart-histogram',20)} การกระจายคะแนนสะสม</h2><div class="gb-hist">${['<50','50–59','60–69','70–79','80+'].map((l,i)=>`<div><i style="height:${Math.round(bins[i]/mx*48)+2}px"></i><small>${bins[i]}</small><small>${l}</small></div>`).join('')}</div></section>`},
-    follow:()=>{const list=r.followAll?M.follow:M.follow.slice(0,8);
-      return `<section class="card rp-card" aria-labelledby="rp-fh"><div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px"><h2 id="rp-fh">${ic('flag',20)} ต้องติดตาม (${M.follow.length} คน)</h2>${M.follow.length?`<button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button>`:''}</div>
-      ${M.follow.length?list.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><div>${fullName(x.n)}</div><div class="tip">${x.missing.slice(0,3).join(' · ')}${x.missing.length>3?' …':''}</div></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')+(M.follow.length>8?`<button class="ghost" style="width:100%" data-a="rpfollowall">${r.followAll?'แสดงแค่ 8 คน':`ดูทั้งหมด (${M.follow.length})`} ${ic(r.followAll?'chevron-up':'chevron-down',16)}</button>`:''):`<div class="tip" style="color:var(--text-success)">${ic('circle-check',16)} ส่งงานครบทุกคน</div>`}</section>`},
+    follow:()=>{const lim=4,list=M.follow.slice(0,lim);
+      return `<section class="card rp-card rp-follow" aria-labelledby="rp-fh"><div class="rp-ch"><h2 id="rp-fh">${ic('flag',20)} ต้องติดตาม <span class="tip">${M.follow.length} คน</span></h2>${M.follow.length?`<button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button>`:''}</div>
+      ${M.follow.length?`<div class="rp-list">${list.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><b>${fullName(x.n)}</b><small>${x.missing.slice(0,2).join(' · ')}${x.missing.length>2?' …':''}</small></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')}</div>${M.follow.length>lim?`<button class="ghost rp-more" data-a="rpfollowfull">ดูทั้งหมด (${M.follow.length}) ${ic('chevron-right',16)}</button>`:''}`:`<div class="tip" style="color:var(--text-success)">${ic('circle-check',16)} ส่งงานครบทุกคน</div>`}</section>`},
     audit:()=>`<section class="card rp-card" aria-labelledby="rp-au"><h2 id="rp-au">${ic('history',20)} แก้ไขล่าสุด <span class="badge-sa">ข้อเสนอ SA</span></h2>${(S.gb?S.gb.log:[]).slice(0,5).map(x=>`<div class="gb-log"><span class="tip">${x.t}</span> ${x.x}</div>`).join('')}</section>`,
   };
-  return cardOrder('reports').map(k=>def[k]?def[k]():'').join('');
+  const ord=cardOrder('reports'),L=ord.filter(k=>k==='works'),R=ord.filter(k=>k!=='works'&&k!=='stats');
+  const html=k=>def[k]?def[k]():'';
+  const stats=ord.includes('stats')?html('stats'):'';
+  const bento=(L.length||R.length)?`<div class="rp-bento${L.length&&R.length?'':' one'}">${L.length?`<div class="rp-col">${L.map(html).join('')}</div>`:''}${R.length?`<div class="rp-col">${R.map(html).join('')}</div>`:''}</div>`:'';
+  return stats+bento;
 }
 function rpTable(M){
   const r=S.rp,rows=rpSorted(M.rows);
@@ -2475,6 +2503,7 @@ function rpPrintHtml(M){
 }
 function rpDrawerHtml(){
   const r=S.rp;if(r.drawer==null)return'';
+  if(r.drawer==='all'){const M=rpModel();return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="rp-dh"><div class="drawer-head"><div><h2 class="t" id="rp-dh">ต้องติดตามทั้งหมด (${M.follow.length} คน)</h2><div class="xs">${CL(r.cls).name} · ${r.subj||'ทุกวิชา'} · เรียงตามงานค้างมากสุด</div></div><button class="icon ghost" data-a="closeov" aria-label="ปิด">${ic('x',20)}</button></div><div class="row" style="justify-content:flex-end;margin-bottom:6px"><button class="ghost" data-a="rpline" data-k="class">${ic(r.copied==='class'?'check':'copy',20)}${r.copied==='class'?'คัดลอกแล้ว':'คัดลอกไป LINE'}</button></div><div class="rp-list scroll tall">${M.follow.map(x=>`<button class="rp-frow" data-a="rpdrawer" data-k="${x.n}"><span class="no">${x.n}</span><span class="grow"><b>${fullName(x.n)}</b><small>${x.missing.slice(0,2).join(' · ')}${x.missing.length>2?' …':''}</small></span>${badge('danger',`ค้าง ${x.miss}`)}</button>`).join('')}</div></div></div>`}
   const n=r.drawer,ws=rpWorks(),x=rpStudent(r.cls,n,ws),a=x.att;
   return `<div class="drawer-scrim" data-a="closeov"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="rp-dh"><div class="drawer-head"><div><h2 class="t" id="rp-dh">${fullName(n)}</h2><div class="xs">“${nick(n)}” · ${CL(r.cls).name} เลขที่ ${n} · รหัส 6${String(n).padStart(3,'0')}</div></div><button class="icon ghost" data-a="closeov" aria-label="ปิด">${ic('x',20)}</button></div>
    <div class="hm-chip muted" style="margin-bottom:8px">${ic('filter',16)}ขอบเขต: ${r.subj||'ทุกวิชา'} · ${r.period==='term'?'ทั้งเทอม':GBMON[r.month]} (ตามตัวกรองหน้านี้)</div>
@@ -2507,7 +2536,8 @@ function rpAct(a,k,t,e){
   case 'rpexcel':toast2('ดาวน์โหลด สรุปงาน_ป.6-1_ทุกวิชา_ทั้งเทอม.xlsx แล้ว (จำลอง · 4 ชีต)');break;
   case 'rpsort':if(r.sort===k)r.dir=-r.dir;else{r.sort=k;r.dir=1}break;
   case 'rpdrawer':r.drawer=+k;S.sub.reports='main';break;
-  case 'rpfollowall':r.followAll=!r.followAll;break;
+  case 'rpworksall':r.worksAll=!r.worksAll;break;
+  case 'rpfollowfull':r.drawer='all';break;
   case 'rpwork':{if(S.gb){S.gb.sel=k}go('gradebook','table');break}
   case 'rpline':{r.copied=k;toast2(k==='class'?'คัดลอกรายชื่อค้างส่งทั้งห้องไป LINE แล้ว':'คัดลอกรายการค้างส่งของคนนี้แล้ว');setTimeout(()=>{r.copied='';render()},2000);break}
   default:return false;
