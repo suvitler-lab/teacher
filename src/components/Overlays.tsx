@@ -13,6 +13,7 @@ import { attDraftCount } from "../lib/attSync";
 import { deviceId, deviceName, savedEmail, saveEmail } from "../lib/device";
 import { studentsById } from "../store";
 import { fullName } from "../lib/names";
+import { loginErrorMessage } from "../lib/loginError";
 import type { FailedItem } from "../lib/idb";
 
 const KIND_ICON = { success: "circle-check", error: "alert-triangle", info: "info-circle" } as const;
@@ -155,7 +156,7 @@ function ReloginForm() {
       saveEmail(email.trim().toLowerCase());
       resumeAfterAuth();
     } catch (e: any) {
-      setErr(e.message || "เข้าสู่ระบบไม่สำเร็จ");
+      setErr(loginErrorMessage(e));
     } finally {
       setBusy(false);
     }

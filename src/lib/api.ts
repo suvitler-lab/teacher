@@ -64,7 +64,8 @@ async function request<T>(method: string, path: string, body?: unknown, options:
       const { epochStale } = await import("./session");
       epochStale.value = true;
     }
-    throw new ApiError(res.status, payload.error ?? "error", payload.message ?? payload.error ?? "เกิดข้อผิดพลาด", payload);
+    const retryAfter = res.headers.get("Retry-After");
+    throw new ApiError(res.status, payload.error ?? "error", payload.message ?? payload.error ?? "เกิดข้อผิดพลาด", retryAfter ? { ...payload, retryAfter } : payload);
   }
   return payload as T;
 }

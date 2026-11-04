@@ -22,7 +22,7 @@
 }
 .pill:hover { background: var(--surface-1); }
 .pill.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
-.pill .n { opacity: 0.75; font-variant-numeric: tabular-nums; }
+.pill .n { opacity: 1; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
 
 /* segmented control */

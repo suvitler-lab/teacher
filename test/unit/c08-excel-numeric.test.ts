@@ -34,12 +34,26 @@ describe("Excel numeric + late (C-08)", () => {
     expect(ws.getRow(3).getCell(7).value).toBe(10);
     expect(ws.getRow(3).getCell(8).value).toBe(30);
   }, 20_000);
-  it("score sheet marks only late hand-ins (fill + note), scores stay numbers", async () => {
+  it("first sheet: one numbers-only column per work, empty where nothing was scored, late only coloured", async () => {
+    const wb = await build(payload());
+    expect(wb.worksheets[0].name).toBe("คะแนนรายใบงาน");
+    const ws = wb.getWorksheet("คะแนนรายใบงาน")!;
+    expect(ws.getRow(1).getCell(4).value).toContain("เต็ม 10");
+    expect(ws.getRow(1).getCell(5).value).toContain("เต็ม 20");
+    expect(ws.getRow(2).getCell(4).value).toBe(7.5); // late, still a number
+    expect((ws.getRow(2).getCell(4).fill as any).fgColor.argb).toBe("FFFFE3B3");
+    expect(ws.getRow(2).getCell(5).value).toBe(15);
+    expect(ws.getRow(3).getCell(4).value).toBe(10);
+    expect(ws.getRow(3).getCell(5).value ?? null).toBeNull(); // not handed in: empty, not a word
+    expect(ws.getRow(2).getCell(6).value).toBe(22.5); // total
+    expect(ws.getRow(2).getCell(4).note).toBeUndefined();
+  }, 20_000);
+  it("score sheet marks only late hand-ins (fill only, no comment), scores stay numbers", async () => {
     const ws = (await build(payload())).getWorksheet("คะแนนรายงาน")!;
     const late = ws.getRow(2).getCell(4);
     expect(late.value).toBe(7.5);
     expect((late.fill as any).fgColor.argb).toBe("FFFFE3B3");
-    expect(String((late.note as any)?.texts?.[0]?.text ?? late.note)).toContain("ส่งช้า");
+    expect(late.note).toBeUndefined(); // a comment hid the score in some viewers
     expect(ws.getRow(2).getCell(5).fill?.type).toBeUndefined(); // on time: no colour
     expect(ws.getRow(3).getCell(4).fill?.type).toBeUndefined();
   }, 20_000);
