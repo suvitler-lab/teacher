@@ -9,6 +9,7 @@ import {
   clearSession,
   requireAuth,
   reserveAttempt,
+  retryAfterSeconds,
   ipRate,
   guessRate,
   currentTokenHash,
@@ -119,7 +120,7 @@ authRoutes.post("/api/auth/login", async (c) => {
   if (!row) throw bad("not_setup", "ยังไม่ได้ตั้งค่าระบบ");
   const keys = [ipRate("login:ip:", c), known ? deviceRate(body.deviceId) : accountRate(row.email === null ? null : body.email)];
   const attempt = await reserveAttempt(c.env, keys);
-  if (!attempt) throw tooMany("ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่");
+  if (!attempt) throw tooMany("ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่", await retryAfterSeconds(c.env, keys));
 
   // The password is always checked, so a wrong e-mail and a wrong password look and cost the same.
   const good = await verifyPassword(body.password, pep, row);

@@ -5,8 +5,10 @@ const stack: HTMLElement[] = [];
 const selector = 'a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
 
 /** Shared focus lifecycle for modal surfaces, including nested dialogs. */
-export function Dialog({ children, label, onClose, dismissible = true, class: className = "modal", style }: {
-  children: ComponentChildren; label: string; onClose: () => void; dismissible?: boolean; class?: string; style?: string;
+export function Dialog({ children, label, onClose, dismissible = true, class: className = "modal", style, id, role = "dialog" }: {
+  children: ComponentChildren; label: string; onClose: () => void; dismissible?: boolean; class?: string; style?: string; id?: string;
+  /** "alertdialog" for a question that must be answered (confirm a destructive step) */
+  role?: "dialog" | "alertdialog";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const latest = useRef({ onClose, dismissible });
@@ -51,5 +53,5 @@ export function Dialog({ children, label, onClose, dismissible = true, class: cl
       if (previous?.isConnected) previous.focus();
     };
   }, []);
-  return <div ref={ref} class={className} style={style} role="dialog" aria-modal="true" aria-label={label} tabIndex={-1}>{children}</div>;
+  return <div ref={ref} id={id} class={className} style={style} role={role} aria-modal="true" aria-label={label} tabIndex={-1}>{children}</div>;
 }

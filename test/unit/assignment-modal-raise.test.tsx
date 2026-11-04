@@ -205,7 +205,7 @@ describe("undo from the toast and the Gradebook page", () => {
     });
   });
 
-  const openEdit = () => { fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" })); fireEvent.click(screen.getByRole("button", { name: /แก้ไข/ })); };
+  const openEdit = () => { fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" })); fireEvent.click(screen.getByRole("menuitem", { name: /แก้ไข/ })); };
 
   it("undo does not close a different form that is open, and keeps what was typed", async () => {
     render(<GradebookPage />);

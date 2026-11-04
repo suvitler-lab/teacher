@@ -44,6 +44,14 @@ export async function getSettings(env: Env): Promise<Settings> {
     onboarding_done: b("onboarding_done"),
     last_backup_at: map.last_backup_at ?? "",
     period_times: map.period_times ?? "",
+    home_cards: map.home_cards ?? "",
+    scan_cards: map.scan_cards ?? "",
+    attendance_cards: map.attendance_cards ?? "",
+    random_cards: map.random_cards ?? "",
+    gradebook_cards: map.gradebook_cards ?? "",
+    reports_cards: map.reports_cards ?? "",
+    students_cards: map.students_cards ?? "",
+    settings_cards: map.settings_cards ?? "",
   };
 }
 

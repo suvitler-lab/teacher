@@ -81,6 +81,52 @@ describe("S-02 a password change signs every OTHER device out", () => {
   });
 });
 
+describe("login 429 says how long to wait", () => {
+  it("Retry-After header and body.retryAfter agree, within [1, 900] for the address budget; absent on 200 and 401", async () => {
+    await login();
+    for (let i = 0; i < 5; i++) {
+      const r = await wrongLogin("203.0.113.50");
+      expect(r.status).toBe(401);
+      expect(r.headers.get("Retry-After")).toBeNull();
+      expect((await r.json()) as any).not.toHaveProperty("retryAfter");
+    }
+    const limited = await wrongLogin("203.0.113.50");
+    expect(limited.status).toBe(429);
+    const header = Number(limited.headers.get("Retry-After"));
+    const body = (await limited.json()) as any;
+    expect(body).toMatchObject({ error: "rate_limited", message: "ลองผิดหลายครั้ง รอสักครู่แล้วลองใหม่" });
+    expect(Number.isInteger(header)).toBe(true);
+    expect(header).toBeGreaterThanOrEqual(1);
+    expect(header).toBeLessThanOrEqual(900);
+    expect(body.retryAfter).toBe(header);
+    const ok = await call("/api/auth/login", fromIp("203.0.113.51", json({ email: EMAIL, password: "pw123456", deviceId: "dev_test" })));
+    expect(ok.status).toBe(200);
+    expect(ok.headers.get("Retry-After")).toBeNull();
+  });
+
+  it("an older lock-out reopens sooner: the wait follows the stored window start", async () => {
+    await login();
+    const old = Date.now() - 14 * 60 * 1000; // 14 min ago: 1 min of the 15 left
+    for (let i = 0; i < 5; i++) await env.DB.prepare("INSERT INTO login_attempts (key, at) VALUES (?, ?)").bind("login:ip:203.0.113.60", old).run();
+    const r = await wrongLogin("203.0.113.60");
+    expect(r.status).toBe(429);
+    const wait = Number(r.headers.get("Retry-After"));
+    expect(wait).toBeGreaterThanOrEqual(55);
+    expect(wait).toBeLessThanOrEqual(61);
+  });
+
+  it("the account/device hour budget gives a wait up to 3600, and the reply does not say which budget", async () => {
+    await login();
+    for (let n = 1; n <= 7; n++) for (let i = 0; i < 5; i++) await wrongLogin(`198.51.100.${n}`);
+    const r = await wrongLogin("198.51.100.99");
+    expect(r.status).toBe(429);
+    const wait = Number(r.headers.get("Retry-After"));
+    expect(wait).toBeGreaterThan(900);
+    expect(wait).toBeLessThanOrEqual(3600);
+    expect(JSON.stringify(await r.json())).not.toMatch(/acct|login:|ip|email|device/i);
+  });
+});
+
 describe("S-03 change-password is rate limited", () => {
   it("5 wrong current passwords, then 429 — even with the right one", async () => {
     const a = await login();

@@ -34,7 +34,7 @@ export function PageHeader({ icon, title, sub, actions }: {
       <div class="uh-l">
         <span class="uh-ic"><Icon name={icon} size={20} /></span>
         <div style="min-width:0">
-          <div class="uh-title">{title}</div>
+          <h1 class="uh-title">{title}</h1>
           {sub != null && <div class="uh-sub">{sub}</div>}
         </div>
       </div>
@@ -54,6 +54,7 @@ export function ClassChips({ items, value, onPick }: {
         <button
           class={"pill" + (c.id === value ? " on" : "")}
           role="tab" aria-selected={c.id === value}
+          aria-label={c.mark ? `${c.name} · ${c.mark === "ok" ? "เช็คครบ" : c.mark === "part" ? "เช็คบางส่วน" : "ยังไม่เช็ค"}${c.count != null ? ` · ${c.count} คน` : ""}` : undefined}
           onClick={() => onPick(c.id)}
         >
           {c.mark === "ok" && <Icon name="check" size={13} />}
@@ -119,8 +120,13 @@ export function Segmented<T extends string>({ options, value, onChange, label }:
   );
 }
 
+export function Switch({ on, onToggle, label }: { on: boolean; onToggle: () => void; label: string }) {
+  return <button class={"switch " + (on ? "on" : "")} role="switch" aria-checked={on} aria-label={label} onClick={onToggle}><span class="knob" /></button>;
+}
+
 // ---- stat card -----------------------------------------------------------
 const TONE_CLS: Record<string, string> = {
+  neutral: "background:var(--surface-1);color:var(--text-secondary)",
   accent: "background:var(--bg-accent);color:var(--text-accent)",
   success: "background:var(--bg-success);color:var(--text-success)",
   warning: "background:var(--bg-warning);color:var(--text-warning)",
@@ -147,7 +153,8 @@ export function StatCard({ label, value, unit, hint, icon, tone = "accent", valu
 
 // ---- progress bar --------------------------------------------------------
 export function ProgressBar({ pct, tone }: { pct: number; tone?: string }) {
-  return <div class="pbar"><div style={`width:${Math.max(0, Math.min(100, pct))}%${tone ? `;background:${tone}` : ""}`} /></div>;
+  const v = Math.max(0, Math.min(100, pct));
+  return <div class="pbar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)}><div style={`width:${v}%${tone ? `;background:${tone}` : ""}`} /></div>;
 }
 
 // ---- progress ring -------------------------------------------------------
@@ -232,10 +239,10 @@ export function LoadError({ onRetry, text }: { onRetry: () => void; text?: strin
 }
 
 // ---- drawer --------------------------------------------------------------
-export function Drawer({ title, onClose, children }: { title: ComponentChildren; onClose: () => void; children: ComponentChildren }) {
+export function Drawer({ title, onClose, children, label }: { title: ComponentChildren; onClose: () => void; children: ComponentChildren; label?: string }) {
   return (
     <div class="drawer-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <Dialog class="drawer" label={typeof title === "string" ? title : "รายละเอียด"} onClose={onClose}>
+      <Dialog class="drawer" label={label ?? (typeof title === "string" ? title : "รายละเอียด")} onClose={onClose}>
         <div class="drawer-head">
           <div style="min-width:0">{title}</div>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
@@ -254,8 +261,8 @@ export function SyncBadge() {
   const label = syncing.value ? "กำลังบันทึก" : up ? "ออนไลน์" : "ออฟไลน์";
   return (
     <span class={"sync " + cls}>
-      <Icon name={syncing.value ? "loader-2" : up ? "cloud-check" : "cloud-off"} size={13} class={syncing.value ? "spin" : undefined} />
-      {label}{pendingCount.value > 0 ? ` · ค้าง ${pendingCount.value}` : ""}
+      <Icon name={syncing.value ? "loader-2" : up ? "cloud-check" : "wifi-off"} size={16} class={syncing.value ? "spin" : undefined} />
+      {label}{pendingCount.value > 0 ? ` · รอส่ง ${pendingCount.value}` : ""}
     </span>
   );
 }

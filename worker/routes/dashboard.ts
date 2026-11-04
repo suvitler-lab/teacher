@@ -10,6 +10,11 @@ import type { DashboardPayload, ClassProgress, AttendanceDay, AssignmentDashboar
 export const dashboardRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 dashboardRoutes.use("/api/dashboard", requireAuth);
 
+/** The calendar day after a YYYY-MM-DD date (dates here are plain calendar days, no time zone involved). */
+function nextDay(d: string): string {
+  return new Date(Date.parse(d + "T00:00:00Z") + 86_400_000).toISOString().slice(0, 10);
+}
+
 // The home dashboard. Numbers are computed with the same shared/metrics
 // functions the report and gradebook use, so the pages never disagree.
 dashboardRoutes.get("/api/dashboard", async (c) => {
@@ -35,13 +40,12 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
     // up as "not checked"), daily sessions only, counting only the active students of that class.
     c.env.DB.prepare("SELECT id FROM classes WHERE archived = 0 ORDER BY sort, name").all<{ id: string }>(),
     c.env.DB.prepare(
-      `SELECT s.class_id AS classId, at.status AS status, COUNT(*) AS n
+      `SELECT s.class_id AS classId, at.student_id AS studentId, at.status AS status
        FROM attendance_sessions s
        JOIN attendance at ON at.session_id = s.id
        JOIN students st ON st.id = at.student_id AND st.status = 'active' AND st.class_id = s.class_id
-       WHERE s.date = ? AND s.subject_id IS NULL AND s.period IS NULL
-       GROUP BY s.class_id, at.status`,
-    ).bind(date).all<{ classId: string; status: string; n: number }>(),
+       WHERE s.date = ? AND s.subject_id IS NULL AND s.period IS NULL`,
+    ).bind(date).all<{ classId: string; studentId: string; status: string }>(),
     // "today" is about the children who are in the class today, whatever term is being viewed
     c.env.DB.prepare("SELECT class_id, COUNT(*) AS n FROM students WHERE status = 'active' GROUP BY class_id")
       .all<{ class_id: string | null; n: number }>(),
@@ -96,6 +100,8 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
   // once the teacher closes an assignment they have stopped collecting it)
   let awaitingCount = 0, missingCount = 0;
   const followMiss = new Map<string, { classId: string; missing: number }>();
+  const dueSoon: DashboardPayload["dueSoon"] = [];
+  const tomorrow = nextDay(date);
   const openAssignments: AssignmentDashboard[] = [];
   const gradingAssignments: AssignmentDashboard[] = [];
 
@@ -122,6 +128,13 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
         awaiting: p.awaiting, late: p.late, missing: p.missing, excused: p.excused,
       };
     });
+    if (isOpen && a.due_date && (a.due_date === date || a.due_date === tomorrow)) {
+      for (const classId of linksByAsg.get(a.id) ?? []) {
+        const studentIds = (classStudents.get(classId) ?? [])
+          .filter((st) => workState(subs.get(st.id), a, date) === "pending").map((st) => st.id);
+        if (studentIds.length) dueSoon.push({ assignmentId: a.id, classId, studentIds });
+      }
+    }
     if (isOpen) openAssignments.push({ assignment: asg, perClass });
     else if (perClass.some((p) => p.awaiting > 0)) gradingAssignments.push({ assignment: asg, perClass });
   }
@@ -135,9 +148,11 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
       total: activeCount.get(cl.id) ?? 0,
     });
   }
+  const absentToday: DashboardPayload["absentToday"] = [];
   for (const r of attRes.results ?? []) {
     const d = tally.get(r.classId);
-    if (d && r.status in d) { (d as any)[r.status] += r.n; d.marked += r.n; }
+    if (d && r.status in d) { (d as any)[r.status] += 1; d.marked += 1; }
+    if (d && r.status !== "present" && r.status in d) absentToday.push({ classId: r.classId, studentId: r.studentId, status: r.status as any });
   }
 
   const followUp = [...followMiss.entries()]
@@ -151,6 +166,8 @@ dashboardRoutes.get("/api/dashboard", async (c) => {
     awaitingCount, missingCount,
     attendanceToday: [...tally.values()],
     followUp,
+    dueSoon,
+    absentToday,
     serverTime: Date.now(),
   };
   return c.json(payload);

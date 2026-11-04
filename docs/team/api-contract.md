@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v5 · อัปเดต 2026-11-03 (server-security: กติกาทั่วไปด้านความปลอดภัย — ดู changelog v5) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v9 · อัปเดต 2026-11-04 (เช็คชื่อ: แตะซ้ำเพื่อยกเลิกการเช็ค — `POST /api/attendance/batch` รับ `status: "none"` ดู EP-08 และ changelog v9) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 
@@ -12,6 +12,8 @@
 - รูปแบบ error: `{ "error": "<code>", "message": "ข้อความไทย" }` · schema ไม่ผ่าน = `422 { "error": "validation", "issues": [...] }` · ไม่ล็อกอิน = `401 unauthorized`
 - (v5) ทุก response `/api/*` มี `Cache-Control: no-store` + `X-Content-Type-Options: nosniff` · คำขอเขียนที่มี `Sec-Fetch-Site` ไม่ใช่ `same-origin`/`none` = `403 forbidden` (message `bad_origin`) · body ใหญ่เกิน (auth/setup 16KB, `/api/restore/*` 8MB, อื่น ๆ 1MB) = `413 { "error": "too_large" }`
 - (v5) การตรวจรหัส (login, setup code, change-password, reset) จองครั้งลองก่อนตรวจแบบ atomic · เกินงบ = `429 rate_limited` · login: 5 ครั้ง/15 นาทีต่อ IP (IPv6 นับต่อ /64) + 30 ครั้ง/ชม. ต่ออีเมล (บัญชีไม่มีอีเมล = key เดียว) หรือ 10 ครั้ง/ชม. ต่อเครื่อง ถ้าเป็นเครื่องที่เคยล็อกอินและยังไม่ถูกสั่งออก/เปลี่ยนรหัส (`devices.revoked = 0`) · คำขอที่เกินงบไม่เขียน D1 · change-password: 5 ครั้ง/15 นาที ต่อ IP และต่อเครื่อง · `password`/`current`/`next`/`setupCode` ≤ 256 ตัว, `deviceId` ≤ 100 (เกิน = 422)
+- (v9.1) `POST /api/auth/login` ตอบ `429` พร้อม header `Retry-After: <วินาทีเต็ม ≥ 1>` และ body `{error:"rate_limited", message, retryAfter}` (ค่าเดียวกัน) · คำนวณจากเวลาเริ่มหน้าต่างที่เก็บไว้ของงบที่ปิดอยู่ (ค่าที่มากที่สุดเมื่อปิดหลายงบ เพราะคำขอผ่านได้เมื่อเปิดครบ) · ไม่บอกว่างบไหนปิด · ไม่มี header/ฟิลด์นี้เมื่อ 200/401
+- (v9.1) `429 rate_limited` ของ `POST /api/auth/login` มี header `Retry-After: <วินาทีเต็ม ≥ 1>` และ `retryAfter` (ตัวเลขเดียวกัน) ใน body = เวลาที่งบที่ปฏิเสธคำขอทั้งหมดเปิดใหม่ (ตัวที่นานสุด · ไม่เกิน 900 วินาทีถ้าเป็นงบ IP, ไม่เกิน 3600 ถ้าเป็นงบอีเมล/เครื่อง) · ไม่บอกว่างบไหนปฏิเสธ · ไม่มีใน 200/401 · ข้อความ `message` เดิมไม่เปลี่ยน
 - (v5) `POST /api/auth/change-password` 200 = session ของเครื่องอื่นทั้งหมดถูกลบ (เครื่องนั้นได้ 401 ในคำขอถัดไป) เครื่องที่เปลี่ยนยังใช้ cookie เดิมได้ และเครื่องอื่นทั้งหมดถูกตั้ง `revoked = 1` (signout ก็เช่นกัน) · `POST /api/restore/execute` (commit) `409 restore_failed` ไม่มีฟิลด์ `detail` แล้ว · `PUT /api/settings` body ไม่ใช่ object = 422 · `POST /api/attendance/batch` `date` ต้อง `YYYY-MM-DD`, `period` 0–20, วิชาไม่มีอยู่ = `422 unknown_subject` · ฟิลด์ข้อความใน catalog/students มีความยาวสูงสุด (เกิน = 422)
 - เวลา: epoch milliseconds (number) ตามนาฬิกาของ server · `clientTs` = เวลาที่ครูทำ (client ปรับ skew แล้ว) server บีบให้อยู่ในช่วง ≤ ตอนนี้ และ ≥ 7 วันก่อน
 - คะแนน: number ขั้นละ 0.5 (`isHalfStep`) 0 ≤ score ≤ full_score หรือ `null` (= รอตรวจ)
@@ -242,6 +244,45 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 - `409 full_score_changed` → ปิดกล่องถาม แสดง `message` ในฟอร์ม (ค่าที่กรอกคงอยู่) · error อื่น → แสดงในฟอร์มแบบเดิม
 - แอปรุ่นเก่า (ก่อน v2): ไม่ส่ง `raise_choice` → เพิ่มคะแนนเต็มที่มีคนได้เต็มเดิมได้ `409 raise_choice_required` → ฟอร์มแสดง `message` (บันทึกไม่ได้จนอัปเดตแอป — Gate 1 Q3) · กรณีอื่นบันทึกได้เหมือนเดิม
 
+### EP-06 `GET /api/dashboard` — หน้าหลัก (เพิ่มใน v6 · งาน ui-redesign รอบ 1)
+
+- ผู้เรียก: `src/lib/dashboard.ts` → `src/pages/Home.tsx` + `src/components/home/*` · server: `worker/routes/dashboard.ts` · ฟิลด์เดิมทั้งหมดไม่เปลี่ยน (`openAssignments`, `gradingAssignments`, `awaitingCount`, `missingCount`, `attendanceToday`, `followUp`, `serverTime`)
+- เพิ่ม 2 ฟิลด์ใน `DashboardPayload` (`shared/types.ts`) — คิดจากแถวที่ endpoint อ่านอยู่แล้ว **ไม่อ่านแถวเพิ่ม** (งบ volume เดิมผ่าน):
+  - `dueSoon: { assignmentId, classId, studentIds[] }[]` — งานที่ **เปิดรับ** และ `due_date` เป็นวันนี้หรือพรุ่งนี้ (`date` ของคำขอ) ต่อ (งาน, ห้อง): เด็กที่ `workState === "pending"` (ยังไม่ส่ง ไม่ยกเว้น ยังไม่เลยกำหนด) · แถวที่ไม่มีเด็กค้างไม่ถูกส่ง · งานที่ปิดแล้ว/เลยกำหนดไม่อยู่ (เลยกำหนด = `followUp`)
+  - `absentToday: { classId, studentId, status: "late"|"leave"|"sick"|"absent" }[]` — เด็ก `active` ของห้องนั้นที่สถานะเช็คชื่อรายวันของวันนี้ไม่ใช่ `present` · คิวรีเช็คชื่อเปลี่ยนจาก `GROUP BY` เป็นระดับแถว (อ่านแถวเท่าเดิม) แล้วรวมยอดต่อห้องใน JS — ยอดใน `attendanceToday` เท่าเดิมทุกค่า
+- แอปรุ่นเก่า: ไม่อ่านสองฟิลด์นี้ (ไม่กระทบ) · แอปรุ่นใหม่: ถ้าไม่มีสองฟิลด์ (server เก่า หรือสำเนาแคชในเครื่องที่บันทึกก่อนอัปเดต) ถือว่าว่าง การ์ดไม่พัง · ลำดับปล่อย: **server ก่อนแอป** เพื่อให้การ์ดมีข้อมูลตั้งแต่เปิดใช้ (ลำดับเดียวกับ v3/v4)
+
+### EP-07 `PUT /api/settings` — ค่า `home_cards` (เพิ่มใน v6)
+
+- คีย์ใหม่ `home_cards` (string) ใน `ALLOWED_SETTINGS` (`worker/routes/catalog.ts`) และ `getSettings` (`worker/lib/db.ts` ค่าเริ่มต้น `""`) · `Settings.home_cards` (`shared/types.ts`) · ไม่มี migration (ตาราง `settings` เป็น key/value)
+- รูปแบบค่า: JSON `{"v":1,"order":["open","att",…],"hidden":["classes",…]}` — ตัวแปล/ค่าเริ่มต้น/คีย์ที่ไม่รู้จัก/เวอร์ชันอื่น อยู่ที่ฝั่ง client เท่านั้น (`src/lib/homeCards.ts`) server เก็บเป็นข้อความตามที่ส่งมา (ผ่านกติกา body ≤ 1MB และ settings ต้องเป็น object เดิม) · `""` = เลย์เอาต์เริ่มต้น
+- ซิงก์: `GET /api/bootstrap` คืน `settings.home_cards` → ทุกเครื่องของครูเห็นหน้าหลักเดียวกัน · การเขียนผ่าน batch เดียวกับ audit (เดิม) · ไม่เข้าคิวออฟไลน์: ออฟไลน์แก้ไม่ได้ (หน้าจอย้อนกลับและแจ้ง "ออฟไลน์ — ปรับหน้าหลักได้เมื่อออนไลน์")
+
+### EP-07 `PUT /api/settings` — ค่า `scan_cards` `attendance_cards` `random_cards` (เพิ่มใน v7)
+
+- คีย์ใหม่ 3 ตัว (string) ใน `ALLOWED_SETTINGS` และ `getSettings` (ค่าเริ่มต้น `""`) · `Settings` ใน `shared/types.ts` เพิ่ม 3 ฟิลด์ — รูปแบบเดียวกับ `home_cards`: JSON `{"v":1,"order":[…],"hidden":[…]}` ของการ์ดหน้าสแกน/เช็คชื่อ/สุ่มชื่อ ตามลำดับ · ค่า `""` = ใช้การ์ดเริ่มต้นของหน้านั้น
+- ไม่มี endpoint ใหม่ · แอปรุ่นเก่าไม่อ่านคีย์เหล่านี้ (ไม่กระทบ) · เทสต์ `test/api/page-cards-settings.test.ts`
+
+### EP-07 `PUT /api/settings` — ค่า `gradebook_cards` `reports_cards` `students_cards` `settings_cards` (เพิ่มใน v8)
+
+- คีย์ใหม่ 4 ตัว (string) ใน `ALLOWED_SETTINGS` และ `getSettings` (ค่าเริ่มต้น `""`) · `Settings` ใน `shared/types.ts` เพิ่ม 4 ฟิลด์ — รูปแบบเดียวกับ `home_cards`: JSON `{"v":1,"order":[…],"hidden":[…]}` ของการ์ดหน้าคะแนน/รายงาน/นักเรียน/ตั้งค่า (การ์ดของตั้งค่าอยู่บนหมวด "ทั่วไป") · ค่า `""` = การ์ดเริ่มต้นของหน้านั้น
+- ไม่มี endpoint ใหม่ · ไม่มี migration · แอปรุ่นเก่าไม่อ่านคีย์เหล่านี้ · เทสต์ `test/api/page-cards-settings.test.ts` · **ปล่อย server ก่อนแอป** (แอปใหม่ PUT คีย์ที่ server เก่าไม่รู้จักจะถูกทิ้งเงียบ ๆ ทำให้การ์ดไม่ซิงก์)
+
+### EP-08 `POST /api/attendance/batch` — ยกเลิกการเช็ค `status: "none"` (เพิ่มใน v9 · งาน attendance-clear)
+
+- ผู้เรียก: `src/lib/attSync.ts` (`runFlush`) ← `src/pages/Attendance.tsx` (แตะซ้ำบนเด็กที่มีสถานะเท่ากับปุ่มที่เลือก) · server: `worker/routes/attendance.ts` · ไม่มี endpoint ใหม่ ไม่มี migration
+- request: แต่ละแถวใน `rows[]` ส่ง `status` ได้เพิ่มอีกค่า `"none"` = **ยกเลิกการเช็ค** → server **ลบแถว** `(session_id, student_id)` ทำให้เด็กกลับเป็น "ยังไม่เช็ค" (ฟิลด์อื่นเหมือนเดิม: `opId`, `baseUpdatedAt`, `dataEpoch`, `method`; `time` ไม่ใช้) · ส่งปนกับแถวเช็คปกติใน batch เดียวกันได้
+- กติกาที่ยกเลิกต้องผ่านเหมือนการเขียนอื่น: (1) `dataEpoch` ไม่ตรง/กู้คืนระหว่างทาง = `409 epoch_changed` ไม่ลบอะไร (2) เด็กทุกคนใน batch ต้อง `active` และอยู่ห้องที่ batch ระบุ ไม่งั้น `422 not_in_class` ทั้ง batch (ตรวจซ้ำใน transaction เดียวกับการลบ) (3) `date` ก่อนต้นปีการศึกษา = `422 before_school_year` (4) ชนกับอีกเครื่อง: ถ้าในระบบมีแถวนั้นอยู่ และ `baseUpdatedAt` เป็น null หรือเก่ากว่า `updated_at` ของแถว = `409 conflict` (`draft.status = "none"`, `server` = แถวในระบบ) เว้นแต่ `force: true` · การตรวจซ้ำอยู่ใน batch เดียวกับการลบ (เหมือนการเขียนปกติ) (5) แถวไม่มีอยู่แล้ว = สำเร็จ ไม่ใช่ conflict ไม่มี audit (idempotent) · ส่ง `opId` เดิมซ้ำหลังสำเร็จ = ไม่ทำซ้ำ
+- audit: 1 แถวต่อการลบจริง ใน batch เดียวกัน: `entity "attendance"`, `action "void"`, `before {status}`, `after null`, `method` ตามที่ส่ง · ไม่เขียนถ้าไม่มีแถวให้ลบ
+- เมื่อลบแถวสุดท้ายของคาบ/วัน server ลบ `attendance_sessions` ที่ว่างนั้นด้วย (ใน batch เดียวกัน) เพื่อให้รายงาน/Excel ไม่นับวันที่ไม่มีใครถูกเช็คเป็น "วันที่เช็คแล้ว" · เช็คใหม่วันนั้นสร้าง session ใหม่ตามเดิม
+- response 200: ฟิลด์เดิมไม่เปลี่ยน (`ok`, `sessionId`, `updatedAt`, `changed`, `rows`, `state`) **เพิ่ม `absent: string[]`** = นักเรียนใน batch ที่ในระบบ **ไม่มี** แถวแล้ว (ยกเลิกสำเร็จ หรืออีกเครื่องยกเลิกไปแล้ว) — client ถือว่านี่คือการยืนยันของแถว `none` (แถว `none` ที่ server ไม่พูดถึงเลยจะค้างในคิวแล้วส่งใหม่) · `changed` นับเฉพาะแถวที่เปลี่ยนจริง (ยกเลิกแถวที่ไม่มี = 0)
+- ผู้อ่านแถวเช็คชื่อ (`GET /api/attendance`, `/days`, `/api/dashboard`, `/api/reports/summary`, ส่งออก Excel, หน้าสุ่มชื่อ, ประวัตินักเรียน, backup/restore) **ไม่เปลี่ยน** — แถวที่ถูกลบคือ "ยังไม่เช็ค" ตามเดิม; backup/restore ตรวจแล้วรับไฟล์ที่ไม่มีแถว/ไม่มี session ได้
+- แอปรุ่นเก่า: ไม่ส่ง `"none"` (ไม่กระทบ) · แอปรุ่นใหม่กับ server เก่า: `"none"` ถูกปฏิเสธด้วย `422 validation` — client เก็บแถวไว้ในเครื่องและแสดง "บันทึกไม่สำเร็จ · ลองอีกครั้ง" ไม่ทิ้ง → **ปล่อย server ก่อนแอป**
+- เทสต์: `test/api/attendance-clear.test.ts`, `test/unit/attendance-round5.test.tsx`
+
+### หมายเหตุ `scan_sessions.mode` (ตัดสินใจ 4 พ.ย. — D40)
+`scan_sessions.mode` บนเซิร์ฟเวอร์คือ **โหมดตอนเริ่มรอบ** ไม่ใช่โหมดล่าสุด: การสลับโหมดสแกนกลางรอบเป็นการตั้งค่าฝั่ง client มีผลกับสแกนครั้งถัดไป (แต่ละ op ส่งวิธีรับ `method` ของตัวเอง) ไม่มี route แก้ mode ของ session และไม่เพิ่ม
+
 ## Changelog
 
 | เวอร์ชัน | วันที่ | เปลี่ยนอะไร | งาน | กระทบ |
@@ -251,3 +292,8 @@ export function receivedAtMs(receivedDate: string | null | undefined, eventAt: n
 | v3 | 2026-11-02 | EP-01 request เพิ่ม `receivedDate?`, `dateOnly?` · `invalid` เพิ่ม reason `received_date_invalid` / `received_date_future` / `received_date_before_assigned` / `cell_not_submitted` / `redate_not_allowed` · ลำดับการตัดสินใหม่ · EP-03 request เพิ่ม `receivedDate?` (all-submitted) + 400 `received_date_*` / `received_date_not_applicable` · EP-04 ไม่แก้ (เพิ่มเทสต์) · EP-02/EP-05 ไม่เปลี่ยน · ตัวตรวจร่วม `shared/received-date.ts` · ไม่มี migration | 2026-11-02-c03-submit-date | server `worker/routes/submissions.ts` + `shared/received-date.ts` (ใหม่) + type `shared/types.ts` · client (Scan/Gradebook/ข้อความ "ส่งไม่สำเร็จ") ทำในแพ็กเกจ ui-redesign · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ · D-c03-submit-date-01..07 |
 | v5 | 2026-11-03 | กติกาทั่วไป (ทุก endpoint): header no-store/nosniff, Sec-Fetch-Site, 413 `too_large`, rate limit แบบ atomic + /64 + ต่ออีเมล, 429 บน change-password, เปลี่ยนรหัสแล้วเครื่องอื่นหลุด, `restore_failed` ไม่มี `detail`, ขีดความยาวรหัส/deviceId · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-server-security | server `worker/app.ts`, `lib/{auth,http}.ts`, `routes/{auth,reset,backup}.ts` · client: คำเตือนก่อนดาวน์โหลด backup (`RestoreModal.tsx` `BackupWarning`, `Settings.tsx`) · แอปเก่าไม่กระทบ (client ใช้แค่ code ของ `restore_failed`; 429 แสดง message เดิม) |
 | v4 | 2026-11-03 | EP-01: re-date วันเดิม = `ok` ไม่เขียน/ไม่มี audit · `received_date_future` ยอมนาฬิกาเครื่องนำ ≤ 5 นาที (`latest`) · audit `after.late` ซิงก์กับค่าที่บันทึก · op B ที่พึ่งแถวรับงานในคำขอเดียวกันรับ guard ของแถวนั้น · lost op B บนช่องที่ไม่ submitted = `cell_not_submitted` · EP-03: `received_date_future` ใช้ `latest` เดียวกัน · EP-05: `full_score` ไม่บังคับเมื่องานมีอยู่ (คงค่าใน DB) · คนที่ได้เต็มเดิมไม่รวมห้องที่ถูกเอาออกในคำขอเดียวกัน · EP-02/EP-04 ไม่เปลี่ยน · ไม่มี migration | 2026-11-03-correctness-lows | server `submissions.ts`, `assignments.ts`, `shared/received-date.ts` · client `Gradebook.tsx` (`saveAsgPatch` ไม่ส่ง `full_score` → **ปล่อย server ก่อนแอป**: server v3 จะตอบ 422) · แอปเก่าไม่กระทบ (ส่ง `full_score` ครบเหมือนเดิม) |
+| v6 | 2026-11-04 | EP-06 (ใหม่ในเอกสาร) `/api/dashboard` เพิ่ม `dueSoon`, `absentToday` · EP-07 `PUT /api/settings` เพิ่มคีย์ `home_cards` + `Settings.home_cards` · EP-01..EP-05 ไม่เปลี่ยน · ไม่มี migration | 2026-11-02-ui-redesign (รอบ 1: เมนู + หน้าหลัก) | server `worker/routes/dashboard.ts`, `catalog.ts`, `lib/db.ts`, `shared/types.ts` · client `src/pages/Home.tsx`, `src/components/home/*`, `src/lib/{homeCards,homePrefs,homeLogic}.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |
+| v7 | 2026-11-04 | EP-07 `PUT /api/settings` เพิ่มคีย์ `scan_cards` `attendance_cards` `random_cards` + `Settings` | ui-redesign รอบ 2 | เพิ่มอย่างเดียว ไม่กระทบแอปเก่า |
+| v8 | 2026-11-04 | EP-07 `PUT /api/settings` เพิ่มคีย์ `gradebook_cards` `reports_cards` `students_cards` `settings_cards` + `Settings` | ui-redesign รอบ 3 (หน้าตั้งค่า) | server `catalog.ts`, `lib/db.ts`, `shared/types.ts` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ |
+| v9 | 2026-11-04 | EP-08 (ใหม่ในเอกสาร) `POST /api/attendance/batch` แถวรับ `status: "none"` = ยกเลิกการเช็ค (ลบแถว) + response เพิ่ม `absent[]` + ลบ session ว่าง · ฟิลด์/ผลเดิมไม่เปลี่ยน · ไม่มี migration | attendance-clear (เจ้าของงาน: "ทำเลย") | server `worker/routes/attendance.ts` · client `src/lib/attSync.ts`, `src/pages/Attendance.tsx` · **ปล่อย server ก่อนแอป** · แอปเก่าไม่กระทบ · D39 |
+| v9.1 | 2026-11-04 | `429 rate_limited` ของ `POST /api/auth/login` เพิ่ม header `Retry-After` (วินาทีเต็ม ≥ 1) และ `retryAfter` (ตัวเลขเดียวกัน) ใน body · ฟิลด์/งบเดิมไม่เปลี่ยน · ไม่มี migration | login-retry-after | server `worker/app.ts`, `worker/lib/{auth,http}.ts`, `worker/routes/auth.ts` · client `src/lib/api.ts` อ่านอยู่แล้ว · แอปเก่าไม่กระทบ |

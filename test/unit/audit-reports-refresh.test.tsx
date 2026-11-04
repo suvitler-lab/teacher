@@ -42,6 +42,7 @@ describe("reports freshness", () => {
     expect(screen.getByText("ข้อมูลแรก")).toBeTruthy();
     expect(screen.getByText("กำลังอัปเดตรายงาน…")).toBeTruthy();
     await act(async () => { next.resolve(payload("ข้อมูลใหม่")); await next.promise; });
+    await screen.findByText("ข้อมูลใหม่");
     expect(screen.queryByText("ข้อมูลแรก")).toBeNull();
     expect(screen.getByText("ข้อมูลใหม่")).toBeTruthy();
     view.unmount();
@@ -60,6 +61,7 @@ describe("reports freshness", () => {
     Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
     await act(async () => { document.dispatchEvent(new Event("visibilitychange")); await Promise.resolve(); });
     expect(get).toHaveBeenCalledTimes(2);
+    await act(async () => { await new Promise((r) => setTimeout(r, 0)); }); // let the load finish (the saved-read layer adds a few promise hops)
     await act(async () => { window.dispatchEvent(new Event("online")); await Promise.resolve(); });
     expect(get).toHaveBeenCalledTimes(3);
   });

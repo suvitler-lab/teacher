@@ -3,6 +3,7 @@ import { api } from "../lib/api";
 import { deviceId, deviceName, savedEmail, saveEmail } from "../lib/device";
 import { accountEmailSet, authState, loadBootstrap } from "../store";
 import { Icon } from "../components/Icon";
+import { loginErrorMessage } from "../lib/loginError";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -66,7 +67,7 @@ export function Setup({ mode }: { mode: "setup" | "login" }) {
       authState.value = "ready";
       location.hash = "/home";
     } catch (e: any) {
-      setErr(e.message || "เข้าสู่ระบบไม่สำเร็จ");
+      setErr(loginErrorMessage(e));
     } finally {
       setBusy(false);
     }

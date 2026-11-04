@@ -9,6 +9,7 @@ import type { SubmissionOp, SubmissionOpResult } from "@shared/types";
 import { classifyFailure } from "@shared/failure";
 import { authRequired, syncPaused, dataEpoch, serverReachable } from "./session";
 import { actionTime } from "./clock";
+import { swrClear } from "./swr";
 import { flushAllDrafts, refreshAttDraftCount } from "./attSync";
 
 export const pendingCount = signal(0);
@@ -154,6 +155,7 @@ async function flushPass(): Promise<void> {
       const res = await api.post<{ results: SubmissionOpResult[] }>("/api/submissions/batch", {
         ops: send.map((c) => c.payload),
       });
+      swrClear(); // something was delivered: every saved read answer may be out of date
       const byId = new Map(res.results.map((r) => [r.opId, r]));
       for (const item of send) {
         const r = byId.get(item.opId);
@@ -167,7 +169,8 @@ async function flushPass(): Promise<void> {
           await outboxRemove(item.opId);
         } else {
           // per-item rejection (not_in_class / invalid / full_score_changed / …)
-          await moveOutboxToFailed([item], r.result);
+          // keep the server's detail for `invalid` (received_date_future, cell_not_submitted, …) so the list can say why
+          await moveOutboxToFailed([item], r.result === "invalid" && r.reason ? r.reason : r.result);
           if (!NON_BLOCKING.has(r.result)) failedPairs.add(pairKey(item.payload));
         }
         emit(r, item.payload);

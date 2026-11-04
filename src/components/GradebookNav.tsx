@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 import type { RefObject } from "preact";
 import { Icon } from "./Icon";
 import {
@@ -11,7 +11,7 @@ const EMPTY: ScrollInfo = { scrollLeft: 0, clientWidth: 0, scrollWidth: 0, nameW
 /** Where the gradebook frame is scrolled, re-read on scroll, resize and whenever the columns change (`sig`). */
 export function useScrollInfo(ref: RefObject<HTMLElement>, active: boolean, sig: string): ScrollInfo {
   const [info, setInfo] = useState<ScrollInfo>(EMPTY);
-  useEffect(() => {
+  useLayoutEffect(() => { // measured before the first paint: the bar never shows an empty position first
     const el = ref.current;
     if (!active || !el) return;
     const measure = () => {
@@ -40,12 +40,15 @@ export function useScrollInfo(ref: RefObject<HTMLElement>, active: boolean, sig:
  */
 export function useScrollFlags(ref: RefObject<HTMLElement>, active: boolean, sig: string): string {
   const [flags, setFlags] = useState("000");
-  useEffect(() => {
+  // First read happens in a layout effect: the frame is measured right after it is drawn and before the browser paints,
+  // so the one follow-up draw (edge shadows / "everything fits") is not seen as a second paint. Equal flags never redraw.
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!active || !el) return;
     const measure = () => {
       const e = edgeState({ scrollLeft: el.scrollLeft, clientWidth: el.clientWidth, scrollWidth: el.scrollWidth, nameW: 0, totW: 0 });
-      setFlags(`${e.left ? 1 : 0}${e.right ? 1 : 0}${fitsAll({ clientWidth: el.clientWidth, scrollWidth: el.scrollWidth }) ? 1 : 0}`);
+      const next = `${e.left ? 1 : 0}${e.right ? 1 : 0}${fitsAll({ clientWidth: el.clientWidth, scrollWidth: el.scrollWidth }) ? 1 : 0}`;
+      setFlags((prev) => (prev === next ? prev : next));
     };
     measure();
     el.addEventListener("scroll", measure, { passive: true });

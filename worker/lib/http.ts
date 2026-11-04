@@ -3,10 +3,13 @@ import type { Context } from "hono";
 export class ApiError extends Error {
   status: number;
   code: string;
-  constructor(status: number, code: string, message?: string) {
+  /** whole seconds until a rate-limited caller may try again (429 only) */
+  retryAfter?: number;
+  constructor(status: number, code: string, message?: string, retryAfter?: number) {
     super(message ?? code);
     this.status = status;
     this.code = code;
+    this.retryAfter = retryAfter;
   }
 }
 
@@ -16,7 +19,7 @@ export const forbidden = (msg?: string) => new ApiError(403, "forbidden", msg);
 export const notFound = (msg?: string) => new ApiError(404, "not_found", msg);
 export const conflict = (code: string, msg?: string) => new ApiError(409, code, msg);
 export const locked = (msg?: string) => new ApiError(423, "locked", msg);
-export const tooMany = (msg?: string) => new ApiError(429, "rate_limited", msg);
+export const tooMany = (msg?: string, retryAfter?: number) => new ApiError(429, "rate_limited", msg, retryAfter);
 
 export function ok<T>(c: Context, data: T, status = 200) {
   return c.json(data as object, status as 200);

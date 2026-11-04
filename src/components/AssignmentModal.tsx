@@ -206,8 +206,9 @@ export function AssignmentModal({
 
         <div class="row" style="justify-content:space-between;background:var(--surface-1);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:10px">
           <div>
-            <div style="font-weight:500;font-size:1rem">ให้ผู้ปกครองเห็นคะแนน</div>
-            <div class="page-sub">{publish ? "เห็นสถานะและคะแนนทันที" : "ซ่อนคะแนนไว้ก่อน"}</div>
+            <div style="font-weight:500;font-size:1rem">แสดงคะแนนบนจอ</div>
+            <div class="page-sub">{publish ? "คะแนนของงานนี้แสดงในตารางและบนจอฉาย" : "ซ่อนคะแนนไว้ — ตารางแสดง ••• แทนตัวเลข (ซ่อน/แสดงทีหลังได้ที่รูปตาของคอลัมน์)"}</div>
+            {wts.find((w) => w.id === typeId)?.is_exam && <div class="page-sub">ประเภทสอบ: ซ่อนคะแนนบนจอไว้ก่อน เพื่อไม่ให้คะแนนหลุด (เปิดได้ที่สวิตช์นี้ หรือที่ไอคอนตาในสมุดคะแนน)</div>}
           </div>
           <button class={"switch " + (publish ? "on" : "")} role="switch" aria-checked={publish} onClick={() => setPublish(!publish)}>
             <span class="knob" />
@@ -215,7 +216,7 @@ export function AssignmentModal({
         </div>
 
         <label class="field">
-          <span>คำชี้แจง (ผู้ปกครองเห็นด้วย)</span>
+          <span>คำชี้แจง</span>
           <textarea rows={2} value={note} onInput={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
         </label>
 

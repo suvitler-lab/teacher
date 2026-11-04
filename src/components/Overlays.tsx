@@ -1,16 +1,19 @@
+import { FAIL_REASON } from "../lib/failReasons";
 import { Dialog } from "./Dialog";
 import { useEffect, useState } from "preact/hooks";
+import { signal } from "@preact/signals";
 import { Icon } from "./Icon";
 import { toasts, dismiss, err } from "../lib/notify";
 import { epochStale } from "../lib/session";
 import { offlineState, applyUpdate } from "../lib/offline";
-import { loadBootstrap, startTermOpen } from "../store";
+import { loadBootstrap, startTermOpen, assignments } from "../store";
 import { authRequired, resumeAfterAuth, pendingCount, failedCount, listFailed, retryFailed, discardFailed } from "../lib/outbox";
 import { api } from "../lib/api";
 import { attDraftCount } from "../lib/attSync";
 import { deviceId, deviceName, savedEmail, saveEmail } from "../lib/device";
 import { studentsById } from "../store";
 import { fullName } from "../lib/names";
+import { loginErrorMessage } from "../lib/loginError";
 import type { FailedItem } from "../lib/idb";
 
 const KIND_ICON = { success: "circle-check", error: "alert-triangle", info: "info-circle" } as const;
@@ -30,6 +33,7 @@ export function Toasts() {
           <button class="icon ghost" aria-label="ปิด" style="width:1.73rem;height:1.73rem;color:inherit" onClick={() => dismiss(t.id)}>
             <Icon name="x" size={14} />
           </button>
+          {t.action && t.ms && <span class="toast-bar" aria-hidden="true" style={`animation-duration:${t.ms}ms`} />}
         </div>
       ))}
     </div>
@@ -83,28 +87,25 @@ export function ReloginOverlay() {
   return <ReloginForm />;
 }
 
+/** The list of sends that failed: opened by the floating button or from the home page. */
+export const failedPanelOpen = signal(false);
+
 export function FailedPanel() {
-  const [open, setOpen] = useState(false);
+  const open = failedPanelOpen.value;
+  const setOpen = (v: boolean) => { failedPanelOpen.value = v; };
   const [items, setItems] = useState<FailedItem[]>([]);
+  const [dropAsk, setDropAsk] = useState("");
   const n = failedCount.value;
 
   async function refresh() { setItems(await listFailed()); }
   useEffect(() => { if (open) refresh(); }, [open, n]);
 
   if (n === 0) return null;
-  const REASON: Record<string, string> = {
-    not_in_class: "ไม่ได้อยู่ในห้องนี้", student_inactive: "นักเรียนไม่อยู่ในห้องแล้ว (ย้าย/ไม่ใช้งาน/จบปี)",
-    full_score_changed: "คะแนนเต็มถูกแก้ไข",
-    invalid: "ข้อมูลไม่ถูกต้อง", validation: "ข้อมูลไม่ถูกต้อง", assignment_closed: "งานปิดรับแล้ว",
-    blocked_by_earlier_failure: "รอแก้รายการก่อนหน้า", no_response: "เซิร์ฟเวอร์ไม่ตอบรับ",
-    superseded: "มีการแก้ไขที่ใหม่กว่าอยู่ในระบบแล้ว (เช่น ล้างทั้งห้อง) จึงไม่ใช้ค่านี้ — ส่งใหม่ถ้ายืนยันว่าค่านี้ถูก",
-    already_submitted: "ส่งไปแล้ว — ไม่บันทึกซ้ำ",
-    epoch_changed: "ข้อมูลถูกกู้คืนจากไฟล์สำรองหลังจากรายการนี้ถูกบันทึกไว้ — ตรวจสอบก่อนส่งใหม่",
-  };
+  const REASON = FAIL_REASON;
   return (
     <>
-      <button class="failed-fab" onClick={() => setOpen(true)}>
-        <Icon name="alert-triangle" size={16} /> ส่งไม่สำเร็จ {n}
+      <button class="failed-fab" aria-label={`ส่งไม่สำเร็จ ${n} รายการ`} onClick={() => setOpen(true)}>
+        <Icon name="alert-triangle" size={16} /> <span class="lbl">ส่งไม่สำเร็จ</span> {n}
       </button>
       {open && (
         <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
@@ -120,10 +121,13 @@ export function FailedPanel() {
                   <div class="row" style="gap:8px;padding:8px 0;border-top:0.5px solid var(--border)">
                     <div class="grow" style="min-width:0">
                       <div style="font-size:var(--fs-sm)">{st ? fullName(st) : it.payload.studentId}</div>
-                      <div class="page-sub">{REASON[it.reason] ?? it.reason}{it.payload.score != null ? ` · คะแนน ${it.payload.score}` : ""}</div>
+                      <div class="page-sub">{assignments.value.find((x) => x.id === it.payload.assignmentId)?.title ?? ""} · {new Date(it.failedAt).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</div>
+                      <div class="page-sub" style="color:var(--text-danger)">{REASON[it.reason] ?? it.reason}{it.payload.score != null ? ` · คะแนน ${it.payload.score}` : ""}</div>
                     </div>
                     <button style="height:2rem;font-size:var(--fs-xs)" onClick={async () => { try { await retryFailed(it.opId); } catch { err("ลองใหม่ไม่ได้ — เครื่องนี้บันทึกข้อมูลไม่ได้ รายการยังอยู่ตามเดิม"); } refresh(); }}>ลองใหม่</button>
-                    <button class="ghost" style="height:2rem;font-size:var(--fs-xs)" onClick={async () => { await discardFailed(it.opId); refresh(); }}>ทิ้ง</button>
+                    {dropAsk === it.opId
+                      ? <><button class="ghost" style="height:2rem;font-size:var(--fs-xs)" onClick={() => setDropAsk("")}>ไม่ทิ้ง</button><button style="height:2rem;font-size:var(--fs-xs);color:var(--text-danger)" onClick={async () => { setDropAsk(""); await discardFailed(it.opId); refresh(); }}>ทิ้งเลย</button></>
+                      : <button class="ghost" style="height:2rem;font-size:var(--fs-xs)" onClick={() => setDropAsk(it.opId)}>ทิ้ง</button>}
                   </div>
                 );
               })}
@@ -152,7 +156,7 @@ function ReloginForm() {
       saveEmail(email.trim().toLowerCase());
       resumeAfterAuth();
     } catch (e: any) {
-      setErr(e.message || "เข้าสู่ระบบไม่สำเร็จ");
+      setErr(loginErrorMessage(e));
     } finally {
       setBusy(false);
     }

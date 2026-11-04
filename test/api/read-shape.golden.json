@@ -1,0 +1,646 @@
+{
+ "200 /api/attendance?date=2569-09-10&class=c1": {
+  "session": {
+   "id": "as1",
+   "date": "2569-09-10",
+   "class_id": "c1",
+   "subject_id": null,
+   "period": null,
+   "updated_at": 100
+  },
+  "rows": [
+   {
+    "session_id": "as1",
+    "student_id": "st1",
+    "status": "present",
+    "time": 1000,
+    "method": "grid",
+    "device_id": null,
+    "updated_at": 200
+   },
+   {
+    "session_id": "as1",
+    "student_id": "st2",
+    "status": "absent",
+    "time": 1000,
+    "method": "manual",
+    "device_id": null,
+    "updated_at": 210
+   }
+  ]
+ },
+ "200 /api/attendance?date=2569-09-10&class=c1&subject=s1&period=1": {
+  "session": {
+   "id": "as2",
+   "date": "2569-09-10",
+   "class_id": "c1",
+   "subject_id": "s1",
+   "period": 1,
+   "updated_at": 100
+  },
+  "rows": [
+   {
+    "session_id": "as2",
+    "student_id": "st1",
+    "status": "late",
+    "time": 2000,
+    "method": "grid",
+    "device_id": null,
+    "updated_at": 220
+   }
+  ]
+ },
+ "200 /api/attendance?date=2569-09-12&class=c1": {
+  "session": null,
+  "rows": []
+ },
+ "200 /api/attendance?date=2569-09-10": {
+  "session": null,
+  "rows": []
+ },
+ "200 /api/attendance/days?from=2569-09-09&to=2569-09-12": {
+  "days": [
+   {
+    "date": "2569-09-10",
+    "classId": "c1",
+    "present": 1,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 1,
+    "marked": 2,
+    "total": 2
+   },
+   {
+    "date": "2569-09-10",
+    "classId": "c2",
+    "present": 0,
+    "late": 0,
+    "leave": 1,
+    "sick": 0,
+    "absent": 0,
+    "marked": 1,
+    "total": 1
+   },
+   {
+    "date": "2569-09-11",
+    "classId": "c1",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 1,
+    "absent": 0,
+    "marked": 1,
+    "total": 2
+   }
+  ]
+ },
+ "200 /api/attendance/days?from=2569-09-09&to=2569-09-12&class=c1": {
+  "days": [
+   {
+    "date": "2569-09-10",
+    "classId": "c1",
+    "present": 1,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 1,
+    "marked": 2,
+    "total": 2
+   },
+   {
+    "date": "2569-09-11",
+    "classId": "c1",
+    "present": 0,
+    "late": 0,
+    "leave": 0,
+    "sick": 1,
+    "absent": 0,
+    "marked": 1,
+    "total": 2
+   }
+  ]
+ },
+ "200 /api/attendance/days?from=2569-09-12&to=2569-09-13": {
+  "days": []
+ },
+ "400 /api/attendance/days?from=2569-09-12&to=2569-08-01": {
+  "error": "bad_range"
+ },
+ "200 /api/gradebook?class=c1&term=t1": {
+  "students": [
+   {
+    "id": "st1",
+    "code": "101",
+    "qr_token": "Q-AAAAAAAAAA",
+    "prefix": "ด.ช.",
+    "first_name": "ก",
+    "last_name": "ข",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 1,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   },
+   {
+    "id": "st2",
+    "code": "102",
+    "qr_token": "Q-BBBBBBBBBB",
+    "prefix": "ด.ญ.",
+    "first_name": "ค",
+    "last_name": "ง",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 2,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   }
+  ],
+  "assignments": [
+   {
+    "id": "a1",
+    "term_id": "t1",
+    "subject_id": "s1",
+    "type_id": "wt_worksheet",
+    "title": "ใบงาน 1",
+    "unit": null,
+    "full_score": 10,
+    "assigned_date": "2569-09-01",
+    "due_date": "2569-12-31",
+    "note": null,
+    "publish_scores": true,
+    "status": "open",
+    "class_ids": [
+     "c1"
+    ],
+    "created_at": 0,
+    "updated_at": 0,
+    "deleted_at": null
+   }
+  ],
+  "submissions": [
+   {
+    "assignment_id": "a1",
+    "student_id": "st1",
+    "status": "submitted",
+    "score": 8,
+    "late": false,
+    "submitted_at": 500,
+    "method": "grid",
+    "device_id": null,
+    "scan_session_id": "ss1",
+    "updated_at": 600
+   },
+   {
+    "assignment_id": "a1",
+    "student_id": "st2",
+    "status": "submitted",
+    "score": null,
+    "late": true,
+    "submitted_at": 510,
+    "method": "camera",
+    "device_id": null,
+    "scan_session_id": "ss1",
+    "updated_at": 610
+   }
+  ]
+ },
+ "200 /api/reports/summary?class=c1&term=t1&month=2569-09": {
+  "classId": "c1",
+  "range": {
+   "from": "2569-09-01",
+   "to": "2569-09-31",
+   "month": "2569-09",
+   "termId": "t1",
+   "termDatesMissing": false,
+   "att": "daily"
+  },
+  "students": [
+   {
+    "id": "st1",
+    "code": "101",
+    "qr_token": "Q-AAAAAAAAAA",
+    "prefix": "ด.ช.",
+    "first_name": "ก",
+    "last_name": "ข",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 1,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   },
+   {
+    "id": "st2",
+    "code": "102",
+    "qr_token": "Q-BBBBBBBBBB",
+    "prefix": "ด.ญ.",
+    "first_name": "ค",
+    "last_name": "ง",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 2,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   }
+  ],
+  "assignments": [
+   {
+    "id": "a1",
+    "term_id": "t1",
+    "subject_id": "s1",
+    "type_id": "wt_worksheet",
+    "title": "ใบงาน 1",
+    "unit": null,
+    "full_score": 10,
+    "assigned_date": "2569-09-01",
+    "due_date": "2569-12-31",
+    "note": null,
+    "publish_scores": true,
+    "status": "open",
+    "class_ids": [
+     "c1"
+    ],
+    "created_at": 0,
+    "updated_at": 0,
+    "deleted_at": null
+   }
+  ],
+  "submissions": [
+   {
+    "assignment_id": "a1",
+    "student_id": "st1",
+    "status": "submitted",
+    "score": 8,
+    "late": false,
+    "submitted_at": 500
+   },
+   {
+    "assignment_id": "a1",
+    "student_id": "st2",
+    "status": "submitted",
+    "score": null,
+    "late": true,
+    "submitted_at": 510
+   }
+  ],
+  "attendanceSessions": [
+   {
+    "id": "as1",
+    "date": "2569-09-10",
+    "class_id": "c1",
+    "subject_id": null,
+    "period": null,
+    "updated_at": 100
+   },
+   {
+    "id": "as3",
+    "date": "2569-09-11",
+    "class_id": "c1",
+    "subject_id": null,
+    "period": null,
+    "updated_at": 100
+   }
+  ],
+  "attendance": [
+   {
+    "session_id": "as1",
+    "student_id": "st1",
+    "status": "present",
+    "time": 1000,
+    "method": "grid",
+    "device_id": null,
+    "updated_at": 200
+   },
+   {
+    "session_id": "as1",
+    "student_id": "st2",
+    "status": "absent",
+    "time": 1000,
+    "method": "manual",
+    "device_id": null,
+    "updated_at": 210
+   },
+   {
+    "session_id": "as3",
+    "student_id": "st1",
+    "status": "sick",
+    "time": 3000,
+    "method": "grid",
+    "device_id": null,
+    "updated_at": 230
+   }
+  ]
+ },
+ "200 /api/dashboard?term=t1&date=2569-09-10": {
+  "date": "2569-09-10",
+  "termId": "t1",
+  "openAssignments": [
+   {
+    "assignment": {
+     "id": "a1",
+     "term_id": "t1",
+     "subject_id": "s1",
+     "type_id": "wt_worksheet",
+     "title": "ใบงาน 1",
+     "unit": null,
+     "full_score": 10,
+     "assigned_date": "2569-09-01",
+     "due_date": "2569-12-31",
+     "note": null,
+     "publish_scores": true,
+     "status": "open",
+     "class_ids": [
+      "c1"
+     ],
+     "created_at": 0,
+     "updated_at": 0,
+     "deleted_at": null
+    },
+    "perClass": [
+     {
+      "classId": "c1",
+      "total": 2,
+      "submitted": 2,
+      "scored": 1,
+      "awaiting": 1,
+      "late": 0,
+      "missing": 0,
+      "excused": 0
+     }
+    ]
+   }
+  ],
+  "gradingAssignments": [],
+  "awaitingCount": 1,
+  "missingCount": 0,
+  "attendanceToday": [
+   {
+    "date": "2569-09-10",
+    "classId": "c1",
+    "present": 1,
+    "late": 0,
+    "leave": 0,
+    "sick": 0,
+    "absent": 1,
+    "marked": 2,
+    "total": 2
+   },
+   {
+    "date": "2569-09-10",
+    "classId": "c2",
+    "present": 0,
+    "late": 0,
+    "leave": 1,
+    "sick": 0,
+    "absent": 0,
+    "marked": 1,
+    "total": 1
+   }
+  ],
+  "followUp": [],
+  "dueSoon": [],
+  "absentToday": [
+   {
+    "classId": "c1",
+    "studentId": "st2",
+    "status": "absent"
+   },
+   {
+    "classId": "c2",
+    "studentId": "st9",
+    "status": "leave"
+   }
+  ]
+ },
+ "200 /api/bootstrap": {
+  "settings": {
+   "school_name": "โรงเรียนบ้านตัวอย่าง",
+   "teacher_name": "ครูผู้สอน",
+   "app_title": "งานครบ",
+   "late_after": "08:30",
+   "theme": "system",
+   "accent": "blue",
+   "sound_enabled": true,
+   "accept_student_code_scan": false,
+   "parent_portal_enabled": false,
+   "onboarding_done": false,
+   "last_backup_at": "",
+   "period_times": "",
+   "home_cards": "",
+   "scan_cards": "",
+   "attendance_cards": "",
+   "random_cards": "",
+   "gradebook_cards": "",
+   "reports_cards": "",
+   "students_cards": "",
+   "settings_cards": ""
+  },
+  "terms": [
+   {
+    "id": "t1",
+    "year": 2569,
+    "term": 1,
+    "name": "1/2569",
+    "is_current": true,
+    "start_date": null,
+    "end_date": null,
+    "updated_at": 0
+   }
+  ],
+  "currentTermId": "t1",
+  "classes": [
+   {
+    "id": "c1",
+    "name": "ป.6/1",
+    "grade": "ป.6",
+    "sort": 10,
+    "archived": false,
+    "year": 2569,
+    "updated_at": 0
+   },
+   {
+    "id": "c2",
+    "name": "ป.6/2",
+    "grade": "ป.6",
+    "sort": 20,
+    "archived": false,
+    "year": 2569,
+    "updated_at": 0
+   }
+  ],
+  "subjects": [
+   {
+    "id": "s1",
+    "code": "ว16101",
+    "name": "วิทย์",
+    "color": "blue",
+    "sort": 10,
+    "archived": false,
+    "updated_at": 0
+   }
+  ],
+  "workTypes": [
+   {
+    "id": "wt_exercise",
+    "name": "แบบฝึกหัด",
+    "icon": "pencil",
+    "color": "aqua",
+    "is_exam": false,
+    "default_full": 10,
+    "sort": 10,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_worksheet",
+    "name": "ใบงาน",
+    "icon": "file-text",
+    "color": "violet",
+    "is_exam": false,
+    "default_full": 10,
+    "sort": 20,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_activity",
+    "name": "ใบกิจกรรม",
+    "icon": "flask",
+    "color": "orange",
+    "is_exam": false,
+    "default_full": 10,
+    "sort": 30,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_project",
+    "name": "ชิ้นงาน/โครงงาน",
+    "icon": "palette",
+    "color": "green",
+    "is_exam": false,
+    "default_full": 20,
+    "sort": 40,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_homework",
+    "name": "การบ้าน",
+    "icon": "backpack",
+    "color": "blue",
+    "is_exam": false,
+    "default_full": 10,
+    "sort": 50,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_quiz",
+    "name": "สอบย่อย",
+    "icon": "certificate",
+    "color": "magenta",
+    "is_exam": true,
+    "default_full": 20,
+    "sort": 60,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_midterm",
+    "name": "สอบกลางภาค",
+    "icon": "school",
+    "color": "red",
+    "is_exam": true,
+    "default_full": 30,
+    "sort": 70,
+    "archived": false,
+    "updated_at": 0
+   },
+   {
+    "id": "wt_final",
+    "name": "สอบปลายภาค",
+    "icon": "trophy",
+    "color": "red",
+    "is_exam": true,
+    "default_full": 40,
+    "sort": 80,
+    "archived": false,
+    "updated_at": 0
+   }
+  ],
+  "students": [
+   {
+    "id": "st1",
+    "code": "101",
+    "qr_token": "Q-AAAAAAAAAA",
+    "prefix": "ด.ช.",
+    "first_name": "ก",
+    "last_name": "ข",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 1,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   },
+   {
+    "id": "st2",
+    "code": "102",
+    "qr_token": "Q-BBBBBBBBBB",
+    "prefix": "ด.ญ.",
+    "first_name": "ค",
+    "last_name": "ง",
+    "nickname": null,
+    "class_id": "c1",
+    "number": 2,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   },
+   {
+    "id": "st9",
+    "code": "201",
+    "qr_token": "Q-CCCCCCCCCC",
+    "prefix": "ด.ช.",
+    "first_name": "จ",
+    "last_name": "ฉ",
+    "nickname": null,
+    "class_id": "c2",
+    "number": 1,
+    "status": "active",
+    "left_at": null,
+    "updated_at": 0
+   }
+  ],
+  "revokedTokens": {},
+  "qrRotatedAt": {},
+  "assignments": [
+   {
+    "id": "a1",
+    "term_id": "t1",
+    "subject_id": "s1",
+    "type_id": "wt_worksheet",
+    "title": "ใบงาน 1",
+    "unit": null,
+    "full_score": 10,
+    "assigned_date": "2569-09-01",
+    "due_date": "2569-12-31",
+    "note": null,
+    "publish_scores": true,
+    "status": "open",
+    "class_ids": [
+     "c1"
+    ],
+    "created_at": 0,
+    "updated_at": 0,
+    "deleted_at": null
+   }
+  ],
+  "dataEpoch": 1
+ }
+}

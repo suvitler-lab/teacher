@@ -1,0 +1,16 @@
+/* งานครบ · settings page: scope labels, the cards on the first section, touch targets */
+.set-scope { margin-left: 6px; vertical-align: middle; font-size: var(--fs-xs); }
+.set-scope-line { display: flex; margin-bottom: 8px; }
+.set-scope-line .set-scope { margin-left: 0; }
+/* the info cards sit in <PageCols> (max 2 columns, min 20rem each); the forms below get their own grid */
+.set-forms { display: grid; gap: 0.75rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); }
+.set-forms > .card { max-width: 52rem; width: 100%; justify-self: start; }
+/* a touch screen gets 44px targets everywhere in this page, including the small buttons written inline */
+@media (pointer: coarse) {
+  .set-body button, .set-nav button { min-height: 44px; }
+  .set-body button[style*="height"] { height: auto !important; }
+}
+
+/* the section chips scroll sideways: they must keep their own width, not shrink into circles */
+.set-nav-chips .pill { flex: 0 0 auto; white-space: nowrap; }
+@media (pointer: coarse) { .set-nav-chips .pill { height: auto; min-height: 44px; } }

@@ -35,6 +35,79 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
     row.height = 28;
   }
 
+  // ---- Sheet 0: คะแนนทุกงาน — one column per piece of work (every type), numbers only, so it can be copied into another system ----
+  // Columns are grouped by work type (worksheet, exercise, quiz, exam ...) with the type in the header and a subtotal per type;
+  // a cell is a score or empty (no words, no comments); late hand-ins are only coloured.
+  const typeOf = (a: any) => opts.workTypeName(a.type_id ?? null);
+  const typeOrder: string[] = [];
+  for (const a of payload.assignments) if (!typeOrder.includes(typeOf(a))) typeOrder.push(typeOf(a));
+  const grouped = typeOrder.map((t) => ({ type: t, works: payload.assignments.filter((a) => typeOf(a) === t) }));
+  const s0 = wb.addWorksheet("คะแนนทุกงาน", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
+  s0.columns = [
+    { header: "เลขที่", width: 8 },
+    { header: "รหัสนักเรียน", width: 14 },
+    { header: "ชื่อ - สกุล", width: 26 },
+    ...grouped.flatMap((g) => [
+      ...g.works.map((a) => ({ header: `[${g.type}] ${a.title} (เต็ม ${a.full_score})`, width: 18 })),
+      ...(g.works.length > 1 ? [{ header: `รวม${g.type}`, width: 12 }] : []),
+    ]),
+    { header: "คะแนนรวมทั้งหมด", width: 14 },
+  ] as any;
+  styleHeader(s0.getRow(1));
+  s0.getRow(1).height = 44;
+  const sub0 = new Map(payload.submissions.map((x) => [`${x.assignment_id}:${x.student_id}`, x]));
+  for (const st of payload.students) {
+    const row: any[] = [st.number ?? "", st.code ?? "", opts.fullName(st)];
+    const lateCols: number[] = [];
+    let total = 0;
+    for (const g of grouped) {
+      let sum = 0;
+      for (const a of g.works) {
+        const sub = sub0.get(`${a.id}:${st.id}`);
+        if (sub && sub.status === "submitted" && sub.score != null) {
+          row.push(sub.score);
+          sum += sub.score;
+          if (sub.late) lateCols.push(row.length);
+        } else row.push(null);
+      }
+      if (g.works.length > 1) row.push(sum);
+      total += sum;
+    }
+    row.push(total);
+    const added = s0.addRow(row);
+    for (const col of lateCols) added.getCell(col).fill = LATE_FILL;
+  }
+  s0.addRow([]);
+  s0.addRow(["", "", "ช่องว่าง = ยังไม่ส่ง/รอตรวจ/ยกเว้น (ดูคำอธิบายในชีต “คะแนนรายงาน”) · สีส้ม = ส่งช้า · รวมเป็นผลบวกคะแนนดิบ ไม่ถ่วงน้ำหนัก"]);
+
+  // ---- Sheet 0b: คะแนนรวมตามประเภท — one column per work TYPE (sum of every work of that type), for copying into a school system ----
+  const sT = wb.addWorksheet("คะแนนรวมตามประเภท", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
+  sT.columns = [
+    { header: "เลขที่", width: 8 },
+    { header: "รหัสนักเรียน", width: 14 },
+    { header: "ชื่อ - สกุล", width: 26 },
+    ...grouped.map((g) => ({ header: `${g.type} (เต็ม ${g.works.reduce((n, a) => n + Number(a.full_score || 0), 0)})`, width: 18 })),
+    { header: "รวมทั้งหมด", width: 14 },
+  ] as any;
+  styleHeader(sT.getRow(1));
+  for (const st of payload.students) {
+    const row: any[] = [st.number ?? "", st.code ?? "", opts.fullName(st)];
+    let total = 0;
+    for (const g of grouped) {
+      let sum = 0, any = false;
+      for (const a of g.works) {
+        const sub = sub0.get(`${a.id}:${st.id}`);
+        if (sub && sub.status === "submitted" && sub.score != null) { sum += sub.score; any = true; }
+      }
+      row.push(any ? sum : null);
+      total += sum;
+    }
+    row.push(total);
+    sT.addRow(row);
+  }
+  sT.addRow([]);
+  sT.addRow(["", "", "เต็ม = ผลบวกคะแนนเต็มของทุกงานในประเภทนั้น · ช่องว่าง = ยังไม่มีคะแนนในประเภทนั้น · ผลบวกดิบ ไม่ถ่วงน้ำหนัก"]);
+
   // ---- Sheet 1: สรุปรายคน ----
   const s1 = wb.addWorksheet("สรุปรายคน", { views: [{ state: "frozen", ySplit: 1, xSplit: 3 }] });
   s1.columns = [
@@ -79,11 +152,7 @@ export async function buildWorkbookBuffer(model: ReportModel, payload: ReportPay
       else row.push(sub.score);
     }
     const added = s2.addRow(row);
-    for (const col of lateAt) {
-      const cell = added.getCell(col);
-      cell.fill = LATE_FILL;
-      cell.note = "ส่งช้า";
-    }
+    for (const col of lateAt) added.getCell(col).fill = LATE_FILL; // colour only: a cell comment hid the score in some viewers
   }
   s2.addRow([]);
   s2.addRow(["", "", "สีส้ม = ส่งช้า (ตัวเลขคือคะแนนที่ได้)"]);

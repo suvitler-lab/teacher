@@ -63,6 +63,8 @@ beforeEach(() => {
 async function open() {
   render(<GradebookPage />);
   await screen.findByRole("columnheader", { name: /แบบฝึกหัด 1/ });
+  // the type / period / grouping / columns controls live in the "ตัวกรอง" panel (round 3): open it
+  fireEvent.click(screen.getByRole("button", { name: /^ตัวกรอง/ }));
 }
 /** Groups start open now; the teacher folds ใบงาน herself so the folded-total paths are still covered. */
 async function openFolded() {

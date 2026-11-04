@@ -27,3 +27,53 @@ export function parseImport(text: string): { rows: ImportRow[]; skipped: string[
   }
   return { rows, skipped };
 }
+
+/** The text the paste box would hold for one worksheet row: its cells joined by tabs (the parser splits on tabs, commas and spaces). */
+export function rowsToText(rows: unknown[][]): string {
+  return rows.map((r) => r.map((c) => (c == null ? "" : String(c).trim())).filter((c) => c !== "").join("\t")).filter(Boolean).join("\n");
+}
+
+export interface SheetText { name: string; text: string }
+
+/**
+ * Read a chosen file as one or more sheets of paste-box text. .csv/.txt are one sheet named after the file; .xlsx gives every visible
+ * worksheet (read by exceljs in the browser — nothing is uploaded). The teacher picks the sheet when there are several.
+ */
+export async function fileToSheets(file: File): Promise<SheetText[]> {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".xlsx")) {
+    const ExcelJS: any = (await import("exceljs")).default ?? (await import("exceljs"));
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(await file.arrayBuffer());
+    const out: SheetText[] = [];
+    for (const ws of wb.worksheets as any[]) {
+      if (ws.state === "hidden" || ws.state === "veryHidden") continue;
+      const rows: unknown[][] = [];
+      ws.eachRow({ includeEmpty: false }, (row: any) => {
+        // exceljs numbers cells from 1; a formula/rich cell gives {result} / {richText}
+        const cells: unknown[] = [];
+        row.eachCell({ includeEmpty: false }, (cell: any) => {
+          const v = cell.value;
+          cells.push(v && typeof v === "object" ? ("result" in v ? v.result : "richText" in v ? v.richText.map((t: any) => t.text).join("") : "text" in v ? v.text : String(v)) : v);
+        });
+        rows.push(cells);
+      });
+      out.push({ name: String(ws.name ?? ""), text: rowsToText(rows) });
+    }
+    return out;
+  }
+  if (name.endsWith(".xls")) throw new Error("ไฟล์ .xls รุ่นเก่าอ่านไม่ได้ — บันทึกเป็น .xlsx หรือ .csv ใน Excel ก่อน");
+  return [{ name: file.name, text: (await file.text()).replace(/^﻿/, "") }];
+}
+
+/** Which sheet to open first: the first one that holds readable students (the others are often notes or a cover page). */
+export function bestSheet(sheets: SheetText[]): number {
+  const i = sheets.findIndex((s) => parseImport(s.text).rows.length > 0);
+  return i >= 0 ? i : 0;
+}
+
+/** Read a student list from a chosen file (its best sheet). */
+export async function fileToText(file: File): Promise<string> {
+  const sheets = await fileToSheets(file);
+  return sheets[bestSheet(sheets)]?.text ?? "";
+}

@@ -10,6 +10,7 @@ import { ApiError } from "@client/lib/api";
 import { dashboard, dashboardStatus, dashboardStale, loadDashboard } from "@client/lib/dashboard";
 import { applyBootstrap, loadSelectedTerm, setSelectedTerm, selectedTermId, UNASSIGNED } from "@client/store";
 import { kvSet } from "@client/lib/idb";
+import { swrClear } from "@client/lib/swr";
 
 const payload = (termId: string | null, awaiting: number) => ({
   date: "2026-09-29", termId, openAssignments: [], gradingAssignments: [],
@@ -47,6 +48,7 @@ describe("dashboard: never shows another term's numbers", () => {
     get.mockResolvedValueOnce(payload("t1", 7));
     await loadDashboard("t1");
 
+    swrClear(); // the page was reloaded: nothing saved in memory, only the copy kept on the device
     get.mockRejectedValueOnce(offline());
     await loadDashboard("t2");
     expect(dashboard.value?.termId).toBe("t2");

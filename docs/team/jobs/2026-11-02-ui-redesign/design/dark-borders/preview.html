@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ขอบปุ่มโหมดมืด — เปรียบเทียบ 3 แบบ</title>
+<style>
+:root{--s0:#14171d;--s1:#1b1f27;--s2:#232833;--s3:#2a303c;--tx:#eef1f6;--tx2:#a7afbd;--accent:#5a92ee;--on-accent:#0b1220;--bgacc:#1d2b44;--txacc:#9cc2f2}
+*{box-sizing:border-box}body{margin:0;background:var(--s0);color:var(--tx);font:16px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;padding:20px}
+h1{font-size:1.3rem;margin:0 0 4px}p.sub{color:var(--tx2);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:14px}
+.opt{--b:rgba(255,255,255,.10);--bs:rgba(255,255,255,.18);--bc:rgba(255,255,255,.18);background:var(--s1);border:1px solid #3a4150;border-radius:12px;padding:14px}
+.opt.a{--bc:#747e91}.opt.b{--bc:#747e91;--b:rgba(255,255,255,.17)}
+.opt h2{font-size:1.05rem;margin:0}.opt .why{color:var(--tx2);font-size:.85rem;margin:2px 0 12px}
+.card{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button,select,input{font:inherit;color:var(--tx);min-height:44px}
+.btn{background:var(--s2);border:1px solid var(--bc);border-radius:10px;padding:0 14px}
+.pill{background:var(--s2);border:1px solid var(--bc);border-radius:999px;padding:0 14px;min-height:36px}
+.pill.on{background:var(--bgacc);color:var(--txacc);border-color:#4a7fc4}
+input,select{background:var(--s1);border:1px solid var(--bc);border-radius:10px;padding:0 12px;min-width:11rem}
+.seg{display:inline-flex;border:1px solid var(--bc);border-radius:10px;overflow:hidden}.seg button{background:transparent;border:0;padding:0 14px}.seg .on{background:var(--bgacc);color:var(--txacc)}
+.sw{width:3.4rem;height:2rem;border-radius:999px;background:rgba(255,255,255,.18);border:0;position:relative;box-shadow:inset 0 0 0 var(--ring,0) var(--tx2)}
+.opt.a .sw,.opt.b .sw{--ring:2px}
+.sw i{position:absolute;top:.25rem;left:.25rem;width:1.5rem;height:1.5rem;border-radius:50%;background:#fff}
+.sw.on{background:var(--accent)}.sw.on i{left:1.65rem}
+.tag{font-size:.78rem;border-radius:999px;padding:1px 8px;background:var(--bgacc);color:var(--txacc)}
+table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1px solid var(--b);text-align:left;font-size:.9rem}
+.ratio{color:var(--tx2);font-size:.8rem}
+</style></head><body>
+<h1>ขอบปุ่มและช่องกรอกในโหมดมืด — เปรียบเทียบ 3 แบบ</h1>
+<p class="sub">ข้อมูลสมมติ · ตัวหนังสือและสีหลักเหมือนเดิมทุกแบบ ต่างกันเฉพาะ "เส้นขอบ" · ค่าวัดเทียบพื้นการ์ด (#232833)</p>
+<div class="grid">
+ <section class="opt"><h2>ก. ตอนนี้ (ไม่เปลี่ยน)</h2><p class="why">ขอบปุ่ม/ช่องกรอก ≈ 1.3–1.8 : 1 · ต่ำกว่าเกณฑ์ 3 : 1</p>
+  <div class="card"><b>ตัวกรองรายงาน</b>
+   <div class="row"><select><option>ทุกวิชา</option></select><input placeholder="ค้นหาชื่อ / รหัส"></div>
+   <div class="row"><button class="btn">ตัวกรอง</button><button class="pill">ป.6/1 · 44</button><button class="pill on">ป.6/2 · 43</button></div>
+   <div class="row"><span class="seg"><button class="on">ทั้งเทอม</button><button>รายเดือน</button></span><button class="sw"><i></i></button><button class="sw on"><i></i></button></div></div>
+  <div class="card"><table><tr><th>#</th><th>ชื่อ</th><th>ส่ง</th></tr><tr><td>1</td><td>ด.ช.ธนะดี</td><td>2/2</td></tr><tr><td>2</td><td>ธนาดล</td><td>1/2</td></tr></table></div></section>
+
+ <section class="opt a"><h2>ข. แนะนำ: เฉพาะตัวควบคุม <span class="tag">แนะนำ</span></h2><p class="why">ขอบปุ่ม/ช่องกรอก/ตัวเลือก/สวิตช์ → #747e91 (≈ 3.6 : 1) · เส้นแบ่งการ์ดและตารางเหมือนเดิม</p>
+  <div class="card"><b>ตัวกรองรายงาน</b>
+   <div class="row"><select><option>ทุกวิชา</option></select><input placeholder="ค้นหาชื่อ / รหัส"></div>
+   <div class="row"><button class="btn">ตัวกรอง</button><button class="pill">ป.6/1 · 44</button><button class="pill on">ป.6/2 · 43</button></div>
+   <div class="row"><span class="seg"><button class="on">ทั้งเทอม</button><button>รายเดือน</button></span><button class="sw"><i></i></button><button class="sw on"><i></i></button></div></div>
+  <div class="card"><table><tr><th>#</th><th>ชื่อ</th><th>ส่ง</th></tr><tr><td>1</td><td>ด.ช.ธนะดี</td><td>2/2</td></tr><tr><td>2</td><td>ธนาดล</td><td>1/2</td></tr></table></div></section>
+
+ <section class="opt b"><h2>ค. ตัวควบคุม + เส้นแบ่งชัดขึ้น</h2><p class="why">เหมือน ข. และเส้นแบ่ง/ขอบการ์ดเข้มขึ้นเป็น 17% (เดิม 10%) · หน้าตาเปลี่ยนมากกว่า</p>
+  <div class="card"><b>ตัวกรองรายงาน</b>
+   <div class="row"><select><option>ทุกวิชา</option></select><input placeholder="ค้นหาชื่อ / รหัส"></div>
+   <div class="row"><button class="btn">ตัวกรอง</button><button class="pill">ป.6/1 · 44</button><button class="pill on">ป.6/2 · 43</button></div>
+   <div class="row"><span class="seg"><button class="on">ทั้งเทอม</button><button>รายเดือน</button></span><button class="sw"><i></i></button><button class="sw on"><i></i></button></div></div>
+  <div class="card"><table><tr><th>#</th><th>ชื่อ</th><th>ส่ง</th></tr><tr><td>1</td><td>ด.ช.ธนะดี</td><td>2/2</td></tr><tr><td>2</td><td>ธนาดล</td><td>1/2</td></tr></table></div></section>
+</div>
+<p class="ratio" style="margin-top:14px">วิธีลงโค้ด (แบบ ข.): เพิ่มค่าสีใหม่ <code>--border-control</code> ในโหมดมืด แล้วใช้กับปุ่ม ช่องกรอก select ชิป ตัวเลือก และสวิตช์ · ไม่แตะ <code>--border</code> ที่ใช้กับเส้นแบ่งและการ์ด · โหมดสว่างไม่เปลี่ยน</p>
+</body></html>

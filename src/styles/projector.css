@@ -1,0 +1,84 @@
+/* งานครบ · projector mode (classroom TV): dark by default, three sizes, nothing personal on screen. Sizes follow --pj-u = the screen / 768 */
+.pj{--pj-u:min(calc(100vh / 768),calc(100vw / 1024));position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;overflow:hidden;font-size:calc(var(--pj-u)*30);line-height:1.25;
+  --pj-bg:#0b1220;--pj-card:#151e33;--pj-t1:#ffffff;--pj-t2:#cdd5e3;--pj-bd:#5b6a8a;--pj-ac:#9cc2f2;--pj-on-ac:#0b1220;--pj-ok:#6ee7a8;--pj-okbg:#0f3a26;--pj-bad:#ff9a9a;--pj-warn:#ffd166;
+  background:var(--pj-bg);color:var(--pj-t1);padding:calc(var(--pj-u)*24)}
+.pj[data-th=light]{--pj-bg:#ffffff;--pj-card:#eef2f8;--pj-t1:#0b1220;--pj-t2:#2c3648;--pj-bd:#55627a;--pj-ac:#164a9e;--pj-on-ac:#ffffff;--pj-ok:#0a5a31;--pj-okbg:#dcf3e6;--pj-bad:#9b1c1c;--pj-warn:#6a4000}
+.pj[data-sz="1"]{--s2:32;--st:56;--nm:72;--bt:64}
+.pj[data-sz="2"]{--s2:40;--st:72;--nm:96;--bt:72}
+.pj[data-sz="3"]{--s2:48;--st:88;--nm:120;--bt:80}
+.pj .pjbar{height:calc(var(--pj-u)*84);display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none}
+.pj .pjbar h1{font-size:calc(var(--pj-u)*40);font-weight:600;display:flex;align-items:center;gap:calc(var(--pj-u)*12)}
+.pj .live{display:inline-flex;align-items:center;gap:calc(var(--pj-u)*10);font-size:calc(var(--pj-u)*26);font-weight:600;border:calc(var(--pj-u)*3) solid var(--pj-ac);color:var(--pj-ac);border-radius:999px;padding:calc(var(--pj-u)*6) calc(var(--pj-u)*18)}
+.pj .live i{width:calc(var(--pj-u)*14);height:calc(var(--pj-u)*14);border-radius:50%;background:var(--pj-ac)}
+.pj .exit{width:calc(var(--pj-u)*64);height:calc(var(--pj-u)*64);border-radius:50%;border:calc(var(--pj-u)*3) solid var(--pj-bd);background:var(--pj-card);color:var(--pj-t2);display:inline-flex;align-items:center;justify-content:center;padding:0;position:relative;touch-action:none;user-select:none}
+.pj .exit::after{content:"";position:absolute;inset:calc(var(--pj-u)*-6);border-radius:50%;background:conic-gradient(var(--pj-ac) calc(var(--p,0)*1%),transparent 0);-webkit-mask:radial-gradient(circle,transparent calc(var(--pj-u)*34),#000 calc(var(--pj-u)*35));mask:radial-gradient(circle,transparent calc(var(--pj-u)*34),#000 calc(var(--pj-u)*35));pointer-events:none}
+.pj .hint{position:absolute;right:calc(var(--pj-u)*24);top:calc(var(--pj-u)*100);background:var(--pj-card);border:calc(var(--pj-u)*3) solid var(--pj-bd);border-radius:calc(var(--pj-u)*14);padding:calc(var(--pj-u)*8) calc(var(--pj-u)*16);font-size:calc(var(--pj-u)*24);z-index:3}
+.pj .body{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(var(--pj-u)*14)}
+.pj .pjbtn{font:inherit;font-size:calc(var(--pj-u)*var(--bt)*.5);font-weight:600;height:calc(var(--pj-u)*var(--bt));padding:0 calc(var(--pj-u)*40);border-radius:calc(var(--pj-u)*20);background:var(--pj-ac);color:var(--pj-on-ac);border:0;display:inline-flex;align-items:center;gap:calc(var(--pj-u)*12);cursor:pointer}
+.pj .pjbtn.sec{background:var(--pj-card);color:var(--pj-t1);border:calc(var(--pj-u)*3) solid var(--pj-bd)}
+.pj .other{position:absolute;right:calc(var(--pj-u)*24);bottom:calc(var(--pj-u)*24);display:flex;flex-direction:column;gap:calc(var(--pj-u)*8);align-items:flex-end}
+.pj .other .menu4{display:flex;flex-direction:column;gap:calc(var(--pj-u)*8);background:var(--pj-card);border:calc(var(--pj-u)*3) solid var(--pj-bd);border-radius:calc(var(--pj-u)*16);padding:calc(var(--pj-u)*10)}
+.pj .other .menu4 button{height:calc(var(--pj-u)*64);font-size:calc(var(--pj-u)*28);background:transparent;color:var(--pj-t1);border:0;justify-content:flex-start;gap:calc(var(--pj-u)*12);padding:0 calc(var(--pj-u)*20)}
+.pj .big{font-size:calc(var(--pj-u)*var(--nm));font-weight:600;line-height:1.15;overflow-wrap:anywhere}
+.pj .stat{font-size:calc(var(--pj-u)*var(--st));font-weight:600;line-height:1.1}
+.pj .s2{font-size:calc(var(--pj-u)*var(--s2));color:var(--pj-t2)}
+.pj .pbar{height:calc(var(--pj-u)*28);border-radius:calc(var(--pj-u)*14);background:var(--pj-card);border:calc(var(--pj-u)*3) solid var(--pj-bd);overflow:hidden;margin:0}
+.pj .pbar>div{height:100%;background:var(--pj-ok)}
+.pj .okmark{display:inline-flex;align-items:center;gap:calc(var(--pj-u)*10);color:var(--pj-ok);font-weight:600}
+.pj .seatp{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:calc(var(--pj-u)*8)}
+.pj .seatp div{height:calc(var(--pj-u)*64);border-radius:calc(var(--pj-u)*12);border:calc(var(--pj-u)*3) dashed var(--pj-bd);display:flex;align-items:center;justify-content:center;gap:calc(var(--pj-u)*6);font-size:calc(var(--pj-u)*28);font-weight:600;color:var(--pj-t2);font-variant-numeric:tabular-nums;min-width:0}
+.pj .seatp div.d{border:calc(var(--pj-u)*3) solid var(--pj-ok);background:var(--pj-okbg);color:var(--pj-ok)}
+.pj .seatp div small{font-size:calc(var(--pj-u)*20);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pj .pcard{background:var(--pj-card);border:calc(var(--pj-u)*3) solid var(--pj-bd);border-radius:calc(var(--pj-u)*20);padding:calc(var(--pj-u)*20);text-align:center}
+.pj .pgroups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--pj-u)*14)}
+.pj .pgroups .pcard{text-align:left;padding:calc(var(--pj-u)*12) calc(var(--pj-u)*16)}
+.pj .pgroups b{display:block;font-size:calc(var(--pj-u)*30);color:var(--pj-ac);margin-bottom:calc(var(--pj-u)*4)}
+.pj .pgroups div{font-size:calc(var(--pj-u)*28);line-height:1.45}
+.pj .rbadge{width:calc(var(--pj-u)*var(--nm));height:calc(var(--pj-u)*var(--nm));font-size:calc(var(--pj-u)*var(--nm)*.5);background:var(--pj-card);color:var(--pj-ac);border:calc(var(--pj-u)*3) solid var(--pj-bd)}
+.pj .empty{font-size:calc(var(--pj-u)*40);color:var(--pj-t2);text-align:center;margin:auto}
+
+.pjpre{padding:10px;display:flex;flex-direction:column;gap:6px;min-width:16em}
+/* on a phone the button sits at the left of the header, so a menu hung from its right edge ran off the screen: show it as a sheet above the tab bar */
+@media (max-width:720px){.pjpre{position:fixed!important;left:12px!important;right:12px!important;top:auto!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;min-width:0;width:auto}}
+.pj .row{display:flex;align-items:center}
+.pj button{font:inherit}
+.pj .pj-off{color:var(--pj-warn)}
+
+/* icons are the app's icon font, sized in rem by <Icon>: on the TV they follow the screen unit instead (!important beats the inline size) */
+.pj i.ti { flex: none; }
+.pj .pjbar h1 i.ti { font-size: calc(var(--pj-u) * 40) !important; }
+.pj .exit i.ti { font-size: calc(var(--pj-u) * 30) !important; }
+.pj .pj-off i.ti { font-size: calc(var(--pj-u) * 40) !important; }
+.pj .pjbtn i.ti { font-size: calc(var(--pj-u) * 30) !important; }
+.pj .other .menu4 i.ti { font-size: calc(var(--pj-u) * 32) !important; }
+.pj .okmark i.ti { font-size: calc(var(--pj-u) * 40) !important; }
+.pj .seatp i.ti { font-size: calc(var(--pj-u) * 36) !important; }
+.pj .empty { display: flex; flex-direction: column; align-items: center; gap: calc(var(--pj-u) * 12); }
+.pj .empty > i.ti { font-size: calc(var(--pj-u) * 72) !important; }
+.pj:focus { outline: none; }
+.pj .live { white-space: nowrap; }
+/* many children (44) must still fit one screen: the number grid takes what is left and its rows shrink to fit */
+.pj .stat { font-size: calc(var(--pj-u) * min(var(--st), 72)); }
+/* the app's own .stat is a grey card (background + padding): on the TV it is plain text */
+.pj .stat { background: none; padding: 0; border-radius: 0; }
+.pj .seatp { flex: 1; min-height: 0; grid-auto-rows: minmax(0, 1fr); }
+.pj .seatp div { height: auto; min-height: 0; }
+.pj .body > * { min-height: 0; }
+
+/* the attendance bar on the TV is 28 units tall like the work bars (the app's thin bar is 8px) */
+.pj .stack{height:calc(var(--pj-u)*28);border-radius:calc(var(--pj-u)*14)}
+
+/* scan: the last child in a card on the left, the count on the right, then the number grid */
+.pj .pj-top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: calc(var(--pj-u) * 16); align-items: stretch; flex: none; }
+.pj .pj-last { display: flex; align-items: center; gap: calc(var(--pj-u) * 20); padding: calc(var(--pj-u) * 14) calc(var(--pj-u) * 20); min-height: calc(var(--pj-u) * 160); min-width: 0;
+  border: calc(var(--pj-u) * 3) dashed var(--pj-bd); border-radius: calc(var(--pj-u) * 20); color: var(--pj-t2); }
+.pj .pj-last > i.ti { font-size: calc(var(--pj-u) * 72) !important; }
+.pj .pj-last.ok { border-style: solid; border-color: var(--pj-ok); background: var(--pj-okbg); color: var(--pj-t1); }
+.pj .pj-last.ok > i.ti { color: var(--pj-ok); }
+.pj .pj-last.bad { border-style: solid; border-color: var(--pj-bad); color: var(--pj-bad); }
+.pj .pj-lname { font-size: calc(var(--pj-u) * var(--nm) * .667); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; min-width: 0; }
+.pj .pj-last .s2 { white-space: normal; }
+.pj .pj-side { display: flex; flex-direction: column; justify-content: center; gap: calc(var(--pj-u) * 8); min-width: 0; text-align: right; }
+.pj .pj-side .stat { font-size: calc(var(--pj-u) * min(var(--st), 64)); }
+.pj .pj-fail { display: inline-flex; align-items: center; justify-content: flex-end; gap: calc(var(--pj-u) * 8); color: var(--pj-bad); font-weight: 600; font-size: calc(var(--pj-u) * 32); }
+.pj .pj-fail > i.ti { font-size: calc(var(--pj-u) * 40) !important; }

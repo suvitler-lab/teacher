@@ -15,6 +15,7 @@ import { kvGet, kvSet, kvUpdate } from "./lib/idb";
 import { serverSkewMs, dataEpoch, epochStale } from "./lib/session";
 import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
+import { swrClear } from "./lib/swr";
 import { setThemeAttr, saveThemeLocal } from "./lib/theme";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
@@ -46,6 +47,8 @@ export { serverSkewMs };
 // belongs to no term yet (sent to the API as term=unassigned, never as "no filter").
 export const UNASSIGNED = "unassigned";
 export const selectedTermId = signal<string | null>(null);
+// saved read answers (lib/swr.ts) are per term: a term change drops them all
+selectedTermId.subscribe(() => swrClear());
 const validTerm = (id: string | null | undefined, list: Term[]) =>
   id === UNASSIGNED || (!!id && list.some((t) => t.id === id));
 
@@ -195,6 +198,7 @@ export async function logout() {
   pickedClass = ""; pickedSubject = null; // the next teacher on this device starts fresh
   pauseSync();
   stopAttSync();
+  swrClear();
   try { await api.post("/api/auth/logout"); } catch { /* offline: still clear locally; app start finishes it */ }
   await kvSet("bootstrap", null);
   await kvSet("loggedOut", true);

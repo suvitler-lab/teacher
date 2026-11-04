@@ -16,13 +16,13 @@
 .chips-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .pill {
   display: inline-flex; align-items: center; gap: 6px; height: 2rem; padding: 0 12px;
-  border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--surface-2);
+  border-radius: 999px; border: 0.5px solid var(--border-control); background: var(--surface-2);
   color: var(--text-secondary); font-size: var(--fs-sm); white-space: nowrap; cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
 }
 .pill:hover { background: var(--surface-1); }
 .pill.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
-.pill .n { opacity: 0.75; font-variant-numeric: tabular-nums; }
+.pill .n { opacity: 1; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
 
 /* segmented control */
@@ -31,7 +31,7 @@
   height: 1.87rem; padding: 0 12px; border-radius: 6px; font-size: var(--fs-sm); border: 0.5px solid transparent;
   background: transparent; color: var(--text-secondary);
 }
-.seg button.on { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-strong); }
+.seg button.on { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-control); }
 .seg button:hover:not(.on) { color: var(--text-primary); }
 
 /* stat cards */
@@ -114,3 +114,6 @@ button.uc-stat:hover { background: var(--surface-1); }
   .pill { height: 2.4rem; }
   .seg button { height: 2.27rem; }
 }
+
+/* drawers: the action buttons stay in view while a long list scrolls */
+.drawer-actions { position: sticky; bottom: 0; background: var(--surface-2); padding: 8px 0; border-top: 0.5px solid var(--border); }

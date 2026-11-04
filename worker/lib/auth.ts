@@ -158,6 +158,25 @@ export async function reserveAttempt(env: Env, keys: RateKey[], now = Date.now()
   };
 }
 
+/**
+ * Seconds until a request refused by `keys` can pass: for every key over its budget, the moment its oldest counted
+ * try ages out of the window; the request passes only when ALL of them have reopened, so the latest of those.
+ * One number, so the caller learns nothing about which budget (address, account, device) said no.
+ */
+export async function retryAfterSeconds(env: Env, keys: RateKey[], now = Date.now()): Promise<number> {
+  const rows = await env.DB.batch<{ at: number }>(
+    keys.map((k) => env.DB.prepare("SELECT at FROM login_attempts WHERE key = ? AND at >= ? ORDER BY at ASC").bind(k.key, now - k.windowMs)),
+  );
+  let reopen = 0;
+  let cap = 1000;
+  keys.forEach((k, i) => {
+    const ats = (rows[i].results ?? []).map((r) => Number(r.at));
+    cap = Math.max(cap, k.windowMs);
+    if (ats.length >= k.max) reopen = Math.max(reopen, ats[ats.length - k.max] + k.windowMs - now);
+  });
+  return Math.min(Math.max(1, Math.ceil(reopen / 1000)), Math.ceil(cap / 1000));
+}
+
 export function clientKey(c: Ctx): string {
   const raw =
     c.req.header("CF-Connecting-IP") ||

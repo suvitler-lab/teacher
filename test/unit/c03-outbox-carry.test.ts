@@ -70,9 +70,8 @@ describe("outbox carries receivedDate / dateOnly (TC-41)", () => {
     await enqueueSubmission(a);
     await flush();
     const parked = await failedAll();
-    // 0312e8d parks the RESULT ("invalid") as the reason; the server's detail (received_date_*) is not kept — showing the
-    // 5 new reasons in Thai is ui-redesign work (plan.md "ส่วน UI ที่เลื่อน" Q3), noted in qa-report.
-    expect(parked.map((f) => f.reason)).toEqual(["invalid"]);
+    // the server's detail is kept, so the failed list can say why in Thai
+    expect(parked.map((f) => f.reason)).toEqual(["received_date_before_assigned"]);
     expect((parked[0].payload as any).receivedDate).toBe("2026-10-30");
 
     const bodies: any[] = [];

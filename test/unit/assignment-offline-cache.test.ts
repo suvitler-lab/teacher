@@ -15,7 +15,7 @@ const work = (id: string): Assignment => ({
 const bootstrap = (): Bootstrap => ({
   settings: { school_name: "โรงเรียนทดสอบ", teacher_name: "ครูทดสอบ", app_title: "งานครบ", late_after: "08:30",
     theme: "light", accent: "blue", sound_enabled: false, accept_student_code_scan: false,
-    parent_portal_enabled: false, onboarding_done: true, last_backup_at: "", period_times: "{}" },
+    parent_portal_enabled: false, onboarding_done: true, last_backup_at: "", period_times: "{}", home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", gradebook_cards: "", reports_cards: "", students_cards: "", settings_cards: "" },
   terms: [], currentTermId: null, classes: [], subjects: [], workTypes: [], students: [],
   revokedTokens: {}, qrRotatedAt: {}, assignments: [work("old")], dataEpoch: 1, serverTime: 100,
 });

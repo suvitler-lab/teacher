@@ -6,13 +6,21 @@
 // wrong room.
 import { signal } from "@preact/signals";
 import { api, ApiError } from "./api";
-import { draftAll, draftGet, draftUpdate, type AttDraft, type AttConflict, type AttReviewRow } from "./idb";
+import { draftAll, draftGet, draftUpdate, type AttDraft, type AttDraftRow, type AttConflict, type AttReviewRow } from "./idb";
 import { authRequired, syncPaused, dataEpoch } from "./session";
+import { swrClear } from "./swr";
 import { classifyFailure } from "@shared/failure";
 import { ulid } from "@shared/ids";
 import type { AttendanceStatus } from "@shared/types";
 
 export type AttMethod = "camera" | "hid" | "manual" | "grid" | "bulk";
+
+/**
+ * The "status" of an edit that takes a mark back (the teacher tapped the same status again): the child is
+ * "not checked yet" again. It travels like any other tap (draft, op id, retry, clash) and the server deletes the row.
+ */
+export const CLEARED = "none";
+export type AttWireStatus = AttendanceStatus | typeof CLEARED;
 
 export interface AttCtx {
   date: string;
@@ -35,7 +43,8 @@ export function ctxOf(d: AttDraft): AttCtx | null {
 export type AttEvent =
   // acked = the status the SERVER holds for each confirmed student (not necessarily what this device sent);
   // changedByOthers = confirmed students whose server status differs from what this device sent (another device edited later)
-  | { type: "saved"; key: string; acked: Record<string, AttendanceStatus>; versions: Record<string, number>; updatedAt: number; changedByOthers: string[] }
+  // (a student the server holds NO mark for is acked as "none")
+  | { type: "saved"; key: string; acked: Record<string, AttWireStatus>; versions: Record<string, number>; updatedAt: number; changedByOthers: string[] }
   | { type: "changed"; key: string }; // conflicts / dropped rows / error changed the draft
 
 const listeners = new Set<(e: AttEvent) => void>();
@@ -90,10 +99,46 @@ const isEmpty = (d: AttDraft) => Object.keys(d.rows).length === 0 && !(d.review 
 // ---- edits -----------------------------------------------------------------
 export interface AttEdit {
   studentId: string;
-  status: AttendanceStatus;
+  status: AttWireStatus;
   method: AttMethod;
+  /** keep an earlier tap time (undoing a clear puts "สาย 08:41" back with its 08:41) */
+  clientTs?: number;
   /** server updated_at the teacher was looking at for this student (null = saw nothing) */
   baseUpdatedAt: number | null;
+}
+
+export interface DraftEditResult {
+  draft: AttDraft | undefined;
+  /** students whose row was really written (with `onlyIfUnmarked` some may be left as they were) */
+  applied: string[];
+  /** what the draft held for each applied student before this write (a clear that was not sent yet comes back on undo) */
+  previous: Record<string, AttDraftRow>;
+}
+
+async function editDraft(ctx: AttCtx, edits: AttEdit[], onlyIfUnmarked: boolean): Promise<DraftEditResult> {
+  const key = ctxKey(ctx);
+  const now = Date.now();
+  const applied: string[] = [];
+  const previous: Record<string, AttDraftRow> = {};
+  const next = await draftUpdate(key, (cur) => {
+    const rows = { ...(cur?.rows ?? {}) };
+    for (const e of edits) {
+      const prev = rows[e.studentId];
+      // decided inside the same storage transaction as the write: a mark that landed a moment ago (a QR scan, a tap) is never overwritten
+      if (onlyIfUnmarked && prev && prev.status !== CLEARED) continue;
+      if (prev) previous[e.studentId] = prev;
+      applied.push(e.studentId);
+      rows[e.studentId] = {
+        status: e.status, clientTs: e.clientTs ?? now, method: e.method, opId: ulid(), epoch: dataEpoch.value ?? undefined,
+        // keep the base of an edit that hasn't been acknowledged yet
+        baseUpdatedAt: prev ? prev.baseUpdatedAt : e.baseUpdatedAt,
+      };
+    }
+    if (onlyIfUnmarked && applied.length === 0) return cur;
+    return { ...cur, key, ctx, rows, rev: (cur?.rev ?? 0) + 1, updatedAt: now };
+  });
+  void refreshAttDraftCount();
+  return { draft: next, applied, previous };
 }
 
 /**
@@ -101,22 +146,44 @@ export interface AttEdit {
  * them — the caller must then undo the tap, never show it as saved.
  */
 export async function draftEdit(ctx: AttCtx, edits: AttEdit[]): Promise<AttDraft> {
+  return (await editDraft(ctx, edits, false)).draft!;
+}
+
+/**
+ * Like `draftEdit`, but a student who already has a mark in the draft (anything except a not-yet-sent clear) is left alone.
+ * Used by "มาทั้งห้อง": it fills only the children nobody has marked, judged at the moment of writing.
+ */
+export function draftEditIfUnmarked(ctx: AttCtx, edits: AttEdit[]): Promise<DraftEditResult> {
+  return editDraft(ctx, edits, true);
+}
+
+/**
+ * Take back rows that were set a moment ago and have not been sent: used by "undo" right after "มาทั้งห้อง".
+ * Once a row has been sent only a new tap can change it, so this only works while the rows are still in the draft and
+ * no send is running; `taken` is how many could be withdrawn (0 = they are already on their way).
+ */
+export async function withdrawRows(
+  ctx: AttCtx, opIds: Record<string, string>, previous: Record<string, AttDraftRow> = {},
+): Promise<{ taken: number; draft: AttDraft | undefined }> {
   const key = ctxKey(ctx);
-  const now = Date.now();
+  if (stateOf(key).running) return { taken: 0, draft: await draftGet(key) };
+  let taken = 0;
   const next = await draftUpdate(key, (cur) => {
-    const rows = { ...(cur?.rows ?? {}) };
-    for (const e of edits) {
-      const prev = rows[e.studentId];
-      rows[e.studentId] = {
-        status: e.status, clientTs: now, method: e.method, opId: ulid(), epoch: dataEpoch.value ?? undefined,
-        // keep the base of an edit that hasn't been acknowledged yet
-        baseUpdatedAt: prev ? prev.baseUpdatedAt : e.baseUpdatedAt,
-      };
+    if (!cur) return cur;
+    const rows = { ...cur.rows };
+    for (const [sid, opId] of Object.entries(opIds)) {
+      if (rows[sid]?.opId === opId) {
+        // what the draft held for this child before the action (e.g. a clear that was not sent yet) comes back with it
+        if (previous[sid]) rows[sid] = previous[sid]; else delete rows[sid];
+        taken++;
+      }
     }
-    return { ...cur, key, ctx, rows, rev: (cur?.rev ?? 0) + 1, updatedAt: now };
+    if (!taken) return cur;
+    const d = { ...cur, rows, rev: cur.rev + 1, updatedAt: Date.now() };
+    return isEmpty(d) ? null : d;
   });
   void refreshAttDraftCount();
-  return next!;
+  return { taken, draft: next };
 }
 
 /** Take a side on one clash. "server" drops our edit; "draft" re-bases it so it can go through. */
@@ -291,19 +358,22 @@ async function runFlush(key: string, opts: FlushOpts, st: KeyState): Promise<voi
     if (ctx.subjectId) { body.subjectId = ctx.subjectId; body.period = ctx.period; }
 
     try {
-      const res = await api.post<{ updatedAt: number; rows?: Record<string, number>; state?: Record<string, { status: string; updatedAt: number }> }>("/api/attendance/batch", body);
+      const res = await api.post<{ updatedAt: number; rows?: Record<string, number>; state?: Record<string, { status: string; updatedAt: number }>; absent?: string[] }>("/api/attendance/batch", body);
+      swrClear(); // the attendance landed: saved reads (days, reports, dashboard) may be out of date
       const versions = res.rows ?? {};
       const held = res.state; // what the server actually holds, read after the write (absent = an older server)
+      const none = new Set(res.absent ?? []); // students the server holds NO mark for now (a clear that landed, or one cleared by another device)
       // Only rows the server CONFIRMED leave the draft. A row it says nothing about stays, and is sent again.
-      const confirmed = held ? entries.filter(([sid]) => held[sid]) : entries;
+      const confirmed = held ? entries.filter(([sid]) => held[sid] || none.has(sid)) : entries;
+      const serverStatus = (sid: string, sent: string): AttWireStatus => (held?.[sid]?.status ?? (none.has(sid) ? CLEARED : sent)) as AttWireStatus;
       const cleared = await ack(key, Object.fromEntries(confirmed.map(([sid, r]) => [sid, r.opId!])), versions, res.updatedAt);
       st.tries = 0; st.nextAt = 0;
       emit({
         type: "saved", key, updatedAt: res.updatedAt, versions,
         // the screen shows what the SERVER holds: a retry of an edit that had already landed can find that another
         // device changed the student since — saying "present" then would be a lie
-        acked: Object.fromEntries(confirmed.map(([sid, r]) => [sid, (held?.[sid]?.status ?? r.status) as AttendanceStatus])),
-        changedByOthers: confirmed.filter(([sid, r]) => held?.[sid] && held[sid].status !== r.status).map(([sid]) => sid),
+        acked: Object.fromEntries(confirmed.map(([sid, r]) => [sid, serverStatus(sid, r.status)])),
+        changedByOthers: confirmed.filter(([sid, r]) => held && serverStatus(sid, r.status) !== r.status).map(([sid]) => sid),
       });
       void refreshAttDraftCount();
       if (confirmed.length < entries.length) {

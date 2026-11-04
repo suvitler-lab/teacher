@@ -6,12 +6,6 @@
 .gb-summary { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: var(--fs-sm); margin-bottom: 8px; }
 .gb-summary b { font-weight: 500; }
 
-.gb-actionbar {
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  background: var(--bg-accent); color: var(--text-accent);
-  border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 10px; font-size: var(--fs-sm);
-}
-.gb-actionbar button { height: 2rem; font-size: var(--fs-xs); padding: 0 10px; background: var(--surface-2); }
 
 /* The table scrolls inside its own frame (the page never scrolls sideways). Name column sticks left, สะสม sticks right,
    the header sticks on top; edge shadows show there is more. All sizes follow the text size setting (rem). */
@@ -30,7 +24,7 @@
    --gb-col-w and the frame scrolls sideways. The name and total columns keep their own fixed widths. */
 table.gb { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: max(100%, calc(var(--gb-n, 1) * var(--gb-col-w) + var(--gb-name-w) + var(--gb-tot-w))); font-size: var(--fs-sm); }
 .gb-frame.no-tot .gb-scroll { --gb-tot-w: 0px; }
-table.gb th, table.gb td { border-bottom: 0.5px solid var(--border); padding: 0; height: var(--row-h); text-align: center; font-weight: 400; background: var(--surface-2); white-space: nowrap; }
+table.gb th, table.gb td { border-bottom: 0.5px solid var(--border); padding: 0; height: var(--gb-row, var(--row-h)); text-align: center; font-weight: 400; background: var(--surface-2); white-space: nowrap; }
 table.gb thead th { position: sticky; top: 0; background: var(--surface-1); z-index: 2; padding: 0; height: auto; }
 table.gb.grouped thead tr.hd th { top: var(--gb-gh); }
 /* Column head ("A: tint head"): the ground is the work type's pale tint (--hb), a shape per type sits before the title (never colour alone),
@@ -107,8 +101,9 @@ table.gb input.cell-input { width: 3.07rem; height: 2.4rem; text-align: center; 
 }
 .gb-menu-left { right: auto; left: 0; min-width: 14rem; }
 .gb-menu button { white-space: nowrap; }
-.gb-menu button { justify-content: flex-start; border: none; background: transparent; height: 2.27rem; font-size: var(--fs-sm); }
-.gb-menu button:hover { background: var(--surface-1); }
+.gb-menu button:not(.primary) { justify-content: flex-start; border: none; background: transparent; height: 2.27rem; font-size: var(--fs-sm); }
+.gb-menu button.primary { justify-content: flex-start; height: 2.27rem; font-size: var(--fs-sm); }
+.gb-menu button:not(.primary):hover { background: var(--surface-1); }
 
 /* mobile one-assignment list */
 .gb-mchips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px; }
@@ -154,7 +149,6 @@ button[aria-disabled="true"] { opacity: 0.5; cursor: default; }
 /* gb-2: laptop / desktop (wide + mouse). Gives the rows room: the stats ride in the filter row, the action bar and the
    minimap share one row, the page title is slimmer and the column heads take one line (full title stays in the tooltip).
    Touch screens and narrow windows keep the layout above untouched. */
-.gb-bar2 { display: contents; }
 @media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
   /* title, class chips and the term / create buttons share ONE row; every other block takes a full row */
   .gb-page { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; margin-top: -0.8rem; margin-bottom: -1.5rem; }
@@ -168,11 +162,10 @@ button[aria-disabled="true"] { opacity: 0.5; cursor: default; }
   .gb-page .uh-ic { width: 2rem; height: 2rem; }
   .gb-toolbar { margin-bottom: 6px; }
   .gb-toolbar .gb-summary { flex-basis: auto; gap: 12px; order: 0; }
-  .gb-bar2 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 6px; }
-  .gb-bar2 .gb-actionbar { margin-bottom: 0; padding: 4px 10px; flex: 0 1 auto; }
-  .gb-bar2 .gb-nav { margin-bottom: 0; flex: 1 1 14rem; min-width: 0; flex-wrap: nowrap; overflow-x: auto; }
-  .gb-bar2 .gb-mini { height: 2.1rem; }
-  .gb-bar2 .gb-jump { min-height: 2.1rem; }
+  .gb-toolbar .gb-nav { margin-bottom: 0; flex: 1 1 14rem; min-width: 0; flex-wrap: nowrap; overflow-x: auto; }
+  .gb-toolbar .gb-mini { height: 2.1rem; }
+  .gb-toolbar .gb-jump { min-height: 2.1rem; }
+  .gb-work { padding: 4px 12px; }
   table.gb thead th .ht { -webkit-line-clamp: 1; min-height: 0; line-height: 1.35; }
   table.gb thead th.col-w { padding-top: 0.15rem; }
   table.gb thead .name-col { height: auto; }
@@ -181,3 +174,138 @@ button[aria-disabled="true"] { opacity: 0.5; cursor: default; }
   .gb-page .gb-help { display: none; }
   .gb-legend { margin-top: 4px; }
 }
+
+/* round 3: the close button sits in the work's bar; under 900px it moves into ⋮ (the bar is too narrow) */
+.gb-only-narrow { display: none !important; }
+@media (max-width: 899px) { .gb-closebtn { display: none !important; } .gb-only-narrow { display: flex !important; } }
+/* the ▾ that opens the cell editor beside the quick input */
+td.cell { position: relative; }
+.cell-more { position: absolute; right: 0; top: 0; bottom: 0; width: 1.6rem; min-width: 0; min-height: 0; padding: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background: var(--surface-1); border: 0.5px solid var(--border-strong); z-index: 2; }
+@media (pointer: coarse) {
+  .cell-more { width: 44px; }
+  td.cell:has(.cell-more) input.cell-input { width: calc(100% - 44px - 6px); margin-right: auto; margin-left: 3px; }
+}
+/* the picked column: a 2px accent frame down its whole height (the tint alone is 1.15:1) */
+.gb th.sel { box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent), inset 0 2px 0 var(--accent), inset 0 -2px 0 var(--accent); }
+.gb td.cell.sel { box-shadow: inset 2px 0 0 var(--accent), inset -2px 0 0 var(--accent); }
+/* menus in dark mode read from the secondary text colour, not the dimmer muted one */
+[data-theme="dark"] .gb-menu .page-sub, [data-theme="dark"] .gb-menu .muted { color: var(--text-secondary); }
+
+/* the cards under the table (round 3): foldable by the teacher through "ปรับการ์ด", never above the table */
+/* a row is as tall as its (wrapped) title: the app's button rule gives a fixed height, which let a two-line title run over the next row */
+.gc-row { display: flex; align-items: center; gap: 8px; width: 100%; justify-content: flex-start; text-align: left; border: none; background: transparent; border-top: 0.5px solid var(--border); border-radius: 0; height: auto; min-height: var(--tap, 44px); padding: 6px 0; line-height: 1.4; }
+.gc-row > .grow { min-width: 0; overflow-wrap: anywhere; }
+.gc-row > .chip, .gc-row > .hm-chip { flex: none; }
+.gc-row:first-of-type { border-top: none; }
+
+
+/* the legend: a grid of equal places, so no entry is cut in the middle of its words */
+.gb-cards .gb-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 8px 12px; }
+.gb-cards .gb-legend > span { display: flex; align-items: center; gap: 8px; min-height: 2rem; white-space: nowrap; }
+.gc-help { margin: 10px 0 0; padding: 10px 0 0 1.1rem; border-top: 0.5px solid var(--border); font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.6; }
+
+/* iPad held upright (the frame is ~680px): a narrow table (name · five works · total) instead of two or three wide columns */
+@media (min-width: 721px) and (max-width: 900px) and (orientation: portrait) {
+  .gb-scroll, .gb-frame { --gb-name-w: 8.5rem; --gb-col-w: 5rem; --gb-tot-w: 4rem; }
+  .gb-toolbar .gb-nav { display: none; } /* five works fit; the toolbar keeps to one row so the table keeps its rows */
+}
+@media (pointer: coarse) and (min-width: 901px) and (max-width: 1400px) {
+  .gb-scroll, .gb-frame { --gb-name-w: 10rem; --gb-col-w: 6rem; --gb-tot-w: 4rem; }
+}
+@media (pointer: coarse) {
+  .gb-scroll, .gb-frame { --gb-row: max(44px, 2.45rem); }
+  .gb-toolbar select { height: var(--tap); }
+}
+
+/* round 3, as designed: the cards are one row above the table (buttons, drop-downs) and a legend line below it */
+.gb-strip { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.gb-tile { display: inline-flex; align-items: center; gap: 6px; }
+.gb-tile.sum { gap: 14px; font-size: var(--fs-sm); height: auto; min-height: 2.13rem; padding: 4px 10px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--surface-2); flex-wrap: wrap; }
+.gb-tile.sum b { font-weight: 500; }
+.gb-tile.sum .gb-n { border: none; background: none; padding: 0; height: auto; min-height: 0; text-decoration: underline dotted; cursor: pointer; font: inherit; color: inherit; }
+.gb-list { min-width: 16rem; max-height: 50vh; overflow: auto; }
+.gb-list .gc-row { padding: 6px 10px; }
+.gb-filter { min-width: 18rem; max-width: min(24rem, 92vw); padding: 12px; gap: 10px; align-items: stretch; }
+.gb-filter .field > span { font-size: var(--fs-xs); color: var(--text-secondary); }
+.gb-wn { font-size: var(--fs-sm); color: var(--text-secondary); }
+.gb-wn b { font-weight: 500; color: var(--text-primary); }
+.gb-bottom { display: grid; gap: 8px; margin-top: 8px; }
+.gb-bottom .gb-help { display: flex; gap: 6px; align-items: center; margin: 0; }
+.gb-bottom .gb-legend { margin-top: 0; }
+.gb-bcard { padding: 10px 12px; }
+.gb-hist { display: flex; gap: 10px; align-items: flex-end; margin-top: 6px; }
+.gb-hist > div { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+.gb-hist i { display: block; width: 100%; background: var(--fill-accent); border-radius: 4px 4px 0 0; }
+.gb-hist small { font-size: var(--fs-xs); color: var(--text-secondary); }
+.gb-log { font-size: var(--fs-sm); padding: 3px 0; border-top: 0.5px solid var(--border); }
+.gb-bcards { margin-top: 8px; max-width: 96rem; } /* <PageCols>: up to 3 columns; the table above keeps the whole width */
+
+/* ---- the work panel (round 3, as designed): ONE card for the picked work — name · badges · counts · buttons ---- */
+.gb-work {
+  display: flex; flex-direction: column; gap: 6px; padding: 6px 12px; margin-bottom: 8px;
+  background: var(--surface-2); border: 0.5px solid var(--border); border-left: 5px solid var(--f, var(--accent));
+  border-radius: var(--radius); box-shadow: var(--shadow-card); min-height: 3rem; font-size: var(--fs-sm);
+}
+.gb-work.empty { border-left-color: var(--border-strong); justify-content: center; }
+.gb-w1 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; min-width: 0; flex: 1 1 auto; }
+.gb-wl { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 0 1 auto; flex-wrap: wrap; }
+.gb-wt { font-size: var(--fs-md, 1rem); font-weight: 500; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gb-wfull { color: var(--text-secondary); white-space: nowrap; }
+.gb-wn { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.gb-wn > span:first-child b { font-weight: 600; }
+.gb-wn .chip, .gb-wl .chip { display: inline-flex; align-items: center; gap: 4px; min-height: 1.75rem; padding: 0 8px; border-radius: 999px; white-space: nowrap; }
+.gb-wb { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.gb-wb button { min-height: var(--tap); }
+.gb-wb button.icon.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+@media (hover: hover) and (pointer: fine) {
+  .gb-wb button { min-height: 2.5rem; height: 2.5rem; }
+}
+/* a wide mouse screen: one row (about 48px); touch and narrow windows: two rows (names + badges, then buttons) */
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  .gb-work { flex-direction: row; align-items: center; gap: 6px 14px; }
+  .gb-wb { margin-left: auto; flex-wrap: nowrap; }
+}
+
+/* the toolbar: subject · filter · rows filter (and, with a mouse, the minimap) in one row */
+.gb-toolbar { min-height: var(--tap); }
+.gb-toolbar .seg button { min-height: var(--tap); }
+@media (hover: hover) and (pointer: fine) { .gb-toolbar .seg button, .gb-toolbar button { min-height: 2.5rem; } }
+.gb-scrim { position: fixed; inset: 0; z-index: 59; background: rgba(0, 0, 0, 0.35); }
+.gb-filter .gb-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.gb-filter .gb-checks button { min-height: var(--tap); gap: 6px; border: 1.5px solid var(--border-control); background: var(--surface-2); font-size: var(--fs-sm); }
+.gb-filter .gb-checks button.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
+.gb-filter.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; top: auto; margin: 0 auto; z-index: 60; width: 100%; max-width: 440px; min-width: 0;
+  max-height: 85dvh; overflow-y: auto; border-radius: 16px 16px 0 0; padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: var(--surface-3, var(--surface-2));
+}
+.gb-filter.sheet button { white-space: normal; }
+
+/* a wrong score is said once, floating — it never pushes the table down */
+.gb-msg { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 70; max-width: min(92vw, 28rem); padding: 8px 14px; border-radius: var(--radius); background: var(--bg-danger); color: var(--text-danger); border: 0.5px solid var(--border-danger, var(--border)); box-shadow: var(--shadow-pop); font-size: var(--fs-sm); }
+
+/* the third line of a work head ("ส่งแล้ว 30/44") is for touch screens, where the head is taller */
+table.gb thead th .hs2 { display: none; font-size: var(--fs-xs); font-weight: 500; color: var(--text-secondary); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; padding-bottom: 6px; font-variant-numeric: tabular-nums; }
+@media (pointer: coarse) { table.gb thead th .hs2 { display: block; } table.gb thead th .hs { padding-bottom: 0; } }
+table.gb thead th .hs .over, table.gb thead th .hs .over .hs-cal { color: var(--text-warning); font-weight: 500; }
+
+/* the cell editor */
+.ce-status { width: 100%; }
+.ce-status button { flex: 1; min-height: var(--tap); gap: 4px; }
+.ce-note { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 8px; border-radius: 8px; background: var(--bg-warning); color: var(--text-warning); font-size: var(--fs-sm); }
+.ce-quick { display: none; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.ce-quick button { min-width: var(--tap); min-height: var(--tap); }
+@media (pointer: coarse) { .ce-quick { display: flex; } }
+
+/* the cards' own buttons */
+.gc-row > .ghost.grow { text-align: left; justify-content: flex-start; height: auto; white-space: normal; }
+.gb-tile { min-height: var(--tap); }
+@media (hover: hover) and (pointer: fine) { .gb-tile { min-height: 2.5rem; } }
+.gb-tile.sum { min-height: var(--tap); }
+@media (hover: hover) and (pointer: fine) { .gb-tile.sum { min-height: 2.5rem; } }
+.gb-menu [role="menuitem"] { min-height: var(--tap); }
+@media (hover: hover) and (pointer: fine) { .gb-menu [role="menuitem"] { min-height: 2.27rem; } }
+
+/* "ส่งออก Excel" in the toolbar: 44px target; up to 900px (iPad upright, phones) the label folds away so the toolbar stays on one row (aria-label + title keep the name) */
+.gb-toolbar .gb-export { min-height: var(--tap, 44px); min-width: var(--tap, 44px); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin-left: auto; }
+@media (max-width: 900px) { .gb-toolbar .gb-export { padding: 0 11px; } .gb-toolbar .gb-export .gb-export-lbl { display: none; } }

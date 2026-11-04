@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import "../styles/students.css";
 import { Icon } from "./Icon";
 import { activeClasses, studentsByClass, settings, qrRotatedAt } from "../store";
 import { fullName } from "../lib/names";
@@ -13,13 +14,14 @@ const LAYOUTS = {
 } as const;
 type LayoutKey = keyof typeof LAYOUTS;
 
-export function StickerSheet({ classId, onClose }: { classId: string; onClose: () => void }) {
+export function StickerSheet({ classId, onClose, initialScope = "all" }: { classId: string; onClose: () => void; initialScope?: "all" | "rotated" }) {
   const all = studentsByClass.value.get(classId) ?? [];
   const cls = activeClasses.value.find((c) => c.id === classId);
   const school = settings.value?.school_name ?? "";
   const [layout, setLayout] = useState<LayoutKey>("s21");
-  const [scope, setScope] = useState<"all" | "rotated">("all");
+  const [scope, setScope] = useState<"all" | "rotated">(initialScope);
   const [qrs, setQrs] = useState<Record<string, string>>({});
+  
 
   const rotatedSet = qrRotatedAt.value;
   const students = scope === "rotated" ? all.filter((s) => rotatedSet[s.id]) : all;
@@ -47,23 +49,26 @@ export function StickerSheet({ classId, onClose }: { classId: string; onClose: (
   const perPage = { card: 10, s21: 21, s40: 40 }[layout];
   const pages = Math.max(1, Math.ceil(students.length / perPage));
 
+  const rotatedCount = all.filter((s) => rotatedSet[s.id]).length;
   return (
     <div>
       <div class="print-toolbar no-print">
-        <button onClick={onClose}><Icon name="arrow-left" size={16} /> กลับ</button>
+        <button class="stk-back" onClick={onClose}><Icon name="arrow-left" size={20} /> กลับ</button>
         <span class="grow" />
-        <div class="seg">
-          {(Object.keys(LAYOUTS) as LayoutKey[]).map((k) => <button class={k === layout ? "on" : ""} onClick={() => setLayout(k)}>{LAYOUTS[k].label}</button>)}
+        <div class="stk-seg" role="radiogroup" aria-label="ขนาดสติกเกอร์">
+          {(Object.keys(LAYOUTS) as LayoutKey[]).map((k) => (
+            <button role="radio" aria-checked={k === layout} onClick={() => setLayout(k)}>{LAYOUTS[k].label}<small>{LAYOUTS[k].note}</small></button>
+          ))}
         </div>
-        <div class="seg">
-          <button class={scope === "all" ? "on" : ""} onClick={() => setScope("all")}>ทั้งห้อง</button>
-          <button class={scope === "rotated" ? "on" : ""} onClick={() => setScope("rotated")}>เฉพาะ QR ใหม่</button>
+        <div class="stk-seg slim" role="radiogroup" aria-label="ขอบเขต">
+          <button role="radio" aria-checked={scope === "all"} onClick={() => setScope("all")}>ทั้งห้อง ({all.length})</button>
+          <button role="radio" aria-checked={scope === "rotated"} onClick={() => setScope("rotated")}>เฉพาะ QR ใหม่ ({rotatedCount})</button>
         </div>
-        <span class="page-sub">{students.length} ดวง · {pages} แผ่น</span>
-        <button class="primary" onClick={print} disabled={!ready}>{ready ? <Icon name="printer" size={16} /> : <Icon name="loader-2" class="spin" size={16} />} พิมพ์</button>
+        <span class="page-sub">A4 · {students.length} ดวง · {pages} แผ่น</span>
+        <button class="primary" onClick={print} disabled={!ready}>{ready ? <Icon name="printer" size={20} /> : <Icon name="loader-2" class="spin" size={20} />} พิมพ์</button>
       </div>
       {students.length === 0 ? (
-        <div class="card empty">ไม่มีบัตรให้พิมพ์ในเงื่อนไขนี้</div>
+        <div class="card empty stk-empty">{scope === "rotated" ? "ยังไม่มี QR ใหม่ใน 60 วัน" : "ไม่มีบัตรให้พิมพ์ในเงื่อนไขนี้"}</div>
       ) : (
         <div class="sheet">
           <div class={"sticker-grid cols-" + L.cols}>
