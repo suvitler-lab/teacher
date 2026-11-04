@@ -49,7 +49,26 @@ beforeEach(async () => {
 });
 
 describe("AC-03 (C-02 R-05): the holders of a class removed in the same save are neither counted nor adjusted", () => {
-  it("raise 10 → 20 and drop c2, no answer → 409 raise_choice_required with count 1 (ก only), nothing lands", async () => {
+  // Since the restore-orphan fix a room that has ANY submissions row of the work cannot be taken off it (409
+  // class_has_scores), so a removed room never holds a score: the tests below first clear c2's hand-ins (as the teacher must).
+  const clearC2 = () => env.DB.prepare("DELETE FROM submissions WHERE assignment_id = 'a1' AND student_id = ?").bind(SO).run();
+
+  it("raise 10 → 20 and drop c2 while c2 still has its score → 409 class_has_scores, nothing lands", async () => {
+    const mark = await maxAuditId();
+    const res = await save({ ...A1(), full_score: 20, class_ids: ["c1"], raise_choice: "adjust", raise_from: 10 });
+    expect(res.status).toBe(409);
+    const body = (await res.json()) as any;
+    expect(body.error).toBe("class_has_scores");
+    expect(body.message).toContain("ป.6/2");
+    expect((await work()).full_score).toBe(10);
+    expect((await cellOf(KO)).score).toBe(10);
+    expect((await cellOf(SO)).score).toBe(10);
+    expect((await all("SELECT class_id FROM assignment_classes WHERE assignment_id = 'a1' ORDER BY class_id")).map((r) => r.class_id)).toEqual(["c1", "c2"]);
+    expect(await auditsAfter(mark)).toEqual([]);
+  });
+
+  it("raise 10 → 20 and drop c2 (no hand-ins there), no answer → 409 raise_choice_required with count 1 (ก only), nothing lands", async () => {
+    await clearC2();
     const mark = await maxAuditId();
     const res = await save({ ...A1(), full_score: 20, class_ids: ["c1"] });
     expect(res.status).toBe(409);
@@ -58,14 +77,14 @@ describe("AC-03 (C-02 R-05): the holders of a class removed in the same save are
     expect(await auditsAfter(mark)).toEqual([]);
   });
 
-  it("…ปรับ → ก 20 · ซ (c2, removed) stays 10 · raise.count 1 · one cell line + the work line (count 1)", async () => {
+  it("…ปรับ → ก 20 · ข stays 7 · raise.count 1 · one cell line + the work line (count 1)", async () => {
+    await clearC2();
     const mark = await maxAuditId();
     const res = await save({ ...A1(), full_score: 20, class_ids: ["c1"], raise_choice: "adjust", raise_from: 10 });
     expect(res.status).toBe(200);
     const raise = ((await res.json()) as any).raise;
     expect(raise).toMatchObject({ choice: "adjust", from: 10, to: 20, count: 1 });
     expect((await cellOf(KO)).score).toBe(20);
-    expect((await cellOf(SO)).score).toBe(10);
     expect((await cellOf(KHO)).score).toBe(7);
     const lines = await auditsAfter(mark);
     expect(lines.filter((l) => l.entity === "submission").map((l) => l.student_id)).toEqual([KO]);
@@ -78,21 +97,13 @@ describe("AC-03 (C-02 R-05): the holders of a class removed in the same save are
   });
 
   it("…คงไว้ → raise.count 1 and the work line says 1", async () => {
+    await clearC2();
     const mark = await maxAuditId();
     const res = await save({ ...A1(), full_score: 20, class_ids: ["c1"], raise_choice: "keep", raise_from: 10 });
     expect(res.status).toBe(200);
     expect(((await res.json()) as any).raise).toMatchObject({ choice: "keep", count: 1 });
     const workLine = (await auditsAfter(mark)).find((l) => l.entity === "assignment");
     expect(JSON.parse(workLine.after_json).raise).toMatchObject({ choice: "keep", count: 1 });
-  });
-
-  it("drop c2 when only ซ (c2) holds the full score → a plain raise, no question, nobody adjusted", async () => {
-    await env.DB.prepare("UPDATE submissions SET score = 9 WHERE student_id = ?").bind(KO).run();
-    const res = await save({ ...A1(), full_score: 20, class_ids: ["c1"] });
-    expect(res.status).toBe(200);
-    expect(((await res.json()) as any).raise).toBeNull();
-    expect((await work()).full_score).toBe(20);
-    expect((await cellOf(SO)).score).toBe(10);
   });
 
   it("[guard] no class removed → count 2 (ก ซ), both adjusted", async () => {

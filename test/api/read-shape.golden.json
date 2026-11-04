@@ -211,7 +211,7 @@
   "classId": "c1",
   "range": {
    "from": "2569-09-01",
-   "to": "2569-09-31",
+   "to": "2569-09-30",
    "month": "2569-09",
    "termId": "t1",
    "termDatesMissing": false,

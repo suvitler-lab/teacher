@@ -23,7 +23,7 @@ function describeAudit(r: any): string {
     return "รับงาน";
   }
   if (r.entity === "attendance" && r.action === "void") return "ยกเลิกการเช็ค";
-  if (r.entity === "attendance") return `เช็คชื่อ: ${r.after?.status ?? "-"}`;
+  if (r.entity === "attendance") return `เช็คชื่อ: ${({ present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" } as Record<string, string>)[String(r.after?.status)] ?? r.after?.status ?? "-"}`;
   if (r.entity === "qr") return "ออก QR ใหม่";
   return ENTITY_LABEL[r.entity] ?? r.action;
 }

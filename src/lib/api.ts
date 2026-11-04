@@ -12,6 +12,17 @@ export class ApiError extends Error {
   }
 }
 
+/** a server answer that carries only a code (no Thai message) must never reach the teacher as raw English */
+const CODE_TEXT: Record<string, string> = {
+  unauthorized: "เซสชันหมดอายุ — เข้าสู่ระบบอีกครั้ง",
+  forbidden: "ไม่มีสิทธิ์ทำรายการนี้",
+  not_found: "ไม่พบข้อมูลนี้ (อาจถูกลบไปแล้ว)",
+  epoch_changed: "ข้อมูลถูกกู้คืนจากเครื่องอื่น — โหลดใหม่ก่อน",
+  rate_limited: "ทำรายการถี่เกินไป รอสักครู่แล้วลองใหม่",
+  validation: "ข้อมูลที่กรอกไม่ครบหรือไม่ถูกต้อง — ตรวจช่องที่กรอกอีกครั้ง",
+  invalid_body: "ข้อมูลที่ส่งไม่ถูกต้อง — ลองใหม่อีกครั้ง",
+};
+
 export interface RequestOptions { timeoutMs?: number; signal?: AbortSignal }
 
 async function request<T>(method: string, path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
@@ -65,7 +76,7 @@ async function request<T>(method: string, path: string, body?: unknown, options:
       epochStale.value = true;
     }
     const retryAfter = res.headers.get("Retry-After");
-    throw new ApiError(res.status, payload.error ?? "error", payload.message ?? payload.error ?? "เกิดข้อผิดพลาด", retryAfter ? { ...payload, retryAfter } : payload);
+    throw new ApiError(res.status, payload.error ?? "error", payload.message ?? (payload.error && CODE_TEXT[payload.error]) ?? "เกิดข้อผิดพลาด", retryAfter ? { ...payload, retryAfter } : payload);
   }
   return payload as T;
 }

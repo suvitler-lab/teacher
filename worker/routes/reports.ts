@@ -19,7 +19,8 @@ reportRoutes.get("/api/reports/summary", async (c) => {
 
   // month window for filtering assignments by assigned_date
   const monthFrom = month ? `${month}-01` : null;
-  const monthTo = month ? `${month}-31` : null;
+  // the real last day of the month (a month has 28-31 days)
+  const monthTo = month && /^\d{4}-\d{2}$/.test(month) ? `${month}-${String(new Date(Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0)).getUTCDate()).padStart(2, "0")}` : month ? `${month}-31` : null;
 
   const db = c.env.DB;
   const hasTerm = !!termId && termId !== "unassigned";

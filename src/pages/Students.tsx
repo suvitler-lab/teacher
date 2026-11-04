@@ -28,7 +28,7 @@ import { fullName } from "../lib/names";
 import { ok, withToast } from "../lib/notify";
 import { routeParams, navigate } from "../router";
 import { useLoadGuard, type LoadStatus } from "../lib/loader";
-import { parseImport, fileToSheets, bestSheet, type SheetText } from "../lib/importParse";
+import { parseImport, fileToSheets, bestSheet, studentFormErrors, CODE_RULE_TEXT, REQUIRED_FIELDS_TEXT, type SheetText, type StudentFormErrors } from "../lib/importParse";
 
 const STATUS_LABEL: Record<string, string> = { active: "กำลังเรียน", finished: "จบปีการศึกษา", moved: "ย้ายออก", inactive: "ไม่ใช้งาน" };
 
@@ -304,12 +304,25 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
   // the day they left (moved / inactive): a past term still counts them; empty = today
   const [leftAt, setLeftAt] = useState(student?.left_at ?? "");
   const [err, setErr] = useState("");
+  const [fieldErr, setFieldErr] = useState<StudentFormErrors>({});
   const [busy, setBusy] = useState(false);
   const { ask, node: askNode } = useConfirm();
+  // the message under a field goes away as soon as that field is touched
+  const touch = (k: keyof StudentFormErrors) => setFieldErr((f) => (f[k] ? { ...f, [k]: undefined } : f));
+  const fieldProps = (k: keyof StudentFormErrors) => ({ id: "stu-f-" + k, "aria-invalid": fieldErr[k] ? true : undefined, "aria-describedby": fieldErr[k] ? "stu-e-" + k : undefined });
+  const fieldMsg = (k: keyof StudentFormErrors) => fieldErr[k] ? <span id={"stu-e-" + k} role="alert" style="color:var(--text-danger);margin:2px 0 0">{fieldErr[k]}</span> : null;
 
   async function save() {
     setErr("");
-    if (!firstName.trim() || !code.trim()) return setErr("กรอกชื่อและรหัสนักเรียน");
+    // checked here, before anything is sent: the server needs name, last name and code, and says so in its own words only as a last resort
+    const found = studentFormErrors({ code, first_name: firstName, last_name: lastName, number }, student?.code);
+    setFieldErr(found);
+    const firstBad = (["code", "first_name", "last_name", "number"] as const).find((k) => found[k]);
+    if (firstBad) {
+      if (!code.trim() || !firstName.trim() || !lastName.trim()) setErr(REQUIRED_FIELDS_TEXT);
+      setTimeout(() => document.getElementById("stu-f-" + firstBad)?.focus(), 0);
+      return;
+    }
     setBusy(true);
     try {
       await api.post("/api/students", {
@@ -340,15 +353,15 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
           <label class="field"><span>คำนำหน้า</span>
             <select value={prefix} onInput={(e) => setPrefix((e.target as HTMLSelectElement).value)}><option>ด.ช.</option><option>ด.ญ.</option><option>นาย</option><option>น.ส.</option></select>
           </label>
-          <label class="field" style="grid-column:span 2"><span>รหัสนักเรียน</span><input value={code} onInput={(e) => setCode((e.target as HTMLInputElement).value)} /></label>
+          <label class="field" style="grid-column:span 2"><span>รหัสนักเรียน</span><input {...fieldProps("code")} aria-required="true" value={code} onInput={(e) => { setCode((e.target as HTMLInputElement).value); touch("code"); }} />{fieldMsg("code")}</label>
         </div>
         <div class="modal-grid2">
-          <label class="field"><span>ชื่อ</span><input value={firstName} onInput={(e) => setFirstName((e.target as HTMLInputElement).value)} /></label>
-          <label class="field"><span>สกุล</span><input value={lastName} onInput={(e) => setLastName((e.target as HTMLInputElement).value)} /></label>
+          <label class="field"><span>ชื่อ</span><input {...fieldProps("first_name")} aria-required="true" value={firstName} onInput={(e) => { setFirstName((e.target as HTMLInputElement).value); touch("first_name"); }} />{fieldMsg("first_name")}</label>
+          <label class="field"><span>สกุล</span><input {...fieldProps("last_name")} aria-required="true" value={lastName} onInput={(e) => { setLastName((e.target as HTMLInputElement).value); touch("last_name"); }} />{fieldMsg("last_name")}</label>
         </div>
         <div class="modal-grid3">
           <label class="field"><span>ชื่อเล่น</span><input value={nickname} onInput={(e) => setNickname((e.target as HTMLInputElement).value)} /></label>
-          <label class="field"><span>เลขที่</span><input type="number" value={number} onInput={(e) => setNumber((e.target as HTMLInputElement).value === "" ? "" : Number((e.target as HTMLInputElement).value))} /></label>
+          <label class="field"><span>เลขที่</span><input {...fieldProps("number")} type="number" value={number} onInput={(e) => { setNumber((e.target as HTMLInputElement).value === "" ? "" : Number((e.target as HTMLInputElement).value)); touch("number"); }} />{fieldMsg("number")}</label>
           <label class="field"><span>สถานะ</span>
             <select value={status} onInput={(e) => setStatus((e.target as HTMLSelectElement).value as Student["status"])}><option value="active">กำลังเรียน</option><option value="moved">ย้ายออก</option><option value="inactive">ไม่ใช้งาน</option>{student?.status === "finished" && <option value="finished">จบปีการศึกษา</option>}</select>
           </label>
@@ -359,7 +372,7 @@ export function StudentModal({ student, classId, onClose, onSaved }: { student: 
           </label>
         )}
         {student && <div class="page-sub" style="margin:6px 0">QR ปัจจุบัน: <span style="font-family:var(--font-mono)">{student.qr_token}</span></div>}
-        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
+        {err && <div role="alert" style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
         <div class="row" style="justify-content:space-between;margin-top:10px">
           {student ? <button onClick={rotate}><Icon name="refresh" size={16} /> ออก QR ใหม่</button> : <span />}
           <div class="row" style="gap:8px">
@@ -417,7 +430,8 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
 
   // each tab keeps its own text; the one on screen is what is read
   const text = tab === "file" ? (sheets[sheetIdx]?.text ?? "") : pasted;
-  const { rows, skipped } = parseImport(text);
+  const { rows, skipped, noLastName, badNumber } = parseImport(text);
+  const badNumberOf = new Map(badNumber.map((b) => [b.code, b.text]));
   const tooMany = rows.length > MAX_IMPORT;
   const cls = activeClasses.value.find((c) => c.id === classId);
 
@@ -468,7 +482,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
           <button id="imp-tab-file" role="tab" aria-selected={tab === "file"} tabIndex={tab === "file" ? 0 : -1} onClick={() => setTab("file")}><Icon name="file-type-xls" size={16} /> ไฟล์ .xlsx / .csv</button>
           <button id="imp-tab-paste" role="tab" aria-selected={tab === "paste"} tabIndex={tab === "paste" ? 0 : -1} onClick={() => setTab("paste")}><Icon name="clipboard-text" size={16} /> วางข้อความ</button>
         </div>
-        <div class="page-sub" style="margin:8px 0">คอลัมน์: รหัส | คำนำหน้า ชื่อ สกุล | เลขที่ · รหัสที่มีอยู่แล้วจะถูกอัปเดต · ไฟล์ถูกอ่านในเครื่องนี้ ไม่ได้ส่งไปที่ไหน</div>
+        <div class="page-sub" style="margin:8px 0">คอลัมน์: รหัส | คำนำหน้า ชื่อ สกุล | เลขที่ · ต้องมีชื่อและสกุล · {CODE_RULE_TEXT} · รหัสที่มีอยู่แล้วจะถูกอัปเดต · ไฟล์ถูกอ่านในเครื่องนี้ ไม่ได้ส่งไปที่ไหน</div>
         {tab === "file" ? (
           <div role="tabpanel" aria-labelledby="imp-tab-file">
             <label class={"imp-drop" + (over ? " over" : "")} onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
@@ -486,7 +500,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
                 </select>
               </label>
             )}
-            {!fileBusy && fileName && sheets.length > 0 && <div class="page-sub" role="status">อ่านได้ {rows.length} รายการจาก {fileName}{sheets.length > 1 ? ` (ชีต “${sheets[sheetIdx]?.name}”)` : ""}{skipped.length > 0 ? ` · อ่านไม่ได้ ${skipped.length} บรรทัด` : ""}</div>}
+            {!fileBusy && fileName && sheets.length > 0 && <div class="page-sub" role="status">อ่านได้ {rows.length} รายการจาก {fileName}{sheets.length > 1 ? ` (ชีต “${sheets[sheetIdx]?.name}”)` : ""}{skipped.length > 0 ? ` · อ่านไม่ได้ ${skipped.length} บรรทัด` : ""}{noLastName.length > 0 ? ` · ไม่มีสกุล ${noLastName.length} แถว (ไม่นำเข้า)` : ""}</div>}
           </div>
         ) : (
           <div role="tabpanel" aria-labelledby="imp-tab-paste"><textarea aria-label="รายชื่อนักเรียนที่คัดลอกจาก Excel" rows={6} value={pasted} onInput={(e) => setPasted((e.target as HTMLTextAreaElement).value)} placeholder={"10501\tด.ช. ภูมิพัฒน์ ใจดี\t1\n10502\tด.ญ. ปุณยวีร์ แสงทอง\t2"} style="font-family:var(--font-mono);font-size:var(--fs-sm);min-height:8rem" /></div>
@@ -517,7 +531,9 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
         {returning > 0 && !preview?.blockedMoves?.length && (
           <div class="imp-warn info" role="status"><Icon name="info-circle" size={20} /> {returning} คนเคยเรียนกับครูปีที่แล้ว (จบปีการศึกษา) — นำเข้าจะย้ายมาห้องนี้ และประวัติปีเก่าของคนเหล่านี้จะไม่แสดงในรายงานปีเก่าอีก</div>
         )}
-        {skipped.length > 0 && <div class="imp-warn info" role="status"><Icon name="info-circle" size={20} /> อ่านไม่ได้ {skipped.length} บรรทัด (ต้องมีรหัส 3 หลักขึ้นไป และชื่อ): {skipped.slice(0, 3).join(" ⏎ ")}{skipped.length > 3 ? " …" : ""}</div>}
+        {skipped.length > 0 && <div class="imp-warn info" role="status"><Icon name="info-circle" size={20} /> อ่านไม่ได้ {skipped.length} บรรทัด (ต้องมีรหัส — {CODE_RULE_TEXT} — และชื่อ): {skipped.slice(0, 3).join(" ⏎ ")}{skipped.length > 3 ? " …" : ""}</div>}
+        {noLastName.length > 0 && <div class="imp-warn" role="alert"><Icon name="alert-triangle" size={20} /> <span>ไม่มีสกุล {noLastName.length} แถว — แถวเหล่านี้จะไม่ถูกนำเข้า (ต้องมีสกุลเหมือนตอนเพิ่มทีละคน) เติมสกุลแล้วนำเข้าอีกครั้ง: {noLastName.slice(0, 3).join(" ⏎ ")}{noLastName.length > 3 ? " …" : ""}</span></div>}
+        {badNumber.length > 0 && <div class="imp-warn" role="status"><Icon name="alert-triangle" size={20} /> <span>เลขที่ไม่ถูกต้อง {badNumber.length} แถว (ต้องเป็นจำนวนเต็มตั้งแต่ 1 ขึ้นไป): {badNumber.slice(0, 5).map((b) => `${b.code} → “${b.text}”`).join(", ")}{badNumber.length > 5 ? " …" : ""} — จะเว้นเลขที่ไว้ว่าง แก้เลขที่ภายหลังได้</span></div>}
 
         {rows.length > 0 && (
           <div class="card imp-table">
@@ -532,7 +548,7 @@ function ImportModal({ classId, onClose, onDone }: { classId: string; onClose: (
                     {pr?.action === "move" && pr.from && <span class="page-sub"> · จาก {(classById(pr.from!.class_id)?.name ?? "ห้องอื่น")}{pr.reactivates ? " (และกลับมาใช้งาน)" : ""}</span>}
                     {pr?.action === "reactivate" && pr.from && <span class="page-sub"> · เดิมสถานะ {STATUS_LABEL[pr.from.status] ?? pr.from.status}</span>}
                   </span>
-                  <span>{r.number ?? "-"}</span>
+                  {badNumberOf.has(r.code) ? <span style="color:var(--text-warning)" title="เลขที่ไม่ถูกต้อง — จะเว้นว่าง"><Icon name="alert-triangle" size={16} /> {badNumberOf.get(r.code)}</span> : <span>{r.number ?? "-"}</span>}
                   <span class="res">{lab && <span class="chip" style={lab.style}>{lab.text}</span>}</span>
                 </div>
               );

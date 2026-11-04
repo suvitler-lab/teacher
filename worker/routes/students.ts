@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
 import { z } from "zod";
 import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
@@ -42,22 +42,39 @@ function studentForAudit(r: any) {
   return rest;
 }
 
+// Thai messages for the teacher: the client shows `message` as it is. Text fields are trimmed before they are checked,
+// so a name of spaces is "missing" and a code typed with spaces around it is the same code.
+const text = (label: string, max: number) => z.string("กรอก" + label).trim().min(1, "กรอก" + label).max(max, label + "ยาวเกิน " + max + " ตัวอักษร");
+const NUMBER_TEXT = "เลขที่ต้องเป็นจำนวนเต็มตั้งแต่ 1 ขึ้นไป";
+const classNumber = z.number(NUMBER_TEXT).int(NUMBER_TEXT).min(1, NUMBER_TEXT);
+
+/** Parse a body; a failure is the usual 422 { error: "validation", issues } plus a Thai `message` naming the first problem. */
+function parseBody<S extends z.ZodType>(c: Context, schema: S, raw: unknown): { data: z.output<S> } | { res: Response } {
+  const r = schema.safeParse(raw);
+  if (r.success) return { data: r.data };
+  const first = r.error.issues[0];
+  const own = first && typeof first.message === "string" && /[ก-๙]/.test(first.message) ? first.message : "ข้อมูลที่กรอกไม่ครบหรือไม่ถูกต้อง — ตรวจช่องที่กรอกอีกครั้ง";
+  return { res: c.json({ error: "validation", message: own, issues: r.error.issues }, 422) };
+}
+
 const studentSchema = z.object({
   id: z.string().optional(),
-  code: z.string().min(1).max(30),
+  code: text("รหัสนักเรียน", 30),
   prefix: z.string().max(30).optional().nullable(),
-  first_name: z.string().min(1).max(100),
-  last_name: z.string().min(1).max(100),
-  nickname: z.string().max(100).optional().nullable(),
+  first_name: text("ชื่อ", 100),
+  last_name: text("สกุล", 100),
+  nickname: z.string().trim().max(100).optional().nullable(),
   class_id: z.string().optional().nullable(),
-  number: z.number().int().optional().nullable(),
+  number: classNumber.optional().nullable(),
   status: z.enum(["active", "moved", "inactive", "finished"]).optional(),
   // when they left the class (moved / inactive only); defaults to today. A past term still counts them.
   left_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
 });
 
 studentRoutes.post("/api/students", async (c) => {
-  const b = studentSchema.parse(await readJson(c));
+  const parsed = parseBody(c, studentSchema, await readJson(c));
+  if ("res" in parsed) return parsed.res;
+  const b = parsed.data;
   const now = Date.now();
   const sid = b.id ?? id("stu");
   // unique code guard (ignore self). Inside the write UNIQUE(code) is the guard; a request that loses that
@@ -141,12 +158,12 @@ const importSchema = z.object({
   students: z
     .array(
       z.object({
-        code: z.string().min(1).max(30),
+        code: text("รหัสนักเรียน", 30),
         prefix: z.string().max(30).optional().nullable(),
-        first_name: z.string().min(1).max(100),
-        last_name: z.string().max(100).optional().nullable(),
-        nickname: z.string().max(100).optional().nullable(),
-        number: z.number().int().optional().nullable(),
+        first_name: text("ชื่อ", 100),
+        last_name: z.string().trim().max(100).optional().nullable(),
+        nickname: z.string().trim().max(100).optional().nullable(),
+        number: classNumber.optional().nullable(),
       }),
     )
     .min(1)
@@ -224,7 +241,9 @@ function numberConflict(np: Awaited<ReturnType<typeof numberProblems>>) {
  * and reactivating them — so the teacher needs to see that before pressing the button.
  */
 studentRoutes.post("/api/students/import/preview", async (c) => {
-  const b = importSchema.parse(await readJson(c));
+  const parsed = parseBody(c, importSchema, await readJson(c));
+  if ("res" in parsed) return parsed.res;
+  const b = parsed.data;
   const codes = b.students.map((s) => s.code);
   const exRes = await c.env.DB.prepare(
     `SELECT s.id, s.code, s.class_id, s.number, s.status, s.prefix, s.first_name, s.last_name
@@ -261,7 +280,9 @@ studentRoutes.post("/api/students/import/preview", async (c) => {
 });
 
 studentRoutes.post("/api/students/import", async (c) => {
-  const b = importSchema.parse(await readJson(c));
+  const parsed = parseBody(c, importSchema, await readJson(c));
+  if ("res" in parsed) return parsed.res;
+  const b = parsed.data;
   const dup = duplicateCodes(b.students);
   if (dup.length > 0) return c.json({ error: "duplicate_codes", message: `รหัสซ้ำในรายการ: ${dup.join(", ")}`, codes: dup }, 422);
   const conflictBefore = numberConflict(await numberProblems(c.env, b.class_id, b.students));

@@ -98,7 +98,7 @@ export function Setup({ mode }: { mode: "setup" | "login" }) {
               <Icon name="key" size={18} />
               <input value={code} onInput={(e) => setCode((e.target as HTMLInputElement).value)} autocomplete="off" spellcheck={false} />
             </div>
-            <small class="auth-hint">รหัสที่ผู้ดูแลระบบตั้งไว้ (SETUP_CODE) ใช้เฉพาะตอนสร้างบัญชี</small>
+            <small class="auth-hint">รหัสติดตั้งที่ผู้ดูแลระบบตั้งไว้ ใช้เฉพาะตอนสร้างบัญชีครั้งแรก</small>
           </label>
         )}
 

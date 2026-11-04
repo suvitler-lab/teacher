@@ -27,7 +27,11 @@ const METHOD_LABEL: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
-const ACTION_LABEL: Record<string, string> = { create: "เพิ่มข้อมูล", update: "แก้ไข", void: "ยกเลิก/ลบ", delete: "ลบ", move: "ย้ายห้อง", import: "นำเข้า", restore: "กู้คืน" };
+const ACTION_LABEL: Record<string, string> = {
+  create: "เพิ่มข้อมูล", update: "แก้ไข", void: "ยกเลิก/ลบ", delete: "ลบ", move: "ย้ายห้อง", import: "นำเข้า", restore: "กู้คืนข้อมูล",
+  rotate: "ออก QR ใหม่", reactivate: "กลับมาใช้งานอีกครั้ง", password_change: "เปลี่ยนรหัสผ่าน", device_signout: "ออกจากระบบเครื่องอื่น",
+  start_term: "เริ่มภาคเรียนใหม่", signout: "ออกจากระบบ", login: "เข้าสู่ระบบ", archive: "เก็บเข้าคลัง", close: "ปิดรับงาน", reopen: "เปิดรับงานอีกครั้ง",
+};
 
 function describe(r: AuditRow): string {
   if (r.entity === "submission") {

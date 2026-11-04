@@ -166,6 +166,19 @@ assignmentRoutes.post("/api/assignments", async (c) => {
   const classesOffYear =
     "SELECT name FROM classes WHERE id IN (SELECT value FROM json_each(?1)) AND year IS NOT NULL AND year != (SELECT year FROM terms WHERE id = ?2)";
 
+  // A room that has ANY submissions row of this work (any status) cannot be taken off it: the scores would stay behind
+  // for students outside the work's rooms, and the app's own backup could not be restored (restore rule
+  // not_in_assignment_class). SQL with ?1 = work, ?2 = the classes the save keeps; read before the links are rewritten.
+  const scoredRemovedClasses = `SELECT c.name FROM classes c WHERE c.id IN (${removedClasses("?2")})
+    AND EXISTS (SELECT 1 FROM submissions sub JOIN students st ON st.id = sub.student_id WHERE sub.assignment_id = ?1 AND st.class_id = c.id)
+    ORDER BY c.sort, c.name`;
+  const classHasScores = (rows: { name: string }[]) => c.json({
+    error: "class_has_scores",
+    message: `ห้อง ${rows.map((r) => r.name).join(", ")} มีคะแนน/การส่งของงานนี้แล้ว ถอดห้องไม่ได้ — ล้างการส่งของห้องนั้นก่อน`,
+  }, 409);
+  // (no look before the write: the guard in the batch decides, and the fresh look after it fails names the rooms —
+  // one less read of the work's links on every ordinary edit)
+
   // EP-05 case 6 (BR-02, BR-10): raising the full score of work some children hold the old full score of needs the
   // teacher's answer first. The new app opens its question from count/from/to; an older app shows the message.
   const raiseChoiceRequired = (count: number, from: number) => c.json({
@@ -281,6 +294,7 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     // back — nothing of it (title, full score, class links, adjusted cells, the audit lines) is half-applied
     ...(keepFull ? [] : [abortIf(c.env, lowersBelowScores, aid, full)]),
     ...(yearChecked.length > 0 ? [abortIf(c.env, `EXISTS (${classesOffYear})`, JSON.stringify(yearChecked), b.term_id)] : []),
+    ...(existing ? [abortIf(c.env, `EXISTS (${scoredRemovedClasses})`, aid, keepClasses)] : []),
     ...raiseGuard,
   ];
   const holdersAt = holdersNow ? write.push(holdersNow) - 1 : -1;
@@ -310,6 +324,10 @@ assignmentRoutes.post("/api/assignments", async (c) => {
     if (yearChecked.length > 0) {
       const off = await c.env.DB.prepare(classesOffYear).bind(JSON.stringify(yearChecked), b.term_id).all<{ name: string }>();
       if ((off.results ?? []).length > 0) return yearMismatch(off.results);
+    }
+    if (existing) {
+      const scored = await c.env.DB.prepare(scoredRemovedClasses).bind(aid, keepClasses).all<{ name: string }>();
+      if ((scored.results ?? []).length > 0) return classHasScores(scored.results);
     }
     if (!choice && !keepFull) {
       const cur = await c.env.DB.prepare(

@@ -394,7 +394,7 @@ export function ReportProjector({ model, className, subjectName, periodLabel, si
             { value: mix.present, color: "var(--pj-ok)" }, { value: mix.late, color: "var(--pj-warn)" }, { value: mix.leave, color: "var(--pj-ac)" },
             { value: mix.sick, color: "var(--pj-t2)" }, { value: mix.absent, color: "var(--pj-bad)" },
           ]} />
-          <div class="s2" style="margin-top:calc(var(--pj-u)*6)">มา {mix.present} · สาย {mix.late} · ขาด {mix.absent} <span style="opacity:.8">({total.toLocaleString("th-TH")} ครั้ง · {model.attendance.sessions} {unitLabel})</span></div>
+          <div class="s2" style="margin-top:calc(var(--pj-u)*6)">มา {mix.present} · สาย {mix.late} · ลา {mix.leave} · ป่วย {mix.sick} · ขาด {mix.absent} <span style="opacity:.8">({total.toLocaleString("th-TH")} ครั้ง · {model.attendance.sessions} {unitLabel})</span></div>
         </div>
       )}
     </ProjectorShell>
