@@ -30,6 +30,9 @@ body{font-family:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-
 .seg button:hover{background:#363d4b}
 .seg button[aria-pressed="true"]{background:#f4f6fa;color:#141820;font-weight:600}
 .seg button:focus-visible{outline:2px solid #8fb4ff;outline-offset:1px}
+.menu-row{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:6px 8px;border-radius:10px;background:#252b37;border:1px solid #3d4556}
+.menu-info{flex-basis:100%;margin:0;font-size:13px;color:#dfe5ee}
+.menu-info b{color:#ffd78a;font-weight:600}
 .chrome-info{flex-basis:100%;font-size:13px;color:#c7cfdc;margin:0}
 .chrome-info b{color:#fff;font-weight:600}
 .stage{padding:16px;display:flex;justify-content:center}
@@ -196,11 +199,27 @@ body{font-family:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-
 .sec{color:var(--text-secondary)}
 
 /* rail */
-.rail{background:var(--rail-bg);color:var(--rail-fg);display:flex;flex-direction:column;align-items:stretch;padding:var(--s3) var(--s2);gap:2px;overflow-y:auto}
-.brand{display:grid;place-items:center;padding:var(--s1) 0 var(--s3)}
+.rail{background:var(--rail-bg);color:var(--rail-fg);display:flex;flex-direction:column;align-items:stretch;padding:var(--s3) var(--s2);gap:2px;overflow:hidden;min-height:0}
+.brand{display:grid;place-items:center;padding:var(--s1) 0 var(--s3);flex:none}
 .brand svg{width:46px;height:46px}
-.rail-label{height:1px;background:color-mix(in srgb,var(--rail-fg) 22%,transparent);margin:6px 14px;overflow:hidden;color:transparent;font-size:1px;flex:none}
-.rail-item{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:var(--tap);padding:4px 4px;flex:none;border-radius:var(--radius);border:0;background:transparent;color:var(--rail-fg);font-size:var(--t-xs);line-height:1.3;text-align:center;transition:background-color .15s}
+/* T-06: menu list scrolls on its own; fades + "มีต่อ" chip show there is more (honest overflow for menu ค) */
+.rail-mid{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.rail-list{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:2px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--rail-fg) 45%,transparent) transparent}
+.rail-mid::before,.rail-mid::after{content:"";position:absolute;left:0;right:0;height:40px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}
+.rail-mid::before{top:0;background:linear-gradient(var(--rail-bg) 15%,transparent);border-top:2px solid color-mix(in srgb,var(--rail-fg) 35%,transparent)}
+.rail-mid::after{bottom:0;background:linear-gradient(transparent,var(--rail-bg) 75%);border-bottom:2px solid color-mix(in srgb,var(--rail-fg) 35%,transparent)}
+.rail-mid.up::before,.rail-mid.down::after{opacity:1}
+.rail-more{display:none;position:absolute;bottom:4px;left:50%;transform:translateX(-50%);z-index:2;pointer-events:none;align-items:center;gap:2px;white-space:nowrap;font-size:13px;line-height:20px;font-weight:700;padding:0 8px;border-radius:999px;background:var(--rail-active-bg);color:var(--rail-active-fg)}
+.rail-more .ic{font-size:13px}
+.rail-mid.down .rail-more{display:inline-flex}
+.rail-label{flex:none;font-size:13px;line-height:1.3;font-weight:600;color:var(--rail-label);text-align:center;padding:5px 2px 1px;margin-top:2px;border-top:1px solid color-mix(in srgb,var(--rail-fg) 18%,transparent)}
+.rail-label:first-child{border-top:0;margin-top:0;padding-top:0}
+.device.short .brand{padding:0 0 var(--s2)}
+.device.short .brand svg{width:40px;height:40px}
+.nb{position:absolute;top:1px;right:0;font-size:13px;line-height:17px;font-weight:700;font-style:normal;padding:0 3px;border-radius:999px;background:var(--rail-active-bg);color:var(--rail-active-fg)}
+.rail-item[aria-current="page"] .nb{background:var(--rail-bg);color:var(--rail-active-bg)}
+.nb-in{display:inline-block;margin-left:auto;font-size:13px;line-height:20px;font-weight:700;padding:0 8px;border-radius:999px;background:var(--accent-2);color:var(--on-accent-2)}
+.rail-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:var(--tap);padding:4px 4px;flex:none;border-radius:var(--radius);border:0;background:transparent;color:var(--rail-fg);font-size:var(--t-xs);line-height:1.3;text-align:center;transition:background-color .15s}
 .rail-item .ic{font-size:24px}
 .rail-item:hover{background:rgba(255,255,255,.08)}
 .rail-item[aria-current="page"]{background:var(--rail-active-bg);color:var(--rail-active-fg);font-weight:600}
@@ -684,6 +703,19 @@ button.cls-row:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 .sheet-row .t{flex:1;min-width:0;line-height:1.45}
 .sheet-row .t small{display:block;color:var(--text-secondary);font-size:var(--t-xs)}
 .sheet-row>.ic{font-size:22px;color:var(--text-accent)}
+/* T-06: phone "เพิ่มเติม" sheet groups · page info sheet · ข score/report switch */
+.menu-g{display:flex;flex-direction:column;gap:var(--s2)}
+.menu-g h3{margin:0;font-size:var(--t-sm);font-weight:600;color:var(--text-secondary)}
+.menu-g .btn{justify-content:flex-start;width:100%}
+.info-h{display:flex;align-items:center;gap:var(--s3)}
+.info-h .ic{font-size:30px;color:var(--text-accent)}
+.info-sts{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.info-note{padding:var(--s3);border-radius:var(--radius);background:var(--surface-1);color:var(--text-secondary);font-size:var(--t-sm);line-height:1.6;margin:0}
+.pg-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s3) var(--s4);margin-bottom:var(--s4)}
+.pg-head .page-h{margin:0}
+.pg-switch{display:inline-flex;gap:4px;padding:4px;border-radius:var(--radius);background:var(--surface-1);border:1px solid var(--border)}
+.pg-switch button{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 var(--s4);border-radius:var(--radius-sm);border:0;background:transparent;color:var(--text-secondary);font-weight:500}
+.pg-switch button[aria-pressed="true"]{background:var(--surface-2);color:var(--text-accent);font-weight:700;box-shadow:inset 0 0 0 2px var(--text-accent)}
 
 /* loading skeleton (static — no looping animation, AC-40) */
 .sk{background:color-mix(in srgb,var(--text-muted) 16%,var(--surface-2));border-radius:var(--radius-lg)}
@@ -812,6 +844,345 @@ table.gb td.n,table.gb th.n{text-align:right;font-variant-numeric:tabular-nums}
   .focus .acts .btn{flex:1 1 100%}
   .summary .pill{font-size:var(--t-xs);padding:2px 10px}
 }
+
+/* =====================================================================
+   5. T-08 หน้าสแกนเต็ม — uses the same tokens/theme/icons as the home page (no new colours)
+   ===================================================================== */
+.chrome [hidden]{display:none !important}
+.scan-row{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:6px 8px;border-radius:10px;background:#1f2a40;border:1px solid #3d4a66}
+/* Gate เมนู: menu ง must fit 1536×729 without scrolling → tighter rail only on short screens */
+.device.short .rail{padding:var(--s2) var(--s2)}
+.device.short .rail-item{padding:1px 4px;gap:0}
+.device.short .rail-item .ic{font-size:22px}
+.device.short .rail-label{padding:2px 2px 0;margin-top:1px}
+.device.short .rail-foot{padding-top:var(--s2);gap:2px}
+.only-phone{display:none !important}
+.app .btn:disabled{background:var(--surface-1);color:var(--text-secondary);border-style:dashed;border-color:var(--border-control);box-shadow:none;cursor:not-allowed;transform:none}
+.btn-danger{background:var(--text-danger);border-color:var(--text-danger);color:var(--surface-2)}
+.btn-danger:hover{background:var(--text-danger);filter:brightness(.95)}
+.btn-danger-o{color:var(--text-danger);border-color:var(--text-danger)}
+.mrow{justify-content:flex-start;width:100%;white-space:normal;text-align:left}
+.mrow small{font-weight:500}
+.sc-head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s2) var(--s4);margin-bottom:var(--s4)}
+.sc-head h1{font-size:var(--t-2xl)}
+.sc-head p{color:var(--text-secondary);font-size:var(--t-sm)}
+.banner.sc-bad{background:var(--bg-danger);border-color:var(--text-danger)}
+.banner.sc-bad>.ic{color:var(--text-danger)}
+.banner.sc-acc{background:var(--bg-accent);border-color:color-mix(in srgb,var(--text-accent) 55%,transparent)}
+.banner.sc-acc>.ic{color:var(--text-accent)}
+
+/* state colours (5 work states) — shared by grid cells, legend, recent badges */
+.s-scored{--cb:var(--text-success);--cbg:var(--bg-success);--ct:var(--text-success)}
+.s-late{--cb:var(--text-warning);--cbg:var(--bg-warning);--ct:var(--text-warning)}
+.s-awaiting{--cb:var(--text-accent);--cbg:var(--bg-accent);--ct:var(--text-accent)}
+.s-pending{--cb:var(--border-control);--cbg:var(--surface-2);--ct:var(--text-secondary)}
+.s-missing{--cb:var(--text-danger);--cbg:var(--surface-2);--ct:var(--text-danger)}
+.s-excused{--cb:var(--border-control);--cbg:var(--surface-1);--ct:var(--text-secondary)}
+
+/* hero */
+.sc-hero{position:relative;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s4) var(--s5);display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"t n r" "p p r";gap:var(--s2) var(--s5);align-items:center;overflow:hidden}
+[data-theme="playful"] .sc-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.sc-hero .t{grid-area:t;min-width:0}
+.sc-hero .kicker{font-size:var(--t-sm);color:var(--hero-muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-weight:600}
+.sc-hero h1{font-size:var(--t-xl);line-height:1.35}
+.sc-hero .pills{grid-area:p;display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;min-width:0}
+.sc-hero .count{grid-area:n;text-align:right;line-height:1.15}
+.sc-hero .count .num{display:block;font-size:var(--t-4xl);font-weight:700;line-height:1}
+[data-theme="pro"] .sc-hero .count .num{color:var(--accent-2)}
+.sc-hero .count small{display:block;font-size:var(--t-sm);color:var(--hero-fg);font-weight:600}
+.sc-hero .sc-ring{grid-area:r}
+.hp{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 12px;border-radius:999px;background:var(--hero-chip);color:var(--hero-fg);font-size:var(--t-sm);font-weight:500;line-height:1.3;white-space:nowrap;border:1px solid transparent}
+button.hp{border-color:color-mix(in srgb,var(--hero-fg) 38%,transparent);cursor:pointer;font-weight:600}
+button.hp:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
+.hp .cv{font-size:14px}
+.hp.info{min-height:34px}
+.hp.warn{background:var(--bg-warning);color:var(--text-warning);font-weight:700;border-color:currentColor}
+.hp .sht{display:none}
+.sc-ring{--sr-track:color-mix(in srgb,var(--hero-fg) 22%,transparent);--sr-val:var(--hero-fg)}
+[data-theme="pro"] .sc-ring{--sr-val:var(--accent-2)}
+.sc-ring.plain{--sr-track:var(--ring-track);--sr-val:var(--accent)}
+.sc-ring .ring-val{transition:stroke-dasharray .3s ease}
+.sc-ring .rc{color:inherit}
+.device.short .sc-hero{grid-template-columns:minmax(0,1fr) minmax(0,auto) auto auto;grid-template-areas:"t p n r";padding:var(--s3) var(--s4);gap:var(--s2) var(--s4)}
+.device.short .sc-hero h1{font-size:var(--t-lg);-webkit-line-clamp:1}
+.device.short .sc-hero .count .num{font-size:var(--t-3xl)}
+.device.short .sc-hero .pills{max-width:640px}
+
+/* input row (always ready) + camera */
+.sc-in{display:flex;gap:var(--s2);margin:var(--s4) 0 var(--s3);align-items:stretch}
+.in-wrap{flex:1;min-width:0;position:relative;display:flex;align-items:center}
+.in-wrap>.ic{position:absolute;left:16px;font-size:26px;color:var(--text-secondary);pointer-events:none}
+.sc-in input{width:100%;min-height:60px;padding:0 16px 0 54px;border-radius:var(--radius-lg);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font:inherit;font-size:var(--t-lg);font-weight:600;font-family:var(--font-sans)}
+.sc-in input::placeholder{color:var(--text-muted);font-weight:400}
+.sc-in input:focus{outline:3px solid var(--text-accent);outline-offset:2px;border-color:var(--text-accent)}
+[data-theme="playful"] .sc-in input{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.cam-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:60px;min-height:60px;padding:0 var(--s4);border-radius:var(--radius-lg);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:700}
+.cam-btn .ic{font-size:26px}
+.cam-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.sc-cam{margin-bottom:var(--s3)}
+.sc-cam .viewfinder{aspect-ratio:auto;height:min(240px,46cqi);width:100%}
+.sc-cam .vf-frame{width:auto;height:70%}
+.cam-tools{display:flex;gap:var(--s2);margin-top:var(--s2);flex-wrap:wrap}
+
+/* main + side columns */
+.sc-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:var(--s4);align-items:start}
+.sc-mainc,.sc-side{display:flex;flex-direction:column;gap:var(--s4);min-width:0}
+
+/* result card (big) */
+.res{position:relative;border-radius:var(--radius-lg);border:2px solid var(--rt);background:var(--rb);box-shadow:var(--shadow-card);overflow:hidden;color:var(--text-primary)}
+.res::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--rf)}
+.res.t-ok{--rt:var(--text-success);--rb:var(--bg-success);--rf:var(--fill-success)}
+.res.t-warn{--rt:var(--text-warning);--rb:var(--bg-warning);--rf:var(--fill-warning)}
+.res.t-bad{--rt:var(--text-danger);--rb:var(--bg-danger);--rf:var(--fill-danger)}
+.res.t-acc{--rt:var(--text-accent);--rb:var(--bg-accent);--rf:var(--accent)}
+.res.t-idle{--rt:var(--text-accent);--rb:var(--surface-2);--rf:var(--border-control);border-style:dashed;border-color:var(--border-control)}
+[data-theme="playful"] .res{border-width:3px}
+.res.pop{animation:resPop .15s ease-out}
+@keyframes resPop{from{opacity:.55;transform:scale(.985)}to{opacity:1;transform:none}}
+.res-main{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s4);align-items:center;padding:var(--s4) var(--s5) var(--s4) calc(var(--s5) + 10px);min-height:132px}
+.res-ic{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:var(--rt);color:var(--rb);font-size:40px;flex:none}
+.res.t-idle .res-ic{background:var(--bg-accent);color:var(--text-accent)}
+.res h2{font-size:max(28px,var(--t-2xl));line-height:1.3;font-family:var(--font-display);font-weight:var(--display-weight);overflow-wrap:anywhere}
+.res .sub{font-size:var(--t-md);font-weight:500;margin-top:2px}
+.res .sfx{display:flex;flex-wrap:wrap;gap:4px var(--s3);font-size:var(--t-xs);margin-top:6px;font-weight:600}
+.res .sfx span{display:inline-flex;align-items:center;gap:4px}
+.res .score{font-size:var(--t-3xl);font-weight:700;color:var(--rt);text-align:right;line-height:1;white-space:nowrap}
+.res .score small{font-size:var(--t-md);color:var(--text-primary);font-weight:600}
+.res-acts{display:flex;flex-wrap:wrap;gap:var(--s2);padding:0 var(--s5) var(--s4) calc(var(--s5) + 10px)}
+.res-acts .btn{min-height:56px}
+.cand{flex-direction:column;align-items:flex-start;line-height:1.35;padding:var(--s2) var(--s4);text-align:left;white-space:normal}
+.cand small{font-weight:500;font-size:var(--t-xs)}
+.undo-bar{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s5) var(--s3) calc(var(--s5) + 10px);border-top:2px dashed color-mix(in srgb,var(--rt) 45%,transparent)}
+.undo-bar .meter{flex:1;height:8px;border-radius:4px;background:color-mix(in srgb,var(--rt) 22%,transparent);overflow:hidden}
+.undo-bar .meter i{display:block;height:100%;background:var(--rt);transition:width 1s linear}
+.undo-btn{min-height:56px;min-width:150px}
+.undo-hint{display:flex;align-items:center;gap:6px;padding:0 var(--s5) var(--s3) calc(var(--s5) + 10px);font-size:var(--t-sm);font-weight:500}
+
+/* score pad (type mode) */
+.pad-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,300px);gap:var(--s4);padding:var(--s4) var(--s5) var(--s4) calc(var(--s5) + 10px)}
+.pad-who{display:flex;align-items:center;gap:var(--s3)}
+.pad-who .res-ic{width:56px;height:56px;font-size:30px}
+.pad-l{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
+.pad-in{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+.pad-in label{font-weight:700}
+.pad-in input{width:4.4em;min-height:64px;font-size:var(--t-3xl);font-weight:700;text-align:center;border:2px solid var(--border-control);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-family:var(--font-num)}
+.pad-in input[aria-invalid="true"]{border-color:var(--text-danger);border-width:3px}
+.pad-in .of{font-size:var(--t-xl);font-weight:700}
+.pad-err{color:var(--text-danger);font-weight:700;font-size:var(--t-sm)}
+.pad-q{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.pad-q .btn{min-height:56px;min-width:64px}
+.keys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.keys button{min-height:56px;font-size:var(--t-xl);font-weight:700;border-radius:var(--radius);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-family:var(--font-num)}
+.keys button:active{transform:translateY(1px)}
+.pad-acts{display:grid;gap:var(--s2);margin-top:var(--s2)}
+
+/* failed (never collapsed) */
+.fail{border:2px solid var(--text-danger);background:var(--bg-danger);border-radius:var(--radius-lg);padding:var(--s4);color:var(--text-primary)}
+.fail-h{display:flex;align-items:center;gap:var(--s2);color:var(--text-danger);font-size:var(--t-lg)}
+.fail-h .ic{font-size:26px}
+.fail-row{background:var(--surface-2);border-radius:var(--radius);padding:var(--s3);margin-top:var(--s2);display:grid;gap:var(--s2)}
+.fr-top{display:flex;flex-wrap:wrap;gap:4px var(--s3);align-items:baseline}
+.fail-row .why{font-size:var(--t-sm);display:flex;gap:6px;align-items:flex-start}
+.fail-row .why .ic{color:var(--text-danger);margin-top:4px}
+.fr-acts{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+
+/* number grid */
+.g-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s3);margin-bottom:var(--s3)}
+.g-head h2{font-size:var(--t-lg)}
+.g-head .grow{flex:1}
+.g-leg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--s4)}
+.lg{display:inline-flex;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);border:1.5px solid var(--cb);background:var(--cbg);color:var(--text-primary);line-height:1.5}
+.lg .ic{color:var(--ct);font-size:14px}
+.lg.s-pending,.lg.s-missing{border-style:dashed}
+.g-filter{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+.cells{--cols:10;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:12px 8px}
+.cell{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:64px;min-width:44px;padding:4px 2px;border-radius:var(--radius-sm);border:2px solid var(--cb);background:var(--cbg);color:var(--text-primary);line-height:1.25;text-align:center;transition:transform .12s}
+.cell:hover{transform:translateY(-1px)}
+.cell .no{display:flex;align-items:center;gap:3px;font-family:var(--font-num);font-weight:700;font-size:var(--t-lg);font-variant-numeric:tabular-nums}
+.cell .no .ic{font-size:16px;color:var(--ct)}
+.cell .nm{font-size:var(--t-xs);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cell.s-pending,.cell.s-missing{border-style:dashed}
+.cell.s-excused{border-width:1px}
+.cell.s-excused .no,.cell.s-excused .nm{color:var(--text-secondary)}
+.cell .ov{position:absolute;top:-7px;right:-6px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:var(--surface-2);border:2px solid currentColor}
+.cell .ov.q{color:var(--text-warning)}
+.cell .ov.f{color:var(--text-danger)}
+.cell.hit{border-width:3px;border-style:solid;border-color:var(--text-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--text-primary) 16%,transparent)}
+.hit-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:13px;line-height:18px;padding:0 6px;border-radius:999px;background:var(--text-primary);color:var(--surface-2);font-weight:700;white-space:nowrap}
+.nostu-g{padding:var(--s4);border:2px dashed var(--border-control);border-radius:var(--radius)}
+
+/* side panels */
+.sp .card-head h2{font-size:var(--t-lg)}
+.sp .big{font-size:var(--t-xl);font-weight:700;line-height:1}
+.rec{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+.rec li{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s2) var(--s2) var(--s3);border-radius:var(--radius);background:var(--surface-1)}
+.nb2{min-width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--cbg,var(--surface-2));border:2px solid var(--cb,var(--border-control));color:var(--text-primary);flex:none}
+.rec .t{flex:1;min-width:0;line-height:1.4;font-size:var(--t-sm)}
+.rec .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec .t small{color:var(--text-secondary);font-size:var(--t-xs);display:flex;gap:2px 6px;flex-wrap:wrap;align-items:center}
+.how{display:inline-flex;align-items:center;gap:3px}
+.miss-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 10px;border-radius:999px;border:1.5px dashed var(--border-control);font-size:var(--t-sm);background:var(--surface-2);color:var(--text-primary);line-height:1.3}
+.mchip.missing{border-color:var(--text-danger)}
+.mchip.missing .ic{color:var(--text-danger)}
+.mchip.s-scored,.mchip.s-late,.mchip.s-awaiting{border-style:solid;border-color:var(--cb);background:var(--cbg)}
+.mchip.more{border-style:solid;background:var(--surface-1)}
+.side-tabs{display:none;gap:4px;padding:4px;border-radius:var(--radius);background:var(--surface-1);border:1px solid var(--border)}
+.side-tabs button{flex:1;min-height:var(--tap);border:0;border-radius:var(--radius-sm);background:transparent;color:var(--text-secondary);font-weight:600;font-size:var(--t-xs);line-height:1.25;padding:2px 4px}
+.side-tabs button[aria-selected="true"]{background:var(--surface-2);color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent)}
+
+/* setup (A) */
+.su-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:var(--s5);align-items:start}
+.su-steps{display:flex;flex-direction:column;gap:var(--s5);min-width:0}
+.step-h{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s3);flex-wrap:wrap}
+.step-h .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);font-weight:700;font-family:var(--font-num);flex:none}
+[data-theme="playful"] .step-h .n{background:var(--accent-2);color:var(--on-accent-2);border:2px solid var(--ink)}
+.step-h h2{font-size:var(--t-lg)}
+.step-h .grow{flex:1}
+.subj{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--s3)}
+.asg-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+.acard{position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;padding:var(--s3) var(--s4);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);background:var(--surface-2);box-shadow:var(--shadow-card);color:var(--text-primary);min-height:118px;transition:transform .12s}
+.acard:hover{transform:translateY(-1px)}
+.acard[aria-pressed="true"]{border:3px solid var(--text-accent);background:color-mix(in srgb,var(--bg-accent) 55%,var(--surface-2))}
+.ok-mark{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:var(--text-accent);color:var(--surface-2);display:none;place-items:center;font-size:16px}
+[aria-pressed="true"]>.ok-mark{display:grid}
+.acard h3{font-size:var(--t-md);line-height:1.4;padding-right:30px}
+.acard .meta{font-size:var(--t-xs);color:var(--text-secondary);display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-right:30px}
+.acard .rm{display:grid;gap:4px;font-size:var(--t-xs);color:var(--text-secondary)}
+.acard .rm span{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center}
+.acard .rm b{color:var(--text-primary);font-family:var(--font-num)}
+.mbar{height:6px;border-radius:3px;background:var(--ring-track);overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--accent)}
+.room-pick{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.rp{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:56px;padding:6px 40px 6px 16px;border-radius:var(--radius);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);text-align:left;line-height:1.35}
+.rp b{font-size:var(--t-md)}
+.rp small{font-size:var(--t-xs);color:var(--text-secondary)}
+.rp[aria-pressed="true"],.mc[aria-pressed="true"]{border-width:3px;border-color:var(--text-accent);background:var(--bg-accent)}
+.rp .ok-mark{top:50%;transform:translateY(-50%)}
+.meth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3)}
+.mc{position:relative;display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:var(--s3) var(--s4);border-radius:var(--radius-lg);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);min-height:96px;line-height:1.4}
+.mc>.ic{font-size:28px;color:var(--text-accent)}
+.mc b{font-size:var(--t-md);display:block}
+.mc small{font-size:var(--t-xs);color:var(--text-secondary);display:block}
+.su-start{position:sticky;top:0;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3);z-index:3}
+[data-theme="playful"] .su-start{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.su-start .lbl{color:var(--hero-muted);font-size:var(--t-sm);font-weight:600}
+.su-start .ttl{font-size:var(--t-lg);line-height:1.4}
+.su-start .det{font-size:var(--t-sm);font-weight:600}
+.su-start .ring-row{display:flex;align-items:center;gap:var(--s3)}
+.su-start .ring-row p{font-size:var(--t-sm);line-height:1.4}
+.su-start .ring-row b{font-size:var(--t-2xl);font-family:var(--font-num);display:block;line-height:1.1}
+.btn-start{min-height:60px;width:100%;font-size:var(--t-lg);background:var(--hero-fg);border-color:var(--hero-fg);color:var(--hero-bg)}
+.btn-start:hover{background:var(--hero-fg);filter:brightness(1.08)}
+[data-theme="playful"] .btn-start{background:#15142b;border-color:#15142b;color:#ffd43b}
+.su-why{font-size:var(--t-sm);font-weight:700}
+.su-dev{display:flex;flex-wrap:wrap;gap:4px var(--s3);font-size:var(--t-xs);color:var(--hero-fg)}
+.su-dev span{display:inline-flex;align-items:center;gap:4px}
+
+/* summary (C) */
+.sm-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:var(--s4);align-items:start}
+.sm-hero{background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s5);display:flex;flex-direction:column;gap:var(--s4)}
+[data-theme="playful"] .sm-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.sm-hero .top{display:flex;align-items:center;gap:var(--s5);flex-wrap:wrap}
+.sm-hero .big-l{font-size:var(--t-xl);font-family:var(--font-display);font-weight:var(--display-weight);line-height:1.3}
+.sm-hero .big-l .num{font-size:var(--t-4xl);font-weight:700}
+[data-theme="pro"] .sm-hero .big-l .num{color:var(--accent-2)}
+.sm-hero .det{font-size:var(--t-sm);font-weight:600}
+.sm-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.sm-nums div{background:var(--hero-chip);border-radius:var(--radius);padding:var(--s2) var(--s3)}
+.sm-nums b{display:block;font-size:var(--t-2xl);font-family:var(--font-num);line-height:1.2}
+.sm-nums span{font-size:var(--t-xs);font-weight:600}
+.sm-how{display:flex;flex-wrap:wrap;gap:4px var(--s3);font-size:var(--t-sm);align-items:center}
+.sm-how span{display:inline-flex;gap:4px;align-items:center}
+.sm-groups{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
+.grp-h{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+.grp-h h2{font-size:var(--t-lg)}
+.grp-h .grow{flex:1}
+.gi{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--cb);background:var(--cbg);color:var(--ct);flex:none}
+.gi.dash{border-style:dashed}
+.all-done{display:flex;align-items:center;gap:var(--s3);font-size:var(--t-lg);font-weight:700;color:var(--text-success)}
+.all-done .ic{font-size:44px}
+.sm-bar{position:sticky;bottom:0;margin-top:var(--s4);display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;padding:var(--s3);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);z-index:3}
+.sm-bar .why{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.close-row{display:inline-flex;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-left:auto}
+
+/* projector (TV) */
+.proj{position:absolute;inset:0;z-index:40;background:var(--hero-bg);color:var(--hero-fg);display:flex;flex-direction:column;padding:var(--s5) var(--s6);gap:var(--s4);overflow:auto}
+.proj-top{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.proj-top .grow{flex:1}
+.proj-title{font-size:var(--t-lg);min-width:0}
+.proj .btn{background:var(--hero-chip);border-color:color-mix(in srgb,var(--hero-fg) 40%,transparent);color:var(--hero-fg);box-shadow:none}
+.proj-last{display:flex;align-items:center;gap:var(--s5);background:var(--hero-chip);border-radius:var(--radius-hero);padding:var(--s5)}
+.pj-ic{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:var(--hero-fg);color:var(--hero-bg);font-size:48px;flex:none}
+.proj-last .nm{font-size:var(--t-4xl);font-family:var(--font-display);font-weight:var(--display-weight);line-height:1.25;overflow-wrap:anywhere}
+.proj-last .ps{font-size:var(--t-xl);font-weight:700}
+.proj-count{font-size:var(--t-2xl);font-weight:700}
+.proj-count .num{font-size:var(--t-4xl)}
+.proj-bar{height:18px;border-radius:999px;background:color-mix(in srgb,var(--hero-fg) 20%,transparent);overflow:hidden;flex:none}
+.proj-bar i{display:block;height:100%;background:var(--hero-fg)}
+.proj-cells{--pc:12;display:grid;grid-template-columns:repeat(var(--pc),minmax(0,1fr));gap:8px}
+.pcell{min-height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;gap:4px;font-weight:700;font-family:var(--font-num);font-size:var(--t-lg);border:2px dashed color-mix(in srgb,var(--hero-fg) 50%,transparent)}
+.pcell.on{background:var(--hero-fg);color:var(--hero-bg);border-style:solid;border-color:var(--hero-fg)}
+.proj-in input{width:min(520px,100%);min-height:52px;padding:0 16px;border-radius:var(--radius);border:2px solid color-mix(in srgb,var(--hero-fg) 45%,transparent);background:var(--hero-chip);color:var(--hero-fg);font:inherit;font-size:var(--t-md)}
+.proj-in input::placeholder{color:var(--hero-fg);opacity:.8}
+.proj-note{font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:center}
+
+/* breakpoints */
+@container app (max-width:1300px){ .cells{--cols:8} }
+@container app (max-width:1100px){
+  .sc-grid{grid-template-columns:1fr}
+  .sc-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .sc-side .wide{grid-column:1/-1}
+  .cells{--cols:6}
+  .su-grid{grid-template-columns:1fr}
+  .su-start{position:sticky;top:auto;bottom:0;flex-direction:row;flex-wrap:wrap;align-items:center;padding:var(--s3) var(--s4);box-shadow:var(--shadow-pop)}
+  .su-start .sum{flex:1;min-width:220px}
+  .su-start .btn-start{width:auto;flex:0 0 auto}
+  .su-start .ring-row,.su-start .su-dev{display:none}
+  .sm-grid{grid-template-columns:1fr}
+  .proj-cells{--pc:8}
+}
+@container app (max-width:599px){
+  .no-phone{display:none !important}
+  .only-phone{display:inline-flex !important}
+  .sc-head h1{font-size:var(--t-xl)}
+  .sc-hero{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"t r" "n r" "p p";padding:var(--s3) var(--s4);gap:var(--s1) var(--s3)}
+  .sc-hero .kicker{display:none}
+  .sc-hero h1{font-size:var(--t-md);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sc-hero .count{text-align:left;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .sc-hero .count .num{display:inline;font-size:var(--t-2xl)}
+  .hp{font-size:var(--t-xs);padding:0 10px}
+  .hp .lng{display:none}
+  .hp .sht{display:inline}
+  /* thumb dock: input + camera stay above the tab bar (one-handed) */
+  .sc-in{position:absolute;left:0;right:0;bottom:100px;margin:0;padding:var(--s2) var(--s3);background:var(--surface-2);border-top:var(--card-bw) solid var(--card-border);box-shadow:0 -8px 18px rgba(0,0,0,.12);z-index:4}
+  .sc-in input{min-height:56px;font-size:var(--t-md)}
+  .cam-btn{min-width:56px;min-height:56px;padding:0}
+  .cam-btn .lbl{display:none}
+  .main[data-scan="scan"]{padding-bottom:210px}
+  .sc-grid{margin-top:var(--s3)}
+  .res-main{grid-template-columns:auto minmax(0,1fr);padding:var(--s3) var(--s3) var(--s3) calc(var(--s3) + 10px);gap:var(--s3);min-height:124px}
+  .res-ic{width:52px;height:52px;font-size:30px}
+  .res .score{grid-column:2;text-align:left;font-size:var(--t-2xl)}
+  .res-acts,.undo-bar,.undo-hint{padding-left:calc(var(--s3) + 10px);padding-right:var(--s3)}
+  .res-acts .btn{flex:1 1 100%}
+  .pad-grid{grid-template-columns:1fr;padding:var(--s3) var(--s3) var(--s3) calc(var(--s3) + 10px)}
+  .cells{--cols:5;gap:12px 6px}
+  .cell{min-height:56px}
+  .sc-side{display:flex}
+  .side-tabs{display:flex}
+  .sc-side .sp:not(.on){display:none}
+  .asg-cards,.meth{grid-template-columns:1fr}
+  .mc{min-height:64px;flex-direction:row;align-items:center;gap:var(--s3)}
+  .su-start{bottom:100px}
+  .su-start .btn-start{width:100%}
+  .sm-bar{bottom:100px}
+  .sm-bar .btn{flex:1 1 100%;white-space:normal}
+  .close-row{margin-left:0;flex-basis:100%;padding-top:var(--s2);border-top:1px dashed var(--border-control)}
+  .proj{padding:var(--s4)}
+  .proj-cells{--pc:6}
+  .pj-ic{width:56px;height:56px;font-size:32px}
+}
 </style>
 </head>
 <body>
@@ -824,6 +1195,8 @@ table.gb td.n,table.gb th.n{text-align:right;font-variant-numeric:tabular-nums}
   <div class="ctl"><span>อุปกรณ์</span><div class="seg" data-group="device"></div></div>
   <div class="ctl"><span>สถานะ</span><div class="seg" data-group="state"></div></div>
   <div class="ctl"><div class="seg" data-group="fit"></div><div class="seg" data-group="tags"></div></div>
+  <div class="scan-row scan-only" hidden><div class="ctl"><span>ช่วง</span><div class="seg" data-group="phase"></div></div><div class="ctl"><span>วิธี</span><div class="seg" data-group="meth"></div></div><div class="ctl"><span>Q1 แผงยังไม่ส่ง</span><div class="seg" data-group="q1"></div></div><div class="ctl scan-cam" hidden><span>ข้อความกล้อง</span><div class="seg" data-group="cam"></div></div></div>
+  <div class="menu-row"><div class="ctl"><span>เมนู</span><div class="seg" data-group="menu"></div></div><p class="menu-info" id="menuInfo"></p></div>
   <p class="chrome-info" id="info"></p>
 </header>
 <main class="stage" id="stage">
@@ -933,7 +1306,7 @@ function load(ds) {
 }
 
 /* ---------- state ---------- */
-const S = { page: "home", layout: "a", theme: "warm", modePref: "light", device: innerWidth < 700 ? "phone" : "ipadL", fit: "w", tags: false,
+const S = { menu: "D", sstate: "normal", page: "home", layout: "a", theme: "warm", modePref: "light", device: innerWidth < 700 ? "phone" : "ipadL", fit: "w", tags: false,
   state: "normal", hide: false, cls: null, order: [], focus: null, sheet: null, opener: null, saveMsg: "", confirmReset: false, dsKey: null };
 const mode = () => S.modePref === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : S.modePref;
 const ICONW = { pro: "bold", warm: "duotone", playful: "fill" };
@@ -1055,16 +1428,59 @@ function thumb(k) {
 }
 
 /* ---------- shared blocks ---------- */
-const NAV = [["วันนี้", [["home", "หน้าหลัก", "house"]]], ["ในห้องเรียน", [["scan", "สแกน", "scan"], ["attendance", "เช็คชื่อ", "user-check"], ["random", "สุ่มชื่อ", "dice-five"]]],
-  ["ตรวจงาน", [["gradebook", "คะแนน", "notebook"], ["reports", "รายงาน", "chart-bar"]]], ["จัดการ", [["students", "นักเรียน", "users-three"], ["settings", "ตั้งค่า", "gear-six"]]]];
+/* T-06 menu options — data from menu-proposal.md (JSON block) · nw = new on the menu · chg = merged/renamed */
+const NAV_IC = { home: "house", timetable: "calendar-check", scan: "scan", attendance: "user-check", random: "dice-five", gradebook: "notebook",
+  reports: "chart-bar", students: "users-three", "qr-cards": "qr-code", backup: "cloud-arrow-up", settings: "gear-six" };
+const it = (id, label, group, x = {}) => ({ id, label, group, ...x });
+const M_A = [it("home", "หน้าหลัก", "วันนี้"), it("scan", "สแกน", "ในห้องเรียน"), it("attendance", "เช็คชื่อ", "ในห้องเรียน"), it("random", "สุ่มชื่อ", "ในห้องเรียน"),
+  it("gradebook", "คะแนน", "ตรวจงาน"), it("reports", "รายงาน", "ตรวจงาน"), it("students", "นักเรียน", "จัดการ"), it("settings", "ตั้งค่า", "จัดการ")];
+const TT = it("timetable", "ตารางสอน", "วันนี้", { nw: true });
+const QRC = it("qr-cards", "บัตร QR", "จัดการ", { nw: true }), BAK = it("backup", "สำรองข้อมูล", "จัดการ", { nw: true });
+const pick = (ids) => ids.map((k) => M_A.find((x) => x.id === k));
+const MENUS = {
+  A: { rail: M_A, sheet: pick(["random", "reports", "students", "settings"]) },
+  B: { rail: [...pick(["home", "scan", "attendance", "random"]), it("gradebook", "คะแนนและรายงาน", "ตรวจงาน", { chg: true }), ...pick(["students", "settings"])],
+       sheet: pick(["random", "students", "settings"]) },
+  C: { rail: [M_A[0], TT, ...pick(["scan", "attendance", "random", "gradebook", "reports", "students"]), QRC, BAK, M_A[7]],
+       sheet: [TT, ...pick(["random", "reports", "students"]), QRC, BAK, M_A[7]] },
+  D: { rail: [M_A[0], { ...TT, later: true }, ...M_A.slice(1)], sheet: [{ ...TT, later: true }, ...pick(["random", "reports", "students", "settings"])] },
+};
+const MENU_INFO = {
+  A: "<b>ก คงเดิม · 8 รายการ 4 กลุ่ม</b> — เหมือนแอปที่ใช้อยู่ทุกอย่าง ไม่มีงานเพิ่ม · ข้อเสีย: สำรองข้อมูล / บัตร QR ยังซ่อนลึกเหมือนเดิม",
+  B: "<b>ข ลด · 7 รายการ</b> — รวม “คะแนน” กับ “รายงาน” เป็นข้อเดียว แล้วสลับที่หัวสมุดคะแนน (ลองเปิดหน้า สมุดคะแนน) · ข้อเสีย: บน iPad เข้ารายงานต้องกด 2 ครั้งแทน 1",
+  C: "<b>ค เพิ่ม · 11 รายการ</b> — เพิ่ม ตารางสอน (หน้าใหม่) + ลิงก์ลัด บัตร QR และ สำรองข้อมูล · ข้อเสีย: เมนูยาว จอเตี้ยต้องเลื่อน (ดูแถบ “มีต่อ” ที่เมนูซ้าย)",
+  D: "<b>ง แนะนำ · 9 รายการ</b> — เมนู ก เดิมทุกอย่าง + “ตารางสอน” ใต้หน้าหลัก โผล่เมื่อหน้าตารางสอนสร้างเสร็จ · ของซ่อนลึกแก้ในหน้าแทน (เช่น เตือนสำรองข้อมูลบนหน้าหลัก)",
+};
+const MENU_L = { A: "ก", B: "ข", C: "ค", D: "ง" };
+/* what each page without a mockup is: have = already in the app · new = new page · link = shortcut into an existing page */
+const PG_INFO = {
+  attendance: { kind: "have", what: "เช็คชื่อรายห้อง มา · สาย · ลา · ป่วย · ขาด แล้วสรุปเป็นรายวัน" },
+  random: { kind: "have", what: "สุ่มชื่อเฉพาะคนที่มาเรียน และจับกลุ่ม ฉายขึ้นจอได้" },
+  reports: { kind: "have", what: "สรุปการส่งงานรายห้อง/รายคน คัดลอกสรุปไป LINE ผู้ปกครอง ส่งออก Excel และพิมพ์" },
+  students: { kind: "have", what: "รายชื่อนักเรียนรายห้อง ดูข้อมูลรายคน นำเข้าจาก Excel และพิมพ์สติกเกอร์ QR" },
+  timetable: { kind: "new", what: "ตารางสอนรายคาบทั้งสัปดาห์ และบอก “คาบถัดไป” ว่าห้องไหน วิชาอะไร" },
+  "qr-cards": { kind: "link", what: "ทางลัดไปหน้าพิมพ์บัตร/สติกเกอร์ QR ของนักเรียน (ตอนนี้ซ่อนอยู่ในหน้านักเรียน)",
+    extra: "ต้องเพิ่มให้หน้านักเรียนเปิดหน้าพิมพ์ได้ทันที — งานเล็ก ฝั่งหน้าเว็บอย่างเดียว" },
+  backup: { kind: "link", what: "ทางลัดไป ตั้งค่า › สำรองข้อมูล — ดาวน์โหลดไฟล์สำรองและกู้คืน", extra: "ปลายทางมีอยู่แล้ว ใช้ได้ทันที ไม่มีงานเพิ่ม" },
+};
 const PAGES = ["home", "settings", "scan", "gradebook"];
-const navBtn = (k, l) => PAGES.includes(k) ? `data-page="${k}"` : `data-toast="ตัวอย่างนี้ไม่มีหน้า${l}"`;
-const rail = () => `<nav class="rail" aria-label="เมนูหลัก"><div class="brand">${logo()}</div>
-  ${NAV.map(([, items], gi) => `${gi ? `<div class="rail-label" aria-hidden="true"></div>` : ""}${items.map(([k, l, i]) => `<button class="rail-item" ${k === S.page ? 'aria-current="page"' : ""} ${navBtn(k, l)}>${ic(i)}<span>${l}</span></button>`).join("")}`).join("")}
-  <div class="rail-foot"><div class="sync"><span class="dot" ${S.state === "offline" ? 'style="background:var(--fill-warning);box-shadow:none"' : ""}></span>${S.state === "offline" ? "ออฟไลน์" : "ออนไลน์"}</div><button class="rail-item" data-toast="ออกจากระบบ">${ic("sign-out")}<span>ออกจากระบบ</span></button></div></nav>`;
+const navAttr = (x) => PAGES.includes(x.id) ? `data-page="${x.id}"` : `data-info="${x.id}"`;
+const nbadge = (x, inline) => x.nw || x.chg ? `<span class="${inline ? "nb-in" : "nb"}">${x.chg ? "รวม" : "ใหม่"}</span>` : "";
+const menu = () => MENUS[S.menu];
+const rail = () => { let g = "";
+  const items = menu().rail.map((x) => { const head = x.group !== g ? `<div class="rail-label">${(g = x.group)}</div>` : "";
+    return `${head}<button class="rail-item" ${x.id === S.page ? 'aria-current="page"' : ""} ${navAttr(x)}>${ic(NAV_IC[x.id])}<span>${x.label}</span>${nbadge(x)}</button>`; }).join("");
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="brand">${logo()}</div>
+  <div class="rail-mid"><div class="rail-list">${items}</div><span class="rail-more" aria-hidden="true">มีต่อ ${ic("caret-down")}</span></div>
+  <div class="rail-foot"><div class="sync"><span class="dot" ${offNow() ? 'style="background:var(--fill-warning);box-shadow:none"' : ""}></span>${offNow() ? "ออฟไลน์" : "ออนไลน์"}</div><button class="rail-item" data-toast="ออกจากระบบ">${ic("sign-out")}<span>ออกจากระบบ</span></button></div></nav>`; };
+function railShadow(top) {
+  const l = document.querySelector(".rail-list"); if (!l) return; const m = l.parentElement; if (top) l.scrollTop = top;
+  const upd = () => { const over = l.scrollHeight - l.clientHeight > 2; m.classList.toggle("up", over && l.scrollTop > 2); m.classList.toggle("down", over && l.scrollTop + l.clientHeight < l.scrollHeight - 2); };
+  upd(); l.addEventListener("scroll", upd, { passive: true });
+}
 const tabbar = () => { const cur = (k) => (S.page === k ? 'aria-current="page"' : "");
   return `<nav class="tabbar" aria-label="เมนูหลัก">
-  <button class="tab" ${cur("home")} data-page="home">${ic("house")}หน้าหลัก</button><button class="tab" data-toast="ตัวอย่างนี้ไม่มีหน้าเช็คชื่อ">${ic("user-check")}เช็คชื่อ</button>
+  <button class="tab" ${cur("home")} data-page="home">${ic("house")}หน้าหลัก</button><button class="tab" data-info="attendance">${ic("user-check")}เช็คชื่อ</button>
   <button class="tab tab-scan" ${cur("scan")} data-page="scan"><span class="bubble">${ic("scan")}</span>สแกน</button>
   <button class="tab" ${cur("gradebook")} data-page="gradebook">${ic("notebook")}คะแนน</button><button class="tab" ${cur("settings")} data-act="sheet:more">${ic("dots-three-circle")}เพิ่มเติม</button></nav>`; };
 const topbar = (home) => `<div class="topbar"><div class="where">${ic("calendar-blank")}<span>พุธ 11 พ.ย. 2569 <span class="long">· ภาคเรียน 2/2569</span></span></div>
@@ -1314,20 +1730,473 @@ function pageSettings() {
 }
 
 /* ======================= scan / gradebook (short samples — prove the theme works app-wide) ======================= */
+/* ======================= T-08 หน้าสแกนเต็ม (ux-scan.md) — fictional names, numbers follow ASG0 ======================= */
+const FN = ["ภูผา", "ณิชา", "ธนกร", "กานต์ธิดา", "ปัณณวัฒน์", "มินตรา", "ปวริศ", "ศิริกานต์", "กิตติพัฒน์", "นันท์นภัส", "กฤตเมธ", "อัญชิสา", "ธีรเดช", "ปภาวรินทร์", "รัชชานนท์", "สุพิชญา",
+  "ณัฐภัทร", "พิชชาภา", "ศุภกร", "วริศรา", "ชนกันต์", "เปรมิกา", "ธนวินท์", "ญาณิศา", "กิตติพัศ", "ปาลิตา", "ภูริณัฐ", "ชลธิชา", "อิทธิพล", "กมลชนก", "จิรภัทร", "ธัญชนก"];
+const LN = ["ใจกล้า", "แสงทอง", "พรหมมา", "วงศ์ใหญ่", "สายสุด", "คงมั่น", "ศรีเมือง", "บุญประเสริฐ", "ทองมา", "สุขใจ", "รุ่งเรือง", "มั่นคง", "ดีงาม", "ศรีวิไล", "แก้วใส", "จันทร์หอม"];
+const SC_ROOM = { c61: ["ป.6/1", 32], c62: ["ป.6/2", 30], c51: ["ป.5/1", 28] };
+const ROT = { c61: [0, 0], c62: [11, 5], c51: [20, 9] };
+const stName = (cid, no) => { const [a, b] = ROT[cid]; return [FN[(no - 1 + a) % 32], LN[(no - 1 + b) % 16]]; };
+const METH = { full: ["ให้คะแนนเต็ม", "ยิงแล้วได้เต็มทันที", "seal-check", "เต็ม"], type: ["กรอกทีละคน", "ยิงแล้วพิมพ์คะแนน", "keyboard", "กรอก"], later: ["รับงานก่อน", "ตรวจแล้วค่อยให้คะแนน", "tray", "รับก่อน"] };
+const HOW = { hid: ["barcode", "เครื่องยิง"], cam: ["camera", "กล้อง"], key: ["keyboard", "พิมพ์"], tap: ["hand-tap", "แตะตาราง"] };
+const WS = { scored: ["check", "ส่งแล้ว"], late: ["clock", "ส่งช้า"], awaiting: ["pencil-simple", "รอตรวจ"], pending: [null, "ยังไม่ส่ง"], missing: ["warning-circle", "ยังไม่ส่ง · เลยกำหนด"], excused: ["prohibit", "ยกเว้น"] };
+const TYPE_IC = { "ใบงาน": "file-text", "แบบฝึกหัด": "pencil-line", "ชิ้นงาน": "puzzle-piece", "การบ้าน": "house-line", "ทดสอบ": "exam" };
+const RECV_L = { today: "11 พ.ย.", y: "10 พ.ย.", o30: "30 ต.ค." }, RECV_D = { today: TODAY, y: "2026-11-10", o30: "2026-10-30" };
+const CAM = { permission: ["ยังไม่ได้รับอนุญาตให้ใช้กล้อง", "เปิดสิทธิ์กล้องให้เว็บนี้ในการตั้งค่าของเบราว์เซอร์ แล้วกดกล้องอีกครั้ง", "ไม่ได้อนุญาต"],
+  no_camera: ["ไม่พบกล้องในเครื่องนี้", "ต่อเครื่องยิง QR หรือพิมพ์เลขที่แทน", "ไม่มีกล้อง"], insecure: ["เปิดกล้องไม่ได้ — หน้านี้ไม่ได้เปิดผ่าน HTTPS", "เปิดแอปจากลิงก์ https:// ที่ติดตั้งไว้", "ไม่ใช่ HTTPS"],
+  unsupported: ["เบราว์เซอร์นี้ไม่รองรับการเปิดกล้อง", "ลองเปิดด้วย Safari หรือ Chrome รุ่นใหม่", "ไม่รองรับ"], busy: ["กล้องถูกใช้อยู่โดยแอปอื่น", "ปิดแอปที่ใช้กล้องอยู่ (เช่น วิดีโอคอล) แล้วลองอีกครั้ง", "กล้องไม่ว่าง"],
+  reader: ["ตัวอ่าน QR โหลดไม่สำเร็จ", "ตรวจเน็ตแล้วเปิดหน้านี้ใหม่", "ตัวอ่าน QR"], unknown: ["เปิดกล้องไม่สำเร็จ", "ปิดแล้วเปิดกล้องอีกครั้ง", "อื่น ๆ"] };
+const SS = { phase: "setup", selAsg: null, selCls: null, asg: null, cls: null, method: "full", cells: {}, recent: [], last: null, hit: null, undo: null, pad: null,
+  online: true, failed: [], closed: false, cam: "off", camProb: "permission", resume: false, project: false, projNote: false, recv: "today", noasg: false,
+  sideTab: "recent", q1: "b", cards: { recent: true, missing: true }, subj: "all", showAll: false, filterMiss: false, closedDone: false, discard: null,
+  copied: false, seq: 0, clk: 0, lastScore: null, gridFocus: null, pickMsg: "" };
+let undoTimer = null, holdTimer = null, RES_SEEN = null;
+const RP = {}; // last drawn ring values (ring fills from old → new value)
+const offNow = () => (S.page === "scan" ? !SS.online : S.state === "offline");
+const scA = () => ASG0.find((a) => a.id === SS.asg);
+const scRoom = (cid = SS.cls) => SC_ROOM[cid][0];
+const lateOn = (a) => !!a.due && Date.parse(RECV_D[SS.recv]) > Date.parse(a.due);
+const hhmm = (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`;
+const sName = (no, cid = SS.cls) => (S.hide ? `เลขที่ ${no}` : stName(cid, no).join(" "));
+const sShort = (no, cid = SS.cls) => (S.hide ? "" : stName(cid, no)[0]);
+const isSub = (x) => x && ["scored", "late", "awaiting"].includes(x.st);
+const isLeft = (x) => x && ["pending", "missing"].includes(x.st);
+const kindOf = (no) => { const x = SS.cells[no]; return !x ? "ready" : x.st === "late" ? "late" : x.st === "awaiting" ? "later" : "ok"; };
+function sortedAsgs() {
+  const k = (a) => (!a.due ? 1e4 : DUE_DAYS(a.due) >= 0 ? DUE_DAYS(a.due) : 100 - DUE_DAYS(a.due));
+  return ASG0.filter((a) => a.status === "open").sort((x, y) => k(x) - k(y));
+}
+const roomStat = (a, cid) => { const p = a.per[cid]; return { sub: p.scored + p.awaiting, den: SC_ROOM[cid][1] - p.excused, exc: p.excused }; };
+function buildCells(a, cid) {
+  const p = a.per[cid], n = SC_ROOM[cid][1], cells = {}, over = a.due && DUE_DAYS(a.due) < 0;
+  const miss = p.missing.map((s) => Number(s.slice(1)) % 10), exc = [12, 25, 30].slice(0, p.excused);
+  const rest = []; for (let i = 1; i <= n; i++) if (!miss.includes(i) && !exc.includes(i)) rest.push(i);
+  rest.sort((x, y) => ((x * 11) % 37) - ((y * 11) % 37));
+  const sub = p.scored + p.awaiting, hows = ["hid", "hid", "cam", "hid", "hid", "key", "hid", "cam"];
+  rest.forEach((no, i) => {
+    if (i >= sub) { cells[no] = { st: over ? "missing" : "pending" }; return; }
+    const aw = i >= p.late && i < p.late + p.awaiting, sc = !aw; // oldest = late, then awaiting, newest = scored
+    cells[no] = { st: i < p.late ? "late" : sc ? "scored" : "awaiting", score: sc ? Math.max(0, a.full - (no % 4 === 0 ? 1 : no % 7 === 0 ? 2 : 0)) : null,
+      how: i === sub - 4 ? "tap" : hows[i % 8], t: hhmm(10 * 60 + 41 - (sub - 1 - i)) };
+  });
+  miss.forEach((no) => (cells[no] = { st: over ? "missing" : "pending" })); exc.forEach((no) => (cells[no] = { st: "excused" }));
+  return { cells, recent: rest.slice(0, sub).reverse().map((no) => ({ no, t: cells[no].t, how: cells[no].how })) };
+}
+function scStats() {
+  const c = { scored: 0, late: 0, awaiting: 0, pending: 0, missing: 0, excused: 0, q: 0, f: 0, noScore: 0 };
+  for (const x of Object.values(SS.cells)) { c[x.st]++; if (x.q) c.q++; if (x.f) c.f++; if (isSub(x) && x.score == null) c.noScore++; }
+  c.total = Object.keys(SS.cells).length; c.sub = c.scored + c.late + c.awaiting; c.den = c.total - c.excused; c.left = c.pending + c.missing;
+  c.pct = c.den ? c.sub / c.den : 0; return c;
+}
+const nosBy = (f) => Object.keys(SS.cells).map(Number).filter((n) => f(SS.cells[n])).sort((a, b) => a - b);
+function startSession(asg, cls) {
+  const b = buildCells(ASG0.find((x) => x.id === asg), cls); stopUndo();
+  Object.assign(SS, { asg, cls, selAsg: asg, selCls: cls, cells: b.cells, recent: b.recent, phase: "scan", last: null, hit: null, pad: null, failed: [], closed: false,
+    resume: false, project: false, projNote: false, filterMiss: false, closedDone: false, discard: null, clk: 0, cam: "off", noasg: false, gridFocus: null });
+}
+function commit(no, how, o = {}) {
+  const a = scA(), prev = { ...SS.cells[no] }, late = lateOn(a);
+  const st = late ? "late" : SS.method === "full" ? "scored" : "awaiting";
+  const t = hhmm(10 * 60 + 42 + SS.clk++);
+  SS.cells[no] = { st, score: SS.method === "full" ? a.full : null, how, t, q: !SS.online, f: !!o.fail, rd: SS.recv !== "today" ? SS.recv : null };
+  SS.recent.unshift({ no, t, how }); SS.resume = false; SS.hit = no;
+  if (SS.method === "type" && !o.silent) { SS.pad = { no, val: "", err: "" }; SS.last = { kind: "pad", no, id: ++SS.seq }; }
+  else SS.last = { kind: o.fail ? "fail" : late ? "late" : SS.method === "later" ? "later" : "ok", no, id: ++SS.seq };
+  if (!o.silent) startUndo(no, prev, "recv");
+}
+function doScan(raw, how) {
+  const s = String(raw).trim(); if (!s) return;
+  SS.pad = null;
+  if (SS.closed) { SS.last = { kind: "closed", id: ++SS.seq }; return; }
+  if (!/^\d{1,3}$/.test(s)) { SS.last = { kind: "code", code: s.slice(0, 16), id: ++SS.seq }; return; }
+  const no = Number(s), x = SS.cells[no];
+  if (!x) { SS.last = { kind: "unknown", no, id: ++SS.seq }; return; }
+  SS.hit = no; SS.gridFocus = no;
+  if (x.st === "excused") { SS.last = { kind: "excused", no, id: ++SS.seq }; return; }
+  if (isSub(x)) { SS.last = { kind: "dup", no, id: ++SS.seq }; return; }
+  commit(no, how);
+}
+function stopUndo() { clearInterval(undoTimer); undoTimer = null; SS.undo = null; }
+function startUndo(no, prev, kind) { clearInterval(undoTimer); SS.undo = { no, prev, kind, left: 5 }; undoTimer = setInterval(undoTick, 1000); }
+const undoHint = () => `<p class="undo-hint">${ic("hand-tap")}แก้คะแนนหรือยกเลิกการส่งได้ที่ช่องในตาราง</p>`;
+const undoBar = () => `<div class="undo-bar" id="undoBar"><span class="meter" aria-hidden="true"><i id="undoMeter" style="width:${SS.undo.left * 20}%"></i></span><button class="btn undo-btn" id="undoBtn" data-sc="undo">${ic("arrow-u-up-left")}เลิกทำ (${SS.undo.left})</button></div>`;
+function undoTick() {
+  const u = SS.undo; if (!u) return stopUndo();
+  const bar = document.getElementById("undoBar"); if (bar && bar.matches(":hover,:focus-within")) return; // pause while pointing / focused
+  u.left--;
+  if (u.left <= 0) { stopUndo(); if (bar) bar.outerHTML = undoHint(); return; }
+  const b = document.getElementById("undoBtn"), m = document.getElementById("undoMeter");
+  if (b) b.innerHTML = `${ic("arrow-u-up-left")}เลิกทำ (${u.left})`; if (m) m.style.width = u.left * 20 + "%";
+}
+function undoNow() {
+  const u = SS.undo; if (!u) return; stopUndo(); SS.cells[u.no] = u.prev; SS.pad = null; SS.hit = u.no;
+  if (u.kind === "recv") { const i = SS.recent.findIndex((r) => r.no === u.no); if (i >= 0) SS.recent.splice(i, 1); SS.last = { kind: "undone", no: u.no, id: ++SS.seq }; }
+  else SS.last = { kind: "restored", no: u.no, id: ++SS.seq };
+}
+function voidSub(no) { const prev = { ...SS.cells[no] }; SS.cells[no] = { st: scA().due && DUE_DAYS(scA().due) < 0 ? "missing" : "pending" }; SS.hit = no; SS.pad = null; SS.last = { kind: "voided", no, id: ++SS.seq }; startUndo(no, prev, "void"); }
+function padSave() {
+  const P = SS.pad, a = scA(), inp = document.getElementById("padIn"), v = (inp ? inp.value : P.val).trim(), n = Number(v);
+  if (v === "" || isNaN(n) || n < 0 || n > a.full) { P.val = v; P.err = `คะแนนต้องอยู่ระหว่าง 0–${a.full}`; return; }
+  const x = SS.cells[P.no]; x.score = n; if (x.st === "awaiting") x.st = "scored"; SS.lastScore = n;
+  SS.last = { kind: x.st === "late" ? "late" : "ok", no: P.no, id: ++SS.seq }; SS.pad = null;
+}
+function scenario(k) {
+  S.sstate = k; S.hide = k === "hidden"; S.sheet = null; stopUndo();
+  Object.assign(SS, { online: true, cam: "off", noasg: k === "noasg", projNote: false });
+  if (k === "noasg") { SS.phase = "setup"; return; }
+  startSession(k === "late" ? "A3" : "A1", "c61");
+  const c = SS.cells, left = () => nosBy(isLeft), r0 = SS.recent[0].no;
+  const set = (kind, no) => { SS.last = { kind, no, id: ++SS.seq }; SS.hit = no ?? null; };
+  const keep = SS.method; if (keep === "type" && !["normal", "project"].includes(k)) SS.method = "full"; // demos of results use direct receive
+  switch (k) {
+    case "late": { const n = left()[3] ?? left()[0]; commit(n, "hid", { silent: true }); set("late", n); break; }
+    case "dup": set("dup", SS.recent[2].no); break;
+    case "unknown": set("unknown"); SS.last.no = 41; break;
+    case "excused": set("excused", 12); break;
+    case "ambig": set("ambig"); SS.last.no = left()[0]; break;
+    case "offline": SS.online = false; left().slice(0, 3).forEach((n) => commit(n, "hid", { silent: true })); set(kindOf(SS.recent[0].no), SS.recent[0].no); break;
+    case "failed": { const ns = left().slice(0, 2); ns.forEach((n) => commit(n, "hid", { silent: true, fail: true }));
+      SS.failed = [{ no: ns[0], t: c[ns[0]].t, why: "มีการแก้รายการนี้จากเครื่องอื่นก่อนหน้า — กด “ลองใหม่” เพื่อส่งอีกครั้ง" },
+        { no: ns[1], t: c[ns[1]].t, why: "งานนี้ปิดรับแล้ว — เปิดรับงานอีกครั้งในสมุดคะแนน แล้วกด “ลองใหม่”", closed: true }];
+      set("fail", ns[1]); break; }
+    case "camera": SS.cam = "prob"; set(kindOf(r0), r0); break;
+    case "closed": SS.closed = true; set("closed"); break;
+    case "resume": SS.resume = true; SS.last = null; break;
+    case "project": SS.project = true; if (SS.method === "type") { SS.method = "later"; SS.projNote = true; } set(kindOf(r0), r0); break;
+    default: if (SS.method === "type") { commit(left()[0], "hid"); stopUndo(); } else set(kindOf(r0), r0);
+  }
+  if (keep === "type" && SS.method === "full" && k !== "project") SS.method = "type";
+}
+function setPhase(v) {
+  stopUndo(); SS.pad = null; S.sheet = null;
+  if (v === "setup") { SS.phase = "setup"; if (SS.asg) { SS.selAsg = SS.asg; SS.selCls = SS.cls; } return; }
+  if (!SS.asg || SS.noasg) scenario(S.sstate === "noasg" ? "normal" : S.sstate);
+  SS.phase = v;
+}
+function scRing(p, size, sw, center, label, key, plain) {
+  const r = (size - sw) / 2, c = 2 * Math.PI * r, h = size / 2, prev = RP[key] ?? p; RP[key] = p;
+  const da = (v) => `${(c * v).toFixed(1)} ${c.toFixed(1)}`;
+  return `<div class="ringbox sc-ring ${plain ? "plain" : ""}" role="img" aria-label="${label}"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--sr-track)" stroke-width="${sw}"/>
+    <circle class="ring-val" cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--sr-val)" stroke-width="${sw}" stroke-linecap="round" style="stroke-dasharray:${da(prev)}" data-to="${da(p)}" transform="rotate(-90 ${h} ${h})"/></svg><div class="rc">${center}</div></div>`;
+}
+const animRings = () => requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll(".sc-ring [data-to]").forEach((el) => (el.style.strokeDasharray = el.dataset.to))));
+
+/* ----- top bar + banners ----- */
+function scanTop() {
+  const sc = SS.phase === "scan";
+  return `<div class="topbar"><div class="where">${ic("scan")}<span>สแกนส่งงาน <span class="long">· ภาคเรียน 2/2569</span></span></div><div class="grow"></div>
+  ${SS.phase === "setup" ? `<button class="chip-btn" data-toast="เลือกภาคเรียน" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>` : ""}
+  <button class="chip-btn hide-btn" data-act="hide" aria-pressed="${S.hide}" aria-label="ซ่อนชื่อนักเรียน">${ic(S.hide ? "eye-slash" : "eye")}<span class="lbl">${S.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+  ${sc ? `<button class="chip-btn no-phone" data-sc="proj" aria-pressed="${SS.project}">${ic("projector-screen")}<span class="lbl">ฉายจอ</span></button>
+  <button class="chip-btn no-phone" data-act="sheet:sc-cards">${ic("sliders-horizontal")}<span class="lbl">ปรับการ์ด</span></button>
+  <button class="btn btn-primary no-phone" data-sc="end">${ic("flag-checkered")}จบรอบ</button>
+  <button class="chip-btn only-phone" data-act="sheet:sc-more" aria-label="เพิ่มเติม: ฉายจอ วันที่รับ ปรับการ์ด จบรอบ">${ic("dots-three")}</button>` : ""}</div>`;
+}
+function scanBanners() {
+  let h = S.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่</b><br>ทุกจุดแสดงเฉพาะเลขที่ · ไม่แสดงคะแนนรายคน</div><button class="btn" data-act="hide">${ic("eye")}แสดงชื่อ</button></div>` : "";
+  if (SS.phase !== "scan") return h;
+  const c = scStats(), a = scA();
+  if (SS.resume) h += `<div class="banner sc-acc" role="status">${ic("clock-counter-clockwise")}<div><b>ต่อรอบเดิม · ${a.title} · ${scRoom()}</b><br>ส่งแล้ว ${c.sub} จาก ${c.den} — แถบนี้หายเองเมื่อสแกนคนแรก</div><button class="btn btn-primary" data-sc="resume-ok">${ic("play")}สแกนต่อ</button><button class="btn" data-sc="end">จบรอบ</button></div>`;
+  if (SS.closed) h += `<div class="banner sc-bad" role="alert">${ic("lock-simple")}<div><b>งานนี้ปิดรับแล้ว</b><br>สแกนแล้วจะไม่บันทึก ให้คะแนนย้อนหลังได้ที่ สมุดคะแนน</div><button class="btn" data-toast="ไปสมุดคะแนน">${ic("notebook")}สมุดคะแนน</button><button class="btn btn-primary" data-sc="end">จบรอบ</button></div>`;
+  if (SS.recv !== "today") h += `<div class="banner" role="status">${ic("warning")}<div><b>กำลังรับงานย้อนหลัง · ${RECV_L[SS.recv]}</b><br>ทุกคนที่สแกนตอนนี้บันทึกวันที่รับเป็น ${RECV_L[SS.recv]}</div><button class="btn" data-sc="recv:today">${ic("arrow-counter-clockwise")}กลับเป็นวันนี้</button></div>`;
+  return h;
+}
+
+/* ----- B: scanning ----- */
+function scanHero(c) {
+  const a = scA(), d = dueInfo(a.due), pct = Math.round(c.pct * 100), M = METH[SS.method];
+  return `<section class="sc-hero on-hero" aria-label="รอบสแกน ${a.title} ${scRoom()}">
+  <div class="t"><p class="kicker">${ic(TYPE_IC[a.type])}${a.type} · ${a.subject} · เต็ม ${a.full}</p><h1 class="display clamp2" title="${a.title}">${a.title}</h1></div>
+  <div class="pills">
+    <button class="hp" data-act="sheet:sc-room" aria-label="ห้อง ${scRoom()} แตะเพื่อเปลี่ยนห้อง">${ic("chalkboard")}${scRoom()}${ic("caret-down", "cv")}</button>
+    <button class="hp" data-act="sheet:sc-meth" aria-label="วิธีให้คะแนน ${M[0]} แตะเพื่อเปลี่ยน">${ic(M[2])}<span class="lng">${M[0]}</span><span class="sht">${M[3]}</span>${ic("caret-down", "cv")}</button>
+    <button class="hp no-phone" data-act="sheet:sc-date" aria-label="วันที่รับ ${RECV_L[SS.recv]} แตะเพื่อเปลี่ยน">${ic("calendar-dots")}รับ${SS.recv === "today" ? "วันนี้" : " " + RECV_L[SS.recv]}${ic("caret-down", "cv")}</button>
+    <span class="hp info no-phone">${ic(d.icon)}${d.text}</span>
+    <span class="hp info ${SS.online ? "" : "warn"}">${ic(SS.online ? "cloud-check" : "cloud-slash")}${SS.online ? "ออนไลน์" : `ออฟไลน์ · รอส่ง ${c.q}`}</span>
+    <span class="hp info no-phone">${ic("barcode")}เครื่องยิงพร้อม</span>
+  </div>
+  <div class="count" aria-live="off"><small>รับแล้ว</small><span class="num">${c.sub}</span><small>จาก ${c.den} คน${c.excused ? ` · ยกเว้น ${c.excused}` : ""}</small></div>
+  ${scRing(c.pct, S.device === "phone" ? 60 : S.device === "desk" ? 80 : 112, S.device === "phone" ? 8 : 12, `<span class="num" style="font-size:${S.device === "phone" ? "13px" : "var(--t-lg)"};font-weight:700">${pct}%</span>`, `ส่งแล้ว ${c.sub} จาก ${c.den} คน ร้อยละ ${pct}`, "hero")}
+  </section>`;
+}
+const scanInput = () => `<div class="sc-in" role="group" aria-label="รับรหัสนักเรียน"><div class="in-wrap">${ic("barcode")}<input id="scanIn" inputmode="numeric" autocomplete="off" enterkeyhint="done" aria-label="รหัสนักเรียน" placeholder="${S.device === "phone" ? "พิมพ์เลขที่ แล้วกด Enter" : "ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter"}"></div>
+  <button class="cam-btn" data-sc="cam" aria-pressed="${SS.cam === "on"}" aria-label="สแกนด้วยกล้อง">${ic(SS.cam === "prob" ? "camera-slash" : "camera")}<span class="lbl">กล้อง</span></button></div>`;
+function camBlock() {
+  if (SS.cam === "on") return `<div class="sc-cam"><div class="viewfinder" role="img" aria-label="ภาพจากกล้อง"><div class="vf-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="vf-hint">เล็งกล้องไปที่ QR ของนักเรียน</p></div>
+    <div class="cam-tools"><button class="icon-btn" data-toast="เปิดไฟฉาย" aria-label="ไฟฉาย">${ic("flashlight")}</button><button class="icon-btn" data-toast="สลับกล้องหน้า/หลัง" aria-label="สลับกล้อง">${ic("camera-rotate")}</button><button class="btn" data-sc="camshot">${ic("scan")}จำลองยิงติด (ตัวอย่าง)</button><button class="btn btn-ghost" data-sc="cam">${ic("x")}ปิดกล้อง</button></div></div>`;
+  if (SS.cam === "prob") { const [h, t] = CAM[SS.camProb]; return `<div class="banner sc-bad" role="alert">${ic("camera-slash")}<div><b>${h}</b><br>${t} · เครื่องยิง/พิมพ์เลขที่ใช้ได้ตามปกติ</div><button class="btn" data-sc="camclose">${ic("x")}ปิด</button></div>`; }
+  return "";
+}
+const SFX = { ok: [["speaker-high", "เสียงติ๊ดขึ้น"], ["vibrate", "สั่นสั้น"]], dup: [["speaker-high", "เสียงติ๊ดสองครั้ง"], ["vibrate", "สั่น"]], err: [["speaker-high", "เสียงต่ำยาว"], ["vibrate", "สั่นยาว"]], undo: [["speaker-low", "เสียงติ๊ดลง"]] };
+function resInfo(L) {
+  const a = scA(), room = scRoom(), no = L ? L.no : null, x = no != null ? SS.cells[no] : null, nmx = no != null ? sName(no) : "";
+  const pre = S.hide ? "" : `เลขที่ ${no} · `, q = x && x.q ? " · รอส่งขึ้นระบบ" : "", rd = x && x.rd ? ` · รับ ${RECV_L[x.rd]}` : "";
+  const score = x && x.score != null && !S.hide ? `${x.score}<small>/${a.full}</small>` : "";
+  switch (L ? L.kind : "ready") {
+    case "ok": return { tone: "ok", icon: "check", title: nmx, sub: `${pre}ส่งแล้ว · ทันกำหนด${q}${rd}`, score, sfx: "ok", word: "ส่งแล้ว" };
+    case "later": return { tone: "acc", icon: "tray", title: nmx, sub: `${pre}รับงานแล้ว · รอคะแนน${q}${rd}`, sfx: "ok", word: "รับงานแล้ว" };
+    case "late": return { tone: "warn", icon: "clock", title: nmx, sub: `${pre}ส่งแล้ว · ส่งช้า${q}${rd}`, score, sfx: "ok", word: "ส่งช้า" };
+    case "restored": return { tone: "ok", icon: "check", title: nmx, sub: `${pre}รับกลับแล้ว (วันที่รับเดิม)`, score, sfx: "ok", word: "รับกลับแล้ว" };
+    case "dup": return { tone: "warn", icon: "warning", title: nmx, sub: `${pre}ส่งไปแล้ว — ไม่บันทึกซ้ำ`, score, sfx: "dup", word: "ส่งไปแล้ว ไม่บันทึกซ้ำ" };
+    case "unknown": return { tone: "bad", icon: "warning-circle", title: `ไม่มีเลขที่ ${no} ใน ${room}`, sub: "ตรวจเลขที่ หรือเลือกห้องให้ตรงกับบัตร", sfx: "err", word: "ไม่รู้จักรหัส" };
+    case "code": return { tone: "bad", icon: "warning-circle", title: `ไม่รู้จักรหัส ${L.code}`, sub: "ตรวจบัตรหรือพิมพ์เลขที่", sfx: "err", word: "ไม่รู้จักรหัส" };
+    case "notin": return { tone: "bad", icon: "user-minus", title: S.hide ? `เลขที่ ${no}` : stName(L.cid, no).join(" "), sub: `ไม่ได้อยู่ในห้องที่เลือก (อยู่ ${scRoom(L.cid)}) — แก้คะแนนเดิมได้ที่สมุดคะแนน`, sfx: "err", word: "ไม่ได้อยู่ในห้องที่เลือก", alert: true };
+    case "closed": return { tone: "bad", icon: "lock-simple", title: "งานนี้ปิดรับแล้ว", sub: "สแกนแล้วไม่บันทึก · ให้คะแนนย้อนหลังได้ที่ สมุดคะแนน", sfx: "err", word: "งานปิดรับแล้ว", alert: true };
+    case "undone": return { tone: "acc", icon: "arrow-u-up-left", title: "ยกเลิกการรับงานแล้ว", sub: `${S.hide ? `เลขที่ ${no}` : `เลขที่ ${no} ${nmx}`} · สแกนใหม่เพื่อรับอีกครั้ง`, sfx: "undo", word: "ยกเลิกแล้ว" };
+    case "voided": return { tone: "acc", icon: "arrow-u-up-left", title: "ยกเลิกการส่งแล้ว", sub: `${S.hide ? `เลขที่ ${no}` : `เลขที่ ${no} ${nmx}`} · เลิกทำได้ 5 วินาที`, sfx: "undo", word: "ยกเลิกการส่งแล้ว" };
+    case "excused": return { tone: "warn", icon: "prohibit", title: nmx, sub: `${pre}ถูกตั้งเป็น “ยกเว้น” ในงานนี้ — รับงานจริงไหม? รับแล้วจะเปลี่ยนจาก “ยกเว้น” เป็น “ส่งแล้ว”`, sfx: "dup", word: "ยกเว้น ถามว่ารับงานไหม",
+      acts: `<button class="btn btn-primary" data-sc="exc-yes">${ic("check")}รับงานนี้</button><button class="btn" data-sc="exc-no">${ic("prohibit")}ไม่รับ คงยกเว้น</button>` };
+    case "exckept": return { tone: "acc", icon: "prohibit", title: nmx, sub: `${pre}คงเป็น “ยกเว้น” — ไม่ได้รับงาน`, word: "คงยกเว้น" };
+    case "ambig": return { tone: "warn", icon: "users-three", title: `เลขที่ ${no} มี 2 คน`, sub: "เลือกคนที่ถูกต้องด้านล่าง — ยังไม่ได้บันทึกใคร", sfx: "err", word: "เลขที่ซ้ำ ต้องเลือกคน", alert: true,
+      acts: ["c61", "c62"].map((cid) => `<button class="btn cand" data-sc="amb:${cid}"><span>${S.hide ? `เลขที่ ${no}` : stName(cid, no).join(" ")}</span><small>${scRoom(cid)} · รหัส ${cid === "c61" ? "6101" : "6201"}${String(no).padStart(2, "0")}</small></button>`).join("") + `<button class="btn" data-sc="amb-no">ยกเลิก</button>` };
+    case "fail": return { tone: "bad", icon: "cloud-x", title: nmx, sub: `${pre}ยังไม่ได้บันทึกบนระบบ (ดูที่ “ส่งไม่สำเร็จ”)`, sfx: "err", word: "ส่งไม่สำเร็จ", alert: true };
+    default: return { tone: "idle", icon: "scan", title: "พร้อมสแกน", sub: S.device === "phone" ? "ยิง QR หรือพิมพ์เลขที่ด้านล่าง · หรือแตะช่องในตาราง" : "ยิง QR หรือพิมพ์เลขที่ แล้วกด Enter · หรือแตะช่องในตาราง" };
+  }
+}
+function resultCard() {
+  if (SS.pad) return scorePad();
+  const L = SS.last, R = resInfo(L), isNew = L && L.id && L.id !== RES_SEEN; RES_SEEN = L ? L.id : null;
+  const live = R.alert ? 'role="alert"' : 'role="status" aria-live="polite"';
+  const sfx = R.sfx ? `<p class="sfx">${SFX[R.sfx].map(([i, t]) => `<span>${ic(i)}${t}</span>`).join("")}<span class="sr">(ในแอปจริงมีเสียง)</span></p>` : "";
+  const und = SS.undo && L && SS.undo.no === L.no;
+  return `<section class="res t-${R.tone} ${isNew ? "pop" : ""}" aria-label="ผลสแกนล่าสุด"><div class="res-main" ${live}>
+    <span class="res-ic" aria-hidden="true">${ic(R.icon)}</span>
+    <div class="res-t"><h2>${R.title}</h2><p class="sub">${R.sub}</p>${sfx}${und ? `<span class="sr">เลิกทำได้ 5 วินาที</span>` : ""}</div>
+    ${R.score ? `<div class="score num">${R.score}</div>` : ""}</div>
+    ${R.acts ? `<div class="res-acts">${R.acts}</div>` : ""}
+    ${und ? undoBar() : L && ["ok", "later", "late", "restored"].includes(L.kind) ? undoHint() : ""}</section>`;
+}
+function scorePad() {
+  const P = SS.pad, a = scA(), x = SS.cells[P.no];
+  const q = [[a.full, `เต็ม ${a.full}`], [a.full - 1, `${a.full - 1}`], [a.full - 2, `${a.full - 2}`], [Math.round(a.full / 2), `ครึ่ง ${Math.round(a.full / 2)}`]];
+  if (SS.lastScore != null) q.push([SS.lastScore, `ล่าสุด ${SS.lastScore}`]);
+  const und = SS.undo && SS.undo.no === P.no;
+  return `<section class="res t-acc pad" aria-label="ใส่คะแนน ${sName(P.no)}"><div class="pad-grid">
+    <div class="pad-l"><div class="pad-who"><span class="res-ic" aria-hidden="true">${ic("pencil-simple")}</span><div><h2>${sName(P.no)}</h2><p class="sub">${S.hide ? "" : `เลขที่ ${P.no} · `}รับงานแล้ว ใส่คะแนนแล้วกด Enter</p></div></div>
+      <div>${x.st === "late" ? st("st-warn", "clock", "ส่งช้า") : st("st-ok", "check", "ทันกำหนด")}</div>
+      <div class="pad-in"><label for="padIn">คะแนน</label><input id="padIn" inputmode="decimal" autocomplete="off" value="${P.val}" aria-describedby="padErr" aria-invalid="${!!P.err}"><span class="of num">/ ${a.full}</span></div>
+      <p id="padErr" class="pad-err" role="alert">${P.err || ""}</p>
+      <div class="pad-q" role="group" aria-label="คะแนนลัด">${q.map(([v, l]) => `<button class="btn" data-sc="padq:${v}">${l}</button>`).join("")}</div></div>
+    <div class="pad-r"><div class="keys" role="group" aria-label="แป้นตัวเลข">${[7, 8, 9, 4, 5, 6, 1, 2, 3].map((n) => `<button data-sc="pad:${n}">${n}</button>`).join("")}<button data-sc="pad:del" aria-label="ลบตัวเลขท้ายสุด">${ic("backspace")}</button><button data-sc="pad:0">0</button><button data-sc="pad:." aria-label="จุดทศนิยม">.</button></div>
+      <div class="pad-acts"><button class="btn btn-primary btn-lg" data-sc="padsave">${ic("check")}บันทึก</button><button class="btn" data-sc="padlater">${ic("tray")}ให้คะแนนทีหลัง</button></div></div>
+  </div>${und ? undoBar() : ""}</section>`;
+}
+function failedPanel() {
+  if (!SS.failed.length) return "";
+  const who = (n) => (S.hide ? `เลขที่ ${n}` : `เลขที่ ${n} ${sName(n)}`);
+  return `<section class="fail" role="region" aria-labelledby="fail-h"><h2 class="fail-h" id="fail-h">${ic("cloud-x")}ส่งไม่สำเร็จ ${SS.failed.length} รายการ</h2><p style="font-size:var(--t-sm)">ยังไม่ได้บันทึกบนระบบ — แก้ตามเหตุผล แล้วกด “ลองใหม่”</p>
+  ${SS.failed.map((f) => `<div class="fail-row"><div class="fr-top"><b>${who(f.no)}</b><span class="sec small">${scA().title} · ${f.t} น.</span></div><p class="why">${ic("info")}<span>${f.why}</span></p>
+    ${SS.discard === f.no ? `<div class="fr-acts" role="group" aria-label="ยืนยันการทิ้ง"><b>ทิ้งรายการส่งของ ${S.hide ? `เลขที่ ${f.no}` : sName(f.no)}?</b><button class="btn btn-danger" data-sc="discard-yes:${f.no}">${ic("trash")}ทิ้ง</button><button class="btn" data-sc="discard-no">เก็บไว้</button></div>`
+      : `<div class="fr-acts"><button class="btn btn-primary" data-sc="retry:${f.no}">${ic("arrow-clockwise")}ลองใหม่</button><button class="btn" data-sc="discard:${f.no}">${ic("trash")}ทิ้ง</button>${f.closed ? `<button class="btn btn-ghost" data-toast="ไปสมุดคะแนน">${ic("notebook")}ไปสมุดคะแนน</button>` : ""}</div>`}</div>`).join("")}</section>`;
+}
+function gridCard(c) {
+  const all = Object.keys(SS.cells).map(Number).sort((a, b) => a - b), show = SS.filterMiss ? all.filter((n) => isLeft(SS.cells[n])) : all;
+  const gf = show.includes(SS.gridFocus) ? SS.gridFocus : show.includes(SS.hit) ? SS.hit : show[0], pct = Math.round(c.pct * 100);
+  const leg = [["scored", c.scored, "ส่งแล้ว"], ["late", c.late, "ส่งช้า"], ["awaiting", c.awaiting, "รอตรวจ"], [c.missing ? "missing" : "pending", c.left, "ยังไม่ส่ง"], ["excused", c.excused, "ยกเว้น"]].filter((x) => x[1]);
+  const cell = (n) => { const x = SS.cells[n], [icn, word] = WS[x.st], short = sShort(n);
+    const label = `เลขที่ ${n}${S.hide ? "" : " " + sName(n)} · ${word}${x.q ? " · รอส่งขึ้นระบบ" : ""}${x.f ? " · ส่งไม่สำเร็จ" : ""}${SS.hit === n ? " · ล่าสุด" : ""}`;
+    return `<button class="cell s-${x.st} ${SS.hit === n ? "hit" : ""}" data-no="${n}" ${isSub(x) ? `data-act="sheet:sc-cell:${n}"` : `data-sc="cell:${n}"`} tabindex="${n === gf ? 0 : -1}" aria-label="${label}">${SS.hit === n ? `<span class="hit-tag" aria-hidden="true">ล่าสุด</span>` : ""}<span class="no" aria-hidden="true">${icn ? ic(icn) : ""}${n}</span>${short ? `<span class="nm" aria-hidden="true">${short}</span>` : ""}${x.q ? `<span class="ov q" aria-hidden="true">${ic("cloud-arrow-up")}</span>` : ""}${x.f ? `<span class="ov f" aria-hidden="true">${ic("cloud-x")}</span>` : ""}</button>`; };
+  return `<section class="card g-card" aria-labelledby="g-h"><div class="g-head">${scRing(c.pct, 52, 6, `<span class="num" style="font-size:13px;font-weight:700">${pct}%</span>`, `ส่งแล้ว ${c.sub} จาก ${c.den} คน ร้อยละ ${pct}`, "grid", true)}
+    <h2 id="g-h">ตารางเลขที่ · ${scRoom()}</h2><span class="grow"></span>${c.q ? st("st-warn", "cloud-arrow-up", `รอส่งขึ้นระบบ ${c.q}`) : ""}${c.f ? st("st-bad", "cloud-x", `ส่งไม่สำเร็จ ${c.f}`) : ""}</div>
+    <div class="g-leg">${leg.map(([k, n, l]) => `<span class="lg s-${k}">${WS[k][0] ? ic(WS[k][0]) : ic("circle-dashed")}${l} <b class="num">${n}</b></span>`).join("")}</div>
+    ${SS.filterMiss ? `<div class="g-filter">${st("st-mute", "funnel", `แสดงเฉพาะยังไม่ส่ง ${show.length} คน`)}<button class="btn btn-ghost" data-sc="fmiss">แสดงทั้งหมด</button></div>` : ""}
+    <div class="cells" role="group" aria-label="ตารางเลขที่ ใช้ลูกศรเลื่อนช่อง กด Enter เพื่อรับงานหรือเปิดเมนู">${show.map(cell).join("")}</div></section>`;
+}
+function recRow(r) {
+  const a = scA(), x = SS.cells[r.no], sub = isSub(x), [hi, hl] = HOW[r.how] || HOW.hid;
+  const sc = !sub ? "" : x.score != null ? (S.hide ? "" : ` · ${x.score}/${a.full}`) : " · รอคะแนน";
+  return `<li><span class="nb2 num s-${x.st}" aria-hidden="true">${r.no}</span><span class="t"><b>${sName(r.no)}</b><small>${r.t} น. · ${sub ? WS[x.st][1] : "ยกเลิกแล้ว"}${sc}${x.rd ? ` · รับ ${RECV_L[x.rd]}` : ""} · <span class="how">${ic(hi)}${hl}</span>${x.q ? ` · <span class="how">${ic("cloud-arrow-up")}รอส่ง</span>` : ""}</small></span>
+    ${sub ? `<button class="icon-btn" data-act="sheet:sc-cell:${r.no}" aria-label="ตัวเลือก เลขที่ ${r.no}${S.hide ? "" : " " + sName(r.no)}">${ic("dots-three-vertical")}</button>` : ""}</li>`;
+}
+function sidePanels(c) {
+  const miss = nosBy(isLeft), qs = nosBy((x) => x.q), showMiss = SS.q1 !== "a" && SS.cards.missing;
+  const tabs = [SS.cards.recent && ["recent", `ล่าสุด (${SS.recent.length})`], showMiss && ["missing", `ยังไม่ส่ง (${miss.length})`], ["queue", `รอส่ง (${c.q + c.f})`]].filter(Boolean);
+  const cur = tabs.some((t) => t[0] === SS.sideTab) ? SS.sideTab : tabs[0][0], on = (k) => (cur === k ? "on" : "");
+  const chip = (n) => `<span class="mchip ${SS.cells[n].st}">${SS.cells[n].st === "missing" ? ic("warning-circle") : ""}${S.hide ? `เลขที่ ${n}` : `${n} ${sShort(n)}`}</span>`;
+  return `<div class="side-tabs" role="tablist" aria-label="แผงข้าง">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${cur === k}" data-sc="tab:${k}">${l}</button>`).join("")}</div>
+  ${SS.cards.recent ? `<section class="card sp ${on("recent")}" role="tabpanel" aria-labelledby="rc-h"><div class="card-head"><span class="h-ic">${ic("list-checks")}</span><h2 id="rc-h">สแกนล่าสุด</h2><span class="grow"></span>${tag("old")}</div>
+    ${SS.recent.length ? `<ul class="rec">${SS.recent.slice(0, 4).map(recRow).join("")}</ul>${SS.recent.length > 4 ? `<button class="btn btn-ghost" style="margin-top:var(--s2)" data-act="sheet:sc-recent">ดูทั้งหมด (${SS.recent.length}) ${ic("caret-right")}</button>` : ""}` : `<p class="sec">ยังไม่มีใครสแกนในรอบนี้</p>`}</section>` : ""}
+  ${showMiss ? `<section class="card sp ${on("missing")}" role="tabpanel" aria-labelledby="ms-h"><div class="card-head"><span class="h-ic">${ic("circle-dashed")}</span><h2 id="ms-h">ยังไม่ส่ง</h2><span class="grow"></span><span class="big num">${miss.length}</span><span class="sec">คน</span></div>
+    ${miss.length ? `<div class="miss-chips">${miss.slice(0, 12).map(chip).join("")}${miss.length > 12 ? `<span class="mchip more">และอีก ${miss.length - 12} คน</span>` : ""}</div>
+    ${SS.q1 === "c" ? `<button class="btn" style="margin-top:var(--s3)" data-sc="fmiss" aria-pressed="${SS.filterMiss}">${ic("funnel")}${SS.filterMiss ? "แสดงทุกคนในตาราง" : "กรองตารางเฉพาะคนยังไม่ส่ง"}</button>` : `<p class="sec small" style="margin-top:var(--s2)">สรุปอ่านอย่างเดียว · ไล่รับงานที่ตารางเลขที่</p>`}`
+      : `<p class="all-done">${ic("check-circle")}ทุกคนส่งครบแล้ว</p>`}</section>` : ""}
+  <section class="card sp ${on("queue")}" role="tabpanel" aria-labelledby="qu-h"><div class="card-head"><span class="h-ic">${ic("cloud-arrow-up")}</span><h2 id="qu-h">คิวรอส่ง</h2></div>
+    ${c.q ? `<p>${st("st-warn", "cloud-arrow-up", `รอส่งขึ้นระบบ ${c.q}`)}</p><ul class="rec" style="margin-top:var(--s2)">${qs.map((n) => `<li><span class="nb2 num s-${SS.cells[n].st}" aria-hidden="true">${n}</span><span class="t"><b>${sName(n)}</b><small>${SS.cells[n].t} น. · รอส่งขึ้นระบบ</small></span></li>`).join("")}</ul>
+      <p class="sec small" style="margin-top:var(--s2)">จะส่งเองเมื่อมีเน็ต · สแกนต่อได้ตามปกติ</p>${!SS.online ? `<button class="btn" style="margin-top:var(--s2)" data-sc="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button>` : ""}`
+      : `<p class="sec">${ic("cloud-check")} ส่งขึ้นระบบครบแล้ว</p>`}
+    ${c.f ? `<p style="margin-top:var(--s2)">${st("st-bad", "cloud-x", `ส่งไม่สำเร็จ ${c.f}`)} <span class="sec small">ดูการ์ด “ส่งไม่สำเร็จ”</span></p>` : ""}</section>
+  ${S.tags ? `<section class="card wide"><div class="card-head"><span class="h-ic">${ic("clock-counter-clockwise")}</span><h2>ประวัติรอบสแกน</h2></div><div class="chips">${tag("next")}<span class="tag tag-api">ต้องเพิ่ม API</span></div>
+    <ul class="rec" style="margin-top:var(--s3)"><li><span class="t"><b>วันนี้ 08:05–08:12 · ป.6/2</b><small>21 คน · ให้คะแนนเต็ม</small></span></li><li><span class="t"><b>เมื่อวาน 13:30–13:41 · ป.5/1</b><small>18 คน · รับงานก่อน</small></span></li></ul></section>` : ""}`;
+}
+function scanPhase() {
+  const c = scStats();
+  return `${scanTop()}${scanBanners()}${scanHero(c)}${scanInput()}${camBlock()}
+  <div class="sc-grid"><div class="sc-mainc">${resultCard()}${failedPanel()}${gridCard(c)}</div><aside class="sc-side" aria-label="แผงข้าง">${sidePanels(c)}</aside></div>`;
+}
+
+/* ----- A: set up the round ----- */
+function setupPhase() {
+  const head = `${scanTop()}${scanBanners()}<div class="sc-head"><div><h1 class="display">สแกนส่งงาน</h1><p>เลือกงาน → ห้อง → วิธีให้คะแนน แล้วเริ่มยิงได้เลย · งานที่ใกล้ครบกำหนดสุดถูกเลือกไว้ให้แล้ว</p></div></div>`;
+  if (SS.noasg) return head + emptyCard({ title: "ยังไม่มีงานที่เปิดรับในเทอมนี้", sub: "สร้างงานในหน้าสมุดคะแนนก่อน แล้วกลับมาสแกนรับงาน", btn: "สร้างงาน", btnIcon: "plus-circle" });
+  const list = sortedAsgs(), subjects = [...new Set(list.map((a) => a.subject))], flt = list.filter((a) => SS.subj === "all" || a.subject === SS.subj);
+  const shown = SS.showAll ? flt : flt.slice(0, 5), A = ASG0.find((a) => a.id === SS.selAsg), cls = SS.selCls, ready = A && cls;
+  const card = (a) => { const on = a.id === SS.selAsg, d = dueInfo(a.due);
+    return `<button class="acard" aria-pressed="${on}" data-sc="pickAsg:${a.id}"><span class="ok-mark" aria-hidden="true">${ic("check")}</span>
+      <span class="meta">${st("st-mute", TYPE_IC[a.type], a.type)}<span>${a.subject} · เต็ม ${a.full}</span></span><h3 class="clamp2" title="${a.title}">${a.title}</h3>
+      <span class="rm">${Object.keys(a.per).map((cid) => { const r = roomStat(a, cid); return `<span><span>${scRoom(cid)}</span><span class="mbar" aria-hidden="true"><i style="width:${Math.round((r.sub / r.den) * 100)}%"></i></span><span>ส่งแล้ว <b>${r.sub}/${r.den}</b></span></span>`; }).join("")}</span>
+      <span>${st(d.cls, d.icon, d.text)}</span></button>`; };
+  const rs = A ? roomStat(A, cls) : null;
+  return `${head}<p class="sr" role="status">${SS.pickMsg}</p>
+  <div class="su-grid"><div class="su-steps">
+    <section aria-labelledby="st1"><div class="step-h"><span class="n" aria-hidden="true">1</span><h2 id="st1">เลือกงาน</h2><span class="grow"></span><span class="sec small">เรียงตามใกล้ครบกำหนด</span></div>
+      ${subjects.length > 1 ? `<div class="subj" role="group" aria-label="กรองวิชา">${[["all", "ทุกวิชา"], ...subjects.map((s) => [s, s])].map(([k, l]) => `<button class="rchip" aria-pressed="${SS.subj === k}" data-sc="subj:${k}">${SS.subj === k ? ic("check") : ""}<span>${l}</span></button>`).join("")}</div>` : ""}
+      <div class="asg-cards">${shown.map(card).join("")}</div>
+      ${flt.length > 5 ? `<button class="btn btn-ghost" style="margin-top:var(--s2)" data-sc="allAsg">${SS.showAll ? "แสดงน้อยลง" : `ดูทั้งหมด (${flt.length})`} ${ic(SS.showAll ? "caret-up" : "caret-down")}</button>` : ""}</section>
+    <section aria-labelledby="st2"><div class="step-h"><span class="n" aria-hidden="true">2</span><h2 id="st2">เลือกห้อง</h2></div>
+      <div class="room-pick" role="group" aria-labelledby="st2">${A ? Object.keys(A.per).map((cid) => { const r = roomStat(A, cid); return `<button class="rp" aria-pressed="${cid === cls}" data-sc="pickCls:${cid}"><span class="ok-mark" aria-hidden="true">${ic("check")}</span><b>${scRoom(cid)}</b><small>ส่งแล้ว ${r.sub}/${r.den}${r.exc ? ` · ยกเว้น ${r.exc}` : ""}</small></button>`; }).join("") : `<p class="sec">เลือกงานก่อน</p>`}</div></section>
+    <section aria-labelledby="st3"><div class="step-h"><span class="n" aria-hidden="true">3</span><h2 id="st3">วิธีให้คะแนน</h2></div>
+      <div class="meth" role="group" aria-labelledby="st3">${Object.entries(METH).map(([k, [l, d, i]]) => `<button class="mc" aria-pressed="${SS.method === k}" data-sc="pickMeth:${k}"><span class="ok-mark" aria-hidden="true">${ic("check")}</span>${ic(i)}<span><b>${l}</b><small>${d}</small></span></button>`).join("")}</div></section>
+  </div>
+  <aside class="su-start on-hero" aria-label="สรุปรอบนี้">
+    ${rs ? `<div class="ring-row">${scRing(rs.sub / rs.den, 84, 10, `<span class="num" style="font-size:var(--t-sm);font-weight:700">${Math.round((rs.sub / rs.den) * 100)}%</span>`, `${scRoom(cls)} ส่งแล้ว ${rs.sub} จาก ${rs.den} คน`, "setup")}<p><b>${rs.sub}/${rs.den}</b>ส่งแล้วใน ${scRoom(cls)} ${tag("old")}</p></div>` : ""}
+    <div class="sum"><p class="lbl">รอบนี้</p><p class="ttl display">${A ? A.title : "ยังไม่ได้เลือกงาน"}</p>${ready ? `<p class="det">${scRoom(cls)} · เต็ม ${A.full} · ${METH[SS.method][0]}</p>` : ""}</div>
+    <button class="btn btn-lg btn-start" data-sc="start" ${ready ? "" : "disabled"} aria-describedby="su-why">${ic("play")}เริ่มสแกน ${ready ? scRoom(cls) : ""}</button>
+    <p id="su-why" class="su-why" role="status">${!A ? "เลือกงานก่อน" : !cls ? "เลือกห้องก่อน" : ""}</p>
+    <p class="su-dev"><span>${ic("barcode")}เครื่องยิง</span><span>${ic("camera")}กล้อง</span><span>${ic("keyboard")}พิมพ์เลขที่</span></p></aside></div>`;
+}
+
+/* ----- C: summary ----- */
+function summaryPhase() {
+  const c = scStats(), a = scA(), room = scRoom(), pct = Math.round(c.pct * 100);
+  const done = nosBy(isSub), noScore = nosBy((x) => isSub(x) && x.score == null), miss = nosBy(isLeft), exc = nosBy((x) => x.st === "excused");
+  const hows = {}; done.forEach((n) => { const h = SS.cells[n].how || "hid"; hows[h] = (hows[h] || 0) + 1; });
+  const chips = (arr, cls) => arr.slice(0, 18).map((n) => `<span class="mchip ${cls}">${S.hide ? `เลขที่ ${n}` : `${n} ${sShort(n)}`}</span>`).join("") + (arr.length > 18 ? `<span class="mchip more">และอีก ${arr.length - 18} คน</span>` : "");
+  const others = Object.keys(a.per).filter((x) => x !== SS.cls), canClose = SS.online && !c.q && !SS.closed;
+  const why = !SS.online ? "ต้องออนไลน์ถึงปิดรับงานได้" : c.q ? "รอรายการค้างส่งขึ้นระบบก่อน" : SS.closed ? "งานนี้ปิดรับอยู่แล้ว" : "";
+  return `${scanTop()}${scanBanners()}<div class="sc-head"><div><h1 class="display">จบรอบสแกน</h1><p>${a.title} · ${room}</p></div></div>
+  <p class="sr" role="status">จบรอบ: ส่งแล้ว ${c.sub} จาก ${c.den} คน</p>
+  ${c.q ? `<div class="banner" role="status">${ic("cloud-arrow-up")}<div><b>รอส่งขึ้นระบบ ${c.q} คน</b><br>จะส่งเองเมื่อมีเน็ต อย่าเพิ่งปิดงาน</div></div>` : ""}
+  <div class="sm-grid">
+    <section class="sm-hero on-hero" aria-label="สรุปผลรอบนี้"><div class="top">${scRing(c.pct, 120, 14, `<span class="num" style="font-size:var(--t-2xl);font-weight:700">${pct}%</span><br><span style="font-size:var(--t-xs);font-weight:600">ส่งแล้ว</span>`, `ส่งแล้ว ${c.sub} จาก ${c.den} คน ร้อยละ ${pct}`, "sum")}
+      <div><p class="big-l"><span class="num">${c.sub}</span> จาก ${c.den} คน</p><p class="det">${room} · เต็ม ${a.full} · ไม่นับยกเว้น ${c.excused} คน</p></div></div>
+      <div class="sm-nums"><div><b>${c.sub}</b><span>ส่งแล้ว</span></div><div><b>${miss.length}</b><span>ยังไม่ส่ง</span></div><div><b>${c.late}</b><span>ส่งช้า</span></div></div>
+      <p class="sm-how"><span>วิธีรับ:</span>${Object.entries(hows).map(([h, n]) => `<span>${ic(HOW[h][0])}${HOW[h][1]} ${n}</span>`).join("")}${tag("old")}</p></section>
+    <div class="sm-groups">
+      <section class="card"><div class="grp-h"><span class="gi s-scored" aria-hidden="true">${ic("check")}</span><h2>ส่งแล้ว ${done.length}</h2></div><div class="miss-chips">${chips(done, "s-scored")}</div></section>
+      ${noScore.length ? `<section class="card"><div class="grp-h"><span class="gi s-awaiting" aria-hidden="true">${ic("pencil-simple")}</span><h2>ยังไม่มีคะแนน ${noScore.length}</h2><span class="grow"></span><button class="btn" data-toast="ไปสมุดคะแนน ${room} · เฉพาะรอตรวจ">${ic("exam")}ให้คะแนนตอนนี้</button></div><div class="miss-chips">${chips(noScore, "s-awaiting")}</div></section>` : ""}
+      <section class="card"><div class="grp-h"><span class="gi s-missing dash" aria-hidden="true">${ic("circle-dashed")}</span><h2>ยังไม่ส่ง ${miss.length}</h2><span class="grow"></span>
+        ${miss.length ? `<button class="btn" data-sc="copy" ${S.hide ? 'disabled aria-describedby="cp-why"' : ""}>${ic(SS.copied ? "check" : "copy")}<span aria-live="polite">${SS.copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</span></button>${S.hide ? `<span id="cp-why" class="sec small">ปิดระหว่างซ่อนชื่อ</span>` : ""}` : ""}</div>
+        ${miss.length ? `<div class="miss-chips">${chips(miss, "")}</div>` : `<p class="all-done">${ic("confetti")}ทุกคนส่งครบแล้ว</p>`}</section>
+      ${exc.length || c.q ? `<p class="sec small">${exc.length ? `${ic("prohibit")} ยกเว้น ${exc.length} คน (${exc.map((n) => `เลขที่ ${n}`).join(", ")})` : ""}${c.q ? ` · ${ic("cloud-arrow-up")} รอส่งขึ้นระบบ ${c.q}` : ""}</p>` : ""}
+    </div></div>
+  <div class="sm-bar" role="group" aria-label="ทำต่อ">
+    <button class="btn btn-primary btn-lg" data-toast="ไปสมุดคะแนน ${room}">${ic("notebook")}ไปสมุดคะแนน</button>
+    ${others.map((cid) => { const r = roomStat(a, cid); return `<button class="btn btn-lg btn-hl" data-sc="next:${cid}">${ic("arrow-right")}สแกนห้องถัดไป ${scRoom(cid)} · ส่งแล้ว ${r.sub}/${r.den}</button>`; }).join("")}
+    <button class="btn btn-lg" data-sc="again">${ic("scan")}กลับไปสแกนต่อ</button><button class="btn btn-lg" data-sc="other">${ic("list-checks")}เลือกงานอื่น</button>
+    <span class="close-row">${SS.closedDone ? st("st-ok", "lock-simple", "ปิดรับงานแล้ว · ทุกห้อง") : `<button class="btn btn-lg" data-act="sheet:sc-close" ${canClose ? "" : 'disabled aria-describedby="close-why"'}>${ic("lock-simple")}ปิดรับงาน</button>${why ? `<span class="why" id="close-why">${why}</span>` : ""}`}</span>
+  </div>`;
+}
+
+/* ----- E: projector (TV) — no per-student score / late / failure reasons ----- */
+function projector() {
+  const c = scStats(), a = scA(), L = SS.last, nos = Object.keys(SS.cells).map(Number).sort((x, y) => x - y), pct = Math.round(c.pct * 100);
+  let who = "รอสแกน…", sub = "", icn = "scan";
+  if (L && ["ok", "later", "late", "restored", "dup"].includes(L.kind)) { who = S.hide ? `เลขที่ ${L.no}` : stName(SS.cls, L.no).join(" "); sub = L.kind === "dup" ? "ส่งไปแล้ว" : "ส่งแล้ว"; icn = "check"; }
+  else if (L && ["unknown", "code"].includes(L.kind)) { who = "ไม่รู้จักรหัสนี้"; icn = "warning-circle"; }
+  return `<div class="proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ">
+  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${a.title} · ${scRoom()}</b><span class="grow"></span>${c.f ? `<span class="hp info" aria-label="ส่งไม่สำเร็จ ${c.f} รายการ">${ic("cloud-x")}${c.f}</span>` : ""}<button class="btn" id="projOff" data-sc="projoff">${ic("x")}ปิดฉายจอ (กดค้าง 1 วินาที)</button></div>
+  <div class="proj-last" role="status" aria-live="polite"><span class="pj-ic" aria-hidden="true">${ic(icn)}</span><div><p class="nm">${who}</p>${sub ? `<p class="ps">${sub}</p>` : ""}</div></div>
+  <p class="proj-count">ส่งแล้ว <span class="num">${c.sub}</span> จาก ${c.den} คน</p><div class="proj-bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+  <div class="proj-cells" aria-label="ตารางเลขที่ ติ๊ก = ส่งแล้ว">${nos.map((n) => { const on = isSub(SS.cells[n]); return `<span class="pcell ${on ? "on" : ""}">${on ? ic("check") : ""}${n}</span>`; }).join("")}</div>
+  <div class="proj-in"><input id="projIn" inputmode="numeric" autocomplete="off" aria-label="รหัสนักเรียน" placeholder="ยิงต่อได้ตามปกติ — พิมพ์เลขที่แล้วกด Enter"></div>
+  ${SS.projNote ? `<p class="proj-note">${ic("info")}โหมดกรอกคะแนนถูกสลับเป็น “รับงานก่อน” ระหว่างฉายจอ</p>` : ""}</div>`;
+}
 function pageScan() {
-  const a = ASG0[0], recent = [["s07", "10:41", 0], ["s06", "10:40", 0], ["s05", "10:40", 0], ["s04", "10:39", 1], ["s03", "10:38", 0]];
-  return `${topbar(false)}${banners()}<h1 class="display page-h">สแกนส่งงาน</h1>
-  <div class="scan-grid"><section class="card"><div class="viewfinder" role="img" aria-label="ภาพจากกล้อง"><div class="vf-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="vf-hint">เล็งกล้องไปที่ QR ของนักเรียน</p></div>
-    <div class="scan-asg"><div class="t"><b class="clamp2">${a.title}</b><span class="muted small">ป.6/1 · ${a.subject} · ครบกำหนดวันนี้</span></div><button class="btn" data-toast="เปลี่ยนงาน">${ic("swap")}เปลี่ยนงาน</button><button class="btn" data-toast="พิมพ์เลขที่แทน">${ic("keyboard")}พิมพ์เลขที่</button></div></section>
-  <section class="card"><div class="card-head"><span class="h-ic">${ic("check-circle")}</span><h2>รับแล้ววันนี้</h2></div>
-    <p><span class="big-count num">26</span> <span class="sec">จาก 31 คน · ยังไม่ส่ง 5</span></p>${stack({ scored: 18, awaiting: 8, pending: 5, missing: 0 })}
-    <ul class="scan-list">${recent.map(([sid, t, late]) => `<li>${S.hide ? `<span class="av anon" aria-hidden="true">•</span>` : av(sid)}<span class="t">${S.hide ? `นักเรียนเลขที่ ${Number(sid.slice(1))}` : full(sid)}<br><span class="muted small">${t} น.</span></span>${late ? st("st-warn", "clock", "ส่งช้า") : st("st-ok", "check", "ทันเวลา")}</li>`).join("")}</ul></section></div>`;
+  if (!SS.selAsg) { SS.selAsg = sortedAsgs()[0].id; SS.selCls = Object.keys(ASG0.find((a) => a.id === SS.selAsg).per)[0]; }
+  if (SS.phase !== "setup" && !SS.asg) startSession(SS.selAsg, SS.selCls);
+  return SS.phase === "setup" ? setupPhase() : SS.phase === "summary" ? summaryPhase() : scanPhase();
+}
+function scanSheet() {
+  const k = S.sheet, a = scA(); let h = "", body = "";
+  if (k.startsWith("sc-cell:")) { const n = +k.slice(8), x = SS.cells[n], hw = HOW[x.how || "hid"];
+    h = S.hide ? `เลขที่ ${n}` : `เลขที่ ${n} ${sName(n)}`;
+    body = `<div class="info-sts">${st(x.st === "late" ? "st-warn" : x.st === "awaiting" ? "st-mute" : "st-ok", WS[x.st][0] || "circle-dashed", WS[x.st][1])}${x.score == null ? st("st-mute", "hourglass", "รอคะแนน") : S.hide ? "" : st("st-mute", "exam", `คะแนน ${x.score}/${a.full}`)}</div>
+      <div class="sheet-row">${ic(hw[0])}<span class="t"><b>รับเมื่อ ${x.t || "—"} น.${x.rd ? ` · วันที่รับ ${RECV_L[x.rd]}` : ""}</b><small>วิธีรับ: ${hw[1]} ${tag("old")}</small></span></div>
+      <button class="btn mrow" data-sc="edit:${n}">${ic("pencil-simple")}${x.score == null ? "ใส่คะแนน" : "แก้คะแนน"}</button>
+      <button class="btn mrow btn-danger-o" data-sc="void:${n}">${ic("x-circle")}ยกเลิกการส่ง</button><p class="sec small">ยกเลิกแล้วเลิกทำได้ 5 วินาที · ยังไม่ยกเลิกจนกว่าจะกดปุ่มนี้</p>`; }
+  if (k === "sc-room") { h = "เปลี่ยนห้อง"; body = `<p class="sec small">งานเดียวกัน · เปลี่ยนแล้วเริ่มรอบใหม่ของห้องนั้น</p>` + Object.keys(a.per).map((cid) => { const r = roomStat(a, cid); return `<button class="btn mrow ${cid === SS.cls ? "btn-primary" : ""}" aria-pressed="${cid === SS.cls}" data-sc="room:${cid}">${ic("chalkboard")}${scRoom(cid)} · ส่งแล้ว ${r.sub}/${r.den}</button>`; }).join(""); }
+  if (k === "sc-meth") { h = "วิธีให้คะแนน"; body = `<p class="sec small">ใช้กับการสแกนครั้งถัดไป · ไม่เปลี่ยนคะแนนที่บันทึกไปแล้ว</p>` + Object.entries(METH).map(([m, [l, d, i]]) => { const dis = SS.project && m === "type";
+    return `<button class="btn mrow ${SS.method === m ? "btn-primary" : ""}" aria-pressed="${SS.method === m}" data-sc="meth:${m}" ${dis ? "disabled" : ""}>${ic(i)}<span>${l}<small> · ${dis ? "(ปิดระหว่างฉายจอ)" : d}</small></span></button>`; }).join(""); }
+  if (k === "sc-date") { h = "วันที่รับงาน"; body = Object.entries(RECV_L).map(([r, l]) => `<button class="btn mrow ${SS.recv === r ? "btn-primary" : ""}" aria-pressed="${SS.recv === r}" data-sc="recv:${r}">${ic("calendar-dots")}${r === "today" ? `วันนี้ · ${l}` : r === "y" ? `เมื่อวาน · ${l}` : l}</button>`).join("") + `<p class="sec small">เลือกวันก่อนหน้า = รับงานย้อนหลัง (มีแถบเตือนตลอดรอบ)</p>`; }
+  if (k === "sc-cards") { h = "ปรับการ์ดหน้าสแกน"; body = `<p class="sec small">ซ่อน/แสดงการ์ดในแผงข้าง</p>` + [["recent", "สแกนล่าสุด"], ["missing", "ยังไม่ส่ง"]].map(([x, l]) => `<button class="btn mrow" aria-pressed="${SS.cards[x]}" data-sc="card:${x}">${ic(SS.cards[x] ? "toggle-right" : "toggle-left")}${l} · ${SS.cards[x] ? "แสดงอยู่" : "ซ่อนอยู่"}</button>`).join("") + `<p class="sec small">${ic("lock-simple")} แสดงเสมอ: ช่องรับเลข · การ์ดผล · ตารางเลขที่ · แถบบนสุด</p>`; }
+  if (k === "sc-recent") { h = `สแกนล่าสุดทั้งหมด (${SS.recent.length})`; body = `<ul class="rec">${SS.recent.map(recRow).join("")}</ul>`; }
+  if (k === "sc-close") { const c = scStats(); h = "ปิดรับงาน"; body = `<p><b>ปิดรับ “${a.title}” ทุกห้อง?</b></p><p class="sec">${scRoom()} ยังไม่ส่ง ${c.left} คน · ปิดแล้วสแกนรับไม่ได้ ให้คะแนนย้อนหลังได้ที่สมุดคะแนน</p><button class="btn btn-danger" data-sc="close-yes">${ic("lock-simple")}ปิดรับงาน</button><button class="btn" data-act="close">ยังไม่ปิด</button>`; }
+  if (k === "sc-more") { h = "เพิ่มเติม"; body = `<button class="btn mrow" data-sc="proj">${ic("projector-screen")}ฉายจอ</button><button class="btn mrow" data-act="sheet:sc-date">${ic("calendar-dots")}วันที่รับ · ${SS.recv === "today" ? "วันนี้" : RECV_L[SS.recv]}</button><button class="btn mrow" data-act="sheet:sc-cards">${ic("sliders-horizontal")}ปรับการ์ด</button><button class="btn mrow" data-sc="end">${ic("flag-checkered")}จบรอบ</button>`; }
+  return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}
+    ${k === "sc-close" ? "" : `<button class="btn btn-primary" data-act="close">เสร็จ</button>`}</div></div>`;
+}
+function focusEl(sel, force) {
+  if (sel === "#scanIn" && !force && S.device !== "desk") return; // touch screens: don't pull the keyboard up (HID still listens)
+  const el = document.querySelector(sel); if (el) el.focus({ preventScroll: true });
+}
+function scanAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), arg = i < 0 ? "" : v.slice(i + 1); let f = null, keep = true;
+  const padIn = () => document.getElementById("padIn");
+  switch (k) {
+    case "pad": { const p = padIn(); if (!p) return; p.value = arg === "del" ? p.value.slice(0, -1) : arg === "." && p.value.includes(".") ? p.value : p.value + arg; SS.pad.val = p.value; return; }
+    case "padq": padIn().value = arg; padSave(); f = SS.pad ? "#padIn" : "#scanIn"; break;
+    case "padsave": padSave(); f = SS.pad ? "#padIn" : "#scanIn"; break;
+    case "padlater": SS.last = { kind: "later", no: SS.pad.no, id: ++SS.seq }; SS.pad = null; f = "#scanIn"; break;
+    case "pickAsg": { SS.selAsg = arg; const a = ASG0.find((x) => x.id === arg); SS.selCls = Object.keys(a.per)[0]; SS.pickMsg = `เลือก ${a.title} · ${scRoom(SS.selCls)}`; f = `[data-sc="pickAsg:${arg}"]`;
+      if (S.device === "phone") setTimeout(() => { const s2 = document.getElementById("st2"); if (s2) s2.scrollIntoView({ block: "center", behavior: "smooth" }); }, 50); break; }
+    case "pickCls": SS.selCls = arg; SS.pickMsg = `เลือก ${scRoom(arg)}`; f = `[data-sc="pickCls:${arg}"]`; break;
+    case "pickMeth": SS.method = arg; f = `[data-sc="pickMeth:${arg}"]`; break;
+    case "subj": SS.subj = arg; f = `[data-sc="subj:${arg}"]`; break;
+    case "allAsg": SS.showAll = !SS.showAll; break;
+    case "start": startSession(SS.selAsg, SS.selCls); S.sstate = "normal"; SS.online = true; keep = false; f = "#scanIn"; break;
+    case "cell": doScan(arg, "tap"); f = `.cell[data-no="${arg}"]`; break;
+    case "cam": if (SS.cam === "prob") { toast("ยังเปิดกล้องไม่ได้ — ใช้เครื่องยิงหรือพิมพ์เลขที่"); return; } SS.cam = SS.cam === "on" ? "off" : "on"; f = '[data-sc="cam"]'; break;
+    case "camshot": { const n = nosBy(isLeft)[0]; if (n == null) { toast("ทุกคนส่งครบแล้ว"); return; } doScan(n, "cam"); break; }
+    case "camclose": SS.cam = "off"; f = "#scanIn"; break;
+    case "undo": undoNow(); f = "#scanIn"; break;
+    case "exc-yes": commit(SS.last.no, "key"); f = "#scanIn"; break;
+    case "exc-no": SS.last = { kind: "exckept", no: SS.last.no, id: ++SS.seq }; f = "#scanIn"; break;
+    case "amb": { const n = SS.last.no; if (arg === SS.cls) doScan(n, "key"); else { SS.last = { kind: "notin", no: n, cid: arg, id: ++SS.seq }; SS.hit = null; } f = "#scanIn"; break; }
+    case "amb-no": SS.last = null; f = "#scanIn"; break;
+    case "edit": S.sheet = null; SS.pad = { no: +arg, val: SS.cells[+arg].score == null ? "" : String(SS.cells[+arg].score), err: "" }; SS.last = { kind: "pad", no: +arg }; f = "#padIn"; break;
+    case "void": S.sheet = null; voidSub(+arg); f = `.cell[data-no="${arg}"]`; break;
+    case "room": S.sheet = null; startSession(SS.asg, arg); toast(`เริ่มรอบใหม่ ${scRoom(arg)}`); keep = false; break;
+    case "meth": S.sheet = null; SS.method = arg; SS.pad = null; toast(`${METH[arg][0]} · ใช้กับการสแกนครั้งถัดไป`); break;
+    case "recv": S.sheet = null; SS.recv = arg; break;
+    case "card": SS.cards[arg] = !SS.cards[arg]; f = `[data-sc="card:${arg}"]`; break;
+    case "tab": SS.sideTab = arg; f = `[data-sc="tab:${arg}"]`; break;
+    case "fmiss": SS.filterMiss = !SS.filterMiss; break;
+    case "resume-ok": SS.resume = false; f = "#scanIn"; break;
+    case "end": S.sheet = null; stopUndo(); SS.pad = null; SS.project = false; SS.phase = "summary"; keep = false; break;
+    case "again": { const r = SS.recent; SS.phase = "scan"; SS.last = null; SS.hit = null; SS.recent = r; keep = false; f = "#scanIn"; break; }
+    case "other": SS.phase = "setup"; SS.selAsg = SS.asg; SS.selCls = SS.cls; keep = false; break;
+    case "next": startSession(SS.asg, arg); keep = false; f = "#scanIn"; toast(`เริ่มรอบ ${scRoom(arg)}`); break;
+    case "proj": S.sheet = null; SS.project = !SS.project; if (SS.project && SS.method === "type") { SS.method = "later"; SS.projNote = true; SS.pad = null; } f = SS.project ? "#projIn" : null; break;
+    case "projoff": if (e && e.detail === 0) { SS.project = false; break; } toast("กดค้าง 1 วินาทีเพื่อปิดฉายจอ"); return;
+    case "retry": { const n = +arg; SS.failed = SS.failed.filter((x) => x.no !== n); SS.cells[n].f = false; toast(`ส่งขึ้นระบบแล้ว · เลขที่ ${n}`); break; }
+    case "discard": SS.discard = +arg; f = `[data-sc="discard-yes:${arg}"]`; break;
+    case "discard-no": SS.discard = null; break;
+    case "discard-yes": { const n = +arg; SS.failed = SS.failed.filter((x) => x.no !== n); SS.cells[n] = { st: "pending" }; SS.discard = null; toast(`ทิ้งรายการของเลขที่ ${n} แล้ว`); break; }
+    case "online": SS.online = true; Object.values(SS.cells).forEach((x) => (x.q = false)); if (SS.last && SS.last.kind) SS.last = { ...SS.last }; toast("กลับมาออนไลน์ · ส่งขึ้นระบบครบแล้ว"); break;
+    case "close-yes": S.sheet = null; SS.closedDone = true; toast("ปิดรับงานแล้ว · ทุกห้อง"); break;
+    case "copy": if (S.hide) return; SS.copied = true; setTimeout(() => { SS.copied = false; if (S.page === "scan" && SS.phase === "summary") render(true); }, 2000); break;
+  }
+  render(keep); if (!keep) document.getElementById("appMain").scrollTop = 0;
+  if (f) focusEl(f, f !== "#scanIn");
 }
 function pageGradebook() {
   const ids = ["s01", "s02", "s03", "s04", "s05", "s06", "s07"];
   const cell = (sid, i) => { const miss = [["s01", "s02", "s03", "s04"], [], ["s01", "s02", "s05"]][i].includes(sid); if (miss) return `<td>${st("st-bad", "x", "ค้าง")}</td>`;
     if (i === 0 && ["s02", "s06"].includes(sid)) return `<td>${st("st-warn", "hourglass", "รอตรวจ")}</td>`; const v = [16, 14, 18, 12, 15, 19, 17][ids.indexOf(sid)] - (i ? 0 : 8); return `<td class="n num">${i === 2 ? Math.min(10, v - 7) : v}</td>`; };
-  return `${topbar(false)}${banners()}<h1 class="display page-h">สมุดคะแนน · ป.6/1</h1>
+  const head = S.menu === "B" ? `<div class="pg-head"><h1 class="display page-h">สมุดคะแนน · ป.6/1</h1><div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน">
+    <button aria-pressed="true">${ic("notebook")}คะแนน</button><button aria-pressed="false" data-info="reports">${ic("chart-bar")}รายงาน</button></div></div>` : `<h1 class="display page-h">สมุดคะแนน · ป.6/1</h1>`;
+  return `${topbar(false)}${banners()}${head}
   <section class="card"><div class="gb-tools"><button class="btn btn-primary" data-toast="สร้างงาน">${ic("plus")}สร้างงาน</button><button class="btn" data-toast="กรองเฉพาะคนค้าง">${ic("funnel")}เฉพาะคนค้าง</button><button class="btn" data-toast="ส่งออก Excel">${ic("export")}ส่งออก Excel</button></div>
   <div class="gb-wrap"><table class="gb"><thead><tr><th class="n">เลขที่</th><th>ชื่อ</th><th>แผนผังความคิด<br>เรื่องพืช /20</th><th>ใบงานเศษส่วน<br>ชุดที่ 2 /10</th><th>ใบงาน<br>คำควบกล้ำ /10</th></tr></thead>
   <tbody>${ids.map((sid, r) => `<tr><td class="n num">${r + 1}</td><td>${S.hide ? "•••" : full(sid)}</td>${cell(sid, 0).replace("<td", "<td")}${[1, 2].map((i) => cell(sid, i)).join("")}</tr>`).join("")}</tbody></table></div>
@@ -1337,13 +2206,27 @@ function pageGradebook() {
 /* ======================= sheets ======================= */
 function sheet() {
   if (!S.sheet) return "";
+  if (S.sheet.startsWith("sc-")) return scanSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
   if (S.sheet === "layout") { const L = LAYOUTS.find((x) => x[0] === S.layout); h = "ปรับหน้าหลัก";
     body = `<p class="sec small">ใช้อยู่: โครง ${L[1]} · เลือกแล้วเห็นผลทันที</p>${layoutChoices("sh-layout")}<button class="btn" data-page="settings">${ic("palette")}เปลี่ยนธีม / สว่าง-มืด ที่ ตั้งค่า › หน้าตา</button>`; }
-  if (S.sheet === "more") { h = "เพิ่มเติม";
-    body = [["dice-five", "สุ่มชื่อ"], ["chart-bar", "รายงาน"], ["users-three", "นักเรียน"]].map(([i, l]) => `<button class="btn" style="justify-content:flex-start" data-toast="ตัวอย่างนี้ไม่มีหน้า${l}">${ic(i)}${l}</button>`).join("") + `<button class="btn" style="justify-content:flex-start" data-page="settings">${ic("gear-six")}ตั้งค่า</button>`; }
+  if (S.sheet === "more") { h = "เพิ่มเติม"; const gs = [];
+    for (const x of menu().sheet) { let g = gs.find((y) => y[0] === x.group); if (!g) gs.push((g = [x.group, []])); g[1].push(x); }
+    body = `<p class="sec small">เมนูทาง ${MENU_L[S.menu]} · รายการที่ไม่อยู่บนแถบล่าง</p>` + gs.map(([g, xs], gi) => `<section class="menu-g" aria-labelledby="mg-${gi}"><h3 id="mg-${gi}">${g}</h3>
+      ${xs.map((x) => `<button class="btn" ${navAttr(x)}>${ic(NAV_IC[x.id])}<span>${x.label}</span>${nbadge(x, true)}</button>`).join("")}</section>`).join(""); }
+  if (S.sheet.startsWith("info:")) { const id = S.sheet.slice(5), P = PG_INFO[id], x = menu().rail.find((y) => y.id === id) || M_A.find((y) => y.id === id) || { label: "รายงาน", group: "ตรวจงาน" };
+    h = x.label === "คะแนนและรายงาน" ? "รายงาน" : x.label;
+    const sts = P.kind === "have" ? st("st-ok", "check-circle", "มีอยู่แล้วในแอป") + st("st-mute", "database", "ไม่แตะหลังบ้าน")
+      : P.kind === "new" ? st("st-warn", "sparkle", "หน้าใหม่ — ต้องสร้าง") + st("st-bad", "database", "ต้องแตะหลังบ้าน (ตารางใหม่ในฐานข้อมูล)")
+      : st("st-ok", "arrow-bend-up-right", "ลิงก์ลัดไปหน้าที่มีอยู่") + st("st-mute", "database", "ไม่แตะหลังบ้าน");
+    const note = P.kind === "have" ? "ตัวอย่างนี้ยังไม่ได้วาดหน้านี้ — ในแอปจริงกดแล้วไปหน้านั้นทันที เหมือนเดิม"
+      : P.kind === "new" ? (S.menu === "D" ? "ทาง ง: ปุ่มนี้จะโผล่เมื่อหน้าตารางสอนสร้างเสร็จเท่านั้น (งานแยก C) — ไม่ทำปุ่มว่างไว้ก่อน" : "ทาง ค: ปุ่มนี้จะแสดงเมื่อหน้าตารางสอนสร้างเสร็จ (งานแยก C) — ระหว่างนี้เมนูมี 10 รายการ")
+      : P.extra + " · กดแล้วเมนูไฮไลต์ที่ปุ่มลัดนี้เอง ไม่ใช่หน้าปลายทาง";
+    const bnote = id === "reports" && S.menu === "B" ? `<p class="info-note">ทาง ข: ไม่มีปุ่ม “รายงาน” บนเมนูแล้ว — เข้าจากปุ่มสลับ คะแนน | รายงาน ที่หัวสมุดคะแนน และเมนูไฮไลต์ “คะแนนและรายงาน” ทั้งสองหน้า</p>` : "";
+    body = `<div class="info-h">${ic(NAV_IC[id])}<p style="margin:0">${P.what}</p></div><div class="info-sts">${sts}</div>
+      <p class="info-note">${note}</p>${bnote}<p class="muted small" style="margin:0">อยู่ในกลุ่ม “${x.group}” ของเมนูทาง ${MENU_L[S.menu]}</p>`; }
   return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}
     <button class="btn btn-primary" data-act="close">เสร็จ</button></div></div>`;
 }
@@ -1359,6 +2242,13 @@ const GROUPS = {
   state: [["normal", "ปกติ"], ["loading", "กำลังโหลด"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["free", "วันว่าง"], ["offline", "ออฟไลน์"], ["hidden", "ซ่อนชื่อ"], ["many", "ข้อมูลเยอะ"], ["error", "โหลดไม่สำเร็จ"]],
   fit: [["w", "พอดีกว้าง"], ["all", "เห็นทั้งจอ"]],
   tags: [["on", "ป้ายข้อเสนอ"]],
+  menu: [["A", "ก คงเดิม"], ["B", "ข ลด"], ["C", "ค เพิ่ม"], ["D", "ง แนะนำ"]],
+  sstate: [["normal", "ปกติ"], ["late", "ส่งช้า"], ["dup", "ส่งซ้ำ"], ["unknown", "ไม่รู้จักรหัส"], ["excused", "นักเรียนยกเว้น (ถามก่อน)"], ["ambig", "เลขซ้ำหลายห้อง"], ["offline", "ออฟไลน์ + คิวรอส่ง"],
+    ["failed", "ส่งไม่สำเร็จ (ลองใหม่)"], ["camera", "กล้องใช้ไม่ได้"], ["closed", "งานปิดรับแล้ว"], ["noasg", "ไม่มีงาน"], ["resume", "ต่อรอบเดิม"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"]],
+  phase: [["setup", "ตั้งรอบ"], ["scan", "กำลังสแกน"], ["summary", "สรุปรอบ"]],
+  meth: Object.entries(METH).map(([k, v]) => [k, v[0]]),
+  q1: [["a", "ก ไม่มีแผง"], ["b", "ข สรุปอ่านอย่างเดียว (แนะนำ)"], ["c", "ค กดเพื่อกรองตาราง"]],
+  cam: Object.entries(CAM).map(([k, v]) => [k, v[2]]),
 };
 const INFO = {
   a: "<b>ก · วันนี้ของครู</b> — ลำดับงานตามความเร่งด่วน มีเส้น “ตอนนี้” · รายการหายเองเมื่อข้อมูลจริงเปลี่ยน (ไม่มีปุ่มติ๊กปลอม)",
@@ -1369,22 +2259,29 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group;
-    el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : g === "mode" ? S.modePref === v : S[g] === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
-  document.getElementById("info").innerHTML = `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
+  const onScan = S.page === "scan";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group;
+    el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
+  document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
+  document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
+  document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
+  document.getElementById("info").innerHTML = onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
+    : `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
 }
 let toastTimer;
 function render(keepScroll) {
   const dev = document.getElementById("device"), [w, h, fs] = DEV[S.device];
   const old = dev.querySelector(".main"), st0 = keepScroll && old ? old.scrollTop : 0;
+  const oldRail = dev.querySelector(".rail-list"), rt0 = keepScroll && oldRail ? oldRail.scrollTop : 0;
   const key = DS_OF[S.state] || "base";
   if (S.dsKey !== key) { load(DS[key]()); S.dsKey = key; S.order = TODOS.map((t) => t.key); S.focus = null; S.cls = null; }
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
   const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
-  chrome(); fit();
+  chrome(); fit(); railShadow(rt0); animRings();
 }
 function fit() {
   const [w, h] = DEV[S.device], box = document.getElementById("box"), dev = document.getElementById("device");
@@ -1396,7 +2293,8 @@ function fit() {
 }
 function toast(msg) { const t = document.getElementById("toast"); if (!t) return; t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
 function openSheet(k, opener) { S.sheet = k; S.opener = opener; render(true); const f = document.querySelector(".sheet button, .sheet input"); if (f) f.focus(); }
-function closeSheet() { const o = S.opener; S.sheet = null; render(true); const b = o && document.querySelector(`[data-act="${o}"]`); if (b) b.focus(); }
+function closeSheet() { const o = S.opener; S.sheet = null; render(true);
+  const b = o && [...document.querySelectorAll(o.startsWith("[") ? o : `[data-act="${o}"]`)].find((el) => el.offsetParent); if (b) b.focus(); }
 function applyAppearance(p, focusName) {
   if (S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
   else { Object.assign(S, p); S.saveMsg = "saving"; render(true); toast("ใช้หน้าตาใหม่แล้ว");
@@ -1407,10 +2305,16 @@ document.addEventListener("click", (e) => {
   if (e.target.classList && e.target.classList.contains("scrim")) { closeSheet(); return; }
   const b = e.target.closest("button"); if (!b || b.disabled) return; const d = b.dataset;
   if (d.set) { const [g, v] = d.set.split(":");
+    if (g === "sstate") { scenario(v); render(); return; }
+    if (g === "phase") { setPhase(v); render(); return; }
+    if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
+    if (g === "q1") { SS.q1 = v; SS.filterMiss = false; render(true); return; }
+    if (g === "cam") { SS.camProb = v; SS.cam = "prob"; render(true); return; }
     if (g === "tags") S.tags = !S.tags; else if (g === "mode") S.modePref = v; else if (g === "state") { S.state = v; S.hide = v === "hidden"; S.sheet = null; } else S[g] = v;
     if (g === "layout" && S.page !== "settings") S.page = "home";
     render(!["layout", "device", "page", "state"].includes(g)); return; }
-  if (d.page) { S.page = d.page; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0; return; }
+  if (d.page) { S.page = d.page; S.sheet = null; render(true); document.getElementById("appMain").scrollTop = 0; return; }
+  if (d.info) { openSheet(`info:${d.info}`, S.sheet === "more" ? "sheet:more" : `[data-info="${d.info}"]`); return; }
   if (d.act === "hide") { S.hide = !S.hide; render(true); toast(S.hide ? "ซ่อนชื่อนักเรียนแล้ว" : "แสดงชื่อนักเรียนแล้ว"); const hb = document.querySelector(".topbar .hide-btn"); if (hb && b.classList.contains("hide-btn")) hb.focus(); return; }
   if (d.act && d.act.startsWith("sheet:")) { openSheet(d.act.slice(6), d.act); return; }
   if (d.act === "close") { closeSheet(); return; }
@@ -1420,13 +2324,28 @@ document.addEventListener("click", (e) => {
   if (d.skip) { const k = d.skip, t = TODOS.find((x) => x.key === k); S.order = S.order.filter((x) => x !== k).concat(k); S.focus = S.order[0]; render(true); toast(`ย้าย ${t.title} ไปท้ายคิวแล้ว`); return; }
   if (d.focus) { S.focus = d.focus; render(true); document.getElementById("appMain").scrollTop = 0; return; }
   if (d.cls) { S.cls = d.cls; render(true); toast(`เลือกห้อง ${CL[d.cls].name}`); const det = document.querySelector(".detail"); if (det && S.device === "phone") det.scrollIntoView({ block: "start" }); return; }
+  if (d.sc) { scanAct(d.sc, e); return; }
   if (d.toast) toast(d.toast);
 });
+document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#projOff")) return; clearTimeout(holdTimer);
+  holdTimer = setTimeout(() => { SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
+["pointerup", "pointerleave", "pointercancel"].forEach((t) => document.addEventListener(t, () => clearTimeout(holdTimer), true));
 document.addEventListener("change", (e) => { const t = e.target; if (!t.name) return;
   if (t.name === "ap-layout" || t.name === "sh-layout") applyAppearance({ layout: t.value }, t.name);
   else if (t.name === "ap-theme") applyAppearance({ theme: t.value }, t.name);
   else if (t.name === "ap-mode") applyAppearance({ modePref: t.value }, t.name); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && S.sheet) closeSheet(); });
+document.addEventListener("keydown", (e) => {
+  const t = e.target;
+  if (e.key === "Escape" && S.sheet) { closeSheet(); return; }
+  if (e.key === "Escape" && S.page === "scan" && SS.project) { SS.project = false; render(true); return; }
+  if (e.key === "Enter" && (t.id === "scanIn" || t.id === "projIn")) { e.preventDefault(); const v = t.value.trim(); if (!v) return; doScan(v, /^\d+$/.test(v) ? "key" : "hid"); render(true); focusEl("#" + t.id, true); return; }
+  if (e.key === "Enter" && t.id === "padIn") { e.preventDefault(); padSave(); render(true); focusEl(SS.pad ? "#padIn" : "#scanIn", !!SS.pad); return; }
+  if (t.classList && t.classList.contains("cell") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
+    e.preventDefault(); const cs = [...t.parentElement.querySelectorAll(".cell")], i = cs.indexOf(t), cols = getComputedStyle(t.parentElement).gridTemplateColumns.split(" ").length;
+    const j = Math.max(0, Math.min(cs.length - 1, { ArrowLeft: i - 1, ArrowRight: i + 1, ArrowUp: i - cols, ArrowDown: i + cols, Home: 0, End: cs.length - 1 }[e.key]));
+    cs.forEach((c, k) => (c.tabIndex = k === j ? 0 : -1)); cs[j].focus(); SS.gridFocus = +cs[j].dataset.no; }
+});
+document.addEventListener("input", (e) => { if (e.target.id === "padIn" && SS.pad) SS.pad.val = e.target.value; });
 addEventListener("resize", fit);
 render();
 setTimeout(() => { const ok = [...document.fonts].some((f) => /Phosphor/i.test(f.family) && f.status === "loaded"); if (!ok) document.documentElement.classList.add("no-icon-font"); }, 4000);
