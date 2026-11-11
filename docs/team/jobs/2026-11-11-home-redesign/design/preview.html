@@ -2159,6 +2159,156 @@ button.rp-k:disabled{cursor:default}
 .sx-proj .rp-pjn{grid-template-columns:repeat(4,minmax(0,1fr))}
 .sx-pjn{display:flex;gap:8px;align-items:center;font-size:var(--t-md);font-weight:600;margin:0}
 @container app (max-width:599px){.sx-proj .rp-pjn{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ===== T-26 หน้าตั้งค่า (sg-* / .sgp) — 11 หมวด 5 กลุ่ม · existing tokens only (subject colours = sample data) ===== */
+.sgp :focus-visible,.sg-dlg :focus-visible{outline:3px solid var(--text-accent);outline-offset:2px}
+.sgp .btn,.sg-dlg .btn{white-space:normal;text-align:left}
+.sg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sg-head{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;margin-bottom:var(--s4)}
+.sg-head .page-h{margin:0}
+.sg-who{color:var(--text-secondary);font-size:var(--t-sm);overflow-wrap:anywhere;min-width:0;flex:0 1 auto}
+.sg-grid{display:grid;grid-template-columns:14rem minmax(0,1fr);gap:var(--s5);align-items:start}
+.sg-nav{position:sticky;top:0;display:flex;flex-direction:column;gap:2px;overflow-y:auto;padding:2px 4px 8px 2px}
+.sg-gh{font-size:var(--t-xs);font-weight:700;color:var(--text-secondary);margin:var(--s3) 0 2px;padding:0 var(--s3)}
+.sg-gh:first-child{margin-top:0}
+.sg-gh.dz{border-top:1px solid var(--border);padding-top:var(--s3);color:var(--text-danger)}
+.sg-nb{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:4px var(--s3);border-radius:var(--radius);border:0;background:transparent;color:var(--text-primary);text-align:left;font-size:var(--t-sm);font-weight:500;line-height:1.35;width:100%;flex:none}
+.sg-nb:hover{background:var(--surface-1)}
+.sg-nb .ic{font-size:20px;flex:none;color:var(--text-secondary)}
+.sg-nb[aria-current="page"]{background:var(--bg-accent);color:var(--text-accent);font-weight:700;box-shadow:inset 3px 0 0 var(--text-accent)}
+.sg-nb[aria-current="page"] .ic{color:var(--text-accent)}
+.sg-nb.dz,.sg-nb.dz .ic{color:var(--text-danger)}
+.sg-nb.dz[aria-current="page"]{background:var(--bg-danger);box-shadow:inset 3px 0 0 var(--text-danger)}
+.sg-dot{width:10px;height:10px;border-radius:50%;background:var(--fill-warning);margin-left:auto;flex:none;border:1px solid var(--text-warning)}
+.sg-body{min-width:0;max-width:56rem;display:flex;flex-direction:column;gap:var(--s4)}
+.sg-sh{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+.sg-sh h2{font-size:var(--t-xl);margin:0}
+.sg-intro{margin:calc(-1 * var(--s2)) 0 0;color:var(--text-secondary);font-size:var(--t-sm);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.sg-card{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);min-width:0}
+.sg-card>h3{font-size:var(--t-md);padding:var(--s3) var(--s4) 0;margin:0;display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap}
+.sg-card>h3 .grow{flex:1}
+.sg-row{display:flex;align-items:center;gap:var(--s3) var(--s4);padding:var(--s3) var(--s4);flex-wrap:wrap}
+.sg-row+.sg-row{border-top:1px solid var(--border)}
+.sg-rl{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sg-rl b{font-size:var(--t-md);overflow-wrap:anywhere}
+.sg-rl small{color:var(--text-secondary);font-size:var(--t-sm);line-height:1.55}
+.sg-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;align-items:center}
+.sg-scope{display:inline-flex;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:600;padding:1px 8px;border-radius:999px;background:var(--surface-1);color:var(--text-secondary);border:1px solid var(--border);white-space:nowrap;font-family:var(--font-sans);line-height:1.5}
+.sg-scope.here{background:var(--bg-accent);color:var(--text-accent);border-color:color-mix(in srgb,var(--text-accent) 35%,transparent)}
+.sg-how{font-size:var(--t-xs);color:var(--text-secondary)}
+.sg-rc{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.sg-msg{flex-basis:100%;margin:0;font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sg-msg.ok{color:var(--text-success)}.sg-msg.bad{color:var(--text-danger)}.sg-msg.saving{color:var(--text-secondary)}
+.sg-frow{display:flex;gap:10px;flex-wrap:wrap;width:100%}
+.sg-field{display:flex;flex-direction:column;gap:4px;min-width:0;flex:none}
+.sg-frow>.sg-field,.sg-add>.sg-field{flex:1 1 220px}
+.sg-field>label,.sg-field>.gf-l{font-weight:600;font-size:var(--t-sm)}
+.sg-ferr{margin:0;color:var(--text-danger);font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:center}
+.sg-ferr:empty{display:none}
+.sg-help{margin:0;color:var(--text-secondary);font-size:var(--t-xs);display:flex;gap:4px;align-items:center}
+.sgp .gf-in[aria-invalid="true"],.sg-dlg .gf-in[aria-invalid="true"]{border-color:var(--text-danger);box-shadow:inset 0 0 0 1px var(--text-danger)}
+.sg-per{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:0 var(--s4) var(--s4)}
+.sgp.d-phone .sg-per{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sg-per .sg-field{flex:none}
+.sg-bar{position:sticky;bottom:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px var(--s4);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop)}
+.sg-bar[hidden]{display:none}
+.sg-bar .n{flex:1 1 160px;font-weight:700;min-width:0}
+.sg-bar .gf-err{flex-basis:100%}
+.sg-tabs{display:flex;gap:4px;padding:4px;background:var(--surface-1);border-radius:var(--radius);border:1px solid var(--border);overflow-x:auto}
+.sg-tabs button{flex:1 0 auto;min-height:var(--tap);padding:0 var(--s4);border:0;border-radius:var(--radius-sm);background:transparent;color:var(--text-secondary);font-weight:600;font-size:var(--t-sm);white-space:nowrap}
+.sg-tabs button[aria-selected="true"]{background:var(--surface-2);color:var(--text-accent);font-weight:700;box-shadow:inset 0 0 0 2px var(--text-accent)}
+.sg-cath{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.sg-cur{margin:0;font-weight:700;display:flex;gap:6px;align-items:center}
+.sg-li{list-style:none;margin:0;padding:0}
+.sg-li>li{display:flex;align-items:center;gap:8px;padding:6px var(--s3);min-height:56px;flex-wrap:wrap}
+.sg-li>li+li{border-top:1px solid var(--border)}
+.sg-li .nm{flex:1 1 180px;min-width:0;font-weight:600;overflow-wrap:anywhere;display:flex;align-items:center;gap:4px 8px;flex-wrap:wrap}
+.sg-li .nm small{font-weight:400;color:var(--text-secondary);font-size:var(--t-sm);flex-basis:100%}
+.sg-ud{display:flex;gap:4px;flex:none}
+.sg-ud .icon-btn{border-radius:var(--radius-sm)}
+.sg-ud .icon-btn:disabled{opacity:.45}
+.sg-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sg-cdot{display:inline-block;width:16px;height:16px;border-radius:50%;flex:none;border:1px solid var(--border-strong)}
+.sg-colors{display:flex;flex-wrap:wrap;gap:8px}
+.sg-colors button{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 12px 0 6px;border-radius:999px;border:1.5px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-size:var(--t-sm);font-weight:600}
+.sg-colors .sw{width:30px;height:30px;border-radius:50%;border:1px solid var(--border-strong);display:inline-grid;place-items:center;color:#fff}
+.sg-colors button[aria-checked="true"]{border-color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent);background:var(--bg-accent)}
+.sg-ed{display:flex;flex-direction:column;gap:10px;padding:var(--s3);background:var(--surface-1);border-radius:var(--radius);width:100%;border:1px solid var(--border)}
+.sg-add{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:flex-start;padding:var(--s3)}
+.sg-add .btn{flex:none}
+.sg-pad{padding:var(--s3)}
+.sg-fold{border-top:1px solid var(--border)}
+.sg-fold>summary{display:flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 var(--s3);cursor:pointer;font-weight:700;list-style:none}
+.sg-fold>summary::-webkit-details-marker{display:none}
+.sg-fold>summary .cv{transition:transform .15s}
+.sg-fold[open]>summary .cv{transform:rotate(90deg)}
+.sg-ro{display:flex;gap:6px;align-items:center;font-size:var(--t-sm);color:var(--text-secondary);padding:0 var(--s3) var(--s3);margin:0}
+.sg-yh{font-size:var(--t-sm);color:var(--text-secondary);padding:var(--s3) var(--s3) 0;margin:0;font-family:var(--font-sans)}
+.sg-curterm{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:var(--s3);border-bottom:1px solid var(--border)}
+.sg-curterm>div{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sg-auto{margin:0;min-height:var(--tap);display:flex;align-items:center;font-weight:700}
+.sg-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:var(--s5) var(--s4)}
+.sg-empty>.ic{font-size:36px;color:var(--text-secondary)}
+.sg-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--s3)}
+.sg-tile{display:flex;flex-direction:column;gap:2px;padding:var(--s3) var(--s4);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);min-width:0}
+.sg-tile .h{display:flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:var(--t-sm);font-weight:600}
+.sg-tile b{font-size:var(--t-lg);overflow-wrap:anywhere;line-height:1.4}
+.sg-tile small{color:var(--text-secondary);font-size:var(--t-sm)}
+.sg-tile.warn{background:var(--bg-warning);border-color:color-mix(in srgb,var(--text-warning) 45%,transparent)}
+.sg-tile.warn small{color:var(--text-primary)}
+.sg-tile .btn{align-self:flex-start;margin-top:6px}
+.sg-zone{border:2px solid var(--text-danger)}
+.sg-zone>h3{color:var(--text-danger)}
+.sg-chk{list-style:none;margin:0;padding:0 var(--s4) var(--s3);display:flex;flex-direction:column;gap:6px}
+.sg-chk li{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:var(--t-sm)}
+.sg-chk .t{flex:1;min-width:150px;overflow-wrap:anywhere}
+.sg-skel{height:76px;border-radius:var(--radius-lg);background:var(--surface-1);border:1px solid var(--border)}
+.sg-errc{display:flex;gap:12px;align-items:flex-start}
+.sg-errc>.ic{font-size:32px;color:var(--text-danger);flex:none}
+.sg-errc p{margin:4px 0 10px}
+.sg-mail{overflow-wrap:anywhere;font-weight:700;font-size:var(--t-md)}
+.sg-hist{list-style:none;margin:0;padding:0}
+.sg-hist li{display:grid;grid-template-columns:7.5rem auto minmax(0,1fr);gap:4px 10px;align-items:center;padding:8px var(--s4);font-size:var(--t-sm)}
+.sg-hist li+li{border-top:1px solid var(--border)}
+.sg-hist .t{overflow-wrap:anywhere}
+.sg-hist .t small{display:block;color:var(--text-secondary)}
+.sgp.d-phone .sg-hist li{grid-template-columns:auto minmax(0,1fr)}
+.sgp.d-phone .sg-hist .t{grid-column:1 / -1}
+.sg-check{display:flex;align-items:center;gap:10px;min-height:var(--tap);font-weight:600;font-size:var(--t-sm);cursor:pointer}
+.sg-check input{width:22px;height:22px;accent-color:var(--accent);flex:none;margin:0}
+.sg-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sg-two>div{background:var(--surface-1);border-radius:var(--radius-sm);padding:8px 12px;font-size:var(--t-sm)}
+.sg-two h3{font-size:var(--t-sm);margin:0 0 4px;display:flex;gap:6px;align-items:center}
+.sg-two ul{margin:0;padding-left:1.2em}
+.sg-step{margin:0;font-size:var(--t-xs);font-weight:700;color:var(--text-secondary)}
+.sg-gbar{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:var(--s2)}
+.sg-gbar button{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 var(--s4);border-radius:999px;border:1.5px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:600;font-size:var(--t-sm);white-space:nowrap}
+.sg-gbar button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.sg-gbar button.dz{color:var(--text-danger);border-color:var(--text-danger)}
+.sg-gbar button.dz[aria-current="true"]{background:var(--text-danger);color:var(--surface-2)}
+.sg-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:var(--s4)}
+.sg-pills .gf-chip[aria-current="page"]{border-color:var(--text-accent);background:var(--bg-accent);color:var(--text-accent);box-shadow:inset 0 0 0 1px var(--text-accent)}
+.sg-mlist{display:flex;flex-direction:column;gap:var(--s4)}
+.sg-mg>h2{font-size:var(--t-sm);color:var(--text-secondary);margin:0 0 6px var(--s2);font-family:var(--font-sans);font-weight:700}
+.sg-mg .sg-card{overflow:hidden}
+.sg-mg .sg-card button{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:6px var(--s4);border:0;background:transparent;color:var(--text-primary);text-align:left;font-size:var(--t-md);font-weight:600}
+.sg-mg .sg-card button+button{border-top:1px solid var(--border)}
+.sg-mg .sg-card button .t{flex:1;min-width:0}
+.sg-mg .sg-card button small{display:block;font-weight:400;color:var(--text-secondary);font-size:var(--t-xs)}
+.sg-mg .sg-card button>.ic{font-size:22px;color:var(--text-secondary)}
+.sg-mg.dz .sg-card{border:2px solid var(--text-danger)}
+.sg-mg.dz .sg-card button,.sg-mg.dz .sg-card button>.ic,.sg-mg.dz>h2{color:var(--text-danger)}
+.sg-todo{align-items:flex-start}.sg-todo>div{min-width:0}
+.sg-tdl{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sg-tdl li{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sg-tdl li>span{flex:1 1 180px;min-width:0;overflow-wrap:anywhere}
+.sg-back{align-self:flex-start;margin:0 0 var(--s2) calc(-1 * var(--s2));padding-left:6px}
+.sgp.d-phone .sg-head .sg-who{flex-basis:100%}
+.sgp.d-phone .ap-grid,.sgp.d-ipadP .ap-grid{grid-template-columns:1fr}
+.sgp.d-phone .ap-preview,.sgp.d-ipadP .ap-preview{grid-column:1;grid-row:2;position:static}
+.sgp.d-phone .ap-opts,.sgp.d-ipadP .ap-opts{grid-column:1;grid-row:1}
+.sgp.d-phone .choices{grid-template-columns:1fr}
+.sgp.d-phone .sg-two,.sg-dlg.ph .sg-two{grid-template-columns:1fr}
+.sg-dlg .sg-li>li{padding-left:0;padding-right:0}
+@media (prefers-reduced-motion:reduce){.sgp *,.sg-dlg *{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -2463,7 +2613,7 @@ const tabbar = () => { const cur = (k) => (S.page === k ? 'aria-current="page"' 
   <button class="tab" ${cur("gradebook")} data-page="gradebook">${ic("notebook")}คะแนน</button><button class="tab" ${cur("settings")} data-act="sheet:more">${ic("dots-three-circle")}เพิ่มเติม</button></nav>`; };
 const topbar = (home) => `<div class="topbar"><div class="where">${ic("calendar-blank")}<span>พุธ 11 พ.ย. 2569 <span class="long">· ภาคเรียน 2/2569</span></span></div>
   ${S.state === "offline" ? `<span class="off-chip">${ic("wifi-slash")}ออฟไลน์ · ข้อมูลเมื่อ 10:12</span>` : ""}<div class="grow"></div>
-  <button class="chip-btn" data-toast="เลือกภาคเรียน" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>
+  <button class="chip-btn" data-act="sheet:sg-tpick" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>
   <button class="chip-btn hide-btn" data-act="hide" aria-pressed="${S.hide}" aria-label="ซ่อนชื่อนักเรียน (โหมดฉายจอ)">${ic(S.hide ? "eye-slash" : "eye")}<span class="lbl">${S.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
   ${home ? `<button class="chip-btn" data-act="sheet:layout" aria-label="ปรับหน้าหลัก">${ic("sliders-horizontal")}<span class="lbl">ปรับหน้าหลัก</span></button>` : ""}</div>`;
 const banners = () => (S.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่</b><br>ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)</div><button class="btn" data-act="hide">${ic("eye")}แสดงชื่อ</button></div>` : "")
@@ -2683,7 +2833,7 @@ function saveChip() {
   const m = { saving: ["saving", "arrows-clockwise", "กำลังบันทึก…"], saved: ["saved", "check-circle", "บันทึกแล้ว · ใช้กับทุกเครื่อง"], off: ["off", "wifi-slash", "ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"] }[S.saveMsg];
   return m ? `<span class="save-chip ${m[0]}">${ic(m[1])}${m[2]}</span>` : "";
 }
-function pageSettings() {
+function pageSettingsV1() { // T-26: superseded by pageSettings() (หน้าตั้งค่า 11 หมวด) — the หน้าตา section reuses this markup
   const L = LAYOUTS.find((x) => x[0] === S.layout), T = THEMES.find((x) => x[0] === S.theme), M = MODES.find((x) => x[0] === S.modePref);
   return `${topbar(false)}${banners()}<h1 class="display page-h">ตั้งค่า</h1>
   <div class="set-grid"><nav class="set-nav" aria-label="หมวดตั้งค่า">${[["ทั่วไป", "gear-six"], ["หน้าตา", "palette", 1], ["ข้อมูลหลัก", "books"], ["สำรองข้อมูล", "cloud-arrow-up"], ["เครื่องที่ใช้งาน", "device-mobile"]].map(([l, i, on]) => `<button ${on ? 'aria-current="page"' : `data-toast="ตัวอย่างนี้แสดงเฉพาะหมวดหน้าตา"`}>${ic(i)}${l}</button>`).join("")}</nav>
@@ -2730,7 +2880,7 @@ const SS = { phase: "setup", selAsg: null, selCls: null, asg: null, cls: null, m
   copied: false, seq: 0, clk: 0, lastScore: null, gridFocus: null, pickMsg: "" };
 let undoTimer = null, holdTimer = null, RES_SEEN = null;
 const RP = {}; // last drawn ring values (ring fills from old → new value)
-const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.page === "random" ? !RD.online : S.page === "students" ? !STU.online : S.state === "offline");
+const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.page === "random" ? !RD.online : S.page === "students" ? !STU.online : S.page === "settings" ? sgOff() : S.state === "offline");
 const scA = () => ASG0.find((a) => a.id === SS.asg);
 const scRoom = (cid = SS.cls) => SC_ROOM[cid][0];
 const lateOn = (a) => !!a.due && Date.parse(RECV_D[SS.recv]) > Date.parse(a.due);
@@ -2864,7 +3014,7 @@ const animRings = () => requestAnimationFrame(() => requestAnimationFrame(() => 
 function scanTop() {
   const sc = SS.phase === "scan";
   return `<div class="topbar"><div class="where">${ic("scan")}<span>สแกนส่งงาน <span class="long">· ภาคเรียน 2/2569</span></span></div><div class="grow"></div>
-  ${SS.phase === "setup" ? `<button class="chip-btn" data-toast="เลือกภาคเรียน" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>` : ""}
+  ${SS.phase === "setup" ? `<button class="chip-btn" data-act="sheet:sg-tpick" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>` : ""}
   <button class="chip-btn hide-btn" data-act="hide" aria-pressed="${S.hide}" aria-label="ซ่อนชื่อนักเรียน">${ic(S.hide ? "eye-slash" : "eye")}<span class="lbl">${S.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
   ${sc ? `<button class="chip-btn no-phone" data-sc="proj" aria-pressed="${SS.project}">${ic("projector-screen")}<span class="lbl">ฉายจอ</span></button>
   <button class="chip-btn no-phone" data-act="sheet:sc-cards">${ic("sliders-horizontal")}<span class="lbl">ปรับการ์ด</span></button>
@@ -4292,11 +4442,12 @@ function sheet() {
   if (S.sheet.startsWith("gb-")) return gbSheet();
   if (S.sheet.startsWith("rp-")) return rpSheet();
   if (S.sheet.startsWith("stu-")) return stuSheet();
+  if (S.sheet.startsWith("sg-")) return sgSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
   if (S.sheet === "layout") { const L = LAYOUTS.find((x) => x[0] === S.layout); h = "ปรับหน้าหลัก";
-    body = `<p class="sec small">ใช้อยู่: โครง ${L[1]} · เลือกแล้วเห็นผลทันที</p>${layoutChoices("sh-layout")}<button class="btn" data-page="settings">${ic("palette")}เปลี่ยนธีม / สว่าง-มืด ที่ ตั้งค่า › หน้าตา</button>`; }
+    body = `<p class="sec small">ใช้อยู่: โครง ${L[1]} · เลือกแล้วเห็นผลทันที</p>${layoutChoices("sh-layout")}<button class="btn" data-page="settings" data-sgsec="appearance">${ic("palette")}เปลี่ยนธีม / สว่าง-มืด ที่ ตั้งค่า › หน้าตา</button>`; }
   if (S.sheet === "more") { h = "เพิ่มเติม"; const gs = [];
     for (const x of menu().sheet) { let g = gs.find((y) => y[0] === x.group); if (!g) gs.push((g = [x.group, []])); g[1].push(x); }
     body = `<p class="sec small">เมนูทาง ${MENU_L[S.menu]} · รายการที่ไม่อยู่บนแถบล่าง</p>` + gs.map(([g, xs], gi) => `<section class="menu-g" aria-labelledby="mg-${gi}"><h3 id="mg-${gi}">${g}</h3>
@@ -4958,10 +5109,471 @@ document.addEventListener("change", (e) => { const t = e.target; if (S.page !== 
   else if (t.name === "stu-iok" && STU.imp) { STU.imp.ok = t.checked; render(true); rpFocus('input[name="stu-iok"]'); }
   else if (t.name === "stu-ldate" && STU.lv) STU.lv.date = t.value; });
 
+/* ======================= T-26 หน้าตั้งค่า (ux-settings.md · รอบออกแบบที่ 8) — 11 หมวด 5 กลุ่ม · fictional names/email only ======================= */
+const SG_GROUPS = [
+  ["ใช้บ่อย", [["general", "ภาพรวม", "squares-four", "ชื่อโรงเรียน ชื่อครู การ์ดภาพรวม"], ["time", "เวลาเรียน", "clock", "เริ่มนับสาย · เวลาเริ่มคาบ 1–8"], ["scan", "การสแกน", "scan", "เสียง · บาร์โค้ดเดิม · ทดสอบเครื่องยิง/กล้อง"]]],
+  ["การสอน", [["catalog", "ห้องเรียน วิชา ภาคเรียน", "chalkboard", "ห้อง · วิชา · ภาคเรียน/ปีการศึกษา"], ["worktypes", "ประเภทงาน", "tag", "ชื่อ สี คะแนนเต็มเริ่มต้น"]]],
+  ["เครื่องนี้", [["appearance", "หน้าตา", "palette", "โครง ธีม สว่าง/มืด ขนาดตัวอักษร"], ["privacy", "ความเป็นส่วนตัวและเสียง", "eye-slash", "ซ่อนชื่อ · ฉายจอ · เสียง"], ["device", "ตรวจเครื่องและออฟไลน์", "stethoscope", "ตรวจเครื่อง · ออฟไลน์ · ที่เก็บ"]]],
+  ["บัญชีและข้อมูล", [["devices", "บัญชีและอุปกรณ์", "device-mobile", "อีเมล · รหัสผ่าน · เครื่องที่เข้าสู่ระบบ"], ["backup", "สำรองและกู้คืน", "cloud-arrow-up", "ดาวน์โหลด · กู้คืน"], ["history", "ประวัติการแก้ไข", "clock-counter-clockwise", "อะไรเปลี่ยน เมื่อไร เครื่องไหน"]]],
+  ["โซนอันตราย", [["reset", "เริ่มใหม่ (ล้างข้อมูล)", "warning", "ล้างข้อมูลทดลอง · ล้างทั้งหมด"]]],
+];
+const SG_SECS = SG_GROUPS.flatMap(([g, xs]) => xs.map((x) => ({ k: x[0], l: x[1], i: x[2], d: x[3], g })));
+const SG_INTRO = { general: "ข้อมูลโรงเรียนขึ้นบนหัวหน้าและสติกเกอร์ QR", time: "ใช้ตัดสินว่าสแกน/เช็คชื่อ “สาย” หรือไม่", scan: "ตั้งค่าการสแกนส่งงานและทดสอบเครื่องยิง",
+  catalog: "ต้นภาคเรียน: ตั้งห้อง วิชา และภาคเรียน แล้วค่อยนำเข้านักเรียน · ไม่มีการลบถาวร ใช้ “เก็บ” แทน", worktypes: "ประเภทงานใช้ตอนสร้างงาน · คะแนนเต็มเริ่มต้นใช้กับงานใหม่เท่านั้น",
+  appearance: "", privacy: "รวมค่าที่กระจายตามหน้าไว้ดู/แก้ที่เดียว · สวิตช์ในแต่ละหน้ายังอยู่ แก้ค่าเดียวกัน", device: "ทั้งหมดเป็นค่าของเครื่องนี้เท่านั้น",
+  devices: "บัญชีที่ใช้เข้าสู่ระบบ และเครื่องที่ยังเข้าสู่ระบบอยู่", backup: "ควรสำรองสัปดาห์ละครั้ง · ไฟล์สำรองมีข้อมูลส่วนบุคคลของนักเรียน", history: "อ่านอย่างเดียว · ย้อนดูได้ว่าข้อมูลไหนถูกแก้", reset: "ใช้เมื่อต้องการเริ่มใหม่จริง ๆ เท่านั้น" };
+const SG_SRV = ["general", "time", "scan", "catalog", "worktypes", "history"];
+const SG_COLORS = [["red", "แดง", "#d64545"], ["orange", "ส้ม", "#d9711c"], ["yellow", "เหลือง", "#c99700"], ["green", "เขียว", "#2f9e5b"], ["teal", "ฟ้า", "#178aa8"], ["blue", "น้ำเงิน", "#3d5fd1"], ["purple", "ม่วง", "#8a4fc9"]];
+const sgCol = (c) => SG_COLORS.find((x) => x[0] === c) || SG_COLORS[5];
+const SG_FSZ = { s: -2, m: 0, l: 2, xl: 4 }, SG_DENS = { compact: 0.88, normal: null, comfy: 1.15 };
+const SG_M = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+const sgTh = (iso) => { if (!iso) return "ยังไม่ได้ตั้งวันที่"; const [y, m, d] = iso.split("-"); return `${+d} ${SG_M[+m - 1]} ${+y + 543}`; };
+const SG_KL = { classes: "ห้อง", subjects: "วิชา", worktypes: "ประเภทงาน", terms: "ภาคเรียน", dev: "เครื่อง" };
+const SG_V0 = { school: "โรงเรียนตัวอย่างวิทยา", teacher: "ครูสมศรี ตัวอย่าง", late: "08:30", p1: "08:30", p2: "09:30", p3: "10:30", p4: "11:30", p5: "", p6: "13:00", p7: "14:00", p8: "" };
+const SG_FL = { school: "ชื่อโรงเรียน", teacher: "ชื่อครู", late: "เริ่มนับสาย (เช็คชื่อรายวัน)", p1: "คาบ 1", p2: "คาบ 2", p3: "คาบ 3", p4: "คาบ 4", p5: "คาบ 5", p6: "คาบ 6", p7: "คาบ 7", p8: "คาบ 8" };
+const SG_FAIL = "บันทึกไม่สำเร็จ — ข้อมูลเดิมยังอยู่ ตรวจเน็ตแล้วลองอีกครั้ง";
+const SG_SWL = { sound: "เสียงตอบรับตอนสแกน", code: "รับบาร์โค้ดบัตรนักเรียนเดิม", pjHide: "ซ่อนชื่อตอนฉายจอ", ting: "เสียง “ติ๊ง” ตอนสุ่มได้ชื่อ",
+  hp_home: "ซ่อนชื่อ: หน้าหลัก", hp_scan: "ซ่อนชื่อ: สแกน", hp_attendance: "ซ่อนชื่อ: เช็คชื่อ", hp_random: "ซ่อนชื่อ: สุ่มชื่อ", hp_gradebook: "ซ่อนชื่อ: คะแนน", hp_reports: "ซ่อนชื่อ: รายงาน", hp_students: "ซ่อนชื่อ: นักเรียน",
+  card_device: "การ์ด เครื่องนี้", card_term: "การ์ด ภาคเรียนปัจจุบัน", card_backup: "การ์ด สำรองล่าสุด", card_dev: "การ์ด อุปกรณ์ล่าสุด", card_edit: "การ์ด แก้ไขล่าสุด" };
+const SG_HP = [["home", "หน้าหลัก"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"], ["students", "นักเรียน"]];
+const SET = { sstate: "normal", sec: "general", mlist: true, tab: "classes", year: 2569, ed: null, add: "", addErr: "", data: null, v: {}, f: {}, saving: false, saveErr: "", saved: "",
+  sw: { sound: true, code: false, pjHide: true, ting: false }, swMsg: null, cards: { device: true, term: true, backup: true, dev: true, edit: true }, hp: {}, pjt: "dark", pjs: "l",
+  fsz: "m", dens: "normal", hid: null, cam: "idle", chk: "idle", persist: false, rs: null, rst: null, nt: null, pw: false, pwOk: "", hf: "all", devErr: false, live: "", timer: null,
+  bk: "3 พ.ย. 2569 09:14", bkOld: true, folds: {}, cf: "", unErr: null, atErr: "", seq: 0, hidN: 0 };
+function sgFresh(k) {
+  const many = k === "many", empty = k === "empty";
+  const extra = many ? [...Array.from({ length: 20 }, (_, i) => ({ id: "km" + i, name: `ป.${4 - (i % 3)}/${Math.floor(i / 3) + 1}`, n: 25 + (i % 7) })), { id: "kl", name: "ห้องเรียนพิเศษวิทยาศาสตร์และคณิตศาสตร์ ป.6/4 (โครงการส่งเสริมความสามารถพิเศษ ปีการศึกษา 2569)", n: 24 }] : [];
+  return {
+    classes: empty ? [] : [{ id: "k1", name: "ป.6/1", n: 8 }, { id: "k2", name: "ป.6/2", n: 30 }, { id: "k3", name: "ป.5/1", n: 28 }, ...extra],
+    pastClasses: [{ name: "ป.5/1", n: 8 }, { name: "ป.5/2", n: 29 }],
+    subjects: empty ? [] : [{ id: "s1", name: "คณิตศาสตร์", code: "ค16101", color: "blue", w: 24 }, ...(many ? [{ id: "s2", name: "วิทยาศาสตร์และเทคโนโลยี (วิทยาการคำนวณ) สำหรับนักเรียนชั้นประถมศึกษาปีที่ 6 ภาคเรียนที่ 2 ปีการศึกษา 2569 รายวิชาเพิ่มเติม", code: "ว16102", color: "green" }, { id: "s3", name: "ภาษาไทย", code: "ท16101", color: "red" }, { id: "s4", name: "ภาษาอังกฤษ", code: "อ16101", color: "purple" }] : []), { id: "s9", name: "คณิตศาสตร์เพิ่มเติม", code: "", color: "orange", arch: true }],
+    terms: empty ? [] : [{ id: "t1", no: 2, y: 2569, start: "2026-11-03", end: "2027-02-28", cur: true }, { id: "t2", no: 1, y: 2569, start: "2026-05-16", end: "2026-10-31" }, { id: "t3", no: 2, y: 2568, start: "2025-11-01", end: "2026-03-15" }, { id: "t4", no: 1, y: 2568, start: "2025-05-16", end: "2025-10-10" }],
+    worktypes: [["ใบงาน", 10, "blue"], ["แบบฝึกหัด", 10, "green"], ["ชิ้นงาน", 20, "orange"], ["การบ้าน", 5, "teal"], ["ทดสอบ", 20, "red", true]].map(([name, full, color, exam], i) => ({ id: "w" + i, name, full: String(full), color, exam: !!exam })),
+    devices: [{ id: "d1", name: "iPad ห้องเรียน", ua: "iPad · Safari", last: "ใช้อยู่ตอนนี้", me: true }, { id: "d2", name: many ? "คอมพิวเตอร์ตั้งโต๊ะในห้องพักครูกลุ่มสาระการเรียนรู้คณิตศาสตร์" : "คอมที่บ้าน", ua: "Windows · Chrome", last: "ใช้ล่าสุด 10 พ.ย." }, { id: "d3", name: "มือถือ", ua: "Android · Chrome", last: "ใช้ล่าสุด 2 พ.ย." }],
+  };
+}
+function sgScenario(k) {
+  clearTimeout(SET.timer); if (S.sheet && S.sheet.startsWith("sg-")) S.sheet = null;
+  Object.assign(SET, { sstate: k, ed: null, add: "", addErr: "", saving: false, saveErr: "", saved: "", swMsg: null, rs: null, rst: null, nt: null, pw: false, pwOk: "", year: 2569, devErr: k === "loaderr", hid: null, cam: "idle", chk: "idle", cf: "", unErr: null, atErr: "" });
+  SET.data = sgFresh(k);
+  SET.v = { ...SG_V0, ...(k === "many" ? { school: "โรงเรียนตัวอย่างวิทยาคมเฉลิมพระเกียรติ ๘๐ พรรษา (สาขาบ้านหนองตัวอย่างใต้)", teacher: "ครูสมศรี ตัวอย่างนามสกุลยาวมากเพื่อทดสอบการตัดบรรทัด" } : {}) }; SET.f = { ...SET.v };
+  if (k === "dirty" || k === "savefail") { SET.f.school = "โรงเรียนตัวอย่างวิทยา (สาขา 2)"; SET.f.late = "08:45"; if (SET.sec !== "time") SET.sec = "general"; }
+  if (k === "savefail") SET.saveErr = SG_FAIL;
+  if (k === "empty" || k === "past") { SET.sec = "catalog"; SET.tab = "classes"; }
+  if (k === "past") SET.year = 2568;
+  if (k === "termend") { SET.data.terms[0].end = "2026-11-08"; SET.sec = "general"; }
+  if (!["normal", "loading", "offline"].includes(k)) SET.mlist = false;
+}
+sgScenario("normal");
+const sgOff = () => SET.sstate === "offline";
+const sgFails = () => SET.sstate === "savefail" || sgOff();
+const sgSec = (k = SET.sec) => SG_SECS.find((x) => x.k === k) || SG_SECS[0];
+const sgDirty = () => Object.keys(SET.v).filter((k) => SET.f[k] !== SET.v[k]);
+const sgBarTxt = () => { const d = sgDirty(), g = [...new Set(d.map((k) => (k === "school" || k === "teacher" ? "ภาพรวม" : "เวลาเรียน")))]; return `แก้ไขแล้ว ${d.length} รายการ${g.length ? ` · ${g.join(", ")}` : ""} — ยังไม่ได้บันทึก`; };
+const sgTag = (p, why) => `<span class="rp-x sx-p" title="ของเพิ่ม ${p}: ${why}">ของเพิ่ม ${p}</span>`;
+const sgScope = (s) => (s === "all" ? `<span class="sg-scope">${ic("cloud")}ทุกเครื่อง</span>` : `<span class="sg-scope here">${ic("device-mobile")}เครื่องนี้เท่านั้น</span>`);
+const sgGrade = (n) => String(n || "").trim().split("/")[0] || "—";
+const sgList = (k) => SET.data[k === "dev" ? "devices" : k];
+const sgDot = (k) => (k === "backup" && SET.bkOld ? `<span class="sg-dot" aria-hidden="true"></span><span class="sg-sr">(ถึงเวลาสำรอง)</span>` : "");
+const sgNeedOn = (id) => (sgOff() ? `<span class="rp-why" id="${id}">ต้องออนไลน์</span>` : "");
+const sgOffAttr = (id) => (sgOff() ? `disabled aria-describedby="${id}"` : "");
+const sgSwGet = (k) => (k === "hp_home" ? S.hide : k === "hp_students" ? !!STU.hide : k.startsWith("hp_") ? !!SET.hp[k.slice(3)] : k.startsWith("card_") ? !!SET.cards[k.slice(5)] : !!SET.sw[k]);
+const sgSwSet = (k, v) => { if (k === "hp_home") S.hide = v; else if (k === "hp_students") STU.hide = v; else if (k.startsWith("hp_")) SET.hp[k.slice(3)] = v; else if (k.startsWith("card_")) SET.cards[k.slice(5)] = v; else SET.sw[k] = v; };
+const sgSrvSw = (k) => k === "sound" || k === "code" || k.startsWith("card_");
+const sgSw = (k) => { const on = sgSwGet(k); return `<button class="gf-switch sg-sw" role="switch" aria-checked="${on}" aria-label="${SG_SWL[k]}" data-sg="sw:${k}"><span class="tr" aria-hidden="true"><i></i></span><span aria-hidden="true">${on ? "เปิด" : "ปิด"}</span></button>`; };
+const sgMsg = (k) => { const m = SET.swMsg; if (!m || m.k !== k) return "";
+  return `<p class="sg-msg ${m.kind}">${m.kind === "saving" ? ic("circle-notch", "spin") + "กำลังบันทึก…" : m.kind === "ok" ? `${ic("check-circle")}${m.t}<button class="btn btn-ghost" data-sg="swundo:${k}">เลิกทำ</button>` : ic("warning-circle") + m.t}</p>`; };
+const sgRow = (label, desc, ctl, scope, how, msg = "") => `<div class="sg-row"><div class="sg-rl"><b>${label}</b>${desc ? `<small>${desc}</small>` : ""}<span class="sg-meta">${scope ? sgScope(scope) : ""}${how ? `<span class="sg-how">${how}</span>` : ""}</span></div><div class="sg-rc">${ctl}</div>${msg}</div>`;
+const sgSwRow = (k, desc, scope, how = "บันทึกทันที") => sgRow(SG_SWL[k], desc, sgSw(k), scope, how, sgMsg(k));
+const sgFld = (k, ph = "", type = "text") => `<div class="sg-field"><label for="sgF_${k}">${SG_FL[k]}</label><input id="sgF_${k}" class="gf-in" type="${type}" data-sgf="${k}" value="${gbEsc(SET.f[k])}" ${ph ? `placeholder="${ph}"` : ""} autocomplete="off"></div>`;
+function pageSettings() {
+  const d = S.device, wide = d === "desk" || d === "ipadL";
+  const sync = sgOff() ? `<span class="save-chip off">${ic("wifi-slash")}ออฟไลน์</span>` : `<span class="save-chip saved">${ic("check-circle")}ซิงก์แล้ว</span>`;
+  const off = sgOff() ? `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์อยู่</b><br>ดูการตั้งค่าที่โหลดไว้ได้ · แก้ไข/สำรอง/กู้คืนทำได้เมื่อออนไลน์ · ค่า “เครื่องนี้เท่านั้น” แก้ได้ปกติ</div></div>` : "";
+  const head = `${topbar(false)}${banners()}${off}<div class="sg-head"><h1 class="display page-h" id="sgH1" tabindex="-1">ตั้งค่า</h1><span class="sg-who">${SET.v.school} · ${SET.v.teacher}</span>${sync}</div>`;
+  let main;
+  if (wide) main = `<div class="sg-grid">${sgNav()}${sgBody()}</div>`;
+  else if (d === "ipadP") main = sgGbar() + sgBody();
+  else main = SET.mlist ? sgMList() : `<button class="btn btn-ghost sg-back" data-sg="list">${ic("caret-left")}ตั้งค่า</button>${sgBody()}`;
+  return `<div class="sgp d-${d}">${head}${main}</div>`;
+}
+const sgNav = () => `<nav class="sg-nav" aria-label="หมวดตั้งค่า" style="max-height:${DEV[S.device][1] - 126}px">${SG_GROUPS.map(([g, xs]) => `<div class="sg-gh ${g === "โซนอันตราย" ? "dz" : ""}">${g}</div>${xs.map((x) => `<button class="sg-nb ${g === "โซนอันตราย" ? "dz" : ""}" data-sg="sec:${x[0]}" ${SET.sec === x[0] ? 'aria-current="page"' : ""}>${ic(x[2])}<span>${x[1]}</span>${sgDot(x[0])}</button>`).join("")}`).join("")}</nav>`;
+const sgGbar = () => { const cg = sgSec().g, xs = SG_GROUPS.find(([g]) => g === cg)[1];
+  return `<nav aria-label="หมวดตั้งค่า"><div class="sg-gbar" role="group" aria-label="กลุ่มการตั้งค่า">${SG_GROUPS.map(([g, ys]) => `<button class="${g === "โซนอันตราย" ? "dz" : ""}" data-sg="sec:${ys[0][0]}" aria-current="${g === cg}">${g === "โซนอันตราย" ? ic("warning") : ""}${g}</button>`).join("")}</div>
+  <div class="sg-pills">${xs.map((x) => `<button class="gf-chip" data-sg="sec:${x[0]}" ${SET.sec === x[0] ? 'aria-current="page"' : ""}>${ic(x[2])}${x[1]}${sgDot(x[0])}</button>`).join("")}</div></nav>`; };
+const sgMList = () => `<nav class="sg-mlist" aria-label="หมวดตั้งค่า">${SG_GROUPS.map(([g, xs]) => `<section class="sg-mg ${g === "โซนอันตราย" ? "dz" : ""}"><h2>${g}</h2><div class="sg-card">${xs.map((x) => `<button data-sg="sec:${x[0]}">${ic(x[2])}<span class="t">${x[1]}<small>${x[3]}</small></span>${sgDot(x[0])}${ic("caret-right")}</button>`).join("")}</div></section>`).join("")}</nav>`;
+function sgBody() {
+  const x = sgSec(), srv = SG_SRV.includes(x.k); let inner;
+  if (srv && SET.sstate === "loading") inner = `<div aria-busy="true"><p class="sec small" role="status" style="margin:0 0 10px">${ic("circle-notch", "spin")} กำลังโหลดการตั้งค่า…</p><div style="display:grid;gap:10px"><div class="sg-skel"></div><div class="sg-skel"></div><div class="sg-skel"></div></div></div>`;
+  else if (srv && SET.sstate === "loaderr") inner = `<div class="card sg-errc" role="alert">${ic("cloud-slash")}<div><b>โหลดการตั้งค่าไม่สำเร็จ</b><p class="sec small">ตรวจเน็ตแล้วลองอีกครั้ง · หมวด “เครื่องนี้” (หน้าตา ความเป็นส่วนตัว ตรวจเครื่อง) ยังใช้ได้</p><button class="btn btn-primary" data-sg="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div></div>`;
+  else inner = SG_VIEW[x.k]();
+  const tagP = x.k === "privacy" ? sgTag("P1", "หมวดใหม่ รวมค่าซ่อนชื่อ/ฉายจอ/เสียง") : "";
+  return `<section class="sg-body" aria-labelledby="sgSecH"><div class="sg-sh"><h2 id="sgSecH" class="display" tabindex="-1">${x.l}</h2>${tagP}</div>${SG_INTRO[x.k] ? `<p class="sg-intro">${SG_INTRO[x.k]}</p>` : ""}
+    ${SET.saved ? `<p class="rp-ok" role="status">${ic("check-circle")}${SET.saved}</p>` : ""}${inner}${sgBar()}</section>`;
+}
+function sgBar() { const n = sgDirty().length;
+  return `<div class="sg-bar" id="sgBar" role="region" aria-label="แถบบันทึก" ${n ? "" : "hidden"}>${SET.saveErr ? `<p class="gf-err" role="alert">${ic("cloud-slash")}${SET.saveErr}</p>` : ""}<span class="n" id="sgBarN">${sgBarTxt()}</span>
+    <button class="btn" data-sg="discard" ${SET.saving ? "disabled" : ""}>ยกเลิกการแก้</button><button class="btn btn-primary" data-sg="save" ${SET.saving ? "disabled" : ""}>${SET.saving ? ic("circle-notch", "spin") + "กำลังบันทึก…" : SET.saveErr ? ic("arrow-clockwise") + "ลองอีกครั้ง" : ic("check") + "บันทึก"}</button></div>`; }
+const SG_VIEW = {};
+SG_VIEW.general = () => { const D = SET.data, cur = D.terms.find((t) => t.cur);
+  const T = [["device", "device-tablet", "เครื่องนี้", "iPad ห้องเรียน", sgOff() ? "ออฟไลน์ · ใช้ข้อมูลที่โหลดไว้" : "ออนไลน์ · พร้อมใช้ออฟไลน์", ["device", "ตรวจเครื่อง"]],
+    ["term", "calendar-dots", "ภาคเรียนปัจจุบัน", cur ? `${cur.no}/${cur.y}` : "ยังไม่ได้ตั้งภาคเรียน", cur ? `สิ้นสุด ${sgTh(cur.end)}` : "ภาคเรียนใช้แบ่งงาน คะแนน และรายงาน", ["catalog:terms", cur ? "จัดการภาคเรียน" : "ตั้งภาคเรียน"], !cur],
+    ["backup", "cloud-arrow-up", "สำรองล่าสุด", SET.bk, SET.bkOld ? "เกิน 7 วันแล้ว — ควรสำรอง" : "เก็บไฟล์ไว้ที่ปลอดภัย", ["backup", "สำรองเลย"], SET.bkOld],
+    ["dev", "devices", "อุปกรณ์ล่าสุด", D.devices[1] ? D.devices[1].name : "—", D.devices[1] ? D.devices[1].last : "", ["devices", "ดูทุกเครื่อง"]],
+    ["edit", "clock-counter-clockwise", "แก้ไขล่าสุด", "ให้คะแนน แบบฝึกหัด 3.2", "10 พ.ย. 16:20 · ป.6/1", ["history", "ดูประวัติ"]]].filter((t) => SET.cards[t[0]]);
+  return `<div class="sg-card"><h3>${ic("squares-four")}การ์ดภาพรวม <span class="grow"></span>${sgScope("all")}<button class="btn" data-sg="cards">${ic("sliders-horizontal")}ปรับการ์ดภาพรวม</button></h3>
+    ${sgTodo()}<div class="sg-pad"><div class="sg-tiles">${T.map(([k, i, h, b, s, go, warn]) => `<div class="sg-tile ${warn ? "warn" : ""}"><span class="h">${ic(warn ? "warning" : i)}${h}</span><b>${b}</b><small>${s}</small><button class="btn" data-sg="go:${go[0]}">${go[1]}${ic("caret-right")}</button></div>`).join("") || `<p class="sec small" style="margin:0">ซ่อนการ์ดทั้งหมดอยู่ — กด “ปรับการ์ดภาพรวม” เพื่อแสดง</p>`}</div></div></div>
+    <div class="sg-card"><h3>${ic("buildings")}ข้อมูลโรงเรียน <span class="grow"></span>${sgScope("all")}<span class="sg-how">กดบันทึก</span></h3>
+    <div class="sg-row"><div class="sg-frow">${sgFld("school", "เช่น โรงเรียนบ้านตัวอย่าง")}${sgFld("teacher", "เช่น ครูสมศรี")}</div><p class="sg-help">${ic("info")}เว้นว่าง = ใช้ชื่อในตัว · สว่าง/มืด ย้ายไปอยู่ที่หมวด “หน้าตา”</p></div></div>`; };
+SG_VIEW.time = () => `<div class="sg-card"><h3>${ic("clock")}เวลาเรียน <span class="grow"></span>${sgScope("all")}<span class="sg-how">กดบันทึก</span></h3>
+  <div class="sg-row"><div class="sg-rl"><b>เริ่มนับสาย (เช็คชื่อรายวัน)</b><small>สแกนหรือเช็คชื่อหลังเวลานี้ = สาย</small></div><div class="sg-rc"><label class="sg-sr" for="sgF_late">เริ่มนับสาย</label><input id="sgF_late" class="gf-in" type="time" data-sgf="late" value="${SET.f.late}" style="width:9rem"></div></div>
+  <div class="sg-row" style="padding-bottom:4px"><div class="sg-rl"><b>เวลาเริ่มคาบ 1–8</b><small>สแกนหลังเวลาเริ่มคาบ = สาย · เว้นว่างได้ถ้าไม่ใช้คาบนั้น</small></div></div>
+  <div class="sg-per">${[1, 2, 3, 4, 5, 6, 7, 8].map((n) => sgFld("p" + n, "", "time")).join("")}</div></div>`;
+SG_VIEW.scan = () => { const H = SET.hid;
+  const hid = H ? `<div class="sg-ed" style="margin:0 var(--s4) var(--s3);width:auto"><div class="sg-field"><label for="sgHidIn">ยิงสติกเกอร์ QR หรือบาร์โค้ดที่ช่องนี้ แล้วกด Enter</label><input id="sgHidIn" class="gf-in" autocomplete="off" placeholder="รอรับจากเครื่องยิง…" aria-describedby="sgHidR"></div>
+    <div class="sg-acts"><button class="btn" data-sg="hidsim">${ic("barcode")}จำลองยิง 1 ใบ</button><button class="btn" data-sg="hidstop">หยุดทดสอบ</button></div>
+    <ul class="sg-chk" id="sgHidR" style="padding:0">${H.length ? H.map((r) => `<li>${r.ok ? st("st-ok", "check-circle", "อ่านได้") : st("st-bad", "x-circle", "อ่านไม่ได้")}<span class="t">${r.t}</span></li>`).join("") : `<li class="sec">ยังไม่มีผล — ลองยิง 1 ใบ</li>`}</ul></div>` : "";
+  const cam = SET.cam === "checking" ? `<p class="sg-msg saving" role="status">${ic("circle-notch", "spin")}กำลังขอเปิดกล้องแวบเดียว…</p>` : SET.cam === "done" ? `<ul class="sg-chk" style="padding:0;flex-basis:100%">${[["ขอสิทธิ์ใช้กล้อง", "อนุญาตแล้ว"], ["เปิดกล้องหลัง", "ใช้ได้"], ["ปิดกล้องแล้ว", "ไม่ได้บันทึกภาพ"]].map(([a, b]) => `<li>${st("st-ok", "check-circle", "ผ่าน")}<span class="t">${a} · ${b}</span></li>`).join("")}</ul>` : "";
+  return `<div class="sg-card"><h3>${ic("speaker-high")}การสแกน</h3>${sgSwRow("sound", "ติ๊ด = สำเร็จ · ตื๊ด = ซ้ำ/ไม่พบ", "all", "บันทึกทันที · เลิกทำได้")}${sgSwRow("code", "สแกนรหัสนักเรียนตรง ๆ ได้ นอกจาก QR ของระบบ", "all")}</div>
+  <div class="sg-card"><h3>${ic("barcode")}ทดสอบอุปกรณ์ <span class="grow"></span>${sgScope("here")}<span class="sg-how">ไม่เก็บผล</span></h3>
+    ${sgRow("ทดสอบเครื่องยิง", "ยิงสติกเกอร์ ระบบบอกว่าอ่านได้ไหม", H ? st("st-ok", "radio-button", "กำลังฟัง") : `<button class="btn" data-sg="hidstart">${ic("barcode")}เริ่มทดสอบเครื่องยิง</button>`, "", "")}${hid}
+    ${sgRow("ทดสอบกล้อง", "ขอเปิดกล้องแวบเดียว ไม่บันทึกภาพ", `<button class="btn" data-sg="camtest" ${SET.cam === "checking" ? "disabled" : ""}>${ic("camera")}${SET.cam === "done" ? "ตรวจอีกครั้ง" : "ตรวจกล้อง"}</button>`, "", "", cam)}</div>
+  <div class="sg-card">${sgRow(`พิมพ์บัตร QR ${sgTag("P3", "ทางลัดไปหน้านักเรียน")}`, "สติกเกอร์ QR อยู่ที่หน้านักเรียน", `<button class="btn" data-page="students">${ic("printer")}ไปพิมพ์ที่ นักเรียน ›</button>`, "", "")}</div>`; };
+SG_VIEW.catalog = () => { const D = SET.data, cur = D.terms.find((t) => t.cur), past = SET.year !== 2569;
+  return `<div class="sg-cath"><p class="sg-cur">${ic("calendar-dots")}ปีการศึกษา ${SET.year}${cur && !past ? ` · ภาคเรียน ${cur.no}/${cur.y}` : ""}</p>${sgTag("P8", "จำนวนนักเรียนต่อห้อง / งานต่อวิชา ช่วยตัดสินใจก่อนเก็บ")}<div class="rp-seg" role="group" aria-label="เลือกปีการศึกษา">${[2569, 2568].map((y) => `<button aria-pressed="${SET.year === y}" data-sg="year:${y}">${y}${y === 2569 ? " · ปัจจุบัน" : ""}</button>`).join("")}</div></div>
+  ${past ? `<div class="banner" role="status" style="margin:0">${ic("lock-simple")}<div><b>ปีการศึกษา ${SET.year} อ่านอย่างเดียว</b><br>เพิ่มห้อง/เริ่มภาคเรียนได้เฉพาะปีปัจจุบัน · ห้องของปีก่อนนำกลับไม่ได้ — ปีใหม่ได้ห้องใหม่ชื่อเดิม</div><button class="btn" data-sg="year:2569">กลับไปปี 2569</button></div>` : ""}
+  <div class="sg-tabs" role="tablist" aria-label="ห้องเรียน วิชา ภาคเรียน">${[["classes", "ห้องเรียน"], ["subjects", "วิชา"], ["terms", "ภาคเรียน"]].map(([k, l]) => `<button role="tab" id="sgT_${k}" aria-selected="${SET.tab === k}" aria-controls="sgP" tabindex="${SET.tab === k ? 0 : -1}" data-sg="tab:${k}">${l}</button>`).join("")}</div>
+  <div class="sg-card" role="tabpanel" id="sgP" aria-labelledby="sgT_${SET.tab}">${SET.tab === "classes" ? sgClasses() : SET.tab === "subjects" ? sgKindList("subjects") : sgTerms()}</div>`; };
+function sgItem(kind, x, i, n, sub = "", lead = "") {
+  if (SET.ed && SET.ed.kind === kind && SET.ed.id === x.id) return `<li>${sgEdForm()}</li>`;
+  return `<li><span class="sg-ud"><button class="icon-btn" data-sg="mv:${kind}:${x.id}:-1" aria-label="เลื่อน ${x.name} ขึ้น" ${i === 0 ? "disabled" : ""}>${ic("arrow-up")}</button><button class="icon-btn" data-sg="mv:${kind}:${x.id}:1" aria-label="เลื่อน ${x.name} ลง" ${i === n - 1 ? "disabled" : ""}>${ic("arrow-down")}</button></span>
+    <span class="nm">${lead}<span>${x.name}</span>${sub ? `<small>${sub}</small>` : ""}</span><span class="sg-acts"><button class="btn" data-sg="ed:${kind}:${x.id}" aria-label="แก้ไข${SG_KL[kind]} ${x.name}">${ic("pencil-simple")}แก้ไข</button><button class="btn" data-sg="arch:${kind}:${x.id}" aria-label="เก็บ${SG_KL[kind]} ${x.name}">${ic("archive")}เก็บ</button></span></li>`; }
+const sgFold = (id, summary, body) => `<details class="sg-fold" data-sgfold="${id}" ${SET.folds[id] ? "open" : ""}><summary>${ic("caret-right", "cv")}${summary}</summary>${body}</details>`;
+const sgArchFold = (kind, arch) => arch.length ? sgFold("arch-" + kind, `${ic("archive")}เก็บไว้ (${arch.length})`, `<ul class="sg-li">${arch.map((x) => `<li><span class="nm">${kind !== "classes" ? `<i class="sg-cdot" style="background:${sgCol(x.color)[2]}" aria-hidden="true"></i>` : ""}<span>${x.name}</span></span>${st("st-mute", "archive", "เก็บแล้ว")}<button class="btn" data-sg="unarch:${kind}:${x.id}" aria-label="นำ${SG_KL[kind]} ${x.name} กลับ">${ic("arrow-counter-clockwise")}นำกลับ</button>${SET.unErr === x.id ? `<p class="sg-ferr" role="alert" style="flex-basis:100%">${ic("warning-circle")}มี${SG_KL[kind]}ชื่อ “${x.name}” อยู่แล้ว — แก้ชื่อรายการเดิมก่อนแล้วค่อยนำกลับ</p>` : ""}</li>`).join("")}</ul><p class="sg-ro">${ic("info")}ข้อมูลเดิมยังอยู่ครบ · ไม่มีการลบถาวร</p>`) : "";
+function sgClasses() { const D = SET.data;
+  const pastRows = `<ul class="sg-li">${D.pastClasses.map((c) => `<li><span class="nm"><span>${c.name}</span><small>ปีการศึกษา 2568</small></span>${st("st-mute", "graduation-cap", "จบปีการศึกษา")}</li>`).join("")}</ul>`;
+  if (SET.year !== 2569) return `${pastRows}<p class="sg-ro">${ic("lock-simple")}อ่านอย่างเดียว · ดูรายงานย้อนหลังได้ที่หน้ารายงาน</p>`;
+  const live = D.classes.filter((c) => !c.arch), arch = D.classes.filter((c) => c.arch);
+  const empty = live.length ? "" : `<div class="sg-empty">${ic("chalkboard")}<b>ยังไม่มีห้องเรียนในปีการศึกษา 2569</b><span class="sec small">เพิ่มห้องก่อน แล้วค่อยนำเข้านักเรียน</span></div>`;
+  const add = `<div class="sg-add"><div class="sg-field"><label for="sgAddIn" class="sg-sr">ชื่อห้องใหม่</label><input id="sgAddIn" class="gf-in" data-sgadd="1" value="${gbEsc(SET.add)}" placeholder="เพิ่มห้อง เช่น ป.6/3" autocomplete="off" aria-describedby="sgAddH sgAddE" ${SET.addErr ? 'aria-invalid="true"' : ""}><p class="sg-help" id="sgAddH">${SET.add.trim() ? `ระดับชั้น: ${sgGrade(SET.add)}` : "ใส่ชื่อห้อง เช่น ป.6/3"}</p><p class="sg-ferr" id="sgAddE" role="alert">${SET.addErr ? ic("warning-circle") + SET.addErr : ""}</p></div><button class="btn btn-primary" id="sgAddBtn" data-sg="add" ${SET.add.trim() ? "" : "disabled"}>${ic("plus")}${live.length ? "เพิ่มห้อง" : "เพิ่มห้องแรก"}</button></div>`;
+  return `${empty}${live.length ? `<ul class="sg-li">${live.map((c, i) => sgItem("classes", c, i, live.length, `นักเรียน ${c.n} คน`)).join("")}</ul>` : ""}${add}${sgArchFold("classes", arch)}${sgFold("pastcls", `ห้องของปีที่ผ่านมา (${D.pastClasses.length}) — ดูรายงานย้อนหลัง`, pastRows + `<p class="sg-ro">${ic("lock-simple")}ห้องของปีก่อนนำกลับไม่ได้ — ปีใหม่ได้ห้องใหม่ชื่อเดิม</p>`)}`; }
+function sgKindList(kind) { const L = sgList(kind), live = L.filter((x) => !x.arch), arch = L.filter((x) => x.arch), adding = SET.ed && SET.ed.kind === kind && !SET.ed.id;
+  const sub = (x) => kind === "subjects" ? `${x.code ? `รหัส ${x.code}` : "ไม่มีรหัส"} · ${x.w || 0} งาน · สี${sgCol(x.color)[1]}` : `คะแนนเต็มเริ่มต้น ${x.full}${x.exam ? " · การสอบ" : ""} · สี${sgCol(x.color)[1]}`;
+  const empty = live.length || adding ? "" : `<div class="sg-empty">${ic(kind === "subjects" ? "books" : "tag")}<b>${kind === "subjects" ? "ยังไม่มีวิชา" : "ยังไม่มีประเภทงาน"}</b><span class="sec small">${kind === "subjects" ? "เพิ่มวิชาที่สอน เช่น คณิตศาสตร์ เพื่อสร้างงานได้" : "เพิ่มประเภท เช่น ใบงาน การบ้าน"}</span></div>`;
+  return `${adding ? `<div class="sg-pad">${sgEdForm()}</div>` : `<div class="sg-add"><button class="btn btn-primary" data-sg="new:${kind}">${ic("plus")}เพิ่ม${SG_KL[kind]}</button><span class="sec small" style="align-self:center">${kind === "subjects" ? "วิชาไม่ผูกกับปีการศึกษา" : "บันทึกทีละแถวเมื่อกด “บันทึก” ของแถวนั้น"}</span></div>`}${empty}
+    ${live.length ? `<ul class="sg-li">${live.map((x, i) => sgItem(kind, x, i, live.length, sub(x), `<i class="sg-cdot" style="background:${sgCol(x.color)[2]}" aria-hidden="true"></i>${x.exam ? st("st-warn", "exam", "การสอบ") : ""}`)).join("")}</ul>` : ""}${sgArchFold(kind, arch)}`; }
+function sgTerms() { const D = SET.data, cur = D.terms.find((t) => t.cur), ro = SET.year !== 2569;
+  if (!D.terms.length) return `<div class="sg-empty">${ic("calendar-blank")}<b>ยังไม่ได้ตั้งภาคเรียน</b><span class="sec small">ภาคเรียนใช้แบ่งงาน คะแนน และรายงาน</span><button class="btn btn-primary" data-sg="firstterm">${ic("plus")}ตั้งภาคเรียนแรก</button></div>`;
+  const yrs = [...new Set(D.terms.map((t) => t.y))].sort((a, b) => b - a).filter((y) => (ro ? y === SET.year : true));
+  const head = ro ? "" : `<div class="sg-curterm"><div>${ic("calendar-check")}<b>ภาคเรียนปัจจุบัน: ${cur ? `${cur.no}/${cur.y}` : "—"}</b>${cur ? `<span class="sec small">สิ้นสุด ${sgTh(cur.end)}</span>` : ""}</div><button class="btn btn-danger-o" data-sg="newterm" ${sgOffAttr("sgNtWhy")}>${ic("calendar-plus")}เริ่มภาคเรียนใหม่</button>${sgNeedOn("sgNtWhy")}</div>`;
+  const grp = yrs.map((y) => { const old = y < 2569, ts = D.terms.filter((t) => t.y === y).sort((a, b) => b.no - a.no);
+    const rows = ts.map((t) => (SET.ed && SET.ed.kind === "terms" && SET.ed.id === t.id ? `<li>${sgEdForm()}</li>` : `<li><span class="nm"><span>${t.no}/${t.y}</span>${t.cur ? st("st-ok", "check-circle", "ปัจจุบัน") : ""}${old ? st("st-mute", "graduation-cap", "จบปีการศึกษา") : ""}<small>${sgTh(t.start)} – ${sgTh(t.end)}</small></span>${old ? "" : `<span class="sg-acts"><button class="btn" data-sg="ed:terms:${t.id}" aria-label="แก้ไขภาคเรียน ${t.no}/${t.y}">${ic("pencil-simple")}แก้ไข</button>${t.cur ? "" : `<button class="btn" data-sg="setcur:${t.id}">ตั้งเป็นปัจจุบัน</button>`}</span>`}</li>`)).join("");
+    const box = `<ul class="sg-li">${rows}</ul>${old ? `<p class="sg-ro">${ic("lock-simple")}ปีการศึกษา ${y} อ่านอย่างเดียว</p>` : ""}`;
+    return old && !ro ? sgFold("ty" + y, `ปีการศึกษา ${y} (อ่านอย่างเดียว)`, box) : `<h3 class="sg-yh">ปีการศึกษา ${y}</h3>${box}`; }).join("");
+  const opt = (a, sel) => a.map((v) => `<option value="${v}" ${v === sel ? "selected" : ""}>${v}</option>`).join("");
+  const add = ro ? "" : sgFold("addterm", "เพิ่มภาคเรียนที่ผ่านมา/ล่วงหน้า", `<div class="sg-pad"><div class="sg-frow"><div class="sg-field"><label for="sgAtY">ปีการศึกษา</label><select id="sgAtY" class="gf-in">${opt([2566, 2567, 2568, 2569, 2570, 2571, 2572], 2569)}</select></div><div class="sg-field"><label for="sgAtN">ภาคเรียนที่</label><select id="sgAtN" class="gf-in" aria-describedby="sgAtE" ${SET.atErr ? 'aria-invalid="true"' : ""}>${opt([1, 2, 3], 3)}</select></div></div><p class="sg-ferr" id="sgAtE" role="alert">${SET.atErr ? ic("warning-circle") + SET.atErr : ""}</p><button class="btn" data-sg="addterm" style="margin-top:8px">${ic("plus")}เพิ่มภาคเรียน</button></div>`);
+  return head + grp + add; }
+function sgEdForm() { const E = SET.ed, k = E.kind, err = E.err || {};
+  const fe = (f) => `<p class="sg-ferr" id="sgE_${f}E" role="alert">${err[f] ? ic("warning-circle") + err[f] : ""}</p>`;
+  const inp = (f, lab, extra = "", help = "") => `<div class="sg-field"><label for="sgE_${f}">${lab}</label><input id="sgE_${f}" class="gf-in" data-sge="${f}" value="${gbEsc(E[f] ?? "")}" autocomplete="off" ${err[f] ? 'aria-invalid="true"' : ""} aria-describedby="${help ? `sgE_${f}H ` : ""}sgE_${f}E" ${extra}>${help ? `<p class="sg-help" id="sgE_${f}H">${help}</p>` : ""}${fe(f)}</div>`;
+  const colors = () => `<div class="sg-field"><span class="gf-l" id="sgColL">สี</span><div class="sg-colors" role="radiogroup" aria-labelledby="sgColL">${SG_COLORS.map(([c, l, h]) => `<button role="radio" aria-checked="${E.color === c}" tabindex="${E.color === c ? 0 : -1}" data-sg="color:${c}"><i class="sw" style="background:${h}" aria-hidden="true">${E.color === c ? ic("check") : ""}</i>${l}</button>`).join("")}</div></div>`;
+  const title = k === "dev" ? "เปลี่ยนชื่อเครื่อง" : E.id ? `แก้ไข${SG_KL[k]}${k === "terms" ? ` ${E.no0}` : ` · ${E.name0}`}` : `เพิ่ม${SG_KL[k]}`;
+  let body = "";
+  if (k === "classes") body = inp("name", "ชื่อห้อง", 'aria-required="true"', `ระดับชั้น: ${sgGrade(E.name)}`);
+  if (k === "subjects") body = `<div class="sg-frow">${inp("name", "ชื่อวิชา", 'aria-required="true" placeholder="เช่น คณิตศาสตร์"')}${inp("code", "รหัสวิชา (ไม่บังคับ)", 'placeholder="เช่น ค16101"', "ไม่เกิน 30 ตัว")}</div>${colors()}`;
+  if (k === "worktypes") body = `<div class="sg-frow">${inp("name", "ชื่อประเภทงาน", 'aria-required="true" placeholder="เช่น ใบงาน"')}${inp("full", "คะแนนเต็มเริ่มต้น", 'inputmode="numeric"', "1–100 · ใช้กับงานใหม่เท่านั้น")}</div>${colors()}<label class="sg-check"><input type="checkbox" data-sge="exam" ${E.exam ? "checked" : ""}>เป็นการสอบ</label>`;
+  if (k === "terms") body = `<div class="sg-frow"><div class="sg-field"><label for="sgE_no">ภาคเรียนที่</label><select id="sgE_no" class="gf-in" data-sge="no" aria-describedby="sgE_noE" ${err.no ? 'aria-invalid="true"' : ""}>${[1, 2, 3].map((n) => `<option value="${n}" ${+E.no === n ? "selected" : ""}>${n}</option>`).join("")}</select>${fe("no")}</div><div class="sg-field"><span class="gf-l">ชื่อที่แสดง (ตั้งให้อัตโนมัติ)</span><p class="sg-auto" id="sgE_disp">${E.no}/${E.y}</p></div></div>
+    <div class="sg-frow">${inp("start", "วันเริ่ม", 'type="date"')}${inp("end", "วันสิ้นสุด", 'type="date"')}</div><p class="sg-help">${ic("lock-simple")}ปีการศึกษา ${E.y} แก้ไม่ได้ — ถ้าผิดปี ให้เพิ่มภาคเรียนใหม่</p>`;
+  if (k === "dev") body = inp("name", "ชื่อเครื่อง", 'aria-required="true"', "1–40 ตัวอักษร · Enter บันทึก · Esc ยกเลิก");
+  return `<div class="sg-ed" role="group" aria-label="${title}"><b>${title}</b>${E.fail ? `<p class="gf-err" role="alert" id="sgEdFail" tabindex="-1">${ic("cloud-slash")}${E.fail}</p>` : ""}${body}<div class="sg-acts"><button class="btn btn-primary" data-sg="edsave">${ic("check")}บันทึก</button><button class="btn" data-sg="edcancel">ยกเลิก</button></div></div>`; }
+SG_VIEW.worktypes = () => `<div class="sg-card">${sgKindList("worktypes")}</div><p class="sg-help">${sgScope("all")} ไม่มีการลบถาวร — ใช้ “เก็บ” แล้วนำกลับได้</p>`;
+SG_VIEW.appearance = () => { const L = LAYOUTS.find((x) => x[0] === S.layout), T = THEMES.find((x) => x[0] === S.theme), M = MODES.find((x) => x[0] === S.modePref);
+  const seg = (name, cur, opts) => `<div class="segm">${opts.map(([k, l]) => `<label><input type="radio" name="${name}" value="${k}" ${cur === k ? "checked" : ""}>${l}</label>`).join("")}</div>`;
+  return `<p class="sg-intro" style="margin:0">เลือกแล้วเห็นผลทันที · บันทึกอัตโนมัติ <span id="saveChip" aria-live="polite">${saveChip()}</span></p>
+    <div class="ap-grid" style="margin-top:0">
+      <aside class="ap-preview card" aria-label="ตัวอย่างสด"><div class="card-head"><span class="h-ic">${ic("eye")}</span><h2>ตัวอย่างสด</h2></div>
+        <div class="thumb" aria-hidden="true">${thumb(S.layout)}</div>
+        <div class="mini-hero" aria-hidden="true"><small>สวัสดีตอนสาย ${TEACHER}</small><div class="display"><span class="num">5</span> อย่างที่ต้องทำวันนี้</div></div>
+        <div class="mini-row" aria-hidden="true">${st("st-ok", "check-circle", "ส่งแล้ว")}${st("st-warn", "clock", "รอตรวจ")}${st("st-bad", "calendar-x", "ค้างส่ง")}</div>
+        <div class="mini-row"><button class="btn btn-primary" data-page="home">${ic("house")}ไปดูหน้าหลัก</button><button class="btn" data-toast="ตัวอย่างปุ่มรอง">${ic("copy")}ปุ่มรอง</button></div>
+        <p class="muted small" style="margin-top:var(--s3)">โครง ${L[1]} · ธีม${T[1]} · ${M[1]}</p></aside>
+      <div class="ap-opts">
+        <fieldset><legend>โครงหน้าหลัก ${sgScope("all")}</legend>${layoutChoices("ap-layout")}<button class="btn" data-act="sheet:layout" style="margin-top:var(--s2)">${ic("sliders-horizontal")}ปรับหน้าหลัก</button></fieldset>
+        <fieldset><legend>ธีม ${sgScope("all")}</legend><div class="choices">${THEMES.map(([k, l, d]) => `<label class="choice theme-choice" data-theme="${k}" data-mode="${mode()}"><input type="radio" name="ap-theme" value="${k}" ${S.theme === k ? "checked" : ""}>
+          <span class="swatches" aria-hidden="true"><i style="background:var(--hero-bg)"></i><i style="background:var(--accent)"></i><i style="background:var(--accent-2)"></i><i style="background:var(--surface-0)"></i></span>
+          <span class="txt"><span class="sample" aria-hidden="true">กขค 123</span><br><b>${l}</b><br><small>${d}</small></span>${used()}</label>`).join("")}</div></fieldset>
+        <fieldset><legend>สว่าง / มืด ${sgScope("all")}</legend><div class="segm">${MODES.map(([k, l, i]) => `<label><input type="radio" name="ap-mode" value="${k}" ${S.modePref === k ? "checked" : ""}>${ic(i)}${l}</label>`).join("")}</div></fieldset>
+        <fieldset><legend>ขนาดตัวอักษร ${sgScope("here")}</legend>${seg("sg-fsz", SET.fsz, [["s", "เล็ก"], ["m", "ปกติ"], ["l", "ใหญ่"], ["xl", "ใหญ่มาก"]])}</fieldset>
+        <fieldset><legend>ความหนาแน่น ${sgScope("here")}</legend>${seg("sg-dens", SET.dens, [["compact", "กระชับ"], ["normal", "ปกติ"], ["comfy", "โปร่ง"]])}</fieldset>
+        <div class="reset-row">${S.confirmReset ? `<span>คืนค่าหน้าตาเป็นค่าเริ่มต้น?</span><button class="btn" data-act="reset-no">ไม่</button><button class="btn btn-primary" data-act="reset-yes">ใช่ คืนค่า</button>` : `<button class="btn" data-act="reset">${ic("arrow-counter-clockwise")}คืนค่าเริ่มต้น</button><span class="muted small">ค่าเริ่มต้น: โครง ก · อบอุ่น · ตามเครื่อง</span>`}</div>
+      </div></div>`; };
+SG_VIEW.privacy = () => { const seg = (name, cur, opts, lab) => `<div class="segm" role="radiogroup" aria-label="${lab}">${opts.map(([k, l]) => `<label><input type="radio" name="${name}" value="${k}" ${cur === k ? "checked" : ""}>${l}</label>`).join("")}</div>`;
+  return `<p class="gf-note" style="margin:0">${ic("info")}<span><b>สำคัญ:</b> เสียงตอบรับตอนสแกนใช้ร่วมกันทุกเครื่อง แต่การซ่อนชื่อจำเฉพาะเครื่องนี้ — iPad ในห้องเรียนกับคอมที่บ้านตั้งต่างกันได้</span></p>
+  <div class="sg-card"><h3>${ic("eye-slash")}ซ่อนชื่อนักเรียน <span class="grow"></span><button class="btn" data-sg="hpall:1">เปิดทั้งหมด</button><button class="btn" data-sg="hpall:0">ปิดทั้งหมด</button></h3>
+    ${SG_HP.map(([p]) => sgSwRow("hp_" + p, "แสดงเลขที่แทนชื่อ", "here")).join("")}</div>
+  <div class="sg-card"><h3>${ic("projector-screen")}โหมดฉายจอ</h3>${sgSwRow("pjHide", "ใช้เมื่อสะท้อนจอขึ้นทีวี/โปรเจกเตอร์", "here")}
+    ${sgRow("ธีมตอนฉายจอ", "", seg("sg-pjt", SET.pjt, [["dark", "มืด"], ["light", "สว่าง"], ["app", "ตามแอป"]], "ธีมตอนฉายจอ"), "here", "บันทึกทันที")}
+    ${sgRow("ขนาดตัวอักษรตอนฉายจอ", "", seg("sg-pjs", SET.pjs, [["l", "ใหญ่"], ["xl", "ใหญ่มาก"]], "ขนาดตัวอักษรตอนฉายจอ"), "here", "บันทึกทันที")}</div>
+  <div class="sg-card"><h3>${ic("speaker-high")}เสียง</h3>${sgSwRow("sound", "ติ๊ด/ตื๊ด ตอนสแกน · ค่าเดียวกับหมวด “การสแกน”", "all", "บันทึกทันที · เลิกทำได้")}${sgSwRow("ting", "เสียงสั้น ๆ ตอนสุ่มได้ชื่อ (ค่าเริ่มต้น ปิด)", "here")}</div>`; };
+SG_VIEW.device = () => { const off = sgOff(), C = SET.chk;
+  const res = [["HTTPS", true, "ปลอดภัย"], ["เชื่อมต่อเซิร์ฟเวอร์", !off, off ? "ไม่ผ่าน — ออฟไลน์อยู่" : "เชื่อมต่อได้"], ["ใช้ออฟไลน์", true, "พร้อม"], ["ที่เก็บข้อมูลในเครื่อง", SET.persist ? true : "w", SET.persist ? "เก็บถาวรแล้ว" : "ยังไม่ถาวร — กด “ขอเก็บถาวร” ด้านล่าง"], ["นาฬิกาเครื่อง", true, "ตรงกับเซิร์ฟเวอร์"], ["งานค้างส่งในเครื่อง", true, "0 รายการ"]];
+  const out = C === "run" ? `<p class="sg-msg saving" role="status" style="padding:0 var(--s4) var(--s3)">${ic("circle-notch", "spin")}กำลังตรวจเครื่องนี้…</p>` : C === "done" ? `<ul class="sg-chk">${res.map(([a, ok, b]) => `<li>${ok === true ? st("st-ok", "check-circle", "ผ่าน") : ok === "w" ? st("st-warn", "warning", "เตือน") : st("st-bad", "x-circle", "ไม่ผ่าน")}<span class="t"><b>${a}</b> · ${b}</span></li>`).join("")}</ul><div class="sg-acts" style="padding:0 var(--s4) var(--s3)"><button class="btn" data-sg="chkcopy">${ic("copy")}คัดลอกผลตรวจ</button></div>` : "";
+  return `<div class="sg-card"><h3>${ic("stethoscope")}ตรวจเครื่องนี้ <span class="grow"></span>${sgScope("here")}</h3>${sgRow("ตรวจ 6 เรื่อง", "HTTPS · เซิร์ฟเวอร์ · ออฟไลน์ · ที่เก็บ · นาฬิกา · งานค้าง", `<button class="btn btn-primary" data-sg="chk" ${C === "run" ? "disabled" : ""}>${ic("stethoscope")}${C === "done" ? "ตรวจอีกครั้ง" : "ตรวจเครื่องนี้"}</button>`, "", "")}<div id="sgChkOut">${out}</div></div>
+  <div class="sg-card">${sgRow("ใช้ออฟไลน์", "เปิดแอปและสแกนได้แม้ไม่มีเน็ต · ส่งข้อมูลเองเมื่อออนไลน์", off ? st("st-warn", "wifi-slash", "กำลังใช้ออฟไลน์") : st("st-ok", "check-circle", "พร้อม"), "here", "")}
+    ${sgRow("ที่เก็บข้อมูลในเครื่อง", "Safari อาจลบงานค้างหลังประมาณ 7 วัน ถ้าไม่ได้เพิ่มแอปไปหน้าจอโฮม", SET.persist ? st("st-ok", "check-circle", "เก็บถาวรแล้ว") : `${st("st-warn", "warning", "ยังไม่ถาวร")}<button class="btn" data-sg="persist">${ic("lock-simple")}ขอเก็บถาวร</button>`, "here", "")}</div>`; };
+SG_VIEW.devices = () => { const D = SET.data, mail = SET.sstate === "many" ? "kru.somsri.tuayang.rongrian.tuayangwittaya.2569@example.com" : "kru@example.com";
+  const pw = SET.pw ? `<div class="sg-ed sg-pw" role="group" aria-labelledby="sgPwH" style="margin:0 var(--s4) var(--s3);width:auto"><b id="sgPwH">เปลี่ยนรหัสผ่าน</b>${[["a", "รหัสผ่านเดิม", "current-password"], ["b", "รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)", "new-password"], ["c", "ยืนยันรหัสผ่านใหม่", "new-password"]].map(([f, l, ac]) => `<div class="sg-field"><label for="sgPw${f}">${l}</label><input id="sgPw${f}" class="gf-in sg-pwin" type="password" autocomplete="${ac}" value="" aria-describedby="sgPw${f}E"><p class="sg-ferr" id="sgPw${f}E" role="alert"></p></div>`).join("")}
+    <button class="btn btn-ghost" id="sgPwShow" data-sg="pwshow" aria-pressed="false" style="align-self:flex-start">${ic("eye")}แสดงรหัสผ่าน</button><p class="gf-err" id="sgPwFail" role="alert" hidden></p><div class="sg-acts"><button class="btn btn-primary" data-sg="pwsave">${ic("check")}เปลี่ยนรหัสผ่าน</button><button class="btn" data-sg="pwcancel">ยกเลิก</button></div></div>` : "";
+  const devs = SET.devErr ? `<div class="sg-pad sg-errc" role="alert">${ic("cloud-slash")}<div><b>โหลดรายการเครื่องไม่สำเร็จ</b><p class="sec small">ตรวจเน็ตแล้วลองอีกครั้ง</p><button class="btn btn-primary" data-sg="devretry">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div></div>`
+    : `<ul class="sg-li">${D.devices.map((x) => (SET.ed && SET.ed.kind === "dev" && SET.ed.id === x.id ? `<li>${sgEdForm()}</li>` : `<li><span class="nm"><span>${x.name}</span>${x.me ? st("st-ok", "device-tablet", "เครื่องนี้") : ""}<small>${x.ua} · ${x.last}</small></span><span class="sg-acts"><button class="btn" data-sg="ed:dev:${x.id}" aria-label="เปลี่ยนชื่อเครื่อง ${x.name}">${ic("pencil-simple")}เปลี่ยนชื่อ</button>${x.me ? "" : `<button class="btn btn-danger-o" data-sg="signout:${x.id}" aria-label="ออกจากระบบ ${x.name}">${ic("sign-out")}ออกจากระบบ</button>`}</span></li>`)).join("")}</ul>`;
+  return `<div class="sg-card"><h3>${ic("user-circle")}บัญชี <span class="grow"></span>${sgScope("all")}</h3>
+    ${sgRow("อีเมลเข้าสู่ระบบ", "อ่านอย่างเดียว · เปลี่ยนอีเมลในแอปไม่ได้ — แจ้งผู้ดูแลระบบ", `<span class="sg-mail">${mail}</span>`, "", "")}
+    ${sgRow("รหัสผ่าน", "ไม่แสดงรหัสเดิม · ไม่มี PIN ของครู · ลืมรหัสผ่าน = ให้ผู้ดูแลระบบรีเซ็ต", SET.pw ? "" : `<button class="btn" data-sg="pw">${ic("password")}เปลี่ยนรหัสผ่าน</button>`, "", "", SET.pwOk ? `<p class="sg-msg ok" role="status">${ic("check-circle")}${SET.pwOk}</p>` : "")}${pw}</div>
+    <div class="sg-card"><h3>${ic("devices")}อุปกรณ์ที่เข้าสู่ระบบ</h3>${devs}</div>
+    <div class="sg-card">${sgRow(`ออกจากระบบเครื่องนี้ ${sgTag("P5", "ปุ่มเดียวกับเมนูซ้าย ให้ค้นเจอในตั้งค่า")}`, "ต้องเข้าสู่ระบบใหม่ด้วยอีเมลและรหัสผ่าน", `<button class="btn" data-sg="logout">${ic("sign-out")}ออกจากระบบ</button>`, "here", "")}</div>`; };
+SG_VIEW.backup = () => `<div class="sg-card"><h3>${ic("cloud-arrow-up")}สำรองข้อมูล <span class="grow"></span>${sgScope("all")}</h3>
+    <div class="sg-row"><div class="sg-tile ${SET.bkOld ? "warn" : ""}" style="flex:1 1 100%"><span class="h">${ic(SET.bkOld ? "warning" : "check-circle")}สำรองล่าสุด</span><b>${SET.bk}</b><small>${SET.bkOld ? "เกิน 7 วันแล้ว — ควรสำรองวันนี้" : "เก็บไฟล์ไว้ในที่ที่มีรหัสผ่าน"}</small></div></div>
+    ${sgRow("ดาวน์โหลดไฟล์สำรอง (JSON)", "ทั้งระบบในไฟล์เดียว · มีข้อมูลส่วนบุคคลของนักเรียน", `<button class="btn btn-primary" data-sg="bk" ${sgOffAttr("sgBkWhy")}>${ic("download-simple")}ดาวน์โหลดไฟล์สำรอง</button>${sgNeedOn("sgBkWhy")}`, "", "")}
+    ${sgRow("กู้คืนจากไฟล์สำรอง", "ตรวจไฟล์ → สรุป → ยืนยัน · ถ้าล้มเหลวจะไม่มีอะไรเปลี่ยน · ระบบสำรองข้อมูลปัจจุบันให้อัตโนมัติก่อน", `<button class="btn" data-sg="rst" ${sgOffAttr("sgRsWhy")}>${ic("upload-simple")}กู้คืนจากไฟล์…</button>${sgNeedOn("sgRsWhy")}`, "", "")}
+    ${SET.sstate === "loaderr" ? `<div class="sg-row"><p class="gf-err" role="alert" style="flex:1">${ic("cloud-slash")}โหลดสถานะงานกู้คืนไม่สำเร็จ</p><button class="btn" data-sg="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div>` : ""}</div>
+  <div class="sg-card">${sgRow(`ส่งออกเป็น Excel ${sgTag("P7", "ลิงก์ไปหน้ารายงาน")}`, "ไฟล์สำรองใช้กู้คืนเท่านั้น · ส่งออกคะแนน/เช็คชื่อเป็น Excel อยู่ที่หน้ารายงาน", `<button class="btn" data-page="reports">${ic("microsoft-excel-logo")}ส่งออกรายงานที่ รายงาน ›</button>`, "", "")}</div>
+  <p class="sg-help">${ic("info")}ปุ่มล้างข้อมูลย้ายไปอยู่ที่ “โซนอันตราย” ท้ายรายการหมวด — ไม่อยู่ข้างปุ่มดาวน์โหลดแล้ว</p>`;
+const SG_HIST = () => { const n = (c, no) => `${c} เลขที่ ${no} ${S.hide ? "" : stName(c === "ป.6/1" ? "c61" : c === "ป.6/2" ? "c62" : "c51", no).join(" ")}`;
+  const H = [["11 พ.ย. 10:41", "submit", `สแกนส่ง ใบงานที่ 5 · ${n("ป.6/1", 3)}`, "iPad ห้องเรียน"], ["11 พ.ย. 08:32", "att", "เช็คชื่อ ป.6/1 · มา 7 ลา 1", "iPad ห้องเรียน"], ["10 พ.ย. 16:20", "submit", `ให้คะแนน แบบฝึกหัด 3.2 · ${n("ป.6/1", 5)}`, "คอมที่บ้าน"],
+    ["10 พ.ย. 09:05", "student", `แก้ข้อมูลนักเรียน · ${n("ป.6/2", 12)}`, "คอมที่บ้าน"], ["9 พ.ย. 14:10", "qr", `ออก QR ใหม่ · ${n("ป.6/1", 2)}`, "iPad ห้องเรียน"], ["9 พ.ย. 08:30", "att", "เช็คชื่อ ป.6/2 · มา 28 สาย 2", "iPad ห้องเรียน"],
+    ["8 พ.ย. 11:00", "student", `เพิ่มนักเรียน · ${n("ป.5/1", 28)}`, "คอมที่บ้าน"], ["7 พ.ย. 15:45", "submit", `ยกเลิกการส่ง การบ้าน 2 · ${n("ป.6/2", 7)}`, "มือถือ"]];
+  return SET.sstate === "many" ? Array.from({ length: 5 }, () => H).flat() : H; };
+const SG_HK = { submit: ["ส่งงาน", "tray-arrow-down"], att: ["เช็คชื่อ", "user-check"], student: ["นักเรียน", "users-three"], qr: ["บัตร QR", "qr-code"] };
+/* resume 1 (after Gate 2): P2 P4 P9 P10 + SE-S17 */
+const SG_TODAY = "2026-11-11";
+function sgTodo() { const D = SET.data, cur = D.terms.find((t) => t.cur), it = [];
+  if (!cur) it.push(["calendar-blank", "ยังไม่ได้ตั้งภาคเรียน", "go:catalog:terms", "ตั้งภาคเรียน"]);
+  else if (cur.end && cur.end < SG_TODAY) it.push(["calendar-x", `ภาคเรียน ${cur.no}/${cur.y} สิ้นสุดแล้ว ${Math.round((Date.parse(SG_TODAY) - Date.parse(cur.end)) / 864e5)} วัน`, "go:catalog:terms", "เริ่มภาคเรียนใหม่"]);
+  if (SET.bkOld) it.push(["cloud-warning", `สำรองข้อมูลล่าสุด ${SET.bk.split(" ").slice(0, 3).join(" ")} — เกิน 7 วัน`, "go:backup", "สำรองเลย"]);
+  if (!it.length) return "";
+  return `<div class="banner sg-todo" role="region" aria-label="ต้องทำ" style="margin:0">${ic("list-checks")}<div><b>ต้องทำ (${it.length})</b> ${sgTag("P10", "แถบต้องทำบนภาพรวม")}<ul class="sg-tdl">${it.map(([i, t, go, b]) => `<li>${ic(i)}<span>${t}</span><button class="btn" data-sg="${go}">${b}${ic("caret-right")}</button></li>`).join("")}</ul></div></div>`; }
+const sgDev0 = SG_VIEW.device;
+SG_VIEW.device = () => sgDev0() + `<div class="sg-card">${sgRow(`เกี่ยวกับแอป ${sgTag("P4", "ชื่อแอป สถานะติดตั้ง วิธีเพิ่มไปหน้าจอโฮม — ไม่แสดงเลขเวอร์ชันเพราะยังไม่มีที่มา")}`, "“งานครบ” · เปิดในเบราว์เซอร์ (ยังไม่ได้ติดตั้ง) · บน iPad: แตะปุ่มแชร์ใน Safari → “เพิ่มไปยังหน้าจอโฮม” แล้วเปิดจากไอคอน จะใช้ออฟไลน์ได้ดีขึ้นและ Safari ไม่ลบข้อมูลในเครื่อง", st("st-warn", "browser", "ยังไม่ได้ติดตั้ง"), "here", "")}
+  ${sgRow(`ล้างค่าที่จำไว้ในเครื่องนี้ ${sgTag("P9", "คืนค่าเครื่องนี้ แตะเฉพาะค่าของงานครบในเครื่อง")}`, "คืนค่าขนาดตัวอักษร ความหนาแน่น ซ่อนชื่อ ฉายจอ เสียงติ๊ง เป็นค่าเริ่มต้น · ไม่ลบข้อมูลบนเซิร์ฟเวอร์", `<button class="btn btn-danger-o" data-sg="local">${ic("arrow-counter-clockwise")}ล้างค่าที่จำไว้…</button>`, "here", "")}</div>`;
+const sgHist0 = () => SG_VIEW.history0();
+SG_VIEW.history = () => (S.hide ? `<p class="gf-note" style="margin:0">${ic("eye-slash")}<span>ซ่อนชื่ออยู่ — ประวัติแสดง “เลขที่ n” แทนชื่อนักเรียน ${sgTag("P2", "ประวัติซ่อนชื่อตามสวิตช์ซ่อนชื่อ")}</span></p>` : "") + sgHist0();
+SG_VIEW.history0 = () => { const L = SG_HIST().filter((h) => SET.hf === "all" || h[1] === SET.hf);
+  return `<div class="gf-chips" role="group" aria-label="กรองประวัติ">${[["all", "ทั้งหมด"], ...Object.entries(SG_HK).map(([k, v]) => [k, v[0]])].map(([k, l]) => `<button class="gf-chip" aria-pressed="${SET.hf === k}" data-sg="hf:${k}">${l}</button>`).join("")}</div>
+  <div class="sg-card"><h3>${ic("clock-counter-clockwise")}${L.length} รายการล่าสุด <span class="grow"></span>${sgScope("all")}<span class="sg-how">อ่านอย่างเดียว</span></h3><ul class="sg-hist">${L.map(([t, k, x, d]) => `<li><span class="num">${t}</span>${st("st-mute", SG_HK[k][1], SG_HK[k][0])}<span class="t">${x}<small>${d}</small></span></li>`).join("")}</ul></div>`; };
+SG_VIEW.reset = () => `<div class="sg-card sg-zone" role="region" aria-labelledby="sgZh"><h3 id="sgZh">${ic("warning-octagon")}โซนอันตราย — ย้อนกลับไม่ได้</h3>
+    ${sgRow("ล้างข้อมูลทดลอง", "ลบห้อง นักเรียน วิชา ภาคเรียน งาน คะแนน เช็คชื่อ ประวัติ · เก็บบัญชีและการตั้งค่าไว้", `<button class="btn btn-danger-o" data-sg="reset:trial" ${sgOffAttr("sgR1Why")}>${ic("trash")}ล้างข้อมูล…</button>${sgNeedOn("sgR1Why")}`, "all", "")}
+    ${sgRow("ล้างทั้งหมด", "ลบทุกอย่างรวมบัญชีครู แล้วกลับไปหน้าตั้งบัญชี", `<button class="btn btn-danger-o" data-sg="reset:all" ${sgOffAttr("sgR2Why")}>${ic("trash")}ล้างทั้งหมด…</button>${sgNeedOn("sgR2Why")}`, "all", "")}</div>
+  <p class="gf-note" style="margin:0">${ic("info")}<span>แนะนำให้ดาวน์โหลดไฟล์สำรองก่อนทุกครั้ง — อยู่ที่หมวด “สำรองและกู้คืน” · ทั้งสองแบบต้องยืนยัน 2 ขั้น (ตรวจสิ่งที่จะหาย → รหัสผ่าน + พิมพ์คำยืนยัน)</span></p>`;
+/* dialogs (alertdialog · focus starts at ยกเลิก / password · Esc = cancel · focus trap) */
+function sgSheet() {
+  const p = S.sheet.split(":"), kk = p[0], D = SET.data, center = S.device === "desk" || S.device === "ipadL" ? "gb-center" : "";
+  let h = "", body = "", role = "alertdialog", x = `<button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button>`;
+  const err = SET.cf ? `<p class="gf-err" role="alert">${ic("cloud-slash")}${SET.cf}</p>` : "";
+  const no = (l = "ยกเลิก") => `<button class="btn" id="sgNo" data-act="close">${l}</button>`;
+  const foot = (...b) => `<div class="gd-foot">${err}${b.join("")}</div>`;
+  if (kk === "sg-arch") { const kind = p[1], it = sgList(kind).find((y) => y.id === p[2]) || { name: "—", n: 0 };
+    h = `เก็บ${SG_KL[kind]} ${it.name}?`;
+    body = `<p id="sgDd" style="margin:0">${kind === "classes" ? `ห้องจะหายจากรายการและหน้าเช็คชื่อ/สแกน · นักเรียน ${it.n} คน คะแนนและเช็คชื่อยังอยู่ · นำกลับได้` : kind === "subjects" ? "งานและคะแนนเดิมยังอยู่ · จะไม่ปรากฏตอนสร้างงานใหม่ · นำกลับได้" : "งานเดิมที่ใช้ประเภทนี้ยังอยู่ · จะไม่ปรากฏตอนสร้างงานใหม่ · นำกลับได้"}</p>${foot(no(), `<button class="btn btn-danger" data-sg="archyes:${kind}:${p[2]}">${ic("archive")}เก็บ${SG_KL[kind]}</button>`)}`; }
+  if (kk === "sg-cur") { const t = D.terms.find((y) => y.id === p[1]); h = `ตั้ง ${t.no}/${t.y} เป็นภาคเรียนปัจจุบัน?`;
+    body = `<p id="sgDd" style="margin:0">ตัวเลขหน้าหลักและรายงานจะเปลี่ยนไปใช้ภาคเรียนนี้ · งานและคะแนนเดิมยังอยู่ครบ</p>${foot(no(), `<button class="btn btn-primary" data-sg="curyes:${t.id}">ตั้งเป็นปัจจุบัน</button>`)}`; }
+  if (kk === "sg-term") { const N = SET.nt; h = "เริ่มภาคเรียนใหม่";
+    body = `<p class="gf-err" id="sgDd" style="margin:0">${ic("warning")}ย้อนกลับเองไม่ได้ — ข้อมูลปีเก่ายังอยู่ ดูย้อนหลังได้ที่หน้ารายงาน</p>
+      <div class="sg-frow"><div class="sg-field"><label for="sgNtY">ปีการศึกษา</label><select id="sgNtY" class="gf-in" data-sgnt="y">${[2569, 2570].map((y) => `<option ${+N.y === y ? "selected" : ""}>${y}</option>`).join("")}</select></div><div class="sg-field"><label for="sgNtN">ภาคเรียนที่</label><select id="sgNtN" class="gf-in" data-sgnt="no">${[1, 2, 3].map((y) => `<option ${+N.no === y ? "selected" : ""}>${y}</option>`).join("")}</select></div><div class="sg-field"><label for="sgNtD">วันเริ่ม</label><input id="sgNtD" type="date" class="gf-in" value="2027-05-16"></div></div>
+      <fieldset style="border:0;margin:0;padding:0"><legend class="gf-l">ห้องที่เปิดต่อในปีใหม่ (ชื่อเดิม)</legend>${D.classes.filter((c) => !c.arch).slice(0, 6).map((c) => `<label class="sg-check"><input type="checkbox" checked>${c.name}</label>`).join("")}</fieldset>
+      <p class="gf-note" style="margin:0">${ic("graduation-cap")}<span>ข้ามปี: นักเรียน ${D.classes.filter((c) => !c.arch).reduce((a, c) => a + c.n, 0)} คนในปี 2569 จะเป็น “จบปีการศึกษา” · ห้องปีเก่าถูกเก็บ (อ่านอย่างเดียว)</span></p>
+      <label class="sg-check"><input type="checkbox" checked>ปิดรับงานที่ยังค้างของภาคเรียนเดิม</label>
+      <label class="sg-check"><input type="checkbox" id="sgNtOk" ${N.ok ? "checked" : ""}>ตรวจแล้ว — เข้าใจว่าย้อนกลับเองไม่ได้</label>
+      ${foot(no(), `<button class="btn btn-danger" id="sgNtGo" data-sg="ntgo" ${N.ok ? "" : "disabled"}>${ic("calendar-plus")}เริ่มภาคเรียนใหม่</button>`)}`; }
+  if (kk === "sg-signout") { const d = D.devices.find((y) => y.id === p[1]); h = `ออกจากระบบ ${d.name}?`;
+    body = `<p id="sgDd" style="margin:0">เครื่องนั้นต้องเข้าสู่ระบบใหม่ด้วยอีเมลและรหัสผ่าน · ข้อมูลในระบบไม่หาย</p>${foot(no(), `<button class="btn btn-danger" data-sg="soyes:${d.id}">${ic("sign-out")}ออกจากระบบเครื่องนั้น</button>`)}`; }
+  if (kk === "sg-logout") { h = "ออกจากระบบเลยไหม?"; body = `<p id="sgDd" style="margin:0">ต้องเข้าสู่ระบบใหม่ด้วยอีเมลและรหัสผ่านในเครื่องนี้</p>${foot(no(), `<button class="btn btn-primary" data-sg="loyes">${ic("sign-out")}ออกจากระบบ</button>`)}`; }
+  if (kk === "sg-bk") { h = "ก่อนดาวน์โหลดไฟล์สำรอง";
+    body = `<div class="gf-note" id="sgDd">${ic("shield-warning")}<span>ไฟล์สำรองมีข้อมูลส่วนบุคคลของนักเรียน (ผู้เยาว์) และไม่ได้เข้ารหัส · เก็บในเครื่องหรือไดรฟ์ที่มีรหัสผ่าน · อย่าส่งทาง LINE หรืออีเมล · ถ้าไฟล์หลุด ให้ออก QR ใหม่ที่หน้านักเรียน</span></div>${foot(no(), `<button class="btn btn-primary" data-sg="bkyes">${ic("download-simple")}เข้าใจแล้ว ดาวน์โหลด</button>`)}`; }
+  if (kk === "sg-rst") { const R = SET.rst; h = "กู้คืนจากไฟล์สำรอง"; if (R.st === "run") x = "";
+    const pick = `<div class="sg-acts"><button class="btn" data-sg="rfile:ok">${ic("file")}เลือกไฟล์ (ตัวอย่าง: สำรอง-3-พ.ย..json)</button><button class="btn btn-ghost" data-sg="rfile:bad">ลองไฟล์ที่เสีย</button></div>`;
+    body = R.st === "pick" ? `<p id="sgDd" style="margin:0">เลือกไฟล์ .json ที่ดาวน์โหลดจากงานครบ · ระบบตรวจไฟล์ก่อน ยังไม่เปลี่ยนอะไร</p>${pick}${foot(no())}`
+      : R.st === "checking" ? `<p class="sx-chk" role="status" id="sgDd">${ic("circle-notch", "spin")}กำลังตรวจไฟล์…</p>${foot(no())}`
+      : R.st === "bad" ? `<p class="gf-err" role="alert" id="sgDd">${ic("x-circle")}ไฟล์นี้ไม่ใช่ไฟล์สำรองของงานครบ หรือไฟล์เสีย — ไม่มีอะไรเปลี่ยน</p>${pick}${foot(no())}`
+      : R.st === "run" ? `<p class="sx-chk" role="status" id="sgDd">${ic("circle-notch", "spin")}กำลังกู้คืน… อย่าปิดหน้านี้ (ปิดหน้าต่างนี้ไม่ได้ระหว่างทำ)</p>`
+      : `<div role="status" id="sgDd"><dl class="rp-dl">${[["สำรองเมื่อ", "3 พ.ย. 2569"], ["ห้อง", 3], ["นักเรียน", 66], ["งาน", 24]].map(([l, v]) => `<div><dt>${l}</dt><dd>${v}</dd></div>`).join("")}</dl></div>
+        <p class="gf-note" style="margin:0">${ic("info")}<span>ระบบจะสำรองข้อมูลปัจจุบันให้อัตโนมัติก่อนกู้คืน · ถ้าล้มเหลวกลางทาง ข้อมูลจะไม่เปลี่ยน</span></p>
+        <label class="sg-check"><input type="checkbox" id="sgRstOk" ${R.ok ? "checked" : ""}>เข้าใจว่าข้อมูลทั้งหมดตอนนี้จะถูกแทนที่ด้วยไฟล์นี้</label>${foot(no(), `<button class="btn btn-danger" id="sgRstGo" data-sg="rstgo" ${R.ok ? "" : "disabled"}>${ic("upload-simple")}กู้คืนข้อมูล</button>`)}`; }
+  if (kk === "sg-reset") { const R = SET.rs, all = R.kind === "all", phrase = all ? "ล้างทั้งหมด" : "ล้างข้อมูล"; h = all ? "ล้างทั้งหมด?" : "ล้างข้อมูลทดลอง?";
+    body = R.step === 1 ? `<p class="sg-step">ขั้นที่ 1 จาก 2 · ตรวจสิ่งที่จะหายไป</p><div class="sg-two" id="sgDd"><div><h3>${ic("trash")}จะถูกลบ</h3><ul><li>ห้อง นักเรียน วิชา ภาคเรียน</li><li>งาน คะแนน เช็คชื่อ</li><li>ประวัติการแก้ไข</li>${all ? "<li>บัญชีครูและการตั้งค่า</li>" : ""}</ul></div><div><h3>${ic("check-circle")}จะเก็บไว้</h3><ul>${all ? "<li>ไม่มี — กลับไปหน้าตั้งบัญชี</li>" : "<li>บัญชีครู (อีเมล รหัสผ่าน)</li><li>การตั้งค่าทั้งหมด</li>"}</ul></div></div>
+        <label class="sg-check"><input type="checkbox" id="sgRsBk" ${R.bk ? "checked" : ""}>ดาวน์โหลดไฟล์สำรองก่อนลบ</label>${foot(no(), `<button class="btn btn-danger-o" data-sg="rsnext">ต่อไป ${ic("caret-right")}</button>`)}`
+      : `<p class="sg-step">ขั้นที่ 2 จาก 2 · ยืนยันตัวตน</p><p id="sgDd" style="margin:0">ย้อนกลับไม่ได้${R.bk ? " · จะดาวน์โหลดไฟล์สำรองก่อนลบ" : ""}</p>
+        <div class="sg-field"><label for="sgRsPw">รหัสผ่านของคุณ</label><input id="sgRsPw" class="gf-in" type="password" autocomplete="current-password" value=""></div>
+        <div class="sg-field"><label for="sgRsPh">พิมพ์ “${phrase}” เพื่อยืนยัน</label><input id="sgRsPh" class="gf-in" autocomplete="off" value="" aria-describedby="sgRsPhH"><p class="sg-help" id="sgRsPhH">ปุ่มสีแดงจะกดได้เมื่อใส่รหัสผ่านและพิมพ์ตรงทุกตัว</p></div>
+        ${foot(`<button class="btn" data-sg="rsback">${ic("caret-left")}ย้อนกลับ</button>`, no(), `<button class="btn btn-danger" id="sgRsGo" data-sg="rsgo" disabled>${ic("trash")}${phrase}</button>`)}`; }
+  if (kk === "sg-cards") { role = "dialog"; h = "ปรับการ์ดภาพรวม";
+    body = `<p class="sec small" style="margin:0">ซ่อน/แสดงการ์ดบนหมวดภาพรวม · ${sgScope("all")}</p>${["device", "term", "backup", "dev", "edit"].map((c) => `<div class="sheet-row" style="flex-wrap:wrap"><span class="t"><b>${SG_SWL["card_" + c]}</b></span>${sgSw("card_" + c)}${sgMsg("card_" + c)}</div>`).join("")}<button class="btn btn-primary" data-act="close">เสร็จ</button>`; }
+  if (kk === "sg-local") { h = "ล้างค่าที่จำไว้ในเครื่องนี้?";
+    body = `<p id="sgDd" style="margin:0">ขนาดตัวอักษร ความหนาแน่น ซ่อนชื่อทุกหน้า ค่าฉายจอ และเสียงติ๊ง จะกลับเป็นค่าเริ่มต้นเฉพาะเครื่องนี้ · <b>ไม่ลบข้อมูลบนเซิร์ฟเวอร์</b> (ห้อง นักเรียน คะแนน บัญชี ยังอยู่ครบ)</p>${foot(no(), `<button class="btn btn-danger" data-sg="localyes">${ic("arrow-counter-clockwise")}ล้างค่าในเครื่องนี้</button>`)}`; }
+  if (kk === "sg-leave") { h = "ยังไม่ได้บันทึก";
+    body = `<p id="sgDd" style="margin:0">มีการตั้งค่าที่แก้ไขแล้ว ${sgDirty().length} รายการ ยังไม่ได้บันทึก · ออกแล้วค่าที่แก้จะหายไป</p>${foot(`<button class="btn btn-danger" data-sg="leaveyes">ออกโดยไม่บันทึก</button>`, `<button class="btn btn-primary" id="sgStay" data-act="close">อยู่ต่อ</button>`)}`; }
+  if (kk === "sg-tpick") { role = "dialog"; h = "เลือกภาคเรียน";
+    body = `${D.terms.filter((t) => t.y === 2569).map((t) => `<button class="btn rp-sw" style="justify-content:flex-start" aria-pressed="${!!t.cur}" data-sg="tp:${t.id}">${ic(t.cur ? "check-circle" : "circle")}${t.no}/${t.y}${t.cur ? " · ปัจจุบัน" : ""}</button>`).join("") || `<p class="sec">ยังไม่ได้ตั้งภาคเรียน</p>`}
+      <button class="btn btn-ghost" style="justify-content:flex-start" data-sg="go:catalog:terms">${ic("gear-six")}จัดการภาคเรียน ›</button>${sgTag("P6", "ลิงก์จากตัวเลือกภาคเรียนไปตั้งค่า")}`; }
+  return `<div class="scrim ${role === "dialog" ? "" : center}"><div class="sheet sg-dlg ${S.device === "phone" ? "ph" : ""}" role="${role}" aria-modal="true" aria-labelledby="sh-h" ${body.includes('id="sgDd"') ? 'aria-describedby="sgDd"' : ""}><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2>${x}</div>${body}</div></div>`;
+}
+function sgOpen(k, opener, focus) { SET.cf = ""; S.sheet = k; if (opener) S.opener = opener; render(true); rpFocus(focus || "#sgNo", "#device .sg-dlg button"); }
+function sgClose(msg, sel) { S.sheet = null; SET.cf = ""; if (msg) { SET.live = msg; toast(msg); } render(true); rpFocus(...(sel ? [sel] : []), '[role="tab"][aria-selected="true"]', "#sgSecH"); }
+function sgRe(...sels) { render(true); if (sels.length) rpFocus(...sels); }
+function sgAct(v) {
+  const p = v.split(":"), k = p[0], a = p[1] || "";
+  switch (k) {
+    case "local": sgOpen("sg-local", '[data-sg="local"]'); return;
+    case "localyes": Object.assign(SET, { fsz: "m", dens: "normal", hp: {}, pjt: "dark", pjs: "l" }); SET.sw.pjHide = true; SET.sw.ting = false; S.hide = false; STU.hide = false; sgClose("ล้างค่าที่จำไว้ในเครื่องนี้แล้ว · ข้อมูลบนเซิร์ฟเวอร์ไม่เปลี่ยน", '[data-sg="local"]'); return;
+    case "leaveyes": { const L = SET.leave; SET.leave = null; SET.f = { ...SET.v }; SET.saveErr = ""; S.sheet = null; SET.live = "ออกโดยไม่บันทึก — กลับเป็นค่าเดิม";
+      if (L && L.page) { S.page = L.page; render(true); document.getElementById("appMain").scrollTop = 0; } else if (L) sgAct(L.sg); return; }
+    case "sec": if (sgDirty().length && a !== SET.sec && ["general", "time"].includes(SET.sec)) { SET.leave = { sg: v }; sgOpen("sg-leave", `[data-sg="${v}"]`, "#sgStay"); return; }
+      Object.assign(SET, { sec: a, mlist: false, ed: null, saved: "", swMsg: null, pw: false, pwOk: "", hid: null, unErr: null }); render(true); document.getElementById("appMain").scrollTop = 0; rpFocus("#sgSecH"); return;
+    case "list": SET.mlist = true; SET.ed = null; sgRe(`[data-sg="sec:${SET.sec}"]`); return;
+    case "go": S.page = "settings"; S.sheet = null; Object.assign(SET, { sec: a, mlist: false, ed: null, saved: "" }); if (p[2]) SET.tab = p[2]; if (a === "catalog") SET.year = 2569; render(true); document.getElementById("appMain").scrollTop = 0; rpFocus("#sgSecH"); return;
+    case "retry": sgScenario("normal"); SET.live = "โหลดการตั้งค่าแล้ว"; sgRe("#sgSecH"); return;
+    case "devretry": SET.devErr = false; SET.live = "โหลดรายการเครื่องแล้ว"; sgRe("#sgSecH"); return;
+    case "save": { if (!sgDirty().length || SET.saving) return; SET.saving = true; SET.saveErr = ""; SET.live = "กำลังบันทึก…"; sgRe('[data-sg="discard"]');
+      clearTimeout(SET.timer); SET.timer = setTimeout(() => { SET.saving = false;
+        if (sgFails()) { SET.saveErr = sgOff() ? "ออฟไลน์ — บันทึกไม่ได้ ค่าที่พิมพ์ยังอยู่ในช่อง · ลองอีกครั้งเมื่อออนไลน์" : SG_FAIL; SET.live = SET.saveErr; }
+        else { SET.v = { ...SET.f }; SET.saved = "บันทึกการตั้งค่าแล้ว"; SET.live = "บันทึกการตั้งค่าแล้ว"; toast("บันทึกแล้ว"); }
+        if (S.page === "settings") sgRe(SET.saveErr ? '[data-sg="save"]' : "#sgSecH"); }, 600); return; }
+    case "discard": SET.f = { ...SET.v }; SET.saveErr = ""; SET.live = "ยกเลิกการแก้แล้ว — กลับเป็นค่าเดิม"; sgRe("#sgSecH"); return;
+    case "cards": sgOpen("sg-cards", '[data-sg="cards"]', '#device .sg-dlg [role="switch"]'); return;
+    case "sw": { const sel = `[data-sg="sw:${a}"]`, old = sgSwGet(a), nv = !old; sgSwSet(a, nv);
+      if (!sgSrvSw(a)) { SET.swMsg = null; SET.live = `${SG_SWL[a]}: ${nv ? "เปิด" : "ปิด"} · เครื่องนี้`; sgRe(sel); return; }
+      SET.swMsg = { k: a, kind: "saving" }; sgRe(sel); clearTimeout(SET.timer);
+      SET.timer = setTimeout(() => { if (sgFails()) { sgSwSet(a, old); const t = sgOff() ? "ออฟไลน์ — ยังเป็นค่าเดิม เปลี่ยนได้เมื่อออนไลน์" : "บันทึกไม่สำเร็จ — ยังเป็นค่าเดิม"; SET.swMsg = { k: a, kind: "bad", t }; SET.live = t; }
+        else { const t = `บันทึกแล้ว · ${SG_SWL[a]}: ${nv ? "เปิด" : "ปิด"}`; SET.swMsg = { k: a, kind: "ok", t }; SET.live = t; }
+        if (S.page === "settings" || (S.sheet || "").startsWith("sg-")) { const ae = document.activeElement, s2 = ae && ae.dataset && ae.dataset.sg ? `[data-sg="${ae.dataset.sg}"]` : sel; sgRe(s2); } }, 500); return; }
+    case "swundo": sgSwSet(a, !sgSwGet(a)); SET.swMsg = null; SET.live = `เลิกทำแล้ว · ${SG_SWL[a]}: ${sgSwGet(a) ? "เปิด" : "ปิด"}`; sgRe(`[data-sg="sw:${a}"]`); return;
+    case "hpall": SG_HP.forEach(([pg]) => sgSwSet("hp_" + pg, a === "1")); SET.live = a === "1" ? "ซ่อนชื่อทุกหน้าแล้ว · เครื่องนี้" : "แสดงชื่อทุกหน้าแล้ว · เครื่องนี้"; sgRe(`[data-sg="hpall:${a}"]`); return;
+    case "tab": SET.tab = a; SET.ed = null; SET.unErr = null; sgRe(`#sgT_${a}`); return;
+    case "year": SET.year = +a; SET.ed = null; sgRe(`[data-sg="year:${a}"]`); return;
+    case "mv": { const kind = a, L = sgList(kind), live = L.filter((x) => !x.arch), i = live.findIndex((x) => x.id === p[2]), j = i + +p[3], it = live[i];
+      if (sgFails()) { const t = `จัดลำดับ${SG_KL[kind]}ไม่สำเร็จ — ลำดับเดิมยังอยู่`; SET.live = t; toast(t); return; }
+      if (j < 0 || j >= live.length) return; const ai = L.indexOf(live[i]), aj = L.indexOf(live[j]); [L[ai], L[aj]] = [L[aj], L[ai]];
+      SET.live = `ย้าย ${it.name} ไปลำดับที่ ${j + 1}`; sgRe(`[data-sg="${v}"]:not(:disabled)`, `[data-sg="mv:${kind}:${it.id}:${-p[3]}"]`); return; }
+    case "new": SET.ed = { kind: a, id: null, name: "", code: "", color: a === "worktypes" ? "green" : "blue", full: "10", exam: false, err: {} }; sgRe("#sgE_name"); return;
+    case "ed": { const it = sgList(a).find((x) => x.id === p[2]); SET.ed = { ...it, kind: a, name0: it.name, no0: it.no ? `${it.no}/${it.y}` : "", err: {} }; SET.unErr = null; sgRe(a === "terms" ? "#sgE_no" : "#sgE_name"); return; }
+    case "edcancel": { const E = SET.ed; SET.ed = null; sgRe(E && E.id ? `[data-sg="ed:${E.kind}:${E.id}"]` : `[data-sg="new:${E && E.kind}"]`, "#sgSecH"); return; }
+    case "color": SET.ed.color = a; sgRe(`[data-sg="color:${a}"]`); return;
+    case "edsave": { const E = SET.ed, kind = E.kind, L = sgList(kind), e = {}, t = (s) => String(s ?? "").trim(), KL = SG_KL[kind];
+      const dup = (nm) => L.some((x) => x.id !== E.id && !x.arch && (kind !== "terms") && t(x.name).toLowerCase() === t(nm).toLowerCase());
+      if (kind === "classes") { if (!t(E.name)) e.name = "ใส่ชื่อห้อง เช่น ป.6/3"; else if (dup(E.name)) e.name = `มีห้องชื่อ “${t(E.name)}” อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`; }
+      if (kind === "subjects") { if (!t(E.name)) e.name = "ใส่ชื่อวิชา เช่น คณิตศาสตร์"; else if (dup(E.name)) e.name = `มีวิชาชื่อ “${t(E.name)}” อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`; if (t(E.code).length > 30) e.code = "รหัสวิชาไม่เกิน 30 ตัว"; }
+      if (kind === "worktypes") { if (!t(E.name)) e.name = "ใส่ชื่อประเภทงาน เช่น ใบงาน"; else if (dup(E.name)) e.name = `มีประเภทงานชื่อ “${t(E.name)}” อยู่แล้ว — ใช้ชื่ออื่น`; if (!/^\d+$/.test(t(E.full)) || +E.full < 1 || +E.full > 100) e.full = "คะแนนเต็มต้องเป็นเลข 1–100"; }
+      if (kind === "terms") { if (L.some((x) => x.id !== E.id && x.y === E.y && +x.no === +E.no)) e.no = `ภาคเรียน ${E.no}/${E.y} มีอยู่แล้ว — เลือกเลขภาคอื่น`; if (E.start && E.end && E.end < E.start) e.end = "วันสิ้นสุดต้องอยู่หลังวันเริ่ม"; }
+      if (kind === "dev") { if (t(E.name).length < 1 || t(E.name).length > 40) e.name = "ชื่อเครื่องต้องยาว 1–40 ตัวอักษร"; }
+      E.err = e; E.fail = "";
+      if (Object.keys(e).length) { sgRe(...["no", "name", "code", "full", "end"].filter((f) => e[f]).map((f) => `#sgE_${f}`)); return; }
+      if (sgFails()) { E.fail = sgOff() ? "ออฟไลน์ — บันทึกไม่ได้ ค่าที่พิมพ์ยังอยู่ · ลองอีกครั้งเมื่อออนไลน์" : SG_FAIL; sgRe("#sgEdFail"); return; }
+      const rec = kind === "terms" ? { no: +E.no, start: E.start, end: E.end } : kind === "dev" || kind === "classes" ? { name: t(E.name) } : kind === "subjects" ? { name: t(E.name), code: t(E.code), color: E.color } : { name: t(E.name), full: String(+E.full), color: E.color, exam: !!E.exam };
+      let id = E.id; if (id) Object.assign(L.find((x) => x.id === id), rec); else { id = "n" + ++SET.seq; L.unshift({ id, ...rec }); }
+      SET.ed = null; const msg = E.id ? (kind === "terms" ? `บันทึกภาคเรียน ${rec.no}/${E.y} แล้ว` : `บันทึก${KL} ${rec.name} แล้ว`) : `เพิ่ม${KL} ${rec.name} แล้ว`; SET.live = msg; toast(msg);
+      sgRe(`[data-sg="ed:${kind}:${id}"]`); return; }
+    case "add": { const nm = SET.add.trim(), L = SET.data.classes; if (!nm) return;
+      if (L.some((x) => !x.arch && x.name.toLowerCase() === nm.toLowerCase())) { SET.addErr = `มีห้องชื่อ “${nm}” อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`; sgRe("#sgAddIn"); return; }
+      if (sgFails()) { SET.addErr = sgOff() ? "ออฟไลน์ — เพิ่มห้องได้เมื่อออนไลน์" : SG_FAIL; sgRe("#sgAddIn"); return; }
+      L.push({ id: "n" + ++SET.seq, name: nm, n: 0 }); SET.add = ""; SET.addErr = ""; SET.live = `เพิ่มห้อง ${nm} แล้ว`; toast(`เพิ่มห้อง ${nm} แล้ว`); sgRe("#sgAddIn"); return; }
+    case "arch": sgOpen(`sg-arch:${a}:${p[2]}`, `[data-sg="${v}"]`); return;
+    case "archyes": { if (sgFails()) { SET.cf = sgOff() ? "ออฟไลน์ — เก็บได้เมื่อออนไลน์ · ยังไม่มีอะไรเปลี่ยน" : SG_FAIL; sgRe("#sgNo"); return; }
+      const it = sgList(a).find((x) => x.id === p[2]); it.arch = true; SET.folds["arch-" + a] = true; sgClose(`เก็บ${SG_KL[a]} ${it.name} แล้ว · นำกลับได้ที่ “เก็บไว้”`, `[data-sg="unarch:${a}:${it.id}"]`); return; }
+    case "unarch": { const L = sgList(a), it = L.find((x) => x.id === p[2]);
+      if (L.some((x) => x !== it && !x.arch && x.name.toLowerCase() === it.name.toLowerCase())) { SET.unErr = it.id; sgRe(`[data-sg="${v}"]`); return; }
+      if (sgFails()) { const t = "นำกลับไม่สำเร็จ — ยังเก็บอยู่ ลองอีกครั้ง"; SET.live = t; toast(t); return; }
+      it.arch = false; SET.unErr = null; SET.live = `นำ${SG_KL[a]} ${it.name} กลับแล้ว`; toast(SET.live); sgRe(`[data-sg="ed:${a}:${it.id}"]`); return; }
+    case "setcur": sgOpen(`sg-cur:${a}`, `[data-sg="${v}"]`); return;
+    case "curyes": { if (sgFails()) { SET.cf = SG_FAIL; sgRe("#sgNo"); return; } SET.data.terms.forEach((t) => (t.cur = t.id === a)); const t = SET.data.terms.find((x) => x.id === a); sgClose(`ภาคเรียนปัจจุบันเป็น ${t.no}/${t.y} แล้ว`); return; }
+    case "newterm": SET.nt = { y: 2570, no: 1, ok: false }; sgOpen("sg-term", '[data-sg="newterm"]', "#sgNtY"); return;
+    case "ntgo": { if (sgFails()) { SET.cf = SG_FAIL; sgRe("#sgNo"); return; } const y = document.getElementById("sgNtY").value, n = document.getElementById("sgNtN").value; sgClose(`เริ่มภาคเรียน ${n}/${y} แล้ว (ตัวอย่าง — ข้อมูลไม่เปลี่ยน)`, '[data-sg="newterm"]'); return; }
+    case "firstterm": if (sgFails()) { toast(SG_FAIL); return; } SET.data.terms.push({ id: "n" + ++SET.seq, no: 2, y: 2569, start: "2026-11-03", end: "2027-02-28", cur: true }); SET.live = "ตั้งภาคเรียน 2/2569 แล้ว"; toast(SET.live); sgRe('[data-sg="newterm"]'); return;
+    case "addterm": { const y = +document.getElementById("sgAtY").value, n = +document.getElementById("sgAtN").value, T = SET.data.terms; SET.folds.addterm = true;
+      if (T.some((x) => x.y === y && x.no === n)) { SET.atErr = `ภาคเรียน ${n}/${y} มีอยู่แล้ว — เลือกเลขภาคอื่น`; sgRe("#sgAtN"); return; }
+      if (sgFails()) { SET.atErr = SG_FAIL; sgRe("#sgAtN"); return; }
+      SET.atErr = ""; T.push({ id: "n" + ++SET.seq, no: n, y, start: "", end: "" }); if (y < 2569) SET.folds["ty" + y] = true; SET.live = `เพิ่มภาคเรียน ${n}/${y} แล้ว`; toast(SET.live); sgRe(`[data-sg="ed:terms:n${SET.seq}"]`, '[data-sg="addterm"]'); return; }
+    case "tp": { const t = SET.data.terms.find((x) => x.id === a); S.sheet = null; render(true); toast(t.cur ? `ใช้ภาคเรียน ${t.no}/${t.y} อยู่แล้ว` : `ดูข้อมูลภาคเรียน ${t.no}/${t.y} (ตัวอย่าง)`); return; }
+    case "hidstart": SET.hid = []; SET.live = "เริ่มฟังเครื่องยิง"; sgRe("#sgHidIn"); return;
+    case "hidsim": { const no = (SET.hidN++ % 8) + 1; SET.hid.unshift({ ok: no !== 6, t: no !== 6 ? `6100${no} → ป.6/1 เลขที่ ${no} ${S.hide ? "" : stName("c61", no).join(" ")}` : "ไม่รู้จักรหัส “QX-??” — ตรวจสติกเกอร์" }); SET.hid = SET.hid.slice(0, 6); SET.live = SET.hid[0].ok ? "อ่านได้" : "อ่านไม่ได้"; sgRe('[data-sg="hidsim"]'); return; }
+    case "hidstop": SET.hid = null; sgRe('[data-sg="hidstart"]'); return;
+    case "camtest": SET.cam = "checking"; sgRe('[data-sg="camtest"]', "#sgSecH"); clearTimeout(SET.timer); SET.timer = setTimeout(() => { SET.cam = "done"; SET.live = "ตรวจกล้องเสร็จ — ใช้ได้ · ปิดกล้องแล้ว"; if (S.page === "settings") sgRe('[data-sg="camtest"]'); }, 700); return;
+    case "chk": SET.chk = "run"; sgRe("#sgSecH"); clearTimeout(SET.timer); SET.timer = setTimeout(() => { SET.chk = "done"; SET.live = sgOff() ? "ตรวจเสร็จ — ไม่ผ่าน 1 เรื่อง" : SET.persist ? "ตรวจเสร็จ — ผ่านทั้งหมด" : "ตรวจเสร็จ — เตือน 1 เรื่อง"; if (S.page === "settings") sgRe('[data-sg="chk"]'); }, 800); return;
+    case "chkcopy": toast("คัดลอกผลตรวจแล้ว"); return;
+    case "persist": SET.persist = true; SET.live = "ขอเก็บถาวรแล้ว"; sgRe("#sgSecH"); return;
+    case "pw": SET.pw = true; SET.pwOk = ""; sgRe("#sgPwa"); return;
+    case "pwcancel": SET.pw = false; sgRe('[data-sg="pw"]'); return;
+    case "pwshow": { const b = document.getElementById("sgPwShow"), on = b.getAttribute("aria-pressed") !== "true"; document.querySelectorAll("#device .sg-pwin").forEach((i) => (i.type = on ? "text" : "password"));
+      b.setAttribute("aria-pressed", on); b.innerHTML = `${ic(on ? "eye-slash" : "eye")}${on ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"}`; return; }
+    case "pwsave": { const g = (f) => document.getElementById("sgPw" + f), e = {}; if (!g("a").value) e.a = "ใส่รหัสผ่านเดิม"; if (g("b").value.length < 6) e.b = "รหัสใหม่อย่างน้อย 6 ตัว"; if (!e.b && g("c").value !== g("b").value) e.c = "รหัสใหม่ไม่ตรงกัน";
+      ["a", "b", "c"].forEach((f) => { const el = g(f); document.getElementById(`sgPw${f}E`).innerHTML = e[f] ? ic("warning-circle") + e[f] : ""; if (e[f]) el.setAttribute("aria-invalid", "true"); else el.removeAttribute("aria-invalid"); });
+      const first = ["a", "b", "c"].find((f) => e[f]); if (first) { g(first).focus(); return; }
+      if (sgFails()) { const fl = document.getElementById("sgPwFail"); fl.hidden = false; fl.innerHTML = ic("cloud-slash") + (sgOff() ? "ออฟไลน์ — เปลี่ยนรหัสผ่านได้เมื่อออนไลน์" : "เปลี่ยนรหัสผ่านไม่สำเร็จ — รหัสเดิมยังใช้ได้ ลองอีกครั้ง"); return; }
+      SET.pw = false; SET.pwOk = "เปลี่ยนรหัสผ่านแล้ว — ครั้งหน้าใช้รหัสใหม่เข้าสู่ระบบ"; SET.live = SET.pwOk; sgRe('[data-sg="pw"]'); return; }
+    case "signout": sgOpen(`sg-signout:${a}`, `[data-sg="${v}"]`); return;
+    case "soyes": { if (sgFails()) { SET.cf = sgOff() ? "ออฟไลน์ — ทำได้เมื่อออนไลน์" : SG_FAIL; sgRe("#sgNo"); return; } const L = SET.data.devices, d = L.find((x) => x.id === a); L.splice(L.indexOf(d), 1); sgClose(`ออกจากระบบ ${d.name} แล้ว`); return; }
+    case "logout": sgOpen("sg-logout", '[data-sg="logout"]'); return;
+    case "loyes": sgClose("ออกจากระบบแล้ว (ตัวอย่าง — ยังอยู่ในหน้านี้)", '[data-sg="logout"]'); return;
+    case "bk": sgOpen("sg-bk", '[data-sg="bk"]'); return;
+    case "bkyes": if (SET.sstate === "savefail") { SET.cf = "ดาวน์โหลดไม่สำเร็จ — ลองอีกครั้ง"; sgRe("#sgNo"); return; } SET.bk = "11 พ.ย. 2569 10:15"; SET.bkOld = false; sgClose("ดาวน์โหลดไฟล์สำรองแล้ว — เก็บไว้ที่ปลอดภัย", '[data-sg="bk"]'); return;
+    case "rst": SET.rst = { st: "pick", ok: false }; sgOpen("sg-rst", '[data-sg="rst"]'); return;
+    case "rfile": SET.rst = { st: "checking", ok: false }; sgRe("#sgNo"); clearTimeout(SET.timer); SET.timer = setTimeout(() => { if (!SET.rst || S.sheet !== "sg-rst") return; SET.rst.st = a === "ok" ? "ready" : "bad"; SET.live = a === "ok" ? "ตรวจไฟล์แล้ว — พร้อมกู้คืน" : "ไฟล์เสีย"; sgRe(a === "ok" ? "#sgRstOk" : '[data-sg="rfile:ok"]'); }, 600); return;
+    case "rstgo": if (SET.sstate === "savefail") { SET.cf = "กู้คืนไม่สำเร็จ — ไม่มีอะไรเปลี่ยน ข้อมูลเดิมยังอยู่"; sgRe("#sgNo"); return; }
+      SET.rst.st = "run"; sgRe("#sgDd"); clearTimeout(SET.timer); SET.timer = setTimeout(() => { SET.rst = null; sgClose("กู้คืนข้อมูลแล้ว (ตัวอย่าง — ข้อมูลไม่เปลี่ยน)", '[data-sg="rst"]'); }, 900); return;
+    case "reset": SET.rs = { kind: a, step: 1, bk: true }; sgOpen("sg-reset", `[data-sg="${v}"]`); return;
+    case "rsnext": SET.rs.step = 2; SET.cf = ""; sgRe("#sgRsPw"); return;
+    case "rsback": SET.rs.step = 1; SET.cf = ""; sgRe('[data-sg="rsnext"]'); return;
+    case "rsgo": { if (SET.sstate === "savefail") { SET.cf = "ล้างข้อมูลไม่สำเร็จ — ไม่มีอะไรถูกลบ"; const pw = document.getElementById("sgRsPw").value, ph = document.getElementById("sgRsPh").value; render(true); document.getElementById("sgRsPw").value = pw; document.getElementById("sgRsPh").value = ph; document.getElementById("sgRsGo").disabled = false; rpFocus("#sgNo"); return; }
+      const R = SET.rs; SET.rs = null; sgClose(`${R.kind === "all" ? "ล้างทั้งหมด" : "ล้างข้อมูลทดลอง"}แล้ว (ตัวอย่าง — ไม่ได้ลบอะไรจริง)${R.bk ? " · ดาวน์โหลดไฟล์สำรองก่อนแล้ว" : ""}`, `[data-sg="reset:${R.kind}"]`); return; }
+    case "hf": SET.hf = a; SET.live = `แสดง ${SG_HIST().filter((h) => a === "all" || h[1] === a).length} รายการ`; sgRe(`[data-sg="hf:${a}"]`); return;
+  }
+}
+document.addEventListener("input", (e) => { const t = e.target, ds = t.dataset || {}; if (S.page !== "settings" && !(S.sheet || "").startsWith("sg-")) return;
+  if (ds.sgf) { SET.f[ds.sgf] = t.value; SET.saved = ""; const bar = document.getElementById("sgBar"); if (bar) { bar.hidden = !sgDirty().length; const n = document.getElementById("sgBarN"); if (n) n.textContent = sgBarTxt(); } return; }
+  if (ds.sgadd) { SET.add = t.value; SET.addErr = ""; t.removeAttribute("aria-invalid"); const b = document.getElementById("sgAddBtn"), hh = document.getElementById("sgAddH"), ee = document.getElementById("sgAddE");
+    if (b) b.disabled = !t.value.trim(); if (hh) hh.textContent = t.value.trim() ? `ระดับชั้น: ${sgGrade(t.value)}` : "ใส่ชื่อห้อง เช่น ป.6/3"; if (ee) ee.textContent = ""; return; }
+  if (ds.sge && SET.ed) { const f = ds.sge; SET.ed[f] = t.type === "checkbox" ? t.checked : t.value;
+    if (SET.ed.err && SET.ed.err[f]) { delete SET.ed.err[f]; t.removeAttribute("aria-invalid"); const ee = document.getElementById(t.id + "E"); if (ee) ee.textContent = ""; }
+    if (f === "name" && SET.ed.kind === "classes") { const hh = document.getElementById("sgE_nameH"); if (hh) hh.textContent = `ระดับชั้น: ${sgGrade(t.value)}`; }
+    if (f === "no") { const dd = document.getElementById("sgE_disp"); if (dd) dd.textContent = `${t.value}/${SET.ed.y}`; } return; }
+  if (ds.sgnt && SET.nt) { SET.nt[ds.sgnt] = t.value; return; }
+  if ((t.id === "sgRsPw" || t.id === "sgRsPh") && SET.rs) { const ph = SET.rs.kind === "all" ? "ล้างทั้งหมด" : "ล้างข้อมูล", g = document.getElementById("sgRsGo"); if (g) g.disabled = !(document.getElementById("sgRsPw").value && document.getElementById("sgRsPh").value.trim() === ph); return; }
+  if (t.id === "sgRsBk" && SET.rs) { SET.rs.bk = t.checked; return; }
+  if (t.id === "sgRstOk" && SET.rst) { SET.rst.ok = t.checked; const g = document.getElementById("sgRstGo"); if (g) g.disabled = !t.checked; return; }
+  if (t.id === "sgNtOk" && SET.nt) { SET.nt.ok = t.checked; const g = document.getElementById("sgNtGo"); if (g) g.disabled = !t.checked; return; }
+  if (t.classList.contains("sg-pwin")) { t.removeAttribute("aria-invalid"); const ee = document.getElementById(t.id + "E"); if (ee) ee.textContent = ""; } });
+document.addEventListener("change", (e) => { const t = e.target; if (S.page !== "settings" || !t.name) return;
+  const lab = { "sg-fsz": ["fsz", "ขนาดตัวอักษร", { s: "เล็ก", m: "ปกติ", l: "ใหญ่", xl: "ใหญ่มาก" }], "sg-dens": ["dens", "ความหนาแน่น", { compact: "กระชับ", normal: "ปกติ", comfy: "โปร่ง" }], "sg-pjt": ["pjt", "ธีมตอนฉายจอ", { dark: "มืด", light: "สว่าง", app: "ตามแอป" }], "sg-pjs": ["pjs", "ขนาดตอนฉายจอ", { l: "ใหญ่", xl: "ใหญ่มาก" }] }[t.name];
+  if (!lab) return; SET[lab[0]] = t.value; SET.live = `${lab[1]}: ${lab[2][t.value]} · เครื่องนี้`; render(true); rpFocus(`input[name="${t.name}"]:checked`); });
+document.addEventListener("click", (e) => { const b = e.target.closest && e.target.closest("button[data-page]"); // SE-S17: leaving the page with unsaved values
+  if (!b || S.page !== "settings" || b.dataset.page === "settings" || (S.sheet || "").startsWith("sg-") || !sgDirty().length) return;
+  e.stopImmediatePropagation(); SET.leave = { page: b.dataset.page }; sgOpen("sg-leave", null, "#sgStay"); }, true);
+document.addEventListener("toggle", (e) => { const d = e.target; if (d.dataset && d.dataset.sgfold) SET.folds[d.dataset.sgfold] = d.open; }, true);
+document.addEventListener("click", (e) => { if (!(S.sheet || "").startsWith("sg-") || !e.target.classList || !e.target.classList.contains("scrim")) return; if (SET.rst && SET.rst.st === "run") e.stopImmediatePropagation(); }, true);
+document.addEventListener("keydown", (e) => { // capture: settings page + its dialogs
+  const t = e.target, inDlg = (S.sheet || "").startsWith("sg-"); if (S.page !== "settings" && !inDlg) return;
+  if (inDlg && e.key === "Escape" && SET.rst && SET.rst.st === "run") { e.preventDefault(); e.stopImmediatePropagation(); return; }
+  if (inDlg && e.key === "Tab") { const box = document.querySelector("#device .sg-dlg"); if (!box) return;
+    const fs = [...box.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]')].filter((y) => y.offsetParent);
+    if (!fs.length) return; const j = fs.indexOf(document.activeElement);
+    if (e.shiftKey && j <= 0) { e.preventDefault(); fs[fs.length - 1].focus(); } else if (!e.shiftKey && (j < 0 || j === fs.length - 1)) { e.preventDefault(); fs[0].focus(); } return; }
+  if (inDlg) return;
+  if (e.key === "Escape" && !S.sheet && (SET.ed || SET.pw)) { e.preventDefault(); e.stopImmediatePropagation(); sgAct(SET.ed ? "edcancel" : "pwcancel"); return; }
+  if (e.key === "Enter" && t.tagName === "INPUT" && t.type !== "checkbox") {
+    if (t.id === "sgAddIn") { e.preventDefault(); sgAct("add"); return; }
+    if (t.dataset.sge) { e.preventDefault(); sgAct("edsave"); return; }
+    if (t.classList.contains("sg-pwin")) { e.preventDefault(); sgAct("pwsave"); return; }
+    if (t.id === "sgHidIn") { e.preventDefault(); const val = t.value.trim(); if (!val) return; const ok = /^\d{3,}$/.test(val); SET.hid.unshift({ ok, t: ok ? `${val} → อ่านได้` : `ไม่รู้จักรหัส “${val}” — ตรวจสติกเกอร์` }); SET.hid = SET.hid.slice(0, 6); SET.live = ok ? "อ่านได้" : "อ่านไม่ได้"; sgRe("#sgHidIn"); return; } }
+  const nav = t.closest && t.closest(".sg-nav");
+  if (nav && (e.key === "ArrowDown" || e.key === "ArrowUp")) { e.preventDefault(); const bs = [...nav.querySelectorAll(".sg-nb")], i = bs.indexOf(t); bs[(i + (e.key === "ArrowDown" ? 1 : -1) + bs.length) % bs.length].focus(); return; }
+  const grp = t.getAttribute && (t.getAttribute("role") === "tab" ? t.closest('[role="tablist"]') : t.getAttribute("role") === "radio" ? t.closest('[role="radiogroup"]') : null);
+  if (grp && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) { e.preventDefault(); const bs = [...grp.querySelectorAll("button")], i = bs.indexOf(t); bs[(i + (e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1) + bs.length) % bs.length].click(); }
+}, true);
+
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"], ["students", "นักเรียน"]],
+  sgstate: [["normal", "ปกติ"], ["loading", "กำลังโหลด"], ["dirty", "มีค่าที่ยังไม่บันทึก"], ["savefail", "บันทึกไม่สำเร็จ (ย้อนค่า)"], ["offline", "ออฟไลน์"], ["loaderr", "โหลดไม่สำเร็จ"],
+    ["empty", "ยังไม่มีห้อง/วิชา/ภาคเรียน"], ["past", "ปีเก่า (อ่านอย่างเดียว)"], ["many", "ข้อมูลเยอะ/ชื่อยาว"], ["termend", "ภาคเรียนสิ้นสุดแล้ว"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"], ["students", "นักเรียน"]],
   ststate: [["normal", "ปกติ"], ["loading", "กำลังโหลดสถิติ"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["notfound", "ค้นไม่พบ"], ["error", "โหลดสถิติไม่สำเร็จ"], ["offline", "ออฟไลน์"], ["savefail", "บันทึกไม่สำเร็จ"],
     ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"], ["fix", "ควรจัดการ (เลขที่ซ้ำ/ไม่มีเลขที่)"], ["moved", "มีนักเรียนย้ายออก"], ["past", "ปีเก่า (อ่านอย่างเดียว)"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"]],
   gstate: [["normal", "ปกติ"], ["noasg", "ยังไม่มีงาน"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["offline", "ออฟไลน์ + คิว"], ["failed", "บันทึกไม่สำเร็จ"], ["closed", "งานปิดรับ"],
@@ -4998,15 +5610,16 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook", onRp = S.page === "reports", onSt = S.page === "students";
-  const val = (g) => (g === "mode" ? S.modePref : g === "ststate" ? STU.sstate : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "rpstate" ? RPT.sstate : g === "rq1" ? RPT.q1 : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group === "state" && onRp ? "rpstate" : el.dataset.group === "state" && onSt ? "ststate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook", onRp = S.page === "reports", onSt = S.page === "students", onSet = S.page === "settings";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sgstate" ? SET.sstate : g === "ststate" ? STU.sstate : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "rpstate" ? RPT.sstate : g === "rq1" ? RPT.q1 : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group === "state" && onRp ? "rpstate" : el.dataset.group === "state" && onSt ? "ststate" : el.dataset.group === "state" && onSet ? "sgstate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
   document.querySelectorAll(".rp-only").forEach((el) => (el.hidden = !onRp));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onSt ? `<b>หน้านักเรียน</b> (ux-students.md) — ลองกด: ค้นหา (ชื่อ ชื่อเล่น รหัส เลขที่) · เรียง (เมนู/หัวคอลัมน์) · “ส่งงานครบ / มีงานค้าง” ใน hero = กรอง · ชื่อ = ลิ้นชักรายคน · ⋮ = จัดการ · เพิ่มนักเรียน (ลองบันทึกว่าง · เลขที่ 5 ซ้ำ · รหัส 61001 ซ้ำ · ปิดฟอร์มที่แก้ค้าง) · ย้ายออก แล้วกลับมาใช้งานที่การ์ด · ออก QR ใหม่ · ย้ายห้อง (ป.5/1 = ย้ายไม่ได้) · นำเข้า Excel (จำลอง) · ซ่อนชื่อ · ปรับการ์ด · Esc ปิด · ตัวเลข = ชุดเดียวกับรายงาน (ทุกวิชา · ทั้งเทอม)<br>Gate 2 ผ่าน · เจ้าของงานเอา P1–P9 ทั้งหมด · ป้าย <b>ของเพิ่ม</b> = P1–P9 (P4 ดูที่สถานะ “ควรจัดการ” · P5 แท็บบนรายการ · P7 ในกล่องนำเข้า · P9 ค้นชื่อจากห้องอื่น แล้วกด “ไปห้องนี้”) · ห้องอื่นใช้ชื่อสมมติ ไม่มีสถิติ (“—”)<br>${INFO[S.theme]}`
+  document.getElementById("info").innerHTML = onSet ? `<b>หน้าตั้งค่า</b> (ux-settings.md) — 11 หมวด 5 กลุ่ม · คอม/iPad นอน = หมวดซ้าย · iPad ตั้ง = แถบกลุ่ม + ปุ่มหมวด · มือถือ = รายการหมวด → แตะเข้า (“‹ ตั้งค่า” กลับ) · ลองกด: ภาพรวม (แก้ชื่อโรงเรียน → แถบบันทึก) · ห้องเรียน วิชา ภาคเรียน (เพิ่ม “ป.6/1” = ชื่อซ้ำ · เก็บ → ยืนยัน → นำกลับ · ปุ่มสี · ตั้งเป็นปัจจุบัน · ปี 2568 อ่านอย่างเดียว) · การสแกน (สวิตช์เสียง บันทึกทันที + เลิกทำ · ทดสอบเครื่องยิง/กล้อง) · หน้าตา (ค่าเดิม + ขนาดตัวอักษร) · บัญชี (เปลี่ยนรหัสผ่าน · ออกจากระบบเครื่องอื่น) · สำรอง (คำเตือน → ดาวน์โหลด · กู้คืน) · เริ่มใหม่ (ยืนยัน 2 ขั้น) · แถว “สถานะ” = SE-S01…S15 · ชิปเลือกภาคเรียนบนหัว = P6<br>${INFO[S.theme]}`
+    : onSt ? `<b>หน้านักเรียน</b> (ux-students.md) — ลองกด: ค้นหา (ชื่อ ชื่อเล่น รหัส เลขที่) · เรียง (เมนู/หัวคอลัมน์) · “ส่งงานครบ / มีงานค้าง” ใน hero = กรอง · ชื่อ = ลิ้นชักรายคน · ⋮ = จัดการ · เพิ่มนักเรียน (ลองบันทึกว่าง · เลขที่ 5 ซ้ำ · รหัส 61001 ซ้ำ · ปิดฟอร์มที่แก้ค้าง) · ย้ายออก แล้วกลับมาใช้งานที่การ์ด · ออก QR ใหม่ · ย้ายห้อง (ป.5/1 = ย้ายไม่ได้) · นำเข้า Excel (จำลอง) · ซ่อนชื่อ · ปรับการ์ด · Esc ปิด · ตัวเลข = ชุดเดียวกับรายงาน (ทุกวิชา · ทั้งเทอม)<br>Gate 2 ผ่าน · เจ้าของงานเอา P1–P9 ทั้งหมด · ป้าย <b>ของเพิ่ม</b> = P1–P9 (P4 ดูที่สถานะ “ควรจัดการ” · P5 แท็บบนรายการ · P7 ในกล่องนำเข้า · P9 ค้นชื่อจากห้องอื่น แล้วกด “ไปห้องนี้”) · ห้องอื่นใช้ชื่อสมมติ ไม่มีสถิติ (“—”)<br>${INFO[S.theme]}`
     : onRp ?`<b>หน้ารายงาน</b> (ux-reports.md) — อ่านอย่างเดียว · ลองกด: ชิปห้อง/วิชา · ทั้งเทอม|รายเดือน (+เดือน) · เช็คชื่อ รายวัน|รายคาบ · หัวคอลัมน์ = เรียง · ชื่อ = ลิ้นชักนักเรียน · “งานค้าง” ใน hero = ไปการ์ดต้องติดตาม · แถวงาน = เปิดสมุดคะแนนที่งานนั้น · คัดลอกไป LINE · ส่งออก Excel · พิมพ์ (ตัวอย่าง A4) · ฉายจอ · ปรับการ์ด · หัวการ์ด = เปิด/ปิด · Esc ปิดลิ้นชัก/พิมพ์/ฉายจอ · ตัวเลข = ux-reports §ตัวเลขตัวอย่าง (คำนวณจากชุดเดียวกับหน้าคะแนน) · ห้องอื่นในตัวอย่างโหลดแล้วกลับ ป.6/1 · รายเดือน: เช็คชื่อใช้ชุดเดียวกับทั้งเทอม<br>Q1–Q4 ตามค่าแนะนำ (ก) · Q1 ดูทาง ข ได้ที่แถว “Q1 การ์ด” · ป้าย <b>ของเพิ่ม</b> = P1 P2 P3 P5 P7 P8 (Gate 2: เจ้าของงานเอา P1 P3 P4 + “—” แทน 0%) (ข้อมูลเดิม ให้เจ้าของงานเลือก) · ป้าย <b>ของเพิ่ม</b> P4 การ์ด “ขาดบ่อย” อนุมัติแล้วที่ Gate 2 ()<br>${INFO[S.theme]}`
     : onGb ? `<b>หน้าคะแนน</b> — แตะ/คลิกช่อง หรือพิมพ์ตัวเลขที่ช่อง → Enter บันทึกแล้วลงแถวถัดไป · Esc ยกเลิก · ลูกศรเลื่อนช่อง · Alt+Enter / ▾ / แตะซ้ำ / กดค้าง = ตัวแก้ไขช่อง (สถานะ · วันที่รับ) · คะแนนเกินเต็มหรือไม่ใช่ตัวเลขขึ้นข้อความ · hero/แถบ 6 ส่วน/สะสม อัปเดตตามสูตรเดิม · แตะหัวคอลัมน์ = เลือกงาน · “สร้างงาน” / คัดลอกงาน / ปิดรับงาน / ทำทั้งห้อง / ⋮ ลองได้ · pill ใน hero เปิดแผงงาน (คอมปักได้) · แถว “สถานะ” = ux-gradebook.md · Q1–Q4 ตามค่าแนะนำ UX<br>${INFO[S.theme]} · ป้ายข้อเสนอ = P10 (ต้องเพิ่ม API)`
     : onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
@@ -5023,7 +5636,8 @@ function render(keepScroll) {
   const key = DS_OF[S.state] || "base";
   if (S.dsKey !== key) { load(DS[key]()); S.dsKey = key; S.order = TODOS.map((t) => t.key); S.focus = null; S.cls = null; }
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
-  dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
+  dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + SG_FSZ[SET.fsz] + "px");
+  if (SG_DENS[SET.dens]) dev.style.setProperty("--density", SG_DENS[SET.dens]); else dev.style.removeProperty("--density");
   dev.dataset.page = S.page;
   const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : S.page === "reports" ? pageReports() : S.page === "students" ? pageStudents() : pageGradebook();
   dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${(S.page === "reports" || S.page === "students") && (S.device === "desk" || S.device === "ipadL") ? "data-rp" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${S.page === "reports" ? rpOverlays() : ""}${S.page === "students" && STU.project && !STU.noclass ? stuProj(STU.rows || []) : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
@@ -5032,7 +5646,7 @@ function render(keepScroll) {
   GB.rendering = false; if (S.page === "gradebook") gbAfter();
   chrome(); fit(); railShadow(rt0); animRings();
   if (S.page === "attendance") atAnim();
-  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : S.page === "reports" ? RPT : S.page === "students" ? STU : null;
+  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : S.page === "reports" ? RPT : S.page === "students" ? STU : S.page === "settings" || (S.sheet || "").startsWith("sg-") ? SET : null;
   if (LV && LV.live) { const lv = document.getElementById("atLive"), msg = LV.live; LV.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); }
 }
 function fit() {
@@ -5048,7 +5662,7 @@ function openSheet(k, opener) { S.sheet = k; S.opener = opener; render(true); co
 function closeSheet() { const o = S.opener; if (S.sheet && S.sheet.startsWith("rp-stu")) RPT.cur = null; S.sheet = null; render(true);
   const b = o && [...document.querySelectorAll(o.startsWith("[") || /[\s.#]/.test(o) ? o : `[data-act="${o}"]`)].find((el) => el.offsetParent); if (b) b.focus(); }
 function applyAppearance(p, focusName) {
-  if (S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
+  if (S.page === "settings" ? sgOff() : S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
   else { Object.assign(S, p); S.saveMsg = "saving"; render(true); toast("ใช้หน้าตาใหม่แล้ว");
     setTimeout(() => { S.saveMsg = "saved"; const c = document.getElementById("saveChip"); if (c) c.innerHTML = saveChip(); }, 600); }
   if (focusName) { const el = document.querySelector(`input[name="${focusName}"]:checked`); if (el) el.focus(); }
@@ -5065,6 +5679,7 @@ document.addEventListener("click", (e) => {
     if (g === "gstate") { gbScenario(v); render(); return; }
     if (g === "rpstate") { rpScenario(v); render(); return; }
     if (g === "ststate") { stuScenario(v); render(); return; }
+    if (g === "sgstate") { sgScenario(v); render(); return; }
     if (g === "rq1") { RPT.q1 = v; if (S.sheet === "rp-side") S.sheet = null; render(true); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
@@ -5073,7 +5688,8 @@ document.addEventListener("click", (e) => {
     if (g === "tags") S.tags = !S.tags; else if (g === "mode") S.modePref = v; else if (g === "state") { S.state = v; S.hide = v === "hidden"; S.sheet = null; } else S[g] = v;
     if (g === "layout" && S.page !== "settings") S.page = "home";
     render(!["layout", "device", "page", "state"].includes(g)); return; }
-  if (d.page) { S.page = d.page; S.sheet = null; render(true); document.getElementById("appMain").scrollTop = 0; return; }
+  if (d.sg) { sgAct(d.sg); return; }
+  if (d.page) { if (d.sgsec) { SET.sec = d.sgsec; SET.mlist = false; } S.page = d.page; S.sheet = null; render(true); document.getElementById("appMain").scrollTop = 0; return; }
   if (d.info) { openSheet(`info:${d.info}`, S.sheet === "more" ? "sheet:more" : `[data-info="${d.info}"]`); return; }
   if (d.act === "hide") { S.hide = !S.hide; render(true); toast(S.hide ? "ซ่อนชื่อนักเรียนแล้ว" : "แสดงชื่อนักเรียนแล้ว"); const hb = document.querySelector(".topbar .hide-btn"); if (hb && b.classList.contains("hide-btn")) hb.focus(); return; }
   if (d.act && d.act.startsWith("sheet:")) { openSheet(d.act.slice(6), d.act); return; }
