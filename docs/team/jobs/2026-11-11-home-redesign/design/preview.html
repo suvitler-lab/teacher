@@ -2055,6 +2055,110 @@ button.rp-k:disabled{cursor:default}
 .rp-paper .k4 b{display:block;font-size:18px}
 .rp-paper .sig{margin-top:28px;text-align:right}
 .rp-paper .rp-x{color:#1d5c2e;background:#e8f3ea}
+/* ===== T-23 หน้านักเรียน (sx-* / .stp) — reuses rp-* layout + existing tokens · no new colour tokens ===== */
+.no-tags .sx-p{display:none}
+.stp.d-desk{--rh:48px}.stp.d-ipadL{--rh:52px}.stp.d-ipadP{--rh:56px}.stp.d-phone{--rh:60px}
+.stp :focus-visible,.sx-sheet :focus-visible,.sx-proj :focus-visible{outline:3px solid var(--text-accent);outline-offset:2px}
+.stp.d-desk .rp-band :focus-visible,.stp.d-ipadL .rp-band :focus-visible,.stp.d-ipadP .rp-hero :focus-visible,.stp.d-phone .rp-hero :focus-visible,.sx-proj :focus-visible{outline-color:var(--hero-fg)}
+.stp button.rp-k[aria-pressed="true"]{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.stp button.rp-k[aria-pressed="true"] .s{color:var(--hero-bg)}
+.stp.d-desk .rp-band .sx-add,.stp.d-ipadL .rp-band .sx-add{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.sx-add{white-space:nowrap}
+.stp .rp-room,.stp .rp-seg button,.stp .sx-qrb{white-space:nowrap}
+.stp.d-ipadP .rp-hero{gap:4px;padding:6px}
+.stp.d-ipadP .rp-k{padding-top:1px;padding-bottom:1px}
+.stp.d-desk .rp-body,.stp.d-ipadL .rp-body{grid-template-columns:minmax(0,64fr) minmax(0,36fr)}
+.stp.d-ipadP .rp-body,.stp.d-phone .rp-body{grid-template-areas:"tbl" "cards"}
+.stp.d-ipadP .rp-tools{flex-wrap:wrap;overflow:visible}
+.sx-search{flex:0 1 280px;min-width:200px;padding:0 10px;cursor:text}
+.stp.d-ipadL .sx-search,.stp.d-desk .sx-search{min-width:220px;flex:1 1 240px}
+.stp.d-ipadL .rp-tools,.stp.d-desk .rp-tools{flex-wrap:wrap;overflow:visible}
+.stp.d-phone .rp-tools{flex-wrap:wrap;overflow:visible}
+.stp.d-phone .rp-tools .sx-search{flex:1 1 100%!important}
+.stp .sx-search,.stp .rp-sel{min-height:var(--tap);box-sizing:border-box}
+.stp .rp-sel select{min-height:var(--tap)}
+.rpt.sxt thead button{min-width:44px}
+.scrim.sx-bottom{align-items:flex-end;justify-content:stretch}
+.scrim.sx-bottom .sheet{width:100%;height:90%;border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-left:0;border-top:var(--card-bw) solid var(--card-border)}
+.stp.d-phone .rp-k{column-gap:14px}
+.stp.d-phone .rp-k .l{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.stp.d-phone .rp-k .v{font-size:calc(var(--fs)*1.35)}
+.sx-tblc .rp-th{flex-wrap:wrap;gap:4px 8px;padding-top:2px;padding-bottom:2px}
+.sx-tabs button{min-height:var(--tap)}
+.stp.d-phone .sx-tblc .rp-th h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.stp.d-phone .sx-tabs button{padding:0 8px}
+.sx-fix p{margin:2px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.sx-fix .btn{min-height:var(--tap);padding:0 8px;text-decoration:underline}
+.sx-all{border-top:1px solid var(--border);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.sx-all h3{margin:0;font-size:var(--t-sm);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sx-all .btn .st{margin-right:2px}
+.stp.d-phone .rp-meta>span:nth-child(2),.stp.d-phone .rp-meta>span:last-child{display:none}
+.stp.d-phone .rp-meta{flex-wrap:nowrap;gap:8px}
+.sx-search input{flex:1;min-width:0;border:0;background:transparent;color:inherit;font:inherit;min-height:var(--tap);padding:0}
+.sx-search input:focus{outline:none}
+.sx-search:focus-within{outline:3px solid var(--text-accent);outline-offset:2px}
+.sx-search input::placeholder{color:var(--text-secondary);opacity:1}
+.stp.d-phone .rp-tools .sx-search{flex:1 1 auto;min-width:0;width:auto}
+.stp.d-phone .rp-tools .sx-qrb{width:var(--tap);padding:0;justify-content:center}
+.stp.d-phone .sx-qrb .lbl,.stp.d-phone .sx-qrb .ic:last-child:not(:first-child),.stp.d-ipadL .sx-qrb .ic:last-child:not(:first-child){display:none}
+.rpt.sxt .c-nm{width:auto}
+.rpt.sxt .c-no{width:3.4em}
+.rpt.sxt .c-code{width:4.8em;color:var(--text-secondary);font-family:var(--font-num)}
+.rpt.sxt .c-sub{width:7em}
+.rpt.sxt .c-miss{width:4.6em;text-align:right}
+.rpt.sxt .c-att{width:4em}
+.rpt.sxt .rp-mb .bar{width:44px}
+.rpt.sxt .c-act{width:52px;padding:0 4px;text-align:right}
+.rpt.sxt td.c-act .icon-btn{border-color:transparent;background:transparent;color:var(--text-secondary)}
+.rpt.sxt td.c-act .icon-btn:hover,.sx-dots:hover{background:var(--surface-1)}
+.stp.d-ipadL .rpt.sxt .rp-mb .bar{display:none}
+.stp.d-ipadL .rpt.sxt .c-sub{width:4.8em}
+.stp.d-ipadL .rpt.sxt .c-code{width:4.8em}
+.sx-dash{color:var(--text-secondary)}
+.sx-nm{display:flex;align-items:center;gap:6px;width:100%;min-height:var(--tap);border:0;background:none;color:var(--text-primary);font:inherit;font-weight:600;text-align:left;padding:0 6px;border-radius:var(--radius-xs);cursor:pointer;min-width:0;overflow:hidden}
+.sx-nm:hover .n1{text-decoration:underline}
+.sx-nm .n1,.sx-nmrow .n1{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:0 1 auto}
+.sx-nm .nk,.sx-nmrow .nk{color:var(--text-secondary);font-weight:500;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:9em}
+.sx-chip{flex:none}
+.sx-chip .ic{font-size:13px}
+.rp-li .sx-nmrow{display:flex;align-items:center;gap:6px;min-width:0}
+.sx-li{display:flex;align-items:center;border-bottom:1px solid var(--border)}
+.sx-li .rp-li{flex:1;min-width:0;border-bottom:0;min-height:var(--rh);grid-template-columns:2em minmax(0,1fr) auto}
+.sx-dots{border-color:transparent;background:transparent;margin-right:4px}
+.sx-none{display:flex;flex-direction:column;align-items:center;gap:6px;padding:24px 16px;text-align:center}
+.sx-none>.ic{font-size:28px;color:var(--text-secondary)}
+.sx-none span{color:var(--text-secondary);font-size:var(--t-sm)}
+.card.sx-card{padding:0;flex:none}
+.sx-card h2{display:flex;align-items:center;gap:6px}
+.sx-card h2 .ic{color:var(--text-accent)}
+.sx-kv{display:flex;justify-content:space-between;align-items:baseline;margin:0;font-weight:600}
+.sx-kv b{font-size:var(--t-lg)}
+.sx-ml{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sx-ml li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;justify-content:space-between;background:var(--surface-1);border-radius:var(--radius-sm);padding:6px 6px 6px 12px}
+.sx-ml .t{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
+.sx-ml .t b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;font-size:var(--t-sm)}
+.sx-ml small{color:var(--text-secondary);font-size:var(--t-xs);font-weight:600}
+.sx-hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:var(--t-sm)}
+.sx-hist li{display:flex;gap:10px}
+.sx-hist .num{color:var(--text-secondary);min-width:7.5em;font-size:var(--t-xs);font-weight:600}
+.sx-acts .btn{justify-content:flex-start}
+.sx-ferr{margin:2px 0 0;color:var(--text-danger);font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.sx-ferr:empty{display:none}
+.sx-sheet .gf-in[aria-invalid="true"]{border-color:var(--text-danger);box-shadow:inset 0 0 0 1px var(--text-danger)}
+.sx-help{margin:0;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600;line-height:1.5}
+.sx-req{color:var(--text-danger)}
+.sx-sheet .gf-row{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.sx-next{align-self:flex-start;padding:0 10px;white-space:normal;text-align:left}
+.sx-inline{border:2px solid var(--text-danger);border-radius:var(--radius-sm);padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--bg-danger);color:var(--text-primary)}
+.sx-inline p{margin:0}
+.sx-check{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:6px 12px;border-radius:var(--radius-sm);background:var(--bg-warning);color:var(--text-primary);font-weight:600;cursor:pointer;line-height:1.5}
+.sx-check input{width:22px;height:22px;flex:none;accent-color:var(--accent)}
+.sx-chk{display:flex;gap:8px;align-items:center;margin:0;font-weight:600}
+.sx-fdl{background:var(--surface-1);border-radius:var(--radius-sm);padding:8px 12px}
+.sx-fab{position:sticky;bottom:12px;align-self:flex-end;min-height:56px;border-radius:28px;padding:0 20px;box-shadow:var(--shadow-pop);z-index:5;margin-top:4px}
+.sx-proj .rp-pjn{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sx-pjn{display:flex;gap:8px;align-items:center;font-size:var(--t-md);font-weight:600;margin:0}
+@container app (max-width:599px){.sx-proj .rp-pjn{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -2337,7 +2441,7 @@ const PG_INFO = {
     extra: "ต้องเพิ่มให้หน้านักเรียนเปิดหน้าพิมพ์ได้ทันที — งานเล็ก ฝั่งหน้าเว็บอย่างเดียว" },
   backup: { kind: "link", what: "ทางลัดไป ตั้งค่า › สำรองข้อมูล — ดาวน์โหลดไฟล์สำรองและกู้คืน", extra: "ปลายทางมีอยู่แล้ว ใช้ได้ทันที ไม่มีงานเพิ่ม" },
 };
-const PAGES = ["home", "settings", "scan", "attendance", "random", "gradebook", "reports"];
+const PAGES = ["home", "settings", "scan", "attendance", "random", "gradebook", "reports", "students"];
 const navAttr = (x) => PAGES.includes(x.id) ? `data-page="${x.id}"` : `data-info="${x.id}"`;
 const nbadge = (x, inline) => x.nw || x.chg ? `<span class="${inline ? "nb-in" : "nb"}">${x.chg ? "รวม" : "ใหม่"}</span>` : "";
 const menu = () => MENUS[S.menu];
@@ -2626,7 +2730,7 @@ const SS = { phase: "setup", selAsg: null, selCls: null, asg: null, cls: null, m
   copied: false, seq: 0, clk: 0, lastScore: null, gridFocus: null, pickMsg: "" };
 let undoTimer = null, holdTimer = null, RES_SEEN = null;
 const RP = {}; // last drawn ring values (ring fills from old → new value)
-const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.page === "random" ? !RD.online : S.state === "offline");
+const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.page === "random" ? !RD.online : S.page === "students" ? !STU.online : S.state === "offline");
 const scA = () => ASG0.find((a) => a.id === SS.asg);
 const scRoom = (cid = SS.cls) => SC_ROOM[cid][0];
 const lateOn = (a) => !!a.due && Date.parse(RECV_D[SS.recv]) > Date.parse(a.due);
@@ -4187,6 +4291,7 @@ function sheet() {
   if (S.sheet.startsWith("rd-")) return rdSheet();
   if (S.sheet.startsWith("gb-")) return gbSheet();
   if (S.sheet.startsWith("rp-")) return rpSheet();
+  if (S.sheet.startsWith("stu-")) return stuSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
@@ -4489,10 +4594,376 @@ function rpAct(v, e) {
   }
 }
 
+/* ======================= T-23 หน้านักเรียน (ux-students.md · รอบออกแบบที่ 7) — fictional names only (GB_NAMES / LONGN / stName) · stats = rpModel() of the same sample (ทุกวิชา · ทั้งเทอม) ======================= */
+const STU_TERM = "ภาคเรียนที่ 2/2569", STU_AT = "16:42", STU_TODAY = "12 พ.ย. 2569";
+const STU_NICK = { 4: "ดาว", 5: "ดา", 7: "นะ" };
+const STU_SORTS = [["no", "เลขที่"], ["name", "ชื่อ ก–ฮ"], ["code", "รหัสนักเรียน"], ["sub", "ส่งงานน้อยก่อน"], ["att", "มาเรียนน้อยก่อน"]];
+const STU_CARDS = [["qr", "บัตร QR", "qr-code"], ["moved", "ย้ายออก / ไม่ใช้งาน", "user-minus"], ["recent", "เพิ่ม/แก้ล่าสุด · ทุกห้อง", "clock-counter-clockwise"]];
+const STU_PFX = ["ไม่ระบุ", "ด.ช.", "ด.ญ.", "นาย", "นางสาว"];
+const STU_FAIL = "บันทึกไม่สำเร็จ — ข้อมูลเดิมยังอยู่ ตรวจเน็ตแล้วลองอีกครั้ง", STU_QRFAIL = "ออก QR ใหม่ไม่สำเร็จ — บัตรเดิมยังใช้ได้อยู่";
+const STU_MON = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+const STU_BLANK = { sent: 0, miss: 0, pend: 0, aw: 0, sc: 0, fu: 0, app: 0, pct: null, at: [0, 0, 0, 0, 0], atT: 0, attP: null, missA: [] };
+const STU = { sstate: "normal", cards: { qr: true, moved: true, recent: true }, timer: null, seq: 0, rows: null };
+function stuScenario(k) {
+  clearTimeout(STU.timer); if (S.sheet && S.sheet.startsWith("stu-")) S.sheet = null;
+  Object.assign(STU, { sstate: k, room: "c61", q: k === "notfound" ? "61099" : "", filter: "all", sort: "no", hide: k === "hidden", project: k === "project", loading: k === "loading", error: k === "error", bg: false,
+    noclass: k === "noclass", online: k !== "offline", fail: k === "savefail", past: k === "past", live: "", f: null, imp: null, cf: "", mv: null, lv: null, rot: {}, added: [], gone: {}, copied: false, tab: "active",
+    edits: k === "fix" ? { s8: { no: 5 }, s7: { no: null } } : {},
+    moved: k === "moved" ? [{ id: "m9", no: 9, n: stName("c61", 9), nick: "", code: "61009", kind: "moved", left: "3 พ.ย. 2569" }] : [],
+    recent: [[stName("c62", 12), "ป.6/2", 12, "เพิ่มใหม่ · 10 พ.ย."], [GB_NAMES[4], "ป.6/1", 5, "แก้ชื่อเล่น · 8 พ.ย."], [stName("c51", 3), "ป.5/1", 3, "นำเข้า · 1 ต.ค."]] });
+}
+stuScenario("normal");
+const stuStatsOk = () => !STU.loading && !STU.error && STU.room === "c61";
+const STU_RC = { c61: "61", c62: "62", c51: "51" };
+const stuOther = (cid) => Array.from({ length: AT_ROOM0[cid][1] }, (_, i) => ({ ...STU_BLANK, id: `${cid}-${i + 1}`, no: i + 1, n: stName(cid, i + 1), nick: "", code: `${STU_RC[cid]}${String(i + 1).padStart(3, "0")}`, pfx: "ไม่ระบุ" }));
+function stuAllRooms() { // P9: search every room (fictional names from stName / GB_NAMES)
+  const q = STU.q.trim(); if (!q || STU.hide || /^\d{1,2}$/.test(q)) return "";
+  const pool = GB_ROOMS.filter(([c]) => c !== STU.room).flatMap(([c]) => (c === "c61" ? GB_NAMES.map((n, i) => ({ id: "s" + (i + 1), no: i + 1, n, code: String(61001 + i) })) : stuOther(c)).map((r) => ({ ...r, cid: c })));
+  const hit = pool.filter((r) => `${r.n[0]} ${r.n[1]}`.includes(q) || r.code.includes(q));
+  return `<div class="sx-all" role="region" aria-label="ผลค้นหาในห้องอื่น"><h3>${ic("magnifying-glass")}ค้นในทุกห้อง · พบ ${hit.length} คน ${stuTag("P9", "ค้นหาทุกห้อง")}</h3>${hit.length ? `<ul class="sx-ml">${hit.slice(0, 5).map((r) => `<li><span class="t"><b>${r.n[0]} ${r.n[1]}</b><small>รหัส ${r.code} · เลขที่ ${r.no}</small></span><button class="btn" data-stu="goroom:${r.cid}:${r.code}" aria-label="ไปห้อง ${gbRoom(r.cid)} ดู ${r.n[0]} ${r.n[1]}"><span class="st st-mute">${ic("chalkboard")}${gbRoom(r.cid)}</span>ไปห้องนี้</button></li>`).join("")}</ul>` : `<p class="rp-why" style="margin:0">ไม่พบในห้องอื่น</p>`}</div>`;
+}
+const stuRo = () => STU.past || STU.project;
+const stuBlocked = () => !STU.online || STU.fail;
+const stuPc = (v) => (v == null || !stuStatsOk() ? "—" : v + "%");
+const stuWho = (r) => (STU.hide ? `เลขที่ ${r.no ?? "—"}` : `${r.n[0]} ${r.n[1]}`);
+const stuWhoNo = (r) => (STU.hide ? `เลขที่ ${r.no ?? "—"}` : `${r.no ?? "—"} ${r.n[0]} ${r.n[1]}`);
+const stuRoom = () => gbRoom(STU.room);
+const stuTag = (p, why) => `<span class="rp-x sx-p" title="ของเพิ่ม ${p}: ${why}">ของเพิ่ม ${p}</span>`;
+const stuSortL = () => STU_SORTS.find((s) => s[0] === STU.sort)[1];
+const stuDate = (d) => `${+d.slice(8)} ${STU_MON[+d.slice(5, 7) - 1]} ${+d.slice(0, 4) + 543}`;
+const stuCur = () => (S.sheet && /^stu-(stu|row):/.test(S.sheet) ? S.sheet.slice(8) : null);
+function stuRows() {
+  if (STU.noclass) return [];
+  let base = [];
+  if (STU.room !== "c61") base = stuOther(STU.room);
+  else if (STU.sstate !== "nostudent") {
+    const sv = [RPT.sstate, RPT.period, RPT.month]; RPT.sstate = STU.sstate === "many" ? "many" : "normal"; RPT.period = "term"; RPT.month = "2026-11";
+    let m; try { m = rpModel(); } finally { [RPT.sstate, RPT.period, RPT.month] = sv; }
+    base = m.rows.map((r) => ({ ...r, id: "s" + r.no, code: String(61000 + r.no), nick: STU.sstate === "many" ? (r.no % 9 === 0 ? "น้องชื่อเล่นยาวมากเป็นพิเศษ" : "") : STU_NICK[r.no] || "", pfx: "ไม่ระบุ" }));
+  }
+  return base.concat(STU.added).filter((r) => !STU.gone[r.id]).map((r) => (STU.edits[r.id] ? { ...r, ...STU.edits[r.id] } : r));
+}
+function stuAgg(rows) { const n = rows.length, miss = rows.filter((r) => r.miss).length, atT = rows.reduce((t, r) => t + r.atT, 0), atC = rows.reduce((t, r) => t + r.at[0] + r.at[1], 0);
+  return { n, miss, done: n - miss, missL: rows.filter((r) => r.miss), atT, atC, att: atT ? Math.round((atC * 100) / atT) : null }; }
+function stuFound(rows) {
+  const q = STU.q.trim(); let out = rows;
+  if (q) { if (/^\d{1,2}$/.test(q)) out = out.filter((r) => r.no === +q);
+    else if (STU.hide) out = [];
+    else { const l = q.toLowerCase(); out = out.filter((r) => `${r.n[0]} ${r.n[1]}`.includes(q) || (r.nick && r.nick.includes(q)) || r.code.toLowerCase().includes(l)); } }
+  if (STU.filter !== "all" && stuStatsOk()) out = out.filter((r) => (STU.filter === "miss" ? r.miss > 0 : !r.miss));
+  const f = { no: (r) => r.no ?? 999, name: (r) => (STU.hide ? r.no ?? 999 : r.n.join(" ")), code: (r) => r.code, sub: (r) => (r.app ? r.sent / r.app : 2), att: (r) => (r.attP == null ? 999 : r.attP) }[STU.sort];
+  return [...out].sort((p, w) => { const a = f(p), b = f(w), c = typeof a === "string" ? a.localeCompare(b, "th") : a - b; return c || (p.no ?? 999) - (w.no ?? 999); });
+}
+const stuSay = (r) => { const ok = stuStatsOk(); return `ดูข้อมูล ${stuWho(r)}${!STU.hide && r.no != null ? ` เลขที่ ${r.no}` : ""}${ok && r.app ? ` ส่งงาน ${r.sent} จาก ${r.app}` : ""}${ok && r.miss ? ` ค้าง ${r.miss}` : ""}${ok && r.attP != null ? ` มาเรียน ${r.attP} เปอร์เซ็นต์` : ""}`; };
+function stuName(r) {
+  const nk = !STU.hide && r.nick ? `<span class="nk">“${r.nick}”</span>` : "";
+  const qr = STU.rot[r.id] ? `<span class="st st-warn sx-chip">${ic("qr-code")}QR ใหม่</span>` : "";
+  const nono = r.no == null ? `<span class="st st-mute sx-chip">ไม่มีเลขที่</span>` : "";
+  const past = STU.past ? `<span class="st st-mute sx-chip">จบปีการศึกษา</span>` : "";
+  return `<span class="n1">${STU.hide ? `เลขที่ ${r.no ?? "—"}` : `${r.n[0]} ${r.n[1]}`}</span>${nk}${qr}${nono}${past}`;
+}
+function stuHead(rows) {
+  const ph = S.device === "phone", ro = stuRo() || STU.noclass;
+  const sub = STU.noclass ? STU_TERM : `${stuRoom()} · ${rows.length} คน · ${STU.past ? "ปีการศึกษา 2568 (อ่านอย่างเดียว)" : STU_TERM}`;
+  const hide = `<button class="chip-btn hide-btn" data-stu="hide" aria-pressed="${STU.hide}" aria-label="ซ่อนชื่อนักเรียน (เฉพาะหน้านี้)">${ic(STU.hide ? "eye-slash" : "eye")}<span class="lbl">${STU.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>`;
+  const term = `<button class="chip-btn" data-toast="เลือกภาคเรียน — ตัวอย่างนี้มี ${STU_TERM} (ปีเก่าดูได้ที่แถวสถานะ)" aria-label="${STU_TERM} แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">เทอม 2/2569</span>${ic("caret-down")}</button>`;
+  const cards = `<button class="chip-btn" data-act="sheet:stu-cards" aria-label="ปรับการ์ด">${ic("sliders-horizontal")}<span class="lbl">ปรับการ์ด</span></button>`;
+  const imp = ro ? "" : `<button class="chip-btn" data-stu="imp" aria-label="นำเข้า Excel">${ic("microsoft-excel-logo")}<span class="lbl">นำเข้า Excel</span></button>`;
+  const add = ro ? "" : `<button class="btn btn-primary sx-add" data-stu="new">${ic("plus")}<span class="lbl">เพิ่มนักเรียน</span></button>`;
+  const acts = ph ? `${hide}<button class="icon-btn" data-act="sheet:stu-more" aria-label="เพิ่มเติม: นำเข้า Excel ปรับการ์ด ภาคเรียน">${ic("dots-three-vertical")}</button>` : `${term}${hide}${cards}${imp}${add}`;
+  return `<div class="rp-head"><div class="rp-ht"><h1 class="display" id="stuH1" tabindex="-1">นักเรียน</h1><span class="k" title="${sub}">${sub}</span></div><div class="rp-ha">${acts}</div></div>`;
+}
+function stuHero(rows) {
+  if (STU.loading) return `<div class="rp-hero" aria-busy="true" aria-label="กำลังโหลดสถิติ">${"<span class='rp-k rp-skk'><span class='sk-line' style='width:60%'></span><span class='sk-line' style='width:40%;height:22px'></span></span>".repeat(4)}</div>`;
+  const A = stuAgg(rows), ok = stuStatsOk() && A.n, d = "—";
+  const tile = (f, icon, l, v, s, al) => f ? `<button class="rp-k" data-stu="filter:${STU.filter === f ? "all" : f}" aria-pressed="${STU.filter === f}" aria-label="${al}" ${ok ? "" : "disabled"}><span class="l">${ic(icon)}${l}${ic(STU.filter === f ? "x-circle" : "funnel", "go")}</span><span class="v num">${v}</span><span class="s">${s}</span></button>`
+    : `<div class="rp-k"><span class="l">${ic(icon)}${l}</span><span class="v num">${v}</span><span class="s">${s}</span></div>`;
+  const fs = (f) => (STU.filter === f ? "กรองอยู่ · แตะเพื่อยกเลิก" : "แตะเพื่อกรองรายชื่อ");
+  const missW = A.missL.map((r) => (STU.hide ? `เลขที่ ${r.no}` : r.n[0])).join(" ");
+  return `<div class="rp-hero" aria-live="off">
+    ${tile("", "users-three", "นักเรียน", A.n ? `${A.n}<small>คน</small>` : d, A.n ? `กำลังเรียน${STU.moved.length ? ` · ย้ายออก ${STU.moved.length}` : ""}` : "ยังไม่มีนักเรียน")}
+    ${tile("done", "check-circle", "ส่งงานครบ", ok ? `${A.done}<small>คน</small>` : d, ok ? fs("done") : "ยังไม่มีข้อมูล", `ส่งงานครบ ${ok ? A.done + " คน" : d} · ${fs("done")}`)}
+    ${tile("miss", "warning-circle", "มีงานค้าง", ok ? `${A.miss}<small>คน</small>` : d, ok ? (A.miss ? missW : "ไม่มีใครค้าง") : "ยังไม่มีข้อมูล", `มีงานค้าง ${ok ? A.miss + " คน " + missW : d} · ${fs("miss")}`)}
+    ${tile("", "user-check", S.device === "phone" ? "มาเฉลี่ย" : "มาเรียนเฉลี่ย", ok && A.att != null ? A.att + "%" : d, ok && A.atT ? `${A.atC}/${A.atT} ครั้ง · ทุกวิชา` : "ยังไม่มีข้อมูล")}</div>`;
+}
+const stuRoomsH = (rows) => `<div role="group" aria-label="เลือกห้อง" style="display:contents">${GB_ROOMS.map(([id, nm]) => `<button class="chip-btn rp-room" aria-pressed="${id === STU.room}" data-stu="room:${id}">${ic("chalkboard")}${nm}<small class="num">${id === STU.room ? rows.length : id === "c61" ? 8 : AT_ROOM0[id][1]} คน</small></button>`).join("")}</div>`;
+const stuFltH = (ok) => `<div class="rp-seg" role="group" aria-label="กรองการส่งงาน">${[["all", "ทั้งหมด"], ["done", "ส่งครบ"], ["miss", "ค้างส่ง"]].map(([k, l]) => `<button aria-pressed="${STU.filter === k}" data-stu="filter:${k}" ${k !== "all" && !ok ? "disabled" : ""}>${k === "miss" ? ic("warning") : ""}${l}</button>`).join("")}</div>`;
+function stuTools(rows) {
+  if (STU.noclass) return "";
+  const ok = stuStatsOk() && rows.length;
+  const search = `<label class="chip-btn sx-search">${ic("magnifying-glass")}<span class="sr">ค้นหานักเรียน</span><input type="search" name="stu-q" aria-label="ค้นหานักเรียน" autocomplete="off" placeholder="${STU.hide ? "ค้นหาด้วยเลขที่" : "ค้นหาชื่อ ชื่อเล่น รหัส หรือเลขที่"}" value="${gbEsc(STU.q)}" ${rows.length ? "" : "disabled"}></label>`;
+  const sort = `<label class="chip-btn rp-sel">${ic("arrows-down-up")}<span class="sr">เรียงรายชื่อ</span><select name="stu-sort" aria-label="เรียงรายชื่อ" ${rows.length ? "" : "disabled"}>${STU_SORTS.map(([k, l]) => `<option value="${k}" ${k === STU.sort ? "selected" : ""} ${(k === "sub" || k === "att") && !stuStatsOk() ? "disabled" : ""}>เรียง: ${l}</option>`).join("")}</select></label>`;
+  const qr = STU.past ? "" : `<button class="chip-btn sx-qrb" data-act="sheet:stu-qrmenu" aria-label="บัตร QR: พิมพ์ หรือออกใหม่" ${rows.length ? "" : "disabled"}>${ic("qr-code")}<span class="lbl">บัตร QR</span>${ic("caret-down")}</button>`;
+  if (S.device === "phone") { const nf = (STU.filter !== "all") + (STU.sort !== "no"); return `<div class="rp-tools">${search}<button class="chip-btn" data-act="sheet:stu-filter">${ic("funnel")}ตัวกรอง${nf ? ` (${nf})` : ""}</button>${qr}</div>`; }
+  return `<div class="rp-tools">${stuRoomsH(rows)}${search}${sort}${stuFltH(ok)}<span class="grow"></span>${qr}</div>`;
+}
+function stuMeta(rows, list) {
+  if (STU.noclass || !rows.length) return "";
+  const ld = STU.loading ? `<span role="status">${ic("circle-notch", "spin")}กำลังโหลดสถิติ…</span>` : STU.bg ? `<span class="st st-mute">${ic("circle-notch", "spin")}กำลังอัปเดต…</span>` : "";
+  const rl = STU.loading ? "" : `<button class="btn btn-ghost" data-stu="reload" ${STU.online ? "" : 'disabled aria-describedby="stuRlWhy"'}>${ic("arrow-clockwise")}โหลดใหม่</button>${STU.online ? "" : '<span class="rp-why" id="stuRlWhy">โหลดใหม่ได้เมื่อมีเน็ต</span>'}`;
+  return `<div class="rp-meta"><span>${ic("chart-bar")}ตัวเลขสถิติ: ทุกวิชา · ทั้งเทอม ${stuTag("P2", "ป้ายขอบเขตสถิติ + เวลาข้อมูล")}</span><span>${ic("clock")}ข้อมูลล่าสุด ${STU_AT}</span>${ld}${rl}<span class="grow"></span><span>${STU.q || STU.filter !== "all" ? `พบ ${list.length} จาก ${rows.length} คน` : `${rows.length} คน`} · เรียงตาม${stuSortL()}</span></div>`;
+}
+function stuBanners() {
+  let h = "";
+  if (STU.past) h += `<div class="banner" role="status">${ic("archive")}<div><b>กำลังดูปีการศึกษา 2568 — อ่านอย่างเดียว</b> · เพิ่ม/แก้/ย้าย/นำเข้า/บัตร QR ใช้ได้เฉพาะปีปัจจุบัน</div><button class="btn" data-stu="thisyear">${ic("arrow-u-up-left")}กลับไปปีนี้</button></div>`;
+  if (STU.hide) h += `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่ · แสดงเฉพาะเลขที่</b> — เฉพาะหน้านี้ · ชื่อ ชื่อเล่น รหัส แสดงเป็นเลขที่ · ปิดคัดลอกไป LINE · ฟอร์ม/นำเข้า/พิมพ์ยังแสดงชื่อจริง ${stuTag("P1", "ซ่อนชื่อต่อหน้า")}</div><button class="btn" data-stu="hide">${ic("eye")}แสดงชื่อ</button></div>`;
+  if (!STU.online) h += `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์อยู่ — แสดงรายชื่อที่โหลดไว้</b> · เพิ่ม/แก้/ย้าย/นำเข้า/ออก QR ใหม่ทำได้เมื่อออนไลน์</div><button class="btn" data-stu="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button></div>`;
+  if (STU.error) h += `<div class="banner" role="alert">${ic("cloud-slash")}<div><b>โหลดสถิติไม่สำเร็จ</b> · รายชื่อยังใช้ได้ ตัวเลขส่งงาน/มาเรียนจะกลับมาเมื่อโหลดได้</div><button class="btn" data-stu="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div>`;
+  const rows = STU.rows || [], act = rows.filter((r) => r.no != null), dupNo = [...new Set(act.map((r) => r.no).filter((n, i, a) => a.indexOf(n) !== i))], none = rows.filter((r) => r.no == null);
+  if ((dupNo.length || none.length) && !STU.past) { let j = 0; const who = (r) => `<button class="btn btn-ghost" data-stu="edit:${r.id}" aria-label="แก้ไข ${stuWho(r)}">${STU.hide ? `คนที่ ${++j}` : `${r.n[0]} ${r.n[1]}`}</button>`;
+    h += `<div class="banner sx-fix" role="alert">${ic("warning")}<div><b>ควรจัดการ</b> ${stuTag("P4", "แถบควรจัดการ")}${dupNo.map((n) => `<p>เลขที่ซ้ำในห้องนี้: เลขที่ ${n} · ${rows.filter((r) => r.no === n).map(who).join("")}</p>`).join("")}${none.length ? `<p>ไม่มีเลขที่ ${none.length} คน — สแกนด้วยเลขที่ไม่ได้ · ${none.map(who).join("")}</p>` : ""}</div></div>`; }
+  if (STU.room !== "c61" && !STU.noclass) h += `<div class="banner banner-off" role="status">${ic("info")}<div><b>ตัวอย่าง: ${stuRoom()} ไม่มีสถิติ</b> · รายชื่อสมมติ ตัวเลขส่งงาน/มาเรียนแสดง “—”</div><button class="btn" data-stu="room:c61">${ic("arrow-u-up-left")}กลับ ป.6/1</button></div>`;
+  if (STU.fail) h += `<div class="banner banner-off" role="note">${ic("info")}<div><b>จำลอง: เซิร์ฟเวอร์ตอบผิดพลาด</b> · ลองบันทึกฟอร์ม / ออก QR ใหม่ / ย้ายออก เพื่อดูข้อความ “บันทึกไม่สำเร็จ”</div></div>`;
+  return h;
+}
+const stuNone = () => (STU.q ? `<div class="sx-none" role="status">${ic("magnifying-glass")}<b>ไม่พบนักเรียนที่ค้นหา</b><span>${STU.hide ? "ตอนซ่อนชื่อค้นได้ด้วยเลขที่เท่านั้น" : "ลองค้นด้วยเลขที่หรือรหัส"}</span><button class="btn" data-stu="clearq">${ic("x")}ล้างคำค้น</button></div>`
+  : `<div class="sx-none" role="status">${ic("funnel")}<b>ไม่มีนักเรียนตามตัวกรองนี้</b><button class="btn" data-stu="filter:all">${ic("x")}ล้างตัวกรอง</button></div>`);
+function stuTable(all, list) {
+  const ok = stuStatsOk(), cur = stuCur(), ro = stuRo();
+  const th = (k, l, cls) => `<th scope="col" class="${cls}" ${STU.sort === k ? 'aria-sort="ascending"' : ""}><button data-stu="sort:${k}" aria-pressed="${STU.sort === k}" aria-label="เรียงตาม${l}" ${(k === "sub" || k === "att") && !ok ? "disabled" : ""}>${l}${ic(STU.sort === k ? "sort-ascending" : "arrows-down-up")}</button></th>`;
+  const body = list.map((r) => `<tr ${cur === r.id ? 'aria-current="true"' : ""}><td class="c-no num">${r.no ?? "—"}</td><th scope="row" class="c-nm"><button class="sx-nm" data-stu="stu:${r.id}" aria-label="${stuSay(r)}" ${STU.hide ? "" : `title="${r.n[0]} ${r.n[1]}${r.nick ? ` (${r.nick})` : ""}"`}>${stuName(r)}</button></th>
+    <td class="c-code num">${STU.hide ? '<span aria-hidden="true">•••</span><span class="sr">ซ่อนอยู่</span>' : r.code}</td>
+    <td class="c-sub num">${ok && r.app ? `<span class="rp-mb"><span class="bar" aria-hidden="true"><i style="width:${Math.round((r.sent * 100) / r.app)}%"></i></span><span>${r.sent}/${r.app}</span></span>` : "—"}</td>
+    <td class="c-miss num">${!ok ? "—" : r.miss ? `<span class="rp-miss">${ic("warning")}ค้าง ${r.miss}</span>` : '<span class="sx-dash" aria-hidden="true">–</span><span class="sr">ไม่มีงานค้าง</span>'}</td>
+    <td class="c-att num">${stuPc(r.attP)}</td><td class="c-act">${ro ? "" : `<button class="icon-btn" data-stu="row:${r.id}" aria-label="จัดการ ${stuWho(r)}" aria-haspopup="dialog">${ic("dots-three-vertical")}</button>`}</td></tr>`).join("");
+  return `<section class="card rp-tblc sx-tblc" aria-labelledby="stuTblH"><div class="rp-th"><h2 id="stuTblH" class="display" tabindex="-1">รายชื่อ · ${all.length} คน</h2>${stuTabs(all)}</div>
+  ${list.length ? `<div class="rp-scroll" role="region" aria-labelledby="stuTblH" tabindex="0"><table class="rpt sxt"><caption class="sr">รายชื่อนักเรียน ${stuRoom()} ${all.length} คน · แตะชื่อเพื่อเปิดข้อมูลรายคน</caption>
+  <thead><tr>${th("no", "เลขที่", "c-no")}${th("name", "ชื่อ-สกุล", "c-nm")}${th("code", "รหัส", "c-code")}${th("sub", "ส่งงาน", "c-sub")}<th scope="col" class="c-miss">ค้าง</th>${th("att", "มา", "c-att")}<th scope="col" class="c-act"><span class="sr">จัดการ</span></th></tr></thead><tbody>${body}</tbody></table></div>` : stuNone()}${stuAllRooms()}</section>`;
+}
+function stuList(all, list) {
+  const ok = stuStatsOk(), cur = stuCur(), ro = stuRo();
+  return `<section class="card rp-tblc sx-tblc" aria-labelledby="stuTblH"><div class="rp-th"><h2 id="stuTblH" class="display" tabindex="-1">รายชื่อ · ${all.length} คน</h2>${stuTabs(all)}</div>
+  ${list.length ? `<ul class="rp-list">${list.map((r) => `<li class="sx-li"><button class="rp-li" data-stu="stu:${r.id}" aria-label="${stuSay(r)}" ${cur === r.id ? 'aria-current="true"' : ""}><span class="no num">${r.no ?? "—"}</span><span class="t"><span class="nm sx-nmrow">${stuName(r)}</span><small>${STU.hide ? "" : r.code + " · "}มา ${stuPc(r.attP)}</small></span><span class="sub num ${ok && r.miss ? "rp-miss" : ""}">${!ok ? "—" : r.miss ? `${ic("warning")}ค้าง ${r.miss}` : r.app ? `ส่ง ${r.sent}/${r.app}` : "—"}</span></button>${ro ? "" : `<button class="icon-btn sx-dots" data-stu="row:${r.id}" aria-label="จัดการ ${stuWho(r)}" aria-haspopup="dialog">${ic("dots-three-vertical")}</button>`}</li>`).join("")}</ul>` : stuNone()}${stuAllRooms()}</section>`;
+}
+function stuCards(rows) {
+  const ro = stuRo(), rot = rows.filter((r) => STU.rot[r.id]), out = [];
+  const card = (k, title, body) => `<section class="card sx-card" aria-labelledby="stc-${k}"><div class="rp-ch"><h2 class="display" id="stc-${k}" tabindex="-1">${ic(STU_CARDS.find((c) => c[0] === k)[2])}${title}</h2></div><div class="rp-cb">${body}</div></section>`;
+  if (STU.cards.qr) out.push(card("qr", "บัตร QR", `<p class="sx-kv"><span>QR ใหม่ใน 60 วัน</span><b class="num">${rot.length} คน</b></p>${rot.length ? `<p class="rp-why" style="margin:0">${rot.map(stuWhoNo).join(", ")} — พิมพ์สติกเกอร์ใหม่ให้ด้วย</p>` : ""}
+    ${STU.past ? "" : `<div class="gd-acts"><button class="btn" data-stu="print:all" ${rows.length ? "" : "disabled"}>${ic("printer")}พิมพ์ทั้งห้อง</button>${rot.length ? `<button class="btn" data-stu="print:new">${ic("printer")}เฉพาะ QR ใหม่ (${rot.length})</button>` : ""}</div>`}`));
+  if (STU.cards.moved) out.push(card("moved", `ย้ายออก / ไม่ใช้งาน (${STU.moved.length})`, STU.moved.length ? `<ul class="sx-ml">${STU.moved.map((r) => `<li><span class="t"><b>${stuWhoNo(r)}</b><span class="st st-mute">${ic(r.kind === "moved" ? "sign-out" : "pause-circle")}${r.kind === "moved" ? `ย้ายออก ${r.left}` : `ไม่ใช้งาน · ${r.left}`}</span></span>${ro ? "" : `<button class="btn" data-stu="react:${r.id}" aria-label="กลับมาใช้งาน ${stuWho(r)}">${ic("arrow-counter-clockwise")}กลับมาใช้งาน</button>`}</li>`).join("")}</ul><p class="rp-why" style="margin:0">ไม่นับในสถิติห้อง · ประวัติคะแนนและเช็คชื่อยังอยู่</p>`
+    : `<p class="rp-why" style="margin:0">ไม่มี — ยังไม่มีใครย้ายออกหรือเลิกใช้งานในห้องนี้</p>`));
+  if (STU.cards.recent) out.push(card("recent", "เพิ่ม/แก้ล่าสุด · ทุกห้อง", `<ul class="sx-ml">${STU.recent.slice(0, 4).map(([n, rm, no, what]) => `<li><span class="t"><b>${STU.hide ? `${rm} · เลขที่ ${no ?? "—"}` : `${n[0]} ${n[1]} · ${rm}`}</b><small>${what}</small></span></li>`).join("")}</ul>`));
+  return out.join("");
+}
+function stuMain(rows) {
+  if (STU.noclass) return gbEmpty("chalkboard", "ยังไม่มีห้องเรียน", "สร้างห้องก่อน แล้วค่อยนำเข้านักเรียน", `<button class="btn btn-primary" data-toast="ไปที่ ตั้งค่า › ห้องเรียน (/settings?section=catalog)">${ic("gear-six")}ไปที่ตั้งค่า › ห้องเรียน</button>`);
+  if (!rows.length) return gbEmpty("users-three", "ยังไม่มีนักเรียนในห้องนี้", "เพิ่มทีละคน หรือนำเข้ารายชื่อจาก Excel (ไฟล์อ่านในเครื่องนี้)", stuRo() ? "" : `<div class="gd-acts"><button class="btn btn-primary" data-stu="new">${ic("plus")}เพิ่มนักเรียน</button><button class="btn" data-stu="imp">${ic("microsoft-excel-logo")}นำเข้า Excel</button></div>`);
+  const list = stuFound(rows);
+  return `<div class="rp-body sx-body">${STU.tab === "moved" ? stuMovedTab(rows) : S.device === "phone" ? stuList(rows, list) : stuTable(rows, list)}<div class="rp-cards">${stuCards(rows)}</div></div>`;
+}
+const stuTabs = (rows) => `<div class="rp-seg sx-tabs" role="group" aria-label="แสดงนักเรียน">${[["active", `กำลังเรียน ${rows.length}`], ["moved", `ย้ายออก/ไม่ใช้งาน (${STU.moved.length})`]].map(([k, l]) => `<button aria-pressed="${STU.tab === k}" data-stu="tab:${k}">${l}</button>`).join("")}</div>${stuTag("P5", "แท็บกำลังเรียน / ย้ายออก")}`;
+function stuMovedTab(rows) { const ro = stuRo();
+  return `<section class="card rp-tblc sx-tblc" aria-labelledby="stuTblH"><div class="rp-th"><h2 id="stuTblH" class="display sr" tabindex="-1">ย้ายออก/ไม่ใช้งาน · ${STU.moved.length} คน</h2>${stuTabs(rows)}</div>
+  <div class="rp-cb" style="padding-top:10px">${STU.moved.length ? `<ul class="sx-ml">${STU.moved.map((r) => `<li><span class="t"><b>${stuWhoNo(r)}</b><span class="st st-mute">${ic(r.kind === "moved" ? "sign-out" : "pause-circle")}${r.kind === "moved" ? `ย้ายออก ${r.left}` : `ไม่ใช้งาน · ${r.left}`}</span></span>${ro ? "" : `<span class="gd-acts"><button class="btn" data-stu="edit:${r.id}" aria-label="แก้ไข ${stuWho(r)}">${ic("pencil-simple")}แก้ไข</button><button class="btn" data-stu="react:${r.id}" aria-label="กลับมาใช้งาน ${stuWho(r)}">${ic("arrow-counter-clockwise")}กลับมาใช้งาน</button></span>`}</li>`).join("")}</ul><p class="rp-why" style="margin:0">ไม่นับในสถิติห้อง · ประวัติคะแนนและเช็คชื่อยังอยู่</p>`
+    : `<div class="sx-none" role="status">${ic("user-minus")}<b>ไม่มี</b><span>ยังไม่มีใครย้ายออกหรือเลิกใช้งานในห้องนี้</span></div>`}</div></section>`;
+}
+function pageStudents() {
+  const rows = (STU.rows = stuRows());
+  const fab = S.device === "phone" && !stuRo() && !STU.noclass && rows.length ? `<button class="btn btn-primary sx-fab" data-stu="new">${ic("plus")}เพิ่มนักเรียน</button>` : "";
+  return `<div class="rpp stp d-${S.device} ${S.device === "desk" ? "" : "touch"}">${stuBanners()}<section class="rp-band" aria-label="สรุปนักเรียน">${stuHead(rows)}${STU.noclass ? "" : stuHero(rows)}</section>${stuTools(rows)}${stuMeta(rows, stuFound(rows))}${stuMain(rows)}${fab}</div>`;
+}
+function stuProj(rows) {
+  const A = stuAgg(rows);
+  return `<div class="proj sx-proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ นักเรียน"><div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${stuRoom()} · ทุกวิชา · ทั้งเทอม</b><span class="grow"></span><span class="hp">${ic("eye-slash")}ไม่มีชื่อนักเรียนบนจอนี้</span><button class="btn" id="stuProjOff" data-stu="projoff">${ic("x")}ปิดฉายจอ</button></div>
+  <div class="rp-pjn"><div><span>นักเรียน</span><b class="num">${A.n}<small> คน</small></b></div><div><span>ส่งงานครบ</span><b class="num">${A.done}<small> คน</small></b></div><div><span>มีงานค้าง</span><b class="num">${A.miss}<small> คน</small></b></div><div><span>มาเรียนเฉลี่ย</span><b class="num">${A.att == null ? "—" : A.att + "%"}</b></div></div>
+  <p class="sx-pjn">${ic("lock-simple")}ปิดอยู่ตอนฉายจอ: เพิ่ม · นำเข้า · แก้ไข · บัตร QR · พิมพ์ · คัดลอก — ตัวเลขรายคนไม่แสดงบนจอนี้</p></div>`;
+}
+const stuHist = (r) => [...(STU.rot[r.id] ? [["วันนี้", "ออก QR ใหม่"]] : []), ...(STU.edits[r.id] ? [["วันนี้", "แก้ข้อมูลนักเรียน"]] : []), ...(r.app ? [["10 พ.ย. 16:20", "ให้คะแนน แบบฝึกหัด 3.2"], ["5 พ.ย. 08:12", "สแกนส่ง ใบงานที่ 4"]] : []), ["1 ต.ค. 09:00", "นำเข้าจาก Excel"]].slice(0, 6);
+function stuNoErr(v, self) { const s = String(v || "").trim(); if (!s) return ""; if (!/^\d+$/.test(s) || +s < 1) return "เลขที่ต้องเป็นตัวเลข 1 ขึ้นไป";
+  const c = (STU.rows || stuRows()).find((r) => r.id !== self && r.no === +s);
+  return c ? (STU.hide ? `เลขที่ ${s} ถูกใช้แล้ว` : `เลขที่ ${s} มี${c.n[0]} ${c.n[1]}อยู่แล้ว — ใช้เลขอื่น หรือแก้เลขที่ของคนนั้นก่อน`) : ""; }
+function stuSheet() {
+  const k = S.sheet, rows = STU.rows || stuRows(), [kk, id] = k.split(":"), R = (x) => rows.find((r) => r.id === x) || STU.moved.find((r) => r.id === x);
+  let h = "", body = "", role = "dialog", cls = "", x = `<button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button>`;
+  const no = (l = "ยกเลิก") => `<button class="btn" id="stuNo" data-act="close">${l}</button>`;
+  const err = STU.cf ? `<p class="gf-err" role="alert">${ic("warning-circle")}${STU.cf}</p>` : "";
+  const center = S.device === "desk" || S.device === "ipadL" ? "gb-center" : "";
+  if (kk === "stu-stu") { const r = R(id);
+    if (!r) { h = "นักเรียน"; body = `<p class="sec">ไม่พบนักเรียน</p>`; }
+    else { const ok = stuStatsOk(), v = (y) => (ok ? y : "—"), line = STU.hide || STU.project;
+      h = STU.hide ? `เลขที่ ${r.no ?? "—"}` : `เลขที่ ${r.no ?? "—"} ${r.n[0]} ${r.n[1]}`;
+      const dl = [["ส่งงาน", r.app ? `${r.sent}/${r.app}` : "—"], ["ค้างส่ง", r.miss], ["ยังไม่ถึงกำหนด", r.pend], ["รอตรวจ", r.aw], ["สะสม", r.fu ? `${fmtN(r.sc)}/${r.fu}` : "—"], ["ร้อยละสะสม", rpPc(r.pct)], ["มาเรียน", r.atT ? `${r.at[0] + r.at[1]}/${r.atT}` : "—"], ["ร้อยละมา", rpPc(r.attP)]];
+      body = `<p class="sec small" style="margin:0">${stuRoom()} · ทุกวิชา · ทั้งเทอม · ${STU.hide ? "ซ่อนชื่ออยู่" : `รหัส ${r.code}${r.nick ? ` · ชื่อเล่น ${r.nick}` : ""}`} ${stuTag("P2", "ป้ายขอบเขตในลิ้นชัก")}</p>
+      ${ok ? "" : `<p class="gf-note">${ic("cloud-slash")}${STU.loading ? "กำลังโหลดสถิติ…" : STU.room !== "c61" ? "ตัวอย่างนี้มีสถิติเฉพาะ ป.6/1" : "โหลดสถิติไม่สำเร็จ — ตัวเลขรายคนจะขึ้นเมื่อโหลดได้"}</p>`}
+      <dl class="rp-dl">${dl.map(([l, y]) => `<div><dt>${l}</dt><dd>${v(y)}</dd></div>`).join("")}</dl>
+      ${ok && r.atT ? `<ul class="rp-leg">${RP_AK.map((a, i) => `<li class="a-${a[0]}"><i class="sw"></i>${ic(a[1])}${a[2]} <b class="num">${r.at[i]}</b></li>`).join("")}</ul>` : ""}
+      ${!ok ? "" : r.missA.length ? `<div class="rp-fgrp"><h3>งานที่ค้าง ${r.missA.length} งาน</h3>${r.missA.map((a) => `<button class="btn" style="justify-content:flex-start" data-stu="asg:${a.id}">${ic("warning")}${a.title}${ic("arrow-right")}</button>`).join("")}<button class="btn" data-stu="line:${r.id}" ${line ? 'disabled aria-describedby="stuLineWhy"' : ""}>${ic(STU.copied ? "check" : "copy")}${STU.copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>${line ? `<span class="rp-why" id="stuLineWhy">ปิดอยู่ตอน${STU.project ? "ฉายจอ" : "ซ่อนชื่อ"}</span>` : ""}</div>` : `<p class="rp-ok">${ic("check-circle")}ไม่มีงานค้าง</p>`}
+      <div class="rp-fgrp"><h3>ประวัติล่าสุด</h3><ul class="sx-hist">${stuHist(r).map(([t, d]) => `<li><span class="num">${t}</span><span>${d}</span></li>`).join("")}</ul></div>
+      <div class="rp-fgrp sx-acts"><h3>จัดการ</h3>${STU.past ? `<p class="gf-note">${ic("lock-simple")}ปีการศึกษาเก่า — อ่านอย่างเดียว ไม่มีปุ่มแก้ไขหรือย้าย</p>` : `<button class="btn btn-primary" data-stu="edit:${r.id}">${ic("pencil-simple")}แก้ไขข้อมูล</button><button class="btn" data-stu="qr:${r.id}">${ic("qr-code")}ออก QR ใหม่…</button><button class="btn" data-stu="move:${r.id}">${ic("arrows-left-right")}ย้ายห้อง… ${stuTag("P3", "ปุ่มย้ายห้องในลิ้นชัก")}</button><button class="btn" data-stu="leave:${r.id}">${ic("sign-out")}ย้ายออก/ไม่ใช้งาน… ${stuTag("P3", "ปุ่มย้ายออกในลิ้นชัก")}</button>`}<button class="btn" data-stu="gb">${ic("notebook")}ไปสมุดคะแนน</button></div>`; } }
+  if (kk === "stu-row") { const r = R(id); h = `จัดการ ${stuWhoNo(r)}`;
+    body = `<button class="btn mrow" data-stu="edit:${id}">${ic("pencil-simple")}แก้ไข</button><button class="btn mrow" data-stu="qr:${id}">${ic("qr-code")}ออก QR ใหม่…</button><button class="btn mrow" data-stu="move:${id}">${ic("arrows-left-right")}ย้ายห้อง…</button><button class="btn mrow" data-stu="leave:${id}">${ic("sign-out")}ย้ายออก/ไม่ใช้งาน…</button><button class="btn mrow" data-stu="stu:${id}">${ic("user-circle")}ดูข้อมูลรายคน</button>`; }
+  if (kk === "stu-form") { const F = STU.f; cls = center; x = `<button class="icon-btn" data-stu="fclose" aria-label="ปิด">${ic("x")}</button>`;
+    if (F.ask) { role = "alertdialog"; h = "ยังไม่ได้บันทึก"; body = `<p style="margin:0">ปิดแล้วข้อมูลที่แก้จะหายไป</p><div class="gd-foot"><button class="btn btn-danger" data-stu="fdrop">ปิดโดยไม่บันทึก</button><button class="btn btn-primary" id="stuBack" data-stu="fback">กลับไปแก้</button></div>`; }
+    else { const e = F.err, nextNo = Math.max(0, ...rows.filter((r) => r.id !== F.id).map((r) => r.no || 0)) + 1;
+      h = F.mode === "new" ? "เพิ่มนักเรียน" : `แก้ไขข้อมูล · ${STU.hide ? `เลขที่ ${F.no0 ?? "—"}` : `${F.fn0} ${F.ln0}`}`;
+      const fe = (f, i) => `<p class="sx-ferr" id="${i}E" role="alert">${e[f] ? ic("warning-circle") + e[f] : ""}</p>`;
+      const inp = (f, i, extra = "") => `<input id="${i}" class="gf-in" data-stuf="${f}" value="${gbEsc(F[f])}" autocomplete="off" ${e[f] ? 'aria-invalid="true"' : ""} aria-describedby="${i}E${f === "no" ? " sfNoH" : f === "code" ? " sfCodeH" : ""}" ${extra}>`;
+      const req = `<span class="sx-req" aria-hidden="true"> *</span>`;
+      body = `${STU.hide ? `<p class="gf-note">${ic("eye")}หน้าต่างนี้แสดงชื่อจริง (หน้ารายชื่อซ่อนชื่ออยู่)</p>` : ""}${F.fail ? `<p class="gf-err" role="alert" id="sfFail" tabindex="-1">${ic("cloud-slash")}${F.fail}</p>` : ""}
+      <div class="gf-row"><div class="gf-field"><label for="sfPfx">คำนำหน้า</label><select id="sfPfx" class="gf-in" data-stuf="pfx">${STU_PFX.map((p) => `<option ${F.pfx === p ? "selected" : ""}>${p}</option>`).join("")}</select></div>
+        <div class="gf-field"><label for="sfFn">ชื่อ${req}</label>${inp("fn", "sfFn", 'aria-required="true"')}${fe("fn", "sfFn")}</div>
+        <div class="gf-field"><label for="sfLn">สกุล${req}</label>${inp("ln", "sfLn", 'aria-required="true"')}${fe("ln", "sfLn")}</div></div>
+      <div class="gf-row"><div class="gf-field"><label for="sfNick">ชื่อเล่น</label>${inp("nick", "sfNick")}${fe("nick", "sfNick")}</div>
+        <div class="gf-field"><label for="sfCode">รหัสนักเรียน${req}</label>${inp("code", "sfCode", 'aria-required="true"')}<p class="sx-help" id="sfCodeH">3–30 ตัว ตัวเลขหรือตัวอักษรอังกฤษ</p>${fe("code", "sfCode")}</div>
+        <div class="gf-field"><label for="sfNo">เลขที่</label>${inp("no", "sfNo", 'inputmode="numeric"')}<p class="sx-help" id="sfNoH">${String(F.no).trim() ? "ตัวเลข 1 ขึ้นไป ไม่ซ้ำในห้อง" : "เว้นว่างได้ แต่สแกนด้วยเลขที่จะเลือกคนนี้ไม่ได้"}</p>${fe("no", "sfNo")}<button class="btn btn-ghost sx-next" data-stu="nextno:${nextNo}">${ic("plus-circle")}ใช้เลขที่ถัดไป (${nextNo}) ${stuTag("P6", "เลขที่ถัดไป + เตือนเลขที่ซ้ำก่อนส่ง")}</button></div></div>
+      <dl class="gd-dl sx-fdl"><dt>ห้อง</dt><dd>${stuRoom()}${F.mode === "edit" ? " · ย้ายใช้ปุ่ม “ย้ายห้อง…”" : ""}</dd>${F.mode === "edit" ? `<dt>สถานะ</dt><dd>${STU.moved.some((y) => y.id === F.id) ? "ย้ายออก/ไม่ใช้งาน · กลับมาใช้งานได้ที่แท็บ “ย้ายออก/ไม่ใช้งาน”" : "กำลังเรียน · เปลี่ยนที่ “ย้ายออก/ไม่ใช้งาน…”"}</dd><dt>บัตร QR</dt><dd>${STU.rot[F.id] ? `ออกใหม่ล่าสุด ${STU.rot[F.id]}` : "ยังไม่เคยออกใหม่"}</dd>` : ""}</dl>
+      ${F.mode !== "edit" ? "" : F.qrAsk ? `<div class="sx-inline" role="group" aria-labelledby="sfQrH"><b id="sfQrH">ออก QR ใหม่ให้ ${STU.hide ? `เลขที่ ${F.no0 ?? "—"}` : `${F.fn0} ${F.ln0}`}?</b><p>บัตรเดิมของคนนี้จะใช้ไม่ได้ ต้องพิมพ์สติกเกอร์ใหม่ · ข้อมูลที่แก้ในฟอร์มยังอยู่</p><div class="gd-acts"><button class="btn" id="sfQrNo" data-stu="fqr:no">ยกเลิก</button><button class="btn btn-danger" data-stu="fqr:yes">${ic("qr-code")}ออก QR ใหม่</button></div></div>` : `<button class="btn" data-stu="fqr:ask" style="align-self:flex-start">${ic("qr-code")}ออก QR ใหม่…</button>`}
+      ${F.qrMsg ? `<p class="rp-ok" role="status">${ic("check-circle")}${F.qrMsg}</p>` : ""}
+      <div class="gd-foot"><p class="gf-err" id="sfSum" role="alert" ${F.sum ? "" : "hidden"}>${ic("warning-circle")}${F.sum}</p><button class="btn" data-stu="fclose">ยกเลิก</button><button class="btn btn-primary" data-stu="fsave">${ic("check")}บันทึก</button></div>`; } }
+  if (kk === "stu-qr") { const r = R(id); role = "alertdialog"; h = `ออก QR ใหม่ให้ ${stuWho(r)}?`; body = `<p style="margin:0">บัตรเดิมของคนนี้จะใช้ไม่ได้ ต้องพิมพ์สติกเกอร์ใหม่</p><div class="gd-foot">${err}${no()}<button class="btn btn-danger" data-stu="qryes:${id}">${ic("qr-code")}ออก QR ใหม่</button></div>`; }
+  if (kk === "stu-qrall") { role = "alertdialog"; h = `ออก QR ใหม่ทั้งห้อง ${stuRoom()}?`; body = `<p style="margin:0">ออกบัตรใหม่ให้ ${rows.length} คน — บัตรเดิมของทุกคนจะใช้ไม่ได้ ต้องพิมพ์สติกเกอร์ใหม่</p><div class="gd-foot">${err}${no()}<button class="btn btn-danger" data-stu="qrallyes">${ic("qr-code")}ออก QR ใหม่ ${rows.length} คน</button></div>`; }
+  if (kk === "stu-qrmenu") { const nR = rows.filter((r) => STU.rot[r.id]).length; h = "บัตร QR";
+    body = `${STU.hide ? `<p class="gf-note">${ic("warning")}หน้าพิมพ์สติกเกอร์แสดงชื่อจริง</p>` : ""}<button class="btn mrow" data-stu="print:all">${ic("printer")}<span>พิมพ์สติกเกอร์ทั้งห้อง<br><small>${rows.length} คน</small></span></button><button class="btn mrow" data-stu="print:new" ${nR ? "" : "disabled"}>${ic("printer")}<span>พิมพ์เฉพาะ QR ใหม่ (${nR})<br><small>${nR ? "ที่ออกใหม่ใน 60 วัน" : "ยังไม่มี QR ใหม่ใน 60 วัน"}</small></span></button><button class="btn mrow" data-stu="qrall">${ic("arrows-clockwise")}<span>ออก QR ใหม่ทั้งห้อง…<br><small>บัตรเดิมทุกใบจะใช้ไม่ได้</small></span></button>`; }
+  if (kk === "stu-leave") { const r = R(id), L = STU.lv || (STU.lv = { kind: "moved", date: "" }); role = "alertdialog"; h = `ย้ายออก/ไม่ใช้งาน · ${stuWhoNo(r)}`;
+    body = `<div class="gf-field"><span class="gf-l" id="slK">เลือกสถานะ</span><div class="gf-chips" role="group" aria-labelledby="slK">${[["moved", "ย้ายออก", "sign-out"], ["inactive", "ไม่ใช้งาน", "pause-circle"]].map(([v, l, i]) => `<button class="gf-chip" aria-pressed="${L.kind === v}" data-stu="lkind:${v}">${ic(i)}${l}</button>`).join("")}</div></div>
+    <div class="gf-field"><label for="slDate">ออกเมื่อ (เว้นว่าง = วันนี้)</label><input type="date" id="slDate" class="gf-in" name="stu-ldate" value="${L.date}"></div>
+    <p class="gf-note">${ic("info")}ประวัติคะแนนและเช็คชื่อเดิมยังอยู่ · แต่จะไม่ถูกนับในห้อง และสแกนรับงานไม่ได้ · กลับมาใช้งานได้ที่ “ย้ายออก / ไม่ใช้งาน”</p>
+    <div class="gd-foot">${err}${no()}<button class="btn btn-danger" data-stu="leaveyes:${id}">${ic("sign-out")}${L.kind === "moved" ? "ย้ายออก" : "ตั้งเป็นไม่ใช้งาน"}</button></div>`; }
+  if (kk === "stu-react") { const r = R(id); role = "alertdialog"; h = `ให้ ${stuWhoNo(r)} กลับมาใช้งาน?`; body = `<p style="margin:0">กลับเข้า ${stuRoom()} เลขที่ ${r.no ?? "—"} · นับในสถิติและสแกนรับงานได้อีกครั้ง</p><div class="gd-foot">${err}${no()}<button class="btn btn-primary" data-stu="reactyes:${id}">${ic("arrow-counter-clockwise")}กลับมาใช้งาน</button></div>`; }
+  if (kk === "stu-move") { const r = R(id), M = STU.mv || (STU.mv = { to: "", st: "idle" }), off = !STU.online; h = "ย้ายห้อง";
+    const res = off ? `<p class="gf-err" role="alert">${ic("wifi-slash")}ย้ายห้องต้องออนไลน์</p>` : M.st === "checking" ? `<p class="sx-chk" role="status">${ic("circle-notch", "spin")}กำลังตรวจกับข้อมูลในระบบ…</p>`
+      : M.st === "blocked" ? `<p class="gf-err" role="alert">${ic("prohibit")}ย้ายไม่ได้ — มีประวัติเดิมหรือเป็นการย้ายข้ามปี เก็บนักเรียนไว้ในห้องเดิมเพื่อรักษารายงานย้อนหลัง</p>` : M.st === "ok" ? `<p class="rp-ok" role="status">${ic("check-circle")}ตรวจแล้ว ย้ายไป ${gbRoom(M.to)} ได้</p>` : "";
+    body = `<p style="margin:0">จาก ${stuRoom()} · เลขที่เดิม ${r.no ?? "—"} (ตั้งเลขที่ใหม่ในห้องปลายทางหลังย้าย)</p><div class="gf-field"><span class="gf-l" id="smTo">ย้ายไปห้อง</span><div class="gf-chips" role="group" aria-labelledby="smTo">${GB_ROOMS.filter(([y]) => y !== STU.room).map(([y, nm]) => `<button class="gf-chip" aria-pressed="${M.to === y}" data-stu="mto:${y}" ${off ? "disabled" : ""}>${ic("chalkboard")}${nm}</button>`).join("")}</div><p class="sx-help">ตัวอย่าง: ป.5/1 จำลองกรณีย้ายไม่ได้</p></div>${res}
+    <div class="gd-foot">${err}${no()}<button class="btn btn-primary" data-stu="moveyes:${id}" ${M.st === "ok" && !off ? "" : "disabled"}>${ic("arrows-left-right")}ย้ายห้อง</button></div>`; }
+  if (kk === "stu-imp") { const I = STU.imp; h = "นำเข้ารายชื่อจาก Excel"; cls = center;
+    const tabs = `<div class="rp-seg" role="group" aria-label="วิธีนำเข้า">${[["file", "ไฟล์ Excel"], ["paste", "วางจากตาราง"]].map(([v, l]) => `<button aria-pressed="${I.tab === v}" data-stu="itab:${v}">${l}</button>`).join("")}</div>`;
+    const src = I.tab === "file" ? `<div class="gd-acts"><button class="btn" data-stu="ifile:ok">${ic("file-xls")}เลือกไฟล์ (ตัวอย่าง: รายชื่อ ป.6-1.xlsx)</button><button class="btn btn-ghost" data-stu="ifile:lock">${ic("file-xls")}ลองไฟล์ที่มีเลขที่ซ้ำ</button></div>`
+      : `<div class="gf-field"><label for="siPaste">วางรายชื่อ (รหัส · คำนำหน้า · ชื่อ · สกุล · เลขที่)</label><textarea id="siPaste" class="gf-in" rows="3" placeholder="61009 ไม่ระบุ ชื่อ สกุล 9"></textarea></div><button class="btn" data-stu="ifile:ok" style="align-self:flex-start">${ic("magnifying-glass")}ตรวจรายชื่อ</button>`;
+    const st = I.st === "checking" ? `<p class="sx-chk" role="status">${ic("circle-notch", "spin")}กำลังตรวจกับข้อมูลในระบบ…</p>`
+      : I.st === "ready" ? `<div role="status"><dl class="rp-dl">${[["เพิ่มใหม่", 2], ["แก้ข้อมูล", 1], ["เหมือนเดิม", 6], ["ย้ายเข้าห้องนี้", 1]].map(([l, v]) => `<div><dt>${l}</dt><dd>${v}</dd></div>`).join("")}</dl></div><label class="sx-check"><input type="checkbox" name="stu-iok" ${I.ok ? "checked" : ""}>ตรวจแล้ว — ยอมรับการย้ายห้อง 1 คน (จาก ป.6/2 มา ${stuRoom()})</label><p class="rp-why" style="margin:0">นำเข้าเสร็จแล้วจะสรุปผลเป็นข้อความ ${stuTag("P8", "สรุปผลหลังนำเข้า")}</p>`
+      : I.st === "lock" ? `<p class="gf-err" role="alert">${ic("prohibit")}เลขที่ 5 ซ้ำกัน 2 แถวในไฟล์ — แก้ไฟล์แล้วเลือกใหม่ (ปุ่มนำเข้าถูกล็อก)</p>` : "";
+    const can = I.st === "ready" && I.ok && STU.online;
+    const tpl = `<button class="btn btn-ghost" style="align-self:flex-start" data-toast="ดาวน์โหลด ตัวอย่างรายชื่อ.xlsx แล้ว (หัวคอลัมน์ รหัส · คำนำหน้า · ชื่อ · สกุล · เลขที่ + 2 แถวสมมติ — ตัวอย่างไม่ได้สร้างไฟล์จริง)">${ic("download-simple")}ดาวน์โหลดไฟล์ตัวอย่าง ${stuTag("P7", "ไฟล์ตัวอย่างสำหรับนำเข้า")}</button>`;
+    body = `<p class="gf-note">${ic("lock-simple")}ไฟล์อ่านในเครื่องนี้เท่านั้น ระบบตรวจกับข้อมูลจริงก่อนนำเข้า${STU.hide ? " · หน้าต่างนี้แสดงชื่อจริง" : ""}</p>${tabs}${src}${tpl}${st}<div class="gd-foot">${err}${STU.online ? "" : '<span class="rp-why" id="siWhy">ต้องออนไลน์</span>'}<button class="btn" data-act="close">ยกเลิก</button><button class="btn btn-primary" data-stu="ido" ${can ? "" : `disabled ${STU.online ? "" : 'aria-describedby="siWhy"'}`}>${ic("upload-simple")}นำเข้า 4 คน</button></div>`; }
+  if (kk === "stu-cards") { h = "ปรับการ์ด";
+    body = `<p class="sec small" style="margin:0">ซ่อน/แสดงการ์ดข้างรายชื่อ · จำในเครื่องนี้</p><div class="sheet-row">${ic("lock-simple")}<span class="t"><b>สรุป (แถบบนสุด)</b><small>ล็อกไว้เสมอ</small></span></div>${STU_CARDS.map(([c, l, i]) => `<div class="sheet-row">${ic(i)}<span class="t"><b>${l}</b></span><button class="btn rp-sw" data-stu="card:${c}" aria-pressed="${STU.cards[c]}" aria-label="แสดงการ์ด ${l}">${ic(STU.cards[c] ? "eye" : "eye-slash")}${STU.cards[c] ? "แสดง" : "ซ่อน"}</button></div>`).join("")}<button class="btn btn-primary" data-act="close">เสร็จ</button>`; }
+  if (kk === "stu-more") { h = "เพิ่มเติม"; body = `${stuRo() || STU.noclass ? "" : `<button class="btn mrow" data-stu="imp">${ic("microsoft-excel-logo")}นำเข้า Excel</button>`}<button class="btn mrow" data-act="sheet:stu-cards">${ic("sliders-horizontal")}ปรับการ์ด</button><button class="btn mrow" data-toast="เลือกภาคเรียน — ตัวอย่างนี้มี ${STU_TERM}">${ic("calendar-dots")}${STU_TERM}</button>`; }
+  if (kk === "stu-filter") { h = "ตัวกรองและการเรียง";
+    body = `<div class="rp-fgrp"><h3>ห้อง</h3><div class="row">${stuRoomsH(rows)}</div></div><div class="rp-fgrp"><h3>การส่งงาน</h3><div class="row">${stuFltH(stuStatsOk() && rows.length)}</div></div><div class="rp-fgrp"><h3>เรียง</h3>${STU_SORTS.map(([s, l]) => `<button class="btn rp-sw" style="justify-content:flex-start" data-stu="sort:${s}" aria-pressed="${STU.sort === s}" ${(s === "sub" || s === "att") && !stuStatsOk() ? "disabled" : ""}>${ic(STU.sort === s ? "check" : "arrows-down-up")}${l}</button>`).join("")}</div><button class="btn btn-primary" data-act="close">ดูผล ${stuFound(rows).length} คน</button>`; }
+  if (S.device === "phone" && (kk === "stu-stu" || kk === "stu-row")) cls = "sx-bottom";
+  return `<div class="scrim ${cls}"><div class="sheet sx-sheet ${kk}" role="${role}" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2>${x}</div>${body}</div></div>`;
+}
+function stuOpen(k, opener, focus) { S.sheet = k; if (opener) S.opener = opener; render(true); const el = focus && document.querySelector(focus); if (el) el.focus(); else { const f = document.querySelector("#device .sheet button, #device .sheet input"); if (f) f.focus(); } }
+function stuDone(msg, sel) { STU.cf = ""; S.sheet = null; STU.f = null; STU.mv = null; STU.lv = null; STU.live = msg; render(true); toast(msg);
+  const o = sel || S.opener, q = o && (o.startsWith("[") || /[\s.#]/.test(o) ? o : `[data-act="${o}"]`), b = q && [...document.querySelectorAll(q)].find((y) => y.offsetParent); (b || document.getElementById("stuH1")).focus(); }
+function stuRerender() { const ae = document.activeElement, sel = ae && ae.dataset && ae.dataset.stu ? `[data-stu="${ae.dataset.stu}"]` : ae && ae.id ? "#" + ae.id : null; render(true); if (sel) rpFocus(sel); }
+function stuSave() {
+  const F = STU.f, rows = STU.rows || stuRows(), e = {}, t = (s) => String(s ?? "").trim();
+  if (!t(F.fn)) e.fn = "กรอกชื่อ"; if (!t(F.ln)) e.ln = "กรอกสกุล";
+  if (!t(F.code)) e.code = "กรอกรหัสนักเรียน"; else if (!/^[A-Za-z0-9]{3,30}$/.test(t(F.code))) e.code = "รหัสนักเรียนต้องยาว 3 ตัวขึ้นไป ใช้ตัวเลขหรือตัวอักษรอังกฤษ เช่น 10501 หรือ P001";
+  const ne = stuNoErr(F.no, F.id); if (ne) e.no = ne;
+  F.err = e; F.fail = ""; F.sum = e.fn || e.ln || e.code === "กรอกรหัสนักเรียน" ? "กรอกชื่อ สกุล และรหัสนักเรียนให้ครบ" : Object.keys(e).length ? "แก้ช่องที่มีข้อความสีแดงก่อนบันทึก" : "";
+  if (F.sum) { render(true); rpFocus(["#sfFn", "#sfLn", "#sfCode", "#sfNo"][["fn", "ln", "code", "no"].findIndex((f) => e[f])]); return; }
+  const taken = [...rows, ...STU.moved].find((r) => r.id !== F.id && r.code.toLowerCase() === t(F.code).toLowerCase());
+  if (taken) { F.err = { code: "รหัสนี้มีอยู่แล้ว — เป็นของนักเรียนคนอื่นในระบบ ตรวจรหัสอีกครั้ง" }; render(true); rpFocus("#sfCode"); return; }
+  if (stuBlocked()) { F.fail = STU_FAIL; render(true); rpFocus("#sfFail"); return; }
+  const rec = { pfx: F.pfx, n: [t(F.fn), t(F.ln)], nick: t(F.nick), code: t(F.code), no: t(F.no) ? +t(F.no) : null };
+  STU.recent.unshift([rec.n, stuRoom(), rec.no, F.mode === "new" ? "เพิ่มใหม่ · วันนี้" : "แก้ข้อมูล · วันนี้"]);
+  if (F.mode === "new") { const r = { ...STU_BLANK, id: "n" + ++STU.seq, ...rec }; STU.added.push(r); stuDone(`เพิ่ม ${STU.hide ? `เลขที่ ${rec.no ?? "—"}` : rec.n.join(" ")} แล้ว`, `[data-stu="stu:${r.id}"]`); }
+  else { const mv = STU.moved.find((y) => y.id === F.id); if (mv) Object.assign(mv, rec); else STU.edits[F.id] = rec; stuDone("บันทึกแล้ว"); }
+}
+function stuAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), a = i < 0 ? "" : v.slice(i + 1);
+  const re = (...sels) => { render(true); if (sels.length) rpFocus(...sels); };
+  const rows = STU.rows || stuRows(), R = (y) => rows.find((r) => r.id === y) || STU.moved.find((r) => r.id === y), op = S.sheet ? null : `[data-stu="${v}"]`;
+  const fail = (msg, sel) => { STU.cf = msg; re(sel || "#stuNo"); };
+  switch (k) {
+    case "hide": STU.hide = !STU.hide; STU.copied = false; STU.live = STU.hide ? "ซ่อนชื่อนักเรียนแล้ว" : "แสดงชื่อนักเรียนแล้ว"; re('.rp-head [data-stu="hide"]'); toast(STU.live); return;
+    case "room": if (a === STU.room) return; S.sheet = null; STU.room = a; STU.q = ""; STU.filter = "all"; STU.tab = "active"; STU.live = `เปิดรายชื่อ ${gbRoom(a)}`; re(`[data-stu="room:${a}"]`, "#stuH1"); toast(STU.live); return;
+    case "goroom": { const [c, code] = a.split(":"); STU.room = c; STU.q = code; STU.filter = "all"; STU.tab = "active"; STU.live = `สลับไป ${gbRoom(c)} · พบ ${stuFound(stuRows()).length} คน`; re('input[name="stu-q"]'); toast(STU.live); return; }
+    case "tab": STU.tab = a; STU.live = a === "moved" ? `ย้ายออก/ไม่ใช้งาน ${STU.moved.length} คน` : `กำลังเรียน ${rows.length} คน`; re(`[data-stu="tab:${a}"]`); return;
+    case "filter": { const hero = e && e.target.closest && e.target.closest(".rp-k"), hs = [...document.querySelectorAll("#device .rp-hero .rp-k")], hi = hero ? hs.indexOf(hero) : -1;
+      STU.filter = a; STU.live = a === "all" ? `แสดงทั้งหมด ${rows.length} คน` : `กรอง${a === "miss" ? "มีงานค้าง" : "ส่งงานครบ"} · พบ ${stuFound(rows).length} คน`; render(true);
+      if (hi >= 0) { const tt = document.querySelectorAll("#device .rp-hero .rp-k")[hi]; if (tt) tt.focus(); } else rpFocus(`[data-stu="filter:${a}"]`); return; }
+    case "sort": STU.sort = a; STU.live = `เรียงตาม${stuSortL()}`; re(`[data-stu="sort:${a}"]`); return;
+    case "clearq": STU.q = ""; STU.live = `แสดงทั้งหมด ${rows.length} คน`; re('input[name="stu-q"]'); return;
+    case "stu": stuOpen(`stu-stu:${a}`, `[data-stu="stu:${a}"]`); return;
+    case "row": stuOpen(`stu-row:${a}`, `[data-stu="row:${a}"]`); return;
+    case "new": case "edit": { if (stuRo()) return; const r = k === "edit" ? R(a) : null;
+      STU.f = r ? { mode: "edit", id: a, pfx: r.pfx || "ไม่ระบุ", fn: r.n[0], ln: r.n[1], nick: r.nick || "", code: r.code, no: r.no == null ? "" : String(r.no), fn0: r.n[0], ln0: r.n[1], no0: r.no, err: {}, sum: "", fail: "", dirty: false }
+        : { mode: "new", pfx: "ไม่ระบุ", fn: "", ln: "", nick: "", code: "", no: "", err: {}, sum: "", fail: "", dirty: false };
+      stuOpen("stu-form", S.sheet ? null : k === "new" ? '[data-stu="new"]' : `[data-stu="row:${a}"]`, "#sfPfx"); return; }
+    case "fclose": { const F = STU.f; if (F && F.dirty) { F.ask = true; re("#stuBack"); return; } STU.f = null; closeSheet(); return; }
+    case "fback": STU.f.ask = false; re("#sfPfx"); return;
+    case "fdrop": STU.f = null; closeSheet(); return;
+    case "fsave": stuSave(); return;
+    case "nextno": STU.f.no = a; STU.f.dirty = true; delete STU.f.err.no; re("#sfNo"); return;
+    case "fqr": { const F = STU.f; if (a === "ask") { F.qrAsk = true; re("#sfQrNo"); return; } if (a === "no") { F.qrAsk = false; re('[data-stu="fqr:ask"]'); return; }
+      F.qrAsk = false; if (stuBlocked()) { F.fail = STU_QRFAIL; re("#sfFail"); return; }
+      STU.rot[F.id] = STU_TODAY; F.qrMsg = "ออก QR ใหม่แล้ว — พิมพ์สติกเกอร์ใหม่ (ฟอร์มยังเปิดอยู่ ค่าที่แก้ไม่หาย)"; re('[data-stu="fqr:ask"]'); return; }
+    case "qr": STU.cf = ""; stuOpen(`stu-qr:${a}`, op, "#stuNo"); return;
+    case "qrall": STU.cf = ""; stuOpen("stu-qrall", op, "#stuNo"); return;
+    case "qryes": if (stuBlocked()) return fail(STU_QRFAIL); STU.rot[a] = STU_TODAY; stuDone(`ออก QR ใหม่ให้ ${stuWho(R(a))} แล้ว — พิมพ์สติกเกอร์ใหม่`); return;
+    case "qrallyes": if (stuBlocked()) return fail(STU_QRFAIL); rows.forEach((r) => (STU.rot[r.id] = STU_TODAY)); stuDone(`ออก QR ใหม่ทั้งห้อง ${rows.length} คนแล้ว — พิมพ์สติกเกอร์ใหม่`, '[data-act="sheet:stu-qrmenu"]'); return;
+    case "print": S.sheet = null; render(true); rpFocus('[data-act="sheet:stu-qrmenu"]'); toast(`เปิดหน้าพิมพ์สติกเกอร์${a === "new" ? "เฉพาะ QR ใหม่" : "ทั้งห้อง"} (StickerSheet เดิม — ตัวอย่างนี้ไม่ได้วาด)${STU.hide ? " · หน้าพิมพ์แสดงชื่อจริง" : ""}`); return;
+    case "leave": STU.lv = { kind: "moved", date: "" }; STU.cf = ""; stuOpen(`stu-leave:${a}`, op, "#stuNo"); return;
+    case "lkind": STU.lv.kind = a; re(`[data-stu="lkind:${a}"]`); return;
+    case "leaveyes": { if (stuBlocked()) return fail(STU_FAIL); const r = R(a), kind = STU.lv.kind; STU.gone[a] = true;
+      STU.moved.push({ id: a, no: r.no, n: r.n, nick: r.nick, code: r.code, kind, left: STU.lv.date ? stuDate(STU.lv.date) : STU_TODAY });
+      stuDone(`${stuWho(r)} ${kind === "moved" ? "ย้ายออกแล้ว" : "ตั้งเป็นไม่ใช้งานแล้ว"}`, "#stc-moved"); return; }
+    case "react": STU.cf = ""; stuOpen(`stu-react:${a}`, `[data-stu="react:${a}"]`, "#stuNo"); return;
+    case "reactyes": { if (stuBlocked()) return fail(STU_FAIL); const r = R(a), clash = r.no != null && rows.find((y) => y.no === r.no);
+      if (clash) return fail(`เลขที่ ${r.no} มี${STU.hide ? "คนอื่น" : `${clash.n[0]} ${clash.n[1]}`}อยู่แล้ว — แก้เลขที่ของคนนั้นก่อน แล้วค่อยกลับมาใช้งาน`);
+      STU.moved = STU.moved.filter((y) => y.id !== a); if (STU.gone[a]) delete STU.gone[a]; else STU.added.push({ ...STU_BLANK, id: a, no: r.no, n: r.n, nick: r.nick, code: r.code, pfx: "ไม่ระบุ" });
+      stuDone(`${stuWho(r)} กลับมาใช้งานแล้ว`, `[data-stu="stu:${a}"]`); return; }
+    case "move": STU.mv = { to: "", st: "idle" }; STU.cf = ""; stuOpen(`stu-move:${a}`, op); return;
+    case "mto": STU.mv = { to: a, st: "checking" }; re(`[data-stu="mto:${a}"]`); clearTimeout(STU.timer);
+      STU.timer = setTimeout(() => { if (!STU.mv || !S.sheet || !S.sheet.startsWith("stu-move")) return; STU.mv.st = a === "c51" ? "blocked" : "ok"; render(true); rpFocus(`[data-stu="mto:${a}"]`); }, 400); return;
+    case "moveyes": { if (stuBlocked()) return fail(STU_FAIL); const r = R(a); STU.gone[a] = true; stuDone(`ย้ายห้องแล้ว — ${stuWho(r)} ไป ${gbRoom(STU.mv.to)}`, "#stuTblH"); return; }
+    case "imp": if (stuRo()) return; STU.imp = { tab: "file", st: "idle", ok: false }; STU.cf = ""; stuOpen("stu-imp", S.sheet ? null : '[data-stu="imp"]'); return;
+    case "itab": STU.imp.tab = a; STU.imp.st = "idle"; re(`[data-stu="itab:${a}"]`); return;
+    case "ifile": STU.imp.st = "checking"; STU.imp.ok = false; re(`[data-stu="ifile:${a}"]`); clearTimeout(STU.timer);
+      STU.timer = setTimeout(() => { if (!STU.imp || S.sheet !== "stu-imp") return; STU.imp.st = a === "lock" ? "lock" : "ready"; render(true); rpFocus(a === "lock" ? '[data-stu="ifile:lock"]' : 'input[name="stu-iok"]'); }, 400); return;
+    case "ido": { if (stuBlocked()) return fail(STU_FAIL, '[data-stu="ido"]'); const mx = Math.max(0, ...rows.map((r) => r.no || 0));
+      [stName("c61", 10), stName("c61", 11), stName("c62", 4)].forEach((n, j) => { STU.seq++; STU.added.push({ ...STU_BLANK, id: "n" + STU.seq, no: mx + 1 + j, n, nick: "", code: String(62000 + STU.seq), pfx: "ไม่ระบุ" }); });
+      STU.recent.unshift([stName("c61", 10), stuRoom(), mx + 1, "นำเข้า · วันนี้"]); STU.imp = null;
+      stuDone("นำเข้าแล้ว — เพิ่มใหม่ 2 · แก้ข้อมูล 1 · เหมือนเดิม 6 · ย้ายเข้า 1", '[data-stu="imp"]'); return; }
+    case "card": STU.cards[a] = !STU.cards[a]; STU.live = `${STU.cards[a] ? "แสดง" : "ซ่อน"}การ์ด ${STU_CARDS.find((c) => c[0] === a)[1]}`; re(`[data-stu="card:${a}"]`); return;
+    case "asg": rpToGb(a); return;
+    case "gb": gbScenario("normal"); S.page = "gradebook"; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0; toast(`เปิดสมุดคะแนน ${stuRoom()}`); return;
+    case "line": STU.copied = true; STU.live = "คัดลอกไปวางใน LINE ได้เลย (เลขที่ + ชื่อ + งานค้าง)"; re(`[data-stu="line:${a}"]`); toast(STU.live);
+      setTimeout(() => { STU.copied = false; if (S.page === "students" && S.sheet && S.sheet.startsWith("stu-stu")) stuRerender(); }, 2000); return;
+    case "reload": case "online": if (k === "online") STU.online = true; if (!STU.online) return; STU.bg = true; re('[data-stu="reload"]'); clearTimeout(STU.timer);
+      STU.timer = setTimeout(() => { STU.bg = false; if (S.page !== "students") return; stuRerender(); toast("อัปเดตรายชื่อและสถิติแล้ว"); }, 800); return;
+    case "retry": STU.error = false; STU.loading = true; STU.live = "กำลังโหลดสถิติ…"; re("#stuH1"); clearTimeout(STU.timer);
+      STU.timer = setTimeout(() => { STU.loading = false; STU.live = "โหลดสถิติแล้ว"; if (S.page === "students") stuRerender(); }, 700); return;
+    case "thisyear": stuScenario("normal"); re("#stuH1"); toast("กลับมาปีการศึกษา 2569"); return;
+    case "projoff": STU.project = false; re("#stuH1"); toast("ปิดฉายจอแล้ว"); return;
+  }
+}
+document.addEventListener("keydown", (e) => { // capture: runs before the shared handler
+  if (S.page !== "students") return; const t = e.target;
+  if (e.key === "Escape") {
+    if (S.sheet === "stu-form" && STU.f) { e.preventDefault(); e.stopImmediatePropagation(); stuAct(STU.f.ask ? "fback" : "fclose"); return; }
+    if (!S.sheet && STU.project) { e.preventDefault(); e.stopImmediatePropagation(); stuAct("projoff"); }
+    return; }
+  if (e.key === "Tab") { const box = document.querySelector("#device .sx-sheet") || (STU.project ? document.querySelector("#device .sx-proj") : null); if (!box) return;
+    const fs = [...box.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]')].filter((y) => y.offsetParent);
+    if (!fs.length) return; const j = fs.indexOf(document.activeElement);
+    if (e.shiftKey && j <= 0) { e.preventDefault(); fs[fs.length - 1].focus(); } else if (!e.shiftKey && (j < 0 || j === fs.length - 1)) { e.preventDefault(); fs[0].focus(); } return; }
+  if (e.key === "Enter" && t.tagName === "INPUT" && t.dataset && t.dataset.stuf) { e.preventDefault(); e.stopImmediatePropagation(); stuAct("fsave"); }
+}, true);
+document.addEventListener("click", (e) => { if (S.page !== "students" || S.sheet !== "stu-form" || !STU.f) return;
+  if (e.target.classList && e.target.classList.contains("scrim")) { e.stopImmediatePropagation(); stuAct("fclose"); } }, true);
+document.addEventListener("input", (e) => { const t = e.target; if (S.page !== "students") return;
+  if (t.name === "stu-q") { STU.q = t.value; const pos = t.selectionStart; render(true); const el = document.querySelector('#device input[name="stu-q"]'); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (_) {} }
+    clearTimeout(STU.qT); STU.qT = setTimeout(() => { const lv = document.getElementById("atLive"); if (lv && S.page === "students") lv.textContent = STU.q ? `พบ ${stuFound(STU.rows || stuRows()).length} คน` : ""; }, 500); return; }
+  if (t.dataset && t.dataset.stuf && STU.f) { const f = t.dataset.stuf; STU.f[f] = t.value; STU.f.dirty = true; let msg = "";
+    if (f === "no") { msg = stuNoErr(t.value, STU.f.id); const hp = document.getElementById("sfNoH"); if (hp) hp.textContent = t.value.trim() ? "ตัวเลข 1 ขึ้นไป ไม่ซ้ำในห้อง" : "เว้นว่างได้ แต่สแกนด้วยเลขที่จะเลือกคนนี้ไม่ได้"; }
+    if (msg) STU.f.err[f] = msg; else delete STU.f.err[f];
+    const er = document.getElementById(t.id + "E"); if (er) er.innerHTML = msg ? ic("warning-circle") + msg : "";
+    if (msg) t.setAttribute("aria-invalid", "true"); else t.removeAttribute("aria-invalid"); } });
+document.addEventListener("change", (e) => { const t = e.target; if (S.page !== "students" || !t.name) return;
+  if (t.name === "stu-sort") { STU.sort = t.value; STU.live = `เรียงตาม${stuSortL()}`; render(true); rpFocus('select[name="stu-sort"]'); }
+  else if (t.name === "stu-iok" && STU.imp) { STU.imp.ok = t.checked; render(true); rpFocus('input[name="stu-iok"]'); }
+  else if (t.name === "stu-ldate" && STU.lv) STU.lv.date = t.value; });
+
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"], ["students", "นักเรียน"]],
+  ststate: [["normal", "ปกติ"], ["loading", "กำลังโหลดสถิติ"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["notfound", "ค้นไม่พบ"], ["error", "โหลดสถิติไม่สำเร็จ"], ["offline", "ออฟไลน์"], ["savefail", "บันทึกไม่สำเร็จ"],
+    ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"], ["fix", "ควรจัดการ (เลขที่ซ้ำ/ไม่มีเลขที่)"], ["moved", "มีนักเรียนย้ายออก"], ["past", "ปีเก่า (อ่านอย่างเดียว)"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"]],
   gstate: [["normal", "ปกติ"], ["noasg", "ยังไม่มีงาน"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["offline", "ออฟไลน์ + คิว"], ["failed", "บันทึกไม่สำเร็จ"], ["closed", "งานปิดรับ"],
     ["hidden", "ซ่อนชื่อ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน × 20 งาน)"], ["export", "กำลังส่งออก Excel"]],
   rstate: [["normal", "ปกติ"], ["unchecked", "ยังไม่ได้เช็คชื่อวันนี้"], ["nobody", "มาเรียน 0 คน"], ["complete", "สุ่มครบแล้ว"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"],
@@ -4527,15 +4998,16 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook", onRp = S.page === "reports";
-  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "rpstate" ? RPT.sstate : g === "rq1" ? RPT.q1 : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group === "state" && onRp ? "rpstate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook", onRp = S.page === "reports", onSt = S.page === "students";
+  const val = (g) => (g === "mode" ? S.modePref : g === "ststate" ? STU.sstate : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "rpstate" ? RPT.sstate : g === "rq1" ? RPT.q1 : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group === "state" && onRp ? "rpstate" : el.dataset.group === "state" && onSt ? "ststate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
   document.querySelectorAll(".rp-only").forEach((el) => (el.hidden = !onRp));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onRp ? `<b>หน้ารายงาน</b> (ux-reports.md) — อ่านอย่างเดียว · ลองกด: ชิปห้อง/วิชา · ทั้งเทอม|รายเดือน (+เดือน) · เช็คชื่อ รายวัน|รายคาบ · หัวคอลัมน์ = เรียง · ชื่อ = ลิ้นชักนักเรียน · “งานค้าง” ใน hero = ไปการ์ดต้องติดตาม · แถวงาน = เปิดสมุดคะแนนที่งานนั้น · คัดลอกไป LINE · ส่งออก Excel · พิมพ์ (ตัวอย่าง A4) · ฉายจอ · ปรับการ์ด · หัวการ์ด = เปิด/ปิด · Esc ปิดลิ้นชัก/พิมพ์/ฉายจอ · ตัวเลข = ux-reports §ตัวเลขตัวอย่าง (คำนวณจากชุดเดียวกับหน้าคะแนน) · ห้องอื่นในตัวอย่างโหลดแล้วกลับ ป.6/1 · รายเดือน: เช็คชื่อใช้ชุดเดียวกับทั้งเทอม<br>Q1–Q4 ตามค่าแนะนำ (ก) · Q1 ดูทาง ข ได้ที่แถว “Q1 การ์ด” · ป้าย <b>ของเพิ่ม</b> = P1 P2 P3 P5 P7 P8 (Gate 2: เจ้าของงานเอา P1 P3 P4 + “—” แทน 0%) (ข้อมูลเดิม ให้เจ้าของงานเลือก) · ป้าย <b>ของเพิ่ม</b> P4 การ์ด “ขาดบ่อย” อนุมัติแล้วที่ Gate 2 ()<br>${INFO[S.theme]}`
+  document.getElementById("info").innerHTML = onSt ? `<b>หน้านักเรียน</b> (ux-students.md) — ลองกด: ค้นหา (ชื่อ ชื่อเล่น รหัส เลขที่) · เรียง (เมนู/หัวคอลัมน์) · “ส่งงานครบ / มีงานค้าง” ใน hero = กรอง · ชื่อ = ลิ้นชักรายคน · ⋮ = จัดการ · เพิ่มนักเรียน (ลองบันทึกว่าง · เลขที่ 5 ซ้ำ · รหัส 61001 ซ้ำ · ปิดฟอร์มที่แก้ค้าง) · ย้ายออก แล้วกลับมาใช้งานที่การ์ด · ออก QR ใหม่ · ย้ายห้อง (ป.5/1 = ย้ายไม่ได้) · นำเข้า Excel (จำลอง) · ซ่อนชื่อ · ปรับการ์ด · Esc ปิด · ตัวเลข = ชุดเดียวกับรายงาน (ทุกวิชา · ทั้งเทอม)<br>Gate 2 ผ่าน · เจ้าของงานเอา P1–P9 ทั้งหมด · ป้าย <b>ของเพิ่ม</b> = P1–P9 (P4 ดูที่สถานะ “ควรจัดการ” · P5 แท็บบนรายการ · P7 ในกล่องนำเข้า · P9 ค้นชื่อจากห้องอื่น แล้วกด “ไปห้องนี้”) · ห้องอื่นใช้ชื่อสมมติ ไม่มีสถิติ (“—”)<br>${INFO[S.theme]}`
+    : onRp ?`<b>หน้ารายงาน</b> (ux-reports.md) — อ่านอย่างเดียว · ลองกด: ชิปห้อง/วิชา · ทั้งเทอม|รายเดือน (+เดือน) · เช็คชื่อ รายวัน|รายคาบ · หัวคอลัมน์ = เรียง · ชื่อ = ลิ้นชักนักเรียน · “งานค้าง” ใน hero = ไปการ์ดต้องติดตาม · แถวงาน = เปิดสมุดคะแนนที่งานนั้น · คัดลอกไป LINE · ส่งออก Excel · พิมพ์ (ตัวอย่าง A4) · ฉายจอ · ปรับการ์ด · หัวการ์ด = เปิด/ปิด · Esc ปิดลิ้นชัก/พิมพ์/ฉายจอ · ตัวเลข = ux-reports §ตัวเลขตัวอย่าง (คำนวณจากชุดเดียวกับหน้าคะแนน) · ห้องอื่นในตัวอย่างโหลดแล้วกลับ ป.6/1 · รายเดือน: เช็คชื่อใช้ชุดเดียวกับทั้งเทอม<br>Q1–Q4 ตามค่าแนะนำ (ก) · Q1 ดูทาง ข ได้ที่แถว “Q1 การ์ด” · ป้าย <b>ของเพิ่ม</b> = P1 P2 P3 P5 P7 P8 (Gate 2: เจ้าของงานเอา P1 P3 P4 + “—” แทน 0%) (ข้อมูลเดิม ให้เจ้าของงานเลือก) · ป้าย <b>ของเพิ่ม</b> P4 การ์ด “ขาดบ่อย” อนุมัติแล้วที่ Gate 2 ()<br>${INFO[S.theme]}`
     : onGb ? `<b>หน้าคะแนน</b> — แตะ/คลิกช่อง หรือพิมพ์ตัวเลขที่ช่อง → Enter บันทึกแล้วลงแถวถัดไป · Esc ยกเลิก · ลูกศรเลื่อนช่อง · Alt+Enter / ▾ / แตะซ้ำ / กดค้าง = ตัวแก้ไขช่อง (สถานะ · วันที่รับ) · คะแนนเกินเต็มหรือไม่ใช่ตัวเลขขึ้นข้อความ · hero/แถบ 6 ส่วน/สะสม อัปเดตตามสูตรเดิม · แตะหัวคอลัมน์ = เลือกงาน · “สร้างงาน” / คัดลอกงาน / ปิดรับงาน / ทำทั้งห้อง / ⋮ ลองได้ · pill ใน hero เปิดแผงงาน (คอมปักได้) · แถว “สถานะ” = ux-gradebook.md · Q1–Q4 ตามค่าแนะนำ UX<br>${INFO[S.theme]} · ป้ายข้อเสนอ = P10 (ต้องเพิ่ม API)`
     : onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
     : onAtt ?`<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
@@ -4553,14 +5025,14 @@ function render(keepScroll) {
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
   dev.dataset.page = S.page;
-  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : S.page === "reports" ? pageReports() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${S.page === "reports" && (S.device === "desk" || S.device === "ipadL") ? "data-rp" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${S.page === "reports" ? rpOverlays() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : S.page === "reports" ? pageReports() : S.page === "students" ? pageStudents() : pageGradebook();
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${(S.page === "reports" || S.page === "students") && (S.device === "desk" || S.device === "ipadL") ? "data-rp" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${S.page === "reports" ? rpOverlays() : ""}${S.page === "students" && STU.project && !STU.noclass ? stuProj(STU.rows || []) : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
   const gs1 = dev.querySelector("#gbScroll"); if (gsl && gs1) { gs1.scrollLeft = gsl[0]; gs1.scrollTop = gsl[1]; }
   GB.rendering = false; if (S.page === "gradebook") gbAfter();
   chrome(); fit(); railShadow(rt0); animRings();
   if (S.page === "attendance") atAnim();
-  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : S.page === "reports" ? RPT : null;
+  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : S.page === "reports" ? RPT : S.page === "students" ? STU : null;
   if (LV && LV.live) { const lv = document.getElementById("atLive"), msg = LV.live; LV.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); }
 }
 function fit() {
@@ -4592,6 +5064,7 @@ document.addEventListener("click", (e) => {
     if (g === "rstate") { rdScenario(v); render(); return; }
     if (g === "gstate") { gbScenario(v); render(); return; }
     if (g === "rpstate") { rpScenario(v); render(); return; }
+    if (g === "ststate") { stuScenario(v); render(); return; }
     if (g === "rq1") { RPT.q1 = v; if (S.sheet === "rp-side") S.sheet = null; render(true); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
@@ -4617,6 +5090,7 @@ document.addEventListener("click", (e) => {
   if (d.rdfrom) { rdFromAtt(); return; }
   if (d.gb) { gbAct(d.gb, e); return; }
   if (d.rp) { rpAct(d.rp, e); return; }
+  if (d.stu) { stuAct(d.stu, e); return; }
   if (d.toast) toast(d.toast);
 });
 document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"), rd = e.target.closest("#rdProjOff"); if (!e.target.closest("#projOff") && !at && !rd) return; clearTimeout(holdTimer);
