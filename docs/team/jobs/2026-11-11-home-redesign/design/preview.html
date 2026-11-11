@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup หน้าหลัก + ชุดหน้าตา · งานครบ (Gate 2)</title>
+<!-- Fonts: Google Fonts (SIL OFL 1.1). Fallbacks: Leelawadee UI / Thonburi / system sans. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mitr:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Mali:wght@500;600;700&family=Anuphan:wght@400;500;600;700&display=swap">
+<!-- Icons: Phosphor Icons v2.1.1 (MIT). If the CDN fails, icons fall back to small dots (labels are always shown). -->
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<style>
+/* =====================================================================
+   1. Draft chrome (the switcher bar around the device) — not part of the app
+   ===================================================================== */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif;background:#d7dbe2;color:#1b1f27;line-height:1.5;overflow-x:hidden}
+.chrome{position:sticky;top:0;z-index:50;background:#1c2029;color:#e9edf4;padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.chrome h1{font-size:15px;margin:0;font-weight:600;white-space:nowrap}
+.chrome h1 small{display:block;font-weight:400;color:#aab3c2;font-size:12.5px}
+.ctl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ctl>span{font-size:12.5px;color:#aab3c2}
+.seg{display:flex;flex-wrap:wrap;background:#2a303c;border-radius:10px;padding:3px;gap:2px}
+.seg button{font:inherit;font-size:13.5px;color:#d9dfe9;background:transparent;border:0;border-radius:8px;padding:0 10px;min-height:36px;cursor:pointer;white-space:nowrap}
+.seg button:hover{background:#363d4b}
+.seg button[aria-pressed="true"]{background:#f4f6fa;color:#141820;font-weight:600}
+.seg button:focus-visible{outline:2px solid #8fb4ff;outline-offset:1px}
+.chrome-info{flex-basis:100%;font-size:13px;color:#c7cfdc;margin:0}
+.chrome-info b{color:#fff;font-weight:600}
+.stage{padding:16px;display:flex;justify-content:center}
+.frame-box{position:relative;border-radius:22px;box-shadow:0 0 0 8px #11141a,0 18px 40px rgba(0,0,0,.28);overflow:hidden;flex:none}
+.size-note{text-align:center;font-size:12.5px;color:#4a5160;margin:-4px 0 18px}
+@media (max-width:700px){.chrome{padding:8px 10px;gap:6px 10px}.chrome h1 small{display:none}.seg button{padding:0 8px;font-size:13px}.stage{padding:12px 8px}}
+
+/* =====================================================================
+   2. Theme tokens — names follow src/styles/tokens.css so they can move into the app
+   ===================================================================== */
+.device{
+  --tap:44px;
+  --t-xs:max(13px,calc(var(--fs)*.8125)); --t-sm:max(13px,calc(var(--fs)*.875)); --t-md:var(--fs);
+  --t-lg:calc(var(--fs)*1.125); --t-xl:calc(var(--fs)*1.375); --t-2xl:calc(var(--fs)*1.75);
+  --t-3xl:calc(var(--fs)*2.375); --t-4xl:calc(var(--fs)*3.25);
+  --s1:calc(4px*var(--density)); --s2:calc(8px*var(--density)); --s3:calc(12px*var(--density));
+  --s4:calc(16px*var(--density)); --s5:calc(24px*var(--density)); --s6:calc(32px*var(--density)); --s7:calc(48px*var(--density));
+  --rail-w:max(92px,calc(var(--fs)*5.4));
+}
+/* ---- theme: มืออาชีพสะอาดตา (pro) ---- */
+[data-theme="pro"]{
+  --font-sans:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  --font-display:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif; --display-weight:700; --display-track:-.01em;
+  --font-num:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:4px; --radius-sm:6px; --radius:10px; --radius-lg:14px; --radius-btn:8px; --radius-hero:16px;
+  --card-bw:1px; --btn-bw:1px; --density:1;
+}
+[data-theme="pro"][data-mode="light"]{
+  --surface-0:#edf1f7; --surface-1:#e3e9f2; --surface-2:#ffffff; --surface-3:#ffffff;
+  --text-primary:#0f1b2d; --text-secondary:#3f4c63; --text-muted:#56627a;
+  --border:rgba(15,35,71,.12); --border-strong:rgba(15,35,71,.22); --border-control:#8794ab; --card-border:rgba(15,35,71,.10);
+  --accent:#1f56d6; --accent-hover:#1946b3; --on-accent:#ffffff; --bg-accent:#e3ecfd; --text-accent:#1a4bbf;
+  --accent-2:#22b8cf; --on-accent-2:#0f2347;
+  --hero-bg:#0f2347; --hero-fg:#ffffff; --hero-muted:#b9c7e0; --hero-chip:rgba(255,255,255,.12);
+  --bg-success:#dff5e9; --text-success:#11683b; --fill-success:#16a05d;
+  --bg-warning:#fdf0d5; --text-warning:#865507; --fill-warning:#f0a422;
+  --bg-danger:#fde4e4;  --text-danger:#b01f1f;  --fill-danger:#dc3b3b;
+  --att-present:#16a05d; --att-late:#f0a422; --att-leave:#1f56d6; --att-sick:#8b5cf6; --att-absent:#dc3b3b;
+  --cls-1:#1f56d6; --cls-2:#22b8cf; --cls-3:#f0a422;
+  --illo-1:#22b8cf; --illo-2:#ffffff; --illo-3:#5b8cff; --illo-4:#f0a422;
+  --rail-bg:#0f2347; --rail-fg:#c6d2e8; --rail-active-bg:#22b8cf; --rail-active-fg:#0f2347; --rail-label:#8ea0c2;
+  --ring-track:#e3e9f2; --ink:#0f2347;
+  --shadow-card:0 1px 2px rgba(15,35,71,.06),0 6px 18px rgba(15,35,71,.07); --shadow-pop:0 12px 32px rgba(15,35,71,.22);
+}
+[data-theme="pro"][data-mode="dark"]{
+  --surface-0:#0a1120; --surface-1:#0f1a2e; --surface-2:#142139; --surface-3:#1a2945;
+  --text-primary:#eaf0fa; --text-secondary:#b6c3d9; --text-muted:#93a1ba;
+  --border:rgba(255,255,255,.10); --border-strong:rgba(255,255,255,.18); --border-control:#6f7f9c; --card-border:rgba(255,255,255,.08);
+  --accent:#6b98ff; --accent-hover:#86abff; --on-accent:#0a1120; --bg-accent:#17284d; --text-accent:#a9c3ff;
+  --accent-2:#2fd0e6; --on-accent-2:#0a1120;
+  --hero-bg:#16346e; --hero-fg:#ffffff; --hero-muted:#c3d1ea; --hero-chip:rgba(255,255,255,.12);
+  --bg-success:#0f3020; --text-success:#7fdca6; --fill-success:#2bb673;
+  --bg-warning:#3a2a08; --text-warning:#f3c873; --fill-warning:#f0a422;
+  --bg-danger:#3a1418;  --text-danger:#ff9d9d;  --fill-danger:#f05252;
+  --att-present:#2bb673; --att-late:#f0a422; --att-leave:#6b98ff; --att-sick:#a78bfa; --att-absent:#f05252;
+  --cls-1:#6b98ff; --cls-2:#2fd0e6; --cls-3:#f0a422;
+  --illo-1:#2fd0e6; --illo-2:#ffffff; --illo-3:#6b98ff; --illo-4:#f0a422;
+  --rail-bg:#0d1730; --rail-fg:#b6c3d9; --rail-active-bg:#2fd0e6; --rail-active-fg:#0a1120; --rail-label:#8494b0;
+  --ring-track:#1f2e4c; --ink:#000;
+  --shadow-card:0 1px 2px rgba(0,0,0,.4); --shadow-pop:0 12px 32px rgba(0,0,0,.5);
+}
+/* ---- theme: อบอุ่นเป็นกันเอง (warm) ---- */
+[data-theme="warm"]{
+  --font-sans:"Sarabun","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  --font-display:"Mitr","Leelawadee UI","Thonburi",system-ui,sans-serif; --display-weight:500; --display-track:0;
+  --font-num:"Mitr","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px; --radius-sm:12px; --radius:16px; --radius-lg:22px; --radius-btn:999px; --radius-hero:28px;
+  --card-bw:1px; --btn-bw:1px; --density:1.05;
+}
+[data-theme="warm"][data-mode="light"]{
+  --surface-0:#f6efe4; --surface-1:#ede2d1; --surface-2:#fffaf2; --surface-3:#fffaf2;
+  --text-primary:#2a1f16; --text-secondary:#574535; --text-muted:#6b5846;
+  --border:rgba(90,60,30,.14); --border-strong:rgba(90,60,30,.24); --border-control:#9b8670; --card-border:rgba(90,60,30,.12);
+  --accent:#b4462a; --accent-hover:#983a22; --on-accent:#ffffff; --bg-accent:#f8e0d4; --text-accent:#9a3a22;
+  --accent-2:#e9a23b; --on-accent-2:#2a1f16;
+  --hero-bg:#f3cd9c; --hero-fg:#2a1f16; --hero-muted:#5a3f26; --hero-chip:rgba(255,250,242,.55);
+  --bg-success:#e6f0d6; --text-success:#46661c; --fill-success:#6f9a33;
+  --bg-warning:#fbecd0; --text-warning:#85520a; --fill-warning:#e9a23b;
+  --bg-danger:#f9e0da;  --text-danger:#a52a1c;  --fill-danger:#cf4a32;
+  --att-present:#6f9a33; --att-late:#e9a23b; --att-leave:#4a7fb5; --att-sick:#9a6bc0; --att-absent:#cf4a32;
+  --cls-1:#b4462a; --cls-2:#4a7fb5; --cls-3:#6f9a33;
+  --illo-1:#e9a23b; --illo-2:#b4462a; --illo-3:#6f9a33; --illo-4:#fffaf2;
+  --rail-bg:#2f241b; --rail-fg:#e8d8c4; --rail-active-bg:#f3cd9c; --rail-active-fg:#2a1f16; --rail-label:#b9a48c;
+  --ring-track:#ede2d1; --ink:#2a1f16;
+  --shadow-card:0 2px 0 rgba(90,60,30,.06),0 10px 24px rgba(90,60,30,.08); --shadow-pop:0 14px 34px rgba(90,60,30,.22);
+}
+[data-theme="warm"][data-mode="dark"]{
+  --surface-0:#1b1611; --surface-1:#231c15; --surface-2:#2b231a; --surface-3:#342a20;
+  --text-primary:#f6ecdf; --text-secondary:#d8c6b0; --text-muted:#b6a28b;
+  --border:rgba(255,235,210,.10); --border-strong:rgba(255,235,210,.18); --border-control:#8a7762; --card-border:rgba(255,235,210,.08);
+  --accent:#e98a62; --accent-hover:#f09c78; --on-accent:#1b1611; --bg-accent:#3e2619; --text-accent:#f4b393;
+  --accent-2:#f0b553; --on-accent-2:#1b1611;
+  --hero-bg:#4a3020; --hero-fg:#f6ecdf; --hero-muted:#e0c7ab; --hero-chip:rgba(255,235,210,.10);
+  --bg-success:#24321a; --text-success:#b5d98a; --fill-success:#86b04a;
+  --bg-warning:#3a2a10; --text-warning:#f3c873; --fill-warning:#f0b553;
+  --bg-danger:#3d1c16;  --text-danger:#ffab98;  --fill-danger:#e8674c;
+  --att-present:#86b04a; --att-late:#f0b553; --att-leave:#79a8d8; --att-sick:#c19ae0; --att-absent:#e8674c;
+  --cls-1:#e98a62; --cls-2:#79a8d8; --cls-3:#86b04a;
+  --illo-1:#f0b553; --illo-2:#e98a62; --illo-3:#86b04a; --illo-4:#2b231a;
+  --rail-bg:#120e0a; --rail-fg:#d8c6b0; --rail-active-bg:#f0b553; --rail-active-fg:#1b1611; --rail-label:#a08d77;
+  --ring-track:#3a2f24; --ink:#000;
+  --shadow-card:0 1px 2px rgba(0,0,0,.45); --shadow-pop:0 14px 34px rgba(0,0,0,.5);
+}
+/* ---- theme: สดใสสนุก (playful) — sticker look: ink outline + offset shadow ---- */
+[data-theme="playful"]{
+  --font-sans:"Anuphan","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  --font-display:"Mali","Leelawadee UI","Thonburi",system-ui,sans-serif; --display-weight:700; --display-track:0;
+  --font-num:"Mali","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px; --radius-sm:12px; --radius:16px; --radius-lg:20px; --radius-btn:14px; --radius-hero:24px;
+  --card-bw:2px; --btn-bw:2px; --density:1;
+}
+[data-theme="playful"][data-mode="light"]{
+  --surface-0:#eaf3ff; --surface-1:#dceafc; --surface-2:#ffffff; --surface-3:#ffffff;
+  --text-primary:#15142b; --text-secondary:#3b3a5c; --text-muted:#514f73;
+  --border:rgba(21,20,43,.14); --border-strong:rgba(21,20,43,.3); --border-control:#15142b; --card-border:#15142b;
+  --accent:#3b5bfd; --accent-hover:#2c48e0; --on-accent:#ffffff; --bg-accent:#e1e7ff; --text-accent:#2c48e0;
+  --accent-2:#ffd43b; --on-accent-2:#15142b;
+  --hero-bg:#ffd43b; --hero-fg:#15142b; --hero-muted:#4d3f00; --hero-chip:rgba(255,255,255,.6);
+  --bg-success:#d4f7e6; --text-success:#0b6b45; --fill-success:#22c58b;
+  --bg-warning:#fff1c2; --text-warning:#7a5400; --fill-warning:#ffb020;
+  --bg-danger:#ffe0e6;  --text-danger:#b3123c;  --fill-danger:#ff4d6d;
+  --att-present:#22c58b; --att-late:#ffb020; --att-leave:#3b5bfd; --att-sick:#b05cff; --att-absent:#ff4d6d;
+  --cls-1:#3b5bfd; --cls-2:#ff6fa8; --cls-3:#22c58b;
+  --illo-1:#ff6fa8; --illo-2:#3b5bfd; --illo-3:#22c58b; --illo-4:#15142b;
+  --rail-bg:#15142b; --rail-fg:#dcdbf5; --rail-active-bg:#ffd43b; --rail-active-fg:#15142b; --rail-label:#9b99c9;
+  --ring-track:#dceafc; --ink:#15142b;
+  --shadow-card:4px 4px 0 #15142b; --shadow-pop:6px 6px 0 #15142b;
+}
+[data-theme="playful"][data-mode="dark"]{
+  --surface-0:#12112a; --surface-1:#1b1a3a; --surface-2:#22204a; --surface-3:#2a2858;
+  --text-primary:#f5f4ff; --text-secondary:#cfcdf0; --text-muted:#aeabd8;
+  --border:rgba(245,244,255,.12); --border-strong:rgba(245,244,255,.24); --border-control:#8f8cd0; --card-border:#5b57b3;
+  --accent:#8fa2ff; --accent-hover:#a5b4ff; --on-accent:#12112a; --bg-accent:#262a66; --text-accent:#b7c3ff;
+  --accent-2:#ffd43b; --on-accent-2:#15142b;
+  --hero-bg:#ffcf2e; --hero-fg:#15142b; --hero-muted:#4d3f00; --hero-chip:rgba(255,255,255,.5);
+  --bg-success:#0f3a2a; --text-success:#74e8b6; --fill-success:#22c58b;
+  --bg-warning:#3d3010; --text-warning:#ffd36b; --fill-warning:#ffb020;
+  --bg-danger:#45162a;  --text-danger:#ff9fb4;  --fill-danger:#ff5c7a;
+  --att-present:#22c58b; --att-late:#ffb020; --att-leave:#8fa2ff; --att-sick:#c58bff; --att-absent:#ff5c7a;
+  --cls-1:#8fa2ff; --cls-2:#ff8fbd; --cls-3:#22c58b;
+  --illo-1:#ff6fa8; --illo-2:#3b5bfd; --illo-3:#22c58b; --illo-4:#15142b;
+  --rail-bg:#0b0a1f; --rail-fg:#cfcdf0; --rail-active-bg:#ffd43b; --rail-active-fg:#15142b; --rail-label:#8f8cc0;
+  --ring-track:#2f2d5e; --ink:#05041a;
+  --shadow-card:4px 4px 0 #05041a; --shadow-pop:6px 6px 0 #05041a;
+}
+
+/* =====================================================================
+   3. App frame (container queries = device widths)
+   ===================================================================== */
+.device{position:absolute;top:0;left:0;transform-origin:0 0;container-type:inline-size;container-name:app;overflow:hidden;
+  background:var(--surface-0);color:var(--text-primary);font-family:var(--font-sans);font-size:var(--fs);line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.app{display:grid;grid-template-columns:var(--rail-w) minmax(0,1fr);height:100%}
+.main{overflow-y:auto;overflow-x:hidden;padding:var(--s5) var(--s6) var(--s7);min-width:0;scroll-behavior:smooth}
+.inner{max-width:1320px;margin:0 auto}
+:where(.app) :where(button){font:inherit;color:inherit;cursor:pointer}
+.app :focus-visible{outline:3px solid var(--text-accent);outline-offset:2px}
+.app h1,.app h2,.app h3,.app p{margin:0}
+.ic{display:inline-block;line-height:1;flex:none}
+.num{font-family:var(--font-num);font-variant-numeric:tabular-nums lining-nums}
+.display{font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-track);line-height:1.3}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--text-muted)}
+.sec{color:var(--text-secondary)}
+
+/* rail */
+.rail{background:var(--rail-bg);color:var(--rail-fg);display:flex;flex-direction:column;align-items:stretch;padding:var(--s3) var(--s2);gap:2px;overflow-y:auto}
+.brand{display:grid;place-items:center;padding:var(--s1) 0 var(--s3)}
+.brand svg{width:46px;height:46px}
+.rail-label{height:1px;background:color-mix(in srgb,var(--rail-fg) 22%,transparent);margin:6px 14px;overflow:hidden;color:transparent;font-size:1px;flex:none}
+.rail-item{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:var(--tap);padding:4px 4px;flex:none;border-radius:var(--radius);border:0;background:transparent;color:var(--rail-fg);font-size:var(--t-xs);line-height:1.3;text-align:center;transition:background-color .15s}
+.rail-item .ic{font-size:24px}
+.rail-item:hover{background:rgba(255,255,255,.08)}
+.rail-item[aria-current="page"]{background:var(--rail-active-bg);color:var(--rail-active-fg);font-weight:600}
+[data-theme="luxe"] .rail-item[aria-current="page"]{box-shadow:inset 3px 0 0 var(--illo-1)}
+[data-theme="playful"] .rail-item[aria-current="page"]{box-shadow:3px 3px 0 #000}
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:var(--s3)}
+.sync{display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--t-xs);line-height:1.3;color:var(--rail-fg)}
+.sync .dot{width:9px;height:9px;border-radius:50%;background:#3ccf86;box-shadow:0 0 0 3px rgba(60,207,134,.25);flex:none}
+
+/* phone tab bar */
+.tabbar{display:none;position:absolute;left:0;right:0;bottom:0;background:var(--surface-2);border-top:var(--card-bw) solid var(--card-border);padding:6px 6px 16px;justify-content:space-around;align-items:flex-end;z-index:5}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;min-height:var(--tap);border:0;background:transparent;font-size:var(--t-xs);color:var(--text-secondary);line-height:1.25}
+.tab .ic{font-size:24px}
+.tab[aria-current="page"]{color:var(--text-accent);font-weight:600}
+.tab-scan .bubble{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);margin-top:-26px;box-shadow:var(--shadow-pop);border:var(--btn-bw) solid var(--card-border)}
+[data-theme="playful"] .tab-scan .bubble{background:var(--accent-2);color:var(--on-accent-2)}
+
+/* top bar inside main */
+.topbar{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-bottom:var(--s4)}
+.topbar .where{font-size:var(--t-sm);color:var(--text-secondary);display:flex;align-items:center;gap:var(--s2)}
+.topbar .grow{flex:1}
+.chip-btn{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 var(--s3);border-radius:var(--radius-btn);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-size:var(--t-sm)}
+.chip-btn .ic{font-size:18px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s4);border-radius:var(--radius-btn);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:600;font-size:var(--t-sm);line-height:1.3;white-space:nowrap;transition:transform .12s,background-color .15s,box-shadow .15s}
+.btn .ic{font-size:1.25em}
+.btn:hover{background:var(--surface-1)}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-hl{background:var(--accent-2);border-color:var(--accent-2);color:var(--on-accent-2)}
+.btn-hl:hover{background:var(--accent-2);filter:brightness(.96)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-accent)}
+.btn-ghost:hover{background:var(--bg-accent)}
+.btn-lg{min-height:56px;font-size:var(--t-md);padding:0 var(--s5)}
+[data-theme="playful"] .btn:not(.btn-ghost){border-color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
+[data-theme="playful"][data-mode="dark"] .btn:not(.btn-ghost){border-color:var(--card-border)}
+[data-theme="playful"] .btn:active{transform:translate(2px,2px);box-shadow:none}
+[data-theme="luxe"] .btn{letter-spacing:.01em}
+.on-hero .btn:not(.btn-primary):not(.btn-hl){background:var(--hero-chip);border-color:color-mix(in srgb,var(--hero-fg) 35%,transparent);color:var(--hero-fg)}
+.icon-btn{width:var(--tap);height:var(--tap);display:inline-grid;place-items:center;border-radius:50%;border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-secondary);flex:none}
+.icon-btn .ic{font-size:20px}
+
+/* cards & headings */
+.card{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:var(--s5)}
+.card-head{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s3);flex-wrap:wrap}
+.card-head h2{font-size:var(--t-lg)}
+.card-head .ic{font-size:22px;color:var(--text-accent)}
+.card-head .grow{flex:1}
+.h-ic{width:36px;height:36px;border-radius:var(--radius);display:grid;place-items:center;background:var(--bg-accent);color:var(--text-accent);flex:none}
+[data-theme="luxe"] .h-ic{background:transparent;border:1px solid var(--border-strong);color:var(--text-gold)}
+[data-theme="luxe"] .card-head h2{font-family:var(--font-display);font-weight:600}
+.eyebrow{font-size:var(--t-xs);letter-spacing:.04em;color:var(--text-muted);font-weight:600}
+[data-theme="luxe"] .eyebrow{letter-spacing:.14em;color:var(--text-gold)}
+
+/* proposal tags */
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:600;line-height:1.35;padding:1px 7px;border-radius:4px;border:1px dashed currentColor;white-space:nowrap;vertical-align:middle;font-family:var(--font-sans)}
+.tag-old{color:var(--text-success);background:var(--bg-success)}
+.tag-api{color:var(--text-warning);background:var(--bg-warning)}
+.on-hero .tag{background:var(--hero-chip);color:var(--hero-fg)}
+.no-tags .tag{display:none}
+
+/* status pills (text + icon, never color alone) */
+.st{display:inline-flex;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);line-height:1.4;white-space:nowrap}
+.st .ic{font-size:14px}
+.st-ok{background:var(--bg-success);color:var(--text-success)}
+.st-warn{background:var(--bg-warning);color:var(--text-warning)}
+.st-bad{background:var(--bg-danger);color:var(--text-danger)}
+.st-mute{background:var(--surface-1);color:var(--text-secondary)}
+
+/* hero (color area) */
+.hero{position:relative;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s5) var(--s6);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4);align-items:center;overflow:hidden}
+.hero .kicker{font-size:var(--t-sm);color:var(--hero-muted)}
+.hero h1{font-size:var(--t-2xl)}
+.hero .muted-h{color:var(--hero-muted)}
+.hero-illo svg{display:block;width:clamp(150px,22cqi,260px);height:auto}
+[data-theme="playful"] .hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+[data-theme="luxe"] .hero::after{content:"";position:absolute;inset:8px;border:1px solid color-mix(in srgb,var(--illo-1) 45%,transparent);border-radius:2px;pointer-events:none}
+
+/* quick actions */
+.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+.qa{display:flex;align-items:center;gap:var(--s3);min-height:72px;padding:var(--s3) var(--s4);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);background:var(--surface-2);color:var(--text-primary);text-align:left;box-shadow:var(--shadow-card);transition:transform .12s,box-shadow .15s}
+.qa:hover{transform:translateY(-1px)}
+.qa:active{transform:translateY(1px)}
+.qa .qi{width:48px;height:48px;border-radius:var(--radius);display:grid;place-items:center;flex:none;font-size:28px}
+.qa b{display:block;font-size:var(--t-md);line-height:1.35}
+.qa small{display:block;font-size:var(--t-xs);color:var(--text-muted);line-height:1.35}
+.qa.main-qa{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.qa.main-qa small{color:var(--on-accent);opacity:.92}
+.qa.main-qa .qi{background:color-mix(in srgb,var(--on-accent) 16%,transparent)}
+.qi-1{background:color-mix(in srgb,var(--cls-2) 22%,var(--surface-2));color:var(--text-primary)}
+.qi-2{background:color-mix(in srgb,var(--cls-3) 24%,var(--surface-2));color:var(--text-primary)}
+.qi-3{background:color-mix(in srgb,var(--att-sick) 20%,var(--surface-2));color:var(--text-primary)}
+[data-theme="playful"] .qa{border-color:var(--ink)}
+[data-theme="playful"][data-mode="dark"] .qa{border-color:var(--card-border)}
+[data-theme="playful"] .qa.main-qa{background:var(--accent-2);border-color:var(--ink);color:var(--on-accent-2)}
+[data-theme="playful"] .qa.main-qa small{color:var(--on-accent-2)}
+[data-theme="luxe"] .qa .qi{background:transparent;border:1px solid var(--border-strong);color:var(--text-gold)}
+[data-theme="luxe"] .qa.main-qa .qi{border-color:color-mix(in srgb,var(--on-accent) 40%,transparent);color:var(--on-accent)}
+
+/* progress bars */
+.bar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--ring-track);gap:2px}
+.bar>span{display:block;height:100%}
+.seg-scored{background:var(--accent)}
+.seg-await{background:color-mix(in srgb,var(--accent) 45%,var(--surface-2))}
+.seg-pend{background:transparent}
+.seg-miss{background:var(--fill-danger)}
+[data-theme="luxe"] .bar{height:8px;border-radius:0}
+[data-theme="playful"] .bar{height:14px;border:2px solid var(--ink);background:var(--surface-2)}
+[data-theme="playful"][data-mode="dark"] .bar{border-color:var(--card-border)}
+.legend{display:flex;flex-wrap:wrap;gap:4px var(--s3);font-size:var(--t-xs);color:var(--text-secondary)}
+.legend i.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.sw-pend{border:1.5px solid var(--border-control)}
+
+/* avatars */
+.av{width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;font-weight:700;font-size:var(--t-sm);background:var(--surface-1);color:var(--text-primary);box-shadow:inset 0 0 0 2.5px var(--c,var(--accent));flex:none;line-height:1}
+[data-theme="luxe"] .av{border-radius:3px;font-family:var(--font-display);font-weight:600}
+[data-theme="playful"] .av{box-shadow:inset 0 0 0 2.5px var(--ink);background:color-mix(in srgb,var(--c) 30%,var(--surface-2))}
+.av-stack{display:flex}
+.av-stack .av{margin-left:-8px;border:2px solid var(--surface-2)}
+.av-stack .av:first-child{margin-left:0}
+
+/* follow-up grouped by count (no repeated chip per row) */
+.fgroup+.fgroup{margin-top:var(--s4)}
+.fgroup-h{display:flex;align-items:baseline;gap:var(--s2);margin-bottom:var(--s2)}
+.fgroup-h .big{font-size:var(--t-xl);font-weight:700;line-height:1}
+.fgroup-h .big.bad{color:var(--text-danger)}
+.people{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.person{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:4px 12px 4px 4px;border-radius:999px;background:var(--surface-1);border:0;font-size:var(--t-sm);line-height:1.3;text-align:left;color:var(--text-primary)}
+.person small{display:block;color:var(--text-muted);font-size:var(--t-xs)}
+[data-theme="luxe"] .person{border-radius:4px;background:transparent;border:1px solid var(--border)}
+[data-theme="playful"] .person{border:2px solid var(--border-strong)}
+
+/* rings */
+.ringbox{display:grid;place-items:center;flex:none}
+.ringbox>*{grid-area:1/1}
+.ringbox .rc{text-align:center;line-height:1.1}
+.ring-val{transition:stroke-dasharray .6s ease}
+.ringbox .rc .num{font-weight:700}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;background:var(--text-primary);color:var(--surface-2);padding:10px 18px;border-radius:var(--radius);font-size:var(--t-sm);pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:88%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@container app (max-width:599px){.toast{bottom:96px}}
+
+/* ============ Layout ก : วันนี้ของครู (timeline) ============ */
+.a-hero .big-line{display:flex;align-items:baseline;gap:var(--s3);margin-top:var(--s2);flex-wrap:wrap}
+.a-hero .big-line .num{font-size:var(--t-4xl);font-weight:700;line-height:1;color:var(--hero-fg)}
+[data-theme="pro"] .a-hero .big-line .num,[data-theme="luxe"] .a-hero .big-line .num{color:var(--accent-2)}
+[data-theme="luxe"][data-mode="light"] .a-hero .big-line .num{color:var(--illo-1)}
+.a-hero .big-line span.t{font-size:var(--t-xl);font-family:var(--font-display);font-weight:var(--display-weight)}
+.summary{margin-top:var(--s3);display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+.summary .pill{display:inline-flex;align-items:center;gap:6px;background:var(--hero-chip);border-radius:999px;padding:4px 12px;font-size:var(--t-sm);font-weight:500}
+[data-theme="luxe"] .summary .pill{border-radius:2px;border:1px solid color-mix(in srgb,var(--hero-fg) 22%,transparent)}
+.grid-a{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:var(--s5);margin-top:var(--s5);align-items:start}
+.side{display:flex;flex-direction:column;gap:var(--s4)}
+.side .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+.side .qa{flex-direction:column;align-items:flex-start;gap:var(--s2)}
+.tl-wrap{padding:var(--s5) var(--s5) var(--s4)}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:calc(var(--tl-time) + 15px);top:12px;bottom:12px;width:3px;border-radius:3px;background:var(--border-strong)}
+[data-theme="playful"] .tl::before{background:repeating-linear-gradient(var(--ink) 0 8px,transparent 8px 14px);opacity:.5}
+[data-theme="luxe"] .tl::before{width:1px;background:var(--illo-1)}
+.tl{--tl-time:84px}
+.tl-item{display:grid;grid-template-columns:var(--tl-time) 34px minmax(0,1fr);gap:0 var(--s3);padding:var(--s3) 0;position:relative}
+.tl-time{text-align:right;font-size:var(--t-sm);font-weight:700;line-height:1.3;padding-top:6px}
+.tl-time small{display:block;font-weight:500;color:var(--text-muted);font-size:var(--t-xs)}
+.tl-node{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:3px solid var(--node,var(--fill-warning));color:var(--node,var(--fill-warning));z-index:1;margin-top:2px}
+.tl-node .ic{font-size:16px}
+.tl-item.done .tl-node{background:var(--fill-success);border-color:var(--fill-success);color:#fff}
+.tl-body{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);padding:var(--s4);box-shadow:var(--shadow-card);transition:opacity .2s}
+.tl-item.urgent .tl-body{border-left:5px solid var(--fill-warning)}
+[data-theme="playful"] .tl-item.urgent .tl-body{border-left-width:6px}
+.tl-item.done .tl-body{opacity:.62}
+.tl-item.done h3{text-decoration:line-through;text-decoration-thickness:2px}
+.tl-top{display:flex;gap:var(--s3);align-items:flex-start}
+.tl-top .txt{flex:1;min-width:0}
+.tl-body h3{font-size:var(--t-lg);line-height:1.4;font-weight:700}
+[data-theme="luxe"] .tl-body h3,[data-theme="warm"] .tl-body h3{font-family:var(--font-display);font-weight:var(--display-weight)}
+.tl-body p{font-size:var(--t-sm);color:var(--text-secondary);margin-top:2px}
+.tl-acts{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.check{width:var(--tap);height:var(--tap);border-radius:50%;border:2px solid var(--border-control);background:var(--surface-2);display:grid;place-items:center;color:var(--text-muted);flex:none}
+.check[aria-pressed="true"]{background:var(--fill-success);border-color:var(--fill-success);color:#fff}
+.check .ic{font-size:22px}
+.tl-now{display:grid;grid-template-columns:var(--tl-time) 34px 1fr;gap:0 var(--s3);align-items:center;padding:var(--s1) 0}
+.tl-now .lbl{text-align:right;font-weight:700;font-size:var(--t-sm);color:var(--text-danger)}
+.tl-now .dot{width:16px;height:16px;border-radius:50%;background:var(--fill-danger);justify-self:center;box-shadow:0 0 0 5px color-mix(in srgb,var(--fill-danger) 25%,transparent);z-index:1}
+.tl-now .line{height:2px;background:var(--fill-danger)}
+.tl-item.ghost .tl-body{background:transparent;box-shadow:none;border:2px dashed var(--border-strong)}
+.tl-item.ghost .tl-node{border-style:dashed;--node:var(--text-muted)}
+.tl-item.later .tl-node{--node:var(--text-muted)}
+.rooms{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.room{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius-sm);font-size:var(--t-sm);font-weight:600;background:var(--surface-1)}
+.room.ok{background:var(--bg-success);color:var(--text-success)}
+.room.no{background:var(--bg-warning);color:var(--text-warning)}
+.mini-bars{display:grid;gap:6px;margin-top:var(--s3)}
+.mini-bars .row{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:var(--s2);align-items:center;font-size:var(--t-sm)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--s2)}
+.chips .st{white-space:normal;max-width:100%}
+
+/* class rows (side, layout ก & ค) */
+.cls-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding:var(--s3) 0;border-top:1px solid var(--border)}
+.cls-row:first-of-type{border-top:0}
+.cls-name{font-weight:700;font-size:var(--t-md);font-family:var(--font-display)}
+.pct{font-size:var(--t-xl);font-weight:700;line-height:1}
+.pct small{font-size:var(--t-sm);font-weight:600}
+.cls-row .meta{font-size:var(--t-xs);color:var(--text-muted);margin-top:4px;display:flex;gap:var(--s3);flex-wrap:wrap}
+
+/* ============ Layout ข : แผงรายห้อง ============ */
+.b-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4);align-items:end;margin-bottom:var(--s4)}
+.b-top h1{font-size:var(--t-2xl)}
+.b-top .summary-line{font-size:var(--t-sm);color:var(--text-secondary);margin-top:4px}
+.dock{background:var(--hero-bg);border-radius:var(--radius-hero);padding:var(--s3);display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr));gap:var(--s3)}
+[data-theme="playful"] .dock{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.dock .qa{background:var(--hero-chip);border-color:transparent;color:var(--hero-fg);box-shadow:none}
+.dock .qa small{color:var(--hero-muted)}
+.dock .qa .qi{background:color-mix(in srgb,var(--hero-fg) 12%,transparent);color:var(--hero-fg)}
+.dock .qa.main-qa{background:var(--accent-2);color:var(--on-accent-2)}
+.dock .qa.main-qa small{color:var(--on-accent-2)}
+.dock .qa.main-qa .qi{background:color-mix(in srgb,var(--on-accent-2) 12%,transparent);color:var(--on-accent-2)}
+[data-theme="playful"] .dock .qa{background:#fff;color:#15142b;border:2px solid #15142b}
+[data-theme="playful"] .dock .qa small{color:#3b3a5c}
+[data-theme="playful"] .dock .qa .qi{background:#eaf3ff;color:#15142b}
+[data-theme="playful"] .dock .qa.main-qa{background:#3b5bfd;color:#fff}
+[data-theme="playful"] .dock .qa.main-qa small{color:#fff}
+[data-theme="playful"] .dock .qa.main-qa .qi{background:rgba(255,255,255,.18);color:#fff}
+[data-theme="warm"][data-mode="light"] .dock .qa{background:rgba(255,250,242,.7)}
+.todo-strip{display:flex;gap:var(--s3);margin:var(--s4) 0;flex-wrap:wrap}
+.todo-strip .lead{display:flex;align-items:center;gap:var(--s2);font-weight:700;font-size:var(--t-md)}
+.todo-strip .lead .n{display:inline-grid;place-items:center;min-width:30px;height:30px;border-radius:999px;background:var(--text-danger);color:var(--surface-2);font-size:var(--t-sm);padding:0 8px}
+.todo-pill{display:flex;align-items:center;gap:var(--s2);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:999px;padding:4px 4px 4px 14px;font-size:var(--t-sm);box-shadow:var(--shadow-card);min-height:52px}
+[data-theme="luxe"] .todo-pill{border-radius:3px}
+.todo-pill .ic{color:var(--text-warning);font-size:20px}
+.todo-pill .btn{min-height:var(--tap);padding:0 14px}
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.panel{position:relative;text-align:left;border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);background:color-mix(in srgb,var(--c) 10%,var(--surface-2));padding:var(--s4) var(--s4) var(--s4);box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:var(--s3);transition:transform .15s,box-shadow .15s;color:var(--text-primary)}
+.panel::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--c);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+[data-theme="luxe"] .panel::before{height:2px}
+.panel[aria-pressed="true"]{outline:3px solid var(--c);outline-offset:3px}
+[data-theme="playful"] .panel[aria-pressed="true"]{transform:translate(-2px,-2px);box-shadow:var(--shadow-pop);outline:0}
+.panel .p-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s2);padding-top:var(--s1)}
+.panel .p-head h2{font-size:var(--t-2xl)}
+.panel .p-mid{display:flex;align-items:center;gap:var(--s4)}
+.panel .p-stats{display:grid;gap:6px;font-size:var(--t-sm);flex:1;min-width:0}
+.panel .p-stats div{display:flex;justify-content:space-between;gap:var(--s2);border-bottom:1px dashed var(--border);padding-bottom:4px}
+.panel .p-stats b{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.panel .p-att{font-size:var(--t-sm)}
+.panel .p-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);font-size:var(--t-sm);color:var(--text-secondary);margin-top:auto}
+.attbar{display:flex;height:10px;border-radius:999px;overflow:hidden;gap:2px;margin:6px 0 4px;background:var(--ring-track)}
+.attbar span{display:block}
+[data-theme="luxe"] .attbar{border-radius:0;height:6px}
+.detail{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:var(--s4);margin-top:var(--s5)}
+.asg{display:grid;gap:var(--s2);padding:var(--s3) 0;border-top:1px solid var(--border)}
+.asg:first-of-type{border-top:0;padding-top:0}
+.asg-top{display:flex;gap:var(--s3);align-items:flex-start}
+.asg-top .t{flex:1;min-width:0}
+.asg-top h3{font-size:var(--t-md);line-height:1.4}
+.asg-top p{font-size:var(--t-xs);color:var(--text-muted)}
+.asg .nums{display:flex;flex-wrap:wrap;gap:4px var(--s3);font-size:var(--t-sm);color:var(--text-secondary)}
+.asg .nums b{color:var(--text-primary);font-family:var(--font-num)}
+.spark{width:100%;height:auto;display:block}
+.abs-list{display:grid;gap:var(--s2)}
+.abs-row{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;font-size:var(--t-sm)}
+
+/* ============ Layout ค : โฟกัสงานถัดไป ============ */
+.c-grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:var(--s4);align-items:stretch}
+.focus{position:relative;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s6);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4);overflow:hidden;min-height:330px}
+[data-theme="playful"] .focus{border:2px solid var(--ink);box-shadow:var(--shadow-pop)}
+[data-theme="luxe"] .focus::after{content:"";position:absolute;inset:10px;border:1px solid color-mix(in srgb,var(--illo-1) 45%,transparent);pointer-events:none}
+.focus .step{display:flex;align-items:center;gap:var(--s2);font-size:var(--t-sm);color:var(--hero-muted);font-weight:600}
+.dots{display:flex;gap:6px}
+.dots i{width:22px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--hero-fg) 25%,transparent)}
+.dots i.on{background:var(--hero-fg)}
+.dots i.dn{background:color-mix(in srgb,var(--hero-fg) 60%,transparent)}
+.focus .f-ic{width:64px;height:64px;border-radius:var(--radius-lg);display:grid;place-items:center;background:var(--hero-chip);font-size:36px;margin:var(--s4) 0 var(--s3)}
+[data-theme="pro"] .focus .f-ic{background:var(--accent-2);color:var(--on-accent-2)}
+[data-theme="luxe"] .focus .f-ic{background:transparent;border:1px solid var(--illo-1);color:var(--illo-1)}
+.focus h1{font-size:var(--t-3xl);line-height:1.25}
+.focus .why{font-size:var(--t-lg);color:var(--hero-muted);margin-top:var(--s2);max-width:34em}
+.focus .acts{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s5)}
+.focus .btn-primary{background:var(--hero-fg);border-color:var(--hero-fg);color:var(--hero-bg)}
+[data-theme="playful"] .focus .btn-primary{background:#15142b;border-color:#15142b;color:#ffd43b}
+[data-theme="luxe"][data-mode="light"] .focus .btn-primary{background:#d4b26a;border-color:#d4b26a;color:#141a17}
+[data-theme="luxe"][data-mode="dark"] .focus .btn-primary{background:#d4b26a;border-color:#d4b26a;color:#0e1110}
+.focus .f-illo{align-self:end}
+.focus .f-illo svg{width:clamp(140px,20cqi,250px);height:auto;display:block}
+.next{display:flex;flex-direction:column;gap:var(--s2)}
+.next h2{font-size:var(--t-lg)}
+.nx{display:flex;align-items:center;gap:var(--s3);min-height:60px;padding:var(--s2) var(--s3);border-radius:var(--radius);border:var(--card-bw) solid var(--card-border);background:var(--surface-2);text-align:left;width:100%;color:var(--text-primary);box-shadow:var(--shadow-card)}
+.nx .k{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface-1);font-weight:700;font-size:var(--t-sm);flex:none}
+.nx .t{flex:1;min-width:0;line-height:1.35}
+.nx .t b{display:block;font-size:var(--t-sm)}
+.nx .t small{display:block;font-size:var(--t-xs);color:var(--text-muted)}
+.nx.dn{opacity:.6}
+.nx.dn b{text-decoration:line-through}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4);margin-top:var(--s4)}
+.att-tile .row{display:flex;align-items:center;gap:var(--s4)}
+.att-legend{display:grid;gap:4px;font-size:var(--t-sm)}
+.att-legend div{display:flex;align-items:center;gap:6px}
+.att-legend i{width:10px;height:10px;border-radius:2px;flex:none}
+.att-legend b{margin-left:auto;font-family:var(--font-num);padding-left:var(--s3)}
+.empty{text-align:center;padding:var(--s5) 0}
+.empty svg{width:200px;height:auto}
+
+/* ---------- container breakpoints ---------- */
+@container app (max-width:1180px){ .main{padding:var(--s5) var(--s5) var(--s7)} }
+@container app (max-width:1100px){
+  .grid-a{grid-template-columns:1fr}
+  .side .quick{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .side>.quick{grid-column:1/-1;order:-1}
+  .detail{grid-template-columns:1fr}
+  .c-grid{grid-template-columns:1fr}
+  .next{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .next h2{grid-column:1/-1}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiles>.wide{grid-column:1/-1}
+}
+@container app (max-width:860px){
+  .side{grid-template-columns:1fr}
+  .quick,.side .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dock{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel .p-mid{flex-direction:column;align-items:stretch}
+  .panel .ringbox{align-self:center}
+}
+@container app (max-width:599px){
+  .app{grid-template-columns:1fr}
+  .rail{display:none}
+  .tabbar{display:flex}
+  .main{padding:var(--s4) var(--s4) 120px}
+  .hero{grid-template-columns:1fr;padding:var(--s4) var(--s4)}
+  .hero-illo{position:absolute;right:-14px;top:-6px;opacity:.9}
+  .hero-illo svg{width:120px}
+  .hero h1,.b-top h1{font-size:var(--t-xl);padding-right:96px}
+  .a-hero .big-line .num{font-size:var(--t-3xl)}
+  .a-hero .big-line span.t{font-size:var(--t-lg)}
+  .qa{min-height:64px;padding:var(--s2) var(--s3);gap:var(--s2)}
+  .qa .qi{width:40px;height:40px;font-size:24px}
+  .tl{--tl-time:0px}
+  .tl::before{left:15px}
+  .tl-item,.tl-now{grid-template-columns:34px minmax(0,1fr)}
+  .tl-time{grid-column:2;text-align:left;padding:0 0 4px}
+  .tl-node{grid-row:1/3;grid-column:1}
+  .tl-body{grid-column:2}
+  .tl-now .lbl{grid-column:2;grid-row:1;text-align:left}
+  .tl-now .line{display:none}
+  .tl-wrap{padding:var(--s4) var(--s3)}
+  .card{padding:var(--s4)}
+  .b-top{grid-template-columns:1fr}
+  .panels{grid-template-columns:1fr}
+  .todo-pill{flex-wrap:wrap;border-radius:var(--radius-lg);padding:var(--s2) var(--s2) var(--s2) var(--s3);width:100%}
+  .todo-pill span.t{flex:1;min-width:0}
+  .focus{grid-template-columns:1fr;padding:var(--s5) var(--s4);min-height:0}
+  .focus .f-illo{position:absolute;right:-10px;top:10px;opacity:.85}
+  .focus .f-illo svg{width:110px}
+  .focus h1{font-size:var(--t-2xl);padding-right:70px}
+  .focus .why{font-size:var(--t-md)}
+  .focus .acts .btn{flex:1 1 auto}
+  .next,.tiles{grid-template-columns:1fr}
+  .topbar .where span.long{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .device *, .device *::before, .device *::after{transition:none !important;animation:none !important;scroll-behavior:auto !important} }
+
+/* icon font fallback (CDN unreachable): show a small dot, labels stay */
+.no-icon-font .ic{width:.55em;height:.55em;border-radius:50%;background:currentColor;opacity:.5}
+.no-icon-font .ic::before,.no-icon-font .ic::after{content:none !important}
+
+/* =====================================================================
+   4. Gate 2 (T-04) additions — override the Gate R draft above
+   ===================================================================== */
+/* icon/text colour on --fill-success (≥ 3:1 for icons — fixes playful 2.23) */
+[data-theme="pro"][data-mode="light"]{--on-success:#ffffff}
+[data-theme="pro"][data-mode="dark"]{--on-success:#0a1120}
+[data-theme="warm"][data-mode="light"]{--on-success:#ffffff}
+[data-theme="warm"][data-mode="dark"]{--on-success:#1b1611}
+[data-theme="playful"][data-mode="light"]{--on-success:#15142b}
+[data-theme="playful"][data-mode="dark"]{--on-success:#12112a}
+.chrome .seg button{min-height:34px}
+.chrome .ctl>span{min-width:3.2em}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tag-next{color:var(--text-accent);background:var(--bg-accent)}
+.small{font-size:var(--t-xs)}
+
+/* topbar: hide-names toggle, offline chip */
+.chip-btn{font-weight:500}
+.hide-btn[aria-pressed="true"]{background:var(--bg-warning);color:var(--text-warning);border-color:currentColor;font-weight:700}
+.off-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:var(--bg-warning);color:var(--text-warning);font-size:var(--t-sm);font-weight:600;border:1px solid currentColor}
+.stale{display:inline-flex;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:600;padding:1px 8px;border-radius:var(--radius-xs);background:var(--bg-warning);color:var(--text-warning);white-space:nowrap}
+.on-hero .stale{background:var(--hero-chip);color:var(--hero-fg)}
+.banner{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:var(--s3) var(--s4);border-radius:var(--radius);margin-bottom:var(--s4);background:var(--bg-warning);color:var(--text-primary);border:var(--card-bw) solid color-mix(in srgb,var(--text-warning) 45%,transparent)}
+.banner>.ic{font-size:26px;color:var(--text-warning)}
+.banner>div{flex:1;min-width:200px;font-size:var(--t-sm)}
+.banner b{font-size:var(--t-md)}
+.banner-off{background:var(--surface-1);border-color:var(--border-control)}
+.banner-off>.ic{color:var(--text-secondary)}
+
+/* hero pills are buttons now (ux #9) */
+.summary .pill{border:1px solid color-mix(in srgb,var(--hero-fg) 30%,transparent);color:var(--hero-fg);min-height:var(--tap);font:inherit;font-size:var(--t-sm);font-weight:500;cursor:pointer;transition:background-color .15s}
+.summary .pill:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
+.summary .pill .ic:last-child{font-size:14px;opacity:.85}
+.big-check{display:inline-flex}
+.big-check .ic{font-size:1em}
+.hero h1{max-width:30em}
+
+/* short screens (desk 729px): hero ≤ ~200px, smaller illustration (ux #10). App: @media (max-height:760px) */
+.device.short .hero{padding:var(--s4) var(--s5)}
+.device.short .hero-illo svg,.device.short .focus .f-illo svg{width:170px}
+.device.short .hero h1{font-size:var(--t-xl)}
+.device.short .a-hero .big-line{margin-top:0}
+.device.short .a-hero .big-line .num{font-size:var(--t-3xl)}
+.device.short .summary{margin-top:var(--s2)}
+.device.short .focus{min-height:0;padding:var(--s5)}
+.device.short .focus h1{font-size:var(--t-2xl)}
+.device.short .focus .f-ic{width:48px;height:48px;font-size:28px;margin:var(--s2) 0}
+.device.short .focus .acts{margin-top:var(--s4)}
+
+/* layout ก — DOM order = visual order (quick actions before the timeline on narrow screens; no CSS order) */
+.grid-a{grid-template-areas:"tl qs" "tl sd";grid-template-rows:auto 1fr}
+.grid-a>.qs{grid-area:qs}.grid-a>.tl-wrap{grid-area:tl}.grid-a>.side{grid-area:sd}
+.qs .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+.qs .qa{flex-direction:column;align-items:flex-start;gap:var(--s2)}
+.tl-node{color:var(--node-t,var(--text-warning))}
+.tl-item.bad .tl-body{border-left:5px solid var(--fill-danger)}
+.tl-top .tone{flex:none}
+.tl-item.clear .tl-node{background:var(--fill-success);border-color:var(--fill-success);color:var(--on-success)}
+.due-list{display:grid;gap:var(--s2);margin-top:var(--s3)}
+.due-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3);border-radius:var(--radius);background:var(--surface-1)}
+.due-row .t{flex:1;min-width:0;font-size:var(--t-sm);line-height:1.45}
+.due-row .t b{display:block}
+button.cls-row{width:100%;background:transparent;border:0;border-top:1px solid var(--border);text-align:left;color:var(--text-primary);min-height:48px;border-radius:0;padding-left:var(--s1);padding-right:var(--s1)}
+button.cls-row:first-of-type{border-top:0}
+button.cls-row:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.cls-row .cls-name{max-width:8.5em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pct.none{color:var(--text-muted);font-size:var(--t-lg)}
+.person{max-width:100%}
+.person>span{min-width:0}
+.person small{max-width:14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av.anon{box-shadow:inset 0 0 0 2px var(--border-control);color:var(--text-muted)}
+.people.anon{gap:4px}
+
+/* layout ข */
+.sum-btns{display:flex;flex-wrap:wrap;align-items:center;gap:0 2px;margin-top:4px;font-size:var(--t-sm);color:var(--text-secondary)}
+.link-btn{background:none;border:0;padding:0 6px;min-height:var(--tap);color:var(--text-accent);font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.link-btn:hover{text-decoration-thickness:2px}
+.panel[aria-pressed="true"]{border:3px solid var(--text-primary)}
+.panel .viewing{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--text-primary);font-size:var(--t-sm)}
+.panel .p-head{min-width:0}
+.panel .p-head h2{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.panel .nostu{font-size:var(--t-md);color:var(--text-secondary);padding:var(--s4) 0}
+.panels.compact{grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+.panel.cp{padding:var(--s3);gap:var(--s2)}
+.panel.cp .p-head{flex-direction:column;align-items:stretch;gap:0}
+.panel.cp .p-head h2{font-size:var(--t-lg)}
+.panel.cp .p-head span{font-size:var(--t-xs)}
+.panel.cp .p-mid{flex-direction:row;align-items:center;gap:var(--s3)}
+.panel.cp .cp-n{display:grid;gap:2px;font-size:var(--t-sm);line-height:1.4;min-width:0}
+.panel.cp .cp-n b{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.panel.cp .p-foot{font-size:var(--t-xs)}
+.room-chips{display:none;gap:var(--s2);overflow-x:auto;padding:2px 2px var(--s2);margin-bottom:var(--s3);-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent)}
+.rchip{flex:none;min-height:var(--tap);padding:0 var(--s3);border-radius:999px;border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);font-size:var(--t-sm);display:inline-flex;align-items:center;gap:6px;max-width:220px;color:var(--text-primary)}
+.rchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rchip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700}
+.detail-h{font-size:var(--t-lg)}
+.more-row{margin-top:var(--s3)}
+
+/* layout ค */
+.focus h1{overflow-wrap:anywhere}
+.focus .acts .btn-skip{background:transparent;border-color:color-mix(in srgb,var(--hero-fg) 45%,transparent);color:var(--hero-fg);box-shadow:none}
+
+/* sheets (todo list / layout picker / more) */
+.scrim{position:absolute;inset:0;z-index:30;background:rgba(10,12,20,.5);display:flex;justify-content:flex-end}
+.sheet{background:var(--surface-2);color:var(--text-primary);width:min(460px,100%);height:100%;overflow-y:auto;padding:var(--s5);box-shadow:var(--shadow-pop);display:flex;flex-direction:column;gap:var(--s4);border-left:var(--card-bw) solid var(--card-border)}
+.sheet-h{display:flex;align-items:center;gap:var(--s2)}
+.sheet-h h2{flex:1;font-size:var(--t-xl)}
+.sheet .choices{grid-template-columns:1fr}
+.sheet .choice{flex-direction:row;align-items:center}
+.sheet .choice .thumb{width:120px;flex:none}
+.sheet-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);border-radius:var(--radius);background:var(--surface-1)}
+.sheet-row .t{flex:1;min-width:0;line-height:1.45}
+.sheet-row .t small{display:block;color:var(--text-secondary);font-size:var(--t-xs)}
+.sheet-row>.ic{font-size:22px;color:var(--text-accent)}
+
+/* loading skeleton (static — no looping animation, AC-40) */
+.sk{background:color-mix(in srgb,var(--text-muted) 16%,var(--surface-2));border-radius:var(--radius-lg)}
+.sk-hero{background:color-mix(in srgb,var(--hero-bg) 50%,var(--surface-0));border-radius:var(--radius-hero)}
+.sk-line{height:14px;border-radius:7px;background:color-mix(in srgb,var(--text-muted) 22%,var(--surface-2))}
+.load-msg{display:flex;align-items:center;gap:var(--s2);color:var(--text-secondary);font-size:var(--t-sm);margin-bottom:var(--s3)}
+
+/* empty / error cards */
+.empty-card{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s5);align-items:center;padding:var(--s6)}
+.illo-box{width:clamp(150px,20cqi,230px);background:var(--hero-bg);border-radius:var(--radius-hero);padding:var(--s3)}
+.illo-box svg{display:block;width:100%;height:auto}
+.empty-card h2{font-size:var(--t-2xl)}
+.empty-card p{color:var(--text-secondary);margin-top:var(--s2)}
+.empty-card .acts{margin-top:var(--s4);display:flex;gap:var(--s3);flex-wrap:wrap}
+.empty-card.bad h2{color:var(--text-danger)}
+.gap-t{margin-top:var(--s4)}
+.gap-b{margin-bottom:var(--s4)}
+
+/* settings > หน้าตา */
+.page-h{font-size:var(--t-2xl);margin-bottom:var(--s4)}
+.set-grid{display:grid;grid-template-columns:minmax(170px,210px) minmax(0,1fr);gap:var(--s5);align-items:start}
+.set-nav{display:flex;flex-direction:column;gap:4px}
+.set-nav button{display:flex;align-items:center;gap:var(--s2);min-height:var(--tap);padding:0 var(--s3);border-radius:var(--radius);border:0;background:transparent;color:var(--text-secondary);text-align:left;font-size:var(--t-md)}
+.set-nav button:hover{background:var(--surface-1)}
+.set-nav button[aria-current="page"]{background:var(--bg-accent);color:var(--text-accent);font-weight:700}
+.ap-head{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.ap-head h2{font-size:var(--t-xl)}
+.save-chip{display:inline-flex;align-items:center;gap:6px;font-size:var(--t-sm);font-weight:600;padding:2px 10px;border-radius:999px}
+.save-chip.saving{background:var(--surface-1);color:var(--text-secondary)}
+.save-chip.saved{background:var(--bg-success);color:var(--text-success)}
+.save-chip.off{background:var(--bg-warning);color:var(--text-warning)}
+.ap-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:var(--s5);margin-top:var(--s4);align-items:start}
+.ap-preview{grid-column:2;grid-row:1;position:sticky;top:0}
+.ap-opts{grid-column:1;grid-row:1;display:grid;gap:var(--s5)}
+.app fieldset{border:0;margin:0;padding:0;min-width:0}
+.app legend{font-weight:700;font-size:var(--t-lg);margin-bottom:var(--s2);padding:0;font-family:var(--font-display)}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3)}
+.choice{position:relative;display:flex;flex-direction:column;gap:var(--s2);padding:var(--s3);border-radius:var(--radius-lg);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);cursor:pointer;font-family:var(--font-sans);line-height:1.5;transition:border-color .15s,transform .12s}
+.choice:hover{transform:translateY(-1px)}
+.choice input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.choice:has(input:focus-visible){outline:3px solid var(--text-accent);outline-offset:2px}
+.choice:has(input:checked){border-color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent)}
+.choice b{font-size:var(--t-md);line-height:1.4}
+.choice small{font-size:var(--t-xs);color:var(--text-secondary);line-height:1.5}
+.choice .txt{min-width:0}
+.used{display:none;position:absolute;top:8px;right:8px;align-items:center;gap:4px;font-size:var(--t-xs);font-weight:700;padding:2px 8px 2px 4px;border-radius:999px;background:var(--accent);color:var(--on-accent)}
+.choice:has(input:checked) .used{display:inline-flex}
+.thumb{border-radius:var(--radius);overflow:hidden;background:var(--surface-0);border:1px solid var(--border)}
+.thumb svg{display:block;width:100%;height:auto}
+.swatches{display:flex;gap:4px;margin-top:22px}
+.swatches i{flex:1;height:30px;border-radius:6px;border:1px solid var(--border-strong)}
+.sample{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-xl);line-height:1.6}
+.segm{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:var(--radius);background:var(--surface-1);border:1px solid var(--border)}
+.segm label{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 var(--s4);border-radius:var(--radius-sm);cursor:pointer;font-weight:500;color:var(--text-secondary)}
+.segm input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.segm label:has(input:checked){background:var(--surface-2);color:var(--text-accent);font-weight:700;box-shadow:inset 0 0 0 2px var(--text-accent)}
+.segm label:has(input:focus-visible){outline:3px solid var(--text-accent);outline-offset:2px}
+.mini-hero{background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s4);margin:var(--s3) 0}
+.mini-hero small{color:var(--hero-muted);font-size:var(--t-xs)}
+.mini-hero .display{font-size:var(--t-lg)}
+.mini-hero .num{font-size:var(--t-3xl);font-weight:700;line-height:1}
+[data-theme="pro"] .mini-hero .num{color:var(--accent-2)}
+[data-theme="playful"] .mini-hero{border:2px solid var(--ink)}
+.mini-row{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.reset-row{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+
+/* scan / gradebook mini pages */
+.scan-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:var(--s4);align-items:start}
+.viewfinder{position:relative;aspect-ratio:4/3;border-radius:var(--radius-lg);background:#101318;display:grid;place-items:center;overflow:hidden}
+.vf-frame{width:44%;aspect-ratio:1;position:relative}
+.vf-frame i{position:absolute;width:26%;height:26%;border:5px solid var(--accent-2)}
+.vf-frame i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.vf-frame i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.vf-frame i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
+.vf-frame i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.vf-hint{position:absolute;bottom:12px;left:12px;right:12px;text-align:center;font-size:var(--t-sm);color:#eef1f6;background:rgba(0,0,0,.55);border-radius:999px;padding:4px 12px}
+.scan-asg{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s3)}
+.scan-asg .t{flex:1;min-width:0}
+.scan-list{list-style:none;margin:var(--s3) 0 0;padding:0;display:grid;gap:var(--s2)}
+.scan-list li{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3);border-radius:var(--radius);background:var(--surface-1);font-size:var(--t-sm)}
+.scan-list li .t{flex:1;min-width:0}
+.big-count{font-size:var(--t-3xl);font-weight:700;line-height:1.1}
+.gb-wrap{overflow-x:auto}
+table.gb{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+table.gb th,table.gb td{padding:var(--s2) var(--s3);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;line-height:1.5}
+table.gb th{color:var(--text-secondary);font-weight:600;font-size:var(--t-xs);vertical-align:bottom}
+table.gb td.n,table.gb th.n{text-align:right;font-variant-numeric:tabular-nums}
+.gb-tools{display:flex;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+
+/* breakpoints for the additions */
+@container app (max-width:1100px){
+  .grid-a{grid-template-columns:1fr;grid-template-areas:"qs" "tl" "sd";grid-template-rows:auto}
+  .quick,.qs .quick{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .quick .qa{flex-direction:column;align-items:flex-start;gap:var(--s2)}
+  .panels.compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .set-grid{grid-template-columns:1fr}
+  .set-nav{flex-direction:row;flex-wrap:wrap}
+  .ap-grid{grid-template-columns:1fr}
+  .ap-preview{grid-column:auto;grid-row:auto;position:static}
+  .ap-opts{grid-column:auto;grid-row:auto}
+}
+@container app (max-width:860px){
+  .panels{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel.cp .p-mid{flex-direction:row;align-items:center}
+  .scan-grid{grid-template-columns:1fr}
+}
+@container app (max-width:599px){
+  .quick,.qs .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quick .qa{flex-direction:row;align-items:center}
+  .panels,.panels.compact{grid-template-columns:1fr}
+  .panels.compact .panel:not([aria-pressed="true"]){display:none}
+  .room-chips{display:flex}
+  .chip-btn .lbl{display:none}
+  .chip-btn{width:var(--tap);justify-content:center;padding:0}
+  .off-chip{display:none}
+  .empty-card{grid-template-columns:1fr;text-align:center;padding:var(--s5)}
+  .illo-box{margin:0 auto;width:150px}
+  .empty-card .acts{justify-content:center}
+  .choices{grid-template-columns:1fr}
+  .choice{flex-direction:row;align-items:center}
+  .choice .thumb{width:108px;flex:none}
+  .theme-choice{flex-wrap:wrap}
+  .theme-choice .swatches{width:100%}
+  .scrim{align-items:flex-end}
+  .sheet{height:auto;max-height:88%;border-radius:var(--radius-hero) var(--radius-hero) 0 0;padding-bottom:var(--s6)}
+  .focus .acts .btn{flex:1 1 100%}
+  .summary .pill{font-size:var(--t-xs);padding:2px 10px}
+}
+</style>
+</head>
+<body>
+<header class="chrome" aria-label="ตัวสลับ mockup">
+  <h1>Mockup หน้าหลัก + ชุดหน้าตา · งานครบ<small>Gate 2 · ข้อมูลสมมติ · ลองกดได้จริง</small></h1>
+  <div class="ctl"><span>หน้า</span><div class="seg" data-group="page"></div></div>
+  <div class="ctl"><span>โครง</span><div class="seg" data-group="layout"></div></div>
+  <div class="ctl"><span>ธีม</span><div class="seg" data-group="theme"></div></div>
+  <div class="ctl"><span>โหมด</span><div class="seg" data-group="mode"></div></div>
+  <div class="ctl"><span>อุปกรณ์</span><div class="seg" data-group="device"></div></div>
+  <div class="ctl"><span>สถานะ</span><div class="seg" data-group="state"></div></div>
+  <div class="ctl"><div class="seg" data-group="fit"></div><div class="seg" data-group="tags"></div></div>
+  <p class="chrome-info" id="info"></p>
+</header>
+<main class="stage" id="stage">
+  <div class="frame-box" id="box"><div class="device" id="device"></div></div>
+</main>
+<p class="size-note" id="sizeNote"></p>
+
+<script>
+/* ======================= sample data (fictional names only — matches DashboardPayload) ======================= */
+const TODAY = "2026-11-11", NOW = "10:42", LATE_AFTER = "08:30", TEACHER = "ครูอรอุมา";
+const ST0 = {
+  s01: ["ภูผา", "ใจกล้า", "c61", "ด.ช."], s02: ["ณิชา", "แสงทอง", "c61", "ด.ญ."], s03: ["ธนกร", "พรหมมา", "c61", "ด.ช."],
+  s04: ["กานต์ธิดา", "วงศ์ใหญ่", "c61", "ด.ญ."], s05: ["ปัณณวัฒน์", "สายสุด", "c61", "ด.ช."], s06: ["มินตรา", "คงมั่น", "c61", "ด.ญ."],
+  s07: ["ปวริศ", "ศรีเมือง", "c61", "ด.ช."],
+  s11: ["วรเมธ", "บุญมา", "c62", "ด.ช."], s12: ["ศุภิสรา", "ทองดี", "c62", "ด.ญ."], s13: ["ชยพล", "ศรีสุข", "c62", "ด.ช."],
+  s14: ["อรปรียา", "ดวงแก้ว", "c62", "ด.ญ."], s15: ["ทินภัทร", "มีสุข", "c62", "ด.ช."], s16: ["เขมจิรา", "คำดี", "c62", "ด.ญ."],
+  s17: ["พิมพ์มาดา", "ใจดี", "c62", "ด.ญ."],
+  s21: ["ณัฐวุฒิ", "ปัญญาดี", "c51", "ด.ช."], s22: ["ปุณยวีร์", "รักเรียน", "c51", "ด.ญ."], s23: ["อชิรวิทย์", "ทองคำ", "c51", "ด.ช."],
+  s24: ["สิรภัทร", "แก้วมณี", "c51", "ด.ญ."], s25: ["กันตพงศ์", "ศรีงาม", "c51", "ด.ช."],
+};
+const ASG0 = [
+  { id: "A1", title: "ใบงานเศษส่วน ชุดที่ 2", subject: "คณิตศาสตร์", type: "ใบงาน", full: 10, due: "2026-11-11", status: "open",
+    per: { c61: { scored: 18, awaiting: 8, late: 0, missing: [], excused: 1 }, c62: { scored: 21, awaiting: 0, late: 0, missing: [], excused: 0 } } },
+  { id: "A2", title: "แบบฝึกหัดทศนิยม หน้า 42–43", subject: "คณิตศาสตร์", type: "แบบฝึกหัด", full: 5, due: "2026-11-12", status: "open",
+    per: { c51: { scored: 9, awaiting: 6, late: 0, missing: [], excused: 0 } } },
+  { id: "A3", title: "แผนผังความคิด เรื่องพืช", subject: "วิทยาศาสตร์", type: "ชิ้นงาน", full: 20, due: "2026-11-06", status: "open",
+    per: { c61: { scored: 15, awaiting: 12, late: 4, missing: ["s01", "s02", "s03", "s04"], excused: 1 },
+           c62: { scored: 24, awaiting: 0, late: 2, missing: ["s11", "s12", "s13", "s14", "s15", "s16"], excused: 0 } } },
+  { id: "A4", title: "สมุดบันทึกการอ่าน สัปดาห์ที่ 1", subject: "ภาษาไทย", type: "การบ้าน", full: 10, due: null, status: "open",
+    per: { c51: { scored: 20, awaiting: 0, late: 0, missing: [], excused: 0 } } },
+  { id: "A5", title: "ใบงานคำควบกล้ำ", subject: "ภาษาไทย", type: "ใบงาน", full: 10, due: "2026-11-04", status: "open",
+    per: { c61: { scored: 29, awaiting: 0, late: 1, missing: ["s01", "s02", "s05"], excused: 0 },
+           c62: { scored: 26, awaiting: 0, late: 3, missing: ["s11", "s12", "s13", "s17"], excused: 0 } } },
+  { id: "A6", title: "ใบงานแรงและการเคลื่อนที่", subject: "วิทยาศาสตร์", type: "ใบงาน", full: 10, due: "2026-11-09", status: "open",
+    per: { c51: { scored: 23, awaiting: 0, late: 2, missing: ["s21", "s22", "s23", "s24", "s25"], excused: 0 } } },
+  { id: "G1", title: "ทดสอบย่อย บทที่ 3 การคูณ", subject: "คณิตศาสตร์", type: "ทดสอบ", full: 10, due: "2026-11-02", status: "closed",
+    per: { c51: { scored: 22, awaiting: 4, late: 0, missing: [], excused: 0 } } },
+];
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const z = (scored, awaiting, missing = []) => ({ scored, awaiting, late: 0, missing, excused: 0 });
+const att0 = (total) => ({ present: 0, late: 0, leave: 0, sick: 0, absent: 0, total });
+function dsBase() {
+  return { classes: [["c61", "ป.6/1", 32], ["c62", "ป.6/2", 30], ["c51", "ป.5/1", 28]], st: { ...ST0 }, asg: clone(ASG0),
+    att: { c61: { present: 28, late: 2, leave: 1, sick: 1, absent: 0, total: 32 }, c62: { present: 26, late: 1, leave: 0, sick: 1, absent: 2, total: 30 }, c51: att0(28) },
+    absent: [["c61", "s03", "late"], ["c61", "s06", "late"], ["c61", "s04", "leave"], ["c61", "s07", "sick"], ["c62", "s13", "late"], ["c62", "s14", "sick"], ["c62", "s11", "absent"], ["c62", "s15", "absent"]],
+    backupDays: 9 };
+}
+function dsMany() { // 8 rooms, long names, 4 assignments due today
+  const d = dsBase();
+  d.classes.push(["c52", "ป.5/2 ห้องเรียนพิเศษวิทย์-คณิต", 36], ["c41", "ป.4/1", 34], ["c42", "ป.4/2 โครงการสองภาษา (English Program)", 25], ["c31", "ป.3/1", 30], ["c32", "ป.3/2", 29]);
+  Object.assign(d.st, { s31: ["กัญญาณัฐชานันท์", "ศรีสุวรรณวงศ์ไพศาล", "c52", "ด.ญ."], s32: ["ธีรภัทรพงศ์", "เจริญรุ่งเรืองกิจ", "c52", "ด.ช."], s33: ["ปิยะฉัตร", "มณีวงศ์", "c41", "ด.ญ."],
+    s34: ["จิรายุ", "บุญเรือง", "c42", "ด.ช."], s35: ["พัชราภา", "ศรีอ่อน", "c42", "ด.ญ."], s36: ["ภาคิน", "ทองสุข", "c31", "ด.ช."], s37: ["ชนัญชิดา", "พึ่งบุญ", "c32", "ด.ญ."] });
+  d.asg.find((a) => a.id === "A1").per.c52 = z(20, 4);
+  d.asg.push(
+    { id: "A7", title: "โครงงานสำรวจระบบนิเวศในโรงเรียนและชุมชนรอบโรงเรียน (งานกลุ่ม ส่งรูปเล่มพร้อมภาพถ่าย)", subject: "วิทยาศาสตร์", type: "ชิ้นงาน", full: 20, due: TODAY, status: "open", per: { c41: z(10, 5), c42: z(12, 3) } },
+    { id: "A8", title: "ใบงานการบวกเลขสองหลัก", subject: "คณิตศาสตร์", type: "ใบงาน", full: 10, due: TODAY, status: "open", per: { c31: z(15, 2) } },
+    { id: "A9", title: "เขียนเรื่องสั้นจากภาพ", subject: "ภาษาไทย", type: "การบ้าน", full: 10, due: TODAY, status: "open", per: { c32: z(18, 0) } },
+    { id: "A10", title: "แบบฝึกหัดการอ่านจับใจความ ชุดที่ 4", subject: "ภาษาไทย", type: "แบบฝึกหัด", full: 10, due: "2026-11-05", status: "open",
+      per: { c52: z(30, 0, ["s31", "s32"]), c41: z(30, 0, ["s33"]), c42: z(20, 0, ["s34", "s35"]), c31: z(25, 0, ["s36"]), c32: z(24, 0, ["s37"]) } });
+  Object.assign(d.att, { c52: { present: 33, late: 1, leave: 1, sick: 0, absent: 1, total: 36 }, c41: att0(34), c42: { present: 22, late: 1, leave: 0, sick: 1, absent: 1, total: 25 },
+    c31: { present: 28, late: 0, leave: 1, sick: 0, absent: 1, total: 30 }, c32: att0(29) });
+  d.absent.push(["c52", "s31", "absent"], ["c42", "s34", "absent"], ["c31", "s36", "absent"]);
+  return d;
+}
+function dsFree() { // nothing left to do today
+  const d = dsBase();
+  for (const a of d.asg) { if (a.id === "A1") a.due = "2026-11-12"; for (const c in a.per) { const p = a.per[c]; p.scored += p.awaiting + p.missing.length; p.awaiting = 0; p.missing = []; } }
+  d.att.c51 = { present: 26, late: 1, leave: 1, sick: 0, absent: 0, total: 28 }; d.backupDays = 2; return d;
+}
+const dsNoStudent = () => ({ classes: [["c61", "ป.6/1", 0], ["c62", "ป.6/2", 0], ["c51", "ป.5/1", 0]], st: {}, asg: [], att: { c61: att0(0), c62: att0(0), c51: att0(0) }, absent: [], backupDays: 0 });
+const dsNoClass = () => ({ classes: [], st: {}, asg: [], att: {}, absent: [], backupDays: 0 });
+const DS = { base: dsBase, many: dsMany, free: dsFree, nostudent: dsNoStudent, noclass: dsNoClass };
+const DS_OF = { many: "many", free: "free", nostudent: "nostudent", noclass: "noclass" };
+// proposals (need a new API — shown only with "ป้ายข้อเสนอ" on, labelled as next job)
+const TREND = [["จ.2", 41], ["อ.3", 55], ["พ.4", 38], ["พฤ.5", 62], ["ศ.6", 47], ["จ.9", 33], ["อ.10", 58]];
+const STREAK = [{ sid: "s11", days: 3 }];
+
+/* ---------- derived numbers (same rules as the worker) ---------- */
+let CLASSES, CL, ST, ASG, ATT, ABSENT, BACKUP_DAYS, OPEN, AGG, awaitingCount, missingCount, followUp, dueToday, dueTomorrow, overdue, unchecked, attSum, TODOS;
+const DUE_DAYS = (d) => Math.round((Date.parse(d) - Date.parse(TODAY)) / 864e5);
+function pc(a, cid) {
+  const p = a.per[cid], total = CL[cid].total, submitted = p.scored + p.awaiting, missing = p.missing.length;
+  return { ...p, total, submitted, missing, pending: total - submitted - missing - p.excused, missIds: p.missing };
+}
+function classAgg(cid) {
+  const r = { scored: 0, awaiting: 0, late: 0, missing: 0, pending: 0, excused: 0, submitted: 0, open: 0 };
+  for (const a of OPEN) if (a.per[cid]) { const p = pc(a, cid); r.open++; for (const k of ["scored", "awaiting", "late", "missing", "pending", "excused", "submitted"]) r[k] += p[k]; }
+  const den = r.submitted + r.missing; // BR-03 (owner Q4): submitted ÷ (submitted + missing) — ป.6/2 = 71 ÷ 81 = 88%
+  r.pct = den ? Math.round((r.submitted / den) * 100) : null;
+  return r;
+}
+function load(ds) {
+  CLASSES = ds.classes.map(([id, name, total], i) => ({ id, name, total, c: `var(--cls-${(i % 3) + 1})` }));
+  CL = Object.fromEntries(CLASSES.map((c) => [c.id, c])); ST = ds.st; ASG = ds.asg; ATT = ds.att; ABSENT = ds.absent; BACKUP_DAYS = ds.backupDays;
+  for (const a of Object.values(ATT)) a.marked = a.present + a.late + a.leave + a.sick + a.absent;
+  OPEN = ASG.filter((a) => a.status === "open");
+  AGG = Object.fromEntries(CLASSES.map((c) => [c.id, classAgg(c.id)]));
+  awaitingCount = ASG.reduce((s, a) => s + Object.values(a.per).reduce((t, p) => t + p.awaiting, 0), 0);
+  missingCount = OPEN.reduce((s, a) => s + Object.values(a.per).reduce((t, p) => t + p.missing.length, 0), 0);
+  const fm = {}; for (const a of OPEN) for (const c in a.per) for (const sid of a.per[c].missing) fm[sid] = (fm[sid] || 0) + 1;
+  followUp = Object.entries(fm).map(([sid, n]) => ({ sid, missing: n, classId: ST[sid][2] })).sort((x, y) => y.missing - x.missing).slice(0, 8);
+  dueToday = OPEN.filter((a) => a.due === TODAY); dueTomorrow = OPEN.filter((a) => a.due && DUE_DAYS(a.due) === 1);
+  overdue = OPEN.filter((a) => a.due && DUE_DAYS(a.due) < 0).sort((x, y) => DUE_DAYS(x.due) - DUE_DAYS(y.due));
+  unchecked = CLASSES.filter((c) => c.total > 0 && ATT[c.id].marked === 0); // rooms without students are never "unchecked" (AC-14)
+  attSum = ["present", "late", "leave", "sick", "absent", "marked"].reduce((o, k) => (o[k] = CLASSES.reduce((s, c) => s + ATT[c.id][k], 0), o), {});
+  TODOS = todos();
+}
+
+/* ---------- state ---------- */
+const S = { page: "home", layout: "a", theme: "warm", modePref: "light", device: innerWidth < 700 ? "phone" : "ipadL", fit: "w", tags: false,
+  state: "normal", hide: false, cls: null, order: [], focus: null, sheet: null, opener: null, saveMsg: "", confirmReset: false, dsKey: null };
+const mode = () => S.modePref === "system" ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : S.modePref;
+const ICONW = { pro: "bold", warm: "duotone", playful: "fill" };
+const ic = (n, cls = "") => `<i class="ic ph-${ICONW[S.theme]} ph-${n} ${cls}" aria-hidden="true"></i>`;
+const tag = (k) => k === "next" ? `<span class="tag tag-next">งานถัดไป — ยังไม่มีในรอบนี้</span>` : `<span class="tag tag-old">ใช้ข้อมูลเดิม</span>`;
+const nm = (sid) => ST[sid][0];
+const full = (sid) => `${ST[sid][0]} ${ST[sid][1]}`;
+const initial = (s) => (s.match(/[ก-ฮ]/) || [s[0]])[0];
+const av = (sid) => `<span class="av" style="--c:${CL[ST[sid][2]].c}" aria-hidden="true">${initial(ST[sid][0])}</span>`;
+const thDate = (d) => { const m = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]; const [, mo, da] = d.split("-").map(Number); return `${da} ${m[mo - 1]}`; };
+const stale = () => S.state === "offline" ? `<span class="stale">${ic("wifi-slash")}ข้อมูลเก่า</span>` : "";
+function dueInfo(d) {
+  if (!d) return { cls: "st-mute", icon: "calendar-blank", text: "ไม่มีกำหนดส่ง" };
+  const n = DUE_DAYS(d);
+  if (n < 0) return { cls: "st-bad", icon: "calendar-x", text: `เลยกำหนด ${-n} วัน` };
+  if (n === 0) return { cls: "st-warn", icon: "clock", text: "ครบกำหนดวันนี้" };
+  if (n === 1) return { cls: "st-warn", icon: "clock", text: "ส่งพรุ่งนี้" };
+  return { cls: "st-mute", icon: "calendar-blank", text: `ส่ง ${thDate(d)}` };
+}
+const st = (cls, icon, text) => `<span class="st ${cls}">${ic(icon)}${text}</span>`;
+const TONE = { bad: ["st-bad", "warning-octagon", "ต้องดู"], warn: ["st-warn", "warning", "ควรทำ"], mute: ["st-mute", "coffee", "ว่างค่อยทำ"] };
+const toneLabel = (t) => `<span class="tone">${st(...TONE[t])}</span>`;
+function ring(p, size, sw, color, center = "") {
+  const r = (size - sw) / 2, c = 2 * Math.PI * r, h = size / 2;
+  return `<div class="ringbox"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--ring-track)" stroke-width="${sw}"/>
+    <circle class="ring-val" cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c * p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/>
+  </svg><div class="rc">${center}</div></div>`;
+}
+function donut(parts, size, sw, center = "") {
+  const r = (size - sw) / 2, c = 2 * Math.PI * r, h = size / 2, tot = parts.reduce((s, p) => s + p[0], 0) || 1;
+  let off = 0; const gap = parts.filter((p) => p[0] > 0).length > 1 ? 3 : 0;
+  const segs = parts.filter((p) => p[0] > 0).map(([v, col]) => { const len = (v / tot) * c; const s = `<circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-dasharray="${Math.max(len - gap, 1).toFixed(1)} ${c.toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}" transform="rotate(-90 ${h} ${h})"/>`; off += len; return s; }).join("");
+  return `<div class="ringbox"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--ring-track)" stroke-width="${sw}"/>${segs}</svg><div class="rc">${center}</div></div>`;
+}
+const stack = (p) => { const d = (p.scored + p.awaiting + p.pending + p.missing) || 1; const w = (v) => (v / d * 100).toFixed(2) + "%";
+  return `<div class="bar" role="img" aria-label="ตรวจแล้ว ${p.scored} รอตรวจ ${p.awaiting} ยังไม่ถึงกำหนด ${p.pending} ค้าง ${p.missing}">
+    <span class="seg-scored" style="width:${w(p.scored)}"></span><span class="seg-await" style="width:${w(p.awaiting)}"></span><span class="seg-pend" style="width:${w(p.pending)}"></span><span class="seg-miss" style="width:${w(p.missing)}"></span></div>`; };
+const legend = () => `<div class="legend"><span><i class="sw seg-scored"></i>ตรวจแล้ว</span><span><i class="sw seg-await"></i>รอตรวจ</span><span><i class="sw sw-pend"></i>ยังไม่ถึงกำหนด</span><span><i class="sw seg-miss"></i>ค้างส่ง</span></div>`;
+const ATT_LABEL = { present: "มา", late: "สาย", leave: "ลา", sick: "ป่วย", absent: "ขาด" };
+const ATT_ICON = { present: "check", late: "clock", leave: "note", sick: "first-aid", absent: "x" };
+const attParts = (a) => [[a.present, "var(--att-present)"], [a.late, "var(--att-late)"], [a.leave, "var(--att-leave)"], [a.sick, "var(--att-sick)"], [a.absent, "var(--att-absent)"]];
+const attBar = (a) => `<div class="attbar" aria-hidden="true">${attParts(a).filter((p) => p[0]).map(([v, c]) => `<span style="flex:${v};background:${c}"></span>`).join("")}</div>`;
+
+/* ---------- the to-do list (todoRows + dueSoon + shouldClose + awaitingCount). Real labels only — no invented times ---------- */
+function todos() {
+  const t = [];
+  for (const c of unchecked) t.push({ key: "room:" + c.id, icon: "user-check", tone: "warn", when: LATE_AFTER, whenSub: "เข้าเรียน",
+    title: `เช็คชื่อ ${c.name}`, why: `ยังไม่ได้เช็ค ${c.total} คน · เลยเวลาเข้าเรียน ${LATE_AFTER} มาแล้ว`, act: "เริ่มเช็คชื่อ", actIcon: "user-check" });
+  const pendOf = (a) => Object.keys(a.per).map((c) => [c, pc(a, c).pending]);
+  if (dueToday.length > 3) {
+    const n = dueToday.reduce((s, a) => s + pendOf(a).reduce((t2, x) => t2 + x[1], 0), 0);
+    t.push({ key: "due:all", icon: "calendar-check", tone: "warn", when: "วันนี้", whenSub: "ครบกำหนด", multi: true,
+      title: `ครบกำหนดวันนี้ ${dueToday.length} งาน`, why: `ยังไม่ส่งรวม ${n} คน · แตะไอคอนสแกนของงานที่จะรับ`, act: "เปิดสมุดคะแนน", actIcon: "notebook" });
+  } else for (const a of dueToday) { const pend = pendOf(a), n = pend.reduce((s, x) => s + x[1], 0);
+    t.push({ key: "due:" + a.id, icon: "calendar-check", tone: "warn", when: "วันนี้", whenSub: "ครบกำหนด", asg: a,
+      title: `${a.title} ครบกำหนดวันนี้`, why: `ยังไม่ส่ง ${n} คน · ${pend.map(([c, v]) => `${CL[c].name} ${v} คน`).join(" · ")}`, act: "สแกนรับงาน", actIcon: "scan", alt: "คัดลอกรายชื่อไป LINE", altIcon: "copy" }); }
+  const tot = overdue.reduce((s, a) => s + Object.values(a.per).reduce((t2, p) => t2 + p.missing.length, 0), 0);
+  if (tot) { const old = overdue.find((a) => -DUE_DAYS(a.due) >= 7);
+    t.push({ key: "chase", icon: "flag", tone: "bad", when: "ค้างอยู่", whenSub: "ตามงาน",
+      title: `ตามงานค้าง ${tot} ชิ้น`, why: `${overdue.length} งานเลยกำหนด` + (old ? ` · ${old.title} เลยมา ${-DUE_DAYS(old.due)} วัน ควรปิดรับ` : ""), act: "ดูรายชื่อคนค้าง", actIcon: "list-checks", alt: old ? "ปิดรับงานนี้" : null, altIcon: "lock-simple" }); }
+  if (awaitingCount) { const parts = ASG.map((a) => [a, Object.values(a.per).reduce((s, p) => s + p.awaiting, 0)]).filter((x) => x[1]).sort((x, y) => y[1] - x[1]);
+    t.push({ key: "grade", icon: "exam", tone: "mute", when: "ว่างแล้วทำ", whenSub: "ตรวจงาน",
+      title: `ตรวจงาน ${awaitingCount} ชิ้นที่ส่งแล้ว`, why: parts.slice(0, 3).map(([a, n]) => `${a.title} ${n}`).join(" · ") + (parts.length > 3 ? ` · และอีก ${parts.length - 3} งาน` : ""), act: "เปิดสมุดคะแนน", actIcon: "notebook" }); }
+  if (BACKUP_DAYS > 7) t.push({ key: "backup", icon: "cloud-arrow-up", tone: "mute", when: "ว่างแล้วทำ", whenSub: "สำรอง",
+    title: "สำรองข้อมูล", why: `สำรองล่าสุด ${BACKUP_DAYS} วันที่แล้ว · ควรสำรองสัปดาห์ละครั้ง`, act: "สำรองตอนนี้", actIcon: "download-simple" });
+  return t;
+}
+
+/* ---------- illustrations (inline SVG, theme-coloured) ---------- */
+function illo() {
+  if (S.theme === "pro") return `<svg viewBox="0 0 240 170" aria-hidden="true">
+    <g fill="var(--illo-2)" opacity=".18">${[0,1,2,3,4,5].map(r=>[0,1,2,3,4,5,6,7].map(c=>`<circle cx="${12+c*14}" cy="${20+r*14}" r="1.6"/>`).join("")).join("")}</g>
+    <circle cx="150" cy="88" r="70" fill="none" stroke="var(--illo-2)" stroke-opacity=".14" stroke-width="1.5"/>
+    <circle cx="150" cy="88" r="54" fill="none" stroke="var(--illo-2)" stroke-opacity=".12" stroke-width="12"/>
+    <circle cx="150" cy="88" r="54" fill="none" stroke="var(--illo-1)" stroke-width="12" stroke-linecap="round" stroke-dasharray="250 400" transform="rotate(-90 150 88)"/>
+    <rect x="122" y="52" width="56" height="74" rx="8" fill="var(--illo-2)"/>
+    <rect x="137" y="45" width="26" height="13" rx="5" fill="var(--illo-3)"/>
+    <rect x="132" y="70" width="34" height="5" rx="2.5" fill="var(--illo-3)" opacity=".35"/>
+    <rect x="132" y="81" width="24" height="5" rx="2.5" fill="var(--illo-3)" opacity=".35"/>
+    <path d="M134 103l9 9 17-19" fill="none" stroke="var(--illo-1)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="22" y="118" width="12" height="34" rx="3" fill="var(--illo-3)"/><rect x="40" y="100" width="12" height="52" rx="3" fill="var(--illo-1)"/>
+    <rect x="58" y="128" width="12" height="24" rx="3" fill="var(--illo-4)"/><rect x="76" y="108" width="12" height="44" rx="3" fill="var(--illo-2)" opacity=".5"/>
+    <circle cx="214" cy="30" r="6" fill="var(--illo-4)"/></svg>`;
+  if (S.theme === "warm") return `<svg viewBox="0 0 240 170" aria-hidden="true">
+    <circle cx="168" cy="62" r="34" fill="var(--illo-1)"/>
+    <g stroke="var(--illo-1)" stroke-width="5" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(d=>{const r=d*Math.PI/180;return `<line x1="${(168+44*Math.cos(r)).toFixed(1)}" y1="${(62+44*Math.sin(r)).toFixed(1)}" x2="${(168+54*Math.cos(r)).toFixed(1)}" y2="${(62+54*Math.sin(r)).toFixed(1)}"/>`}).join("")}</g>
+    <path d="M0 150 C40 112 80 112 120 136 S200 118 240 132 V170 H0Z" fill="var(--illo-3)"/>
+    <path d="M0 160 C50 140 110 146 150 156 S220 150 240 154 V170 H0Z" fill="var(--illo-3)" opacity=".6"/>
+    <rect x="58" y="96" width="62" height="48" rx="4" fill="var(--illo-4)"/>
+    <path d="M50 100 L89 70 L128 100Z" fill="var(--illo-2)"/>
+    <rect x="82" y="118" width="14" height="26" rx="3" fill="var(--illo-2)"/>
+    <rect x="64" y="108" width="12" height="10" rx="2" fill="var(--illo-1)"/><rect x="102" y="108" width="12" height="10" rx="2" fill="var(--illo-1)"/>
+    <line x1="89" y1="70" x2="89" y2="48" stroke="var(--illo-2)" stroke-width="3"/><path d="M89 48 h18 l-5 6 5 6 h-18z" fill="var(--illo-1)"/>
+    <circle cx="28" cy="128" r="14" fill="var(--illo-3)"/><rect x="26" y="134" width="4" height="16" fill="var(--illo-2)"/></svg>`;
+  return `<svg viewBox="0 0 240 170" aria-hidden="true">
+    <path d="M150 20c30-6 66 12 70 44s-18 70-56 76-74-10-78-44 34-70 64-76z" fill="var(--illo-1)" stroke="var(--illo-4)" stroke-width="3"/>
+    <path d="M60 34l6.5 17.1 18.7 0.9-14.5 11.8 5 18-15.7-10.3-15.7 10.3 5-18L35.3 52l18.7-0.9z" fill="#fff" stroke="var(--illo-4)" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="120" y="58" width="66" height="78" rx="10" fill="#fff" stroke="var(--illo-4)" stroke-width="3" transform="rotate(8 153 97)"/>
+    <path d="M136 86l10 10 22-22" fill="none" stroke="var(--illo-3)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" transform="rotate(8 153 97)"/>
+    <path d="M14 126c12-12 24 12 36 0s24 12 36 0" fill="none" stroke="var(--illo-2)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="208" cy="146" r="10" fill="var(--illo-3)" stroke="var(--illo-4)" stroke-width="3"/>
+    <circle cx="104" cy="22" r="6" fill="var(--illo-2)"/></svg>`;
+}
+const logo = () => `<svg viewBox="0 0 48 48" role="img" aria-label="งานครบ"><rect x="3" y="3" width="42" height="42" rx="${{ pro: 11, warm: 16, playful: 13 }[S.theme]}" fill="var(--rail-active-bg)" ${S.theme === "playful" ? 'stroke="#000" stroke-width="2"' : ""}/><path d="M14 25l7 7 14-15" fill="none" stroke="var(--rail-active-fg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+// layout thumbnails for the picker (drawn with the current theme's tokens)
+function thumb(k) {
+  const H = "var(--hero-bg)", A = "var(--accent)", A2 = "var(--accent-2)", C = "var(--surface-2)", B = "var(--border-strong)";
+  const card = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${C}" stroke="${B}"/>`;
+  const txt = (x, y, w, o = .55) => `<rect x="${x}" y="${y}" width="${w}" height="2.6" rx="1.3" fill="var(--hero-fg)" opacity="${o}"/>`;
+  if (k === "a") return `<svg viewBox="0 0 120 78" aria-hidden="true"><rect x="4" y="4" width="112" height="19" rx="4" fill="${H}"/><rect x="9" y="8" width="12" height="11" rx="2" fill="${A2}"/>${txt(25, 9, 40, .85)}${txt(25, 15, 28)}
+    <line x1="11" y1="28" x2="11" y2="74" stroke="${B}" stroke-width="2"/>${[29, 44, 59].map((y) => `<circle cx="11" cy="${y + 5}" r="3.4" fill="${C}" stroke="var(--fill-warning)" stroke-width="1.8"/>${card(18, y, 54, 12)}`).join("")}
+    <rect x="76" y="28" width="19" height="14" rx="3" fill="${A}"/>${card(97, 28, 19, 14)}${card(76, 45, 40, 13)}${card(76, 61, 40, 13)}</svg>`;
+  if (k === "b") return `<svg viewBox="0 0 120 78" aria-hidden="true"><rect x="4" y="4" width="112" height="14" rx="4" fill="${H}"/><rect x="7" y="7" width="30" height="8" rx="2" fill="${A2}"/>${[40, 65, 90].map((x) => `<rect x="${x}" y="7" width="23" height="8" rx="2" fill="var(--hero-fg)" opacity=".2"/>`).join("")}
+    ${[4, 42, 80].map((x, i) => `${card(x, 22, 36, 30)}<rect x="${x}" y="22" width="36" height="3" fill="var(--cls-${i + 1})"/><circle cx="${x + 12}" cy="39" r="7" fill="none" stroke="var(--cls-${i + 1})" stroke-width="3"/><rect x="${x + 22}" y="35" width="10" height="2.4" fill="${B}"/><rect x="${x + 22}" y="40" width="8" height="2.4" fill="${B}"/>`).join("")}
+    ${card(4, 56, 70, 18)}${card(78, 56, 38, 18)}</svg>`;
+  return `<svg viewBox="0 0 120 78" aria-hidden="true"><rect x="4" y="4" width="74" height="46" rx="5" fill="${H}"/>${txt(10, 12, 20)}<rect x="10" y="18" width="10" height="9" rx="2" fill="${A2}"/>${txt(10, 31, 52, .9)}${txt(10, 36, 40)}<rect x="10" y="41" width="24" height="6" rx="3" fill="var(--hero-fg)"/>
+    ${[4, 17, 30].map((y) => card(82, y, 34, 11)).join("")}${[4, 33, 62, 91].map((x) => `<rect x="${x}" y="54" width="25" height="8" rx="2" fill="${x === 4 ? A : C}" stroke="${B}"/>`).join("")}${card(4, 65, 54, 9)}${card(62, 65, 54, 9)}</svg>`;
+}
+
+/* ---------- shared blocks ---------- */
+const NAV = [["วันนี้", [["home", "หน้าหลัก", "house"]]], ["ในห้องเรียน", [["scan", "สแกน", "scan"], ["attendance", "เช็คชื่อ", "user-check"], ["random", "สุ่มชื่อ", "dice-five"]]],
+  ["ตรวจงาน", [["gradebook", "คะแนน", "notebook"], ["reports", "รายงาน", "chart-bar"]]], ["จัดการ", [["students", "นักเรียน", "users-three"], ["settings", "ตั้งค่า", "gear-six"]]]];
+const PAGES = ["home", "settings", "scan", "gradebook"];
+const navBtn = (k, l) => PAGES.includes(k) ? `data-page="${k}"` : `data-toast="ตัวอย่างนี้ไม่มีหน้า${l}"`;
+const rail = () => `<nav class="rail" aria-label="เมนูหลัก"><div class="brand">${logo()}</div>
+  ${NAV.map(([, items], gi) => `${gi ? `<div class="rail-label" aria-hidden="true"></div>` : ""}${items.map(([k, l, i]) => `<button class="rail-item" ${k === S.page ? 'aria-current="page"' : ""} ${navBtn(k, l)}>${ic(i)}<span>${l}</span></button>`).join("")}`).join("")}
+  <div class="rail-foot"><div class="sync"><span class="dot" ${S.state === "offline" ? 'style="background:var(--fill-warning);box-shadow:none"' : ""}></span>${S.state === "offline" ? "ออฟไลน์" : "ออนไลน์"}</div><button class="rail-item" data-toast="ออกจากระบบ">${ic("sign-out")}<span>ออกจากระบบ</span></button></div></nav>`;
+const tabbar = () => { const cur = (k) => (S.page === k ? 'aria-current="page"' : "");
+  return `<nav class="tabbar" aria-label="เมนูหลัก">
+  <button class="tab" ${cur("home")} data-page="home">${ic("house")}หน้าหลัก</button><button class="tab" data-toast="ตัวอย่างนี้ไม่มีหน้าเช็คชื่อ">${ic("user-check")}เช็คชื่อ</button>
+  <button class="tab tab-scan" ${cur("scan")} data-page="scan"><span class="bubble">${ic("scan")}</span>สแกน</button>
+  <button class="tab" ${cur("gradebook")} data-page="gradebook">${ic("notebook")}คะแนน</button><button class="tab" ${cur("settings")} data-act="sheet:more">${ic("dots-three-circle")}เพิ่มเติม</button></nav>`; };
+const topbar = (home) => `<div class="topbar"><div class="where">${ic("calendar-blank")}<span>พุธ 11 พ.ย. 2569 <span class="long">· ภาคเรียน 2/2569</span></span></div>
+  ${S.state === "offline" ? `<span class="off-chip">${ic("wifi-slash")}ออฟไลน์ · ข้อมูลเมื่อ 10:12</span>` : ""}<div class="grow"></div>
+  <button class="chip-btn" data-toast="เลือกภาคเรียน" aria-label="ภาคเรียน 2/2569 แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">2/2569</span></button>
+  <button class="chip-btn hide-btn" data-act="hide" aria-pressed="${S.hide}" aria-label="ซ่อนชื่อนักเรียน (โหมดฉายจอ)">${ic(S.hide ? "eye-slash" : "eye")}<span class="lbl">${S.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+  ${home ? `<button class="chip-btn" data-act="sheet:layout" aria-label="ปรับหน้าหลัก">${ic("sliders-horizontal")}<span class="lbl">ปรับหน้าหลัก</span></button>` : ""}</div>`;
+const banners = () => (S.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่</b><br>ทุกการ์ดแสดงเฉพาะจำนวน (สำหรับตอนสะท้อนจอขึ้นทีวี)</div><button class="btn" data-act="hide">${ic("eye")}แสดงชื่อ</button></div>` : "")
+  + (S.state === "offline" ? `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์ · ข้อมูลเมื่อ 10:12</b><br>สแกนและเช็คชื่อยังใช้ได้ ข้อมูลจะส่งเองเมื่อมีเน็ต</div></div>` : "");
+const QA = () => [
+  { t: "สแกนส่งงาน", s: "กล้องหรือเครื่องอ่าน QR", i: "scan", main: true, page: "scan" },
+  { t: "เช็คชื่อ", s: unchecked.length ? `ยังเหลือ ${unchecked.length} ห้อง` : "เช็คครบแล้ว", i: "user-check", q: 1 },
+  { t: "สุ่มชื่อ", s: "เฉพาะคนที่มาเรียน", i: "dice-five", q: 3 },
+  { t: "สร้างงาน", s: "หลายห้องพร้อมกัน", i: "plus-circle", q: 2 },
+];
+const qaBtn = (q, dock) => `<button class="qa ${q.main ? "main-qa" : ""}" ${q.page ? `data-page="${q.page}"` : `data-toast="ไปหน้า${q.t}"`}><span class="qi ${q.main || dock ? "" : "qi-" + q.q}">${ic(q.i)}</span><span><b>${q.t}</b><small>${q.s}</small></span></button>`;
+const quick = () => `<div class="quick" role="group" aria-label="ปุ่มลัดในห้องเรียน">${QA().map((q) => qaBtn(q)).join("")}</div>`;
+const person = (f, withClass = true) => { const s = S.tags && STREAK.find((x) => x.sid === f.sid);
+  return `<button class="person" data-toast="เปิดประวัติของ ${full(f.sid)}">${av(f.sid)}<span>${nm(f.sid)}<small>${withClass ? CL[f.classId].name : `ค้าง ${f.missing} ชิ้น`}${s ? ` · ขาดติดกัน ${s.days} วัน` : ""}</small></span></button>`; };
+function followBlock(cls) {
+  const list = cls ? followUp.filter((f) => f.classId === cls) : followUp;
+  if (!list.length) return `<p class="sec">${ic("smiley")} ไม่มีใครค้างงานที่เปิดรับอยู่</p>`;
+  const groups = {}; for (const f of list) (groups[f.missing] ||= []).push(f);
+  return Object.keys(groups).sort((a, b) => b - a).map((n) => `<div class="fgroup"><div class="fgroup-h"><span class="big num ${n >= 2 ? "bad" : ""}">${n}</span><span class="sec">ชิ้นที่ค้าง · ${groups[n].length} คน</span></div>
+    ${S.hide ? `<div class="people anon" aria-hidden="true">${groups[n].map(() => `<span class="av anon">•</span>`).join("")}</div>` : `<div class="people">${groups[n].map((f) => person(f, !cls)).join("")}</div>`}</div>`).join("")
+    + (S.tags && !S.hide ? `<p class="muted small" style="margin-top:var(--s3)">${tag("next")} ป้าย “ขาดติดกัน N วัน”</p>` : "");
+}
+function classRows() {
+  return CLASSES.map((c) => { const g = AGG[c.id];
+    return `<button class="cls-row" data-toast="เปิดสมุดคะแนน ${c.name}" aria-label="${c.name} ส่งงาน ${g.pct == null ? "ยังไม่มีงานเปิดรับ" : g.pct + "%"} · รอตรวจ ${g.awaiting} · ค้าง ${g.missing}"><span class="cls-name" title="${c.name}">${c.name}</span>
+      <div>${g.open ? stack(g) : `<span class="muted small">ยังไม่มีงานที่เปิดรับ</span>`}<div class="meta"><span>รอตรวจ ${g.awaiting}</span><span>ค้าง ${g.missing}</span><span>ส่งช้า ${g.late}</span></div></div>
+      ${g.pct == null ? `<span class="pct none">—</span>` : `<span class="pct num">${g.pct}<small>%</small></span>`}</button>`; }).join("");
+}
+function attDonutTile() {
+  const a = attSum, came = a.present + a.late;
+  return `<div class="card att-tile"><div class="card-head"><span class="h-ic">${ic("user-check")}</span><h2>มาเรียนวันนี้</h2><span class="grow"></span>${stale()}${tag("old")}</div>
+  ${a.marked ? `<div class="row">${donut(attParts(a), 124, 16, `<span class="num" style="font-size:var(--t-2xl)">${came}</span><br><span class="muted" style="font-size:var(--t-xs)">จาก ${a.marked} คน</span>`)}
+  <div class="att-legend">${["present", "late", "leave", "sick", "absent"].map((k) => `<div><i style="background:var(--att-${k})"></i>${ic(ATT_ICON[k])}${ATT_LABEL[k]}<b>${a[k]}</b></div>`).join("")}</div></div>` : `<p class="sec">ยังไม่ได้เช็คชื่อวันนี้</p>`}
+  ${unchecked.length ? `<p class="sec" style="font-size:var(--t-sm);margin-top:var(--s3)">${st("st-warn", "warning", `${unchecked.map((c) => c.name).join(", ")} ยังไม่เช็ค`)} นับเฉพาะห้องที่เช็คแล้ว</p>` : ""}</div>`;
+}
+function trendCard(h, title) {
+  const max = Math.max(...TREND.map((t) => t[1])), w = 280, step = w / (TREND.length - 1);
+  const pts = TREND.map((t, i) => [i * step, h - 8 - (t[1] / max) * (h - 20)]);
+  return `<section class="card wide"><div class="card-head"><span class="h-ic">${ic("trend-up")}</span><h2>${title}</h2><span class="grow"></span>${tag("next")}</div>
+    <svg class="spark" viewBox="-10 0 ${w + 20} ${h + 22}" aria-hidden="true"><path d="M${pts.map((p) => p.join(" ")).join(" L")} L${w} ${h} L0 ${h}Z" fill="var(--accent)" opacity=".14"/>
+    <polyline points="${pts.map((p) => p.join(",")).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="${i === pts.length - 1 ? 5 : 3}" fill="var(--accent)"/><text x="${p[0]}" y="${h + 18}" text-anchor="middle" font-size="13" fill="var(--text-muted)">${TREND[i][0]}</text>`).join("")}</svg>
+    <p class="muted small">ตัวอย่างเท่านั้น — ต้องเพิ่มข้อมูลจากระบบหลังบ้านก่อน</p></section>`;
+}
+const greet = () => `<p class="eyebrow" style="margin-bottom:var(--s3)">สวัสดีตอนสาย ${TEACHER}</p>`;
+const emptyCard = (o) => `<section class="card empty-card ${o.bad ? "bad" : ""}" role="${o.bad ? "alert" : "region"}" aria-label="${o.title}"><div class="illo-box" aria-hidden="true">${illo()}</div>
+  <div><h2 class="display">${o.icon ? ic(o.icon) + " " : ""}${o.title}</h2><p>${o.sub}</p><div class="acts"><button class="btn btn-primary btn-lg" data-toast="${o.btn}">${ic(o.btnIcon)}${o.btn}</button>${o.alt || ""}</div></div></section>`;
+
+/* ======================= Layout ก : วันนี้ของครู ======================= */
+function tlItem(t, inner) {
+  const node = t.tone === "bad" ? "danger" : t.tone === "warn" ? "warning" : "success";
+  const altBtn = t.alt && !(S.hide && t.altIcon === "copy") ? `<button class="btn" data-toast="${t.alt}">${ic(t.altIcon)}${t.alt}</button>` : "";
+  return `<li class="tl-item ${t.tone === "mute" ? "" : "urgent"} ${t.tone === "bad" ? "bad" : ""}" style="--node:var(--fill-${node});--node-t:var(--text-${node})">
+    <div class="tl-time num">${t.when}<small>${t.whenSub}</small></div><div class="tl-node">${ic(t.icon)}</div>
+    <div class="tl-body"><div class="tl-top"><div class="txt"><h3 class="clamp2" title="${t.title}">${t.title}</h3><p>${t.why}</p></div>${toneLabel(t.tone)}</div>
+      ${inner || ""}<div class="tl-acts"><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" ${t.actIcon === "scan" ? 'data-page="scan"' : `data-toast="${t.act}"`}>${ic(t.actIcon)}${t.act}</button>${altBtn}</div></div></li>`;
+}
+function innerOf(t, firstRoom) {
+  if (t.key.startsWith("room:")) return firstRoom ? `<div class="rooms">${CLASSES.filter((c) => c.total).map((c) => { const a = ATT[c.id]; return a.marked ? `<span class="room ok">${ic("check-circle")}${c.name} ครบ ${a.marked}/${a.total}</span>` : `<span class="room no">${ic("warning-circle")}${c.name} ยังไม่เช็ค</span>`; }).join("")}</div>
+    <p class="sec" style="font-size:var(--t-sm);margin-top:var(--s2)">ห้องที่เช็คแล้ว: มา ${attSum.present} · สาย ${attSum.late} · ลา ${attSum.leave} · ป่วย ${attSum.sick} · ขาด ${attSum.absent}</p>` : "";
+  if (t.multi) return `<div class="due-list">${dueToday.map((a) => { const n = Object.keys(a.per).reduce((s, c) => s + pc(a, c).pending, 0);
+    return `<div class="due-row"><div class="t"><b class="clamp2" title="${a.title}">${a.title}</b><span class="muted">${Object.keys(a.per).map((c) => CL[c].name).join(" · ")} · ยังไม่ส่ง ${n} คน</span></div><button class="icon-btn" aria-label="สแกนรับ ${a.title}" data-page="scan">${ic("scan")}</button></div>`; }).join("")}</div>`;
+  if (t.asg) return `<div class="mini-bars">${Object.keys(t.asg.per).map((c) => { const p = pc(t.asg, c); return `<div class="row"><b class="ell">${CL[c].name}</b>${stack(p)}<span class="num">${p.submitted}/${p.total - p.excused}</span></div>`; }).join("")}</div>`;
+  if (t.key === "chase") return `<div class="chips">${overdue.filter((a) => Object.values(a.per).some((p) => p.missing.length)).map((a) => st("st-bad", "calendar-x", `${a.title} · เลย ${-DUE_DAYS(a.due)} วัน · ค้าง ${Object.values(a.per).reduce((s, p) => s + p.missing.length, 0)}`)).join("")}</div>`;
+  return "";
+}
+function layoutA() {
+  const n = TODOS.length, c0 = CLASSES.filter((c) => c.total && ATT[c.id].marked).length, nRooms = CLASSES.filter((c) => c.total).length;
+  const rooms = TODOS.filter((t) => t.key.startsWith("room:")), rest = TODOS.filter((t) => !t.key.startsWith("room:"));
+  const tomorrow = dueTomorrow[0];
+  const pill = (icon, text, to, label) => `<button class="pill" ${to === "scan" ? 'data-page="scan"' : `data-toast="${to}"`} aria-label="${label || text}">${ic(icon)}${text}${ic("caret-right")}</button>`;
+  return `<section class="hero a-hero on-hero"><div>
+    <p class="kicker">สวัสดีตอนสาย · ${NOW} น. ${stale()}</p>
+    <h1 class="display">${TEACHER} ${n ? "วันนี้มีงานรออยู่" : "วันนี้เรียบร้อยดี"}</h1>
+    <div class="big-line">${n ? `<span class="num">${n}</span><span class="t">อย่างที่ต้องทำวันนี้</span>` : `<span class="num big-check">${ic("check-circle")}</span><span class="t">เคลียร์ครบแล้ว เยี่ยมมาก</span>`}</div>
+    <div class="summary">${pill("user-check", `เช็คชื่อแล้ว ${c0}/${nRooms} ห้อง`, "ไปหน้าเช็คชื่อ")}${pill("calendar-check", `ครบกำหนดวันนี้ ${dueToday.length} งาน`, "ไปสมุดคะแนน")}${pill("exam", `รอตรวจ ${awaitingCount}`, "เปิดลิสต์รอตรวจ", `รอตรวจ ${awaitingCount} ชิ้น เปิดรายการ`)}${pill("flag", `ค้างส่ง ${missingCount}`, "เปิดลิสต์ยังไม่ส่ง", `ค้างส่ง ${missingCount} ชิ้น เปิดรายการ`)}${tag("old")}</div>
+  </div><div class="hero-illo">${illo()}</div></section>
+  <div class="grid-a">
+    <div class="qs">${quick()}</div>
+    <section class="card tl-wrap" aria-labelledby="tl-h"><div class="card-head"><span class="h-ic">${ic("path")}</span><h2 class="display" id="tl-h">ลำดับงานวันนี้</h2><span class="grow"></span><span class="muted small">รายการหายเองเมื่อทำเสร็จ</span></div>
+    <ol class="tl">
+      ${rooms.map((t, i) => tlItem(t, innerOf(t, i === 0))).join("")}
+      <li class="tl-now"><span class="lbl num">ตอนนี้ ${NOW}</span><span class="dot" aria-hidden="true"></span><span class="line" aria-hidden="true"></span></li>
+      ${S.tags ? `<li class="tl-item ghost"><div class="tl-time num">คาบถัดไป<small>ตารางสอน</small></div><div class="tl-node">${ic("chalkboard-teacher")}</div><div class="tl-body"><h3>ต่อไป: ป.6/2 คณิตศาสตร์</h3><p>ต้องมีตารางสอนรายคาบก่อน</p><div class="chips">${tag("next")}</div></div></li>` : ""}
+      ${rest.map((t) => tlItem(t, innerOf(t))).join("")}
+      ${n ? "" : `<li class="tl-item clear"><div class="tl-time num">วันนี้<small>สถานะ</small></div><div class="tl-node">${ic("check")}</div><div class="tl-body"><h3>ไม่มีอะไรค้าง</h3><p>พักสักครู่ แล้วค่อยเตรียมงานพรุ่งนี้</p><div class="tl-acts"><button class="btn btn-primary" data-toast="สร้างงานพรุ่งนี้">${ic("plus-circle")}สร้างงานพรุ่งนี้</button></div></div></li>`}
+      ${tomorrow ? `<li class="tl-item later" style="--node-t:var(--text-muted)"><div class="tl-time num">พรุ่งนี้<small>${thDate(tomorrow.due)}</small></div><div class="tl-node">${ic("calendar-blank")}</div><div class="tl-body"><h3>${tomorrow.title}</h3><p>${Object.keys(tomorrow.per).map((c) => `${CL[c].name} ยังไม่ส่ง ${pc(tomorrow, c).pending} คน`).join(" · ")} · ไม่นับในตัวเลขวันนี้</p></div></li>` : ""}
+    </ol></section>
+    <aside class="side">
+      <section class="card"><div class="card-head"><span class="h-ic">${ic("chart-donut")}</span><h2>ความคืบหน้ารายห้อง</h2><span class="grow"></span>${stale()}${tag("old")}</div>${classRows()}<div style="margin-top:var(--s2)">${legend()}</div></section>
+      <section class="card"><div class="card-head"><span class="h-ic">${ic("flag")}</span><h2>ต้องติดตาม</h2><span class="grow"></span><button class="btn btn-ghost" data-toast="ไปหน้ารายงาน">ดูในรายงาน ${ic("caret-right")}</button></div>${followBlock()}</section>
+    </aside>
+  </div>`;
+}
+
+/* ======================= Layout ข : แผงรายห้อง ======================= */
+function defaultCls() {
+  if (S.cls && CL[S.cls]) return S.cls;
+  if (unchecked[0]) return unchecked[0].id;
+  let best = CLASSES[0]; for (const c of CLASSES) if (AGG[c.id].missing > AGG[best.id].missing) best = c;
+  return best.id;
+}
+function panel(c, sel, compact) {
+  const g = AGG[c.id], at = ATT[c.id], fu = followUp.filter((f) => f.classId === c.id), on = sel === c.id;
+  const pctTxt = g.pct == null ? "—" : g.pct;
+  const label = `${c.name} ส่งงาน ${g.pct == null ? "ยังไม่มีงานเปิดรับ" : g.pct + "%"} · ${at.marked ? `มาเรียน ${at.present + at.late} จาก ${at.total}` : "ยังไม่ได้เช็คชื่อ"} · แตะเพื่อดูรายละเอียด`;
+  const center = (fs) => `<span class="num" style="font-size:${fs}">${pctTxt}${g.pct == null ? "" : `<small style="font-size:max(13px,.5em)">%</small>`}</span>${compact ? "" : `<br><span class="muted" style="font-size:var(--t-xs)">ส่งแล้ว</span>`}`;
+  const foot = `<div class="p-foot">${fu.length ? (S.hide ? `<span>ต้องติดตาม ${fu.length} คน</span>` : `<span class="av-stack">${fu.slice(0, 4).map((f) => av(f.sid)).join("")}</span><span>ต้องติดตาม ${fu.length} คน</span>`) : `<span>${ic("smiley")} ไม่มีคนค้างมาก</span>`}
+    ${on ? `<span class="viewing">${ic("caret-down")}กำลังดู</span>` : `<span>${ic("caret-right")}</span>`}</div>`;
+  if (!c.total) return `<button class="panel ${compact ? "cp" : ""}" style="--c:${c.c}" aria-pressed="${on}" data-cls="${c.id}" aria-label="${c.name} ยังไม่มีนักเรียน"><div class="p-head"><h2 class="display" title="${c.name}">${c.name}</h2></div><p class="nostu">${ic("student")} ยังไม่มีนักเรียน</p></button>`;
+  if (compact) return `<button class="panel cp" style="--c:${c.c}" aria-pressed="${on}" data-cls="${c.id}" aria-label="${label}">
+    <div class="p-head"><h2 class="display" title="${c.name}">${c.name}</h2><span class="muted">${c.total} คน · ${g.open} งาน</span></div>
+    <div class="p-mid">${ring(g.pct == null ? 0 : g.pct / 100, 72, 9, c.c, center("var(--t-lg)"))}
+      <div class="cp-n"><span>ส่ง <b>${g.submitted}</b> · ค้าง <b style="color:var(--text-danger)">${g.missing}</b></span><span>รอตรวจ <b>${g.awaiting}</b></span>
+      <span>${at.marked ? `มา <b>${at.present + at.late}/${at.total}</b>` : st("st-warn", "warning", "ยังไม่เช็ค")}</span></div></div>${foot}</button>`;
+  return `<button class="panel" style="--c:${c.c}" aria-pressed="${on}" data-cls="${c.id}" aria-label="${label}">
+    <div class="p-head"><h2 class="display" title="${c.name}">${c.name}</h2><span class="muted" style="font-size:var(--t-sm);flex:none">${c.total} คน · ${g.open} งานเปิดรับ</span></div>
+    <div class="p-mid">${ring(g.pct == null ? 0 : g.pct / 100, 132, 14, c.c, center("var(--t-3xl)"))}
+      <div class="p-stats"><div><span>ส่งแล้ว</span><b>${g.submitted}</b></div><div><span>ค้างส่ง</span><b style="color:var(--text-danger)">${g.missing}</b></div><div><span>รอตรวจ</span><b>${g.awaiting}</b></div><div><span>ส่งช้า</span><b>${g.late}</b></div></div></div>
+    <div class="p-att">${at.marked ? `<div style="display:flex;justify-content:space-between;gap:8px"><span>มาเรียน ${at.present + at.late}/${at.total}</span><span class="muted">ลา/ป่วย/ขาด ${at.leave + at.sick + at.absent}</span></div>${attBar(at)}` : st("st-warn", "warning", "ยังไม่ได้เช็คชื่อวันนี้")}</div>${foot}</button>`;
+}
+function layoutB() {
+  const sel = CL[defaultCls()], a = ATT[sel.id], compact = CLASSES.length > 3, n = TODOS.length;
+  const asgs = OPEN.filter((x) => x.per[sel.id]).sort((x, y) => (x.due ? DUE_DAYS(x.due) : 99) - (y.due ? DUE_DAYS(y.due) : 99));
+  const abs = ABSENT.filter((r) => r[0] === sel.id);
+  const nost = S.state === "nostudent";
+  const lb = (t, to) => `<button class="link-btn" data-toast="${to}">${t}</button>`;
+  return `<div class="b-top"><div><p class="eyebrow">สวัสดีตอนสาย ${TEACHER}</p><h1 class="display">ภาพรวมทุกห้อง</h1>
+    ${nost ? "" : `<div class="sum-btns">${lb(`เช็คชื่อแล้ว ${CLASSES.filter((c) => c.total && ATT[c.id].marked).length}/${CLASSES.filter((c) => c.total).length} ห้อง`, "ไปหน้าเช็คชื่อ")}·${lb(`ครบกำหนดวันนี้ ${dueToday.length} งาน`, "ไปสมุดคะแนน")}·${lb(`รอตรวจ ${awaitingCount} ชิ้น`, "เปิดลิสต์รอตรวจ")}·${lb(`ค้างส่ง ${missingCount} ชิ้น`, "เปิดลิสต์ยังไม่ส่ง")} ${stale()}${tag("old")}</div>`}</div></div>
+  <div class="dock on-hero" role="group" aria-label="ปุ่มลัดในห้องเรียน">${QA().map((q) => qaBtn(q, true)).join("")}</div>
+  ${nost ? `<div class="gap-t"></div>` : `<div class="todo-strip"><span class="lead">${ic("bell-ringing")}ต้องทำตอนนี้ <span class="n num">${n}</span></span>
+    ${n ? TODOS.slice(0, 3).map((t) => `<div class="todo-pill">${ic(t.icon)}<span class="t">${t.title}</span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" ${t.actIcon === "scan" ? 'data-page="scan"' : `data-toast="${t.act}"`}>${t.act}</button></div>`).join("")
+      : `<div class="todo-pill" style="padding-right:16px">${ic("smiley")}<span class="t">ไม่มีอะไรค้าง · เคลียร์ครบแล้ว</span></div>`}
+    ${n > 3 ? `<button class="btn btn-ghost" data-act="sheet:todo">อีก ${n - 3} อย่าง ${ic("caret-right")}</button>` : ""}</div>`}
+  ${compact ? `<div class="room-chips" role="group" aria-label="เลือกห้อง (เลื่อนซ้ายขวาได้)">${CLASSES.map((c) => `<button class="rchip" aria-pressed="${sel.id === c.id}" data-cls="${c.id}" aria-label="${c.name}">${sel.id === c.id ? ic("check") : ""}<span>${c.name}</span></button>`).join("")}</div>` : ""}
+  <div class="panels ${compact ? "compact" : ""}">${CLASSES.map((c) => panel(c, sel.id, compact)).join("")}</div>
+  ${nost ? `<div class="gap-t">${emptyCard({ title: "ยังไม่มีนักเรียนในห้อง", sub: "นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน", btn: "นำเข้านักเรียน", btnIcon: "upload-simple" })}</div>` : `
+  <div class="detail" role="region" aria-labelledby="det-h">
+    <section class="card"><div class="card-head"><span class="h-ic" style="background:color-mix(in srgb,${sel.c} 18%,var(--surface-2))">${ic("clipboard-text")}</span><h2 class="detail-h ell" id="det-h" title="${sel.name}">กำลังดู ${sel.name} · งานที่เปิดรับ</h2><span class="grow"></span><button class="btn" data-toast="สร้างงานให้ ${sel.name}">${ic("plus")}สร้างงาน</button></div>
+      ${asgs.length ? asgs.slice(0, 5).map((x) => { const p = pc(x, sel.id), d = dueInfo(x.due); return `<div class="asg"><div class="asg-top"><div class="t"><h3 class="clamp2" title="${x.title}">${x.title}</h3><p>${x.subject} · ${x.type} · เต็ม ${x.full}</p></div>${st(d.cls, d.icon, d.text)}<button class="icon-btn" aria-label="สแกนรับ ${x.title} ${sel.name}" data-page="scan">${ic("scan")}</button></div>
+        ${stack(p)}<div class="nums"><span>ส่งแล้ว <b>${p.submitted}/${p.total - p.excused}</b></span><span>ตรวจแล้ว <b>${p.scored}</b></span><span>รอตรวจ <b>${p.awaiting}</b></span>${p.pending ? `<span>ยังไม่ถึงกำหนด <b>${p.pending}</b></span>` : ""}${p.missing ? `<span style="color:var(--text-danger)">ค้าง <b style="color:inherit">${p.missing}</b></span>` : ""}${p.late ? `<span>ส่งช้า <b>${p.late}</b></span>` : ""}${p.excused ? `<span>ยกเว้น <b>${p.excused}</b></span>` : ""}</div></div>`; }).join("")
+        + (asgs.length > 5 ? `<div class="more-row"><button class="btn btn-ghost" data-toast="เปิดสมุดคะแนน ${sel.name}">ดูทั้งหมด (${asgs.length}) ${ic("caret-right")}</button></div>` : "")
+      : `<p class="sec">ยังไม่มีงานที่เปิดรับ</p>`}
+      <div style="margin-top:var(--s3)">${legend()}</div></section>
+    <div class="side">
+      <section class="card"><div class="card-head"><span class="h-ic">${ic("flag")}</span><h2 class="ell">ต้องติดตาม · ${sel.name}</h2></div>${followBlock(sel.id)}
+        <button class="btn btn-ghost" style="margin-top:var(--s2)" data-toast="ไปหน้ารายงาน">ดูในรายงาน ${ic("caret-right")}</button></section>
+      <section class="card"><div class="card-head"><span class="h-ic">${ic("user-minus")}</span><h2>ไม่มาวันนี้</h2></div>
+        ${a.marked ? (a.late + a.leave + a.sick + a.absent ? `<div class="abs-list">${["late", "leave", "sick", "absent"].filter((k) => a[k]).map((k) => `<div class="abs-row">${st(k === "absent" ? "st-bad" : k === "late" ? "st-warn" : "st-mute", ATT_ICON[k], ATT_LABEL[k] + " " + a[k])}${S.hide ? "" : abs.filter((r) => r[2] === k).map((r) => `<span>${nm(r[1])}</span>`).join(" · ")}</div>`).join("")}</div>` : `<p class="sec">มาครบทุกคน</p>`)
+          : `<p class="sec" style="margin-bottom:var(--s3)">ยังไม่ได้เช็คชื่อ ${sel.name} วันนี้</p><button class="btn btn-primary" data-toast="เช็คชื่อ ${sel.name}">${ic("user-check")}เช็คชื่อ ${sel.name}</button>`}</section>
+      ${S.tags ? trendCard(70, "ส่งงาน 7 วันเรียน") : ""}
+    </div>
+  </div>`}`;
+}
+
+/* ======================= Layout ค : โฟกัสงานถัดไป ======================= */
+function layoutC() {
+  const keys = S.order.filter((k) => TODOS.some((t) => t.key === k));
+  const fk = keys.includes(S.focus) ? S.focus : keys[0];
+  const f = TODOS.find((t) => t.key === fk), pos = keys.indexOf(fk) + 1;
+  const altOk = f && f.alt && !(S.hide && f.altIcon === "copy");
+  const focus = f ? `<section class="focus on-hero" aria-labelledby="f-h"><div>
+      <div class="step"><span>ถัดไป · ${pos} จาก ${keys.length}</span><span class="dots" aria-hidden="true">${keys.map((k) => `<i class="${k === fk ? "on" : ""}"></i>`).join("")}</span>${stale()}</div>
+      <div class="f-ic">${ic(f.icon)}</div>
+      <h1 class="display clamp2" id="f-h" title="${f.title}">${f.title}</h1><p class="why">${f.why}</p>
+      <div class="acts"><button class="btn btn-primary btn-lg" ${f.actIcon === "scan" ? 'data-page="scan"' : `data-toast="${f.act}"`}>${ic(f.actIcon)}${f.act}</button>
+        ${altOk ? `<button class="btn btn-lg" data-toast="${f.alt}">${ic(f.altIcon)}${f.alt}</button>` : ""}
+        ${keys.length > 1 ? `<button class="btn btn-lg btn-skip" data-skip="${f.key}">${ic("arrow-bend-down-right")}ทำทีหลัง</button>` : ""}</div>
+    </div><div class="f-illo">${illo()}</div></section>`
+    : `<section class="focus on-hero"><div><div class="step">ไม่มีอะไรค้าง</div><div class="f-ic">${ic("check-circle")}</div><h1 class="display">วันนี้เคลียร์ครบแล้ว</h1><p class="why">ไม่มีอะไรค้าง พักสักครู่ แล้วค่อยเตรียมงานพรุ่งนี้</p>
+      <div class="acts"><button class="btn btn-primary btn-lg" data-toast="สร้างงานพรุ่งนี้">${ic("plus-circle")}สร้างงานพรุ่งนี้</button></div></div><div class="f-illo">${illo()}</div></section>`;
+  const nexts = keys.filter((k) => k !== fk).map((k) => TODOS.find((t) => t.key === k));
+  const tomorrow = dueTomorrow[0];
+  return `<p class="eyebrow" style="margin-bottom:var(--s2)">สวัสดีตอนสาย ${TEACHER} · ${NOW} น. · เหลือ ${TODOS.length} อย่าง ${tag("old")}</p>
+  <div class="c-grid">${focus}
+    <div class="next"><h2 class="display">ต่อจากนี้</h2>
+      ${nexts.slice(0, 4).map((t) => `<button class="nx" data-focus="${t.key}" aria-label="ทำ ${t.title} ก่อน"><span class="k">${ic(t.icon)}</span><span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span>${ic("caret-right")}</button>`).join("")}
+      ${nexts.length > 4 ? `<button class="btn btn-ghost" data-act="sheet:todo">ดูทั้งหมด (${TODOS.length}) ${ic("caret-right")}</button>` : ""}
+      ${!nexts.length ? (tomorrow ? `<div class="nx" style="box-shadow:none"><span class="k">${ic("calendar-blank")}</span><span class="t"><b>พรุ่งนี้: ${tomorrow.title}</b><small>ไม่นับในงานของวันนี้</small></span></div>` : `<p class="sec">ไม่มีงานต่อ</p>`) : ""}
+    </div>
+  </div>
+  <div style="margin-top:var(--s4)">${quick()}</div>
+  <div class="tiles">
+    ${attDonutTile()}
+    <section class="card"><div class="card-head"><span class="h-ic">${ic("chart-donut")}</span><h2>งานแต่ละห้อง</h2><span class="grow"></span>${stale()}${tag("old")}</div>${classRows()}<div style="margin-top:var(--s2)">${legend()}</div></section>
+    <section class="card"><div class="card-head"><span class="h-ic">${ic("flag")}</span><h2>ต้องติดตาม</h2></div>${followBlock()}</section>
+    ${S.tags ? trendCard(56, "ส่งงาน 7 วันเรียนล่าสุด") : ""}
+  </div>`;
+}
+
+/* ======================= states ======================= */
+function skeleton() {
+  const msg = `<p class="load-msg" role="status">${ic("hourglass")}กำลังโหลดหน้าหลัก… <span class="muted small">(ในแอปจริงขึ้นหลัง 3 วินาที)</span></p>`;
+  const rows = (k, h) => Array.from({ length: k }, () => `<div class="sk" style="height:${h}px;margin-bottom:12px"></div>`).join("");
+  if (S.layout === "b") return `${msg}<div class="b-top"><div><div class="sk-line" style="width:180px;margin-bottom:10px"></div><div class="sk-line" style="width:320px;height:26px"></div></div></div>
+    <div class="dock on-hero" role="group" aria-label="ปุ่มลัดในห้องเรียน">${QA().map((q) => qaBtn({ ...q, s: q.t === "เช็คชื่อ" ? "พร้อมใช้" : q.s }, true)).join("")}</div>
+    <div class="panels gap-t">${rows(1, 260)}${rows(1, 260)}${rows(1, 260)}</div>`;
+  if (S.layout === "c") return `${msg}<div class="c-grid"><div class="sk sk-hero" style="height:300px"></div><div>${rows(4, 60)}</div></div><div class="gap-t">${quick()}</div>`;
+  return `${msg}<div class="sk sk-hero" style="height:180px"></div><div class="grid-a"><div class="qs">${quick()}</div><section class="card tl-wrap">${rows(3, 96)}</section><aside class="side"><div class="sk" style="height:200px"></div><div class="sk" style="height:160px"></div></aside></div>`;
+}
+function home() {
+  const s = S.state, head = topbar(true) + banners();
+  if (s === "noclass") return head + greet() + emptyCard({ title: "ยังไม่มีห้องเรียน", sub: "เริ่มจากสร้างห้องแรก แล้วค่อยนำเข้านักเรียน", btn: "ตั้งค่าห้องเรียน", btnIcon: "gear-six" });
+  if (s === "error") return head + greet() + emptyCard({ bad: true, icon: "cloud-x", title: "โหลดข้อมูลหน้าหลักไม่สำเร็จ", sub: "ลองอีกครั้ง หรือรอสักครู่แล้วเปิดใหม่ · สแกนและเช็คชื่อยังใช้ได้", btn: "ลองอีกครั้ง", btnIcon: "arrow-clockwise" }) + `<div class="gap-t">${quick()}</div>`;
+  if (s === "loading") return head + skeleton();
+  if (s === "nostudent" && S.layout !== "b") return head + greet() + `<div class="gap-b">${quick()}</div>` + emptyCard({ title: "ยังไม่มีนักเรียนในห้อง", sub: "นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน", btn: "นำเข้านักเรียน", btnIcon: "upload-simple" });
+  return head + (S.layout === "a" ? layoutA() : S.layout === "b" ? layoutB() : layoutC());
+}
+
+/* ======================= settings > หน้าตา ======================= */
+const LAYOUTS = [["a", "ก วันนี้ของครู", "ไล่งานตามลำดับของวัน เหมาะกับคนที่อยากเห็นภาพรวมทั้งวัน"], ["b", "ข แผงรายห้อง", "ดูทีละห้อง เหมาะกับครูที่สอนหลายห้อง"], ["c", "ค โฟกัสงานถัดไป", "ทีละเรื่อง ใหญ่ ชัด เหมาะกับใช้ในห้องเรียน"]];
+const THEMES = [["pro", "มืออาชีพ", "สะอาดตา จริงจัง"], ["warm", "อบอุ่น", "นุ่มนวล เป็นกันเอง"], ["playful", "สดใส", "สดใส มีชีวิตชีวา"]];
+const MODES = [["system", "ตามเครื่อง", "desktop"], ["light", "สว่าง", "sun"], ["dark", "มืด", "moon"]];
+const used = () => `<span class="used">${ic("check-circle")}ใช้อยู่</span>`;
+const layoutChoices = (name) => `<div class="choices">${LAYOUTS.map(([k, l, d]) => `<label class="choice"><input type="radio" name="${name}" value="${k}" ${S.layout === k ? "checked" : ""}><span class="thumb">${thumb(k)}</span><span class="txt"><b>${l}</b><br><small>${d}</small></span>${used()}</label>`).join("")}</div>`;
+function saveChip() {
+  const m = { saving: ["saving", "arrows-clockwise", "กำลังบันทึก…"], saved: ["saved", "check-circle", "บันทึกแล้ว · ใช้กับทุกเครื่อง"], off: ["off", "wifi-slash", "ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"] }[S.saveMsg];
+  return m ? `<span class="save-chip ${m[0]}">${ic(m[1])}${m[2]}</span>` : "";
+}
+function pageSettings() {
+  const L = LAYOUTS.find((x) => x[0] === S.layout), T = THEMES.find((x) => x[0] === S.theme), M = MODES.find((x) => x[0] === S.modePref);
+  return `${topbar(false)}${banners()}<h1 class="display page-h">ตั้งค่า</h1>
+  <div class="set-grid"><nav class="set-nav" aria-label="หมวดตั้งค่า">${[["ทั่วไป", "gear-six"], ["หน้าตา", "palette", 1], ["ข้อมูลหลัก", "books"], ["สำรองข้อมูล", "cloud-arrow-up"], ["เครื่องที่ใช้งาน", "device-mobile"]].map(([l, i, on]) => `<button ${on ? 'aria-current="page"' : `data-toast="ตัวอย่างนี้แสดงเฉพาะหมวดหน้าตา"`}>${ic(i)}${l}</button>`).join("")}</nav>
+  <section aria-labelledby="ap-h"><div class="ap-head"><h2 id="ap-h" class="display">หน้าตา</h2><span id="saveChip" aria-live="polite">${saveChip()}</span></div>
+    <p class="sec small">เลือกแล้วเห็นผลทันที · บันทึกอัตโนมัติ</p>
+    <div class="ap-grid">
+      <aside class="ap-preview card" aria-label="ตัวอย่างสด"><div class="card-head"><span class="h-ic">${ic("eye")}</span><h2>ตัวอย่างสด</h2></div>
+        <div class="thumb" aria-hidden="true">${thumb(S.layout)}</div>
+        <div class="mini-hero" aria-hidden="true"><small>สวัสดีตอนสาย ${TEACHER}</small><div class="display"><span class="num">5</span> อย่างที่ต้องทำวันนี้</div></div>
+        <div class="mini-row" aria-hidden="true">${st("st-ok", "check-circle", "ส่งแล้ว")}${st("st-warn", "clock", "รอตรวจ")}${st("st-bad", "calendar-x", "ค้างส่ง")}</div>
+        <div class="mini-row"><button class="btn btn-primary" data-page="home">${ic("house")}ไปดูหน้าหลัก</button><button class="btn" data-toast="ตัวอย่างปุ่มรอง">${ic("copy")}ปุ่มรอง</button></div>
+        <p class="muted small" style="margin-top:var(--s3)">โครง ${L[1]} · ธีม${T[1]} · ${M[1]}</p></aside>
+      <div class="ap-opts">
+        <fieldset><legend>โครงหน้าหลัก</legend>${layoutChoices("ap-layout")}</fieldset>
+        <fieldset><legend>ธีม</legend><div class="choices">${THEMES.map(([k, l, d]) => `<label class="choice theme-choice" data-theme="${k}" data-mode="${mode()}"><input type="radio" name="ap-theme" value="${k}" ${S.theme === k ? "checked" : ""}>
+          <span class="swatches" aria-hidden="true"><i style="background:var(--hero-bg)"></i><i style="background:var(--accent)"></i><i style="background:var(--accent-2)"></i><i style="background:var(--surface-0)"></i></span>
+          <span class="txt"><span class="sample" aria-hidden="true">กขค 123</span><br><b>${l}</b><br><small>${d}</small></span>${used()}</label>`).join("")}</div></fieldset>
+        <fieldset><legend>สว่าง / มืด</legend><div class="segm">${MODES.map(([k, l, i]) => `<label><input type="radio" name="ap-mode" value="${k}" ${S.modePref === k ? "checked" : ""}>${ic(i)}${l}</label>`).join("")}</div></fieldset>
+        <div class="reset-row">${S.confirmReset ? `<span>คืนค่าหน้าตาเป็นค่าเริ่มต้น?</span><button class="btn" data-act="reset-no">ไม่</button><button class="btn btn-primary" data-act="reset-yes">ใช่ คืนค่า</button>` : `<button class="btn" data-act="reset">${ic("arrow-counter-clockwise")}คืนค่าเริ่มต้น</button><span class="muted small">ค่าเริ่มต้น: โครง ก · อบอุ่น · ตามเครื่อง</span>`}</div>
+      </div>
+    </div></section></div>`;
+}
+
+/* ======================= scan / gradebook (short samples — prove the theme works app-wide) ======================= */
+function pageScan() {
+  const a = ASG0[0], recent = [["s07", "10:41", 0], ["s06", "10:40", 0], ["s05", "10:40", 0], ["s04", "10:39", 1], ["s03", "10:38", 0]];
+  return `${topbar(false)}${banners()}<h1 class="display page-h">สแกนส่งงาน</h1>
+  <div class="scan-grid"><section class="card"><div class="viewfinder" role="img" aria-label="ภาพจากกล้อง"><div class="vf-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="vf-hint">เล็งกล้องไปที่ QR ของนักเรียน</p></div>
+    <div class="scan-asg"><div class="t"><b class="clamp2">${a.title}</b><span class="muted small">ป.6/1 · ${a.subject} · ครบกำหนดวันนี้</span></div><button class="btn" data-toast="เปลี่ยนงาน">${ic("swap")}เปลี่ยนงาน</button><button class="btn" data-toast="พิมพ์เลขที่แทน">${ic("keyboard")}พิมพ์เลขที่</button></div></section>
+  <section class="card"><div class="card-head"><span class="h-ic">${ic("check-circle")}</span><h2>รับแล้ววันนี้</h2></div>
+    <p><span class="big-count num">26</span> <span class="sec">จาก 31 คน · ยังไม่ส่ง 5</span></p>${stack({ scored: 18, awaiting: 8, pending: 5, missing: 0 })}
+    <ul class="scan-list">${recent.map(([sid, t, late]) => `<li>${S.hide ? `<span class="av anon" aria-hidden="true">•</span>` : av(sid)}<span class="t">${S.hide ? `นักเรียนเลขที่ ${Number(sid.slice(1))}` : full(sid)}<br><span class="muted small">${t} น.</span></span>${late ? st("st-warn", "clock", "ส่งช้า") : st("st-ok", "check", "ทันเวลา")}</li>`).join("")}</ul></section></div>`;
+}
+function pageGradebook() {
+  const ids = ["s01", "s02", "s03", "s04", "s05", "s06", "s07"];
+  const cell = (sid, i) => { const miss = [["s01", "s02", "s03", "s04"], [], ["s01", "s02", "s05"]][i].includes(sid); if (miss) return `<td>${st("st-bad", "x", "ค้าง")}</td>`;
+    if (i === 0 && ["s02", "s06"].includes(sid)) return `<td>${st("st-warn", "hourglass", "รอตรวจ")}</td>`; const v = [16, 14, 18, 12, 15, 19, 17][ids.indexOf(sid)] - (i ? 0 : 8); return `<td class="n num">${i === 2 ? Math.min(10, v - 7) : v}</td>`; };
+  return `${topbar(false)}${banners()}<h1 class="display page-h">สมุดคะแนน · ป.6/1</h1>
+  <section class="card"><div class="gb-tools"><button class="btn btn-primary" data-toast="สร้างงาน">${ic("plus")}สร้างงาน</button><button class="btn" data-toast="กรองเฉพาะคนค้าง">${ic("funnel")}เฉพาะคนค้าง</button><button class="btn" data-toast="ส่งออก Excel">${ic("export")}ส่งออก Excel</button></div>
+  <div class="gb-wrap"><table class="gb"><thead><tr><th class="n">เลขที่</th><th>ชื่อ</th><th>แผนผังความคิด<br>เรื่องพืช /20</th><th>ใบงานเศษส่วน<br>ชุดที่ 2 /10</th><th>ใบงาน<br>คำควบกล้ำ /10</th></tr></thead>
+  <tbody>${ids.map((sid, r) => `<tr><td class="n num">${r + 1}</td><td>${S.hide ? "•••" : full(sid)}</td>${cell(sid, 0).replace("<td", "<td")}${[1, 2].map((i) => cell(sid, i)).join("")}</tr>`).join("")}</tbody></table></div>
+  <p class="muted small" style="margin-top:var(--s3)">ตัวอย่างย่อ — ตัวเลขสมมติ แสดงเพื่อดูหน้าตาของตาราง ป้ายสถานะ และปุ่มในธีมนี้</p></section>`;
+}
+
+/* ======================= sheets ======================= */
+function sheet() {
+  if (!S.sheet) return "";
+  let h = "", body = "";
+  if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
+    body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
+  if (S.sheet === "layout") { const L = LAYOUTS.find((x) => x[0] === S.layout); h = "ปรับหน้าหลัก";
+    body = `<p class="sec small">ใช้อยู่: โครง ${L[1]} · เลือกแล้วเห็นผลทันที</p>${layoutChoices("sh-layout")}<button class="btn" data-page="settings">${ic("palette")}เปลี่ยนธีม / สว่าง-มืด ที่ ตั้งค่า › หน้าตา</button>`; }
+  if (S.sheet === "more") { h = "เพิ่มเติม";
+    body = [["dice-five", "สุ่มชื่อ"], ["chart-bar", "รายงาน"], ["users-three", "นักเรียน"]].map(([i, l]) => `<button class="btn" style="justify-content:flex-start" data-toast="ตัวอย่างนี้ไม่มีหน้า${l}">${ic(i)}${l}</button>`).join("") + `<button class="btn" style="justify-content:flex-start" data-page="settings">${ic("gear-six")}ตั้งค่า</button>`; }
+  return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}
+    <button class="btn btn-primary" data-act="close">เสร็จ</button></div></div>`;
+}
+
+/* ======================= render + chrome ======================= */
+const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
+const GROUPS = {
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["gradebook", "สมุดคะแนน"]],
+  layout: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]],
+  theme: THEMES.map(([k, l]) => [k, l]),
+  mode: [["light", "สว่าง"], ["dark", "มืด"]],
+  device: Object.entries(DEV).map(([k, v]) => [k, v[3]]),
+  state: [["normal", "ปกติ"], ["loading", "กำลังโหลด"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["free", "วันว่าง"], ["offline", "ออฟไลน์"], ["hidden", "ซ่อนชื่อ"], ["many", "ข้อมูลเยอะ"], ["error", "โหลดไม่สำเร็จ"]],
+  fit: [["w", "พอดีกว้าง"], ["all", "เห็นทั้งจอ"]],
+  tags: [["on", "ป้ายข้อเสนอ"]],
+};
+const INFO = {
+  a: "<b>ก · วันนี้ของครู</b> — ลำดับงานตามความเร่งด่วน มีเส้น “ตอนนี้” · รายการหายเองเมื่อข้อมูลจริงเปลี่ยน (ไม่มีปุ่มติ๊กปลอม)",
+  b: "<b>ข · แผงรายห้อง</b> — วงแหวน % ส่งงานต่อห้อง (ส่งแล้ว ÷ (ส่งแล้ว+ค้าง)) · แตะแผงเพื่อดูงาน คนค้าง คนไม่มา · “อีก x อย่าง” เปิดรายการ ไม่เปลี่ยนโครง",
+  c: "<b>ค · โฟกัสงานถัดไป</b> — งานถัดไปชิ้นเดียวขนาดใหญ่ · “ทำทีหลัง” ย้ายไปท้ายคิว (จำในหน้าจอเท่านั้น)",
+  pro: "ธีม <b>มืออาชีพ</b>: กรมท่า + ฟ้าน้ำทะเล · IBM Plex Sans Thai · ไอคอน Phosphor Bold",
+  warm: "ธีม <b>อบอุ่น</b> (ค่าเริ่มต้น): ส้มอิฐ + ครีม + เมนูไม้เข้ม · Mitr / Sarabun · ไอคอน Phosphor Duotone",
+  playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
+};
+function chrome() {
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group;
+    el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : g === "mode" ? S.modePref === v : S[g] === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
+  document.getElementById("info").innerHTML = `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
+}
+let toastTimer;
+function render(keepScroll) {
+  const dev = document.getElementById("device"), [w, h, fs] = DEV[S.device];
+  const old = dev.querySelector(".main"), st0 = keepScroll && old ? old.scrollTop : 0;
+  const key = DS_OF[S.state] || "base";
+  if (S.dsKey !== key) { load(DS[key]()); S.dsKey = key; S.order = TODOS.map((t) => t.key); S.focus = null; S.cls = null; }
+  dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
+  dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
+  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : pageGradebook();
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  if (st0) dev.querySelector(".main").scrollTop = st0;
+  chrome(); fit();
+}
+function fit() {
+  const [w, h] = DEV[S.device], box = document.getElementById("box"), dev = document.getElementById("device");
+  const aw = document.getElementById("stage").clientWidth - (innerWidth < 700 ? 16 : 32) - 16;
+  const ah = innerHeight - document.querySelector(".chrome").offsetHeight - 60;
+  const s = Math.min(1, aw / w, S.fit === "all" ? ah / h : Infinity);
+  dev.style.transform = `scale(${s})`; box.style.width = w * s + "px"; box.style.height = h * s + "px";
+  document.getElementById("sizeNote").textContent = `${DEV[S.device][3]} ${w}×${h} · ตัวอักษรพื้นฐาน ${DEV[S.device][2]}px · ย่อ ${Math.round(s * 100)}%`;
+}
+function toast(msg) { const t = document.getElementById("toast"); if (!t) return; t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
+function openSheet(k, opener) { S.sheet = k; S.opener = opener; render(true); const f = document.querySelector(".sheet button, .sheet input"); if (f) f.focus(); }
+function closeSheet() { const o = S.opener; S.sheet = null; render(true); const b = o && document.querySelector(`[data-act="${o}"]`); if (b) b.focus(); }
+function applyAppearance(p, focusName) {
+  if (S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
+  else { Object.assign(S, p); S.saveMsg = "saving"; render(true); toast("ใช้หน้าตาใหม่แล้ว");
+    setTimeout(() => { S.saveMsg = "saved"; const c = document.getElementById("saveChip"); if (c) c.innerHTML = saveChip(); }, 600); }
+  if (focusName) { const el = document.querySelector(`input[name="${focusName}"]:checked`); if (el) el.focus(); }
+}
+document.addEventListener("click", (e) => {
+  if (e.target.classList && e.target.classList.contains("scrim")) { closeSheet(); return; }
+  const b = e.target.closest("button"); if (!b || b.disabled) return; const d = b.dataset;
+  if (d.set) { const [g, v] = d.set.split(":");
+    if (g === "tags") S.tags = !S.tags; else if (g === "mode") S.modePref = v; else if (g === "state") { S.state = v; S.hide = v === "hidden"; S.sheet = null; } else S[g] = v;
+    if (g === "layout" && S.page !== "settings") S.page = "home";
+    render(!["layout", "device", "page", "state"].includes(g)); return; }
+  if (d.page) { S.page = d.page; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0; return; }
+  if (d.act === "hide") { S.hide = !S.hide; render(true); toast(S.hide ? "ซ่อนชื่อนักเรียนแล้ว" : "แสดงชื่อนักเรียนแล้ว"); const hb = document.querySelector(".topbar .hide-btn"); if (hb && b.classList.contains("hide-btn")) hb.focus(); return; }
+  if (d.act && d.act.startsWith("sheet:")) { openSheet(d.act.slice(6), d.act); return; }
+  if (d.act === "close") { closeSheet(); return; }
+  if (d.act === "reset") { S.confirmReset = true; render(true); return; }
+  if (d.act === "reset-no") { S.confirmReset = false; render(true); return; }
+  if (d.act === "reset-yes") { S.confirmReset = false; applyAppearance({ layout: "a", theme: "warm", modePref: "system" }); return; }
+  if (d.skip) { const k = d.skip, t = TODOS.find((x) => x.key === k); S.order = S.order.filter((x) => x !== k).concat(k); S.focus = S.order[0]; render(true); toast(`ย้าย ${t.title} ไปท้ายคิวแล้ว`); return; }
+  if (d.focus) { S.focus = d.focus; render(true); document.getElementById("appMain").scrollTop = 0; return; }
+  if (d.cls) { S.cls = d.cls; render(true); toast(`เลือกห้อง ${CL[d.cls].name}`); const det = document.querySelector(".detail"); if (det && S.device === "phone") det.scrollIntoView({ block: "start" }); return; }
+  if (d.toast) toast(d.toast);
+});
+document.addEventListener("change", (e) => { const t = e.target; if (!t.name) return;
+  if (t.name === "ap-layout" || t.name === "sh-layout") applyAppearance({ layout: t.value }, t.name);
+  else if (t.name === "ap-theme") applyAppearance({ theme: t.value }, t.name);
+  else if (t.name === "ap-mode") applyAppearance({ modePref: t.value }, t.name); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && S.sheet) closeSheet(); });
+addEventListener("resize", fit);
+render();
+setTimeout(() => { const ok = [...document.fonts].some((f) => /Phosphor/i.test(f.family) && f.status === "loaded"); if (!ok) document.documentElement.classList.add("no-icon-font"); }, 4000);
+</script>
+</body>
+</html>
