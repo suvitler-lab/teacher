@@ -1357,6 +1357,233 @@ button.hp:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
   .at-undo{bottom:186px}
   .device[data-page="attendance"] .toast{bottom:270px}
 }
+
+/* =====================================================================
+   T-14 หน้าสุ่มชื่อ (ux-random.md) — same tokens; stage = --hero-bg/--hero-fg (no new colours)
+   motion: reel = 13 steps, each ≤ 240ms (total ≈ 1.9 s, transform only) · pop 240ms · glow ring 600ms once · reduced-motion = none (inset border 1.2 s)
+   ===================================================================== */
+.rd-hero .rd-mode{display:inline-flex;gap:4px;padding:3px;border-radius:999px;background:var(--hero-chip)}
+.rd-hero .rd-mode .hp:not([aria-checked="true"]){border-color:transparent;background:transparent}
+.rd-hero .hp[aria-pressed="true"],.rd-hero .hp[aria-checked="true"]{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.rd-mode-s{display:flex;gap:4px;padding:4px;border-radius:var(--radius);background:var(--surface-1);border:1px solid var(--border);width:100%}
+.rd-mode-s .btn{flex:1;border-color:transparent;background:transparent;color:var(--text-secondary)}
+.rd-mode-s .btn[aria-checked="true"]{background:var(--surface-2);color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent)}
+.rd-count{grid-area:n;display:flex;gap:var(--s5);align-items:flex-end}
+.rd-stat{display:flex;flex-direction:column;line-height:1.15;white-space:nowrap}
+.rd-stat small{font-size:var(--t-sm);font-weight:600;display:flex;gap:4px;align-items:center}
+.rd-stat .num{font-size:var(--t-3xl);font-weight:700;line-height:1}
+.rd-stat.big .num{font-size:var(--t-4xl)}
+.rd-stat .num i{font-style:normal;font-size:var(--t-md);font-weight:700;margin-left:6px}
+.rd-stat .num.rd-rep{font-size:var(--t-xl)}
+.rd-stat.dim .num{opacity:.75}
+[data-theme="pro"] .rd-stat.big .num{color:var(--accent-2)}
+.rd-plate .rd-rcok{font-size:34px;color:var(--text-success)}
+.device.short .rd-stat .num,.device.short .rd-stat.big .num{font-size:var(--t-3xl)}
+.rd-tt{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s3)}
+/* iPad นอน + คอม: hero one row (≤ 130 / ≤ 110) */
+.rd-hero.rd-one{grid-template-columns:minmax(0,auto) minmax(0,1fr) auto auto;grid-template-areas:"t p n r";padding:var(--s3) var(--s4);gap:var(--s2) var(--s4)}
+.rd-hero.rd-one .kicker{display:none}
+.rd-hero.rd-one h1{font-size:var(--t-lg)}
+.rd-hero.rd-one .rd-stat .num{font-size:var(--t-3xl)}
+.rd-hero.rd-sht .hp .lng{display:none}
+.rd-hero.rd-sht .hp .sht{display:inline}
+.rd-nav{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);align-items:center;margin:var(--s3) 0}
+.rd-rooms{display:flex;gap:var(--s2);flex-wrap:wrap;min-width:0}
+.rd-note{font-size:var(--t-sm);color:var(--text-secondary);display:flex;gap:6px;align-items:center;margin-left:auto}
+.rd-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--s4);align-items:start}
+.device.short .rd-grid{grid-template-columns:minmax(0,1.8fr) minmax(0,1fr)}
+.rd-main,.rd-side{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
+/* stage */
+.rd-stage{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;gap:var(--s3);min-height:380px;padding:var(--s5);border-radius:var(--radius-hero);background:var(--hero-bg);color:var(--hero-fg)}
+.rd-stage::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 50% 46%,transparent 0 21%,color-mix(in srgb,var(--hero-fg) 7%,transparent) 21% 22%,transparent 22% 37%,color-mix(in srgb,var(--hero-fg) 7%,transparent) 37% 38%,transparent 38% 55%,color-mix(in srgb,var(--hero-fg) 7%,transparent) 55% 56%,transparent 56%)}
+[data-theme="playful"] .rd-stage{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.device.short .rd-stage{min-height:300px}
+.rd-body{flex:1 1 auto;display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;container-type:inline-size}
+/* names break only between first and last name (never inside a Thai name) when the stage is wide enough; narrow stage = number above name */
+@container (min-width:480px){ .rd-name .nw{white-space:nowrap} }
+@container (max-width:900px){ .rd-proj .rd-name{font-size:64px} }
+@container (max-width:720px){ .rd-res{flex-direction:column;text-align:center;gap:var(--s3)} }
+.rd-idle{display:flex;flex-direction:column;align-items:center;gap:var(--s2);padding:var(--s5) var(--s6);border:3px dashed color-mix(in srgb,var(--hero-fg) 55%,transparent);border-radius:var(--radius-lg)}
+.rd-idle>.ic{font-size:64px}
+.rd-idle b{font-size:var(--t-3xl);line-height:1.2}
+.rd-idle span,.rd-msg span{font-size:var(--t-md);font-weight:600}
+.rd-msg{display:flex;flex-direction:column;align-items:center;gap:var(--s2);max-width:34em}
+.rd-msg>.ic{font-size:56px}
+.rd-msg b{font-size:var(--t-2xl);font-family:var(--font-display);font-weight:var(--display-weight);line-height:1.3}
+.rd-msg .btn{margin-top:var(--s2)}
+.rd-slot{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s2)}
+.rd-rlab{font-size:var(--t-md);font-weight:700;display:flex;gap:6px;align-items:center}
+.rd-win{--rh:96px;position:relative;width:100%;height:var(--rh);overflow:hidden;border-block:3px solid color-mix(in srgb,var(--hero-fg) 55%,transparent)}
+.rd-reel{will-change:transform}
+.rd-row{height:var(--rh);display:flex;align-items:center;justify-content:center;gap:var(--s4);white-space:nowrap;overflow:hidden;padding:0 var(--s3)}
+.rd-rno{font-size:44px;font-weight:700;min-width:1.6em}
+.rd-rnm{font-family:var(--font-display);font-weight:var(--display-weight);font-size:56px;overflow:hidden;text-overflow:ellipsis}
+.rd-res{display:flex;align-items:center;gap:var(--s5);text-align:left;max-width:100%}
+.rd-no{position:relative;flex:none;width:136px;height:136px;border-radius:50%;display:grid;place-items:center;background:var(--hero-fg);color:var(--hero-bg);font-size:64px;font-weight:700;line-height:1}
+[data-theme="pro"] .rd-no,[data-theme="pro"] .rd-mno{background:var(--accent-2);color:var(--on-accent-2)}
+.rd-glow{position:absolute;inset:-8px;border-radius:50%;border:4px solid var(--hero-fg);opacity:0;animation:rdGlow .6s ease-out 1;pointer-events:none}
+.rd-who{min-width:0}
+.rd-name{font-size:64px;line-height:1.3;text-wrap:balance;overflow-wrap:anywhere}
+.rd-name.long{font-size:52px}
+.rd-sub{font-size:var(--t-lg);font-weight:600;margin-top:var(--s1)}
+.rd-multi{list-style:none;margin:0;padding:0;width:100%;display:grid;grid-template-columns:repeat(var(--mc,2),minmax(0,1fr));gap:var(--s3)}
+.rd-multi li,.rd-pc{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);border-radius:var(--radius-lg);border:3px solid var(--hero-fg);text-align:left;min-width:0}
+.rd-mno{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--hero-fg);color:var(--hero-bg);font-size:32px;font-weight:700}
+.rd-mnm{font-size:40px;line-height:1.3;overflow-wrap:anywhere;min-width:0}
+.rd-pair{display:flex;align-items:center;gap:var(--s4);width:100%}
+.rd-pair .rd-pc{flex:1}
+.rd-and{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;font-size:var(--t-md);flex:none}
+.rd-and .ic{font-size:32px}
+@keyframes rdPop{0%{transform:scale(.85)}60%{transform:scale(1.04)}100%{transform:none}}
+@keyframes rdGlow{0%{opacity:.75;transform:scale(.9)}100%{opacity:0;transform:scale(1.6)}}
+.rd-pop .rd-res,.rd-pop>li,.rd-pop .rd-pc{animation:rdPop .24s ease-out 1}
+.rd-stage.rd-rm{box-shadow:inset 0 0 0 6px var(--hero-fg)}
+.rd-snd{position:absolute;top:var(--s3);left:var(--s3);display:inline-flex;gap:6px;align-items:center;padding:2px 12px;border-radius:999px;border:2px solid var(--hero-fg);font-size:var(--t-sm);font-weight:700;line-height:1.5}
+.rd-snd .ic{font-size:18px}
+/* answer timer (in stage) */
+.rd-tm{align-self:flex-end;display:flex;align-items:center;gap:var(--s2)}
+.rd-tring{position:relative;display:inline-grid;place-items:center}
+.rd-tring svg{display:block}
+.rd-tarc{transition:stroke-dashoffset .24s linear}
+.rd-tnum{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1}
+.rd-tnum b{font-size:var(--t-lg);font-weight:700}
+.rd-tnum small{font-size:13px;font-weight:600}
+.rd-tm.up{gap:var(--s3);padding:var(--s2) var(--s3);border-radius:var(--radius);border:3px solid var(--hero-fg)}
+.rd-tm.up>.ic{font-size:32px}
+.rd-tup{font-size:var(--t-xl)}
+/* roll button + skip/undo */
+.rd-ctl{display:flex;gap:var(--s3);align-items:stretch}
+.rd-dock{flex:1 1 auto;display:flex;min-width:0}
+.app .rd-go{flex:1;min-height:80px;gap:var(--s3);font-size:var(--t-xl);border-radius:var(--radius-lg);background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.app .rd-go:hover{background:var(--accent-hover)}
+.rd-go .ic{font-size:28px}
+.rd-go kbd{font:inherit;font-size:var(--t-xs);font-weight:700;padding:0 8px;border-radius:6px;border:2px solid currentColor;line-height:1.5}
+.app .rd-go:disabled{background:var(--surface-1);border:2px dashed var(--border-control);color:var(--text-secondary);cursor:not-allowed;box-shadow:none}
+.rd-go[aria-disabled="true"]{cursor:progress}
+.device.short .app .rd-go,.device.short .rd-go{min-height:72px}
+.rd-acts{display:flex;gap:var(--s2)}
+.rd-acts .btn{min-height:48px;justify-content:flex-start;text-align:left}
+.rd-acts .btn>span{display:flex;flex-direction:column;line-height:1.25}
+.rd-acts small{font-size:var(--t-xs);font-weight:500;color:var(--text-secondary)}
+.rd-foot{display:flex;flex-wrap:wrap;gap:var(--s1) var(--s4);align-items:center}
+.rd-why{font-size:var(--t-sm);color:var(--text-primary);font-weight:600;display:flex;gap:6px;align-items:center}
+.rd-sum{display:inline-flex;gap:6px;align-items:center;min-height:var(--tap);padding:0;border:0;background:none;color:var(--text-secondary);font-size:var(--t-sm);font-weight:600;text-decoration:underline dotted;text-underline-offset:4px;text-align:left}
+/* side cards */
+.rd-card>summary{display:flex;align-items:center;gap:var(--s2);min-height:48px;cursor:pointer;list-style:none}
+.rd-card>summary::-webkit-details-marker{display:none}
+.rd-card>summary h2{font-size:var(--t-lg)}
+.rd-card[open]>summary{margin-bottom:var(--s3)}
+.rd-card[open]>summary .cv{transform:rotate(180deg)}
+.rd-card .grow{flex:1}
+.rd-sw{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:48px;padding:0 var(--s1);border:0;border-radius:var(--radius);background:transparent;color:var(--text-primary);font-weight:600;font-size:var(--t-sm);line-height:1.3;text-align:left}
+.rd-sw:hover{background:var(--surface-1)}
+.rd-sw .tr{position:relative;width:46px;height:28px;border-radius:999px;background:var(--surface-1);border:2px solid var(--border-control);flex:none}
+.rd-sw .tr i{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--border-control);transition:transform .15s}
+.rd-sw[aria-checked="true"] .tr{background:var(--accent);border-color:var(--accent)}
+.rd-sw[aria-checked="true"] .tr i{transform:translateX(18px);background:var(--on-accent)}
+.rd-sw .l{display:flex;flex-direction:column;min-width:0}
+.rd-sw .l small{font-size:var(--t-xs);font-weight:500;color:var(--text-secondary)}
+.rd-sw .st{margin-left:auto;font-size:var(--t-xs);font-weight:700;color:var(--text-secondary)}
+.rd-row2{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;min-height:48px;padding:0 var(--s1)}
+.rd-lab{font-size:var(--t-sm);font-weight:600}
+.rd-step{display:flex;align-items:center;gap:var(--s2);margin-left:auto}
+.rd-step .icon-btn{width:48px;height:48px}
+.rd-step output{min-width:2ch;text-align:center;font-size:var(--t-xl);font-weight:700}
+.rd-range{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;padding:0 var(--s1) var(--s2)}
+.rd-range label{display:flex;align-items:center;gap:6px;font-size:var(--t-sm);font-weight:600}
+.rd-range input{width:4.6em;min-height:48px;border:2px solid var(--border-control);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font:inherit;font-size:var(--t-md);text-align:center}
+.rd-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;margin:var(--s1) 0 var(--s2);border-radius:var(--radius);background:var(--surface-1);border:1px solid var(--border)}
+.rd-seg button{min-height:var(--tap);border:0;border-radius:var(--radius-sm);background:transparent;font-weight:600;font-size:var(--t-sm);color:var(--text-secondary)}
+.rd-seg button[aria-checked="true"]{background:var(--surface-2);color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent)}
+.rd-tbtns{display:flex;gap:var(--s2);flex-wrap:wrap;margin:var(--s2) 0}
+.rd-chips{list-style:none;margin:0;padding:2px;display:flex;flex-wrap:wrap;gap:6px;max-height:196px;overflow:auto}
+.rd-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;max-width:100%;padding:0 10px;border-radius:999px;font-size:var(--t-sm);font-weight:600;line-height:1.3}
+.rd-chip b{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.rd-chip span:not(.sr){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:8.5em}
+.rd-chip.left{border:2px dashed var(--border-control);background:var(--surface-2);color:var(--text-primary)}
+.rd-chip.done{border:2px solid var(--accent);background:var(--accent);color:var(--on-accent)}
+.rd-chip.last{border:3px solid var(--text-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--text-primary) 22%,transparent)}
+.rd-away{display:flex;gap:6px;align-items:center;margin-top:var(--s2)}
+.rd-card .btn{margin-top:var(--s2)}
+/* groups (B) */
+.rd-gstage{min-height:0;padding:var(--s4) var(--s5)}
+.device.short .rd-gstage{min-height:0}
+.rd-gsum{display:flex;align-items:center;gap:var(--s3);text-align:left;width:100%}
+.rd-gsum>.ic{font-size:40px}
+.rd-gsum b{display:block;font-size:var(--t-xl);line-height:1.3}
+.rd-gsum small{display:block;font-size:var(--t-sm);font-weight:600}
+.rd-gwrap{--gcol:4;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--gcol),minmax(0,1fr));gap:var(--s3)}
+.rd-g{min-width:0;background:var(--surface-2);color:var(--text-primary);border:var(--card-bw) solid var(--card-border);border-top:6px solid var(--gc);border-radius:var(--radius-lg);padding:var(--s3);box-shadow:var(--shadow-card)}
+.rd-gh{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s2)}
+.rd-gdot{width:22px;height:22px;border-radius:50%;background:var(--gc);border:2px solid var(--text-primary);flex:none}
+.rd-gh h3{font-size:var(--t-xl);line-height:1.2}
+.rd-g ol{list-style:none;margin:0;padding:0;display:grid;gap:2px 8px;font-size:var(--t-sm)}
+.rd-g.two ol{grid-template-columns:1fr 1fr}
+.rd-g li{display:flex;gap:6px;align-items:center;min-height:28px;min-width:0}
+.rd-g li b{flex:none}
+.rd-g .nmx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rd-g li.lead{font-weight:700}
+.rd-g li.lead>.ic{color:var(--text-warning);font-size:18px}
+.rd-lw{font-size:var(--t-xs);color:var(--text-secondary)}
+.rd-gnote{display:flex;gap:6px;align-items:center}
+/* projector (C) */
+.rd-proj .rd-pjstage{flex:1 1 auto;min-height:280px;border:3px solid var(--hero-fg)}
+.rd-proj .rd-win{--rh:140px}
+.rd-proj .rd-rnm{font-size:88px}
+.rd-proj .rd-rno{font-size:72px}
+.rd-proj .rd-no{width:200px;height:200px;font-size:110px}
+.rd-proj .rd-name{font-size:96px}
+.rd-proj .rd-mnm{font-size:56px}
+.rd-proj .rd-tnum b{font-size:var(--t-3xl)}
+.rd-proj .rd-g{border-width:3px}
+.rd-pjfoot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s3)}
+.rd-pjbtns{display:flex;gap:var(--s3);flex-wrap:wrap}
+.rd-pjbtns .btn{min-height:80px;font-size:var(--t-xl);padding:0 var(--s6)}
+.rd-proj .rd-pjgo{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.rd-proj .rd-pjgo:disabled{background:transparent;color:var(--hero-fg);border-style:dashed}
+@container app (max-width:1100px){ .rd-stat .num,.rd-stat.big .num{font-size:var(--t-2xl)} .rd-count{gap:var(--s4)} .rd-gwrap{--gcol:3} }
+@container app (max-width:900px){
+  .rd-grid{grid-template-columns:1fr}
+  .rd-side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .rd-stage{min-height:440px}
+  .rd-gstage{min-height:0}
+  .rd-ctl{flex-direction:column}
+  .rd-acts .btn{flex:1;min-height:56px}
+  .rd-gwrap{--gcol:2}
+}
+@container app (max-width:599px){
+  .rd-nav{margin:var(--s3) 0}
+  .rd-rooms{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:4px;overscroll-behavior-x:contain}
+  .rd-rooms .at-room{flex:none}
+  .rd-note{margin-left:0}
+  .rd-side{display:flex}
+  .rd-stage{min-height:300px;padding:var(--s4)}
+  .rd-res{flex-direction:column;text-align:center;gap:var(--s3)}
+  .rd-no{width:104px;height:104px;font-size:48px}
+  .rd-name{font-size:44px}
+  .rd-name.long{font-size:40px}
+  .rd-win{--rh:64px}
+  .rd-rnm{font-size:34px}
+  .rd-rno{font-size:30px}
+  .rd-multi{grid-template-columns:1fr}
+  .rd-pair{flex-direction:column}
+  .rd-dock{position:absolute;left:0;right:0;bottom:100px;z-index:4;padding:var(--s2) var(--s3);background:var(--surface-2);border-top:var(--card-bw) solid var(--card-border);box-shadow:0 -8px 18px rgba(0,0,0,.12)}
+  .app .rd-go{min-height:64px}
+  .main[data-rnd]{padding-bottom:200px}
+  .rd-count{gap:var(--s3)}
+  .rd-stat small{font-size:var(--t-xs)}
+  .rd-gwrap{--gcol:1}
+  .rd-proj .rd-name{font-size:48px}
+  .rd-proj .rd-no{width:120px;height:120px;font-size:60px}
+  .rd-proj .rd-win{--rh:80px}
+  .rd-proj .rd-rnm{font-size:44px}
+  .device[data-page="random"] .toast{bottom:190px}
+}
+@media (prefers-reduced-motion:reduce){
+  .device .rd-reel,.device .rd-tarc{transition:none !important}
+  .device .rd-pop *,.device .rd-glow{animation:none !important}
+  .device .rd-glow{display:none}
+}
 </style>
 </head>
 <body>
@@ -1638,7 +1865,7 @@ const PG_INFO = {
     extra: "ต้องเพิ่มให้หน้านักเรียนเปิดหน้าพิมพ์ได้ทันที — งานเล็ก ฝั่งหน้าเว็บอย่างเดียว" },
   backup: { kind: "link", what: "ทางลัดไป ตั้งค่า › สำรองข้อมูล — ดาวน์โหลดไฟล์สำรองและกู้คืน", extra: "ปลายทางมีอยู่แล้ว ใช้ได้ทันที ไม่มีงานเพิ่ม" },
 };
-const PAGES = ["home", "settings", "scan", "attendance", "gradebook"];
+const PAGES = ["home", "settings", "scan", "attendance", "random", "gradebook"];
 const navAttr = (x) => PAGES.includes(x.id) ? `data-page="${x.id}"` : `data-info="${x.id}"`;
 const nbadge = (x, inline) => x.nw || x.chg ? `<span class="${inline ? "nb-in" : "nb"}">${x.chg ? "รวม" : "ใหม่"}</span>` : "";
 const menu = () => MENUS[S.menu];
@@ -1668,7 +1895,7 @@ const banners = () => (S.hide ? `<div class="banner" role="status">${ic("eye-sla
 const QA = () => [
   { t: "สแกนส่งงาน", s: "กล้องหรือเครื่องอ่าน QR", i: "scan", main: true, page: "scan" },
   { t: "เช็คชื่อ", s: unchecked.length ? `ยังเหลือ ${unchecked.length} ห้อง` : "เช็คครบแล้ว", i: "user-check", q: 1, page: "attendance" },
-  { t: "สุ่มชื่อ", s: "เฉพาะคนที่มาเรียน", i: "dice-five", q: 3 },
+  { t: "สุ่มชื่อ", s: "เฉพาะคนที่มาเรียน", i: "dice-five", q: 3, page: "random" },
   { t: "สร้างงาน", s: "หลายห้องพร้อมกัน", i: "plus-circle", q: 2 },
 ];
 const qaBtn = (q, dock) => `<button class="qa ${q.main ? "main-qa" : ""}" ${q.page ? `data-page="${q.page}"` : `data-toast="ไปหน้า${q.t}"`}><span class="qi ${q.main || dock ? "" : "qi-" + q.q}">${ic(q.i)}</span><span><b>${q.t}</b><small>${q.s}</small></span></button>`;
@@ -1927,7 +2154,7 @@ const SS = { phase: "setup", selAsg: null, selCls: null, asg: null, cls: null, m
   copied: false, seq: 0, clk: 0, lastScore: null, gridFocus: null, pickMsg: "" };
 let undoTimer = null, holdTimer = null, RES_SEEN = null;
 const RP = {}; // last drawn ring values (ring fills from old → new value)
-const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.state === "offline");
+const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.page === "random" ? !RD.online : S.state === "offline");
 const scA = () => ASG0.find((a) => a.id === SS.asg);
 const scRoom = (cid = SS.cls) => SC_ROOM[cid][0];
 const lateOn = (a) => !!a.due && Date.parse(RECV_D[SS.recv]) > Date.parse(a.due);
@@ -2532,7 +2759,7 @@ function atHero(c) {
     <span class="at-date" role="group" aria-label="เลือกวัน"><button class="hp ico" data-at="prev" aria-label="วันก่อนหน้า" ${canPrev ? "" : "disabled"}>${ic("caret-left")}</button><button class="hp" data-at="today" aria-label="${AT.date === TODAY ? "วันนี้ " + dLabel(AT.date) : "กลับเป็นวันนี้ (กำลังดู " + dLabel(AT.date) + ")"}">${ic("calendar-dots")}${AT.date === TODAY ? "วันนี้" : dLabel(AT.date)}</button><button class="hp ico" data-at="next" aria-label="วันถัดไป${canNext ? "" : " (เป็นวันนี้แล้ว)"}" ${canNext ? "" : "disabled"}>${ic("caret-right")}</button></span>
     <button class="hp no-phone" data-toast="รายวัน / รายคาบ (คาบ 1–8) — ตัวอย่างนี้แสดงรายวัน · รายคาบไม่ส่งผลต่อสุ่มชื่อ" aria-label="เช็ครายวัน แตะเลือก แตะเพื่อเปลี่ยนเป็นรายคาบหรือสแกน">${ic("hand-tap")}<span class="lng">รายวัน · แตะเลือก</span><span class="sht">รายวัน</span>${ic("caret-down", "cv")}</button>
     <span class="hp info ${b[0] === "warn" ? "warn" : b[0] === "bad" ? "bad" : ""}">${badgeIc(b)}${b[2]}</span>
-    ${done ? `<button class="btn" data-toast="ไปหน้าสุ่มชื่อ · ${room} · ${c.came} คนที่มา">${ic("dice-five")}สุ่มชื่อเฉพาะคนที่มา (${c.came})</button><span class="at-q4">${ic("info")}สุ่มชื่ออ่านเฉพาะการเช็ครายวัน · รายคาบไม่ส่งผลต่อสุ่มชื่อ</span>` : ""}
+    ${done && AT.date === TODAY ? `<button class="btn" data-rdfrom="${AT.cls}" aria-label="สุ่มชื่อเฉพาะคนที่มา ${c.came} คน ${room} · ไปหน้าสุ่มชื่อห้องเดิม">${ic("dice-five")}สุ่มชื่อเฉพาะคนที่มา (${c.came})</button><span class="at-q4">${ic("info")}สุ่มชื่ออ่านเฉพาะการเช็ครายวัน · รายคาบไม่ส่งผลต่อสุ่มชื่อ</span>` : ""}
     ${ph && !done ? atAllBtn(c, "only-phone") : ""}
   </div>
   ${count}<div class="at-ringwrap">${atRing(c, ...sz)}${leg}</div></section>${leg.replace('class="at-leg"', 'class="at-leg at-legbar"')}`;
@@ -2673,11 +2900,369 @@ function atKey_(e) { // keyboard: radiogroup arrows · roving grid arrows · pro
 }
 atScenario("partial");
 
+/* ======================= T-14 หน้าสุ่มชื่อ (ux-random.md) — fictional names, same tokens/icons ======================= */
+const NICK = ["ภู", "นิชา", "ต้น", "กานต์", "ปั้น", "มิน", "ปิง", "ศิริ", "กิต", "นันท์", "เมฆ", "อัญ", "ธีร์", "ปภา", "รัช", "พิช"];
+// today's daily attendance per room (pool = มา + สาย) · many: 45 → มา 38 + สาย 3 = 41 · ขาด 2 ลา 1 ป่วย 1 = 4 (ux-random.md example)
+const RD_CFG = { c61: { absent: [5], leave: [11], sick: [23], late: [3, 14] }, c61m: { absent: [5, 18], leave: [11], sick: [23], late: [3, 14, 27] }, c62: { absent: [8, 19], sick: [12], late: [2] }, c51: { absent: [7], late: [20] } };
+const G_COL = ["--att-present", "--att-leave", "--att-late", "--att-sick", "--accent-2", "--att-absent"]; // GROUP_COLORS (6, rotating) — always with number + text
+const RD = { sstate: "normal", cls: "c61", mode: "pick", presentOnly: true, noRepeat: true, k: 1, pair: false, rangeOn: false, rFrom: 1, rTo: 20,
+  tSec: 30, tLeft: 30, tRun: false, tUp: false, tAuto: true, gBy: "count", gN: 4, leader: true, groups: null, copied: false,
+  marks: {}, called: {}, cur: null, rolling: false, reel: null, skipping: null, fresh: "", hide: false, project: false, online: true, err: false, loading: false,
+  many: false, noclass: false, nostu: false, undo: null, live: "", tmsg: "", sound: false,
+  cards: { opts: true, timer: true, left: true, hist: true, pass: true, range: true, pair: true, gopts: true } };
+let rdTimerT = null, rdRollT = null, rdUndoT = null;
+const rdReduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const rdRooms = () => (RD.noclass ? [] : Object.keys(AT_ROOM0));
+const rdRoom = (cid = RD.cls) => AT_ROOM0[cid][0];
+const rdN = (cid = RD.cls) => (RD.nostu ? 0 : cid === "c61" && RD.many ? 45 : AT_ROOM0[cid][1]);
+const rdName = (no, cid = RD.cls) => (RD.many && cid === "c61" && no % 5 === 0 ? LONGN[(no / 5) % LONGN.length] : stName(cid, no));
+const rdHideNow = () => (RD.project ? AT.pjHide : RD.hide); // projector follows its own pjHideNames switch (shared with เช็คชื่อ)
+const rdWho = (no, hide = rdHideNow()) => (hide ? `เลขที่ ${no}` : `เลขที่ ${no} ${rdName(no).join(" ")}`);
+const rdOrder = (a, seed = 3) => [...a].sort((x, y) => ((x * 7 + seed) % 37) - ((y * 7 + seed) % 37) || x - y);
+const rdShuffle = (a) => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const rdAll = (n) => Array.from({ length: n }, (_, i) => i + 1);
+function rdDay(cid) { const n = rdN(cid), c = RD_CFG[cid === "c61" && RD.many ? "c61m" : cid], m = {};
+  for (let i = 1; i <= n; i++) m[i] = "present";
+  for (const k in c) c[k].forEach((no) => { if (no <= n) m[no] = k; });
+  return m; }
+const rdMarks = (cid = RD.cls) => (RD.marks[cid] ??= rdDay(cid));
+function rdStat(cid = RD.cls) {
+  const n = rdN(cid), m = rdMarks(cid), ids = Object.keys(m).map(Number).filter((x) => x <= n);
+  const came = ids.filter((x) => ["present", "late"].includes(m[x])).sort((a, b) => a - b);
+  return { n, marked: ids.length, came, away: ids.length - came.length, unmarked: n - ids.length, att: RD.loading ? "loading" : RD.err || !RD.online ? "error" : "ok" };
+}
+const rdLo = () => Math.min(RD.rFrom, RD.rTo), rdHi = () => Math.max(RD.rFrom, RD.rTo);
+const rdBase = (s) => (RD.presentOnly ? (s.att === "ok" ? s.came : []) : rdAll(s.n));
+const rdPool = (s = rdStat()) => rdBase(s).filter((x) => RD.mode === "group" || !RD.rangeOn || (x >= rdLo() && x <= rdHi()));
+function rdBlocker(s = rdStat()) {
+  if (!s.n) return "nostu"; // RS-07 checked first (also covers RS-08)
+  if (RD.presentOnly) { if (s.att === "loading") return "loading"; if (s.att === "error") return "error"; if (!s.marked) return "unchecked"; if (!s.came.length) return "nobody"; }
+  const p = rdPool(s);
+  if (RD.mode === "pick" && !p.length) return "range";
+  if (RD.mode === "group" && p.length < 2) return "few";
+  return "none";
+}
+const rdCalled = (cid = RD.cls) => (RD.called[cid] ??= []);
+function rdNums(s = rdStat()) { // N = pool · m = left in round · n = N − m (always adds up)
+  const pool = rdPool(s), c = rdCalled(), N = pool.length, m = pool.filter((x) => !c.includes(x)).length;
+  return { pool, N, m, n: N - m, done: RD.noRepeat && N > 0 && m === 0 };
+}
+function rdPick(exclude = []) { // pickNext: no repeat until everyone is called; remaining first, then refill a new round
+  const { pool } = rdNums(), c = rdCalled(), k = Math.min(RD.pair ? 2 : RD.k, pool.length);
+  let cand = pool.filter((x) => !exclude.includes(x)); if (cand.length < k) cand = pool;
+  if (!RD.noRepeat) return { nos: rdShuffle(cand).slice(0, k), round: false, add: [] };
+  const first = rdShuffle(cand.filter((x) => !c.includes(x))).slice(0, k);
+  if (first.length === k) return { nos: first, round: false, add: first };
+  const fill = rdShuffle(cand.filter((x) => !first.includes(x))).slice(0, k - first.length);
+  return { nos: [...first, ...fill], round: true, at: first.length + 1, add: fill };
+}
+function rdCommit(p) {
+  const c = rdCalled();
+  if (!RD.noRepeat) p.nos.forEach((x) => { const i = c.indexOf(x); if (i >= 0) c.splice(i, 1); c.push(x); });
+  else if (p.round) RD.called[RD.cls] = [...p.add];
+  else c.push(...p.add);
+  RD.cur = { nos: p.nos, pair: RD.pair && p.nos.length === 2 };
+}
+const rdSay = (nos) => (nos.length === 1 ? `สุ่มได้ ${rdWho(nos[0])}` : RD.pair && nos.length === 2 ? `สุ่มได้คู่ ${rdWho(nos[0])} คู่กับ ${rdWho(nos[1])}` : `สุ่มได้ ${nos.length} คน ${nos.map((n) => rdWho(n)).join(" ")}`);
+const rdFocusGo = () => { const el = document.getElementById(RD.project ? "rdPjGo" : "rdGo"); if (el) el.focus({ preventScroll: true }); };
+function rdGo(exclude = []) {
+  if (RD.rolling || RD.skipping) return;
+  if (RD.mode === "group") return rdGroup();
+  if (rdBlocker() !== "none") return;
+  rdTStop(true);
+  const p = rdPick(exclude);
+  if (rdReduced()) return rdLand(p, "rm"); // RS-14: no spinning names at all — result appears at once
+  const pool = rdPool(), r0 = Math.floor(Math.random() * pool.length), rows = Array.from({ length: 13 }, (_, i) => pool[(r0 + i * 5) % pool.length]);
+  rows.push(p.nos[0]); RD.reel = rows; RD.rolling = true; RD.cur = null; render(true); rdFocusGo();
+  let i = 0, d = 50; const steps = rows.length - 1;
+  const step = () => { i++; const dd = Math.min(240, Math.round(d)); d *= 1.18;
+    document.querySelectorAll(".rd-reel").forEach((el) => { el.style.transition = `transform ${dd}ms cubic-bezier(.25,.7,.35,1)`; el.style.transform = `translateY(calc(var(--rh) * -${i}))`; });
+    rdRollT = setTimeout(i < steps ? step : () => rdLand(p, "pop"), i < steps ? dd : dd + 80); };
+  rdRollT = setTimeout(step, 30);
+}
+function rdLand(p, how) {
+  RD.rolling = false; RD.reel = null; rdCommit(p); RD.fresh = how; RD.live = rdSay(p.nos);
+  if (p.round) RD.tmsg = p.at > 1 ? `ครบรอบแล้ว — เริ่มรอบใหม่ที่คนที่ ${p.at}` : "ครบรอบแล้ว — เริ่มรอบใหม่";
+  if (RD.tAuto) rdTStart(true);
+  render(true); RD.fresh = ""; rdFocusGo();
+  if (RD.tmsg) { toast(RD.tmsg); RD.tmsg = ""; }
+  if (how === "rm") { document.querySelectorAll(".rd-stage").forEach((el) => el.classList.add("rd-rm")); setTimeout(() => document.querySelectorAll(".rd-rm").forEach((el) => el.classList.remove("rd-rm")), 1200); }
+}
+const rdGK = (N) => Math.max(1, Math.min(N, RD.gBy === "count" ? RD.gN : Math.round(N / RD.gN)));
+function rdGroup() {
+  if (rdBlocker() !== "none") return;
+  const pool = rdPool(), k = rdGK(pool.length), G = Array.from({ length: k }, () => []);
+  rdShuffle(pool).forEach((no, i) => G[i % k].push(no)); // leader = first of each group
+  RD.groups = G; RD.copied = false; RD.live = `แบ่งได้ ${k} กลุ่ม กลุ่มละประมาณ ${Math.round(pool.length / k)} คน`; RD.fresh = rdReduced() ? "" : "pop";
+  render(true); RD.fresh = ""; rdFocusGo();
+}
+/* answer timer 10/30/60 s */
+function rdTStop(reset) { clearInterval(rdTimerT); rdTimerT = null; RD.tRun = false; if (reset) { RD.tLeft = RD.tSec; RD.tUp = false; } }
+function rdTStart(fresh) {
+  if (fresh || RD.tUp || RD.tLeft <= 0) { RD.tLeft = RD.tSec; RD.tUp = false; }
+  clearInterval(rdTimerT); RD.tRun = true;
+  rdTimerT = setInterval(() => {
+    if (S.page !== "random") { rdTStop(false); return; }
+    RD.tLeft--;
+    if (RD.tLeft <= 0) { rdTStop(false); RD.tLeft = 0; RD.tUp = true; RD.live = "หมดเวลา";
+      const a = document.activeElement, sel = a && a.id ? "#" + a.id : a && a.dataset && a.dataset.rd ? `[data-rd="${a.dataset.rd}"]` : null; render(true); if (sel) focusEl(sel, true); return; }
+    document.querySelectorAll(".rd-tm").forEach((el) => { const b = el.querySelector(".rd-tnum b"), c = el.querySelector(".rd-tarc"); if (b) b.textContent = RD.tLeft; if (c) c.style.strokeDashoffset = (c.dataset.c * (1 - RD.tLeft / RD.tSec)).toFixed(1); });
+  }, 1000);
+}
+function rdTimer(big) {
+  if (RD.tUp) return `<div class="rd-tm up" role="status">${ic("alarm")}<b class="rd-tup">หมดเวลา</b><button class="btn" data-rd="treset">${ic("arrow-counter-clockwise")}ตั้งใหม่</button></div>`;
+  const sz = big ? 116 : S.device === "phone" ? 56 : 68, sw = big ? 10 : 6, r = (sz - sw) / 2, C = 2 * Math.PI * r, h = sz / 2, off = C * (1 - RD.tLeft / RD.tSec);
+  return `<div class="rd-tm"><span class="rd-tring" role="timer" aria-live="off" aria-label="จับเวลาตอบ ${RD.tSec} วินาที"><svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" aria-hidden="true">
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="color-mix(in srgb,var(--hero-fg) 28%,transparent)" stroke-width="${sw}"/>
+    <circle class="rd-tarc" data-c="${C.toFixed(1)}" cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--hero-fg)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" style="stroke-dashoffset:${off.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/></svg>
+    <span class="rd-tnum" aria-hidden="true"><b class="num">${RD.tLeft}</b><small>วิ</small></span></span>
+    <button class="btn" data-rd="tgo" aria-label="${RD.tRun ? "หยุดจับเวลา" : "เริ่มจับเวลา"}">${ic(RD.tRun ? "pause" : "play")}${RD.tRun ? "หยุด" : "เริ่ม"}</button></div>`;
+}
+/* reset round: 5 s undo (pauses on hover/focus) */
+function rdUndoStop() { clearInterval(rdUndoT); rdUndoT = null; RD.undo = null; }
+function rdUndoStart() { clearInterval(rdUndoT); rdUndoT = setInterval(() => { const u = RD.undo, bar = document.getElementById("rdUndo"); if (!u) return rdUndoStop();
+  if (bar && bar.matches(":hover,:focus-within")) return; u.left--; if (u.left <= 0) { rdUndoStop(); if (bar) bar.remove(); return; }
+  const b = document.getElementById("rdUndoBtn"), mt = document.getElementById("rdUndoM"); if (b) b.innerHTML = `${ic("arrow-u-up-left")}เลิกทำ (${u.left})`; if (mt) mt.style.width = u.left * 20 + "%"; }, 1000); }
+const rdUndoBar = () => { const u = RD.undo; if (!u) return "";
+  return `<div class="at-undo" id="rdUndo" role="group" aria-label="เลิกทำ"><span class="m">${ic("arrow-clockwise")}เริ่มรอบใหม่แล้ว · สุ่มแล้ว 0 จาก ${u.N}</span><span class="meter" aria-hidden="true"><i id="rdUndoM" style="width:${u.left * 20}%"></i></span><button class="btn" id="rdUndoBtn" data-rd="unreset">${ic("arrow-u-up-left")}เลิกทำ (${u.left})</button></div>`; };
+function rdStopAll() { clearTimeout(rdRollT); rdTStop(true); rdUndoStop(); RD.rolling = false; RD.reel = null; RD.skipping = null; }
+function rdScenario(k) {
+  rdStopAll(); S.sheet = null;
+  Object.assign(RD, { sstate: k, cls: "c61", mode: "pick", presentOnly: true, noRepeat: true, k: 1, pair: false, rangeOn: false, rFrom: 1, rTo: 20, groups: null, copied: false, cur: null, fresh: "",
+    hide: k === "hidden", project: k === "project", online: k !== "offline", err: k === "error", loading: k === "loading", many: k === "many", noclass: k === "noclass", nostu: k === "nostudent",
+    marks: {}, called: {}, live: "", tmsg: "", tLeft: RD.tSec, tUp: false });
+  if (RD.noclass) return;
+  if (k === "unchecked") RD.marks.c61 = {};
+  if (k === "nobody") { const m = {}; for (let i = 1; i <= rdN(); i++) m[i] = i % 9 === 0 ? "sick" : i % 7 === 0 ? "leave" : "absent"; RD.marks.c61 = m; }
+  const pool = rdPool(), pre = { normal: 9, hidden: 9, project: 9, many: 17, complete: pool.length }[k] || 0;
+  RD.called.c61 = rdOrder(pool).slice(0, pre);
+  if (pre && (k === "hidden" || k === "project")) RD.cur = { nos: [RD.called.c61[pre - 1]], pair: false };
+}
+/* ---------- views ---------- */
+function rdTop() {
+  return `<div class="topbar"><div class="where">${ic("dice-five")}<span>สุ่มชื่อ <span class="long">· ${dLabel(TODAY)} · ภาคเรียน 2/2569</span></span></div><div class="grow"></div>
+  <button class="chip-btn hide-btn" data-rd="hide" aria-pressed="${RD.hide}" aria-label="ซ่อนชื่อนักเรียน (เฉพาะหน้านี้)">${ic(RD.hide ? "eye-slash" : "eye")}<span class="lbl">${RD.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+  ${RD.noclass ? "" : `<button class="chip-btn" data-rd="proj" aria-pressed="${RD.project}" aria-label="โหมดฉายจอ">${ic("projector-screen")}<span class="lbl no-phone">ฉายจอ</span></button>
+  <button class="chip-btn" data-act="sheet:rd-cards" aria-label="ปรับการ์ดหน้าสุ่มชื่อ">${ic("sliders-horizontal")}<span class="lbl no-phone">ปรับการ์ด</span></button>`}</div>`;
+}
+const RD_CARDS = [["opts", "ตัวเลือก"], ["timer", "จับเวลาตอบ (รวมวงในเวที)"], ["left", "ยังไม่ถูกสุ่ม"], ["hist", "สุ่มแล้ว (ประวัติวันนี้)"], ["pass", "ปุ่มข้ามคนนี้"], ["range", "ช่วงเลขที่"], ["pair", "จับคู่"], ["gopts", "ตัวเลือกจับกลุ่ม"]];
+function rdSheet() { // random_cards (D37) — same sheet pattern as ปรับหน้าหลัก / ปรับการ์ดเช็คชื่อ
+  const body = `<p class="sec small">ซ่อน/แสดงการ์ดของหน้าสุ่มชื่อ (จำต่อเครื่อง) · ค่าที่ตั้งไว้ยังทำงานแม้ซ่อนการ์ด</p>` + RD_CARDS.map(([x, l]) => `<button class="btn mrow" aria-pressed="${RD.cards[x]}" data-rd="card:${x}">${ic(RD.cards[x] ? "toggle-right" : "toggle-left")}${l} · ${RD.cards[x] ? "แสดงอยู่" : "ซ่อนอยู่"}</button>`).join("")
+    + `<p class="sec small">${ic("lock-simple")} ล็อก แสดงเสมอ: hero · ชิปห้อง · แถบเหตุผล · เวทีสุ่ม · ปุ่มสุ่ม / จับกลุ่ม</p>`;
+  return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">ปรับการ์ดหน้าสุ่มชื่อ</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}<button class="btn btn-primary" data-act="close">เสร็จ</button></div></div>`;
+}
+const rdModeSw = (hero) => `<span class="rd-mode ${hero ? "" : "rd-mode-s"}" role="radiogroup" aria-label="โหมด">${[["pick", "dice-five", "สุ่มชื่อ"], ["group", "users-four", "จับกลุ่ม"]].map(([k, i, l]) =>
+  `<button class="${hero ? "hp" : "btn"}" role="radio" aria-checked="${RD.mode === k}" tabindex="${RD.mode === k ? 0 : -1}" data-rd="mode:${k}">${ic(i)}${l}</button>`).join("")}</span>`;
+function rdRing(nn, size, sw, blocked) {
+  const r = (size - sw) / 2, C = 2 * Math.PI * r, h = size / 2, p = nn.N && !blocked ? nn.n / nn.N : 0;
+  return `<div class="at-plate rd-plate" role="progressbar" aria-label="สุ่มแล้วกี่คนในรอบนี้" aria-valuemin="0" aria-valuemax="${nn.N}" aria-valuenow="${blocked ? 0 : nn.n}" aria-valuetext="${blocked ? "ยังสุ่มไม่ได้" : `สุ่มแล้ว ${nn.n} จาก ${nn.N} คน`}"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--border-control)" stroke-width="${Math.max(3, sw * 0.4)}" stroke-dasharray="4 5"/>
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="${sw}" stroke-linecap="${p ? "round" : "butt"}" stroke-dasharray="${(C * p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 ${h} ${h})"/></svg>
+    <div class="at-rc" aria-hidden="true">${nn.done && !blocked ? `<span class="rd-rcok">${ic("check-circle")}</span>` : `<b>${blocked ? "–" : nn.n}</b><small>จาก ${blocked ? "–" : nn.N}</small>`}</div></div>`;
+}
+function rdHero(s, b, nn) {
+  const room = rdRoom(), ph = S.device === "phone", dash = RD.presentOnly && ["loading", "error", "unchecked"].includes(b), came = dash ? "–" : s.came.length, blocked = !["none", "range"].includes(b);
+  const base = s.n ? `<button class="hp" data-rd="base:came" aria-pressed="${RD.presentOnly}">${ic("user-check")}<span class="lng">เฉพาะคนที่มา (${came})</span><span class="sht">มา (${came})</span></button><button class="hp" data-rd="base:all" aria-pressed="${!RD.presentOnly}">${ic("users-three")}<span class="lng">ทั้งห้อง (${s.n})</span><span class="sht">ทั้งห้อง (${s.n})</span></button>` : "";
+  const st1 = RD.presentOnly ? `<span class="rd-stat ${dash ? "dim" : ""}"><small>มาเรียน</small><span class="num">${came}<i>จาก ${s.n}</i></span></span>` : `<span class="rd-stat"><small>สุ่มจากทั้งห้อง</small><span class="num">${s.n}<i>คน</i></span></span>`;
+  const st2 = blocked ? "" : RD.mode === "group" ? `<span class="rd-stat big"><small>จะแบ่งได้</small><span class="num">${rdGK(nn.N)}<i>กลุ่ม</i></span></span>`
+    : !RD.noRepeat ? `<span class="rd-stat big"><small>แบบสุ่ม</small><span class="num rd-rep">สุ่มซ้ำได้</span></span>`
+    : nn.done ? `<span class="rd-stat big"><small>${ic("check-circle")}สุ่มครบทุกคนแล้ว</small><span class="num">${nn.N}<i>/ ${nn.N}</i></span></span>`
+    : `<span class="rd-stat big"><small>เหลือยังไม่ถูกสุ่ม</small><span class="num">${nn.m}<i>คน</i></span></span>`;
+  const sz = ph ? [56, 7] : S.device === "ipadP" ? [88, 10] : S.device === "desk" ? [64, 8] : [72, 9], one = ["desk", "ipadL"].includes(S.device) ? "rd-one" : "", sht = S.device === "ipadL" ? "rd-sht" : "";
+  return `<section class="at-hero rd-hero on-hero ${one} ${sht}" aria-label="สุ่มชื่อ ${room}">
+  <div class="t"><p class="kicker">${ic("dice-five")}สุ่มชื่อ · ${RD.mode === "group" ? "จับกลุ่ม" : RD.presentOnly ? "เฉพาะคนที่มาเรียนวันนี้" : "ทั้งห้อง"}</p><div class="rd-tt"><h1 class="display">${room}${ph ? "" : " · สุ่มชื่อ"}</h1>${!RD.online ? `<span class="hp info warn">${ic("wifi-slash")}ออฟไลน์</span>` : ""}</div></div>
+  <div class="pills">${base}${ph ? "" : rdModeSw(true)}</div>
+  <div class="rd-count" aria-live="off">${s.n ? st1 + st2 : `<span class="rd-stat"><small>ห้องนี้ยังไม่มีนักเรียน</small><span class="num">0<i>คน</i></span></span>`}</div>
+  <div class="at-ringwrap">${rdRing(nn, ...sz, blocked || RD.mode === "group")}</div></section>`;
+}
+function rdNav() {
+  const rooms = rdRooms().map((cid) => { const s = rdStat(cid), t = !s.n ? "ไม่มีนักเรียน" : s.att !== "ok" ? `${s.n} คน` : !s.marked ? `${s.n} คน · ยังไม่เช็คชื่อ` : `${s.n} คน · มา ${s.came.length}`;
+    return `<button class="at-room ${s.att === "ok" && s.marked ? "ok" : ""}" aria-pressed="${cid === RD.cls}" data-rd="room:${cid}">${ic(s.att === "ok" && s.marked ? "check-circle" : "chalkboard")}<span>${rdRoom(cid)}<small>${t}</small></span></button>`; }).join("");
+  return `<div class="rd-nav"><div class="rd-rooms" role="group" aria-label="เลือกห้อง">${rooms}</div>${S.device === "phone" ? rdModeSw(false) : ""}<p class="rd-note">${ic("info")}${RD.presentOnly ? "นับจากเช็คชื่อรายวันของวันนี้ · เช็คชื่อรายคาบไม่นับ" : "สุ่มจากทุกคนในห้อง ไม่ดูการเช็คชื่อ"}</p></div>`;
+}
+const rdHideBanner = () => (RD.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่ · แสดงเฉพาะเลขที่</b><br>เฉพาะหน้านี้ · ผลสุ่ม รายการ และเสียงอ่านหน้าจอไม่มีชื่อ · ปิดคัดลอกรายชื่อกลุ่ม</div><button class="btn" data-rd="hide">${ic("eye")}แสดงชื่อ</button></div>` : "");
+function rdReasons(s, b) {
+  const all = `<button class="btn" data-rd="base:all">${ic("users-three")}ใช้ทั้งห้อง (${s.n})</button>`, toAtt = (p) => `<button class="btn ${p ? "btn-primary" : ""}" data-rd="toatt">${ic("user-check")}ไปเช็คชื่อ</button>`;
+  const bar = (cls, icon, h, sub, acts) => `<div class="banner ${cls}" role="status">${icon}<div><b>${h}</b>${sub ? `<br>${sub}` : ""}</div>${acts ? `<div class="fr-acts" style="display:flex;gap:var(--s2);flex-wrap:wrap">${acts}</div>` : ""}</div>`;
+  let h = "";
+  if (!RD.online) h += bar("banner-off", ic("wifi-slash"), "ออฟไลน์ — โหลดข้อมูลเช็คชื่อไม่ได้ จึงยังไม่รู้ว่าใครมาเรียน", "สุ่มทั้งห้องได้ปกติ ประวัติเก็บในเครื่อง", (RD.presentOnly ? all : "") + `<button class="btn" data-rd="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button>`);
+  else if (b === "error") h += bar("banner-off", ic("cloud-x"), "โหลดข้อมูลเช็คชื่อไม่สำเร็จ จึงยังไม่รู้ว่าใครมาเรียน", "", `<button class="btn btn-primary" data-rd="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button>${all}`);
+  if (b === "unchecked") h += bar("", ic("clipboard-text"), "วันนี้ยังไม่ได้เช็คชื่อห้องนี้", "จึงยังไม่รู้ว่าใครมาเรียน · เช็คชื่อรายคาบไม่นับ", toAtt(true) + all);
+  if (b === "nobody") h += bar("", ic("user-minus"), "เช็คชื่อแล้ว แต่วันนี้ไม่มีใครมาเรียน — ไม่มีรายชื่อให้สุ่ม", "ถ้าเช็คผิด แก้ได้ที่หน้าเช็คชื่อ", all + toAtt(false));
+  if (b === "loading") h += bar("", ic("circle-notch", "spin"), "กำลังโหลดรายชื่อคนที่มาเรียน…", "", all);
+  if (b === "range") h += bar("", ic("funnel"), `ไม่มีใครเลขที่ ${rdLo()}–${rdHi()} ในรายชื่อที่สุ่มได้ (${RD.presentOnly ? "คนที่มาเรียน" : "ทั้งห้อง"})`, "ปรับช่วงเลขที่ หรือปิดช่วงเลขที่", `<button class="btn btn-primary" data-rd="rangeoff">${ic("funnel-x")}ปิดช่วงเลขที่</button>${RD.presentOnly ? all : ""}`);
+  if (b === "few") h += bar("", ic("users"), "ต้องมีอย่างน้อย 2 คนจึงจะจับกลุ่มได้", "", RD.presentOnly ? all : "");
+  return h;
+}
+function rdStageBody(s, b, hide, pj) {
+  if (RD.rolling && RD.reel) return `<div class="rd-slot" aria-hidden="true"><p class="rd-rlab">${ic("dice-five")}กำลังสุ่ม…</p><div class="rd-win"><div class="rd-reel">${RD.reel.map((no) => `<div class="rd-row"><span class="rd-rno num">${no}</span><span class="rd-rnm">${hide ? "เลขที่ " + no : rdName(no).join(" ")}</span></div>`).join("")}</div></div></div>`;
+  if (RD.skipping) return `<div class="rd-msg">${ic("skip-forward")}<b>${RD.skipping}</b><span>กำลังสุ่มคนต่อไป…</span></div>`;
+  const M = { nostu: ["users-three", "ห้องนี้ยังไม่มีนักเรียน", "นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน"], unchecked: ["clipboard-text", "ยังไม่มีรายชื่อให้สุ่ม", "วันนี้ยังไม่ได้เช็คชื่อห้องนี้"],
+    nobody: ["user-minus", "ไม่มีรายชื่อให้สุ่ม", "เช็คชื่อแล้ว แต่วันนี้ไม่มีใครมาเรียน"], loading: ["circle-notch", "กำลังโหลดรายชื่อ…", "รอสักครู่"],
+    error: ["cloud-x", "ยังไม่รู้ว่าใครมาเรียน", pj ? "โหลดข้อมูลเช็คชื่อไม่สำเร็จ" : "ใช้ “ทั้งห้อง” เพื่อสุ่มต่อได้"], range: ["funnel", "ไม่มีใครในช่วงเลขที่นี้", `เลขที่ ${rdLo()}–${rdHi()}`], few: ["users", "คนไม่พอจับกลุ่ม", "ต้องมีอย่างน้อย 2 คน"] };
+  if (b !== "none") { const x = M[b]; return `<div class="rd-msg">${ic(x[0], b === "loading" ? "spin" : "")}<b>${x[1]}</b><span>${x[2]}</span>${b === "nostu" && !pj ? `<button class="btn btn-lg" data-rd="import">${ic("upload-simple")}นำเข้านักเรียน</button>` : ""}</div>`; }
+  const cur = RD.cur, fr = RD.fresh === "pop" ? "rd-pop" : "";
+  if (cur) {
+    const snd = RD.sound ? `<span class="rd-snd" aria-hidden="true">${ic("speaker-high")}ติ๊ง</span>` : "";
+    return snd + rdResult(cur, hide, fr);
+  }
+  return rdIdle(s, pj);
+}
+function rdResult(cur, hide, fr) {
+  {
+    const card = (no) => `<div class="rd-pc"><span class="rd-mno num" aria-hidden="true">${no}</span><p class="rd-mnm display">${hide ? "เลขที่ " + no : rdName(no).map((x) => `<span class="nw">${x}</span>`).join(" ")}</p></div>`;
+    if (cur.pair) return `<div class="rd-pair ${fr}">${card(cur.nos[0])}<span class="rd-and">${ic("users")}คู่กับ</span>${card(cur.nos[1])}</div>`;
+    if (cur.nos.length > 1) return `<ul class="rd-multi ${fr}" style="--mc:${cur.nos.length <= 4 ? 2 : 3}">${cur.nos.map((no) => `<li><span class="rd-mno num" aria-hidden="true">${no}</span><span class="rd-mnm display">${hide ? "เลขที่ " + no : rdName(no)[0]}</span></li>`).join("")}</ul>`;
+    const no = cur.nos[0], nm = rdName(no).join(" ");
+    return `<div class="${fr}"><div class="rd-res"><span class="rd-no num" aria-hidden="true">${no}${fr ? '<i class="rd-glow"></i>' : ""}</span><div class="rd-who"><p class="rd-name display ${!hide && nm.length > 24 ? "long" : ""}">${hide ? `เลขที่ ${no}` : rdName(no).map((x) => `<span class="nw">${x}</span>`).join(" ")}</p><p class="rd-sub">${hide ? "ซ่อนชื่ออยู่ · แสดงเฉพาะเลขที่" : `“${NICK[(no - 1) % 16]}” · เลขที่ ${no}`}</p></div></div></div>`;
+  }
+}
+function rdIdle(s, pj) {
+  const nn = rdNums(s);
+  if (nn.done) return `<div class="rd-msg rd-done">${ic("check-circle")}<b>สุ่มครบทุกคนแล้ว (${nn.N})</b><span>สุ่มครั้งถัดไปเริ่มรอบใหม่</span>${pj ? "" : `<button class="btn btn-lg" data-rd="reset">${ic("arrow-clockwise")}เริ่มรอบใหม่</button>`}</div>`;
+  return `<div class="rd-idle">${ic("dice-three")}<b class="display">พร้อมสุ่ม</b><span>${pj ? "กด “สุ่มคนต่อไป”" : S.device === "phone" ? "แตะปุ่ม “สุ่มเลย” ด้านล่าง" : "กดปุ่ม หรือกด Space"}</span></div>`;
+}
+const RD_WHY = { nostu: "ห้องนี้ยังไม่มีนักเรียน", unchecked: "สุ่มไม่ได้ · วันนี้ยังไม่ได้เช็คชื่อห้องนี้", nobody: "สุ่มไม่ได้ · วันนี้ไม่มีใครมาเรียน", loading: "รอโหลดรายชื่อคนที่มาเรียน",
+  error: "สุ่มไม่ได้ · ยังไม่รู้ว่าใครมาเรียน (ใช้ทั้งห้องได้)", range: "สุ่มไม่ได้ · ไม่มีใครในช่วงเลขที่นี้", few: "ต้องมีอย่างน้อย 2 คน" };
+function rdMainPick(s, b, nn) {
+  const ph = S.device === "phone", busy = RD.rolling || !!RD.skipping;
+  const label = busy ? "กำลังสุ่ม…" : b === "loading" ? "รอสักครู่" : RD.cur ? "สุ่มคนต่อไป" : nn.done ? "สุ่มต่อ (เริ่มรอบใหม่)" : "สุ่มเลย";
+  const why = b !== "none" ? RD_WHY[b] : nn.done ? "สุ่มครั้งถัดไปเริ่มรอบใหม่" : "";
+  const sum = `สุ่ม ${RD.pair ? "เป็นคู่ (2 คน)" : RD.k + " คน"} · ${RD.noRepeat ? "ไม่ซ้ำจนครบ" : "ซ้ำได้"} · ${RD.tAuto ? `จับเวลา ${RD.tSec} วิ` : "ไม่จับเวลาเอง"}${RD.rangeOn ? ` · ช่วงเลขที่ ${rdLo()}–${rdHi()}` : ""}`;
+  return `<section class="rd-stage on-hero" id="rdStage" aria-labelledby="rdStageH" aria-busy="${busy}"><h2 class="sr" id="rdStageH">เวทีสุ่ม</h2><div class="rd-body">${rdStageBody(s, b, RD.hide, false)}</div>${b === "none" && RD.cards.timer ? rdTimer(false) : ""}</section>
+  <div class="rd-ctl"><div class="rd-dock"><button class="btn rd-go" id="rdGo" data-rd="go" ${b !== "none" ? 'disabled aria-describedby="rdWhy"' : ""} ${busy ? 'aria-disabled="true"' : ""}>${ic("dice-five")}<span>${label}</span>${ph ? "" : '<kbd aria-hidden="true">Space</kbd>'}</button></div>
+    <div class="rd-acts">${RD.cards.pass ? `<button class="btn" data-rd="skip" ${!RD.cur || busy ? "disabled" : ""}>${ic("skip-forward")}<span>ข้ามคนนี้<small>ไม่นับว่าเรียกแล้ว</small></span></button>` : ""}<button class="btn" data-rd="undo" ${!RD.cur || busy ? "disabled" : ""}>${ic("arrow-u-up-left")}<span>เลิกทำ<small>ครั้งล่าสุด</small></span></button></div></div>
+  <div class="rd-foot">${why ? `<p class="rd-why" id="rdWhy">${ic("info")}${why}</p>` : ""}<button class="rd-sum" data-rd="opts" aria-label="ตัวเลือกที่ใช้อยู่: ${sum} · ไปที่ตัวเลือก">${ic("sliders-horizontal")}${sum}</button></div>`;
+}
+function rdGCard(g, i, hide) {
+  return `<li class="rd-g ${g.length > 8 ? "two" : ""}" style="--gc:var(${G_COL[i % 6]})"><div class="rd-gh"><span class="rd-gdot" aria-hidden="true"></span><h3 class="display">กลุ่ม ${i + 1}</h3><span class="sec num">(${g.length} คน)</span></div>
+    <ol>${g.map((no, j) => { const lead = j === 0 && RD.leader, nm = rdName(no).join(" ");
+      return `<li class="${lead ? "lead" : ""}">${lead ? `${ic("star")}<span class="rd-lw">หัวหน้า</span>` : ""}<b class="num">${hide ? "เลขที่ " : ""}${no}</b>${hide ? "" : `<span class="nmx" title="${nm}">${rdName(no)[0]}</span>`}</li>`; }).join("")}</ol></li>`;
+}
+function rdMainGroup(s, b, nn) {
+  const G = RD.groups, ph = S.device === "phone", tot = G ? G.reduce((a, g) => a + g.length, 0) : nn.N, k = G ? G.length : rdGK(nn.N);
+  const head = b !== "none" && !G ? `<div class="rd-body">${rdStageBody(s, b, RD.hide, false)}</div>`
+    : `<div class="rd-gsum">${ic("users-four")}<div><b class="display">${G ? `แบ่งได้ ${k} กลุ่ม · กลุ่มละประมาณ ${Math.round(tot / k)} คน · ${tot} คน` : `พร้อมจับกลุ่ม · ${tot} คน → ${k} กลุ่ม`}</b><small>${RD.presentOnly ? "เฉพาะคนที่มา" : "ทั้งห้อง"} · ${RD.gBy === "count" ? `แบ่ง ${RD.gN} กลุ่ม` : `กลุ่มละ ${RD.gN} คน`}${RD.leader ? " · สุ่มหัวหน้ากลุ่ม ★" : ""}</small></div></div>`;
+  return `<section class="rd-stage rd-gstage on-hero" id="rdStage" aria-labelledby="rdStageH"><h2 class="sr" id="rdStageH">จับกลุ่ม</h2>${head}</section>
+  <div class="rd-ctl"><div class="rd-dock"><button class="btn rd-go" id="rdGo" data-rd="go" ${b !== "none" ? 'disabled aria-describedby="rdWhy"' : ""}>${ic("users-three")}<span>${G ? "จับกลุ่มอีกครั้ง" : "จับกลุ่ม"}</span>${ph ? "" : '<kbd aria-hidden="true">Space</kbd>'}</button></div>
+    <div class="rd-acts"><button class="btn" data-rd="copy" ${!G || RD.hide ? "disabled" : ""} ${RD.hide ? 'title="ปิดไว้ขณะซ่อนชื่อ"' : ""}>${ic(RD.copied ? "check" : "copy")}<span>${RD.copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}<small>${RD.hide ? "ปิดไว้ขณะซ่อนชื่อ" : "ไว้วางใน LINE / เอกสาร"}</small></span></button></div></div>
+  ${b !== "none" ? `<div class="rd-foot"><p class="rd-why" id="rdWhy">${ic("info")}${RD_WHY[b]}</p></div>` : ""}
+  ${G ? `<ul class="rd-gwrap ${RD.fresh === "pop" ? "rd-pop" : ""}" aria-label="ผลจับกลุ่ม ${k} กลุ่ม">${G.map((g, i) => rdGCard(g, i, RD.hide)).join("")}</ul><p class="sec small rd-gnote">${ic("info")}ผลจับกลุ่มไม่ถูกบันทึก — คัดลอกไว้ถ้าต้องใช้</p>` : ""}`;
+}
+function rdSide(s, b, nn) {
+  const ph = S.device === "phone", hide = RD.hide, blocked = !["none", "range"].includes(b);
+  const box = (id, icon, title, count, body, open, extra = "") => ph
+    ? `<details class="card sp rd-card" id="${id}" ${open ? "open" : ""}><summary><span class="h-ic">${ic(icon)}</span><h2>${title}${count != null ? ` (${count})` : ""}</h2><span class="grow"></span>${ic("caret-down", "cv")}</summary>${body}</details>`
+    : `<section class="card sp rd-card" id="${id}" aria-labelledby="${id}-h"><div class="card-head"><span class="h-ic">${ic(icon)}</span><h2 id="${id}-h">${title}</h2>${extra}<span class="grow"></span>${count != null ? `<span class="big num">${count}</span><span class="sec">คน</span>` : ""}</div>${body}</section>`;
+  const sw = (k, on, label, sub) => `<button class="rd-sw" role="switch" aria-checked="${on}" data-rd="${k}"><span class="tr" aria-hidden="true"><i></i></span><span class="l">${label}${sub ? `<small>${sub}</small>` : ""}</span><span class="st" aria-hidden="true">${on ? "เปิด" : "ปิด"}</span></button>`;
+  const step = (id, lab, v, min, max, key, dis) => `<div class="rd-row2"><span class="rd-lab" id="${id}">${lab}</span><div class="rd-step" role="group" aria-labelledby="${id}"><button class="icon-btn" data-rd="${key}:-1" aria-label="ลด${lab}" ${dis || v <= min ? "disabled" : ""}>${ic("minus")}</button><output class="num" aria-live="polite">${v}</output><button class="icon-btn" data-rd="${key}:1" aria-label="เพิ่ม${lab}" ${dis || v >= max ? "disabled" : ""}>${ic("plus")}</button></div></div>`;
+  if (RD.mode === "group") {
+    const body = `<p class="rd-lab">แบ่งแบบ</p><div class="rd-seg" role="radiogroup" aria-label="แบ่งแบบ">${[["count", "กี่กลุ่ม"], ["size", "กลุ่มละกี่คน"]].map(([k, l]) => `<button role="radio" aria-checked="${RD.gBy === k}" data-rd="gby:${k}">${l}</button>`).join("")}</div>
+      ${step("rdGL", RD.gBy === "count" ? "จำนวนกลุ่ม" : "คนต่อกลุ่ม", RD.gN, 2, 8, "gn")}${sw("leader", RD.leader, "สุ่มหัวหน้ากลุ่ม", "คนแรกของแต่ละกลุ่ม · ★ หัวหน้า")}
+      <p class="sec small" style="margin-top:var(--s2)">จับกลุ่มจาก${RD.presentOnly ? `คนที่มา ${blocked ? "–" : nn.N} คน` : `ทั้งห้อง ${s.n} คน`} · เปลี่ยนฐานที่ hero</p>`;
+    return RD.cards.gopts ? box("rdOpts", "sliders-horizontal", "ตัวเลือกจับกลุ่ม", null, body, true) : `<p class="sec small">${ic("eye-slash")}ซ่อนการ์ดตัวเลือกจับกลุ่มไว้ · <button class="rd-sum" data-act="sheet:rd-cards">ปรับการ์ด</button></p>`;
+  }
+  const opts = sw("norep", RD.noRepeat, "ไม่ซ้ำจนครบ", "ครบทุกคนแล้วค่อยเริ่มรอบใหม่") + step("rdKL", "จำนวนต่อครั้ง", RD.pair ? 2 : RD.k, 1, 6, "k", RD.pair)
+    + sw("sound", RD.sound, "เสียงตอนได้ชื่อ", "เสียง “ติ๊ง” สั้น ๆ ตอนขึ้นผล · ปิดเริ่มต้น · จำต่อเครื่อง")
+    + (RD.cards.pair ? sw("pair", RD.pair, "จับคู่", "สุ่มครั้งละ 2 คน “A คู่กับ B”") : "") + (RD.cards.range ? sw("range", RD.rangeOn, "ช่วงเลขที่", "สุ่มเฉพาะเลขที่ที่กำหนด") : "")
+    + (RD.rangeOn && RD.cards.range ?`<div class="rd-range"><label>จาก <input id="rdFrom" name="rd-from" type="number" inputmode="numeric" min="1" max="${s.n}" value="${RD.rFrom}"></label><span aria-hidden="true">–</span><label>ถึง <input id="rdTo" name="rd-to" type="number" inputmode="numeric" min="1" max="${s.n}" value="${RD.rTo}"></label></div>` : "");
+  const timer = `<div class="rd-seg" role="radiogroup" aria-label="เวลาตอบ">${[10, 30, 60].map((x) => `<button role="radio" aria-checked="${RD.tSec === x}" data-rd="tsec:${x}">${x} วิ</button>`).join("")}</div>${sw("tauto", RD.tAuto, "เริ่มเองหลังสุ่ม")}
+    <div class="rd-tbtns"><button class="btn" data-rd="tgo">${ic(RD.tRun ? "pause" : "play")}${RD.tRun ? "หยุด" : "เริ่ม"}</button><button class="btn" data-rd="treset">${ic("arrow-counter-clockwise")}ตั้งใหม่</button></div><p class="sec small">หมดเวลา = ข้อความ + ไอคอน + เสียงเดิมของแอป (ตัวอย่างนี้ไม่มีเสียง)</p>`;
+  const c = rdCalled(), calledIn = c.filter((x) => nn.pool.includes(x)), remain = nn.pool.filter((x) => !c.includes(x)).sort((a, b2) => a - b2), last = RD.cur ? RD.cur.nos : [];
+  const chip = (no, cls) => { const nm = rdName(no).join(" "), l = cls === "done" && last.includes(no);
+    return `<li class="rd-chip ${cls} ${l ? "last" : ""}" ${hide ? "" : `title="เลขที่ ${no} ${nm}"`}>${l ? ic("sparkle") : ""}<b>${no}</b>${hide ? "" : `<span>${rdName(no)[0]}</span>`}${l ? '<span class="sr">(ล่าสุด)</span>' : ""}</li>`; };
+  const away = RD.presentOnly && s.att === "ok" && s.marked ? s.away + s.unmarked : 0;
+  const leftB = blocked ? `<p class="sec">${b === "loading" ? "รอโหลดรายชื่อ…" : "ยังไม่มีรายชื่อให้สุ่ม"}</p>`
+    : (remain.length ? `<ul class="rd-chips" tabindex="0" aria-label="ยังไม่ถูกสุ่ม ${remain.length} คน (เลื่อนดูได้)">${remain.map((no) => chip(no, "left")).join("")}</ul>` : `<p class="all-done sm">${ic("check-circle")}สุ่มครบทุกคนแล้ว</p>`)
+      + (away ? `<p class="sec small rd-away">${ic("user-minus")}ไม่อยู่ในรอบนี้ ${away} คน (ไม่ได้มาหรือยังไม่เช็คชื่อ)</p>` : "");
+  const doneB = (blocked || !calledIn.length ? `<p class="sec">ยังไม่มีใครถูกเรียก</p>` : `<ul class="rd-chips" tabindex="0" aria-label="สุ่มแล้ว ${calledIn.length} คน ตามลำดับที่ถูกเรียก (เลื่อนดูได้)">${calledIn.map((no) => chip(no, "done")).join("")}</ul>`)
+    + `<button class="btn" data-rd="reset" ${calledIn.length && !RD.rolling ? "" : "disabled"}>${ic("arrow-clockwise")}เริ่มรอบใหม่</button>`;
+  const C = RD.cards, hidden = RD_CARDS.filter(([x]) => x !== "gopts" && !C[x]).length;
+  return (C.opts ? box("rdOpts", "sliders-horizontal", "ตัวเลือก", null, opts, false) : "") + (C.timer ? box("rdTimerC", "timer", "จับเวลาตอบ", null, timer, false) : "")
+    + (C.left ? box("rdLeft", "circle-dashed", "ยังไม่ถูกสุ่ม", blocked ? "–" : RD.noRepeat ? nn.m : nn.N, leftB, true, tag("old")) : "") + (C.hist ? box("rdDone", "check-circle", "สุ่มแล้ว", blocked ? "–" : calledIn.length, doneB, true) : "")
+    + (hidden ? `<p class="sec small">${ic("eye-slash")}ซ่อนไว้ ${hidden} การ์ด · <button class="rd-sum" data-act="sheet:rd-cards">ปรับการ์ด</button></p>` : "");
+}
+function pageRandom() {
+  if (RD.noclass) return rdTop() + emptyCard({ icon: "chalkboard", title: "ยังไม่มีห้องเรียน", sub: "เพิ่มห้องในตั้งค่าก่อนสุ่มชื่อ", btn: "ตั้งค่าห้องเรียน", btnIcon: "gear-six" });
+  const s = rdStat(), b = rdBlocker(s), nn = rdNums(s);
+  return `${rdTop()}${rdHideBanner()}${rdHero(s, b, nn)}${rdNav()}${rdReasons(s, b)}
+  <div class="rd-grid"><div class="rd-main">${RD.mode === "pick" ? rdMainPick(s, b, nn) : rdMainGroup(s, b, nn)}</div><aside class="rd-side" aria-label="แผงข้าง">${rdSide(s, b, nn)}</aside></div>`;
+}
+function rdProjector() {
+  const s = rdStat(), b = rdBlocker(s), nn = rdNums(s), hide = AT.pjHide, busy = RD.rolling || !!RD.skipping, grp = RD.mode === "group";
+  const body = grp ? (RD.groups ? `<ul class="rd-gwrap">${RD.groups.map((g, i) => rdGCard(g, i, hide)).join("")}</ul>` : `<div class="rd-msg">${ic("users-four")}<b>${b === "none" ? "พร้อมจับกลุ่ม" : RD_WHY[b]}</b></div>`) : rdStageBody(s, b, hide, true);
+  const ok = ["none", "range"].includes(b);
+  return `<div class="proj rd-proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ สุ่มชื่อ">
+  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${grp ? "จับกลุ่ม" : "สุ่มชื่อ"} ${rdRoom()}</b><span class="grow"></span><button class="btn" data-rd="pjhide" aria-pressed="${hide}">${ic(hide ? "eye-slash" : "eye")}${hide ? "ซ่อนชื่อบนจออยู่" : "ซ่อนชื่อบนจอ"}</button><button class="btn" id="rdProjOff" data-rd="projoff">${ic("x")}ปิดฉายจอ (กดค้าง 1 วินาที)</button></div>
+  <section class="rd-stage rd-pjstage" aria-busy="${busy}" aria-label="เวทีสุ่ม"><div class="rd-body">${body}</div>${!grp && b === "none" ? rdTimer(true) : ""}</section>
+  <div class="rd-pjfoot"><p class="proj-count">${RD.presentOnly ? `มาเรียน <span class="num">${ok ? s.came.length : "–"}</span>` : `ทั้งห้อง <span class="num">${s.n}</span>`}${grp ? "" : ` · ${RD.noRepeat ? `เหลือ <span class="num">${ok ? nn.m : "–"}</span>` : "สุ่มซ้ำได้"}`}</p>
+  <div class="rd-pjbtns"><button class="btn rd-pjgo" id="rdPjGo" data-rd="go" ${b !== "none" ? "disabled" : ""} ${busy ? 'aria-disabled="true"' : ""}>${ic(grp ? "users-three" : "dice-five")}${grp ? (RD.groups ? "จับกลุ่มอีกครั้ง" : "จับกลุ่ม") : busy ? "กำลังสุ่ม…" : "สุ่มคนต่อไป"}</button>${grp ? "" : `<button class="btn" data-rd="skip" ${!RD.cur || busy ? "disabled" : ""}>${ic("skip-forward")}ข้าม</button>`}</div></div>
+  <p class="proj-note">${ic("eye-slash")}จอนี้ทำตามสวิตช์ “ซ่อนชื่อบนจอ” ของโหมดฉายจอ (ค่าเดียวกับหน้าเช็คชื่อ) ไม่ใช่ปุ่มซ่อนชื่อของหน้า · ไม่มีข้อมูลรายคน</p></div>`;
+}
+function rdToAtt() { // reason bar → เช็คชื่อ (same room, today)
+  atStopUndo(); const cid = RD.cls, m = {}, src = rdMarks(cid);
+  for (const no in src) m[no] = { st: src[no], t: src[no] === "late" ? "08:41" : "08:12" };
+  Object.assign(AT, { cls: cid, date: TODAY, many: RD.many, nostu: RD.nostu, noclass: false, loading: false, err: false, online: RD.online, hit: null, gridFocus: null, project: false });
+  AT.marks[atKey(cid, TODAY)] = m; S.page = "attendance"; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0; toast(`ไปเช็คชื่อ ${rdRoom(cid)} · วันนี้`);
+}
+function rdFromAtt() { // เช็คชื่อ "สุ่มชื่อเฉพาะคนที่มา" → this page with the same room (?class=) and today's marks
+  const cid = AT.cls, src = atMarks(cid, TODAY), m = {}; for (const no in src) m[no] = src[no].st;
+  rdStopAll(); Object.assign(RD, { cls: cid, marks: { [cid]: m }, many: AT.many, nostu: AT.nostu, noclass: false, loading: false, err: false, online: AT.online, presentOnly: true, mode: "pick", cur: null, groups: null, project: false, rangeOn: false });
+  S.page = "random"; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0; toast(`เปิดสุ่มชื่อ ${rdRoom(cid)} · ห้องเดียวกับเช็คชื่อ`); rdFocusGo();
+}
+function rdAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), arg = i < 0 ? "" : v.slice(i + 1), sel = `[data-rd="${v}"]`;
+  const btn = e && e.target && e.target.closest ? e.target.closest("button") : null, idx = btn ? [...document.querySelectorAll(sel)].indexOf(btn) : 0;
+  let f = sel;
+  const clear = () => { RD.cur = null; RD.groups = null; RD.copied = false; rdTStop(true); };
+  switch (k) {
+    case "go": rdGo(); return;
+    case "skip": { if (!RD.cur || RD.rolling || RD.skipping) return; const nos = RD.cur.nos; RD.called[RD.cls] = rdCalled().filter((x) => !nos.includes(x)); RD.cur = null; rdTStop(true);
+      RD.skipping = `ข้าม${rdHideNow() ? "เลขที่ " + nos.join(", ") : " " + nos.map((n) => rdName(n)[0]).join(", ")} แล้ว`; RD.live = RD.skipping + " · กำลังสุ่มคนต่อไป"; render(true); rdFocusGo();
+      clearTimeout(rdRollT); rdRollT = setTimeout(() => { RD.skipping = null; rdGo(nos); }, 700); return; }
+    case "undo": { if (!RD.cur) return; const nos = RD.cur.nos; RD.called[RD.cls] = rdCalled().filter((x) => !nos.includes(x)); RD.cur = null; rdTStop(true);
+      RD.live = `เลิกทำแล้ว · ${nos.map((n) => rdWho(n)).join(", ")} กลับเข้ากอง`; RD.tmsg = RD.live; f = "#rdGo"; break; }
+    case "reset": { const N = rdNums().N; RD.undo = { prev: [...rdCalled()], cur: RD.cur, N, left: 5 }; RD.called[RD.cls] = []; RD.cur = null; rdTStop(true);
+      RD.live = `เริ่มรอบใหม่แล้ว · สุ่มแล้ว 0 จาก ${N}`; rdUndoStart(); f = "#rdUndoBtn"; break; }
+    case "unreset": if (!RD.undo) return; RD.called[RD.cls] = RD.undo.prev; RD.cur = RD.undo.cur; rdUndoStop(); RD.live = "เลิกทำแล้ว · กลับไปรอบเดิม"; RD.tmsg = RD.live; f = '[data-rd="reset"]'; break;
+    case "room": RD.cls = arg; clear(); rdUndoStop(); RD.tmsg = `เปลี่ยนเป็น ${rdRoom(arg)} · ล้างผลบนเวทีแล้ว`; break;
+    case "base": RD.presentOnly = arg === "came"; RD.groups = null; RD.tmsg = RD.presentOnly ? "สุ่มเฉพาะคนที่มา" : `สุ่มจากทั้งห้อง (${rdN()} คน)`; f = `.rd-hero [data-rd="base:${arg}"]`; break;
+    case "mode": RD.mode = arg; clear(); f = `[data-rd="mode:${arg}"]`; break;
+    case "hide": RD.hide = !RD.hide; RD.tmsg = RD.hide ? "ซ่อนชื่อนักเรียนแล้ว (เฉพาะหน้านี้)" : "แสดงชื่อนักเรียนแล้ว"; f = '.topbar [data-rd="hide"]'; break;
+    case "proj": RD.project = !RD.project; f = RD.project ? "#rdPjGo" : sel; break;
+    case "projoff": if (e && e.detail === 0) { RD.project = false; f = '[data-rd="proj"]'; break; } toast("กดค้าง 1 วินาทีเพื่อปิดฉายจอ"); return;
+    case "pjhide": AT.pjHide = !AT.pjHide; break;
+    case "norep": RD.noRepeat = !RD.noRepeat; break;
+    case "k": RD.k = Math.max(1, Math.min(6, RD.k + +arg)); RD.cur = null; break;
+    case "pair": RD.pair = !RD.pair; RD.cur = null; break;
+    case "range": RD.rangeOn = !RD.rangeOn; RD.cur = null; break;
+    case "rangeoff": RD.rangeOn = false; f = "#rdGo"; break;
+    case "tsec": RD.tSec = +arg; rdTStop(true); break;
+    case "tauto": RD.tAuto = !RD.tAuto; break;
+    case "tgo": if (RD.tRun) rdTStop(false); else rdTStart(false); break;
+    case "treset": rdTStop(true); f = '[data-rd="tgo"]'; break;
+    case "gby": RD.gBy = arg; RD.groups = null; break;
+    case "gn": RD.gN = Math.max(2, Math.min(8, RD.gN + +arg)); RD.groups = null; break;
+    case "leader": RD.leader = !RD.leader; break;
+    case "sound": RD.sound = !RD.sound; RD.tmsg = RD.sound ? "เปิดเสียงตอนได้ชื่อแล้ว (ตัวอย่างนี้ไม่มีเสียงจริง)" : "ปิดเสียงตอนได้ชื่อแล้ว"; break;
+    case "card": RD.cards[arg] = !RD.cards[arg]; break;
+    case "copy": if (RD.hide || !RD.groups) return; RD.copied = true; RD.live = "คัดลอกแล้ว"; setTimeout(() => { RD.copied = false; if (S.page === "random") render(true); }, 2000); break;
+    case "toatt": rdToAtt(); return;
+    case "retry": case "online": RD.err = false; RD.loading = false; RD.online = true; RD.tmsg = "โหลดรายชื่อคนที่มาเรียนแล้ว"; f = "#rdGo"; break;
+    case "import": toast("ไปหน้านักเรียน · นำเข้านักเรียน"); return;
+    case "opts": { const el = document.getElementById("rdOpts"); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); const x = el.querySelector("button:not([disabled]),input"); if (x) x.focus({ preventScroll: true }); } return; }
+  }
+  render(true); if (RD.tmsg) { toast(RD.tmsg); RD.tmsg = ""; }
+  const els = [...document.querySelectorAll(f)].filter((x) => x.offsetParent && !x.disabled), el = (f === sel && els[idx]) || els[0];
+  if (el) el.focus({ preventScroll: true }); else rdFocusGo();
+}
+
 /* ======================= sheets ======================= */
 function sheet() {
   if (!S.sheet) return "";
   if (S.sheet.startsWith("sc-")) return scanSheet();
   if (S.sheet.startsWith("at-")) return attSheet();
+  if (S.sheet.startsWith("rd-")) return rdSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
@@ -2705,7 +3290,9 @@ function sheet() {
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["gradebook", "สมุดคะแนน"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "สมุดคะแนน"]],
+  rstate: [["normal", "ปกติ"], ["unchecked", "ยังไม่ได้เช็คชื่อวันนี้"], ["nobody", "มาเรียน 0 คน"], ["complete", "สุ่มครบแล้ว"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"],
+    ["offline", "ออฟไลน์"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"]],
   layout: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]],
   theme: THEMES.map(([k, l]) => [k, l]),
   mode: [["light", "สว่าง"], ["dark", "มืด"]],
@@ -2732,14 +3319,15 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan", onAtt = S.page === "attendance";
-  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onAtt ? `<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
+  document.getElementById("info").innerHTML = onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
+    : onAtt ?`<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
     : onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
     : `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
 }
@@ -2753,11 +3341,13 @@ function render(keepScroll) {
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
   dev.dataset.page = S.page;
-  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : pageGradebook();
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
   chrome(); fit(); railShadow(rt0); animRings();
-  if (S.page === "attendance") { atAnim(); if (AT.live) { const lv = document.getElementById("atLive"), msg = AT.live; AT.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); } }
+  if (S.page === "attendance") atAnim();
+  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : null;
+  if (LV && LV.live) { const lv = document.getElementById("atLive"), msg = LV.live; LV.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); }
 }
 function fit() {
   const [w, h] = DEV[S.device], box = document.getElementById("box"), dev = document.getElementById("device");
@@ -2783,6 +3373,7 @@ document.addEventListener("click", (e) => {
   if (d.set) { const [g, v] = d.set.split(":");
     if (g === "sstate") { scenario(v); render(); return; }
     if (g === "astate") { atScenario(v); render(); return; }
+    if (g === "rstate") { rdScenario(v); render(); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
     if (g === "q1") { SS.q1 = v; SS.filterMiss = false; render(true); return; }
@@ -2803,12 +3394,15 @@ document.addEventListener("click", (e) => {
   if (d.cls) { S.cls = d.cls; render(true); toast(`เลือกห้อง ${CL[d.cls].name}`); const det = document.querySelector(".detail"); if (det && S.device === "phone") det.scrollIntoView({ block: "start" }); return; }
   if (d.sc) { scanAct(d.sc, e); return; }
   if (d.at) { attAct(d.at, e); return; }
+  if (d.rd) { rdAct(d.rd, e); return; }
+  if (d.rdfrom) { rdFromAtt(); return; }
   if (d.toast) toast(d.toast);
 });
-document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"); if (!e.target.closest("#projOff") && !at) return; clearTimeout(holdTimer);
-  holdTimer = setTimeout(() => { if (at) AT.project = false; else SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
+document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"), rd = e.target.closest("#rdProjOff"); if (!e.target.closest("#projOff") && !at && !rd) return; clearTimeout(holdTimer);
+  holdTimer = setTimeout(() => { if (rd) RD.project = false; else if (at) AT.project = false; else SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
 ["pointerup", "pointerleave", "pointercancel"].forEach((t) => document.addEventListener(t, () => clearTimeout(holdTimer), true));
 document.addEventListener("change", (e) => { const t = e.target; if (!t.name) return;
+  if (t.name === "rd-from" || t.name === "rd-to") { RD[t.name === "rd-from" ? "rFrom" : "rTo"] = Math.max(1, Math.min(rdN() || 1, Math.round(+t.value) || 1)); RD.cur = null; render(true); focusEl("#" + t.id, true); return; }
   if (t.name === "ap-layout" || t.name === "sh-layout") applyAppearance({ layout: t.value }, t.name);
   else if (t.name === "ap-theme") applyAppearance({ theme: t.value }, t.name);
   else if (t.name === "ap-mode") applyAppearance({ modePref: t.value }, t.name); });
@@ -2817,7 +3411,12 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && S.sheet) { closeSheet(); return; }
   if (e.key === "Escape" && S.page === "scan" && SS.project) { SS.project = false; render(true); return; }
   if (e.key === "Escape" && S.page === "attendance" && AT.project) { AT.project = false; render(true); return; }
+  if (e.key === "Escape" && S.page === "random" && RD.project) { RD.project = false; render(true); return; }
   if (S.page === "attendance" && atKey_(e)) return;
+  if (S.page === "random" && !S.sheet) {
+    if (e.key === " " && !(t.closest && t.closest("button,input,select,textarea,summary,a,[tabindex]"))) { e.preventDefault(); if (!e.repeat) rdGo(); return; }
+    if (t.dataset && t.dataset.rd && t.dataset.rd.startsWith("mode:") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) { e.preventDefault(); rdAct("mode:" + (RD.mode === "pick" ? "group" : "pick")); return; }
+  }
   if (e.key === "Enter" && (t.id === "scanIn" || t.id === "projIn")) { e.preventDefault(); const v = t.value.trim(); if (!v) return; doScan(v, /^\d+$/.test(v) ? "key" : "hid"); render(true); focusEl("#" + t.id, true); return; }
   if (e.key === "Enter" && t.id === "padIn") { e.preventDefault(); padSave(); render(true); focusEl(SS.pad ? "#padIn" : "#scanIn", !!SS.pad); return; }
   if (t.classList && t.classList.contains("cell") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
