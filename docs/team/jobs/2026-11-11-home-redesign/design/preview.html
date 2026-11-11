@@ -1584,6 +1584,259 @@ button.hp:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
   .device .rd-pop *,.device .rd-glow{animation:none !important}
   .device .rd-glow{display:none}
 }
+
+/* =====================================================================
+   T-17 หน้าคะแนน (ux-gradebook.md) — same tokens · cell states reuse --bg-*/--text-* pairs (same as .st chips)
+   work-type tint --tc (from --cls-* / --fill-danger / --accent) mixed ≤ 24% into --surface-2 · .tsh shape tells the type without colour
+   space budget: desk name 256 · work 121.6 · cum 83.2 / row 36 · iPad นอน 160·96·64 / 44 · iPad ตั้ง 136·80·64 / 44 (= 16rem·7.6rem·5.2rem …)
+   ===================================================================== */
+.t-sheet{--tc:var(--cls-1)}.t-drill{--tc:var(--cls-2)}.t-proj{--tc:var(--cls-3)}.t-exam{--tc:var(--fill-danger)}.t-home{--tc:var(--accent)}
+.tsh{display:inline-block;width:11px;height:11px;flex:none;background:var(--tc);border-radius:2px}
+.t-drill .tsh,.tsh.t-drill{border-radius:50%}
+.t-proj .tsh{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);width:13px;height:13px}
+.t-exam .tsh{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%);width:13px;height:12px}
+.t-home .tsh{border-radius:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);width:13px}
+.main[data-gb]{display:flex;flex-direction:column;overflow:hidden;padding:12px 16px;position:relative}
+.main[data-gb]>.inner{max-width:none;width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
+.gbp{--cw-n:256px;--cw-a:121.6px;--cw-c:83.2px;--rh:36px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.gbp.d-ipadL{--cw-n:160px;--cw-a:96px;--cw-c:64px;--rh:44px}
+.gbp.d-ipadP{--cw-n:136px;--cw-a:80px;--cw-c:64px;--rh:44px;gap:6px}
+.gbp.d-phone{gap:12px;flex:none}
+.gbp .banner{margin-bottom:0;padding:6px 12px;flex:none}
+.gb-qbad{background:var(--bg-danger);border-color:color-mix(in srgb,var(--text-danger) 50%,transparent)}
+.gb-qbad>.ic{color:var(--text-danger)}
+/* hero — one band ≤ 96px (desk / iPad นอน) */
+.gb-hero{flex:none;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:8px 10px 8px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"t n a" "p p p";gap:6px 16px;align-items:center}
+[data-theme="playful"] .gb-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.gh-t{grid-area:t;min-width:0;display:flex;align-items:baseline;gap:2px 12px;flex-wrap:wrap}
+.gh-t h1{font-size:var(--t-xl);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gh-t .k{font-size:var(--t-xs);font-weight:600;color:var(--hero-muted);display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+.gh-n{grid-area:n;display:flex;align-items:center;gap:8px}
+.gh-big{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 12px 0 10px;border-radius:var(--radius);border:1.5px solid color-mix(in srgb,var(--hero-fg) 40%,transparent);background:var(--hero-chip);color:var(--hero-fg);line-height:1}
+.gh-big .num{font-size:calc(var(--fs)*2.1);font-weight:700}
+.gh-big small{font-size:var(--t-xs);font-weight:700;line-height:1.25;text-align:left}
+.gh-big .ic{font-size:20px}
+.gh-big[aria-pressed="true"]{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.gh-big:disabled{cursor:default}
+.gh-sm{display:inline-flex;flex-direction:column;line-height:1.2;padding:0 8px;border-left:1.5px solid color-mix(in srgb,var(--hero-fg) 30%,transparent)}
+.gh-sm b{font-size:var(--t-xl);font-weight:700}
+.gh-sm small{font-size:var(--t-xs);font-weight:600;color:var(--hero-muted);display:inline-flex;gap:3px;align-items:center;white-space:nowrap}
+.gh-a{grid-area:a;display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.gh-a .pg-switch{padding:0;border:0}
+.gh-pill .sht{display:none}
+.gh-p{grid-area:p;display:flex;align-items:center;gap:4px 14px;min-width:0;background:var(--surface-2);color:var(--text-primary);border-radius:var(--radius-sm);padding:3px 10px;min-height:28px}
+.segbar{display:flex;gap:2px;height:10px;flex:1 1 100px;min-width:90px;max-width:360px;border-radius:5px;overflow:hidden;background:var(--surface-1)}
+.segbar i{display:block;min-width:3px;background:var(--gf)}
+.gl-scored{--gf:var(--fill-success)}.gl-late{--gf:var(--fill-warning)}.gl-awaiting{--gf:var(--accent)}.gl-missing{--gf:var(--fill-danger)}.gl-excused{--gf:var(--text-muted)}
+.gl-pending{--gf:repeating-linear-gradient(135deg,var(--text-muted) 0 2px,transparent 2px 5px)}
+.gh-leg{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0 10px;font-size:var(--t-xs);font-weight:600;line-height:1.4}
+.gh-leg li{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.gh-leg .sw{width:12px;height:12px;border-radius:3px;background:var(--gf);box-shadow:inset 0 0 0 1px var(--text-secondary);flex:none}
+.gh-leg .tot{color:var(--text-secondary)}
+.gh-save{font-size:var(--t-xs);font-weight:700;display:inline-flex;gap:4px;align-items:center;white-space:nowrap;color:var(--text-success)}
+.gh-save.in-p{margin-left:auto}.gh-save.in-t{display:none}
+.gh-save.warn{color:var(--text-warning)}.gh-save.bad{color:var(--text-danger)}.gh-save.mute{color:var(--text-secondary)}
+/* tools row ≤ 44px · scrolls inside itself, never the page */
+.gb-tools{flex:none;display:flex;flex-wrap:nowrap;margin:0;align-items:center;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;min-height:var(--tap)}
+.gb-tools>*{flex:none}
+.gt-rooms{display:flex;gap:6px}
+.gb-tools .chip-btn small{color:var(--text-secondary);font-size:var(--t-xs)}
+.gb-tools .chip-btn[aria-pressed="true"]{border-color:var(--text-accent);color:var(--text-accent);box-shadow:inset 0 0 0 1px var(--text-accent);font-weight:700}
+.gb-tools .chip-btn[aria-pressed="true"] small{color:var(--text-accent)}
+.gt-seg{display:inline-flex;border-radius:var(--radius-btn);background:var(--surface-1)}
+.gt-seg button{min-height:var(--tap);padding:0 12px;border:0;border-radius:var(--radius-btn);background:transparent;color:var(--text-secondary);font-size:var(--t-sm);font-weight:600;white-space:nowrap}
+.gt-seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent)}
+.gt-seg button:disabled{cursor:default}
+.gt-scope{font-size:var(--t-xs);color:var(--text-secondary);display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+.gt-scope.warn{color:var(--text-warning);font-weight:700}
+.gb-tools .grow{flex:1 0 4px}
+/* selected-work bar — one line ≤ 48px (desk/iPad นอน) · two lines ≤ 88px (iPad ตั้ง) */
+.gb-sel{flex:none;display:flex;align-items:center;gap:6px 12px;min-height:48px;padding:0 2px 0 12px;border-radius:var(--radius);background:color-mix(in srgb,var(--tc) 12%,var(--surface-2));border:var(--card-bw) solid color-mix(in srgb,var(--tc) 50%,var(--card-border));border-left:6px solid var(--tc)}
+.gs-i{display:flex;align-items:center;gap:8px;min-width:0;flex:1;font-size:var(--t-sm);white-space:nowrap;overflow:hidden}
+.gs-ty{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--text-secondary)}
+.gs-tt{font-size:var(--t-md);overflow:hidden;text-overflow:ellipsis;min-width:4em}
+.gs-f{font-weight:600}
+.gs-st{color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.gs-a{display:flex;gap:6px;flex:none;align-items:center}
+.gs-a .btn{padding:0 12px}
+.d-ipadP .gb-sel{flex-wrap:wrap;padding:0 2px 0 12px;row-gap:2px}
+.d-ipadP .gs-i{flex-basis:100%;min-height:32px}
+.d-ipadP .gs-a{flex:1;justify-content:flex-start}
+/* table */
+.gb-body{flex:1;min-height:0;display:flex;gap:8px}
+.gb-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;gap:6px}
+.gb-scroll{flex:1;min-height:0;overflow:auto;border-radius:var(--radius);border:var(--card-bw) solid var(--card-border);background:var(--surface-2);overscroll-behavior:contain}
+.gbt{border-collapse:separate;border-spacing:0;table-layout:fixed;width:max-content}
+.gbt th,.gbt td{box-sizing:border-box;height:var(--rh);padding:0 6px;border:0;border-bottom:1px solid var(--border);border-right:1px solid var(--border);text-align:center;white-space:nowrap;line-height:1.25;font-size:var(--t-sm);scroll-margin:0}
+.gbt thead th{position:sticky;top:0;z-index:2;height:auto;padding:0;vertical-align:bottom;background:var(--surface-2);border-bottom:2px solid var(--border-strong)}
+.gbt .c-name{position:sticky;left:0;z-index:1;width:var(--cw-n);max-width:var(--cw-n);background:var(--surface-2);text-align:left;font-weight:600;overflow:hidden;text-overflow:ellipsis;border-right:2px solid var(--border-strong);padding:0 8px 0 6px}
+.gbt .c-cum{position:sticky;right:0;z-index:1;width:var(--cw-c);background:var(--surface-2);border-left:2px solid var(--border-strong);border-right:0;line-height:1.2;padding:0 4px}
+.gbt thead .c-name,.gbt thead .c-cum{z-index:3;padding:4px 8px;font-size:var(--t-xs);color:var(--text-secondary);text-align:left;line-height:1.3}
+.gbt thead .c-cum{text-align:center;padding:4px}
+.gbt th.gba{width:var(--cw-a);background:color-mix(in srgb,var(--tc) 12%,var(--surface-2))}
+.gbt th.gba.sel{background:color-mix(in srgb,var(--tc) 24%,var(--surface-2))}
+.gbt tfoot th,.gbt tfoot td,.gbt tfoot .c-name{background:var(--surface-1);height:auto;padding:4px 6px}
+.gbt tfoot td b,.gbt .c-cum b{display:block;font-size:var(--t-sm);font-weight:700}
+.gbt tfoot td small,.gbt .c-cum small{display:block;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.gh-btn{display:flex;flex-direction:column;align-items:stretch;gap:1px;width:100%;padding:4px 6px 5px;border:0;background:transparent;color:var(--text-primary);text-align:left;font-size:var(--t-xs);line-height:1.3;border-radius:0}
+.gh-btn:hover{background:color-mix(in srgb,var(--tc) 10%,transparent)}
+.gx1{display:flex;align-items:center;gap:4px;font-weight:700;font-size:var(--t-sm);min-width:0}
+.gx1 .ic{font-size:13px;color:var(--text-secondary)}
+.gx1 .ht{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.touch .gx1{align-items:flex-start}.touch .gx1 .tsh{margin-top:4px}
+.touch .gx1 .ht{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25;min-height:2.5em}
+.gx2{display:flex;align-items:center;gap:3px;color:var(--text-secondary);font-weight:600;overflow:hidden;white-space:nowrap}
+.gx2 .ic{font-size:13px}
+.gx2.od{color:var(--text-warning);font-weight:700}
+.gx3{display:flex;align-items:center;gap:6px;color:var(--text-secondary);font-weight:600}
+.gpb{flex:1;height:5px;border-radius:3px;background:color-mix(in srgb,var(--text-muted) 30%,transparent);overflow:hidden}
+.gpb i{display:block;height:100%;background:var(--text-accent)}
+.gbt .sel{box-shadow:inset 2px 0 0 var(--text-accent),inset -2px 0 0 var(--text-accent)}
+.gbt th.gba.sel .gh-btn{box-shadow:inset 0 3px 0 var(--text-accent)}
+.c-name .no{display:inline-block;min-width:1.6em;text-align:right;margin-right:8px;color:var(--text-secondary);font-weight:600}
+.gb-rd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:1px}
+.gb-rd.on{background:var(--fill-danger);box-shadow:0 0 0 1.5px var(--surface-2),0 0 0 2.5px var(--text-danger)}
+/* cell: 6 states = icon / word / shape + colour · 3 queue marks differ by shape */
+.gbc{position:relative;font-weight:600;cursor:pointer}
+.gbc .ic{font-size:14px;vertical-align:-2px;margin-right:3px}
+.gbc b{font-weight:700;font-size:var(--t-md)}
+.gw-scored{color:var(--text-primary)}
+.gw-late{background:var(--bg-warning);color:var(--text-warning)}
+.gw-awaiting{background:var(--bg-accent);color:var(--text-accent)}
+.gw-missing{background:var(--bg-danger);color:var(--text-danger)}
+.gw-pending{color:var(--text-muted)}
+.gw-excused{background:var(--surface-1);color:var(--text-secondary)}
+.gdot{font-size:var(--t-lg);font-weight:700}
+td.gbc:hover{box-shadow:inset 0 0 0 2px var(--border-control)}
+.gbt td.gbc:focus{outline:3px solid var(--text-accent);outline-offset:-3px}
+.gbc.m-unsaved{outline:2px dashed var(--text-danger);outline-offset:-4px}
+.gmk{position:absolute;top:1px;right:2px;font-style:normal;line-height:1}
+.gmk .ic{font-size:13px;margin:0}
+.gmk.pend{color:var(--text-warning)}.gmk.fail{color:var(--text-danger)}
+.gbc.ed{background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--text-accent);padding:2px}
+.gc-in{width:100%;height:calc(var(--rh) - 6px);box-sizing:border-box;border:0;border-radius:var(--radius-xs);background:transparent;color:var(--text-primary);font:inherit;font-size:var(--t-md);font-weight:700;text-align:center;padding:0 18px 0 4px}
+.gc-in:focus{outline:0}
+.gc-more{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:18px;height:22px;display:grid;place-items:center;border:0;border-radius:4px;background:var(--bg-accent);color:var(--text-accent);padding:0}
+.gc-more .ic{margin:0;font-size:13px}
+.gb-fnote{flex:none;display:flex;align-items:center;gap:8px;font-size:var(--t-sm);font-weight:600;color:var(--text-secondary)}
+.gb-fnote .btn{min-height:36px}.touch .gb-fnote .btn{min-height:var(--tap)}
+.gb-empty{display:flex;gap:var(--s4);align-items:flex-start}
+.gb-empty h2{font-size:var(--t-xl)}
+.gb-empty .btn{margin-top:var(--s3)}
+.gb-ld{padding:10px 12px}
+.gb-sk .sk-line{display:block;width:70%;margin:0 auto}
+.gb-sk td,.gb-sk th{border-style:dashed}
+/* drawer — overlays the table on the right (360px) · pinned = beside the table (desk only) · bottom sheet on iPad ตั้ง/มือถือ */
+.gb-drawer{position:absolute;top:0;right:0;bottom:0;width:360px;z-index:22;background:var(--surface-0);border-left:var(--card-bw) solid var(--card-border);box-shadow:var(--shadow-pop);overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.gb-drawer.pinned{position:static;width:340px;flex:none;box-shadow:none;border:var(--card-bw) solid var(--card-border);border-radius:var(--radius)}
+.gb-drawer.btm{top:auto;left:0;width:auto;max-height:62%;border-left:0;border-top:var(--card-bw) solid var(--card-border);border-radius:var(--radius-hero) var(--radius-hero) 0 0}
+.gd-head{display:flex;align-items:center;gap:8px}.gd-head h2{flex:1;font-size:var(--t-xl)}
+.gd-card{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);padding:12px;display:flex;flex-direction:column;gap:8px;flex:none}
+.gd-card .card-head{display:flex;align-items:center;gap:8px;margin:0}
+.gd-card h3{font-size:var(--t-md)}
+.gd-card .big{font-size:var(--t-2xl);font-weight:700;line-height:1}
+.gd-tt{font-weight:700;font-size:var(--t-md)}
+.gd-dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;font-size:var(--t-sm)}.gd-dl dt{color:var(--text-secondary);font-weight:600}.gd-dl dd{margin:0}
+.gd-acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gd-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.gd-list button:not(.btn){width:100%;display:flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 10px;border-radius:var(--radius-sm);border:0;background:var(--surface-1);color:var(--text-primary);text-align:left;font-size:var(--t-sm);font-weight:600}
+.gd-list .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gd-list .no{color:var(--text-secondary);min-width:1.4em;text-align:right}
+.gd-row{display:flex;gap:6px}.gd-row>button:first-child{flex:1;min-width:0}
+.gd-fold{display:flex;align-items:center;gap:8px;width:100%;min-height:var(--tap);border:0;background:transparent;color:var(--text-primary);font-weight:700;font-size:var(--t-md);padding:0;text-align:left}
+.gd-fold span{flex:1}
+.gd-leg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:var(--t-xs);font-weight:600}
+.gd-leg li{display:flex;align-items:center;gap:6px}
+.gd-sw{display:inline-flex;align-items:center;justify-content:center;min-width:64px;height:32px;border-radius:var(--radius-xs);border:1px solid var(--border);font-size:var(--t-xs)}
+.gd-sw .ic{font-size:13px}.gd-sw b{font-size:var(--t-sm)}
+.gd-dist{display:flex;align-items:flex-end;gap:6px;height:96px}
+.gd-dist div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:2px;font-size:var(--t-xs);font-weight:600}
+.gd-dist i{display:block;width:100%;min-height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
+/* cell editor + work dialog */
+.gb-popscrim.float{background:transparent;display:block}
+.gb-pop{gap:10px}
+.gb-pop.float{position:absolute;width:368px;height:auto;max-height:calc(100% - 24px);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);padding:14px}
+.gb-pop .sheet-h h2{font-size:var(--t-md);font-weight:700}
+.gp-opt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.gp-r{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border-radius:var(--radius-sm);border:1.5px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:600;font-size:var(--t-sm)}
+.gp-r[aria-checked="true"]{border-color:var(--text-accent);background:var(--bg-accent);color:var(--text-accent);box-shadow:inset 0 0 0 1px var(--text-accent)}
+.gp-sc{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.gp-sc label{font-weight:600}
+.gp-sc .gf-in{width:88px;font-size:var(--t-lg);text-align:center}
+.gp-q{display:flex;gap:6px}.gp-q .btn{padding:0 12px}
+.gp-rv{display:flex;flex-wrap:wrap;gap:6px}
+.gp-res{font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.gp-res.late{color:var(--text-warning)}
+.gp-acts{display:flex;gap:8px}
+.scrim.gb-center{justify-content:center;align-items:center}
+.scrim.gb-center .sheet{height:auto;max-height:94%;width:min(640px,94%);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border)}
+.gb-sheet{gap:12px}
+.gf-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gf-field>label,.gf-l{font-weight:600;font-size:var(--t-sm)}
+.gf-in{min-height:var(--tap);padding:0 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font:inherit;font-size:var(--t-md);width:100%;box-sizing:border-box}
+textarea.gf-in{padding:8px 12px;min-height:64px;resize:vertical}
+.gf-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.gf-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gf-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gf-chip{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 12px;border-radius:var(--radius-btn);border:1.5px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-size:var(--t-sm);font-weight:600}
+.gf-chip[aria-pressed="true"]{border-color:var(--text-accent);background:var(--bg-accent);color:var(--text-accent);box-shadow:inset 0 0 0 1px var(--text-accent)}
+.gf-switch{display:inline-flex;align-items:center;gap:10px;min-height:var(--tap);border:0;background:transparent;color:var(--text-primary);font-weight:600;padding:0;align-self:flex-start}
+.gf-switch .tr{width:44px;height:26px;border-radius:13px;background:var(--border-control);position:relative;flex:none}
+.gf-switch .tr i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--surface-2);transition:left .15s}
+.gf-switch[aria-checked="true"] .tr{background:var(--accent)}.gf-switch[aria-checked="true"] .tr i{left:21px}
+.gf-note{background:var(--bg-accent);color:var(--text-primary);border-radius:var(--radius-sm);padding:8px 12px;font-size:var(--t-sm);display:flex;gap:6px;align-items:flex-start}
+.gf-err{background:var(--bg-danger);color:var(--text-danger);border-radius:var(--radius-sm);padding:6px 10px;font-size:var(--t-sm);font-weight:600;display:flex;gap:6px;align-items:center}
+.gf-err[hidden]{display:none}
+.gd-foot{position:sticky;bottom:calc(-1 * var(--s5));margin:4px calc(-1 * var(--s5)) calc(-1 * var(--s5));padding:10px var(--s5);background:var(--surface-2);border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center;z-index:1}
+.gd-foot .gf-err{flex-basis:100%}
+.gb-err{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:28;background:var(--bg-danger);color:var(--text-danger);border:2px solid var(--text-danger);border-radius:var(--radius);padding:8px 14px;font-weight:700;font-size:var(--t-sm);box-shadow:var(--shadow-pop);max-width:90%;display:flex;gap:6px;align-items:center}
+.gb-err[hidden]{display:none}
+.device[data-page="gradebook"] .toast{bottom:20px}
+/* iPad นอน / ตั้ง — touch sizes */
+.gbp.d-ipadL{--cw-c:72px}
+.touch .gbt .c-cum b{font-size:var(--t-xs);letter-spacing:-.02em}
+.touch .gt-scope{display:none}
+.d-ipadL .gh-pill .lng{display:none}.d-ipadL .gh-pill .sht{display:inline}
+.d-ipadL .gh-big .num,.d-ipadP .gh-big .num{font-size:calc(var(--fs)*1.75)}
+.d-ipadL .gh-t .k,.d-ipadP .gh-t .k{display:none}
+.touch .gh-leg .tot{display:none}
+.gh-a .chip-btn{white-space:nowrap}
+.d-ipadP .hide-btn .lbl{display:none}.d-ipadP .hide-btn{min-width:var(--tap);justify-content:center;padding:0}
+.touch .gh-sm b{font-size:var(--t-lg)}
+.gb-scroll{scrollbar-width:thin}
+.main[data-gb]:has(.d-ipadP){padding:12px 10px}
+.d-ipadP .gh-sm{padding:0 4px}.d-ipadP .gh-n{gap:6px}
+/* iPad ตั้ง — hero 2 rows ≤ 120px */
+.d-ipadP .gb-hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"t a" "n p";padding:5px 8px 5px 14px;gap:5px 12px}
+.d-ipadP .gh-t{align-items:center}
+.d-ipadP .gh-p{flex-direction:column;align-items:stretch;gap:3px;padding:3px 8px}
+.d-ipadP .segbar{height:8px}
+.d-ipadP .segbar{max-width:none;flex:none}
+.d-ipadP .gh-leg{display:grid;grid-template-columns:repeat(3,auto);gap:0 10px;line-height:1.3}
+.d-ipadP .gh-save.in-p{display:none}.d-ipadP .gh-save.in-t{display:inline-flex;color:var(--hero-fg)}
+.d-ipadP .gh-pill .lng,.d-phone .gh-pill .lng{display:none}.d-ipadP .gh-pill .sht,.d-phone .gh-pill .sht{display:inline}
+.d-ipadP .gh-big{padding:0 8px}
+/* มือถือ — one work at a time, list of 56px rows (GradebookMobile) */
+.d-phone .gb-hero{grid-template-columns:1fr;grid-template-areas:"t" "n" "p" "a";padding:12px 14px}
+.d-phone .gh-t{flex-direction:column;gap:0}
+.d-phone .gh-n{flex-wrap:wrap}
+.d-phone .gh-big .num{font-size:var(--t-2xl)}
+.d-phone .gh-a{justify-content:flex-start;flex-wrap:wrap}
+.d-phone .gh-p{flex-wrap:wrap;padding:6px 10px}
+.d-phone .segbar{max-width:none;flex-basis:100%}
+.pm-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.pm-chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 12px;border-radius:999px;border:1.5px solid var(--border-control);background:color-mix(in srgb,var(--tc) 12%,var(--surface-2));color:var(--text-primary);font-size:var(--t-sm);font-weight:600;white-space:nowrap}
+.pm-chip[aria-pressed="true"]{border-color:var(--text-accent);box-shadow:inset 0 0 0 2px var(--text-accent);color:var(--text-accent)}
+.pm-card{display:flex;flex-direction:column;gap:6px;border-left:6px solid var(--tc);padding:14px}
+.pm-card h2{font-size:var(--t-lg)}
+.pm-card .kick{font-size:var(--t-xs);font-weight:700;color:var(--text-secondary);display:flex;gap:6px;align-items:center}
+.pm-stat{font-size:var(--t-sm);color:var(--text-secondary);font-weight:600}
+.pm-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pm-acts .btn:last-child{grid-column:1/-1}
+.pm-list{list-style:none;margin:0;padding:0;background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);overflow:hidden}
+.pm-row{display:flex;align-items:center;gap:10px;min-height:56px;padding:4px 8px 4px 12px;border-bottom:1px solid var(--border)}
+.pm-row:last-child{border-bottom:0}
+.pm-row .no{width:1.6em;text-align:right;color:var(--text-secondary);font-weight:600}
+.pm-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.pm-cell{position:relative;min-width:96px;min-height:var(--tap);border-radius:var(--radius-sm);border:1.5px solid var(--border-control);display:inline-flex;align-items:center;justify-content:center;gap:2px;font-size:var(--t-sm);padding:0 10px;background-clip:padding-box}
+.pm-cell.gw-scored,.pm-cell.gw-pending{background:var(--surface-2)}
 </style>
 </head>
 <body>
@@ -1898,7 +2151,7 @@ const QA = () => [
   { t: "สุ่มชื่อ", s: "เฉพาะคนที่มาเรียน", i: "dice-five", q: 3, page: "random" },
   { t: "สร้างงาน", s: "หลายห้องพร้อมกัน", i: "plus-circle", q: 2 },
 ];
-const qaBtn = (q, dock) => `<button class="qa ${q.main ? "main-qa" : ""}" ${q.page ? `data-page="${q.page}"` : `data-toast="ไปหน้า${q.t}"`}><span class="qi ${q.main || dock ? "" : "qi-" + q.q}">${ic(q.i)}</span><span><b>${q.t}</b><small>${q.s}</small></span></button>`;
+const qaBtn = (q, dock) => `<button class="qa ${q.main ? "main-qa" : ""}" ${q.page ? `data-page="${q.page}"` : q.t === "สร้างงาน" ? 'data-gb="newhome"' : `data-toast="ไปหน้า${q.t}"`}><span class="qi ${q.main || dock ? "" : "qi-" + q.q}">${ic(q.i)}</span><span><b>${q.t}</b><small>${q.s}</small></span></button>`;
 const quick = () => `<div class="quick" role="group" aria-label="ปุ่มลัดในห้องเรียน">${QA().map((q) => qaBtn(q)).join("")}</div>`;
 const person = (f, withClass = true) => { const s = S.tags && STREAK.find((x) => x.sid === f.sid);
   return `<button class="person" data-toast="เปิดประวัติของ ${full(f.sid)}">${av(f.sid)}<span>${nm(f.sid)}<small>${withClass ? CL[f.classId].name : `ค้าง ${f.missing} ชิ้น`}${s ? ` · ขาดติดกัน ${s.days} วัน` : ""}</small></span></button>`; };
@@ -2593,18 +2846,6 @@ function scanAct(v, e) {
   render(keep); if (!keep) document.getElementById("appMain").scrollTop = 0;
   if (f) focusEl(f, f !== "#scanIn");
 }
-function pageGradebook() {
-  const ids = ["s01", "s02", "s03", "s04", "s05", "s06", "s07"];
-  const cell = (sid, i) => { const miss = [["s01", "s02", "s03", "s04"], [], ["s01", "s02", "s05"]][i].includes(sid); if (miss) return `<td>${st("st-bad", "x", "ค้าง")}</td>`;
-    if (i === 0 && ["s02", "s06"].includes(sid)) return `<td>${st("st-warn", "hourglass", "รอตรวจ")}</td>`; const v = [16, 14, 18, 12, 15, 19, 17][ids.indexOf(sid)] - (i ? 0 : 8); return `<td class="n num">${i === 2 ? Math.min(10, v - 7) : v}</td>`; };
-  const head = S.menu === "B" ? `<div class="pg-head"><h1 class="display page-h">สมุดคะแนน · ป.6/1</h1><div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน">
-    <button aria-pressed="true">${ic("notebook")}คะแนน</button><button aria-pressed="false" data-info="reports">${ic("chart-bar")}รายงาน</button></div></div>` : `<h1 class="display page-h">สมุดคะแนน · ป.6/1</h1>`;
-  return `${topbar(false)}${banners()}${head}
-  <section class="card"><div class="gb-tools"><button class="btn btn-primary" data-toast="สร้างงาน">${ic("plus")}สร้างงาน</button><button class="btn" data-toast="กรองเฉพาะคนค้าง">${ic("funnel")}เฉพาะคนค้าง</button><button class="btn" data-toast="ส่งออก Excel">${ic("export")}ส่งออก Excel</button></div>
-  <div class="gb-wrap"><table class="gb"><thead><tr><th class="n">เลขที่</th><th>ชื่อ</th><th>แผนผังความคิด<br>เรื่องพืช /20</th><th>ใบงานเศษส่วน<br>ชุดที่ 2 /10</th><th>ใบงาน<br>คำควบกล้ำ /10</th></tr></thead>
-  <tbody>${ids.map((sid, r) => `<tr><td class="n num">${r + 1}</td><td>${S.hide ? "•••" : full(sid)}</td>${cell(sid, 0).replace("<td", "<td")}${[1, 2].map((i) => cell(sid, i)).join("")}</tr>`).join("")}</tbody></table></div>
-  <p class="muted small" style="margin-top:var(--s3)">ตัวอย่างย่อ — ตัวเลขสมมติ แสดงเพื่อดูหน้าตาของตาราง ป้ายสถานะ และปุ่มในธีมนี้</p></section>`;
-}
 
 /* ======================= T-11 หน้าเช็คชื่อ (ux-attendance.md) — fictional names, same tokens/icons ======================= */
 const AK = ["present", "late", "leave", "sick", "absent"];
@@ -2899,6 +3140,468 @@ function atKey_(e) { // keyboard: radiogroup arrows · roving grid arrows · pro
   return false;
 }
 atScenario("partial");
+
+/* ======================= T-17 หน้าคะแนน (ux-gradebook.md) — fictional names · numbers = §ตัวเลขตัวอย่าง (metrics.ts rules, unchanged) ======================= */
+const GB_NAMES = [["สมชาย", "ใจดี"], ["สมหญิง", "รักเรียน"], ["ภูมิ", "แสงทอง"], ["ดวงดาว", "มั่นคง"], ["กานดา", "เพชรดี"], ["ปวีณ", "สุขใจ"], ["นภัส", "ทองงาม"], ["ธีรา", "จันทร์เพ็ญ"]];
+const GT = { "ใบงาน": ["file-text", "sheet", 10], "แบบฝึกหัด": ["pencil-line", "drill", 20], "ชิ้นงาน": ["puzzle-piece", "proj", 15], "สอบ": ["exam", "exam", 10], "การบ้าน": ["house-line", "home", 10] };
+const GW = { scored: ["hash", "มีคะแนน", "มีคะแนน"], late: ["clock", "ส่งช้า", "ส่งช้า"], awaiting: ["check", "รอตรวจ", "รับงานแล้ว รอตรวจ"], missing: ["warning-circle", "ค้างส่ง", "ค้างส่ง"], pending: ["dot-outline", "ยังไม่ถึงกำหนด", "ยังไม่ถึงกำหนด"], excused: ["prohibit", "ยกเว้น", "ยกเว้น"] };
+const GK = ["scored", "late", "awaiting", "missing", "pending", "excused"];
+const GB_ROOMS = [["c61", "ป.6/1"], ["c62", "ป.6/2"], ["c51", "ป.5/1"]];
+const GB_FAIL = "งานนี้ปิดรับแล้ว — เปิดรับงานอีกครั้งในสมุดคะแนน แล้วกด “ลองใหม่”";
+const GB_CARDS = [["summary", "งานที่เลือก"], ["awaiting", "รอตรวจ"], ["follow", "ต้องติดตาม"], ["close", "ควรปิดรับ"], ["legend", "ความหมายของช่อง"], ["shortcuts", "ปุ่มลัด (คอม)"], ["dist", "การกระจายคะแนน"], ["recent", "แก้ไขล่าสุด"]];
+const GB = { gstate: "normal", st: [], asg: [], sub: {}, rowNos: [], rows: "all", sel: null, fr: 0, fc: 0, edit: null, hide: false, online: true, drawer: false, pin: false,
+  cards: Object.fromEntries(GB_CARDS.map((c) => [c[0], true])), open: { dist: false, recent: false }, xl: "idle", live: "", tmsg: "", mk: {}, loading: false, error: false,
+  noclass: false, nostu: false, pop: null, dlg: null, bulk: null, closeId: null, undo: null, seq: 0, scrollCol: null, dirty: false, rendering: false, copied: false };
+let gbSaveT = {}, gbErrT = null, gbUndoT = null, gbHoldT = null, gbHeld = false, gbXlT = null;
+const fmtN = (n) => String(Math.round(n * 10) / 10);
+const gbEsc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+const gbA = (id = GB.sel) => GB.asg.find((a) => a.id === id);
+const gbStu = (no) => GB.st.find((s) => s.no === no);
+const gbX = (aid, no) => { const m = GB.sub[aid] || (GB.sub[aid] = {}); return m[no] || (m[no] = { s: 0 }); };
+const gbLate = (a, x) => !!(a.due && x.rv && x.rv > a.due);
+function gbWs(a, x) { // = workState (metrics.ts:44): closed / past due & not sent = ค้างส่ง · not due / no due = ยังไม่ถึงกำหนด
+  if (x.s === "x") return "excused"; if (x.s === 1) return x.sc == null ? "awaiting" : gbLate(a, x) ? "late" : "scored";
+  return a.status === "closed" || (a.due && a.due < TODAY) ? "missing" : "pending"; }
+const gbName = (s) => (GB.hide ? `เลขที่ ${s.no}` : `${s.n[0]} ${s.n[1]}`);
+const gbWho = (s) => (GB.hide ? `เลขที่ ${s.no}` : `เลขที่ ${s.no} ${s.n[0]}`);
+const gbDays = (a, b) => Math.round((dObj(a) - dObj(b)) / 864e5);
+const gbRoom = (cid) => GB_ROOMS.find((r) => r[0] === cid)[1];
+const gbTouch = () => S.device !== "desk";
+const gbRowList = () => GB.rowNos.map(gbStu).filter(Boolean);
+function gbCount(asgs = GB.asg, sts = GB.st) { // countWorkStates + classSubmitRate (sent ÷ (sent + missing))
+  const c = { scored: 0, late: 0, awaiting: 0, missing: 0, pending: 0, excused: 0 };
+  for (const a of asgs) for (const s of sts) c[gbWs(a, gbX(a.id, s.no))]++;
+  c.total = asgs.length * sts.length; c.sent = c.scored + c.late + c.awaiting; c.rate = c.sent + c.missing ? Math.round((c.sent * 100) / (c.sent + c.missing)) : null; return c; }
+function gbAS(a) { const c = gbCount([a]), den = GB.st.length - c.excused; return { ...c, den, pct: den ? Math.round((c.sent * 100) / den) : 0 }; } // assignmentRate: sent ÷ (class − excused)
+function gbSum(s) { let sc = 0, fu = 0, hid = 0; // studentSummary: Σ scored/late · Σ full of scored/late/missing (missing = 0) · hidden-score work excluded
+  for (const a of GB.asg) { if (!a.pub) { hid++; continue; } const x = gbX(a.id, s.no), w = gbWs(a, x);
+    if (w === "scored" || w === "late") { sc += x.sc; fu += a.full; } else if (w === "missing") fu += a.full; }
+  return { sc, fu, pct: fu ? Math.round((sc * 100) / fu) : null, hid, all: GB.asg.length > 0 && hid === GB.asg.length }; }
+function gbAvg(a) { const v = GB.st.map((s) => gbX(a.id, s.no)).filter((x) => x.s === 1 && x.sc != null); return v.length ? Math.round((v.reduce((t, x) => t + x.sc, 0) / v.length) * 10) / 10 : null; }
+function gbSetRows(k) { GB.rows = k; GB.rowNos = GB.st.filter((s) => k === "all" || GB.asg.some((a) => gbWs(a, gbX(a.id, s.no)) === k)).map((s) => s.no); GB.fr = 0; GB.edit = null; }
+const GB_ROWS = [[9, 18, 14, 8], [10, "A", 15, 9], ["L7.5", 16, "-", "L6"], ["A", "-", 11, 7], ["-", 12, "-", "-"], [8, "A", "A", 10], ["X", 20, 13, 5], ["-", "-", 9.5, "-"]];
+function gbSample() {
+  const asg = [
+    { id: "W1", title: "ใบงานที่ 4", type: "ใบงาน", full: 10, given: "2026-10-29", due: "2026-11-05", status: "open", pub: true, unit: "บทที่ 3 เศษส่วน", note: "ทำในสมุด แล้ววางไว้ที่โต๊ะครูก่อนพักเที่ยง", rooms: ["c61", "c62"] },
+    { id: "W2", title: "แบบฝึกหัด 3.2", type: "แบบฝึกหัด", full: 20, given: "2026-11-04", due: "2026-11-11", status: "open", pub: true, unit: "บทที่ 3 เศษส่วน", note: "หนังสือเรียนหน้า 58–59 ข้อ 1–10", rooms: ["c61"] },
+    { id: "W3", title: "ชิ้นงานโครงงาน", type: "ชิ้นงาน", full: 15, given: "2026-11-02", due: null, status: "open", pub: true, unit: "โครงงานคณิตศาสตร์", note: "", rooms: ["c61"] },
+    { id: "W4", title: "สอบย่อยบทที่ 3", type: "สอบ", full: 10, given: "2026-11-04", due: "2026-11-04", status: "closed", pub: true, unit: "บทที่ 3 เศษส่วน", note: "สอบในคาบ 20 นาที", rooms: ["c61", "c62"] }];
+  const rv0 = { W1: "2026-11-05", W2: "2026-11-10", W3: "2026-11-09", W4: "2026-11-04" }, rvL = { W1: "2026-11-08", W4: "2026-11-06" }, sub = {};
+  asg.forEach((a, j) => { sub[a.id] = {}; GB_ROWS.forEach((r, i) => { const v = r[j];
+    sub[a.id][i + 1] = v === "-" ? { s: 0 } : v === "X" ? { s: "x" } : v === "A" ? { s: 1, sc: null, rv: rv0[a.id] } : typeof v === "string" ? { s: 1, sc: +v.slice(1), rv: rvL[a.id] } : { s: 1, sc: v, rv: rv0[a.id] }; }); });
+  return { st: GB_NAMES.map((n, i) => ({ no: i + 1, n })), asg, sub };
+}
+function gbMany() { // ST-21: 45 students × 20 works, long names (every 5th) and long titles
+  const st = Array.from({ length: 45 }, (_, i) => { const no = i + 1; return { no, n: no % 5 === 0 ? LONGN[(no / 5) % LONGN.length] : stName("c61", no) }; });
+  const T = ["ใบงาน", "แบบฝึกหัด", "ชิ้นงาน", "สอบ", "การบ้าน"], TOP = ["จำนวนนับและการประมาณค่า", "ตัวประกอบ ห.ร.ม. และ ค.ร.น.", "เศษส่วนและการบวกลบเศษส่วน", "การคูณและการหารเศษส่วน", "ทศนิยมและร้อยละ", "อัตราส่วนในชีวิตประจำวัน", "รูปเรขาคณิตสองมิติ", "ปริซึมและทรงกระบอก", "สถิติและแผนภูมิแท่ง", "โจทย์ปัญหาระคน"];
+  const asg = [], sub = {};
+  for (let j = 0; j < 20; j++) { const ty = T[j % 5], given = addD("2026-09-07", j * 3), due = j === 19 ? null : j === 18 ? "2026-11-12" : j % 4 === 3 ? null : addD(given, 5), full = GT[ty][2];
+    const a = { id: "M" + (j + 1), title: `${ty === "สอบ" ? "สอบย่อย" : ty}ที่ ${Math.floor(j / 5) + 1} เรื่อง${TOP[j % 10]}`, type: ty, full, given, due, status: j < 8 ? "closed" : "open", pub: true, unit: `บทที่ ${Math.floor(j / 2) + 1}`, note: "", rooms: ["c61"] };
+    asg.push(a); sub[a.id] = {};
+    st.forEach((s) => { const h = (s.no * 13 + j * 7) % 23, late = h % 7 === 0 && due;
+      sub[a.id][s.no] = h === 0 ? { s: "x" } : (j >= 18 && h < 12) || h < 3 ? { s: 0 } : h < 6 ? { s: 1, sc: null, rv: due || given } : { s: 1, sc: Math.round(full * (0.5 + (h % 10) / 20) * 2) / 2, rv: late ? addD(due, 2) : due || given }; }); }
+  return { st, asg, sub };
+}
+function gbScenario(k) {
+  gbStopUndo(); clearTimeout(gbXlT); if (S.sheet && S.sheet.startsWith("gb-")) S.sheet = null;
+  Object.assign(GB, k === "many" ? gbMany() : gbSample(), { gstate: k, edit: null, hide: k === "hidden", online: k !== "offline", drawer: false, pin: false, xl: k === "export" ? "busy" : "idle", mk: {},
+    loading: k === "loading", error: k === "error", noclass: k === "noclass", nostu: k === "nostudent", pop: null, dlg: null, bulk: null, live: "", tmsg: "", fr: 0, copied: false });
+  if (k === "noasg") { GB.asg = []; GB.sub = {}; }
+  if (k === "nostudent") GB.st = [];
+  if (k === "offline") ["W1|3", "W2|1", "W3|1"].forEach((x) => (GB.mk[x] = "pend"));
+  if (k === "failed") { GB.mk["W4|1"] = "fail"; GB.mk["W3|4"] = "unsaved"; }
+  const open = GB.asg.filter((a) => a.status === "open"); // Q4 (ข): open on the latest open work · ?asg= would win
+  GB.sel = k === "closed" ? "W4" : ((open[open.length - 1] || GB.asg[GB.asg.length - 1]) || {}).id || null;
+  GB.fc = Math.max(0, GB.asg.findIndex((a) => a.id === GB.sel)); GB.scrollCol = GB.sel; gbSetRows("all");
+}
+const gbQ = () => { const v = Object.values(GB.mk); return { pend: v.filter((x) => x === "pend").length, fail: v.filter((x) => x === "fail").length, unsaved: v.filter((x) => x === "unsaved").length }; };
+function gbSaveBadge() { const n = gbQ();
+  if (n.fail || n.unsaved) return ["bad", "cloud-x", `ค้างในเครื่องนี้ ${n.fail + n.unsaved + n.pend}`];
+  if (!GB.online) return ["warn", "cloud-slash", n.pend ? `ออฟไลน์ · รอส่ง ${n.pend}` : "ออฟไลน์ · เก็บในเครื่อง"];
+  if (n.pend) return ["mute", "circle-notch", "กำลังส่ง…"];
+  return ["ok", "cloud-check", "บันทึกแล้ว"]; }
+const gbSaveHtml = (cls) => { const b = gbSaveBadge(); return `<span class="gh-save gb-savebadge ${cls} ${b[0]}">${badgeIc(b)}${b[2]}</span>`; };
+function gbDue(a) { if (a.status === "closed") return ["st-mute", "lock-simple", "ปิดรับ"]; if (!a.due) return ["st-mute", "calendar-blank", "ไม่มีกำหนดส่ง"];
+  const d = gbDays(TODAY, a.due); return d > 0 ? ["st-warn", "warning", `เลยกำหนด ${d} วัน`] : d === 0 ? ["st-warn", "calendar-check", "ครบกำหนดวันนี้"] : ["st-mute", "calendar-blank", `กำหนด ${thDate(a.due)}`]; }
+function gbSide() {
+  const aw = GB.asg.map((a) => [a, gbAS(a).awaiting]).filter((x) => x[1]).sort((p, q) => q[1] - p[1]).slice(0, 8);
+  const fol = GB.st.map((s) => [s, GB.asg.filter((a) => gbWs(a, gbX(a.id, s.no)) === "missing").length]).filter((x) => x[1]).sort((p, q) => q[1] - p[1] || p[0].no - q[0].no);
+  const shut = GB.asg.filter((a) => a.status === "open").map((a) => { const s = gbAS(a); return [a, a.due && a.due < TODAY ? `เลยกำหนด ${gbDays(TODAY, a.due)} วัน` : s.den && s.sent === s.den ? "ส่งครบทุกคนแล้ว" : ""]; }).filter((x) => x[1]);
+  return { aw, fol, shut };
+}
+const gbOff = () => GB.noclass || GB.loading || GB.error || !GB.asg.length || !GB.st.length;
+function gbHero(c) {
+  const off = gbOff(), v = (n) => (off ? "–" : n), q = gbSide(), ph = S.device === "phone";
+  const big = (k, lbl) => `<button class="gh-big" data-gb="rows:${k}" aria-pressed="${GB.rows === k}" ${off ? "disabled" : ""} aria-label="${lbl} ${v(c[k])} ชิ้น${off ? "" : GB.rows === k ? " · กำลังกรองอยู่ แตะเพื่อดูทุกคน" : " · แตะเพื่อกรองแถว"}">${ic(GW[k][0])}<span class="num">${v(c[k])}</span><small>${lbl}<br>ชิ้น</small></button>`;
+  const title = GB.noclass ? "คะแนน" : `${gbRoom("c61")} · คณิตศาสตร์`, rate = c.rate == null ? "–" : c.rate + "%";
+  const sw = S.menu === "B" ? `<div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน"><button aria-pressed="true">${ic("notebook")}คะแนน</button><button aria-pressed="false" data-info="reports">${ic("chart-bar")}รายงาน</button></div>` : "";
+  const plate = off ? `<div class="gh-p"><span class="sec">${GB.loading ? "กำลังโหลด…" : GB.noclass ? "ยังไม่มีห้อง — ยังไม่มีตัวเลข" : GB.error ? "ยังไม่มีข้อมูลส่วนนี้" : !GB.asg.length ? "งาน 0 · ยังไม่มีช่องคะแนน" : "ห้องนี้ยังไม่มีนักเรียน"}</span></div>`
+    : `<div class="gh-p"><div class="segbar" title="รวม ${c.total} ช่อง" role="img" aria-label="${GK.map((k) => `${GW[k][1]} ${c[k]}`).join(" ")} จาก ${c.total} ช่อง">${GK.map((k) => (c[k] ? `<i class="gl-${k}" style="flex:${c[k]}"></i>` : "")).join("")}</div>
+      <ul class="gh-leg" aria-hidden="true">${GK.map((k) => `<li class="gl-${k}"><i class="sw"></i>${ic(GW[k][0])}${GW[k][1]} <b class="num">${c[k]}</b></li>`).join("")}<li class="tot">รวม <b class="num">${c.total}</b> ช่อง</li></ul>${gbSaveHtml("in-p")}</div>`;
+  return `<section class="gb-hero on-hero" aria-label="สรุปคะแนน ${title}">
+  <div class="gh-t"><h1 class="display" title="${title}">${title}</h1><span class="k">${ic("notebook")}ภาคเรียน 2/2569${GB.noclass ? "" : ` · ${GB.st.length} คน`}</span>${off ? "" : gbSaveHtml("in-t")}</div>
+  <div class="gh-n" aria-live="off">${big("awaiting", "รอตรวจ")}${big("missing", "ค้างส่ง")}
+    <span class="gh-sm"><b class="num">${GB.noclass || GB.loading || GB.error ? "–" : GB.asg.length}</b><small>งาน</small></span>
+    <span class="gh-sm" tabindex="0" title="อัตราส่งรวม = ส่งแล้ว ÷ (ส่งแล้ว + ค้างส่ง) ไม่นับยังไม่ถึงกำหนดและยกเว้น" aria-label="อัตราส่งรวม ${v(rate)} · ส่งแล้ว ÷ (ส่งแล้ว + ค้างส่ง) ไม่นับยังไม่ถึงกำหนดและยกเว้น"><b class="num">${v(rate)}</b><small>อัตราส่ง${ic("info")}</small></span></div>
+  <div class="gh-a">${sw}<button class="chip-btn hide-btn" data-gb="hide" aria-pressed="${GB.hide}" aria-label="ซ่อนชื่อนักเรียน (เฉพาะหน้านี้)">${ic(GB.hide ? "eye-slash" : "eye")}<span class="lbl">${GB.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+    ${off ? "" : `<button class="hp gh-pill" data-gb="drawer" aria-expanded="${GB.drawer || GB.pin}" aria-label="แผงงาน: รอตรวจ ${q.aw.length} งาน ควรปิดรับ ${q.shut.length} งาน ต้องติดตาม ${q.fol.length} คน">${ic("sidebar-simple")}<span class="lng">รอตรวจ ${q.aw.length} งาน · ควรปิดรับ ${q.shut.length} · ติดตาม ${q.fol.length} คน</span><span class="sht">แผงงาน · ติดตาม ${q.fol.length}</span></button>`}
+    <button class="btn btn-primary" data-gb="new" ${GB.noclass ? "disabled" : ""}>${ic("plus")}${ph ? "งาน" : "สร้างงาน"}</button></div>
+  ${plate}</section>`;
+}
+function gbTools(c) {
+  const dis = GB.noclass, busy = GB.loading || GB.error;
+  const rooms = dis ? "" : `<div class="gt-rooms" role="group" aria-label="เลือกห้อง">${GB_ROOMS.map(([id, nm]) => `<button class="chip-btn" aria-pressed="${id === "c61"}" data-gb="room:${id}">${ic("chalkboard")}${nm}<small class="num">${id === "c61" ? GB.st.length : AT_ROOM0[id][1]} คน</small></button>`).join("")}</div>`;
+  const seg = `<div class="gt-seg" role="group" aria-label="แสดงแถว">${[["all", "ทุกคน"], ["missing", `ค้างส่ง ${busy ? "–" : c.missing}`], ["awaiting", `รอตรวจ ${busy ? "–" : c.awaiting}`]].map(([k, l]) => `<button aria-pressed="${GB.rows === k}" data-gb="rows:${k}" ${dis || busy || gbOff() ? "disabled" : ""}>${l}</button>`).join("")}</div>`;
+  const xl = GB.xl === "busy" ? `<button class="chip-btn" disabled aria-busy="true">${ic("circle-notch", "spin")}กำลังสร้าง…</button>`
+    : `<button class="chip-btn" data-gb="xl" ${dis ? 'disabled aria-describedby="gbXlWhy"' : ""} title="ส่งออกคะแนนทั้งเทอมเป็น Excel (ไฟล์เดียวกับหน้ารายงานสรุป)">${ic("microsoft-excel-logo")}ส่งออก Excel</button>`;
+  return `<div class="gb-tools">${rooms}${dis ? "" : `<button class="chip-btn" data-toast="เลือกวิชา — ตัวอย่างนี้แสดงคณิตศาสตร์">${ic("book-open")}คณิตศาสตร์${ic("caret-down")}</button><button class="chip-btn" data-gb="filter">${ic("funnel")}ตัวกรอง</button>`}${seg}
+    ${GB.asg.length > 8 ? `<button class="chip-btn" data-act="sheet:gb-jump">${ic("arrows-left-right")}กระโดดไปงาน</button>` : ""}<span class="grow"></span>
+    <span class="gt-scope ${GB.hide ? "warn" : ""}">${GB.hide ? `${ic("warning")}ไฟล์ Excel มีชื่อนักเรียน` : "Excel: ห้อง+วิชาบนจอ · ทั้งเทอม"}</span>${xl}${dis ? `<span class="sr" id="gbXlWhy">ยังไม่มีห้อง — เลือกห้องก่อนส่งออก</span>` : ""}</div>`;
+}
+function gbSelbar() {
+  const a = gbA(); if (!a) return "";
+  const s = gbAS(a), d = gbDue(a), cl = a.status === "closed", ty = GT[a.type];
+  const stat = [`ส่งแล้ว ${s.sent}/${s.den} (${s.pct}%)`, s.awaiting && `รอตรวจ ${s.awaiting}`, s.missing && `ค้าง ${s.missing}`, s.excused && `ยกเว้น ${s.excused}`].filter(Boolean).join(" · ");
+  return `<section class="gb-sel t-${ty[1]}" aria-label="งานที่เลือก ${a.title}">
+   <div class="gs-i"><span class="gs-ty"><i class="tsh" aria-hidden="true"></i>${ic(ty[0])}${a.type}</span><b class="gs-tt" title="${a.title}">${a.title}</b><span class="num gs-f">เต็ม ${a.full}</span>${st(d[0], d[1], d[2])}${a.pub ? "" : st("st-mute", "eye-slash", "ซ่อนคะแนนบนจอ")}<span class="gs-st num" title="${stat}">${stat}</span></div>
+   <div class="gs-a"><button class="btn" data-gb="bulk">${ic("users-three")}ทำทั้งห้อง${ic("caret-down")}</button><button class="btn" data-gb="copy">${ic("copy")}คัดลอกงาน</button>
+    <button class="btn" data-gb="${cl ? "reopen" : "close"}">${ic(cl ? "lock-simple-open" : "lock-simple")}${cl ? "เปิดรับงาน" : "ปิดรับงาน"}</button>
+    <button class="icon-btn" data-gb="eye" aria-pressed="${!a.pub}" aria-label="${a.pub ? "ซ่อนคะแนนบนจอของงานนี้" : "แสดงคะแนนบนจอของงานนี้"}">${ic(a.pub ? "eye" : "eye-slash")}</button>
+    <button class="icon-btn" data-gb="more" aria-label="เพิ่มเติม: แก้ไขงาน ซ่อนคะแนนทั้งหมด ลบงาน">${ic("dots-three-vertical")}</button></div></section>`;
+}
+function gbInner(a, x, w) { const hid = !a.pub && (w === "scored" || w === "late"), val = x.sc != null ? fmtN(x.sc) : "";
+  return w === "scored" ? `<b class="num">${hid ? "•••" : val}</b>` : w === "late" ? `${ic("clock")}<b class="num">${hid ? "•••" : val}</b>` : w === "pending" ? `<span class="gdot" aria-hidden="true">·</span>` : `${ic(GW[w][0])}<span>${w === "missing" ? "ค้าง" : GW[w][1]}</span>`; }
+function gbLabel(a, s, x, w, m) { const hid = !a.pub && (w === "scored" || w === "late");
+  return `${GB.hide ? `เลขที่ ${s.no}` : `${s.n[0]} ${s.n[1]}`} · ${a.title} · ${hid ? "ซ่อนคะแนน" : w === "scored" ? fmtN(x.sc) : w === "late" ? `${fmtN(x.sc)} · ส่งช้า` : GW[w][2]}${m === "pend" ? " · รอส่งขึ้นระบบ" : m === "fail" ? " · ส่งไม่สำเร็จ" : m === "unsaved" ? " · ยังไม่ได้บันทึก" : ""}`; }
+const gbMk = (m) => (m === "pend" ? `<i class="gmk pend" aria-hidden="true">${ic("clock-countdown")}</i>` : m === "fail" ? `<i class="gmk fail" aria-hidden="true">${ic("warning")}</i>` : "");
+function gbCell(a, s, r, c) {
+  const x = gbX(a.id, s.no), w = gbWs(a, x), k = a.id + "|" + s.no, m = GB.mk[k], ed = GB.edit && GB.edit.r === r && GB.edit.c === c, foc = GB.fr === r && GB.fc === c;
+  const inner = ed ? `<input id="gbIn" class="gc-in num" inputmode="decimal" autocomplete="off" aria-label="คะแนน" aria-describedby="gbErr" value="${gbEsc(GB.edit.val)}">${gbTouch() ? "" : `<button class="gc-more" data-gb="pop" tabindex="-1" aria-label="เปิดตัวแก้ไขช่อง">${ic("caret-down")}</button>`}` : gbInner(a, x, w);
+  return `<td class="gbc gw-${w} ${m ? "m-" + m : ""} ${a.id === GB.sel ? "sel" : ""} ${ed ? "ed" : ""}" data-r="${r}" data-c="${c}" data-k="${k}" tabindex="${foc && !ed ? 0 : -1}" aria-label="${gbLabel(a, s, x, w, m)}" ${m === "fail" ? `title="ส่งไม่สำเร็จ: ${GB_FAIL}"` : ""}>${inner}${gbMk(m)}</td>`;
+}
+function gbTh(a, j) {
+  const s = gbAS(a), on = a.id === GB.sel, ty = GT[a.type], od = a.status === "open" && a.due && a.due < TODAY;
+  const lbl = `${a.type} · ${a.title} · เต็ม ${a.full}${a.due ? " · กำหนด " + thDate(a.due) : " · ไม่มีกำหนดส่ง"}${od ? " · เลยกำหนด" : ""}${a.status === "closed" ? " · ปิดรับ" : ""}${a.pub ? "" : " · ซ่อนคะแนน"} · ส่งแล้ว ${s.sent}/${s.den} ${s.pct}%`;
+  return `<th scope="col" class="gba t-${ty[1]} ${on ? "sel" : ""}"><button class="gh-btn" data-gb="sel:${a.id}" data-hc="${j}" tabindex="${GB.fr === -1 && GB.fc === j ? 0 : -1}" aria-pressed="${on}" aria-label="${lbl}" title="${a.title}">
+    <span class="gx1"><i class="tsh" aria-hidden="true"></i>${a.status === "closed" ? ic("lock-simple") : ""}${a.pub ? "" : ic("eye-slash")}<span class="ht">${a.title}</span></span>
+    <span class="gx2 ${od ? "od" : ""}"><span class="num">/${a.full}</span>${a.due ? `${ic(od ? "warning" : "calendar-blank")}<span>${thDate(a.due)}</span>` : "<span>ไม่มีกำหนด</span>"}</span>
+    <span class="gx3"><span class="gpb" aria-hidden="true"><i style="width:${s.pct}%"></i></span><span class="num">${s.sent}/${s.den}</span></span></button></th>`;
+}
+function gbTable() {
+  const rows = gbRowList(), A = GB.asg, someHid = A.some((a) => !a.pub);
+  const head = `<tr><th scope="col" class="c-name">เลขที่ · ชื่อ</th>${A.map(gbTh).join("")}<th scope="col" class="c-cum">สะสม${someHid ? "*" : ""}<br>ร้อยละ</th></tr>`;
+  const body = rows.map((s, r) => { const miss = A.filter((a) => gbWs(a, gbX(a.id, s.no)) === "missing").length, sm = gbSum(s);
+    return `<tr><th scope="row" class="c-name" ${GB.hide ? "" : `title="${gbName(s)}"`}><span class="gb-rd ${miss ? "on" : ""}" ${miss ? `role="img" aria-label="ค้างส่ง ${miss} งาน"` : 'aria-hidden="true"'}></span><span class="no num">${s.no}</span><span class="nm">${GB.hide ? "เลขที่ " + s.no : gbName(s)}</span></th>${A.map((a, c) => gbCell(a, s, r, c)).join("")}<td class="c-cum" ${sm.all ? "" : `title="สะสม ${fmtN(sm.sc)}/${sm.fu} · ร้อยละ ${sm.pct ?? "–"}${sm.hid ? " · ไม่รวมงานที่ซ่อนคะแนน" : ""}"`}>${sm.all ? "<b>•••</b>" : `<b class="num">${sm.fu ? `${fmtN(sm.sc)}/${sm.fu}` : "–"}${sm.hid ? "*" : ""}</b><small class="num">${sm.pct == null ? "" : sm.pct + "%"}</small>`}</td></tr>`; }).join("");
+  const foot = `<tfoot><tr><th scope="row" class="c-name">เฉลี่ย · ส่งแล้ว</th>${A.map((a) => { const s = gbAS(a), v = gbAvg(a); return `<td class="gbf ${a.id === GB.sel ? "sel" : ""}" title="เฉลี่ย ${v ?? "–"} · ส่งแล้ว ${s.sent}/${s.den}${s.excused ? " · ยกเว้น " + s.excused : ""}"><b class="num">${!a.pub ? "•••" : v == null ? "–" : fmtN(v)}</b><small class="num">${s.sent}/${s.den}</small></td>`; }).join("")}<td class="c-cum"></td></tr></tfoot>`;
+  return `<div class="gb-scroll" id="gbScroll" role="region" aria-label="ตารางคะแนน"><table class="gbt" style="width:calc(var(--cw-n) + var(--cw-c) + ${A.length} * var(--cw-a))"><caption class="sr">สมุดคะแนน ${gbRoom("c61")} · ลูกศรเลื่อนช่อง · พิมพ์ตัวเลขเพื่อกรอกคะแนน · Alt+Enter เปิดตัวแก้ไขช่อง</caption><thead>${head}</thead><tbody>${body}</tbody>${foot}</table></div>`;
+}
+function gbBanners() {
+  let h = GB.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่ · แสดงเฉพาะเลขที่</b> — เฉพาะหน้านี้ · ปิดคัดลอกรายชื่อ · ไฟล์ Excel ยังมีชื่อนักเรียน</div><button class="btn" data-gb="hide">${ic("eye")}แสดงชื่อ</button></div>` : "";
+  const q = gbQ();
+  if (!GB.online || q.fail || q.unsaved) h += `<div class="banner ${q.fail || q.unsaved ? "gb-qbad" : "banner-off"}" role="status">${ic(q.fail || q.unsaved ? "cloud-x" : "wifi-slash")}<div><b>${!GB.online ? "ออฟไลน์ — คะแนนที่กรอกจะส่งเองเมื่อมีเน็ต" : "บันทึกไม่สำเร็จบางช่อง"}</b> · ค้างในเครื่องนี้ · รอส่งขึ้นระบบ ${q.pend} · ส่งไม่สำเร็จ ${q.fail} · ยังไม่ได้บันทึก ${q.unsaved}${q.unsaved ? "<br>บันทึกลงเครื่องไม่ได้ — ช่องที่ขอบแดงยังไม่ถูกบันทึก" : ""}${q.fail ? `<br>เหตุ: ${GB_FAIL}` : ""}</div>${q.fail || q.unsaved ? `<button class="btn btn-primary" data-gb="retry">${ic("arrow-clockwise")}ลองใหม่</button>` : `<button class="btn" data-gb="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button>`}</div>`;
+  return h;
+}
+function gbEmpty(icon, title, sub, btn, role = "region") { return `<section class="card gb-empty" role="${role}" aria-label="${title}"><span class="h-ic">${ic(icon)}</span><div><h2 class="display">${title}</h2><p class="sec">${sub}</p>${btn || ""}</div></section>`; }
+function gbMainBody() {
+  if (GB.noclass) return gbEmpty("chalkboard", "ยังไม่มีห้องเรียนในปีนี้", "เพิ่มห้องก่อนเริ่มใช้งาน", `<button class="btn btn-primary" data-toast="ไปตั้งค่า › ห้องเรียน (/settings?section=catalog)">${ic("plus")}เพิ่มห้องเรียน</button>`);
+  if (GB.error) return gbEmpty("cloud-x", "โหลดข้อมูลไม่สำเร็จ", "ตรวจการเชื่อมต่อ แล้วลองอีกครั้ง · ถ้าออฟไลน์: “ออฟไลน์ — ยังไม่มีข้อมูลส่วนนี้ในเครื่อง”", `<button class="btn btn-primary" data-gb="reload">${ic("arrow-clockwise")}ลองอีกครั้ง</button>`, "alert");
+  if (GB.loading) return `<div class="gb-scroll" aria-busy="true" aria-label="กำลังโหลด"><p class="sec gb-ld">${ic("circle-notch", "spin")} กำลังโหลด…</p><table class="gbt gb-sk" aria-hidden="true"><thead><tr><th class="c-name">เลขที่ · ชื่อ</th>${"<th class='gba'><span class='sk-line'></span></th>".repeat(4)}<th class="c-cum">สะสม</th></tr></thead><tbody>${`<tr><th class="c-name"><span class="sk-line"></span></th>${"<td><span class='sk-line'></span></td>".repeat(4)}<td class="c-cum"></td></tr>`.repeat(8)}</tbody></table></div>`;
+  if (!GB.asg.length) return gbEmpty("clipboard-text", "ยังไม่มีงานในเงื่อนไขนี้", "สร้างงานแรกของห้องนี้ แล้วกรอกคะแนนในตารางได้ทันที", `<button class="btn btn-primary" data-gb="new">${ic("plus")}สร้างงาน</button>`);
+  if (!GB.st.length) return gbEmpty("users-three", "ห้องนี้ยังไม่มีนักเรียน", "นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน", `<button class="btn btn-primary" data-toast="ไปหน้านักเรียน · นำเข้านักเรียน">${ic("upload-simple")}นำเข้านักเรียน</button>`);
+  const n = GB.rowNos.length, hidN = GB.st.length - n, w = GB.rows === "missing" ? "ค้างส่ง" : "มีงานรอตรวจ";
+  const note = GB.rows === "all" ? "" : n ? `<p class="gb-fnote" role="status">${ic("funnel")}แสดง ${n} คนที่${w} · ซ่อน ${hidN} คน<button class="btn btn-ghost" data-gb="rows:all">ดูทุกคน</button></p>`
+    : `<p class="gb-fnote" role="status">${ic("funnel")}${GB.rows === "missing" ? "ไม่มีใครค้างส่งในงานที่แสดง" : "ไม่มีงานรอตรวจในงานที่แสดง"}<button class="btn btn-ghost" data-gb="rows:all">ดูทุกคน</button></p>`;
+  return note + (n ? gbTable() : "");
+}
+function pageGradebook() {
+  if (S.device === "phone") return gbPhone();
+  const c = gbCount();
+  return `<div class="gbp d-${S.device} ${gbTouch() ? "touch" : ""}">${gbBanners()}${gbHero(c)}${gbTools(c)}${gbOff() ? "" : gbSelbar()}
+    <div class="gb-body"><div class="gb-main">${gbMainBody()}</div>${GB.pin && S.device === "desk" && !gbOff() ? gbDrawer(true) : ""}</div></div>`;
+}
+function gbPhone() {
+  const c = gbCount(), a = gbA();
+  let body = "";
+  if (gbOff()) body = gbMainBody();
+  else { const s = gbAS(a), d = gbDue(a), cl = a.status === "closed", ty = GT[a.type];
+    const chips = `<div class="pm-chips" role="group" aria-label="เลือกงาน">${GB.asg.map((x) => `<button class="pm-chip t-${GT[x.type][1]}" aria-pressed="${x.id === GB.sel}" data-gb="sel:${x.id}" aria-label="${x.title}"><i class="tsh" aria-hidden="true"></i>${x.status === "closed" ? ic("lock-simple") : ""}${x.title.length > 12 ? x.title.slice(0, 12) + "…" : x.title}</button>`).join("")}</div>`;
+    const card = `<section class="card pm-card t-${ty[1]}" aria-labelledby="pm-h"><p class="kick"><i class="tsh" aria-hidden="true"></i>${ic(ty[0])}${a.type}</p><h2 id="pm-h">${a.title}</h2>
+      <div class="chips">${st(d[0], d[1], d[2])}${a.pub ? "" : st("st-mute", "eye-slash", "ซ่อนคะแนนบนจอ")}</div><p class="num pm-stat">เต็ม ${a.full} · ส่งแล้ว ${s.sent}/${s.den}${s.excused ? ` · ยกเว้น ${s.excused}` : ""} · รอตรวจ ${s.awaiting} · ค้าง ${s.missing}</p>
+      <div class="pm-acts"><button class="btn" data-gb="copy">${ic("copy")}คัดลอกงาน</button><button class="btn" data-gb="${cl ? "reopen" : "close"}">${ic(cl ? "lock-simple-open" : "lock-simple")}${cl ? "เปิดรับงาน" : "ปิดรับงาน"}</button><button class="btn" data-gb="more">${ic("list-checks")}จัดการงาน${ic("caret-down")}</button></div></section>`;
+    const list = `<ul class="pm-list" aria-label="นักเรียน ${GB.rowNos.length} คน · ${a.title} · แตะช่องเพื่อแก้">${gbRowList().map((st0) => { const x = gbX(a.id, st0.no), w = gbWs(a, x), k = a.id + "|" + st0.no, m = GB.mk[k];
+      return `<li class="pm-row"><span class="no num">${st0.no}</span><span class="nm" ${GB.hide ? "" : `title="${gbName(st0)}"`}>${gbName(st0)}</span><button class="pm-cell gbc gw-${w} ${m ? "m-" + m : ""}" data-gb="mpop:${st0.no}" data-k="${k}" aria-label="${gbLabel(a, st0, x, w, m)} · แตะเพื่อแก้">${gbInner(a, x, w)}${gbMk(m)}</button></li>`; }).join("")}</ul>`;
+    const n = GB.rowNos.length, note = GB.rows === "all" ? "" : `<p class="gb-fnote" role="status">${n ? `แสดง ${n} คน · ซ่อน ${GB.st.length - n} คน` : "ไม่มีรายการในตัวกรองนี้"}<button class="btn btn-ghost" data-gb="rows:all">ดูทุกคน</button></p>`;
+    body = `${chips}${card}${note}${n ? list : ""}`; }
+  return `<div class="gbp d-phone touch">${gbBanners()}${gbHero(c)}${gbTools(c)}${body}</div>`;
+}
+function gbDrawer(pinned) {
+  const a = gbA(), q = gbSide(), C = GB.cards, btm = ["ipadP", "phone"].includes(S.device);
+  const card = (k, icon, title, n, body, unit = "") => (!C[k] ? "" : `<section class="gd-card" aria-labelledby="gd-${k}"><div class="card-head"><span class="h-ic">${ic(icon)}</span><h3 id="gd-${k}">${title}</h3><span class="grow"></span>${n == null ? "" : `<span class="big num">${n}</span><span class="sec">${unit}</span>`}</div>${body}</section>`);
+  const fold = (k, icon, title, body) => (!C[k] ? "" : `<section class="gd-card"><button class="gd-fold" data-gb="open:${k}" aria-expanded="${GB.open[k]}">${ic(icon)}<span>${title}</span>${ic(GB.open[k] ? "caret-up" : "caret-down")}</button>${GB.open[k] ? body : ""}</section>`);
+  const sel = !a ? "" : card("summary", GT[a.type][0], "งานที่เลือก", null, `<p class="gd-tt">${a.title}</p><dl class="gd-dl"><dt>ประเภท</dt><dd>${a.type} · เต็ม ${a.full}</dd><dt>หน่วย/บท</dt><dd>${a.unit || "–"}${S.tags ? " " + tag("old") : ""}</dd><dt>คำชี้แจง</dt><dd>${a.note || "–"}</dd><dt>สั่ง · กำหนด</dt><dd>${thDate(a.given)} · ${a.due ? thDate(a.due) : "ไม่มีกำหนดส่ง"}</dd><dt>ห้อง</dt><dd>${a.rooms.map(gbRoom).join(" · ")}</dd></dl>
+    <div class="gd-acts"><button class="btn" data-gb="edit">${ic("pencil-simple")}แก้ไข</button><button class="btn" data-gb="copy">${ic("copy")}คัดลอกงาน</button><button class="btn" data-gb="${a.status === "closed" ? "reopen" : "close"}">${ic(a.status === "closed" ? "lock-simple-open" : "lock-simple")}${a.status === "closed" ? "เปิดรับงาน" : "ปิดรับงาน"}</button><button class="btn" data-gb="xl" ${GB.xl === "busy" ? "disabled" : ""}>${ic("microsoft-excel-logo")}Excel</button></div>`);
+  const aw = card("awaiting", "exam", "รอตรวจ", q.aw.length, q.aw.length ? `<ul class="gd-list">${q.aw.map(([x, n]) => `<li><button data-gb="awsel:${x.id}"><span class="t">${x.title}</span><b class="num">${n} ชิ้น</b>${ic("caret-right")}</button></li>`).join("")}</ul>` : `<p class="sec">ไม่มีงานรอตรวจ</p>`, "งาน");
+  const fol = card("follow", "flag", "ต้องติดตาม", q.fol.length, q.fol.length ? `<ul class="gd-list">${q.fol.slice(0, 8).map(([s, n]) => `<li><button data-gb="rows:missing"><span class="no num">${s.no}</span><span class="t">${GB.hide ? "เลขที่ " + s.no : gbName(s)}</span><span class="st st-bad">${ic("warning-circle")}ค้าง ${n}</span></button></li>`).join("")}</ul>
+    <div class="gd-acts"><button class="btn" data-gb="copynames" ${GB.hide ? "disabled" : ""}>${ic(GB.copied ? "check" : "copy")}${GB.copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</button><span class="sec small">${GB.hide ? "ปิดอยู่ระหว่างซ่อนชื่อ" : "เลขที่. ชื่อ · ค้าง n · ไว้ส่ง LINE"}</span></div>` : `<p class="sec">ไม่มีใครค้างส่ง</p>`, "คน");
+  const shut = card("close", "lock-simple", "ควรปิดรับ", q.shut.length, q.shut.length ? `<ul class="gd-list">${q.shut.map(([x, why]) => `<li class="gd-row"><button data-gb="sel:${x.id}"><span class="t">${x.title}</span><span class="st st-warn">${ic("warning")}${why}</span></button><button class="btn" data-gb="close:${x.id}">ปิดรับ</button></li>`).join("")}</ul>` : `<p class="sec">ไม่มีงานที่ควรปิดรับ</p>`, "งาน");
+  const leg = card("legend", "info", "ความหมายของช่อง", null, `<ul class="gd-leg">${GK.map((k) => `<li><span class="gbc gw-${k} gd-sw">${k === "scored" ? '<b class="num">9</b>' : k === "late" ? `${ic("clock")}<b class="num">7.5</b>` : k === "pending" ? "·" : `${ic(GW[k][0])}${k === "missing" ? "ค้าง" : GW[k][1]}`}</span>${GW[k][2]}</li>`).join("")}
+    <li><span class="gbc gd-sw m-pend">${gbMk("pend")}9</span>รอส่งขึ้นระบบ</li><li><span class="gbc gd-sw">${gbMk("fail")}9</span>ส่งไม่สำเร็จ</li><li><span class="gbc gd-sw m-unsaved">9</span>ยังไม่ได้บันทึก (ขอบเส้นประ)</li><li><span class="gbc gd-sw">•••</span>ซ่อนคะแนนบนจอ</li></ul>`);
+  const keys = S.device !== "desk" ? "" : card("shortcuts", "keyboard", "ปุ่มลัด", null, `<p class="small">ลูกศร = เลื่อนช่อง · พิมพ์เลข = กรอก · Enter = บันทึกแล้วลงแถวถัดไป · Esc = ยกเลิก · Alt+Enter = ตัวแก้ไขช่อง · PgUp/PgDn = ±10 แถว</p>`);
+  const dv = a ? GB.st.map((s) => gbX(a.id, s.no)).filter((x) => x.s === 1 && x.sc != null).map((x) => (x.sc * 100) / a.full) : [], bk = [0, 0, 0, 0, 0];
+  dv.forEach((p) => bk[p < 50 ? 0 : p < 60 ? 1 : p < 70 ? 2 : p < 80 ? 3 : 4]++); const mx = Math.max(1, ...bk);
+  const dist = fold("dist", "chart-bar", "การกระจายคะแนน", !a ? "" : !a.pub ? `<p class="sec">งานนี้ซ่อนคะแนนไว้ — ไม่แสดงการกระจายคะแนน</p>` : `<div class="gd-dist" role="img" aria-label="${a.title}: ${["ต่ำกว่า 50%", "50–59%", "60–69%", "70–79%", "80% ขึ้นไป"].map((l, i) => `${l} ${bk[i]} คน`).join(" · ")}">${bk.map((n, i) => `<div><b class="num">${n}</b><i style="height:${(n / mx) * 100}%"></i><span>${["<50", "50–59", "60–69", "70–79", "≥80"][i]}</span></div>`).join("")}</div>`);
+  const rec = fold("recent", "clock-counter-clockwise", "แก้ไขล่าสุด", `<ul class="rec"><li><span class="t"><b>${a ? a.title : ""} · ${GB.hide ? "เลขที่ 3" : "ภูมิ"} → 7.5</b><small>วันนี้ 14:02 · กรอกในสมุดคะแนน</small></span></li><li><span class="t"><b>${GB.hide ? "เลขที่ 6" : "ปวีณ"} → รับงานแล้ว</b><small>วันนี้ 08:12 · สแกน</small></span></li></ul>`);
+  const p10 = S.tags ? `<section class="gd-card"><div class="card-head"><span class="h-ic">${ic("sparkle")}</span><h3>P10 ข้อเสนอถัดไป</h3></div><div class="chips">${tag("next")}<span class="tag tag-api">ต้องเพิ่ม API</span></div><p class="small">ประวัติแก้ไขรายช่อง · Excel ตามตัวกรองบนจอ · สรุปรายคนข้ามวิชา</p></section>` : "";
+  return `<aside class="gb-drawer ${pinned ? "pinned" : ""} ${btm && !pinned ? "btm" : ""}" id="gbDrawer" aria-labelledby="gd-h" ${pinned ? "" : 'role="dialog" aria-modal="false"'}>
+    <div class="gd-head"><h2 class="display" id="gd-h">แผงงาน</h2><button class="icon-btn" data-act="sheet:gb-cards" aria-label="ปรับการ์ด">${ic("sliders-horizontal")}</button>${S.device === "desk" ? `<button class="icon-btn" data-gb="pin" aria-pressed="${GB.pin}" aria-label="${GB.pin ? "เลิกปักแผงข้างตาราง" : "ปักแผงไว้ข้างตาราง"}">${ic("push-pin")}</button>` : ""}<button class="icon-btn" data-gb="drawer" aria-label="ปิดแผงงาน">${ic("x")}</button></div>
+    ${sel}${aw}${fol}${shut}${leg}${keys}${dist}${rec}${p10}</aside>`;
+}
+/* cell editor (หน้าจอ C) — popover on desk/iPad นอน · bottom sheet on iPad ตั้ง/มือถือ */
+function gbPopOpen(aid, no, fromType) {
+  const x = gbX(aid, no); GB.edit = null; const r = GB.rowNos.indexOf(no), c = GB.asg.findIndex((a) => a.id === aid); if (r >= 0) { GB.fr = r; GB.fc = c; }
+  GB.pop = { aid, no, st: x.s === "x" ? "ex" : x.s === 1 ? "sub" : "none", sc: x.sc != null ? fmtN(x.sc) : "", rv: x.rv || TODAY, err: "", wasEx: x.s === "x" && !!fromType };
+  render(true); const f = document.querySelector('#gbPop [aria-checked="true"]'); if (f) f.focus();
+}
+function gbPop() {
+  const P = GB.pop; if (!P) return ""; const a = gbA(P.aid), s = gbStu(P.no), x = gbX(P.aid, P.no), m = GB.mk[P.aid + "|" + P.no], float = ["desk", "ipadL"].includes(S.device);
+  const yd = addD(TODAY, -1), rvs = [[TODAY, "วันนี้"], [yd, "เมื่อวาน"]];
+  if (a.due && a.due < yd) rvs.push([a.due, `ตามกำหนดส่ง · ${thDate(a.due)}`]); if (P.rv && !rvs.some((r) => r[0] === P.rv)) rvs.push([P.rv, `เดิม · ${thDate(P.rv)}`]);
+  const late = a.due && P.rv > a.due, res = !a.due ? `ไม่มีกำหนดส่ง · รับ ${thDate(P.rv)}` : late ? `ส่งช้า ${gbDays(P.rv, a.due)} วัน · รับ ${thDate(P.rv)}` : `ส่งทันกำหนด · รับ ${thDate(P.rv)}`;
+  const opt = [["none", "circle-dashed", "ยังไม่ส่ง"], ["sub", "check", "ส่งแล้ว"], ["ex", "prohibit", "ยกเว้น"]];
+  return `<div class="scrim gb-popscrim ${float ? "float" : ""}"><div class="sheet gb-pop ${float ? "float" : ""}" id="gbPop" role="dialog" aria-modal="true" aria-labelledby="gp-h">
+   <div class="sheet-h"><h2 id="gp-h">${GB.hide ? `เลขที่ ${s.no} · …` : `เลขที่ ${s.no} ${s.n[0]}`} · ${a.title} · เต็ม ${a.full}</h2><button class="icon-btn" data-gb="popx" aria-label="ปิดตัวแก้ไขช่อง">${ic("x")}</button></div>
+   ${P.wasEx ? `<p class="gf-note">${ic("info")}ช่องนี้ “ยกเว้น” อยู่ — จะเปลี่ยนจากยกเว้นเป็นส่งแล้ว ให้เลือก “ส่งแล้ว” ก่อน (ไม่เขียนทับเงียบ)</p>` : ""}
+   ${m === "fail" ? `<p class="gf-err">${ic("warning")}ส่งไม่สำเร็จ: ${GB_FAIL}</p>` : m === "unsaved" ? `<p class="gf-err">${ic("warning")}ยังบันทึกลงเครื่องไม่ได้ — พื้นที่เก็บข้อมูลในเครื่องอาจเต็ม</p>` : ""}
+   <div class="gp-opt" role="radiogroup" aria-label="สถานะงาน">${opt.map(([k, i, l]) => `<button role="radio" class="gp-r" aria-checked="${P.st === k}" tabindex="${P.st === k ? 0 : -1}" data-gb="pst:${k}">${ic(i)}${l}</button>`).join("")}</div>
+   <p class="sec small">ยกเว้น = ไม่นับในอัตราส่งและคะแนนสะสม</p>
+   ${P.st !== "sub" ? "" : `<div class="gp-sc"><label for="gpSc">คะแนน</label><input id="gpSc" class="gf-in num" inputmode="decimal" autocomplete="off" aria-label="คะแนน" value="${gbEsc(P.sc)}" aria-invalid="${!!P.err}" aria-describedby="gpErr"><span class="num">/ ${a.full}</span>
+     <span class="gp-q" role="group" aria-label="คะแนนลัด"><button class="btn" data-gb="pq:${a.full}">เต็ม</button><button class="btn" data-gb="pq:${a.full / 2}">ครึ่ง</button><button class="btn" data-gb="pq:0">0</button></span></div>
+     <p class="gf-err" id="gpErr" role="alert" ${P.err ? "" : "hidden"}>${ic("warning-circle")}${P.err}</p>
+     <div class="gp-rv" role="group" aria-label="วันที่รับ">${rvs.map(([d, l]) => `<button class="gf-chip" aria-pressed="${P.rv === d}" data-gb="prv:${d}">${l}</button>`).join("")}</div>
+     <p class="gp-res ${late ? "late" : ""}">${ic(late ? "clock" : "calendar-check")}${res}<span class="sec">(ระบบคำนวณส่งช้าเอง)</span></p>`}
+   <p class="sec small">${ic("info")}รับด้วย: ${x.s === 1 ? "กรอก · แก้ล่าสุด 14:02" : "–"}</p>
+   <div class="gp-acts"><button class="btn btn-primary" data-gb="popsave">${ic("check")}บันทึก</button><button class="btn" data-gb="popx">ยกเลิก</button></div></div></div>`;
+}
+function gbPopSave() {
+  const P = GB.pop, a = gbA(P.aid), x = gbX(P.aid, P.no), prev = { ...x }, s = gbStu(P.no); let nx;
+  if (P.st === "sub") { const v = String(P.sc).trim(), n = Number(v);
+    if (v !== "" && (!/^\d+(\.\d+)?$/.test(v) || n > a.full || n * 2 !== Math.round(n * 2))) { P.err = `คะแนนต้อง 0–${a.full} (ทีละ 0.5)`; return false; }
+    if (a.given && P.rv < a.given) { P.err = "วันที่รับอยู่ก่อนวันมอบหมายงาน"; return false; }
+    nx = { s: 1, sc: v === "" ? null : n, rv: P.rv }; } else nx = P.st === "ex" ? { s: "x" } : { s: 0 };
+  GB.sub[P.aid][P.no] = nx; GB.pop = null; gbMark(P.aid, P.no);
+  const stCh = (prev.s || 0) !== nx.s, rvCh = nx.s === 1 && prev.s === 1 && prev.rv !== nx.rv;
+  if (stCh || rvCh) gbStartUndo(`${gbWho(s)} · ${stCh ? (nx.s === "x" ? "ตั้งเป็นยกเว้นแล้ว" : nx.s === 1 ? "ตั้งเป็นส่งแล้ว" : "ตั้งเป็นยังไม่ส่งแล้ว") : `แก้วันที่รับเป็น ${thDate(nx.rv)} แล้ว${a.due && nx.rv > a.due ? ` · ส่งช้า ${gbDays(nx.rv, a.due)} วัน` : ""}`}`,
+    () => { GB.sub[P.aid][P.no] = prev; gbMark(P.aid, P.no); });
+  else GB.live = nx.sc != null ? `บันทึก ${fmtN(nx.sc)} · เลขที่ ${P.no}` : "บันทึกแล้ว";
+  return true;
+}
+/* undo (5 s, pauses on hover/focus) — status/date/bulk only; score typing has no toast */
+function gbStopUndo() { clearInterval(gbUndoT); gbUndoT = null; GB.undo = null; }
+function gbStartUndo(msg, fn, btn = "เลิกทำ") { gbStopUndo(); GB.undo = { msg, fn, btn, left: 5 }; GB.live = msg;
+  gbUndoT = setInterval(() => { const u = GB.undo, bar = document.getElementById("gbUndo"); if (!u) return gbStopUndo(); if (bar && bar.matches(":hover,:focus-within")) return;
+    u.left--; if (u.left <= 0) { gbStopUndo(); if (bar) bar.remove(); return; } const b = document.getElementById("gbUndoBtn"), mt = document.getElementById("gbUndoM");
+    if (b) b.innerHTML = `${ic("arrow-u-up-left")}${u.btn} (${u.left})`; if (mt) mt.style.width = u.left * 20 + "%"; }, 1000); }
+const gbUndoBar = () => { const u = GB.undo; if (!u) return "";
+  return `<div class="at-undo" id="gbUndo" role="group" aria-label="${u.btn}"><span class="m">${ic("arrow-counter-clockwise")}${u.msg}</span><span class="meter" aria-hidden="true"><i id="gbUndoM" style="width:${u.left * 20}%"></i></span><button class="btn" id="gbUndoBtn" data-gb="undo">${ic("arrow-u-up-left")}${u.btn} (${u.left})</button></div>`; };
+function gbMark(aid, no) { const k = aid + "|" + no; GB.mk[k] = "pend"; if (!GB.online) return; clearTimeout(gbSaveT[k]);
+  gbSaveT[k] = setTimeout(() => { if (GB.mk[k] !== "pend") return; delete GB.mk[k]; if (S.page !== "gradebook") return;
+    document.querySelectorAll(`[data-k="${k}"]`).forEach((td) => { td.classList.remove("m-pend"); const mk = td.querySelector(".gmk"); if (mk) mk.remove(); td.setAttribute("aria-label", td.getAttribute("aria-label").replace(" · รอส่งขึ้นระบบ", "")); });
+    const b = gbSaveBadge(); document.querySelectorAll(".gb-savebadge").forEach((el) => { el.className = el.className.replace(/\b(ok|warn|bad|mute)\b/g, "").trim() + " " + b[0]; el.innerHTML = badgeIc(b) + b[2]; }); }, 700); }
+function gbShowErr(msg) { const el = document.getElementById("gbErr"); clearTimeout(gbErrT); if (!el) return; el.innerHTML = ic("warning-circle") + msg; el.hidden = false; gbErrT = setTimeout(() => { el.hidden = true; el.textContent = ""; }, 5000); }
+/* commit = decideCellCommit (grade.ts): 0–full in 0.5 steps · empty = clear score (stays submitted) · not-yet-sent cell becomes sent today */
+function gbCommit(raw) {
+  const E = GB.edit; if (!E) return true; const s = gbRowList()[E.r], a = GB.asg[E.c], x = gbX(a.id, s.no), v = String(raw ?? "").trim();
+  if (v === "") { if (x.s === 1 && x.sc != null) { x.sc = null; gbMark(a.id, s.no); GB.live = `ล้างคะแนน · เลขที่ ${s.no}`; } GB.edit = null; return true; }
+  const n = Number(v);
+  if (!/^\d+(\.\d+)?$/.test(v) || n > a.full || n * 2 !== Math.round(n * 2)) { gbShowErr(`คะแนนต้อง 0–${a.full} (ทีละ 0.5)`); return false; }
+  if (x.s === 1 && x.sc === n) { GB.edit = null; return true; }
+  if (x.s !== 1) GB.sub[a.id][s.no] = { s: 1, sc: n, rv: TODAY }; else x.sc = n;
+  gbMark(a.id, s.no); GB.live = `บันทึก ${fmtN(n)} · เลขที่ ${s.no}`; GB.edit = null; return true;
+}
+function gbEditAt(r, c, ch) { const s = gbRowList()[r], a = GB.asg[c], x = gbX(a.id, s.no); GB.fr = r; GB.fc = c; GB.edit = { r, c, val: ch != null ? ch : x.s === 1 && x.sc != null ? fmtN(x.sc) : "", sel: ch == null }; gbRender(); }
+function gbRender() { render(true); gbFocus(); }
+function gbFocus() {
+  if (S.page !== "gradebook") return; const inp = document.getElementById("gbIn");
+  if (GB.edit && inp) { inp.focus({ preventScroll: true }); if (GB.edit.sel) inp.select(); else { const n = inp.value.length; inp.setSelectionRange(n, n); } gbEnsure(inp.closest("td")); return; }
+  const el = S.device === "phone" ? document.querySelector(`[data-gb="mpop:${(gbRowList()[GB.fr] || {}).no}"]`) : GB.fr === -1 ? document.querySelector(`.gh-btn[data-hc="${GB.fc}"]`) : document.querySelector(`td.gbc[data-r="${GB.fr}"][data-c="${GB.fc}"]`);
+  if (el) { el.focus({ preventScroll: true }); gbEnsure(el.closest("td,th")); }
+}
+function gbEnsure(cell) { // keep the focused cell clear of sticky header / name / cumulative columns
+  const sc = document.getElementById("gbScroll"); if (!sc || !cell || !sc.contains(cell)) return; const t = sc.querySelector("table"), nW = t.querySelector("thead .c-name").offsetWidth, cW = t.querySelector("thead .c-cum").offsetWidth, hH = t.tHead.offsetHeight;
+  const L = cell.offsetLeft, W = cell.offsetWidth, T = cell.offsetTop, H = cell.offsetHeight;
+  if (!cell.classList.contains("c-name")) { if (L - nW < sc.scrollLeft) sc.scrollLeft = L - nW; else if (L + W > sc.scrollLeft + sc.clientWidth - cW) sc.scrollLeft = L + W - sc.clientWidth + cW; }
+  if (cell.tagName === "TD") { if (T - hH < sc.scrollTop) sc.scrollTop = T - hH; else if (T + H > sc.scrollTop + sc.clientHeight) sc.scrollTop = T + H - sc.clientHeight; }
+}
+function gbMove(r, c) { const R = GB.rowNos.length, C = GB.asg.length; r = Math.max(-1, Math.min(R - 1, r)); c = Math.max(0, Math.min(C - 1, c));
+  document.querySelectorAll('.gbt [tabindex="0"]').forEach((x) => (x.tabIndex = -1)); GB.fr = r; GB.fc = c;
+  const el = r === -1 ? document.querySelector(`.gh-btn[data-hc="${c}"]`) : document.querySelector(`td.gbc[data-r="${r}"][data-c="${c}"]`); if (el) { el.tabIndex = 0; el.focus({ preventScroll: true }); gbEnsure(el.closest("td,th")); } }
+function gbCellClick(td, e) {
+  if (gbHeld) { gbHeld = false; return; }
+  const r = +td.dataset.r, c = +td.dataset.c, s = gbRowList()[r], a = GB.asg[c];
+  if (GB.edit && GB.edit.r === r && GB.edit.c === c) { if (e.target.id !== "gbIn") { const i = document.getElementById("gbIn"); if (!gbCommit(i ? i.value : GB.edit.val)) GB.edit = null; gbPopOpen(a.id, s.no); } return; } // tap again = cell editor
+  if (GB.edit) { const i = document.getElementById("gbIn"); if (!gbCommit(i ? i.value : GB.edit.val)) GB.edit = null; }
+  GB.fr = r; GB.fc = c;
+  if (gbWs(a, gbX(a.id, s.no)) === "excused") { gbPopOpen(a.id, s.no, true); return; }
+  gbEditAt(r, c, null);
+}
+function gbKey_(e) {
+  const t = e.target, k = e.key;
+  if (GB.pop) { if (k === "Escape") { e.preventDefault(); gbAct("popx"); return true; }
+    if (k === "Enter" && t.id === "gpSc") { e.preventDefault(); gbAct("popsave"); return true; }
+    if (t.classList && t.classList.contains("gp-r") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(k)) { e.preventDefault(); const o = ["none", "sub", "ex"], j = (o.indexOf(GB.pop.st) + (["ArrowLeft", "ArrowUp"].includes(k) ? 2 : 1)) % 3; gbAct("pst:" + o[j]); return true; }
+    return false; }
+  if (S.sheet) return false;
+  if (k === "Escape" && GB.drawer) { gbAct("drawer"); return true; }
+  if (t.id === "gbIn") { const E = GB.edit; if (!E) return false;
+    if (k === "Enter") { e.preventDefault(); if (!gbCommit(t.value)) { t.select(); return true; }
+      if (e.altKey) { gbPopOpen(GB.asg[E.c].id, gbRowList()[E.r].no); return true; }
+      if (E.r < GB.rowNos.length - 1) gbEditAt(E.r + 1, E.c, null); else { GB.fr = E.r; GB.fc = E.c; gbRender(); } return true; }
+    if (k === "Escape") { e.preventDefault(); GB.edit = null; gbRender(); return true; }
+    if (k === "Tab") { e.preventDefault(); if (!gbCommit(t.value)) GB.edit = null; gbRender(); return true; }
+    return false; }
+  const hb = t.closest && t.closest(".gh-btn");
+  if (hb) { const c = +hb.dataset.hc, m = { ArrowLeft: [-1, c - 1], ArrowRight: [-1, c + 1], ArrowDown: [0, c], Home: [-1, 0], End: [-1, GB.asg.length - 1] }[k]; if (m) { e.preventDefault(); gbMove(...m); return true; } return false; }
+  if (!(t.classList && t.classList.contains("gbc") && t.tagName === "TD")) return false;
+  const r = +t.dataset.r, c = +t.dataset.c, C = GB.asg.length;
+  const mv = { ArrowLeft: [r, c - 1], ArrowRight: [r, c + 1], ArrowUp: [r - 1, c], ArrowDown: [r + 1, c], Home: [r, 0], End: [r, C - 1], PageUp: [Math.max(0, r - 10), c], PageDown: [r + 10, c] }[k];
+  if (mv && !e.altKey) { e.preventDefault(); gbMove(...mv); return true; }
+  const s = gbRowList()[r], a = GB.asg[c], ex = gbWs(a, gbX(a.id, s.no)) === "excused";
+  if (/^[0-9.]$/.test(k) && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); if (ex) gbPopOpen(a.id, s.no, true); else gbEditAt(r, c, k); return true; }
+  if (k === "Enter" || k === " ") { e.preventDefault(); if (e.altKey || ex) gbPopOpen(a.id, s.no, ex); else gbEditAt(r, c, null); return true; }
+  return false;
+}
+/* หน้าต่างสร้าง / แก้ไข / คัดลอก งาน (หน้าจอ D) */
+function gbDlgOpen(mode, opener) {
+  const a = gbA();
+  GB.dlg = mode === "new" || !a ? { mode: "new", type: "ใบงาน", title: "", subject: "คณิตศาสตร์", full: "10", unit: "", given: TODAY, due: "", rooms: ["c61"], pub: true, note: "", err: "" }
+    : { mode, from: a.title, id: a.id, type: a.type, title: a.title, subject: "คณิตศาสตร์", full: String(a.full), unit: a.unit || "", given: mode === "copy" ? TODAY : a.given, due: mode === "copy" ? "" : a.due || "", rooms: [...a.rooms], pub: a.pub, note: a.note || "", err: "" };
+  S.sheet = "gb-asg"; S.opener = opener || `[data-gb="${mode}"]`; render(true); const t = document.getElementById("gdTitle"); if (t) t.focus();
+}
+function gbDlgSave(choice) {
+  const D = GB.dlg, t = D.title.trim(), f = Number(String(D.full).trim()), old = D.mode === "edit" ? gbA(D.id) : null;
+  D.err = !t ? "ใส่ชื่องาน" : t.length > 200 ? "ชื่องานยาวเกินไป — ไม่เกิน 200 ตัวอักษร" : !/^\d+$/.test(String(D.full).trim()) || f < 1 || f > 100 ? "คะแนนเต็มเป็นจำนวนเต็ม 1–100"
+    : D.due && D.given && D.due < D.given ? "วันกำหนดส่งต้องไม่ก่อนวันสั่งงาน" : !D.rooms.length ? "เลือกอย่างน้อย 1 ห้อง" : "";
+  if (!D.err && old) { const xs = Object.values(GB.sub[old.id] || {}), over = xs.filter((x) => x.s === 1 && x.sc > f).length;
+    if (over) D.err = `ลดคะแนนเต็มไม่ได้ มี ${over} รายการที่คะแนนเกิน`;
+    else if (f > old.full && !choice) { const n = xs.filter((x) => x.s === 1 && x.sc === old.full).length; if (n) { D.raise = { n, old: old.full, f }; render(true); focusEl('[data-gb="raise:adj"]', true); return; } } }
+  if (D.err) { render(true); focusEl("#gdErr", true); return; }
+  const rec = { type: D.type, title: t, full: f, unit: D.unit.trim(), given: D.given || TODAY, due: D.due || null, rooms: [...D.rooms], pub: D.pub, note: D.note.trim() };
+  S.sheet = null;
+  if (old) { const prevSub = JSON.parse(JSON.stringify(GB.sub[old.id])), prevA = { ...old }; let n = 0;
+    if (choice === "adj") Object.values(GB.sub[old.id]).forEach((x) => { if (x.s === 1 && x.sc === prevA.full) { x.sc = f; n++; } });
+    Object.assign(old, rec); GB.dlg = null;
+    if (n) gbStartUndo(`บันทึกแล้ว · ปรับเป็นเต็มใหม่ ${n} คน`, () => { Object.assign(old, prevA); GB.sub[old.id] = prevSub; }, "ย้อนกลับ"); else GB.tmsg = "บันทึกงานแล้ว";
+  } else { const here = D.rooms.includes("c61") && D.subject === "คณิตศาสตร์", a = { id: "N" + ++GB.seq, status: "open", ...rec }; GB.dlg = null;
+    if (here) { GB.asg.push(a); GB.sub[a.id] = {}; GB.sel = a.id; GB.fc = GB.asg.length - 1; GB.scrollCol = a.id; if (GB.rows !== "all") gbSetRows(GB.rows); }
+    GB.tmsg = `สร้างงานแล้ว · ${rec.rooms.map(gbRoom).join(" · ")}${here ? "" : " — ไม่อยู่ในตารางนี้ (คนละห้อง/วิชา)"}`; }
+  render(true); if (GB.tmsg) { GB.live = GB.tmsg; toast(GB.tmsg); GB.tmsg = ""; }
+  const o = document.querySelector(`.gh-btn[data-gb="sel:${GB.sel}"]`) || document.querySelector('[data-gb="new"]'); if (o) o.focus({ preventScroll: true });
+}
+function gbBulkOpts(a) { const xs = GB.st.map((s) => gbX(a.id, s.no)), cl = a.status === "closed";
+  return { sub: [`ทั้งห้องส่งแล้ว ${xs.filter((x) => x.s === 0).length} คน`, "ทำเครื่องหมายว่าส่งแล้วให้คนที่ยังไม่ส่ง · คนที่ยกเว้นไม่ถูกแตะ", xs.filter((x) => x.s === 0).length, cl ? "งานนี้ปิดรับแล้ว — เปิดรับงานก่อน" : ""],
+    full: [`ให้เต็มคนที่ส่ง ${xs.filter((x) => x.s === 1 && x.sc == null).length} คน`, `ให้ ${a.full}/${a.full} กับคนที่ส่งแล้วแต่ยังไม่มีคะแนน`, xs.filter((x) => x.s === 1 && x.sc == null).length, ""],
+    clear: [`ล้างคะแนนทั้งงาน ${xs.filter((x) => x.s === 1 && x.sc != null).length} คน`, "คะแนนกลับเป็น “รอตรวจ” · ยังนับว่าส่งแล้ว", xs.filter((x) => x.s === 1 && x.sc != null).length, ""] }; }
+function gbBulkApply() { const a = gbA(), k = GB.bulk, prev = JSON.parse(JSON.stringify(GB.sub[a.id])); let n = 0;
+  GB.st.forEach((s) => { const x = gbX(a.id, s.no);
+    if (k === "sub" && x.s === 0) { GB.sub[a.id][s.no] = { s: 1, sc: null, rv: TODAY }; n++; } else if (k === "full" && x.s === 1 && x.sc == null) { x.sc = a.full; n++; } else if (k === "clear" && x.s === 1 && x.sc != null) { x.sc = null; n++; } else return;
+    gbMark(a.id, s.no); });
+  GB.bulk = null; gbStartUndo(k === "sub" ? `ทั้งห้องส่งแล้ว ${n} คน · รับ วันนี้` : k === "full" ? `ให้เต็ม ${n} คนแล้ว` : `ล้างคะแนนทั้งงาน ${n} คนแล้ว`, () => { GB.sub[a.id] = prev; }, "ย้อนกลับ"); }
+function gbSheet() {
+  const k = S.sheet, a = gbA(); let h = "", body = "", role = "dialog", cls = "", foot = false;
+  const no = (l) => `<button class="btn" id="gbNo" data-act="close">${l}</button>`;
+  if (k === "gb-asg") { const D = GB.dlg; h = D.mode === "edit" ? "แก้ไขงาน" : D.mode === "copy" ? "คัดลอกงาน" : "สร้างงานใหม่"; cls = S.device === "desk" ? "gb-center" : "";
+    if (D.raise) { role = "alertdialog"; h = `ปรับคนที่ได้เต็ม ${D.raise.n} คน?`;
+      body = `<p>${D.raise.n} คนได้ ${D.raise.old}/${D.raise.old} (เต็มเดิม) · ปรับเป็น ${D.raise.f}/${D.raise.f} หรือคงไว้เป็น ${D.raise.old}/${D.raise.f}</p><div class="gd-foot"><button class="btn btn-primary" data-gb="raise:adj">ปรับเป็น ${D.raise.f}/${D.raise.f}</button><button class="btn" data-gb="raise:keep">คงไว้ ${D.raise.old}/${D.raise.f}</button><button class="btn" data-gb="raise:cancel">ยกเลิก</button></div>`; }
+    else body = `${D.mode === "copy" ? `<p class="gf-note">${ic("copy")}คัดลอกจาก “${gbEsc(D.from)}” — วันที่สั่ง = วันนี้ · ไม่มีกำหนดส่ง · ไม่คัดลอกคะแนนและการส่ง</p>` : ""}
+      <div class="gf-field"><span class="gf-l" id="gdTy">ประเภทงาน</span><div class="gf-chips" role="group" aria-labelledby="gdTy">${Object.entries(GT).map(([t, v]) => `<button class="gf-chip t-${v[1]}" aria-pressed="${D.type === t}" data-gb="dtype:${t}"><i class="tsh" aria-hidden="true"></i>${ic(v[0])}${t}</button>`).join("")}</div>${D.type === "สอบ" ? `<p class="sec small">ประเภทสอบ: ซ่อนคะแนนบนจอไว้ก่อน เพื่อไม่ให้คะแนนหลุด (เปิดได้ที่สวิตช์นี้ หรือที่ไอคอนตาในสมุดคะแนน)</p>` : ""}</div>
+      <div class="gf-field"><label for="gdTitle">ชื่องาน / เรื่อง</label><input id="gdTitle" class="gf-in" data-gbf="title" value="${gbEsc(D.title)}" placeholder="เช่น ใบงานที่ 5 เรื่อง ระบบหายใจ"></div>
+      <div class="gf-row"><div class="gf-field"><label for="gdSub">วิชา</label><select id="gdSub" class="gf-in" data-gbf="subject">${["คณิตศาสตร์", "วิทยาศาสตร์", "ภาษาไทย"].map((x) => `<option ${D.subject === x ? "selected" : ""}>${x}</option>`).join("")}</select></div>
+        <div class="gf-field"><label for="gdFull">คะแนนเต็ม</label><input id="gdFull" class="gf-in num" inputmode="numeric" data-gbf="full" value="${gbEsc(D.full)}"></div>
+        <div class="gf-field"><label for="gdUnit">หน่วย/บท</label><input id="gdUnit" class="gf-in" data-gbf="unit" value="${gbEsc(D.unit)}" placeholder="เช่น บทที่ 3"></div></div>
+      <div class="gf-row two"><div class="gf-field"><label for="gdGiven">วันที่สั่งงาน</label><input type="date" id="gdGiven" class="gf-in" data-gbf="given" value="${D.given}"></div><div class="gf-field"><label for="gdDue">กำหนดส่ง</label><input type="date" id="gdDue" class="gf-in" data-gbf="due" value="${D.due}"></div></div>
+      <div class="gf-field"><span class="gf-l" id="gdRm">มอบหมายให้ห้อง</span><div class="gf-chips" role="group" aria-labelledby="gdRm">${GB_ROOMS.map(([id, nm]) => `<button class="gf-chip" aria-pressed="${D.rooms.includes(id)}" data-gb="droom:${id}">${ic(D.rooms.includes(id) ? "check-square" : "square")}${nm}</button>`).join("")}</div></div>
+      <div class="gf-field"><button class="gf-switch" role="switch" aria-checked="${D.pub}" data-gb="dpub"><span class="tr" aria-hidden="true"><i></i></span>แสดงคะแนนบนจอ</button><p class="sec small">${D.pub ? "คะแนนของงานนี้แสดงในตารางและบนจอฉาย" : "ซ่อนคะแนนไว้ — ตารางแสดง ••• แทนตัวเลข (ซ่อน/แสดงทีหลังได้ที่รูปตาของคอลัมน์)"}</p></div>
+      <div class="gf-field"><label for="gdNote">คำชี้แจง</label><textarea id="gdNote" class="gf-in" data-gbf="note" rows="2">${gbEsc(D.note)}</textarea></div>
+      <div class="gd-foot"><p class="gf-err" id="gdErr" role="alert" tabindex="-1" ${D.err ? "" : "hidden"}>${ic("warning-circle")}${D.err}</p><button class="btn" data-act="close">ยกเลิก</button><button class="btn btn-primary" data-gb="dsave">${ic("check")}บันทึกงาน</button></div>`; }
+  if (k === "gb-close") { role = "alertdialog"; const x = gbA(GB.closeId), s = gbAS(x), left = s.den - s.sent; h = `ปิดรับ “${x.title}” ทุกห้อง?`;
+    body = `<p>${left ? `ยังไม่ส่ง ${left} คน จะนับเป็นค้างส่ง` : "ทุกคนส่งแล้ว"}</p><p class="sec">เปิดรับอีกครั้งได้ที่ปุ่มเดิม · สแกนรับงานเพิ่มไม่ได้เมื่อปิดรับ แต่ให้คะแนนในสมุดคะแนนได้</p><div class="gd-foot"><button class="btn btn-danger" data-gb="close-yes">${ic("lock-simple")}ปิดรับงาน</button>${no("ยังไม่ปิด")}</div>`; }
+  if (k === "gb-bulk") { const o = gbBulkOpts(a), pend = Object.keys(GB.mk).filter((x) => x.startsWith(a.id + "|") && GB.mk[x] === "pend").length;
+    if (!GB.bulk) { h = `ทำทั้งห้อง · ${a.title}`; foot = true;
+      body = (pend && !GB.online ? `<p class="gf-note">${ic("info")}ยังมีคะแนน ${pend} รายการของงานนี้ที่ยังไม่ได้ส่งขึ้นระบบ — รอให้ส่งเสร็จก่อนแล้วค่อยทำทั้งห้อง</p>` : "") + Object.entries(o).map(([kk, [t, d, n, why]]) => `<button class="btn mrow" data-gb="bk:${kk}" ${!n || why || (pend && !GB.online) ? "disabled" : ""}>${ic(kk === "sub" ? "users-three" : kk === "full" ? "seal-check" : "eraser")}<span>${t}<br><small>${why || (n ? d : "ไม่มีรายการที่ต้องเปลี่ยน")}</small></span></button>`).join(""); }
+    else { role = "alertdialog"; h = `${o[GB.bulk][0]}?`; body = `<p>${gbRoom("c61")} · ${o[GB.bulk][1]}</p><p class="sec small">ย้อนกลับได้ 5 วินาทีหลังกด</p><div class="gd-foot"><button class="btn btn-primary" data-gb="bk-yes">${o[GB.bulk][0]}</button>${no("ยกเลิก")}</div>`; } }
+  if (k === "gb-more") { h = a.title; foot = true; const allPub = GB.asg.every((x) => x.pub);
+    body = `${S.device === "phone" ? `<button class="btn mrow" data-gb="bulk">${ic("users-three")}ทำทั้งห้อง…</button><button class="btn mrow" data-gb="eye">${ic(a.pub ? "eye-slash" : "eye")}${a.pub ? "ซ่อนคะแนนบนจอของงานนี้" : "แสดงคะแนนบนจอของงานนี้"}</button>` : ""}<button class="btn mrow" data-gb="edit">${ic("pencil-simple")}แก้ไขงาน</button><button class="btn mrow" data-gb="allpub">${ic(allPub ? "eye-slash" : "eye")}${allPub ? "ซ่อนคะแนนทั้งหมด" : "แสดงคะแนนทั้งหมด"}</button><button class="btn mrow" data-gb="del">${ic("trash")}ลบงาน…</button>`; }
+  if (k === "gb-del") { role = "alertdialog"; h = `ลบงาน “${a.title}”?`; body = `<p>คะแนนที่บันทึกไว้จะถูกซ่อน · ลบแล้วกู้คืนในหน้านี้ไม่ได้</p><div class="gd-foot"><button class="btn btn-danger" data-gb="del-yes">${ic("trash")}ลบงาน</button>${no("ยกเลิก")}</div>`; }
+  if (k === "gb-cards") { h = "ปรับการ์ดแผงงาน"; foot = true; body = `<p class="sec small">ซ่อน/แสดงการ์ดในแผงงาน (จำต่อเครื่อง · gradebook_cards เดิม)</p>` + GB_CARDS.map(([x, l]) => `<button class="btn mrow" aria-pressed="${GB.cards[x]}" data-gb="card:${x}">${ic(GB.cards[x] ? "toggle-right" : "toggle-left")}${l} · ${GB.cards[x] ? "แสดงอยู่" : "ซ่อนอยู่"}</button>`).join("") + `<p class="sec small">${ic("lock-simple")} แสดงเสมอ: hero · ตาราง · แถบงานที่เลือก · ตัวกรอง · ทำทั้งห้อง · แถบแจ้งเตือน</p>`; }
+  if (k === "gb-jump") { h = "กระโดดไปงาน"; foot = true; const open = GB.asg.filter((x) => x.status === "open");
+    body = `<button class="btn mrow" data-gb="jsel:${(open[open.length - 1] || GB.asg[0]).id}">${ic("arrow-line-right")}งานล่าสุดที่เปิดรับ</button>` + Object.keys(GT).map((t) => { const xs = GB.asg.filter((x) => x.type === t); return xs.length ? `<button class="btn mrow t-${GT[t][1]}" data-gb="jsel:${xs[0].id}"><i class="tsh" aria-hidden="true"></i>${ic(GT[t][0])}${t} · ${xs.length} งาน</button>` : ""; }).join(""); }
+  return `<div class="scrim ${cls}"><div class="sheet gb-sheet ${k}" role="${role}" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}${foot ? `<button class="btn btn-primary" data-act="close">เสร็จ</button>` : ""}</div></div>`;
+}
+function gbOverlays() { return `${GB.drawer && !(GB.pin && S.device === "desk") && !gbOff() ? gbDrawer(false) : ""}${gbPop()}${gbUndoBar()}<div class="gb-err" id="gbErr" role="alert" hidden></div>`; }
+function gbAfter() {
+  if (GB.scrollCol) { const j = GB.asg.findIndex((a) => a.id === GB.scrollCol); GB.scrollCol = null; const th = document.querySelectorAll(".gbt thead th.gba")[j]; if (th) gbEnsure(th); }
+  const p = document.querySelector(".gb-pop.float"); if (!p || !GB.pop) return;
+  const dev = document.getElementById("device"), [DW, DH] = DEV[S.device], dr = dev.getBoundingClientRect(), sc = dr.width / DW, td = document.querySelector(`td.gbc[data-k="${GB.pop.aid}|${GB.pop.no}"]`);
+  if (!td) { p.style.left = (DW - p.offsetWidth) / 2 + "px"; p.style.top = "80px"; return; }
+  const r = td.getBoundingClientRect(), W = p.offsetWidth, H = p.offsetHeight; let x = (r.left - dr.left) / sc, y = (r.bottom - dr.top) / sc + 6;
+  if (x + W > DW - 12) x = DW - 12 - W; if (y + H > DH - 12) y = Math.max(12, (r.top - dr.top) / sc - 6 - H); p.style.left = Math.max(12, x) + "px"; p.style.top = y + "px";
+}
+const gbSelOf = (el) => (!el || el === document.body ? null : el.id ? "#" + el.id : el.dataset && el.dataset.gb ? `[data-gb="${el.dataset.gb}"]` : el.dataset && el.dataset.page ? `[data-page="${el.dataset.page}"]` : el.dataset && el.dataset.set ? `[data-set="${el.dataset.set}"]` : null);
+function gbAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), arg = i < 0 ? "" : v.slice(i + 1), a = gbA(), D = GB.dlg; let f = null;
+  GB.dirty = false;
+  switch (k) {
+    case "rows": { const nk = GB.rows === arg && arg !== "all" ? "all" : arg; gbSetRows(nk); const n = GB.rowNos.length;
+      GB.tmsg = nk === "all" ? "แสดงทุกคนแล้ว" : `แสดง ${n} คนที่${nk === "missing" ? "ค้างส่ง" : "มีงานรอตรวจ"} · ซ่อน ${GB.st.length - n} คน`; f = e && e.target.closest(".gh-big") ? `.gh-big[data-gb="rows:${arg}"]` : `[data-gb="rows:${nk}"]`; break; }
+    case "sel": GB.sel = arg; GB.fc = GB.asg.findIndex((x) => x.id === arg); if (S.device !== "phone" && e && e.target.closest(".gh-btn")) GB.fr = -1; f = `[data-gb="sel:${arg}"]`; break;
+    case "jsel": S.sheet = null; GB.sel = arg; GB.fc = GB.asg.findIndex((x) => x.id === arg); GB.fr = -1; GB.scrollCol = arg; f = `.gh-btn[data-gb="sel:${arg}"]`; break;
+    case "awsel": GB.sel = arg; GB.fc = GB.asg.findIndex((x) => x.id === arg); gbSetRows("awaiting"); GB.scrollCol = arg; GB.tmsg = `เลือก ${gbA(arg).title} · แสดงเฉพาะคนที่มีงานรอตรวจ`; f = `[data-gb="awsel:${arg}"]`; break;
+    case "hide": GB.hide = !GB.hide; GB.tmsg = GB.hide ? "ซ่อนชื่อนักเรียนแล้ว (เฉพาะหน้านี้)" : "แสดงชื่อนักเรียนแล้ว"; f = '.gh-a [data-gb="hide"]'; break;
+    case "drawer": GB.drawer = !GB.drawer; if (!GB.drawer) GB.pin = false; f = GB.drawer ? '#gbDrawer [data-gb="drawer"]' : ".gh-pill"; break;
+    case "pin": GB.pin = !GB.pin; GB.drawer = GB.pin; f = '[data-gb="pin"]'; break;
+    case "new": gbDlgOpen("new", e && e.target.closest(".gb-empty") ? '.gb-empty [data-gb="new"]' : '.gh-a [data-gb="new"]'); return;
+    case "newhome": S.page = "gradebook"; gbDlgOpen("new", '.gh-a [data-gb="new"]'); return;
+    case "copy": case "edit": gbDlgOpen(k, `[data-gb="${k}"]`); return;
+    case "dtype": D.type = arg; D.full = String(GT[arg][2]); if (arg === "สอบ") D.pub = false; f = `[data-gb="dtype:${arg}"]`; break;
+    case "droom": D.rooms = D.rooms.includes(arg) ? D.rooms.filter((x) => x !== arg) : [...D.rooms, arg]; f = `[data-gb="droom:${arg}"]`; break;
+    case "dpub": D.pub = !D.pub; f = '[data-gb="dpub"]'; break;
+    case "dsave": gbDlgSave(); return;
+    case "raise": if (arg === "cancel") { D.raise = null; f = '[data-gb="dsave"]'; break; } D.raise = null; gbDlgSave(arg); return;
+    case "close": { const id = arg || GB.sel; if (!GB.online) { toast("ต้องออนไลน์จึงปิดรับงานได้"); return; } GB.closeId = id; S.sheet = "gb-close"; S.opener = `[data-gb="${v}"]`; render(true); focusEl("#gbNo", true); return; }
+    case "close-yes": gbA(GB.closeId).status = "closed"; S.sheet = null; GB.tmsg = "ปิดรับงานแล้ว"; f = '[data-gb="reopen"]'; break;
+    case "reopen": if (!GB.online) { toast("ต้องออนไลน์จึงเปิดรับงานได้"); return; } a.status = "open"; GB.tmsg = "เปิดรับงานแล้ว"; f = '[data-gb="close"]'; break;
+    case "eye": a.pub = !a.pub; S.sheet = null; GB.tmsg = a.pub ? "แสดงคะแนนบนจอแล้ว" : "ซ่อนคะแนนบนจอแล้ว · ตารางแสดง •••"; f = '[data-gb="eye"]'; break;
+    case "allpub": { const all = GB.asg.every((x) => x.pub); GB.asg.forEach((x) => (x.pub = !all)); S.sheet = null; GB.tmsg = all ? "ซ่อนคะแนนทั้งหมดแล้ว" : "แสดงคะแนนทั้งหมดแล้ว"; f = '[data-gb="more"]'; break; }
+    case "more": S.sheet = "gb-more"; S.opener = '[data-gb="more"]'; render(true); focusEl('.gb-sheet [data-gb="edit"]', true); return;
+    case "bulk": if (!GB.st.length) { toast("ไม่มีรายการที่ต้องเปลี่ยน"); return; } GB.bulk = null; S.sheet = "gb-bulk"; S.opener = '[data-gb="bulk"]'; render(true); focusEl(".gb-sheet .mrow:not([disabled]), .gb-sheet [data-act='close']", true); return;
+    case "bk": GB.bulk = arg; render(true); focusEl("#gbNo", true); return;
+    case "bk-yes": gbBulkApply(); S.sheet = null; f = '[data-gb="bulk"]'; break;
+    case "del": S.sheet = "gb-del"; render(true); focusEl("#gbNo", true); return;
+    case "del-yes": { const j = GB.asg.indexOf(a); GB.asg.splice(j, 1); delete GB.sub[a.id]; GB.sel = (GB.asg[Math.min(j, GB.asg.length - 1)] || {}).id || null; GB.fc = Math.max(0, Math.min(j, GB.asg.length - 1)); S.sheet = null; GB.tmsg = "ลบงานแล้ว"; f = '.gh-a [data-gb="new"]'; break; }
+    case "xl": if (!GB.online) { toast("ต้องออนไลน์จึงส่งออก Excel ได้"); return; } S.sheet = null; GB.xl = "busy"; render(true);
+      gbXlT = setTimeout(() => { GB.xl = "idle"; if (S.page === "gradebook") render(true); toast("ดาวน์โหลด Excel แล้ว" + (GB.hide ? " · ไฟล์ Excel มีชื่อนักเรียน" : "")); const b = document.querySelector('.gb-tools [data-gb="xl"]'); if (b) b.focus({ preventScroll: true }); }, 1500); return;
+    case "filter": toast("ตัวกรอง: ประเภทงาน · ทั้งเทอม/รายเดือน · จัดกลุ่ม · คอลัมน์ · คืนค่า (แผ่นตัวกรองเดิม)"); return;
+    case "room": if (arg !== "c61") { toast(`ตัวอย่างนี้มีข้อมูลเฉพาะ ป.6/1 — ในแอปจริงโหลด ${gbRoom(arg)}`); return; } return;
+    case "online": GB.online = true; Object.keys(GB.mk).forEach((x) => GB.mk[x] === "pend" && delete GB.mk[x]); GB.tmsg = "กลับมาออนไลน์ · ส่งขึ้นระบบครบแล้ว"; break;
+    case "retry": Object.keys(GB.mk).forEach((x) => delete GB.mk[x]); GB.tmsg = "บันทึกลงเครื่องแล้ว · ส่งขึ้นระบบแล้ว"; f = ".gh-a [data-gb='hide']"; break;
+    case "reload": gbScenario("normal"); GB.tmsg = "โหลดข้อมูลแล้ว"; break;
+    case "pop": { const E = GB.edit; if (!E) return; const inp = document.getElementById("gbIn"); if (!gbCommit(inp ? inp.value : E.val)) GB.edit = null; gbPopOpen(GB.asg[E.c].id, gbRowList()[E.r].no); return; }
+    case "mpop": gbPopOpen(GB.sel, +arg); return;
+    case "popx": GB.pop = null; render(true); gbFocus(); return;
+    case "popsave": { const ok = gbPopSave(); render(true); if (ok) gbFocus(); else focusEl("#gpSc", true); return; }
+    case "pst": GB.pop.st = arg; GB.pop.err = ""; render(true); focusEl(`[data-gb="pst:${arg}"]`, true); return;
+    case "pq": GB.pop.sc = arg; GB.pop.err = ""; render(true); focusEl("#gpSc", true); return;
+    case "prv": GB.pop.rv = arg; render(true); focusEl(`[data-gb="prv:${arg}"]`, true); return;
+    case "undo": { const u = GB.undo; gbStopUndo(); if (u) { u.fn(); GB.tmsg = u.btn === "ย้อนกลับ" ? "ย้อนกลับแล้ว" : "เลิกทำแล้ว"; } break; }
+    case "open": GB.open[arg] = !GB.open[arg]; f = `[data-gb="open:${arg}"]`; break;
+    case "card": GB.cards[arg] = !GB.cards[arg]; f = `[data-gb="card:${arg}"]`; break;
+    case "copynames": if (GB.hide) return; GB.copied = true; setTimeout(() => { GB.copied = false; if (S.page === "gradebook") { render(true); focusEl('[data-gb="copynames"]', true); } }, 2000); GB.tmsg = "คัดลอกรายชื่อคนค้างส่งแล้ว"; f = '[data-gb="copynames"]'; break;
+  }
+  if (GB.tmsg) GB.live = GB.live || GB.tmsg;
+  render(true); if (GB.tmsg) { toast(GB.tmsg); GB.tmsg = ""; }
+  if (f) { const el = [...document.querySelectorAll(f)].find((x) => x.offsetParent) || document.querySelector(f); if (el) { el.focus({ preventScroll: true }); if (el.closest(".gbt")) gbEnsure(el.closest("th,td")); } }
+}
+gbScenario("normal");
 
 /* ======================= T-14 หน้าสุ่มชื่อ (ux-random.md) — fictional names, same tokens/icons ======================= */
 const NICK = ["ภู", "นิชา", "ต้น", "กานต์", "ปั้น", "มิน", "ปิง", "ศิริ", "กิต", "นันท์", "เมฆ", "อัญ", "ธีร์", "ปภา", "รัช", "พิช"];
@@ -3263,6 +3966,7 @@ function sheet() {
   if (S.sheet.startsWith("sc-")) return scanSheet();
   if (S.sheet.startsWith("at-")) return attSheet();
   if (S.sheet.startsWith("rd-")) return rdSheet();
+  if (S.sheet.startsWith("gb-")) return gbSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
@@ -3290,7 +3994,9 @@ function sheet() {
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "สมุดคะแนน"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"]],
+  gstate: [["normal", "ปกติ"], ["noasg", "ยังไม่มีงาน"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["offline", "ออฟไลน์ + คิว"], ["failed", "บันทึกไม่สำเร็จ"], ["closed", "งานปิดรับ"],
+    ["hidden", "ซ่อนชื่อ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน × 20 งาน)"], ["export", "กำลังส่งออก Excel"]],
   rstate: [["normal", "ปกติ"], ["unchecked", "ยังไม่ได้เช็คชื่อวันนี้"], ["nobody", "มาเรียน 0 คน"], ["complete", "สุ่มครบแล้ว"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"],
     ["offline", "ออฟไลน์"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"]],
   layout: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]],
@@ -3319,14 +4025,15 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random";
-  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
+  document.getElementById("info").innerHTML = onGb ? `<b>หน้าคะแนน</b> — แตะ/คลิกช่อง หรือพิมพ์ตัวเลขที่ช่อง → Enter บันทึกแล้วลงแถวถัดไป · Esc ยกเลิก · ลูกศรเลื่อนช่อง · Alt+Enter / ▾ / แตะซ้ำ / กดค้าง = ตัวแก้ไขช่อง (สถานะ · วันที่รับ) · คะแนนเกินเต็มหรือไม่ใช่ตัวเลขขึ้นข้อความ · hero/แถบ 6 ส่วน/สะสม อัปเดตตามสูตรเดิม · แตะหัวคอลัมน์ = เลือกงาน · “สร้างงาน” / คัดลอกงาน / ปิดรับงาน / ทำทั้งห้อง / ⋮ ลองได้ · pill ใน hero เปิดแผงงาน (คอมปักได้) · แถว “สถานะ” = ux-gradebook.md · Q1–Q4 ตามค่าแนะนำ UX<br>${INFO[S.theme]} · ป้ายข้อเสนอ = P10 (ต้องเพิ่ม API)`
+    : onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
     : onAtt ?`<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
     : onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
     : `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
@@ -3334,7 +4041,8 @@ function chrome() {
 let toastTimer;
 function render(keepScroll) {
   const dev = document.getElementById("device"), [w, h, fs] = DEV[S.device];
-  const old = dev.querySelector(".main"), st0 = keepScroll && old ? old.scrollTop : 0;
+  const old = dev.querySelector(".main"), st0 = keepScroll && old ? old.scrollTop : 0, gs0 = dev.querySelector("#gbScroll"), gsl = gs0 ? [gs0.scrollLeft, gs0.scrollTop] : null;
+  GB.rendering = true;
   const oldRail = dev.querySelector(".rail-list"), rt0 = keepScroll && oldRail ? oldRail.scrollTop : 0;
   const key = DS_OF[S.state] || "base";
   if (S.dsKey !== key) { load(DS[key]()); S.dsKey = key; S.order = TODOS.map((t) => t.key); S.focus = null; S.cls = null; }
@@ -3342,11 +4050,13 @@ function render(keepScroll) {
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
   dev.dataset.page = S.page;
   const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
+  const gs1 = dev.querySelector("#gbScroll"); if (gsl && gs1) { gs1.scrollLeft = gsl[0]; gs1.scrollTop = gsl[1]; }
+  GB.rendering = false; if (S.page === "gradebook") gbAfter();
   chrome(); fit(); railShadow(rt0); animRings();
   if (S.page === "attendance") atAnim();
-  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : null;
+  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : null;
   if (LV && LV.live) { const lv = document.getElementById("atLive"), msg = LV.live; LV.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); }
 }
 function fit() {
@@ -3360,7 +4070,7 @@ function fit() {
 function toast(msg) { const t = document.getElementById("toast"); if (!t) return; t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
 function openSheet(k, opener) { S.sheet = k; S.opener = opener; render(true); const f = document.querySelector(".sheet button, .sheet input"); if (f) f.focus(); }
 function closeSheet() { const o = S.opener; S.sheet = null; render(true);
-  const b = o && [...document.querySelectorAll(o.startsWith("[") ? o : `[data-act="${o}"]`)].find((el) => el.offsetParent); if (b) b.focus(); }
+  const b = o && [...document.querySelectorAll(o.startsWith("[") || /[\s.#]/.test(o) ? o : `[data-act="${o}"]`)].find((el) => el.offsetParent); if (b) b.focus(); }
 function applyAppearance(p, focusName) {
   if (S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
   else { Object.assign(S, p); S.saveMsg = "saving"; render(true); toast("ใช้หน้าตาใหม่แล้ว");
@@ -3368,12 +4078,15 @@ function applyAppearance(p, focusName) {
   if (focusName) { const el = document.querySelector(`input[name="${focusName}"]:checked`); if (el) el.focus(); }
 }
 document.addEventListener("click", (e) => {
+  if (S.page === "gradebook") { if (e.target.classList && e.target.classList.contains("gb-popscrim")) { gbAct("popx"); return; }
+    const gtd = e.target.closest && e.target.closest("td.gbc"); if (gtd && !e.target.closest("button")) { gbCellClick(gtd, e); return; } }
   if (e.target.classList && e.target.classList.contains("scrim")) { closeSheet(); return; }
   const b = e.target.closest("button"); if (!b || b.disabled) return; const d = b.dataset;
   if (d.set) { const [g, v] = d.set.split(":");
     if (g === "sstate") { scenario(v); render(); return; }
     if (g === "astate") { atScenario(v); render(); return; }
     if (g === "rstate") { rdScenario(v); render(); return; }
+    if (g === "gstate") { gbScenario(v); render(); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
     if (g === "q1") { SS.q1 = v; SS.filterMiss = false; render(true); return; }
@@ -3396,6 +4109,7 @@ document.addEventListener("click", (e) => {
   if (d.at) { attAct(d.at, e); return; }
   if (d.rd) { rdAct(d.rd, e); return; }
   if (d.rdfrom) { rdFromAtt(); return; }
+  if (d.gb) { gbAct(d.gb, e); return; }
   if (d.toast) toast(d.toast);
 });
 document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"), rd = e.target.closest("#rdProjOff"); if (!e.target.closest("#projOff") && !at && !rd) return; clearTimeout(holdTimer);
@@ -3413,6 +4127,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && S.page === "attendance" && AT.project) { AT.project = false; render(true); return; }
   if (e.key === "Escape" && S.page === "random" && RD.project) { RD.project = false; render(true); return; }
   if (S.page === "attendance" && atKey_(e)) return;
+  if (S.page === "gradebook" && gbKey_(e)) return;
   if (S.page === "random" && !S.sheet) {
     if (e.key === " " && !(t.closest && t.closest("button,input,select,textarea,summary,a,[tabindex]"))) { e.preventDefault(); if (!e.repeat) rdGo(); return; }
     if (t.dataset && t.dataset.rd && t.dataset.rd.startsWith("mode:") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) { e.preventDefault(); rdAct("mode:" + (RD.mode === "pick" ? "group" : "pick")); return; }
@@ -3424,6 +4139,15 @@ document.addEventListener("keydown", (e) => {
     const j = Math.max(0, Math.min(cs.length - 1, { ArrowLeft: i - 1, ArrowRight: i + 1, ArrowUp: i - cols, ArrowDown: i + cols, Home: 0, End: cs.length - 1 }[e.key]));
     cs.forEach((c, k) => (c.tabIndex = k === j ? 0 : -1)); cs[j].focus(); SS.gridFocus = +cs[j].dataset.no; }
 });
+document.addEventListener("input", (e) => { const t = e.target; if (S.page !== "gradebook") return; if (t.dataset && t.dataset.gbf && GB.dlg) GB.dlg[t.dataset.gbf] = t.value; if (t.id === "gbIn" && GB.edit) GB.edit.val = t.value; if (t.id === "gpSc" && GB.pop) { GB.pop.sc = t.value; } });
+document.addEventListener("focusout", (e) => { if (S.page !== "gradebook" || GB.rendering || !GB.edit || e.target.id !== "gbIn") return; // blur = save (CellInput)
+  const to = e.relatedTarget; if (to && to.closest && (to.closest("td.gbc") || to.closest(".gc-more"))) return;
+  if (!gbCommit(e.target.value)) GB.edit = null;
+  if (!to) { render(true); return; }
+  GB.dirty = true; setTimeout(() => { if (!GB.dirty) return; GB.dirty = false; const sel = gbSelOf(document.activeElement); render(true); const el = sel && document.querySelector(sel); if (el) el.focus({ preventScroll: true }); }, 250); });
+document.addEventListener("pointerdown", (e) => { if (S.page !== "gradebook" || e.pointerType !== "touch") return; const td = e.target.closest("td.gbc"); if (!td) return; clearTimeout(gbHoldT);
+  gbHoldT = setTimeout(() => { gbHeld = true; const s = gbRowList()[+td.dataset.r], a = GB.asg[+td.dataset.c]; if (s && a) gbPopOpen(a.id, s.no); }, 450); });
+["pointerup", "pointercancel", "pointermove"].forEach((t) => document.addEventListener(t, (e) => { if (t !== "pointermove" || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(gbHoldT); }, true));
 document.addEventListener("input", (e) => { if (e.target.id === "padIn" && SS.pad) SS.pad.val = e.target.value; });
 addEventListener("resize", fit);
 render();
