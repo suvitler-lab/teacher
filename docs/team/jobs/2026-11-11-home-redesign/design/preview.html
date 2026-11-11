@@ -1837,6 +1837,224 @@ textarea.gf-in{padding:8px 12px;min-height:64px;resize:vertical}
 .pm-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .pm-cell{position:relative;min-width:96px;min-height:var(--tap);border-radius:var(--radius-sm);border:1.5px solid var(--border-control);display:inline-flex;align-items:center;justify-content:center;gap:2px;font-size:var(--t-sm);padding:0 10px;background-clip:padding-box}
 .pm-cell.gw-scored,.pm-cell.gw-pending{background:var(--surface-2)}
+/* =====================================================================
+   T-20 หน้ารายงาน (ux-reports.md) — same tokens, no new colour tokens · namespace .rp-*
+   budget: desk/iPad นอน band ≤ 96 · tools 44 · meta 32 (touch 44) · rows 44 · iPad ตั้ง hero 2×2 ≤ 140 · phone ≤ 132 · list rows 56
+   print paper = literal white/black (paper, not a theme surface)
+   ===================================================================== */
+.main[data-rp]{display:flex;flex-direction:column;overflow:hidden;padding:12px 16px;position:relative}
+.main[data-rp]>.inner{max-width:none;width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
+.rpp{--rh:45px;display:flex;flex-direction:column;gap:8px}
+.main[data-rp] .rpp{flex:1;min-height:0;gap:5px}
+.d-ipadL .rp-k .v{font-size:calc(var(--fs)*1.5)}
+.d-ipadL .rp-room>.ic,.d-ipadP .rp-room>.ic{display:none}
+.d-ipadL .rp-ex .lbl{display:none}
+.d-ipadL .rp-tools{gap:6px}
+.d-ipadL .rp-room{padding:0 8px}
+.d-ipadL [data-rp="subj"] .ic:first-child{display:none}
+.d-ipadL .rp-ex{width:var(--tap);justify-content:center;padding:0}
+.d-ipadP .rp-meta .scope{display:none}
+.rpp .banner{margin-bottom:0;padding:6px 12px;flex:none}
+.rp-x{display:inline-flex;align-items:center;gap:3px;font-size:var(--t-xs);font-weight:700;line-height:1.35;padding:0 6px;border-radius:4px;border:1px dashed currentColor;color:var(--text-success);background:var(--bg-success);white-space:nowrap;vertical-align:middle;font-family:var(--font-sans)}
+.rp-x.wait{color:var(--text-warning);background:var(--bg-warning)}
+.rp-k .rp-x{color:var(--hero-fg);background:transparent}
+/* band = head + hero (desk / iPad นอน: one colour band ≤ 96px) */
+.rp-band{flex:none;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:6px 8px 6px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;align-items:center}
+[data-theme="playful"] .rp-band{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.rp-head{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rp-ht{display:flex;align-items:baseline;gap:0 10px;flex-wrap:wrap;min-width:0}
+.rp-ht h1{font-size:var(--t-xl);white-space:nowrap;line-height:1.3;margin:0}
+.rp-ht .k{font-size:var(--t-xs);font-weight:600;color:var(--hero-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.rp-ha{display:flex;gap:6px;align-items:center;flex-wrap:nowrap}
+.rp-band .chip-btn,.rp-band .icon-btn{background:var(--hero-chip);border-color:color-mix(in srgb,var(--hero-fg) 35%,transparent);color:var(--hero-fg)}
+.rp-band .chip-btn[aria-pressed="true"]{background:var(--hero-fg);color:var(--hero-bg);border-color:var(--hero-fg)}
+.rp-band .pg-switch{padding:0;border:0;background:none}
+.rp-hero{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;min-width:0}
+.rp-k{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;padding:5px 12px;border-radius:var(--radius);background:var(--hero-chip);color:var(--hero-fg);border:1.5px solid color-mix(in srgb,var(--hero-fg) 25%,transparent);text-align:left;line-height:1.3;font:inherit;min-height:var(--tap);padding-top:3px;padding-bottom:3px}
+button.rp-k{cursor:pointer}
+button.rp-k:hover:not(:disabled){border-color:var(--hero-fg)}
+button.rp-k:disabled{cursor:default}
+.rp-k .l{font-size:var(--t-xs);font-weight:700;display:flex;gap:4px;align-items:center;white-space:nowrap;width:100%}
+.rp-k .l .ic{font-size:16px}
+.rp-k .l .go{margin-left:auto;font-size:14px}
+.rp-k .v{font-family:var(--font-num);font-size:calc(var(--fs)*1.75);font-weight:700;line-height:1.1;white-space:nowrap}
+.rp-k .v small{font-size:var(--t-sm);font-weight:700;margin-left:4px;font-family:var(--font-sans)}
+.rp-k .s{font-size:var(--t-xs);font-weight:600;color:var(--hero-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.rp-skk{gap:6px}
+.rp-skk .sk-line{background:color-mix(in srgb,var(--hero-fg) 25%,transparent)}
+.d-ipadL .rp-ha .chip-btn:not(.hide-btn) .lbl{display:none}
+.d-ipadL .rp-ha .chip-btn:not(.hide-btn) .ic:last-child:not(:first-child){display:none}
+.d-ipadL .rp-ha .chip-btn:not(.hide-btn),.d-ipadP .rp-ha .chip-btn:not(.hide-btn){width:var(--tap);padding:0;justify-content:center}
+.d-ipadP .rp-ha .chip-btn:not(.hide-btn) .lbl,.d-ipadP .rp-ha .chip-btn:not(.hide-btn) .ic:last-child:not(:first-child){display:none}
+/* iPad ตั้ง / มือถือ: head row then a 2×2 hero */
+.rpp.d-ipadP .rp-band,.rpp.d-phone .rp-band{background:none;color:var(--text-primary);border:0;box-shadow:none;padding:0;grid-template-columns:minmax(0,1fr);gap:8px}
+.d-ipadP .rp-head,.d-phone .rp-head{flex-direction:row;align-items:center;justify-content:space-between;gap:8px}
+.d-ipadP .rp-ht .k,.d-phone .rp-ht .k{color:var(--text-secondary)}
+.d-ipadP .rp-band .chip-btn,.d-phone .rp-band .chip-btn,.d-phone .rp-band .icon-btn{background:var(--surface-2);border-color:var(--border-control);color:var(--text-primary)}
+.d-ipadP .rp-band .chip-btn[aria-pressed="true"],.d-phone .rp-band .chip-btn[aria-pressed="true"]{background:var(--text-primary);color:var(--surface-2);border-color:var(--text-primary)}
+.d-ipadP .rp-hero,.d-phone .rp-hero{grid-template-columns:repeat(2,minmax(0,1fr));background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:8px;gap:6px}
+[data-theme="playful"] .d-ipadP .rp-hero,[data-theme="playful"] .d-phone .rp-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.d-ipadP .rp-k,.d-phone .rp-k{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"l v" "s v";column-gap:8px;align-items:center;padding:5px 10px}
+.d-ipadP .rp-k .l,.d-phone .rp-k .l{grid-area:l}
+.d-ipadP .rp-k .v,.d-phone .rp-k .v{grid-area:v}
+.d-ipadP .rp-k .s,.d-phone .rp-k .s{grid-area:s}
+.d-ipadP .rp-ht h1{font-size:var(--t-lg)}
+.d-phone .rp-ht h1{font-size:var(--t-lg)}
+.d-phone .rp-ht{flex-direction:column;gap:0;align-items:flex-start}
+.d-phone .rp-ha .hide-btn .lbl{display:none}
+.d-phone .rp-ha .hide-btn{width:var(--tap);justify-content:center;padding:0}
+.d-phone .rp-k .v{font-size:calc(var(--fs)*1.5)}
+.d-phone .rp-k .l .go{display:none}
+/* tools + meta */
+.rp-tools{flex:none;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;padding:1px 2px;min-height:var(--tap)}
+.rpp:not(.touch) .rp-tools{scrollbar-width:thin}
+.rp-tools>*{flex:none}
+.rp-tools .grow{flex:1 0 4px}
+.d-ipadP .rp-tools{flex-wrap:wrap;overflow:visible}
+.rp-room small{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.rp-room[aria-pressed="true"]{border-color:var(--text-accent);box-shadow:inset 0 0 0 1px var(--text-accent);color:var(--text-accent);font-weight:700}
+.rp-room[aria-pressed="true"] small{color:var(--text-accent)}
+.rp-seg{display:inline-flex;gap:2px;padding:0;border-radius:var(--radius-btn);background:var(--surface-1);border:1px solid var(--border-control);overflow:hidden}
+.rp-seg button{min-height:max(44px,var(--tap));padding:0 12px;border:0;border-radius:var(--radius-btn);background:transparent;color:var(--text-secondary);font-weight:600;font-size:var(--t-sm);white-space:nowrap}
+.rp-seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text-accent);font-weight:700;box-shadow:inset 0 0 0 2px var(--text-accent)}
+.rp-seg button:disabled{color:var(--text-muted);cursor:not-allowed;text-decoration:line-through}
+.rp-seg .lb{display:inline-flex;align-items:center;padding:0 4px 0 10px;font-size:var(--t-xs);font-weight:700;color:var(--text-secondary)}
+.rp-sel select{border:0;background:transparent;color:inherit;font:inherit;font-weight:600;min-height:calc(var(--tap) - 4px);padding:0 2px;color-scheme:light dark}
+.rp-meta{flex:none;display:flex;align-items:center;gap:2px 12px;flex-wrap:wrap;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600;min-height:32px;line-height:1.5}
+.rp-meta>span{display:inline-flex;align-items:center;gap:4px}
+.rp-meta .btn{min-height:var(--tap);padding:0 10px;font-size:var(--t-xs)}
+.rpp.touch .rp-meta .btn{min-height:var(--tap)}
+.rp-meta .grow{flex:1}
+.rp-meta .scope .ic{font-size:16px}
+.d-phone .rp-meta .scope{display:none}
+.rpp.d-phone .rp-tools .chip-btn,.sheet .rp-fgrp .chip-btn{width:auto;padding:0 var(--s3)}
+.sheet .rp-fgrp .chip-btn .lbl{display:inline}
+.rp-why{font-size:var(--t-xs);font-weight:600;color:var(--text-secondary)}
+/* body: one DOM order (table → cards) · CSS grid moves cards (G-R12) */
+.rp-body{display:grid;grid-template-columns:minmax(0,58fr) minmax(0,42fr);grid-template-areas:"tbl cards";gap:12px;align-items:start}
+.main[data-rp] .rp-body{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch}
+.rp-body.q1b{grid-template-columns:minmax(0,1fr);grid-template-areas:"tbl"}
+.d-ipadP .rp-body,.d-phone .rp-body{grid-template-columns:minmax(0,1fr);grid-template-areas:"cards" "tbl"}
+.card.rp-tblc{grid-area:tbl;min-width:0;min-height:0;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.rp-cards{grid-area:cards;min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}
+.main[data-rp] .rp-cards{overflow-y:auto;padding:2px 4px 8px 2px}
+.d-ipadP .rp-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.sheet .rp-cards{display:flex}
+.rp-th{display:flex;align-items:center;gap:8px;padding:0 8px 0 14px;min-height:30px;border-bottom:1px solid var(--border);flex:none}
+.rp-th h2{font-size:var(--t-md);margin:0}
+.rp-th .grow{flex:1}
+.rp-scroll{overflow:auto;flex:1;min-height:0}
+.d-ipadP .rp-scroll{max-height:calc(var(--rh) * 12 + 52px)}
+.rpt{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--t-sm)}
+.rpt th,.rpt td{height:calc(var(--rh) - 1px);padding:0 10px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;font-weight:400}
+.rpt thead th{position:sticky;top:0;z-index:1;background:var(--surface-1);height:var(--tap);font-size:var(--t-xs);color:var(--text-secondary);font-weight:700;padding:0 4px}
+.rpt thead button{display:inline-flex;align-items:center;gap:4px;min-height:var(--tap);padding:0 6px;border:0;background:transparent;color:inherit;font:inherit;font-weight:700;border-radius:var(--radius-xs)}
+.rpp.touch .rpt thead th{height:var(--tap)}
+.rpp.touch .rpt thead button{min-height:var(--tap)}
+.rpt thead th[aria-sort]{color:var(--text-accent)}
+.rpt .c-no{width:3em;text-align:right;color:var(--text-secondary);font-family:var(--font-num)}
+.rpt thead .c-no{padding-right:10px}
+.rpt .c-nm{width:42%;max-width:0;padding:0 4px}
+.nm-b{display:flex;align-items:center;width:100%;min-height:calc(var(--rh) - 1px);border:0;background:none;color:var(--text-primary);font:inherit;font-weight:600;text-align:left;padding:0 6px;border-radius:var(--radius-xs)}
+.nm-b span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm-b:hover span{text-decoration:underline}
+.rpt .c-att,.rpt .c-sub{text-align:right}
+.rpt .c-p2{color:var(--text-secondary);font-size:var(--t-xs)}
+.rpt tbody tr:hover>*{background:color-mix(in srgb,var(--surface-1) 70%,transparent)}
+.rpt tr[aria-current="true"]>*{background:var(--bg-accent)}
+.rpt tr[aria-current="true"]>:first-child{box-shadow:inset 4px 0 0 var(--text-accent)}
+.rp-miss{color:var(--text-danger);font-weight:700;display:inline-flex;gap:3px;align-items:center}
+.rp-miss .ic{font-size:15px}
+.rp-mb{display:inline-flex;align-items:center;gap:6px}
+.rp-mb .bar,.rp-pb{width:56px;height:8px;border-radius:4px;background:var(--surface-1);border:1px solid var(--border-control);overflow:hidden;flex:none}
+.rp-mb .bar i,.rp-pb i{display:block;height:100%;background:var(--accent)}
+.rp-pb{width:auto;flex:1 1 60px;max-width:180px}
+.rp-pb.open{border-style:dashed}
+.rp-pb.open i{background:repeating-linear-gradient(135deg,var(--accent) 0 4px,transparent 4px 7px)}
+/* phone list (rows 56px · G-R5: มา % stays as a 2nd line) */
+.rp-list{list-style:none;margin:0;padding:0}
+.rp-li{display:grid;grid-template-columns:2em minmax(0,1fr) auto auto;align-items:center;gap:8px;width:100%;min-height:56px;padding:4px 10px 4px 12px;border:0;border-bottom:1px solid var(--border);background:none;color:var(--text-primary);font:inherit;text-align:left}
+.rp-li[aria-current="true"]{background:var(--bg-accent);box-shadow:inset 4px 0 0 var(--text-accent)}
+.rp-li .no{color:var(--text-secondary);text-align:right}
+.rp-li .t{min-width:0;line-height:1.4}
+.rp-li .nm{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-li small{display:block;font-size:var(--t-xs);color:var(--text-secondary)}
+.rp-li .sub{font-size:var(--t-sm);font-weight:600}
+.rp-li>.ic{color:var(--text-muted)}
+/* cards */
+.card.rp-card{padding:0;overflow:hidden;flex:none}
+.rp-ch{display:flex;align-items:center;gap:6px;padding:2px 8px 2px 12px;min-height:44px;flex-wrap:wrap}
+.rp-ch h2{font-size:var(--t-md);margin:0;flex:1 1 140px;min-width:0}
+.rp-tog{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;border:0;background:none;color:inherit;font:inherit;font-weight:inherit;text-align:left;padding:0;border-radius:var(--radius-xs)}
+.rp-tog>.ic:first-child{font-size:20px;color:var(--text-accent)}
+.rp-tog .cv{margin-left:auto;font-size:16px;color:var(--text-secondary)}
+.rp-cb{padding:0 12px 12px;display:flex;flex-direction:column;gap:8px}
+.rp-note{margin:0;font-size:var(--t-xs);color:var(--text-secondary);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rp-ok{margin:0;display:flex;gap:8px;align-items:center;font-weight:700;color:var(--text-success);background:var(--bg-success);border-radius:var(--radius-sm);padding:10px 12px}
+.rp-ok .ic{font-size:22px}
+.rp-fl,.rp-wl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.rp-f{display:flex;align-items:center;gap:8px;min-height:48px;padding:2px 4px 2px 0;border-radius:var(--radius-sm);background:var(--surface-1);box-shadow:inset 4px 0 0 var(--text-danger)}
+.rp-fb{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;border:0;background:none;color:var(--text-primary);font:inherit;text-align:left;min-height:44px;padding:2px 4px 2px 14px;line-height:1.4;border-radius:var(--radius-sm)}
+.rp-fb b{font-size:var(--t-sm);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-fb small{font-size:var(--t-xs);color:var(--text-secondary);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-f .rp-miss{font-size:var(--t-xs)}
+.rp-w{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"t r" "b r";gap:2px 10px;width:100%;min-height:48px;padding:5px 8px;border:0;border-radius:var(--radius-sm);background:none;color:var(--text-primary);font:inherit;text-align:left;align-items:center}
+.rp-w:hover{background:var(--surface-1)}
+.rp-w .t{grid-area:t;display:flex;align-items:center;gap:6px;min-width:0;font-weight:600;font-size:var(--t-sm)}
+.rp-w .tt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rp-w .t .st{flex:none}
+.rp-w .b{grid-area:b;display:flex;align-items:center;gap:8px;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.rp-w .r{grid-area:r;text-align:right;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600;line-height:1.4}
+.rp-w .r b{display:block;font-size:var(--t-md);color:var(--text-primary)}
+.rp-stack{display:flex;gap:2px;height:16px;border-radius:5px;overflow:hidden;border:1px solid var(--border-control);background:var(--surface-2)}
+.rp-stack i{display:block;background:var(--af);min-width:3px}
+.a-p{--af:var(--att-present)}.a-l{--af:var(--att-late)}.a-v{--af:var(--att-leave)}.a-s{--af:var(--att-sick)}.a-x{--af:var(--att-absent)}
+.rp-leg{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:var(--t-xs);font-weight:600}
+.rp-leg li{display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+.rp-leg .sw{width:10px;height:10px;border-radius:2px;background:var(--af);border:1px solid var(--border-control)}
+.rp-hist{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 10px;align-items:center;font-size:var(--t-xs);font-weight:600}
+.rp-hist .hb{height:12px;border-radius:3px;background:var(--surface-1);overflow:hidden}
+.rp-hist .hb i{display:block;height:100%;background:var(--accent)}
+.rp-dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin:0}
+.rp-dl div{background:var(--surface-1);border-radius:var(--radius-sm);padding:6px 10px}
+.rp-dl dt{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.rp-dl dd{margin:0;font-size:var(--t-lg);font-weight:700;font-family:var(--font-num)}
+.rp-ld{display:flex;gap:8px;align-items:center;margin:0}
+.rp-skc{height:120px}
+/* sheets */
+.rp-sw[aria-pressed="true"]{background:var(--bg-accent);color:var(--text-accent);border-color:var(--text-accent)}
+.rp-fgrp{display:flex;flex-direction:column;gap:6px}
+.rp-fgrp h3{margin:0;font-size:var(--t-sm);color:var(--text-secondary)}
+.rp-fgrp .row{display:flex;flex-wrap:wrap;gap:6px}
+/* projector (ST-R13) — class numbers only, no names */
+.rp-pjn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+@container app (max-width:599px){.rp-pjn{grid-template-columns:minmax(0,1fr);gap:var(--s2)}.rp-pjn>div{padding:var(--s2) var(--s4)}.rp-pjn b{font-size:var(--t-3xl)}.rp-pjr{grid-template-columns:minmax(0,1fr) auto;font-size:var(--t-sm)}.rp-pjr .proj-bar{grid-column:1/-1;grid-row:2}}
+.rp-pjn>div{background:var(--hero-chip);border-radius:var(--radius-hero);padding:var(--s4) var(--s5);display:flex;flex-direction:column}
+.rp-pjn span{font-size:var(--t-lg);font-weight:700}
+.rp-pjn b{font-size:var(--t-4xl);line-height:1.2;font-family:var(--font-num)}
+.rp-pjn small{font-size:var(--t-xl);font-family:var(--font-sans)}
+.rp-pjw{display:flex;flex-direction:column;gap:10px}
+.rp-pjr{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) auto;gap:12px;align-items:center;font-size:var(--t-lg);font-weight:600}
+.rp-proj .rp-leg{font-size:var(--t-md)}
+.rp-proj .rp-stack{height:22px;border-color:color-mix(in srgb,var(--hero-fg) 40%,transparent)}
+/* print preview (ST-R14) */
+.rp-print{position:absolute;inset:0;z-index:40;background:var(--surface-0);color:var(--text-primary);display:flex;flex-direction:column}
+.rp-pbar{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--border)}
+.rp-pbar b{flex:1 1 200px;font-size:var(--t-md)}
+.rp-pscroll{flex:1;overflow:auto;padding:16px;display:flex;justify-content:center;align-items:flex-start;background:color-mix(in srgb,var(--text-muted) 30%,var(--surface-0))}
+.rp-paper{background:#fff;color:#111;width:min(100%,595px);min-height:842px;padding:36px 40px;font-family:var(--font-sans);font-size:11.5px;line-height:1.6;box-shadow:var(--shadow-pop);flex:none}
+.rp-paper h2{font-size:16px;margin:0 0 2px}
+.rp-paper h3{font-size:12.5px;margin:14px 0 4px}
+.rp-paper p{margin:0}
+.rp-paper table{width:100%;border-collapse:collapse}
+.rp-paper th,.rp-paper td{border:1px solid #555;padding:2px 6px;text-align:left;font-weight:400}
+.rp-paper thead th{font-weight:700;background:#eee}
+.rp-paper .r{text-align:right}
+.rp-paper .k4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.rp-paper .k4 div{border:1px solid #555;padding:4px 8px}
+.rp-paper .k4 b{display:block;font-size:18px}
+.rp-paper .sig{margin-top:28px;text-align:right}
+.rp-paper .rp-x{color:#1d5c2e;background:#e8f3ea}
 </style>
 </head>
 <body>
@@ -1850,6 +2068,7 @@ textarea.gf-in{padding:8px 12px;min-height:64px;resize:vertical}
   <div class="ctl"><span>สถานะ</span><div class="seg" data-group="state"></div></div>
   <div class="ctl"><div class="seg" data-group="fit"></div><div class="seg" data-group="tags"></div></div>
   <div class="scan-row scan-only" hidden><div class="ctl"><span>ช่วง</span><div class="seg" data-group="phase"></div></div><div class="ctl"><span>วิธี</span><div class="seg" data-group="meth"></div></div><div class="ctl"><span>Q1 แผงยังไม่ส่ง</span><div class="seg" data-group="q1"></div></div><div class="ctl scan-cam" hidden><span>ข้อความกล้อง</span><div class="seg" data-group="cam"></div></div></div>
+  <div class="scan-row rp-only" hidden><div class="ctl"><span>Q1 การ์ด</span><div class="seg" data-group="rq1"></div></div></div>
   <div class="menu-row"><div class="ctl"><span>เมนู</span><div class="seg" data-group="menu"></div></div><p class="menu-info" id="menuInfo"></p></div>
   <p class="chrome-info" id="info"></p>
 </header>
@@ -2118,13 +2337,13 @@ const PG_INFO = {
     extra: "ต้องเพิ่มให้หน้านักเรียนเปิดหน้าพิมพ์ได้ทันที — งานเล็ก ฝั่งหน้าเว็บอย่างเดียว" },
   backup: { kind: "link", what: "ทางลัดไป ตั้งค่า › สำรองข้อมูล — ดาวน์โหลดไฟล์สำรองและกู้คืน", extra: "ปลายทางมีอยู่แล้ว ใช้ได้ทันที ไม่มีงานเพิ่ม" },
 };
-const PAGES = ["home", "settings", "scan", "attendance", "random", "gradebook"];
+const PAGES = ["home", "settings", "scan", "attendance", "random", "gradebook", "reports"];
 const navAttr = (x) => PAGES.includes(x.id) ? `data-page="${x.id}"` : `data-info="${x.id}"`;
 const nbadge = (x, inline) => x.nw || x.chg ? `<span class="${inline ? "nb-in" : "nb"}">${x.chg ? "รวม" : "ใหม่"}</span>` : "";
 const menu = () => MENUS[S.menu];
 const rail = () => { let g = "";
   const items = menu().rail.map((x) => { const head = x.group !== g ? `<div class="rail-label">${(g = x.group)}</div>` : "";
-    return `${head}<button class="rail-item" ${x.id === S.page ? 'aria-current="page"' : ""} ${navAttr(x)}>${ic(NAV_IC[x.id])}<span>${x.label}</span>${nbadge(x)}</button>`; }).join("");
+    return `${head}<button class="rail-item" ${x.id === S.page || (S.menu === "B" && x.id === "gradebook" && S.page === "reports") ? 'aria-current="page"' : ""} ${navAttr(x)}>${ic(NAV_IC[x.id])}<span>${x.label}</span>${nbadge(x)}</button>`; }).join("");
   return `<nav class="rail" aria-label="เมนูหลัก"><div class="brand">${logo()}</div>
   <div class="rail-mid"><div class="rail-list">${items}</div><span class="rail-more" aria-hidden="true">มีต่อ ${ic("caret-down")}</span></div>
   <div class="rail-foot"><div class="sync"><span class="dot" ${offNow() ? 'style="background:var(--fill-warning);box-shadow:none"' : ""}></span>${offNow() ? "ออฟไลน์" : "ออนไลน์"}</div><button class="rail-item" data-toast="ออกจากระบบ">${ic("sign-out")}<span>ออกจากระบบ</span></button></div></nav>`; };
@@ -3234,7 +3453,7 @@ function gbHero(c) {
   const off = gbOff(), v = (n) => (off ? "–" : n), q = gbSide(), ph = S.device === "phone";
   const big = (k, lbl) => `<button class="gh-big" data-gb="rows:${k}" aria-pressed="${GB.rows === k}" ${off ? "disabled" : ""} aria-label="${lbl} ${v(c[k])} ชิ้น${off ? "" : GB.rows === k ? " · กำลังกรองอยู่ แตะเพื่อดูทุกคน" : " · แตะเพื่อกรองแถว"}">${ic(GW[k][0])}<span class="num">${v(c[k])}</span><small>${lbl}<br>ชิ้น</small></button>`;
   const title = GB.noclass ? "คะแนน" : `${gbRoom("c61")} · คณิตศาสตร์`, rate = c.rate == null ? "–" : c.rate + "%";
-  const sw = S.menu === "B" ? `<div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน"><button aria-pressed="true">${ic("notebook")}คะแนน</button><button aria-pressed="false" data-info="reports">${ic("chart-bar")}รายงาน</button></div>` : "";
+  const sw = S.menu === "B" ? `<div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน"><button aria-pressed="true">${ic("notebook")}คะแนน</button><button aria-pressed="false" data-page="reports">${ic("chart-bar")}รายงาน</button></div>` : "";
   const plate = off ? `<div class="gh-p"><span class="sec">${GB.loading ? "กำลังโหลด…" : GB.noclass ? "ยังไม่มีห้อง — ยังไม่มีตัวเลข" : GB.error ? "ยังไม่มีข้อมูลส่วนนี้" : !GB.asg.length ? "งาน 0 · ยังไม่มีช่องคะแนน" : "ห้องนี้ยังไม่มีนักเรียน"}</span></div>`
     : `<div class="gh-p"><div class="segbar" title="รวม ${c.total} ช่อง" role="img" aria-label="${GK.map((k) => `${GW[k][1]} ${c[k]}`).join(" ")} จาก ${c.total} ช่อง">${GK.map((k) => (c[k] ? `<i class="gl-${k}" style="flex:${c[k]}"></i>` : "")).join("")}</div>
       <ul class="gh-leg" aria-hidden="true">${GK.map((k) => `<li class="gl-${k}"><i class="sw"></i>${ic(GW[k][0])}${GW[k][1]} <b class="num">${c[k]}</b></li>`).join("")}<li class="tot">รวม <b class="num">${c.total}</b> ช่อง</li></ul>${gbSaveHtml("in-p")}</div>`;
@@ -3967,6 +4186,7 @@ function sheet() {
   if (S.sheet.startsWith("at-")) return attSheet();
   if (S.sheet.startsWith("rd-")) return rdSheet();
   if (S.sheet.startsWith("gb-")) return gbSheet();
+  if (S.sheet.startsWith("rp-")) return rpSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
@@ -3991,14 +4211,296 @@ function sheet() {
     <button class="btn btn-primary" data-act="close">เสร็จ</button></div></div>`;
 }
 
+/* ======================= T-20 หน้ารายงาน (ux-reports.md) — fictional names · numbers computed from the gradebook sample (gbSample/gbMany) with metrics.ts rules = ux-reports §ตัวเลขตัวอย่าง ======================= */
+const RP_ATT8 = [[19, 1, 0, 0, 0], [18, 1, 1, 0, 0], [17, 1, 0, 1, 1], [19, 0, 1, 0, 0], [14, 1, 1, 1, 3], [20, 0, 0, 0, 0], [17, 1, 1, 1, 0], [14, 1, 0, 2, 3]]; // มา สาย ลา ป่วย ขาด · Σ 138/6/4/5/7 = 160
+const RP_AK = [["p", "check", "มา"], ["l", "clock", "สาย"], ["v", "file-text", "ลา"], ["s", "thermometer", "ป่วย"], ["x", "x", "ขาด"]];
+const RP_CARDS = [["follow", "ต้องติดตาม", "warning-circle"], ["works", "อัตราส่งรายงาน", "chart-bar"], ["att", "การมาเรียน", "user-check"], ["hist", "การกระจายคะแนนสะสม", "chart-bar-horizontal"], ["stats", "ตัวเลขสรุป", "list-numbers"], ["absent", "ขาดบ่อย", "user-minus"]];
+const RP_MONTHS = { "2026-10": ["ต.ค. 2569", "1–31 ต.ค. 2569"], "2026-11": ["พ.ย. 2569", "1–10 พ.ย. 2569"], "2026-12": ["ธ.ค. 2569", ""] };
+const RP_TERM = "ภาคเรียนที่ 2/2569", RP_RANGE = "1 ต.ค.–10 พ.ย. 2569", RP_AT = "16:42";
+const RP_SORT = { name: "ชื่อ", sub: "ส่งงาน", cum: "สะสม", att: "มาเรียน" };
+const RP_HL = ["ต่ำกว่า 50%", "50–59%", "60–69%", "70–79%", "80% ขึ้นไป"];
+const RPT = { sstate: "normal", q1: "a", order: RP_CARDS.map((c) => c[0]), cards: { follow: true, works: true, att: true, hist: true, stats: true, absent: false }, shut: {}, timer: null, m: null };
+function rpScenario(k) {
+  clearTimeout(RPT.timer); if (S.sheet && S.sheet.startsWith("rp-")) S.sheet = null;
+  Object.assign(RPT, { sstate: k, room: "c61", subj: true, period: k === "outterm" ? "month" : "term", month: k === "outterm" ? "2026-12" : "2026-11", att: "day", hide: k === "hidden", sort: ["sub", 1],
+    xl: k === "export" ? "busy" : "idle", xlFail: k === "xlfail", copied: false, project: k === "project", print: k === "print", psum: false, cur: null, live: "",
+    loading: k === "loading", error: k === "error" || k === "offnever", never: k === "offnever", noclass: k === "noclass", online: !(k === "offline" || k === "offnever"), stale: k === "stale", bg: k === "bg" });
+}
+rpScenario("normal");
+function rpAttOf(no, many) { if (!many) return RP_ATT8[no - 1];
+  const x = no % 9 === 0 ? 4 : no % 4 === 0 ? 1 : 0, v = no % 7 === 0 ? 1 : 0, s = no % 6 === 0 ? 1 : 0, l = no % 5 === 0 ? 2 : no % 3 === 0 ? 1 : 0; return [20 - x - v - s - l, l, v, s, x]; }
+function rpModel() {
+  const k = RPT.sstate, many = k === "many", base = many ? gbMany() : gbSample();
+  if (k === "complete") ["W1", "W4"].forEach((id) => [5, 8].forEach((no) => (base.sub[id][no] = { s: 1, sc: 6, rv: "2026-11-04" })));
+  let asg = base.asg;
+  if (RPT.period === "month") asg = asg.filter((a) => !a.given || a.given.slice(0, 7) === RPT.month);
+  if (k === "noasg") asg = [];
+  const sts = k === "nostudent" ? [] : base.st, noAtt = k === "noatt" || (RPT.period === "month" && RPT.month === "2026-12");
+  const X = (a, no) => (base.sub[a.id] || {})[no] || { s: 0 };
+  const rows = sts.map((s) => { const r = { no: s.no, n: s.n, sent: 0, miss: 0, pend: 0, aw: 0, sc: 0, fu: 0, missA: [] };
+    for (const a of asg) { const x = X(a, s.no), w = gbWs(a, x);
+      if (w === "scored" || w === "late") { r.sent++; r.sc += x.sc; r.fu += a.full; } else if (w === "awaiting") { r.sent++; r.aw++; }
+      else if (w === "missing") { r.miss++; r.fu += a.full; r.missA.push(a); } else if (w === "pending") r.pend++; }
+    r.app = r.sent + r.miss; r.pct = r.fu ? Math.round((r.sc * 100) / r.fu) : null;
+    r.at = noAtt ? [0, 0, 0, 0, 0] : rpAttOf(s.no, many); r.atT = r.at.reduce((p, q) => p + q, 0); r.attP = r.atT ? Math.round(((r.at[0] + r.at[1]) * 100) / r.atT) : null; return r; });
+  const sum = (f) => rows.reduce((t, r) => t + f(r), 0);
+  const m = { asg, rows, many, sent: sum((r) => r.sent), miss: sum((r) => r.miss), pend: sum((r) => r.pend), aw: sum((r) => r.aw), sc: sum((r) => r.sc), fu: sum((r) => r.fu),
+    mix: [0, 1, 2, 3, 4].map((i) => sum((r) => r.at[i])), days: noAtt ? 0 : 20 };
+  m.app = m.sent + m.miss; m.rate = m.app ? Math.round((m.sent * 100) / m.app) : null; m.score = m.fu ? Math.round((m.sc * 100) / m.fu) : null; // Q4 (ก): no denominator = "—"
+  m.atT = m.mix.reduce((p, q) => p + q, 0); m.attP = m.atT ? Math.round(((m.mix[0] + m.mix[1]) * 100) / m.atT) : null;
+  m.follow = rows.filter((r) => r.miss).sort((p, q) => q.miss - p.miss || p.no - q.no);
+  m.works = asg.map((a) => { let sent = 0, ex = 0, scN = 0, scS = 0;
+    for (const s of sts) { const x = X(a, s.no), w = gbWs(a, x); if (w === "excused") ex++; if (w === "scored" || w === "late" || w === "awaiting") sent++; if (w === "scored" || w === "late") { scN++; scS += x.sc; } }
+    const den = sts.length - ex, past = a.status === "closed" || !!(a.due && a.due < TODAY);
+    return { a, sent, ex, den, past, pct: den ? Math.round((sent * 100) / den) : null, avg: scN ? Math.round((scS * 100) / (scN * a.full)) : null, scN }; });
+  m.hist = [0, 0, 0, 0, 0]; rows.forEach((r) => { if (r.pct != null) m.hist[r.pct < 50 ? 0 : r.pct < 60 ? 1 : r.pct < 70 ? 2 : r.pct < 80 ? 3 : 4]++; });
+  m.absent = rows.filter((r) => r.at[4] >= 3).sort((p, q) => q.at[4] - p.at[4] || p.no - q.no);
+  m.noGiven = asg.filter((a) => !a.given).length;
+  return m;
+}
+const rpPc = (v) => (v == null ? "—" : v + "%");
+const rpNm = (r) => (RPT.hide ? `เลขที่ ${r.no}` : `${r.n[0]} ${r.n[1]}`);
+const rpWho = (r) => (RPT.hide ? `เลขที่ ${r.no}` : `${r.no} ${r.n[0]} ${r.n[1]}`);
+const rpRoom = () => gbRoom(RPT.room);
+const rpUnit = () => (RPT.att === "day" ? "วัน" : "คาบ");
+const rpScope = () => `${rpRoom()} · ${RPT.subj ? "คณิตศาสตร์" : "ทุกวิชา"} · ${RPT.period === "term" ? "ทั้งเทอม" : RP_MONTHS[RPT.month][0]}`;
+const rpBlock = () => RPT.noclass || RPT.loading || RPT.error;
+function rpSorted(rows) { const [k, d] = RPT.sort, ratio = (r) => (r.app ? r.sent / r.app : 2);
+  const f = { name: (r) => (RPT.hide ? r.no : r.n.join(" ")), sub: ratio, cum: (r) => (r.pct == null ? 999 : r.pct), att: (r) => (r.attP == null ? 999 : r.attP) }[k];
+  return [...rows].sort((p, q) => { const a = f(p), b = f(q), c = typeof a === "string" ? a.localeCompare(b, "th") : a - b; return c * d || p.no - q.no; }); }
+const rpSortTxt = () => { const [k, d] = RPT.sort; return `เรียงตาม ${RP_SORT[k]} ${k === "name" && !RPT.hide ? (d > 0 ? "ก ถึง ฮ" : "ฮ ถึง ก") : d > 0 ? "น้อยไปมาก" : "มากไปน้อย"}`; };
+function rpHead() {
+  const ph = S.device === "phone";
+  const sw = S.menu === "B" && !ph ? `<div class="pg-switch" role="group" aria-label="สลับ คะแนน หรือ รายงาน"><button class="chip-btn" aria-pressed="false" data-page="gradebook">${ic("notebook")}คะแนน</button><button class="chip-btn" aria-pressed="true">${ic("chart-bar")}รายงาน</button></div>` : "";
+  const sub = RPT.noclass ? RP_TERM : `${rpRoom()} · ${RPT.subj ? "คณิตศาสตร์" : "ทุกวิชา"} · ${RP_TERM}`;
+  const hide = `<button class="chip-btn hide-btn" data-rp="hide" aria-pressed="${RPT.hide}" aria-label="ซ่อนชื่อนักเรียน (เฉพาะหน้านี้)">${ic(RPT.hide ? "eye-slash" : "eye")}<span class="lbl">${RPT.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>`;
+  const acts = ph ? `${hide}<button class="icon-btn" data-act="sheet:rp-more" aria-label="เพิ่มเติม: ปรับการ์ด เลือกภาคเรียน">${ic("dots-three-vertical")}</button>`
+    : `${sw}<button class="chip-btn" data-toast="เลือกภาคเรียน — ตัวอย่างนี้มี ${RP_TERM}" aria-label="${RP_TERM} แตะเพื่อเปลี่ยน">${ic("calendar-dots")}<span class="lbl">เทอม 2/2569</span>${ic("caret-down")}</button>${hide}<button class="chip-btn" data-act="sheet:rp-cards" aria-label="ปรับการ์ด">${ic("sliders-horizontal")}<span class="lbl">ปรับการ์ด</span></button>`;
+  return `<div class="rp-head"><div class="rp-ht"><h1 class="display">รายงานสรุป</h1><span class="k" title="${sub}">${sub}</span></div><div class="rp-ha">${acts}</div></div>`;
+}
+function rpHero(m) {
+  if (RPT.loading) return `<div class="rp-hero" aria-hidden="true">${"<span class='rp-k rp-skk'><span class='sk-line' style='width:60%'></span><span class='sk-line' style='width:40%;height:22px'></span></span>".repeat(4)}</div>`;
+  const d = "—", blk = RPT.noclass || RPT.error || !m.rows.length, sh = S.device !== "desk", u = rpUnit();
+  const tile = (btn, icon, l, v, s, ss, al, extra = "") => `<${btn ? `button class="rp-k" data-rp="${btn}" ${blk ? "disabled" : ""}` : 'div class="rp-k" tabindex="0"'} aria-label="${al}" title="${s}"><span class="l">${ic(icon)}${l}${extra}${btn ? ic("caret-right", "go") : ""}</span><span class="v num">${v}</span><span class="s">${sh ? ss : s}</span></${btn ? "button" : "div"}>`;
+  const s1 = blk ? "ยังไม่มีข้อมูล" : m.rate == null ? (m.asg.length ? "ยังไม่มีงานที่ถึงกำหนด" : "ยังไม่มีงานในช่วงนี้") : `ส่งแล้ว ${m.sent} จาก ${m.app} ที่ถึงกำหนด · ยังไม่ถึงกำหนด ${m.pend}`;
+  const s1s = blk || m.rate == null ? s1 : `ส่ง ${m.sent}/${m.app} · รอกำหนด ${m.pend}`;
+  const s3 = blk ? "ยังไม่มีข้อมูล" : m.score == null ? "ยังไม่มีคะแนนในช่วงนี้" : `คะแนนสะสม · ค้างส่งนับ 0 · รอตรวจ ${m.aw} ชิ้น`;
+  const s4 = blk ? "ยังไม่มีข้อมูล" : m.attP == null ? "ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้" : `จาก ${m.days} ${u} · ขาดรวม ${m.mix[4]} ครั้ง`;
+  const rate = blk ? d : rpPc(m.rate), score = blk ? d : rpPc(m.score), att = blk ? d : rpPc(m.attP);
+  return `<div class="rp-hero" aria-live="off">
+    ${tile("", "paper-plane-tilt", "อัตราส่งงาน", rate, s1, s1s, `อัตราส่งงาน ${rate} · ${s1} · ตัวส่วน = ส่งแล้ว + ค้างส่ง ไม่นับยังไม่ถึงกำหนดและยกเว้น`)}
+    ${tile("gofollow", "warning-circle", "งานค้าง", blk ? d : `${m.miss}<small>ชิ้น</small>`, blk ? "ยังไม่มีข้อมูล" : `นักเรียน ${m.follow.length} คน`, blk ? "ยังไม่มีข้อมูล" : `นักเรียน ${m.follow.length} คน`, `งานค้าง ${blk ? d : m.miss + " ชิ้น นักเรียน " + m.follow.length + " คน"} · แตะเพื่อดูรายชื่อต้องติดตาม`)}
+    ${tile("", "exam", "คะแนนเฉลี่ย", score, s3, blk || m.score == null ? s3 : `ค้างนับ 0 · รอตรวจ ${m.aw}`, `คะแนนเฉลี่ย ${score} · ${s3} · ตัวส่วน = คะแนนเต็มของงานที่มีคะแนนและค้างส่ง`, ` <span class="rp-x" title="ของเพิ่ม P3: บรรทัด รอตรวจ n ชิ้น (ข้อมูลเดิม)">ของเพิ่ม</span>`)}
+    ${tile("goatt", "user-check", "มาเรียน", att, s4, blk || m.attP == null ? s4 : `${m.days} ${u} · ขาด ${m.mix[4]} ครั้ง`, `มาเรียน ${att} · ${s4} · แตะเพื่อไปหน้าเช็คชื่อ`)}</div>`;
+}
+function rpFilters(m, inSheet) {
+  const seg = (lbl, items) => `<div class="rp-seg" role="group" aria-label="${lbl}">${items}</div>`;
+  const rooms = `<div class="rp-tools-g" role="group" aria-label="เลือกห้อง" style="display:contents">${GB_ROOMS.map(([id, nm]) => `<button class="chip-btn rp-room" aria-pressed="${id === RPT.room}" data-rp="room:${id}">${ic("chalkboard")}${nm}<small class="num">${id === "c61" ? (m ? m.rows.length : 8) : AT_ROOM0[id][1]} คน</small></button>`).join("")}</div>`;
+  const subj = `<button class="chip-btn" data-rp="subj" aria-label="วิชา: ${RPT.subj ? "คณิตศาสตร์" : "ทุกวิชา"} · แตะเพื่อเปลี่ยน">${ic("book-open")}${RPT.subj ? "คณิตศาสตร์" : "ทุกวิชา"}${ic("caret-down")}</button>`;
+  const per = seg("ช่วงเวลา", [["term", "ทั้งเทอม"], ["month", "รายเดือน"]].map(([k, l]) => `<button aria-pressed="${RPT.period === k}" data-rp="period:${k}">${l}</button>`).join(""));
+  const months = Object.keys(RP_MONTHS).filter((k) => k !== "2026-12" || RPT.month === "2026-12");
+  const mon = RPT.period === "month" ? `<label class="chip-btn rp-sel">${ic("calendar-blank")}<span class="sr">เดือน</span><select name="rp-month" aria-label="เดือน">${months.map((k) => `<option value="${k}" ${k === RPT.month ? "selected" : ""}>${RP_MONTHS[k][0]}</option>`).join("")}</select></label>` : "";
+  const att = `<div class="rp-seg" role="group" aria-label="เช็คชื่อ"><span class="lb" aria-hidden="true">เช็คชื่อ</span>${[["day", "รายวัน"], ["period", "รายคาบ"]].map(([k, l]) => `<button aria-pressed="${RPT.att === k}" data-rp="att:${k}" ${k === "period" && !RPT.subj ? `disabled aria-describedby="rpAttWhy${inSheet ? "S" : ""}" title="รายคาบใช้ได้เมื่อเลือกวิชา"` : ""}>${l}</button>`).join("")}</div>${RPT.subj ? "" : `<span class="${inSheet ? "rp-why" : "sr"}" id="rpAttWhy${inSheet ? "S" : ""}">รายคาบใช้ได้เมื่อเลือกวิชา</span>`}`;
+  if (inSheet) return `<div class="rp-fgrp"><h3>ห้อง</h3><div class="row">${rooms}</div></div><div class="rp-fgrp"><h3>วิชา</h3><div class="row">${subj}</div></div><div class="rp-fgrp"><h3>ช่วงเวลา</h3><div class="row">${per}${mon}</div></div><div class="rp-fgrp"><h3>เช็คชื่อ</h3><div class="row">${att}</div></div>`;
+  return rooms + subj + per + mon + att;
+}
+function rpExports(m, col) {
+  const dis = RPT.noclass || RPT.loading || RPT.error || !m.rows.length ? "disabled" : "";
+  const xl = RPT.xl === "busy" ? `<button class="chip-btn" disabled aria-busy="true">${ic("circle-notch", "spin")}กำลังสร้างไฟล์ Excel…</button>` : `<button class="chip-btn" data-rp="xl" ${dis} title="ไฟล์นี้: ${rpScope()}">${ic("microsoft-excel-logo")}ส่งออก Excel</button>`;
+  return `<button class="chip-btn rp-ex" data-rp="project" aria-label="ฉายจอ" ${dis}>${ic("projector-screen")}<span class="lbl">ฉายจอ</span></button><button class="chip-btn rp-ex" data-rp="print" aria-label="พิมพ์" ${dis}>${ic("printer")}<span class="lbl">พิมพ์</span></button>${xl}`;
+}
+function rpTools(m) {
+  if (S.device === "ipadP") return `<div class="rp-tools">${RPT.noclass ? "" : rpFilters(m)}<span class="grow"></span>${RPT.xl === "busy" ? `<button class="chip-btn" disabled aria-busy="true">${ic("circle-notch", "spin")}กำลังสร้าง…</button>` : `<button class="chip-btn" data-act="sheet:rp-export" ${RPT.noclass || rpBlock() || !m.rows.length ? "disabled" : ""}>${ic("export")}ส่งออก · พิมพ์ · ฉายจอ${ic("caret-down")}</button>`}</div>`;
+  if (S.device === "phone") { const n = [!RPT.subj, RPT.period === "month", RPT.att === "period"].filter(Boolean).length;
+    return `<div class="rp-tools">${RPT.noclass ? "" : `<button class="chip-btn" data-act="sheet:rp-filter">${ic("funnel")}ตัวกรอง${n ? ` (${n})` : ""}</button>`}<span class="grow"></span>${RPT.xl === "busy" ? `<button class="chip-btn" disabled aria-busy="true">${ic("circle-notch", "spin")}กำลังสร้าง…</button>` : `<button class="chip-btn" data-act="sheet:rp-export" ${RPT.noclass ? "disabled" : ""}>${ic("export")}ส่งออก${ic("caret-down")}</button>`}</div>`; }
+  const side = RPT.q1 === "b" && !rpBlock() && m.rows.length ? `<button class="chip-btn" data-act="sheet:rp-side">${ic("sidebar-simple")}การ์ดสรุป</button>` : "";
+  return `<div class="rp-tools">${RPT.noclass ? "" : rpFilters(m)}${side}<span class="grow"></span>${rpExports(m)}</div>`;
+}
+function rpMeta(m) {
+  if (rpBlock() || !m.rows.length) return "";
+  const out = RPT.period === "month" && RPT.month === "2026-12", u = rpUnit();
+  const range = out ? `${ic("calendar-x")}เดือนนี้อยู่นอกภาคเรียน (ไม่มีวันเรียนในช่วงนี้)` : `ช่วง ${RPT.period === "term" ? RP_RANGE : RP_MONTHS[RPT.month][1]}`;
+  const upd = RPT.bg ? `<span class="st st-mute">${ic("circle-notch", "spin")}กำลังอัปเดตรายงาน…</span>` : "";
+  const rl = `<button class="btn btn-ghost" data-rp="reload" ${RPT.online ? "" : 'disabled aria-describedby="rpRlWhy"'}>${ic("arrow-clockwise")}โหลดใหม่</button>${RPT.online ? "" : '<span class="rp-why" id="rpRlWhy">โหลดใหม่ได้เมื่อมีเน็ต</span>'}`;
+  const scope = RPT.hide ? `<span class="scope st st-warn">${ic("warning")}ไฟล์ Excel มีชื่อนักเรียน</span>` : `<span class="scope">${ic("microsoft-excel-logo")}ไฟล์ Excel: ${rpScope()}</span>`;
+  return `<div class="rp-meta"><span title="อัปเดตอัตโนมัติทุก 1 นาที">${ic("clock")}ข้อมูลล่าสุด ${RP_AT}</span><span>${range}</span>${out ? `<button class="btn btn-ghost" data-rp="period:term">ดูทั้งเทอม</button>` : `<span>งาน ${m.asg.length} · เช็คชื่อ ${m.days} ${u}${m.noGiven && RPT.period === "month" ? ` · รวมงานที่ไม่ระบุวันมอบ ${m.noGiven} งาน` : ""}</span>`}${upd}${rl}<span class="grow"></span>${scope}</div>`;
+}
+function rpBanners() {
+  let h = RPT.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่ · แสดงเฉพาะเลขที่</b> — เฉพาะหน้านี้ · ปิดคัดลอกไป LINE · ใบพิมพ์ใช้เลขที่ · ไฟล์ Excel ยังมีชื่อนักเรียน</div><button class="btn" data-rp="hide">${ic("eye")}แสดงชื่อ</button></div>` : "";
+  if (!RPT.online && !RPT.never) h += `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์อยู่ — แสดงรายงานที่โหลดไว้เมื่อ ${RP_AT}</b> · คะแนนใหม่จะยังไม่ปรากฏ · ส่งออก Excel / พิมพ์ / คัดลอก ยังใช้ได้</div><button class="btn" data-rp="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button></div>`;
+  if (RPT.stale) h += `<div class="banner" role="status">${ic("cloud-slash")}<div><b>อัปเดตไม่สำเร็จ — ยังแสดงข้อมูลครั้งก่อน (${RP_AT})</b> · กดโหลดใหม่ได้</div><button class="btn" data-rp="reload">${ic("arrow-clockwise")}โหลดใหม่</button></div>`;
+  return h;
+}
+function rpTable(m) {
+  const rows = rpSorted(m.rows), [sk, sd] = RPT.sort, wide = S.device === "desk" && RPT.q1 === "a" || S.device !== "phone" && RPT.q1 === "b";
+  const th = (k, l, cls) => `<th scope="col" class="${cls}" ${sk === k ? `aria-sort="${sd > 0 ? "ascending" : "descending"}"` : ""}><button data-rp="sort:${k}" aria-label="เรียงตาม${l}">${l}${ic(sk === k ? (sd > 0 ? "sort-ascending" : "sort-descending") : "arrows-down-up")}</button></th>`;
+  const body = rows.map((r) => `<tr ${RPT.cur === r.no ? 'aria-current="true"' : ""}><td class="c-no num">${r.no}</td><th scope="row" class="c-nm"><button class="nm-b" data-rp="stu:${r.no}" data-from="t" ${RPT.hide ? "" : `title="${rpNm(r)}"`}><span>${rpNm(r)}</span></button></th>
+    <td class="c-sub num">${r.app ? (r.miss ? `<span class="rp-miss" title="ค้าง ${r.miss} งาน">${ic("warning")}${r.sent}/${r.app}<span class="sr"> ค้าง ${r.miss} งาน</span></span>` : `${r.sent}/${r.app}`) : "—"}</td>
+    <td class="c-cum">${r.pct == null ? "—" : `<span class="rp-mb"><span class="bar" aria-hidden="true"><i style="width:${r.pct}%"></i></span><span class="num">${r.pct}%</span></span>`}</td>
+    <td class="c-att num">${rpPc(r.attP)}</td>${wide ? `<td class="c-p2 num">${r.miss ? `ค้าง ${r.miss}` : "ค้าง 0"} · ${r.atT ? `ขาด ${r.at[4]}` : "ขาด —"}</td>` : ""}</tr>`).join("");
+  return `<section class="card rp-tblc" aria-labelledby="rpTblH"><div class="rp-th"><h2 id="rpTblH" class="display">รายบุคคล · ${m.rows.length} คน</h2><span class="grow"></span><span class="rp-why">${rpSortTxt()}</span></div>
+  <div class="rp-scroll" role="region" aria-labelledby="rpTblH" tabindex="0"><table class="rpt"><caption class="sr">รายบุคคล ${rpRoom()} · ${rpSortTxt()} · แตะชื่อเพื่อเปิดข้อมูลนักเรียน</caption>
+  <thead><tr><th scope="col" class="c-no">#</th>${th("name", "ชื่อ", "c-nm")}${th("sub", "ส่งงาน", "c-sub")}${th("cum", "สะสม", "c-cum")}${th("att", "มาเรียน", "c-att")}${wide ? `<th scope="col" class="c-p2">ค้าง · ขาด <span class="rp-x" title="ของเพิ่ม P2">ของเพิ่ม</span></th>` : ""}</tr></thead><tbody>${body}</tbody></table></div></section>`;
+}
+function rpList(m) {
+  const rows = rpSorted(m.rows);
+  return `<section class="card rp-tblc" aria-labelledby="rpTblH"><div class="rp-th"><h2 id="rpTblH" class="display">รายบุคคล · ${m.rows.length} คน</h2><span class="grow"></span><button class="btn btn-ghost" data-act="sheet:rp-sort" aria-label="${rpSortTxt()} · แตะเพื่อเปลี่ยน">${ic("arrows-down-up")}เรียงตาม ${RP_SORT[RPT.sort[0]]}${ic("caret-down")}</button></div>
+  <ul class="rp-list">${rows.map((r) => `<li><button class="rp-li" data-rp="stu:${r.no}" data-from="t" ${RPT.cur === r.no ? 'aria-current="true"' : ""}><span class="no num">${r.no}</span><span class="t"><span class="nm">${rpNm(r)}</span><small>มา ${rpPc(r.attP)} · สะสม ${rpPc(r.pct)}</small></span><span class="sub num ${r.miss ? "rp-miss" : ""}">${r.miss ? ic("warning") : ""}ส่ง ${r.app ? `${r.sent}/${r.app}` : "—"}${r.miss ? `<span class="sr"> ค้าง ${r.miss} งาน</span>` : ""}</span>${ic("caret-right")}</button></li>`).join("")}</ul></section>`;
+}
+function rpCard(k, title, body, extra = "") {
+  const shut = !!RPT.shut[k], icon = RP_CARDS.find((c) => c[0] === k)[2];
+  return `<section class="card rp-card" aria-labelledby="rpc-${k}"><div class="rp-ch"><h2 class="display"><button class="rp-tog" id="rpc-${k}" data-rp="tog:${k}" aria-expanded="${!shut}" ${shut ? "" : `aria-controls="rpb-${k}"`}>${ic(icon)}<span>${title}</span>${ic(shut ? "caret-down" : "caret-up", "cv")}</button></h2>${extra}</div>${shut ? "" : `<div class="rp-cb" id="rpb-${k}">${body}</div>`}</section>`;
+}
+function rpWorkRow(w) {
+  const d = gbDue(w.a), ty = GT[w.a.type] || GT["ใบงาน"];
+  const al = `${w.a.title} · ${d[2]} · ส่งแล้ว ${w.sent} จาก ${w.den}${w.past ? ` · ${w.pct}%` : " · เก็บอยู่"}${w.ex ? ` · ยกเว้น ${w.ex}` : ""}${w.avg != null ? ` · เฉลี่ย ${w.avg}% ตรวจแล้ว ${w.scN}/${w.sent}` : ""} · แตะเพื่อเปิดในสมุดคะแนน`;
+  return `<li><button class="rp-w t-${ty[1]}" data-rp="asg:${w.a.id}" aria-label="${al}" title="${w.a.title}"><span class="t"><i class="tsh" aria-hidden="true"></i><span class="tt">${w.a.title}</span>${st(d[0], d[1], d[2])}</span>
+    <span class="b" aria-hidden="true"><span class="rp-pb ${w.past ? "" : "open"}"><i style="width:${w.pct || 0}%"></i></span><span class="num">${w.sent}/${w.den}</span>${w.ex ? `<span>ยกเว้น ${w.ex}</span>` : ""}</span>
+    <span class="r" aria-hidden="true"><b class="num">${w.past ? w.pct + "%" : "เก็บอยู่"}</b>${w.avg != null ? `เฉลี่ย <span class="num">${w.avg}%</span> · ตรวจ ${w.scN}/${w.sent}` : "ยังไม่มีคะแนน"}</span></button></li>`;
+}
+function rpFollowRows(list) {
+  return `<ul class="rp-fl">${list.map((r) => `<li class="rp-f"><button class="rp-fb" data-rp="stu:${r.no}" data-from="f" aria-label="${rpWho(r)} ค้าง ${r.miss} งาน: ${r.missA.map((a) => a.title).join(", ")}"><b>${rpWho(r)}</b><small>${r.missA.map((a) => a.title).join(" · ")}</small></button><span class="rp-miss num" aria-hidden="true">${ic("warning")}ค้าง ${r.miss}</span><button class="icon-btn" data-rp="gbmiss:${r.no}" aria-label="ดูในสมุดคะแนน กรองค้างส่ง (ของเพิ่ม P7)" title="ของเพิ่ม P7: ดูในสมุดคะแนน">${ic("notebook")}</button></li>`).join("")}</ul>`;
+}
+function rpCards(m) {
+  const u = rpUnit(), f = m.follow, fs = f.slice(0, 8);
+  const fns = {
+    follow: () => rpCard("follow", `ต้องติดตาม ${f.length} คน`, !m.asg.length ? `<p class="sec small">ยังไม่มีงานในช่วงนี้</p>` : !f.length ? `<p class="rp-ok">${ic("check-circle")}ส่งงานครบทุกคน</p>`
+      : `${rpFollowRows(fs)}${f.length > fs.length ? `<button class="btn btn-ghost" data-act="sheet:rp-follow">ดูทั้งหมด (${f.length})</button>` : ""}<p class="rp-note"><span class="rp-x">ของเพิ่ม P7</span>ปุ่ม ${ic("notebook")} เปิดสมุดคะแนนกรองเฉพาะค้างส่ง</p>`,
+      f.length ? `<button class="btn" data-rp="line" ${RPT.hide ? 'disabled aria-describedby="rpLineWhy"' : ""}>${ic(RPT.copied ? "check" : "copy")}${RPT.copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>${RPT.hide ? '<span class="rp-why" id="rpLineWhy">ปิดอยู่ตอนซ่อนชื่อ</span>' : ""}` : ""),
+    works: () => { const W = [...m.works].sort((p, q) => (q.a.given || "").localeCompare(p.a.given || "")), ws = W.slice(0, 8);
+      return rpCard("works", `อัตราส่งรายงาน · ${m.asg.length} งาน`, !m.asg.length ? (RPT.period === "month" ? `<p class="sec small">ยังไม่มีงานที่มอบหมายใน ${RP_MONTHS[RPT.month][0]}</p><button class="btn" data-rp="period:term">ดูทั้งเทอม</button>` : `<p class="sec small">ยังไม่มีงานในช่วงนี้</p>`)
+        : `<ul class="rp-wl">${ws.map(rpWorkRow).join("")}</ul>${W.length > ws.length ? `<button class="btn btn-ghost" data-act="sheet:rp-works">ดูทั้งหมด (${W.length})</button>` : ""}<p class="rp-note"><span class="rp-pb open" style="max-width:40px" aria-hidden="true"><i style="width:60%"></i></span>เส้นประ = ยังไม่ถึงกำหนด “เก็บอยู่” · แตะงาน = เปิดสมุดคะแนน</p>`,
+        `<span class="rp-x" title="ของเพิ่ม P1: เฉลี่ย % ต่องาน + ตรวจแล้ว n/m">ของเพิ่ม: เฉลี่ยต่องาน</span>`); },
+    att: () => { const lab = RP_AK.map((a, i) => `${a[2]} ${m.mix[i]}`).join(" · ");
+      return rpCard("att", `การมาเรียน · ${m.atT} ครั้ง · ${m.days} ${u}`, !m.atT ? `<p class="sec small">ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้</p><button class="btn" data-rp="goatt">${ic("user-check")}ไปเช็คชื่อ</button>`
+        : `<div class="rp-stack" role="img" aria-label="การมาเรียน ${lab} จาก ${m.atT} ครั้ง · มาเรียน ${rpPc(m.attP)}">${m.mix.map((n, i) => (n ? `<i class="a-${RP_AK[i][0]}" style="flex:${n}"></i>` : "")).join("")}</div>
+        <ul class="rp-leg" aria-hidden="true">${RP_AK.map((a, i) => `<li class="a-${a[0]}"><i class="sw"></i>${ic(a[1])}${a[2]} <b class="num">${m.mix[i]}</b></li>`).join("")}</ul>`); },
+    hist: () => { const mx = Math.max(1, ...m.hist), tot = m.hist.reduce((p, q) => p + q, 0);
+      return rpCard("hist", "การกระจายคะแนนสะสม", !tot ? `<p class="sec small">ยังไม่มีคะแนนในช่วงนี้</p>` : `<div class="rp-hist" role="img" aria-label="${RP_HL.map((l, i) => `${l}: ${m.hist[i]} คน`).join(" · ")}">${RP_HL.map((l, i) => `<span aria-hidden="true">${l}</span><span class="hb" aria-hidden="true"><i style="width:${(m.hist[i] * 100) / mx}%"></i></span><b class="num" aria-hidden="true">${m.hist[i]} คน</b>`).join("")}</div>${tot < m.rows.length ? `<p class="rp-note">ไม่นับ ${m.rows.length - tot} คนที่ยังไม่มีคะแนนเต็ม</p>` : ""}`); },
+    stats: () => rpCard("stats", "ตัวเลขสรุป", `<dl class="rp-dl">${[["นักเรียน", m.rows.length], ["งาน", m.asg.length], ["ส่งแล้ว", m.sent], ["ค้างส่ง", m.miss], ["ยังไม่ถึงกำหนด", m.pend], ["รอตรวจ", m.aw], ["ขาดรวม", m.atT ? m.mix[4] : "—"]].map(([l, v]) => `<div><dt>${l}${l === "รอตรวจ" ? ' <span class="rp-x">P3</span>' : ""}</dt><dd>${v}</dd></div>`).join("")}</dl>
+      <p class="rp-note"><button class="btn" data-rp="sum5">${ic("copy")}คัดลอกสรุปรวม</button><span class="rp-x" title="ของเพิ่ม P5">ของเพิ่ม P5</span>ไม่มีชื่อ ใช้ได้ตอนซ่อนชื่อ</p>`),
+    absent: () => rpCard("absent", "ขาดบ่อย (ขาด ≥ 3 ครั้ง)", RPT.hide ? `<p class="sec small">ปิดอยู่ตอนซ่อนชื่อ (การ์ดนี้เป็นรายชื่อ)</p>` : !m.atT ? `<p class="sec small">ยังไม่มีข้อมูลเช็คชื่อในช่วงนี้</p>` : !m.absent.length ? `<p class="rp-ok">${ic("check-circle")}ไม่มีใครขาด 3 ครั้งขึ้นไป</p>`
+      : `<ul class="rp-fl">${m.absent.map((r) => `<li class="rp-f"><button class="rp-fb" data-rp="stu:${r.no}" data-from="a"><b>${rpWho(r)}</b><small>มาเรียน ${rpPc(r.attP)}</small></button><span class="rp-miss num">${ic("x")}ขาด ${r.at[4]} ครั้ง</span></li>`).join("")}</ul><p class="rp-note">เกณฑ์: ขาด ≥ 3 ครั้งในช่วงนี้</p>`,
+      `<span class="rp-x" title="ของเพิ่ม P4 (อนุมัติที่ Gate 2)">ของเพิ่ม P4</span>`),
+  };
+  const on = RPT.order.filter((k) => RPT.cards[k]);
+  return on.length ? on.map((k) => fns[k]()).join("") : `<p class="rp-note">ปิดการ์ดทั้งหมดอยู่ — เปิดได้ที่ “ปรับการ์ด”</p>`;
+}
+function rpMain(m) {
+  if (RPT.noclass) return gbEmpty("chalkboard", "ยังไม่มีห้องเรียน", "เริ่มจากสร้างห้องแรก แล้วค่อยนำเข้านักเรียน", `<button class="btn btn-primary" data-toast="ไปตั้งค่า › ห้องเรียน (/settings?section=catalog)">${ic("gear-six")}ตั้งค่าห้องเรียน</button>`);
+  if (RPT.error) return gbEmpty("cloud-x", "โหลดรายงานไม่สำเร็จ", RPT.never ? "ยังไม่เคยเปิดรายงานนี้ในเครื่องนี้ ต่อเน็ตแล้วลองใหม่" : "ตรวจการเชื่อมต่อแล้วลองใหม่ ข้อมูลของคุณไม่หาย", `<button class="btn btn-primary" data-rp="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button>`, "alert");
+  if (RPT.loading) return `<p class="sec rp-ld" role="status">${ic("circle-notch", "spin")}กำลังโหลดรายงาน…</p><div class="rp-body" aria-hidden="true"><div class="card rp-tblc"><div class="rp-th"><span class="sk-line" style="width:30%"></span></div>${"<div class='rp-th'><span class='sk-line' style='width:70%'></span></div>".repeat(6)}</div><div class="rp-cards">${"<div class='sk rp-skc'></div>".repeat(3)}</div></div>`;
+  if (!m.rows.length) return gbEmpty("users-three", "ห้องนี้ยังไม่มีนักเรียน", "เพิ่มหรือนำเข้านักเรียนก่อน แล้วรายงานจะขึ้นเอง", `<button class="btn btn-primary" data-toast="ไปหน้านักเรียน (/students?class=${RPT.room})">${ic("users-three")}ไปหน้านักเรียน</button>`);
+  return `<div class="rp-body ${RPT.q1 === "b" ? "q1b" : ""}">${S.device === "phone" ? rpList(m) : rpTable(m)}${RPT.q1 === "b" ? "" : `<div class="rp-cards">${rpCards(m)}</div>`}</div>`;
+}
+function pageReports() {
+  const m = (RPT.m = rpModel());
+  return `<div class="rpp d-${S.device} ${S.device === "desk" ? "" : "touch"}" ${RPT.loading ? 'aria-busy="true"' : ""}>${rpBanners()}<section class="rp-band" aria-label="สรุปรายงาน">${rpHead()}${RPT.noclass ? "" : rpHero(m)}</section>${rpTools(m)}${rpMeta(m)}${rpMain(m)}</div>`;
+}
+function rpProj(m) {
+  const W = [...m.works].sort((p, q) => (q.a.given || "").localeCompare(p.a.given || "")).slice(0, 8);
+  return `<div class="proj rp-proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ รายงาน">
+  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${rpScope()}</b><span class="grow"></span><span class="hp">${ic("eye-slash")}ไม่มีชื่อนักเรียนบนจอนี้</span><button class="btn" id="rpProjOff" data-rp="projoff">${ic("x")}ปิดฉายจอ</button></div>
+  <div class="rp-pjn"><div><span>ส่งงานแล้ว</span><b class="num">${rpPc(m.rate)}</b></div><div><span>งานค้าง</span><b class="num">${m.miss}<small> ชิ้น</small></b></div><div><span>มาเรียน</span><b class="num">${rpPc(m.attP)}</b></div></div>
+  <section class="rp-pjw" aria-label="อัตราส่งรายงาน">${W.map((w) => `<div class="rp-pjr"><span class="ell">${w.a.title}</span><span class="proj-bar" role="img" aria-label="${w.a.title} ส่งแล้ว ${w.sent} จาก ${w.den}"><i style="width:${w.pct || 0}%"></i></span><b class="num">${w.sent}/${w.den} · ${w.past ? w.pct + "%" : "เก็บอยู่"}</b></div>`).join("")}</section>
+  ${m.atT ? `<section aria-label="การมาเรียน"><div class="rp-stack" role="img" aria-label="${RP_AK.map((a, i) => `${a[2]} ${m.mix[i]}`).join(" · ")}">${m.mix.map((n, i) => (n ? `<i class="a-${RP_AK[i][0]}" style="flex:${n}"></i>` : "")).join("")}</div><ul class="rp-leg" aria-hidden="true" style="margin-top:8px">${RP_AK.map((a, i) => `<li class="a-${a[0]}"><i class="sw"></i>${ic(a[1])}${a[2]} <b class="num">${m.mix[i]}</b></li>`).join("")}</ul></section>` : ""}</div>`;
+}
+function rpPrint(m) {
+  const on = (k) => RPT.cards[k], u = rpUnit(), rows = rpSorted(m.rows);
+  const works = on("works") && m.works.length ? `<h3>อัตราส่งรายงาน</h3><table><thead><tr><th>งาน</th><th class="r">ส่งแล้ว</th><th class="r">ร้อยละ</th><th class="r">เฉลี่ย</th></tr></thead><tbody>${m.works.map((w) => `<tr><td>${w.a.title}</td><td class="r">${w.sent}/${w.den}</td><td class="r">${w.past ? w.pct + "%" : "เก็บอยู่"}</td><td class="r">${rpPc(w.avg)}</td></tr>`).join("")}</tbody></table>` : "";
+  const att = on("att") && m.atT ? `<h3>การมาเรียน · ${m.atT} ครั้ง · ${m.days} ${u}</h3><p>${RP_AK.map((a, i) => `${a[2]} ${m.mix[i]}`).join(" · ")}</p>` : "";
+  const fol = on("follow") ? `<h3>ต้องติดตาม ${m.follow.length} คน</h3>${m.follow.length ? `<p>${m.follow.map((r) => `${rpWho(r)} (ค้าง ${r.miss}: ${r.missA.map((a) => a.title).join(", ")})`).join(" · ")}</p>` : "<p>ส่งงานครบทุกคน</p>"}` : "";
+  const hist = on("hist") ? `<h3>การกระจายคะแนนสะสม</h3><p>${RP_HL.map((l, i) => `${l}: ${m.hist[i]} คน`).join(" · ")}</p>` : "";
+  const ind = RPT.psum ? "" : `<h3>รายบุคคล · ${m.rows.length} คน</h3><table><thead><tr><th class="r">#</th><th>ชื่อ</th><th class="r">ส่ง</th><th class="r">ค้าง</th><th class="r">สะสม</th><th class="r">มา</th></tr></thead><tbody>${rows.map((r) => `<tr><td class="r">${r.no}</td><td>${rpNm(r)}</td><td class="r">${r.app ? `${r.sent}/${r.app}` : "—"}</td><td class="r">${r.miss}</td><td class="r">${rpPc(r.pct)}</td><td class="r">${rpPc(r.attP)}</td></tr>`).join("")}</tbody></table>`;
+  return `<div class="rp-print" role="dialog" aria-modal="true" aria-labelledby="rpPrH"><div class="rp-pbar"><b id="rpPrH">ตัวอย่างก่อนพิมพ์ (A4 แนวตั้ง)</b><button class="btn" data-rp="psum" aria-pressed="${RPT.psum}">${ic(RPT.psum ? "check-square" : "square")}สรุปอย่างเดียว (ไม่มีรายบุคคล)</button><button class="btn btn-primary" id="rpPrGo" data-rp="pgo">${ic("printer")}พิมพ์</button><button class="btn" data-rp="pback">${ic("arrow-left")}กลับ</button></div>
+  <div class="rp-pscroll"><article class="rp-paper" aria-label="ใบรายงาน"><h2>รายงานสรุป ${rpRoom()} · ${RPT.subj ? "คณิตศาสตร์" : "ทุกวิชา"}</h2><p>${RP_TERM} · ช่วง ${RPT.period === "term" ? RP_RANGE : RP_MONTHS[RPT.month][1]} · ข้อมูลเมื่อ 11 พ.ย. 2569 ${RP_AT}${RPT.hide ? " · แสดงเลขที่แทนชื่อ" : ""}</p>
+  <h3>ภาพรวม</h3><div class="k4"><div>อัตราส่งงาน<b>${rpPc(m.rate)}</b></div><div>งานค้าง<b>${m.miss} ชิ้น</b></div><div>คะแนนเฉลี่ย<b>${rpPc(m.score)}</b></div><div>มาเรียน<b>${rpPc(m.attP)}</b></div></div>
+  ${works}${att}${fol}${hist}${ind}<p class="sig">ลงชื่อ ...................................................... ผู้สอน<br>(${TEACHER}) <span class="rp-x">ของเพิ่ม P8</span></p></article></div></div>`;
+}
+const rpOverlays = () => { const m = RPT.m || rpModel(); return (RPT.print && m.rows.length && !rpBlock() ? rpPrint(m) : "") + (RPT.project && m.rows.length && !rpBlock() ? rpProj(m) : ""); };
+function rpSheet() {
+  const m = RPT.m || rpModel(), k = S.sheet; let h = "", body = "";
+  if (k.startsWith("rp-stu:")) { const r = m.rows.find((x) => x.no === +k.slice(7));
+    if (!r) { h = "นักเรียน"; body = `<p class="sec">ไม่พบนักเรียน</p>`; }
+    else { h = RPT.hide ? `เลขที่ ${r.no}` : `เลขที่ ${r.no} ${r.n[0]} ${r.n[1]}`;
+      body = `<p class="sec small" style="margin:0">${rpScope()} · ${RPT.hide ? "ซ่อนชื่ออยู่" : "ข้อมูลรายคน"}</p><dl class="rp-dl">${[["ส่งงาน", r.app ? `${r.sent}/${r.app}` : "—"], ["ค้างส่ง", r.miss], ["ยังไม่ถึงกำหนด", r.pend], ["รอตรวจ", r.aw], ["สะสม", r.fu ? `${fmtN(r.sc)}/${r.fu}` : "—"], ["ร้อยละสะสม", rpPc(r.pct)], ["มาเรียน", r.atT ? `${r.at[0] + r.at[1]}/${r.atT}` : "—"], ["ร้อยละมา", rpPc(r.attP)]].map(([l, v]) => `<div><dt>${l}</dt><dd>${v}</dd></div>`).join("")}</dl>
+      ${r.atT ? `<ul class="rp-leg">${RP_AK.map((a, i) => `<li class="a-${a[0]}"><i class="sw"></i>${ic(a[1])}${a[2]} <b class="num">${r.at[i]}</b></li>`).join("")}</ul>` : ""}
+      ${r.missA.length ? `<div class="rp-fgrp"><h3>งานที่ค้าง ${r.missA.length} งาน</h3>${r.missA.map((a) => `<button class="btn" style="justify-content:flex-start" data-rp="asg:${a.id}">${ic("warning")}${a.title}${ic("arrow-right")}</button>`).join("")}</div>` : `<p class="rp-ok">${ic("check-circle")}ไม่มีงานค้าง</p>`}
+      <button class="btn" data-rp="gbmiss:${r.no}">${ic("notebook")}ดูในสมุดคะแนน</button><button class="btn" data-rp="goatt">${ic("user-check")}ไปหน้าเช็คชื่อ</button>`; } }
+  if (k === "rp-cards") { h = "ปรับการ์ด";
+    body = `<p class="sec small" style="margin:0">ซ่อน/แสดง และเรียงการ์ดของหน้านี้ · จำในเครื่องนี้</p>${RPT.order.map((c, i) => { const C = RP_CARDS.find((x) => x[0] === c), on = RPT.cards[c];
+      return `<div class="sheet-row">${ic(C[2])}<span class="t"><b>${C[1]}</b>${c === "absent" ? '<small><span class="rp-x">ของเพิ่ม P4</span> เกณฑ์ขาด ≥ 3 ครั้งในช่วงนี้</small>' : ""}</span><button class="icon-btn" data-rp="up:${c}" aria-label="เลื่อน ${C[1]} ขึ้น" ${i === 0 ? "disabled" : ""}>${ic("arrow-up")}</button><button class="icon-btn" data-rp="dn:${c}" aria-label="เลื่อน ${C[1]} ลง" ${i === RPT.order.length - 1 ? "disabled" : ""}>${ic("arrow-down")}</button><button class="btn rp-sw" data-rp="card:${c}" aria-pressed="${on}" aria-label="แสดงการ์ด ${C[1]}">${ic(on ? "eye" : "eye-slash")}${on ? "แสดง" : "ซ่อน"}</button></div>`; }).join("")}
+      <p class="info-note">${ic("lock-simple")} ล็อกไว้เสมอ: ตัวกรอง · ตารางรายบุคคล · ปุ่มพิมพ์/ส่งออก Excel</p><button class="btn btn-primary" data-act="close">เสร็จ</button>`; }
+  if (k === "rp-side") { h = "การ์ดสรุป"; body = `<p class="sec small" style="margin:0">ทาง ข (Q1): การ์ดอยู่ในลิ้นชักข้าง หน้าเหลือ hero + ตาราง</p><div class="rp-cards">${rpCards(m)}</div>`; }
+  if (k === "rp-follow") { h = `ต้องติดตาม ${m.follow.length} คน`; body = m.follow.length ? rpFollowRows(m.follow) : `<p class="rp-ok">${ic("check-circle")}ส่งงานครบทุกคน</p>`; }
+  if (k === "rp-works") { h = `อัตราส่งรายงาน · ${m.works.length} งาน`; body = `<ul class="rp-wl">${[...m.works].sort((p, q) => (q.a.given || "").localeCompare(p.a.given || "")).map(rpWorkRow).join("")}</ul>`; }
+  if (k === "rp-filter") { h = "ตัวกรอง"; body = rpFilters(m, true) + `<button class="btn btn-primary" data-act="close">ดูผล</button>`; }
+  if (k === "rp-export") { h = "ส่งออก";
+    body = `<p class="info-note">${ic("microsoft-excel-logo")} ไฟล์นี้: ${rpScope()}${RPT.hide ? "<br><b>ไฟล์ Excel มีชื่อนักเรียน</b> (ใบพิมพ์ใช้เลขที่)" : ""}</p><div class="rp-fgrp"><div class="row">${rpExports(m)}</div></div>`; }
+  if (k === "rp-more") { h = "เพิ่มเติม"; body = `<button class="btn" data-act="sheet:rp-cards">${ic("sliders-horizontal")}ปรับการ์ด</button><button class="btn" data-toast="เลือกภาคเรียน — ตัวอย่างนี้มี ${RP_TERM}">${ic("calendar-dots")}${RP_TERM}</button>`; }
+  if (k === "rp-sort") { h = "เรียงรายบุคคล"; body = Object.entries(RP_SORT).map(([s, l]) => `<button class="btn rp-sw" style="justify-content:flex-start" data-rp="sort:${s}" aria-pressed="${RPT.sort[0] === s}">${ic(RPT.sort[0] === s ? (RPT.sort[1] > 0 ? "sort-ascending" : "sort-descending") : "arrows-down-up")}${l}</button>`).join("") + `<p class="rp-why" style="margin:0">${rpSortTxt()} · แตะซ้ำเพื่อกลับทิศ</p>`; }
+  return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}</div></div>`;
+}
+function rpFocus(...sels) { for (const s of sels) { const el = [...document.querySelectorAll(s)].find((x) => x.offsetParent); if (el) { el.focus({ preventScroll: false }); return; } } }
+function rpReload(sel, after) {
+  clearTimeout(RPT.timer); RPT.loading = true; RPT.live = "กำลังโหลดรายงาน…"; render(true);
+  RPT.timer = setTimeout(() => { RPT.loading = false; if (after) after(); RPT.live = "โหลดรายงานแล้ว · " + rpScope(); if (S.page === "reports") { render(true); if (sel) rpFocus(sel); } }, 700);
+}
+function rpToGb(id, miss) {
+  gbScenario("normal");
+  if (id && GB.asg.some((a) => a.id === id)) { GB.sel = id; GB.fc = GB.asg.findIndex((a) => a.id === id); GB.scrollCol = id; }
+  if (miss) gbSetRows("missing");
+  S.page = "gradebook"; S.sheet = null; render(); document.getElementById("appMain").scrollTop = 0;
+  toast(miss ? "เปิดสมุดคะแนน · กรองเฉพาะค้างส่ง" : `เปิดสมุดคะแนนที่งาน ${(gbA(id) || { title: "" }).title}`);
+}
+function rpAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), a = i < 0 ? "" : v.slice(i + 1);
+  const re = (...sels) => { render(true); if (sels.length) rpFocus(...sels); };
+  switch (k) {
+    case "hide": RPT.hide = !RPT.hide; RPT.copied = false; RPT.live = RPT.hide ? "ซ่อนชื่อนักเรียนแล้ว" : "แสดงชื่อนักเรียนแล้ว"; re('.rp-head [data-rp="hide"]'); toast(RPT.live); return;
+    case "room": if (a === RPT.room) return; RPT.room = a; rpReload('[data-rp="room:c61"]', () => { if (a !== "c61") { RPT.room = "c61"; setTimeout(() => toast(`ตัวอย่างนี้มีข้อมูลเฉพาะ ป.6/1 — ${gbRoom(a)} ในแอปจริงโหลดของห้องนั้น`), 50); } }); return;
+    case "subj": RPT.subj = !RPT.subj; if (!RPT.subj && RPT.att === "period") RPT.att = "day"; rpReload('[data-rp="subj"]'); return;
+    case "period": RPT.period = a; if (a === "month" && RPT.month === "2026-12" && RPT.sstate !== "outterm") RPT.month = "2026-11"; rpReload(`[data-rp="period:${a}"]`, () => a === "term" || RPT.sstate !== "outterm" || (RPT.month = "2026-12")); return;
+    case "att": RPT.att = a; RPT.live = `เช็คชื่อ: ${a === "day" ? "รายวัน" : "รายคาบ"}`; re(`[data-rp="att:${a}"]`); return;
+    case "sort": { const [sk, sd] = RPT.sort; RPT.sort = [a, sk === a ? -sd : 1]; RPT.live = rpSortTxt(); re(`[data-rp="sort:${a}"]`); return; }
+    case "stu": { const fr = (e && e.target.closest("[data-from]")) ? e.target.closest("[data-from]").dataset.from : "t"; RPT.cur = +a; openSheet(`rp-stu:${a}`, `[data-rp="stu:${a}"][data-from="${fr}"]`); return; }
+    case "tog": RPT.shut[a] = !RPT.shut[a]; re(`[data-rp="tog:${a}"]`); return;
+    case "card": RPT.cards[a] = !RPT.cards[a]; RPT.live = `${RPT.cards[a] ? "แสดง" : "ซ่อน"}การ์ด ${RP_CARDS.find((c) => c[0] === a)[1]}`; re(`[data-rp="card:${a}"]`); return;
+    case "up": case "dn": { const o = RPT.order, j = o.indexOf(a), t = k === "up" ? j - 1 : j + 1; if (t < 0 || t >= o.length) return; [o[j], o[t]] = [o[t], o[j]]; RPT.live = `ย้ายการ์ด ${RP_CARDS.find((c) => c[0] === a)[1]} ไปลำดับที่ ${t + 1}`; re(`[data-rp="${k}:${a}"]:not(:disabled)`, `[data-rp="card:${a}"]`); return; }
+    case "gofollow": if (RPT.cards.follow && RPT.q1 === "a") { RPT.shut.follow = false; render(true); const el = document.getElementById("rpc-follow"); if (el) { el.scrollIntoView({ block: "nearest" }); el.focus(); } } else openSheet("rp-follow", '[data-rp="gofollow"]'); return; // G-R7: card off → open the list sheet
+    case "goatt": S.sheet = null; S.page = "attendance"; render(); document.getElementById("appMain").scrollTop = 0; toast(`ไปหน้าเช็คชื่อ ${rpRoom()} (/attendance?class=${RPT.room})`); return;
+    case "asg": rpToGb(a); return;
+    case "gbmiss": rpToGb(null, true); return;
+    case "line": if (RPT.xlFail) { RPT.live = "คัดลอกไม่สำเร็จ — เลือกข้อความแล้วคัดลอกเอง"; toast(RPT.live); render(true); rpFocus('[data-rp="line"]'); return; }
+      RPT.copied = true; RPT.live = "คัดลอกไปวางใน LINE ได้เลย"; re('[data-rp="line"]'); toast(RPT.live);
+      setTimeout(() => { RPT.copied = false; if (S.page !== "reports") return; const had = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.rp === "line"; render(true); if (had) rpFocus('[data-rp="line"]'); }, 2000); return;
+    case "sum5": RPT.live = `คัดลอกสรุปรวมแล้ว · ${rpScope()} (ไม่มีชื่อ)`; toast(RPT.live); render(true); rpFocus('[data-rp="sum5"]'); return;
+    case "xl": RPT.xl = "busy"; RPT.live = "กำลังสร้างไฟล์ Excel…"; render(true);
+      RPT.timer = setTimeout(() => { RPT.xl = "idle"; if (S.page !== "reports") return; const fail = RPT.xlFail; RPT.live = fail ? "สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง" : `ดาวน์โหลด Excel แล้ว · ${rpScope().replace(/ · /g, " ")}`; render(true); rpFocus('[data-rp="xl"]', '[data-act="sheet:rp-export"]'); toast(RPT.live); }, 1200); return;
+    case "print": RPT.print = true; RPT.psum = false; S.sheet = null; render(true); rpFocus("#rpPrGo"); return;
+    case "psum": RPT.psum = !RPT.psum; re('[data-rp="psum"]'); return;
+    case "pgo": toast("ส่งไปที่เครื่องพิมพ์แล้ว (ตัวอย่าง — ไม่ได้พิมพ์จริง)"); return;
+    case "pback": RPT.print = false; re('[data-rp="print"]', '[data-act="sheet:rp-export"]'); return;
+    case "project": RPT.project = true; S.sheet = null; render(true); rpFocus("#rpProjOff"); return;
+    case "projoff": RPT.project = false; re('[data-rp="project"]', '[data-act="sheet:rp-export"]'); toast("ปิดฉายจอแล้ว"); return;
+    case "reload": case "online": if (k === "online") RPT.online = true; if (!RPT.online) return; RPT.stale = false; RPT.bg = true; render(true); rpFocus('[data-rp="reload"]');
+      clearTimeout(RPT.timer); RPT.timer = setTimeout(() => { RPT.bg = false; if (S.page !== "reports") return; const ae = document.activeElement, sel = ae && ae.dataset && ae.dataset.rp ? `[data-rp="${ae.dataset.rp}"]` : null; render(true); if (sel) rpFocus(sel); toast("อัปเดตรายงานแล้ว"); }, 900); return;
+    case "retry": RPT.error = false; RPT.never = false; RPT.online = true; rpReload(".rp-head h1"); return;
+  }
+}
+
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["random", "สุ่มชื่อ"], ["gradebook", "คะแนน"], ["reports", "รายงาน"]],
   gstate: [["normal", "ปกติ"], ["noasg", "ยังไม่มีงาน"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["offline", "ออฟไลน์ + คิว"], ["failed", "บันทึกไม่สำเร็จ"], ["closed", "งานปิดรับ"],
     ["hidden", "ซ่อนชื่อ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน × 20 งาน)"], ["export", "กำลังส่งออก Excel"]],
   rstate: [["normal", "ปกติ"], ["unchecked", "ยังไม่ได้เช็คชื่อวันนี้"], ["nobody", "มาเรียน 0 คน"], ["complete", "สุ่มครบแล้ว"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"],
     ["offline", "ออฟไลน์"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"]],
+  rpstate: [["normal", "ปกติ"], ["loading", "กำลังโหลด"], ["bg", "อัปเดตเบื้องหลัง"], ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["noasg", "ไม่มีงาน"], ["noatt", "ไม่มีข้อมูลเช็คชื่อ"], ["complete", "ครบทุกคน"],
+    ["outterm", "เดือนนอกเทอม"], ["error", "โหลดไม่สำเร็จ"], ["stale", "อัปเดตไม่สำเร็จ"], ["offline", "ออฟไลน์"], ["offnever", "ออฟไลน์ (ยังไม่เคยโหลด)"], ["many", "ข้อมูลเยอะ (45 คน × 20 งาน ชื่อยาว)"],
+    ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"], ["print", "ตัวอย่างพิมพ์"], ["export", "กำลังสร้าง Excel"], ["xlfail", "Excel / คัดลอก ล้ม"]],
+  rq1: [["a", "ก การ์ดในหน้า (แนะนำ)"], ["b", "ข ลิ้นชักข้าง"]],
   layout: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]],
   theme: THEMES.map(([k, l]) => [k, l]),
   mode: [["light", "สว่าง"], ["dark", "มืด"]],
@@ -4025,14 +4527,16 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook";
-  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance", onRd = S.page === "random", onGb = S.page === "gradebook", onRp = S.page === "reports";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "rstate" ? RD.sstate : g === "gstate" ? GB.gstate : g === "rpstate" ? RPT.sstate : g === "rq1" ? RPT.q1 : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group === "state" && onRd ? "rstate" : el.dataset.group === "state" && onGb ? "gstate" : el.dataset.group === "state" && onRp ? "rpstate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
+  document.querySelectorAll(".rp-only").forEach((el) => (el.hidden = !onRp));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onGb ? `<b>หน้าคะแนน</b> — แตะ/คลิกช่อง หรือพิมพ์ตัวเลขที่ช่อง → Enter บันทึกแล้วลงแถวถัดไป · Esc ยกเลิก · ลูกศรเลื่อนช่อง · Alt+Enter / ▾ / แตะซ้ำ / กดค้าง = ตัวแก้ไขช่อง (สถานะ · วันที่รับ) · คะแนนเกินเต็มหรือไม่ใช่ตัวเลขขึ้นข้อความ · hero/แถบ 6 ส่วน/สะสม อัปเดตตามสูตรเดิม · แตะหัวคอลัมน์ = เลือกงาน · “สร้างงาน” / คัดลอกงาน / ปิดรับงาน / ทำทั้งห้อง / ⋮ ลองได้ · pill ใน hero เปิดแผงงาน (คอมปักได้) · แถว “สถานะ” = ux-gradebook.md · Q1–Q4 ตามค่าแนะนำ UX<br>${INFO[S.theme]} · ป้ายข้อเสนอ = P10 (ต้องเพิ่ม API)`
+  document.getElementById("info").innerHTML = onRp ? `<b>หน้ารายงาน</b> (ux-reports.md) — อ่านอย่างเดียว · ลองกด: ชิปห้อง/วิชา · ทั้งเทอม|รายเดือน (+เดือน) · เช็คชื่อ รายวัน|รายคาบ · หัวคอลัมน์ = เรียง · ชื่อ = ลิ้นชักนักเรียน · “งานค้าง” ใน hero = ไปการ์ดต้องติดตาม · แถวงาน = เปิดสมุดคะแนนที่งานนั้น · คัดลอกไป LINE · ส่งออก Excel · พิมพ์ (ตัวอย่าง A4) · ฉายจอ · ปรับการ์ด · หัวการ์ด = เปิด/ปิด · Esc ปิดลิ้นชัก/พิมพ์/ฉายจอ · ตัวเลข = ux-reports §ตัวเลขตัวอย่าง (คำนวณจากชุดเดียวกับหน้าคะแนน) · ห้องอื่นในตัวอย่างโหลดแล้วกลับ ป.6/1 · รายเดือน: เช็คชื่อใช้ชุดเดียวกับทั้งเทอม<br>Q1–Q4 ตามค่าแนะนำ (ก) · Q1 ดูทาง ข ได้ที่แถว “Q1 การ์ด” · ป้าย <b>ของเพิ่ม</b> = P1 P2 P3 P5 P7 P8 (Gate 2: เจ้าของงานเอา P1 P3 P4 + “—” แทน 0%) (ข้อมูลเดิม ให้เจ้าของงานเลือก) · ป้าย <b>ของเพิ่ม</b> P4 การ์ด “ขาดบ่อย” อนุมัติแล้วที่ Gate 2 ()<br>${INFO[S.theme]}`
+    : onGb ? `<b>หน้าคะแนน</b> — แตะ/คลิกช่อง หรือพิมพ์ตัวเลขที่ช่อง → Enter บันทึกแล้วลงแถวถัดไป · Esc ยกเลิก · ลูกศรเลื่อนช่อง · Alt+Enter / ▾ / แตะซ้ำ / กดค้าง = ตัวแก้ไขช่อง (สถานะ · วันที่รับ) · คะแนนเกินเต็มหรือไม่ใช่ตัวเลขขึ้นข้อความ · hero/แถบ 6 ส่วน/สะสม อัปเดตตามสูตรเดิม · แตะหัวคอลัมน์ = เลือกงาน · “สร้างงาน” / คัดลอกงาน / ปิดรับงาน / ทำทั้งห้อง / ⋮ ลองได้ · pill ใน hero เปิดแผงงาน (คอมปักได้) · แถว “สถานะ” = ux-gradebook.md · Q1–Q4 ตามค่าแนะนำ UX<br>${INFO[S.theme]} · ป้ายข้อเสนอ = P10 (ต้องเพิ่ม API)`
     : onRd ? `<b>หน้าสุ่มชื่อ</b> — กด “สุ่มเลย” (หรือ Space) → ชื่อเลื่อนแบบสล็อต ~1.9 วิ แล้วป๊อปผล · ไม่ซ้ำจนครบรอบ (สุ่มแล้ว + เหลือ = จำนวนที่สุ่มได้) · ข้าม / เลิกทำ / เริ่มรอบใหม่ (เลิกทำได้ 5 วิ) · จับเวลาเริ่มเองหลังสุ่ม · สลับ “จับกลุ่ม” ที่ hero · เปลี่ยนห้อง / ฐานสุ่มได้ · ปุ่ม “สุ่มชื่อเฉพาะคนที่มา” ในหน้าเช็คชื่อ (เมื่อเช็คครบ) พามาห้องเดิม · แถว “สถานะ” = ux-random.md<br>${INFO[S.theme]} · Q1–Q3 ตามค่าแนะนำ UX: ซ่อนชื่อบนหน้านี้ + ฉายจอทำตามสวิตช์ของฉายจอ · ห้องแรกเมื่อไม่มีห้องส่งมา · เจ้าของงานเลือกเพิ่มสวิตช์ “เสียงตอนได้ชื่อ” (ปิดเริ่มต้น · ตัวอย่างไม่มีเสียงจริง แสดงไอคอนแทน) · “ปรับการ์ด” เปิดแผ่นซ่อน/แสดงการ์ดได้จริง`
     : onAtt ?`<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
     : onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
@@ -4049,14 +4553,14 @@ function render(keepScroll) {
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
   dev.dataset.page = S.page;
-  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : S.page === "random" ? pageRandom() : S.page === "reports" ? pageReports() : pageGradebook();
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "random" ? `data-rnd="${RD.mode}"` : ""} ${S.page === "gradebook" && S.device !== "phone" ? "data-gb" : ""} ${S.page === "reports" && (S.device === "desk" || S.device === "ipadL") ? "data-rp" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${S.page === "random" && RD.project && !RD.noclass ? rdProjector() : ""}${S.page === "random" ? rdUndoBar() : ""}${S.page === "gradebook" ? gbOverlays() : ""}${S.page === "reports" ? rpOverlays() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
   const gs1 = dev.querySelector("#gbScroll"); if (gsl && gs1) { gs1.scrollLeft = gsl[0]; gs1.scrollTop = gsl[1]; }
   GB.rendering = false; if (S.page === "gradebook") gbAfter();
   chrome(); fit(); railShadow(rt0); animRings();
   if (S.page === "attendance") atAnim();
-  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : null;
+  const LV = S.page === "attendance" ? AT : S.page === "random" ? RD : S.page === "gradebook" ? GB : S.page === "reports" ? RPT : null;
   if (LV && LV.live) { const lv = document.getElementById("atLive"), msg = LV.live; LV.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); }
 }
 function fit() {
@@ -4069,7 +4573,7 @@ function fit() {
 }
 function toast(msg) { const t = document.getElementById("toast"); if (!t) return; t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
 function openSheet(k, opener) { S.sheet = k; S.opener = opener; render(true); const f = document.querySelector(".sheet button, .sheet input"); if (f) f.focus(); }
-function closeSheet() { const o = S.opener; S.sheet = null; render(true);
+function closeSheet() { const o = S.opener; if (S.sheet && S.sheet.startsWith("rp-stu")) RPT.cur = null; S.sheet = null; render(true);
   const b = o && [...document.querySelectorAll(o.startsWith("[") || /[\s.#]/.test(o) ? o : `[data-act="${o}"]`)].find((el) => el.offsetParent); if (b) b.focus(); }
 function applyAppearance(p, focusName) {
   if (S.state === "offline") { S.saveMsg = "off"; render(true); toast("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์"); } // AC-05: keep old value
@@ -4087,6 +4591,8 @@ document.addEventListener("click", (e) => {
     if (g === "astate") { atScenario(v); render(); return; }
     if (g === "rstate") { rdScenario(v); render(); return; }
     if (g === "gstate") { gbScenario(v); render(); return; }
+    if (g === "rpstate") { rpScenario(v); render(); return; }
+    if (g === "rq1") { RPT.q1 = v; if (S.sheet === "rp-side") S.sheet = null; render(true); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
     if (g === "q1") { SS.q1 = v; SS.filterMiss = false; render(true); return; }
@@ -4110,12 +4616,14 @@ document.addEventListener("click", (e) => {
   if (d.rd) { rdAct(d.rd, e); return; }
   if (d.rdfrom) { rdFromAtt(); return; }
   if (d.gb) { gbAct(d.gb, e); return; }
+  if (d.rp) { rpAct(d.rp, e); return; }
   if (d.toast) toast(d.toast);
 });
 document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"), rd = e.target.closest("#rdProjOff"); if (!e.target.closest("#projOff") && !at && !rd) return; clearTimeout(holdTimer);
   holdTimer = setTimeout(() => { if (rd) RD.project = false; else if (at) AT.project = false; else SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
 ["pointerup", "pointerleave", "pointercancel"].forEach((t) => document.addEventListener(t, () => clearTimeout(holdTimer), true));
 document.addEventListener("change", (e) => { const t = e.target; if (!t.name) return;
+  if (t.name === "rp-month") { RPT.month = t.value; rpReload('select[name="rp-month"]'); return; }
   if (t.name === "rd-from" || t.name === "rd-to") { RD[t.name === "rd-from" ? "rFrom" : "rTo"] = Math.max(1, Math.min(rdN() || 1, Math.round(+t.value) || 1)); RD.cur = null; render(true); focusEl("#" + t.id, true); return; }
   if (t.name === "ap-layout" || t.name === "sh-layout") applyAppearance({ layout: t.value }, t.name);
   else if (t.name === "ap-theme") applyAppearance({ theme: t.value }, t.name);
@@ -4126,6 +4634,10 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && S.page === "scan" && SS.project) { SS.project = false; render(true); return; }
   if (e.key === "Escape" && S.page === "attendance" && AT.project) { AT.project = false; render(true); return; }
   if (e.key === "Escape" && S.page === "random" && RD.project) { RD.project = false; render(true); return; }
+  if (e.key === "Escape" && S.page === "reports" && (RPT.print || RPT.project)) { rpAct(RPT.print ? "pback" : "projoff"); return; }
+  if (S.page === "reports" && t.closest && t.closest(".rp-seg") && ["ArrowLeft", "ArrowRight"].includes(e.key)) { // segmented = arrow keys
+    const bs = [...t.closest(".rp-seg").querySelectorAll("button:not(:disabled)")], j = bs.indexOf(t); if (j < 0) return; e.preventDefault();
+    const n = bs[(j + (e.key === "ArrowRight" ? 1 : -1) + bs.length) % bs.length]; if (n !== t) n.click(); return; }
   if (S.page === "attendance" && atKey_(e)) return;
   if (S.page === "gradebook" && gbKey_(e)) return;
   if (S.page === "random" && !S.sheet) {
