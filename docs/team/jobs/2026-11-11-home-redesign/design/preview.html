@@ -1183,6 +1183,180 @@ button.hp:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
   .proj-cells{--pc:6}
   .pj-ic{width:56px;height:56px;font-size:32px}
 }
+
+/* =====================================================================
+   T-11 หน้าเช็คชื่อ (ux-attendance.md) — same tokens; status colours derive from --att-* / --text-* / --bg-*
+   --sc = icon/border/word (≥3:1 icon · ≥4.5:1 word on --sb) · --sb = cell tint · --sf = ring/legend fill
+   ===================================================================== */
+.a-present{--sc:var(--text-success);--sb:var(--bg-success);--sf:var(--att-present)}
+.a-late{--sc:var(--text-warning);--sb:var(--bg-warning);--sf:var(--att-late)}
+.a-leave{--sc:color-mix(in srgb,var(--att-leave) 62%,var(--text-primary));--sb:color-mix(in srgb,var(--att-leave) 15%,var(--surface-2));--sf:var(--att-leave)}
+.a-sick{--sc:color-mix(in srgb,var(--att-sick) 62%,var(--text-primary));--sb:color-mix(in srgb,var(--att-sick) 15%,var(--surface-2));--sf:var(--att-sick)}
+.a-absent{--sc:var(--text-danger);--sb:var(--bg-danger);--sf:var(--att-absent)}
+.a-none{--sc:var(--text-secondary);--sb:var(--surface-2);--sf:transparent}
+[class*="a-"].nb2{--cb:var(--sc);--cbg:var(--sb)}
+/* hero */
+.at-hero{position:relative;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s4) var(--s5);display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"t n r" "p p r";gap:var(--s3) var(--s5);align-items:center;overflow:hidden}
+[data-theme="playful"] .at-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.at-hero .t{grid-area:t;min-width:0}
+.at-hero .kicker{font-size:var(--t-sm);color:var(--hero-muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-weight:600}
+.at-hero h1{font-size:var(--t-xl);line-height:1.3}
+.at-hero .pills{grid-area:p;display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;min-width:0}
+.at-hero .count{grid-area:n;text-align:right;line-height:1.15}
+.at-hero .count .num{display:block;font-size:var(--t-4xl);font-weight:700;line-height:1}
+[data-theme="pro"] .at-hero .count .num{color:var(--accent-2)}
+.at-hero .count small{display:block;font-size:var(--t-sm);font-weight:600}
+.at-hero .count .row{display:flex;align-items:baseline;justify-content:flex-end;gap:8px;white-space:nowrap}
+.at-hero .count .row small,.at-hero .count .row b{display:inline;font-size:var(--t-md);font-weight:700}
+.at-hero .count .row .num{display:inline}
+.at-done{grid-area:n;display:flex;align-items:center;gap:var(--s3)}
+.at-done-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--hero-fg);color:var(--hero-bg);font-size:40px;flex:none;animation:atPop .45s ease-out 1}
+[data-theme="pro"] .at-done-ic{background:var(--accent-2);color:var(--on-accent-2)}
+.at-big{font-size:var(--t-2xl);line-height:1.2}
+.at-det{font-weight:700;font-size:var(--t-md)}
+@keyframes atPop{0%{transform:scale(.6)}70%{transform:scale(1.08)}100%{transform:none}}
+.at-ringwrap{grid-area:r;display:flex;align-items:center;gap:var(--s3)}
+.at-plate{position:relative;border-radius:50%;background:var(--surface-2);color:var(--text-primary);padding:6px;flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--hero-fg) 28%,transparent)}
+.at-plate svg{display:block}
+.at-ring .aseg{transition:stroke-dasharray .3s ease,stroke-dashoffset .3s ease}
+.at-rc{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.1}
+.at-rc b{font-size:var(--t-xl);font-family:var(--font-num)}
+.at-rc small{font-size:var(--t-xs);font-weight:600;color:var(--text-secondary)}
+.at-leg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,auto);gap:0 var(--s3);font-size:var(--t-xs);font-weight:600;line-height:1.55}
+.at-leg li{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.at-leg .sw{width:13px;height:13px;border-radius:3px;background:var(--sf);border:1.5px solid var(--hero-fg);flex:none}
+.at-leg .a-none .sw{background:transparent;border-style:dashed}
+.at-leg b{margin-left:auto;padding-left:var(--s3);font-family:var(--font-num)}
+.at-date{display:inline-flex;gap:4px}
+.at-leg.at-legbar{display:none;flex-wrap:wrap;gap:4px 18px;margin:var(--s2) 0 0;padding:var(--s2) var(--s3);border-radius:var(--radius);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);color:var(--text-primary);font-size:var(--t-sm)}
+.at-legbar .sw{border-color:var(--text-primary)}
+.at-legbar b{margin-left:0;padding-left:2px}
+.hp.ico{min-width:var(--tap);padding:0;justify-content:center}
+.app button.hp:disabled{border-style:dashed;background:transparent;cursor:not-allowed}
+.hp.bad{background:var(--bg-danger);color:var(--text-danger);font-weight:700;border-color:currentColor}
+.spin{animation:atSpin 1s linear infinite}
+@keyframes atSpin{to{transform:rotate(360deg)}}
+.at-q4{flex-basis:100%;font-size:var(--t-xs);font-weight:600;display:flex;gap:6px;align-items:center}
+/* room chips + week strip */
+.at-nav{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);align-items:center;margin:var(--s4) 0 var(--s2)}
+.at-rooms,.at-week{display:flex;gap:var(--s2);flex-wrap:wrap;min-width:0}
+.at-week{margin-left:auto}
+.at-room{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 14px;border-radius:var(--radius);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:700;font-size:var(--t-sm);line-height:1.3;text-align:left}
+.at-room small{display:block;color:var(--text-secondary);font-weight:500;font-size:var(--t-xs)}
+.at-room>.ic{font-size:22px;color:var(--text-secondary)}
+.at-room.ok>.ic{color:var(--text-success)}
+.at-room.part>.ic{color:var(--text-warning)}
+.at-room[aria-pressed="true"]{border-width:3px;border-color:var(--text-accent);background:var(--bg-accent)}
+.at-day{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:52px;min-width:92px;padding:2px 10px;border-radius:var(--radius);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);line-height:1.3;text-align:left}
+.at-day b{font-size:var(--t-sm)}
+.at-day small{font-size:var(--t-xs);color:var(--text-secondary);display:flex;gap:4px;align-items:center;white-space:nowrap}
+.at-day[aria-current="date"]{border-width:3px;border-color:var(--text-accent);background:var(--bg-accent)}
+.at-day[aria-current="date"] small{color:var(--text-primary)}
+.app .at-day:disabled{border-style:dashed;background:var(--surface-1);cursor:not-allowed}
+/* status bar (radiogroup) + all present — sticky */
+.at-tools{position:sticky;top:0;z-index:3;background:var(--surface-0);padding:var(--s2) 0 var(--s3);display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:stretch}
+.at-brush{flex:1 1 400px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s2);min-width:0}
+.ab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:64px;padding:4px;border-radius:var(--radius);border:2px solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:700;font-size:var(--t-md);line-height:1.2;transition:background-color .15s,border-color .15s}
+.ab>.ic{font-size:24px;color:var(--sc)}
+.ab[aria-checked="true"]{background:var(--sb);border:3px solid var(--sc);box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 22%,transparent)}
+[data-theme="playful"] .ab[aria-checked="true"]{box-shadow:3px 3px 0 var(--ink)}
+.ab .ok{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:var(--sc);display:grid;place-items:center}
+.ab .ok .ic{font-size:14px;color:var(--sb)}
+.at-allbtn{min-height:64px;font-size:var(--t-md);padding:0 var(--s5);background:var(--accent-2);border-color:var(--accent-2);color:var(--on-accent-2)}
+.at-allbtn:hover{background:var(--accent-2);filter:brightness(1.05)}
+[data-theme="playful"] .at-allbtn{background:#3b5bfd;border-color:var(--ink);color:#fff}
+.at-allbtn.hl{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent-2) 40%,transparent)}
+.at-hint{flex-basis:100%;font-size:var(--t-sm);color:var(--text-secondary);display:flex;gap:6px;align-items:center}
+/* student grid */
+.acells{--cols:6;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:10px 8px}
+.acell{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:76px;min-width:0;padding:6px 10px;border-radius:var(--radius-sm);border:2px solid var(--sc);background:var(--sb);color:var(--text-primary);text-align:left;line-height:1.3;transition:background-color .15s,border-color .15s;scroll-margin:150px 0 230px}
+.acell .no{font-size:var(--t-xl);font-weight:700;line-height:1.1}
+.acell .nm{font-size:max(16px,var(--t-md));font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acell .sw2{display:flex;align-items:center;gap:4px;font-size:var(--t-sm);font-weight:700;color:var(--sc);white-space:nowrap}
+.acell .sw2 .ic{font-size:16px}
+.acell.a-none{border-style:dashed;border-color:var(--border-control)}
+.acell.a-none .sw2{font-weight:600}
+.acell.a-absent{border-width:3px}
+.acell.hit{border:3px solid var(--text-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--text-primary) 18%,transparent)}
+.acell.at-sk{background:var(--surface-1);cursor:progress}
+.acell.at-sk .sk-line{display:block}
+/* side panels */
+.at-gh{display:flex;align-items:center;gap:8px;font-size:var(--t-md);margin:var(--s3) 0 var(--s2)}
+.at-gh .gi2{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--sb);border:2px solid var(--sc);color:var(--sc);font-size:16px;flex:none}
+.at-link{min-height:var(--tap);display:block;max-width:100%;padding:0;border:0;background:none;font-weight:700;color:var(--text-primary);text-align:left;text-decoration:underline;text-underline-offset:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.at-side .rec li{padding-top:2px;padding-bottom:2px}
+.at-side .rec small .ic{color:var(--sc)}
+.at-copy{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;margin-top:var(--s3)}
+.at-chips{display:flex;flex-wrap:wrap;gap:6px}
+.at-chip{min-width:var(--tap);min-height:var(--tap);padding:0 10px;border-radius:999px;border:2px dashed var(--border-control);background:var(--surface-2);color:var(--text-primary);font-weight:700;font-family:var(--font-num)}
+.at-chip.more{border-style:solid;background:var(--surface-1);font-family:var(--font-sans);font-weight:600}
+.all-done.sm{font-size:var(--t-md)}
+.all-done.sm .ic{font-size:30px}
+.at-qbig{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);border-radius:var(--radius);font-weight:700;font-size:var(--t-md);margin-bottom:var(--s2)}
+.at-qbig .ic{font-size:28px}
+.at-qbig.ok{background:var(--bg-success);color:var(--text-success)}
+.at-qbig.warn{background:var(--bg-warning);color:var(--text-warning)}
+.at-qbig.bad{background:var(--bg-danger);color:var(--text-danger);border:2px solid var(--text-danger)}
+.at-qbig.mute{background:var(--surface-1);color:var(--text-primary)}
+.at-month{display:flex;align-items:flex-end;gap:6px;height:110px;margin:var(--s2) 0}
+.at-month .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:2px;font-size:13px;line-height:1.2;min-width:0}
+.at-month .bar i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--accent);min-height:4px}
+.at-month .bar.low i{background:repeating-linear-gradient(45deg,var(--accent) 0 4px,transparent 4px 7px);border:2px solid var(--accent)}
+.at-month .bar span{color:var(--text-secondary)}
+.at-month .bar b{font-family:var(--font-num)}
+.at-savebar{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);align-items:center;padding:var(--s3) var(--s4);border-radius:var(--radius-lg);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);font-size:var(--t-sm)}
+.at-savebar .grow{flex:1}
+.at-savebar b{font-size:var(--t-md)}
+.at-fail{margin-bottom:var(--s4)}
+/* undo snackbar (5 s, pauses on hover/focus) */
+.at-undo{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:25;display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s2) var(--s2) var(--s4);border-radius:var(--radius-lg);background:var(--text-primary);color:var(--surface-2);box-shadow:var(--shadow-pop);width:min(600px,92%)}
+.at-undo .m{flex:1;min-width:0;display:flex;gap:8px;align-items:center;font-size:var(--t-sm);font-weight:600;line-height:1.4}
+.at-undo .m .ic{font-size:22px}
+.at-undo .meter{width:56px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--surface-2) 30%,transparent);overflow:hidden;flex:none}
+.at-undo .meter i{display:block;height:100%;background:var(--surface-2);transition:width 1s linear}
+.app ~ .at-undo .btn,.at-undo .btn{min-height:52px;background:var(--surface-2);color:var(--text-primary);border-color:var(--surface-2);flex:none}
+.device[data-page="attendance"] .toast{bottom:96px}
+/* short screens (desk 729) : hero one row ≤ ~110px */
+.device.short .at-hero{grid-template-columns:minmax(0,auto) minmax(0,1fr) auto auto;grid-template-areas:"t p n r";padding:var(--s3) var(--s4);gap:var(--s2) var(--s4)}
+.device.short .at-hero h1{font-size:var(--t-lg)}
+.device.short .at-hero .count .num{font-size:var(--t-3xl)}
+.device.short .at-leg{grid-template-columns:repeat(2,auto);gap:0 var(--s3);font-size:var(--t-xs)}
+.device.short .at-nav{margin:var(--s3) 0 var(--s1)}
+.device.short .at-hero .at-leg{display:none}
+.device.short .at-leg.at-legbar{display:flex}
+.device.short .at-hero .count>small{display:none}
+.device.short .acell{min-height:64px;padding:4px 8px}
+.device.short .ab,.device.short .at-allbtn{min-height:56px}
+@container app (max-width:1300px){ .acells{--cols:5} }
+@container app (max-width:1100px){ .acells{--cols:4} .at-week{margin-left:0} .at-hero .kicker{display:none} .at-hero{grid-template-areas:"t n r" "p p r";padding:var(--s3) var(--s4);gap:var(--s2) var(--s4)} .at-hero .count>small{display:none} .at-hero .count .num{font-size:var(--t-3xl)} .at-hero .hp .lng{display:none} .at-hero .hp .sht{display:inline} .at-hero .at-leg{display:none} .at-leg.at-legbar{display:flex} }
+@container app (max-width:599px){
+  .at-hero{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"t r" "n r" "p p";padding:var(--s3) var(--s4);gap:var(--s2) var(--s3)}
+  .at-hero .kicker{display:none}
+  .at-hero h1{font-size:var(--t-lg)}
+  .at-hero .count{text-align:left;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .at-hero .count .num{display:inline;font-size:var(--t-3xl)}
+  .at-hero .count small{display:inline}
+  .at-done-ic{width:48px;height:48px;font-size:30px}
+  .at-big{font-size:var(--t-xl)}
+  .at-ringwrap{display:contents}
+  .at-plate{grid-area:r;padding:4px}
+  .at-leg{grid-area:l;display:flex;flex-wrap:wrap;gap:2px 12px;font-size:var(--t-xs)}
+  .at-leg b{margin-left:0;padding-left:2px}
+  .at-hero .at-allbtn{flex:1 1 100%;min-height:56px}
+  .at-rooms{display:none}
+  .at-nav{margin:var(--s3) 0 var(--s2)}
+  .at-week{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:4px;overscroll-behavior-x:contain}
+  .at-day{flex:none}
+  .at-tools{position:absolute;left:0;right:0;bottom:100px;top:auto;margin:0;padding:var(--s2) var(--s3);background:var(--surface-2);border-top:var(--card-bw) solid var(--card-border);box-shadow:0 -8px 18px rgba(0,0,0,.12)}
+  .at-tools .at-allbtn,.at-tools .at-hint{display:none}
+  .at-brush{flex:1 1 100%;gap:6px}
+  .ab{min-height:60px;font-size:var(--t-sm)}
+  .main[data-att]{padding-bottom:230px}
+  .acells{--cols:2}
+  .acell{min-height:68px}
+  .at-undo{bottom:186px}
+  .device[data-page="attendance"] .toast{bottom:270px}
+}
 </style>
 </head>
 <body>
@@ -1203,6 +1377,7 @@ button.hp:hover{background:color-mix(in srgb,var(--hero-fg) 18%,transparent)}
   <div class="frame-box" id="box"><div class="device" id="device"></div></div>
 </main>
 <p class="size-note" id="sizeNote"></p>
+<div id="atLive" class="sr" role="status" aria-live="polite"></div>
 
 <script>
 /* ======================= sample data (fictional names only — matches DashboardPayload) ======================= */
@@ -1463,7 +1638,7 @@ const PG_INFO = {
     extra: "ต้องเพิ่มให้หน้านักเรียนเปิดหน้าพิมพ์ได้ทันที — งานเล็ก ฝั่งหน้าเว็บอย่างเดียว" },
   backup: { kind: "link", what: "ทางลัดไป ตั้งค่า › สำรองข้อมูล — ดาวน์โหลดไฟล์สำรองและกู้คืน", extra: "ปลายทางมีอยู่แล้ว ใช้ได้ทันที ไม่มีงานเพิ่ม" },
 };
-const PAGES = ["home", "settings", "scan", "gradebook"];
+const PAGES = ["home", "settings", "scan", "attendance", "gradebook"];
 const navAttr = (x) => PAGES.includes(x.id) ? `data-page="${x.id}"` : `data-info="${x.id}"`;
 const nbadge = (x, inline) => x.nw || x.chg ? `<span class="${inline ? "nb-in" : "nb"}">${x.chg ? "รวม" : "ใหม่"}</span>` : "";
 const menu = () => MENUS[S.menu];
@@ -1480,7 +1655,7 @@ function railShadow(top) {
 }
 const tabbar = () => { const cur = (k) => (S.page === k ? 'aria-current="page"' : "");
   return `<nav class="tabbar" aria-label="เมนูหลัก">
-  <button class="tab" ${cur("home")} data-page="home">${ic("house")}หน้าหลัก</button><button class="tab" data-info="attendance">${ic("user-check")}เช็คชื่อ</button>
+  <button class="tab" ${cur("home")} data-page="home">${ic("house")}หน้าหลัก</button><button class="tab" ${cur("attendance")} data-page="attendance">${ic("user-check")}เช็คชื่อ</button>
   <button class="tab tab-scan" ${cur("scan")} data-page="scan"><span class="bubble">${ic("scan")}</span>สแกน</button>
   <button class="tab" ${cur("gradebook")} data-page="gradebook">${ic("notebook")}คะแนน</button><button class="tab" ${cur("settings")} data-act="sheet:more">${ic("dots-three-circle")}เพิ่มเติม</button></nav>`; };
 const topbar = (home) => `<div class="topbar"><div class="where">${ic("calendar-blank")}<span>พุธ 11 พ.ย. 2569 <span class="long">· ภาคเรียน 2/2569</span></span></div>
@@ -1492,7 +1667,7 @@ const banners = () => (S.hide ? `<div class="banner" role="status">${ic("eye-sla
   + (S.state === "offline" ? `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์ · ข้อมูลเมื่อ 10:12</b><br>สแกนและเช็คชื่อยังใช้ได้ ข้อมูลจะส่งเองเมื่อมีเน็ต</div></div>` : "");
 const QA = () => [
   { t: "สแกนส่งงาน", s: "กล้องหรือเครื่องอ่าน QR", i: "scan", main: true, page: "scan" },
-  { t: "เช็คชื่อ", s: unchecked.length ? `ยังเหลือ ${unchecked.length} ห้อง` : "เช็คครบแล้ว", i: "user-check", q: 1 },
+  { t: "เช็คชื่อ", s: unchecked.length ? `ยังเหลือ ${unchecked.length} ห้อง` : "เช็คครบแล้ว", i: "user-check", q: 1, page: "attendance" },
   { t: "สุ่มชื่อ", s: "เฉพาะคนที่มาเรียน", i: "dice-five", q: 3 },
   { t: "สร้างงาน", s: "หลายห้องพร้อมกัน", i: "plus-circle", q: 2 },
 ];
@@ -1752,7 +1927,7 @@ const SS = { phase: "setup", selAsg: null, selCls: null, asg: null, cls: null, m
   copied: false, seq: 0, clk: 0, lastScore: null, gridFocus: null, pickMsg: "" };
 let undoTimer = null, holdTimer = null, RES_SEEN = null;
 const RP = {}; // last drawn ring values (ring fills from old → new value)
-const offNow = () => (S.page === "scan" ? !SS.online : S.state === "offline");
+const offNow = () => (S.page === "scan" ? !SS.online : S.page === "attendance" ? !AT.online : S.state === "offline");
 const scA = () => ASG0.find((a) => a.id === SS.asg);
 const scRoom = (cid = SS.cls) => SC_ROOM[cid][0];
 const lateOn = (a) => !!a.due && Date.parse(RECV_D[SS.recv]) > Date.parse(a.due);
@@ -2102,10 +2277,10 @@ function summaryPhase() {
 function projector() {
   const c = scStats(), a = scA(), L = SS.last, nos = Object.keys(SS.cells).map(Number).sort((x, y) => x - y), pct = Math.round(c.pct * 100);
   let who = "รอสแกน…", sub = "", icn = "scan";
-  if (L && ["ok", "later", "late", "restored", "dup"].includes(L.kind)) { who = S.hide ? `เลขที่ ${L.no}` : stName(SS.cls, L.no).join(" "); sub = L.kind === "dup" ? "ส่งไปแล้ว" : "ส่งแล้ว"; icn = "check"; }
+  if (L && ["ok", "later", "late", "restored", "dup"].includes(L.kind)) { who = SS.pjHide ? `เลขที่ ${L.no}` : stName(SS.cls, L.no).join(" "); sub = L.kind === "dup" ? "ส่งไปแล้ว" : "ส่งแล้ว"; icn = "check"; }
   else if (L && ["unknown", "code"].includes(L.kind)) { who = "ไม่รู้จักรหัสนี้"; icn = "warning-circle"; }
   return `<div class="proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ">
-  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${a.title} · ${scRoom()}</b><span class="grow"></span>${c.f ? `<span class="hp info" aria-label="ส่งไม่สำเร็จ ${c.f} รายการ">${ic("cloud-x")}${c.f}</span>` : ""}<button class="btn" id="projOff" data-sc="projoff">${ic("x")}ปิดฉายจอ (กดค้าง 1 วินาที)</button></div>
+  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">${a.title} · ${scRoom()}</b><span class="grow"></span><button class="btn" data-sc="pjhide" aria-pressed="${!!SS.pjHide}">${ic(SS.pjHide ? "eye-slash" : "eye")}${SS.pjHide ? "ซ่อนชื่อบนจออยู่" : "ซ่อนชื่อบนจอ"}</button>${c.f ? `<span class="hp info" aria-label="ส่งไม่สำเร็จ ${c.f} รายการ">${ic("cloud-x")}${c.f}</span>` : ""}<button class="btn" id="projOff" data-sc="projoff">${ic("x")}ปิดฉายจอ (กดค้าง 1 วินาที)</button></div>
   <div class="proj-last" role="status" aria-live="polite"><span class="pj-ic" aria-hidden="true">${ic(icn)}</span><div><p class="nm">${who}</p>${sub ? `<p class="ps">${sub}</p>` : ""}</div></div>
   <p class="proj-count">ส่งแล้ว <span class="num">${c.sub}</span> จาก ${c.den} คน</p><div class="proj-bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
   <div class="proj-cells" aria-label="ตารางเลขที่ ติ๊ก = ส่งแล้ว">${nos.map((n) => { const on = isSub(SS.cells[n]); return `<span class="pcell ${on ? "on" : ""}">${on ? ic("check") : ""}${n}</span>`; }).join("")}</div>
@@ -2177,6 +2352,7 @@ function scanAct(v, e) {
     case "again": { const r = SS.recent; SS.phase = "scan"; SS.last = null; SS.hit = null; SS.recent = r; keep = false; f = "#scanIn"; break; }
     case "other": SS.phase = "setup"; SS.selAsg = SS.asg; SS.selCls = SS.cls; keep = false; break;
     case "next": startSession(SS.asg, arg); keep = false; f = "#scanIn"; toast(`เริ่มรอบ ${scRoom(arg)}`); break;
+    case "pjhide": SS.pjHide = !SS.pjHide; f = '[data-sc="pjhide"]'; break;
     case "proj": S.sheet = null; SS.project = !SS.project; if (SS.project && SS.method === "type") { SS.method = "later"; SS.projNote = true; SS.pad = null; } f = SS.project ? "#projIn" : null; break;
     case "projoff": if (e && e.detail === 0) { SS.project = false; break; } toast("กดค้าง 1 วินาทีเพื่อปิดฉายจอ"); return;
     case "retry": { const n = +arg; SS.failed = SS.failed.filter((x) => x.no !== n); SS.cells[n].f = false; toast(`ส่งขึ้นระบบแล้ว · เลขที่ ${n}`); break; }
@@ -2203,10 +2379,305 @@ function pageGradebook() {
   <p class="muted small" style="margin-top:var(--s3)">ตัวอย่างย่อ — ตัวเลขสมมติ แสดงเพื่อดูหน้าตาของตาราง ป้ายสถานะ และปุ่มในธีมนี้</p></section>`;
 }
 
+/* ======================= T-11 หน้าเช็คชื่อ (ux-attendance.md) — fictional names, same tokens/icons ======================= */
+const AK = ["present", "late", "leave", "sick", "absent"];
+const A_IC = { ...ATT_ICON, none: "circle-dashed" };
+const AT_ROOM0 = { c61: ["ป.6/1", 31], c62: ["ป.6/2", 30], c51: ["ป.5/1", 28] };
+const LONGN = [["กัญญาณัฐชานันท์", "ศรีสุวรรณวงศ์ไพศาล"], ["ปิยะฉัตรนรินทร์", "มณีวงศ์สวัสดิ์"], ["วรินทร์ลดา", "อัครเศรษฐวงศ์"], ["ภูมิพัฒน์ประเสริฐ", "สุขสันต์วัฒนา"], ["ธนพัฒน์พงศ์", "เจริญรุ่งเรืองกิจ"]];
+const YEAR0 = "2026-05-18", DOW = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"], DOWL = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+const AT = { sstate: "partial", cls: "c61", date: TODAY, brush: "present", marks: {}, hit: null, gridFocus: null, undo: null, hide: false, project: false, online: true, err: false,
+  loading: false, failed: 0, pend: 0, save: "saved", savedAt: "08:44", many: false, noclass: false, nostu: false, sideTab: "away", cards: { away: true, todo: true, month: true },
+  clk: 0, last: null, live: "", copied: false, pjHide: false };
+const ARP = {}; // last drawn ring segments (fill from old → new)
+let atUndoTimer = null, atSaveT = null;
+const dObj = (d) => new Date(d + "T00:00:00");
+const dStr = (o) => `${o.getFullYear()}-${String(o.getMonth() + 1).padStart(2, "0")}-${String(o.getDate()).padStart(2, "0")}`;
+const addD = (d, n) => { const o = dObj(d); o.setDate(o.getDate() + n); return dStr(o); };
+const stepD = (d, dir) => { let x = addD(d, dir); while ([0, 6].includes(dObj(x).getDay())) x = addD(x, dir); return x; };
+const dLabel = (d) => `${DOW[dObj(d).getDay()]} ${thDate(d)}`;
+const weekOf = (d) => { const k = (dObj(d).getDay() + 6) % 7, mon = addD(d, -k); return [0, 1, 2, 3, 4].map((i) => addD(mon, i)); };
+const atRooms = () => (AT.noclass ? [] : Object.keys(AT_ROOM0));
+const atN = (cid = AT.cls) => (AT.nostu ? 0 : cid === "c61" && AT.many ? 45 : AT_ROOM0[cid][1]);
+const atRoom = (cid = AT.cls) => AT_ROOM0[cid][0];
+const aName = (no, cid = AT.cls) => (AT.many && cid === "c61" && no % 5 === 0 ? LONGN[(no / 5) % LONGN.length] : stName(cid, no));
+const aShort = (no) => aName(no)[0];
+const aWho = (no) => (AT.hide ? `เลขที่ ${no}` : `เลขที่ ${no} ${aShort(no)}`);
+const atKey = (cid = AT.cls, d = AT.date) => `${cid}|${d}`;
+const atClock = () => { const m = 8 * 60 + 36 + (AT.clk++ % 20); return `0${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`; };
+const hashS = (s) => { let h = 7; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) % 100003; return h; };
+function genDay(cid, d, n, upto = n) { // deterministic marks; `upto` = how many are already tapped (in tap order)
+  const m = {}; if (!n) return m;
+  const h = hashS(cid + d), order = Array.from({ length: n }, (_, i) => i + 1).sort((a, b) => ((a * 7 + h) % 37) - ((b * 7 + h) % 37));
+  const ab = [(h % n) + 1, ((h * 3) % n) + 1].slice(0, 1 + (h % 2)), sk = h % 3 ? [((h * 5) % n) + 1] : [], lv = h % 2 ? [((h * 11) % n) + 1] : [], lt = [((h * 13) % n) + 1, ((h * 17) % n) + 1];
+  order.slice(0, upto).forEach((no, i) => {
+    const st = ab.includes(no) ? "absent" : sk.includes(no) ? "sick" : lv.includes(no) ? "leave" : lt.includes(no) ? "late" : "present";
+    m[no] = { st, t: st === "late" ? `08:${String(34 + (no % 20)).padStart(2, "0")}` : `08:${String(10 + (i % 20)).padStart(2, "0")}` };
+  });
+  return m;
+}
+function atMarks(cid = AT.cls, d = AT.date) {
+  const k = atKey(cid, d);
+  if (!AT.marks[k]) AT.marks[k] = d > TODAY ? {} : d < TODAY || cid === "c62" ? genDay(cid, d, atN(cid)) : {};
+  return AT.marks[k];
+}
+function atStats(cid = AT.cls, d = AT.date) {
+  const m = atMarks(cid, d), c = { present: 0, late: 0, leave: 0, sick: 0, absent: 0 };
+  for (const x of Object.values(m)) c[x.st]++;
+  c.total = atN(cid); c.marked = AK.reduce((s, k) => s + c[k], 0); c.none = c.total - c.marked; c.came = c.present + c.late;
+  c.pct = c.marked ? Math.round((c.came / c.marked) * 100) : null; // attendancePercent (เดิม): มา+สาย ÷ ที่เช็คแล้ว
+  return c;
+}
+function atScenario(k) {
+  atStopUndo(); S.sheet = null; for (const x in ARP) delete ARP[x];
+  Object.assign(AT, { sstate: k, marks: {}, hit: null, gridFocus: null, date: k === "past" ? "2026-11-05" : TODAY, cls: "c61", brush: "present", hide: k === "hidden", project: k === "project",
+    online: !["offline", "error"].includes(k), err: k === "error", loading: k === "loading", failed: k === "failed" ? 5 : 0, pend: k === "offline" ? 5 : 0, save: "saved",
+    savedAt: k === "complete" ? "08:47" : "08:44", many: k === "many", noclass: k === "noclass", nostu: k === "nostudent", last: null, live: "", clk: 0, copied: false, sideTab: "away" });
+  if (AT.noclass) return;
+  const n = atN(), up = { none: 0, complete: n, many: 38, project: 20, error: 7, loading: 0, nostudent: 0 }[k], key = atKey("c61", TODAY);
+  AT.marks[key] = genDay("c61", TODAY, n, up ?? 12);
+  if (k === "project") AT.last = Object.keys(AT.marks[key]).map(Number).find((no) => AT.marks[key][no].st === "present") || null;
+}
+function atBadge() {
+  if (AT.failed) return ["bad", "cloud-x", `ยังไม่ได้ส่ง ${AT.failed} · ลองใหม่`];
+  if (!AT.online) return ["warn", "cloud-slash", AT.pend ? `ออฟไลน์ · รอส่ง ${AT.pend}` : "ออฟไลน์ · เก็บในเครื่อง"];
+  if (AT.save === "saving") return ["mute", "circle-notch", "กำลังบันทึก"];
+  return ["ok", "cloud-check", `บันทึกแล้ว ${AT.savedAt}`];
+}
+const badgeIc = (b) => ic(b[1], b[1] === "circle-notch" ? "spin" : "");
+function atSaved(k = 1) {
+  if (!AT.online) { AT.pend += k; return; }
+  if (AT.failed) { AT.failed += k; return; }
+  AT.save = "saving"; clearTimeout(atSaveT);
+  atSaveT = setTimeout(() => { AT.save = "saved"; AT.savedAt = "10:42";
+    if (S.page !== "attendance" || S.sheet) return; const a = document.activeElement, sel = a && a.id ? "#" + a.id : a && a.dataset && a.dataset.no ? `.acell[data-no="${a.dataset.no}"]` : a && a.dataset && a.dataset.at ? `[data-at="${a.dataset.at}"]` : null;
+    render(true); if (sel) focusEl(sel, true); }, 700);
+}
+/* undo (D39: 5 s, pause while pointing/focused) */
+function atStopUndo() { clearInterval(atUndoTimer); atUndoTimer = null; AT.undo = null; }
+function atStartUndo(u) { atStopUndo(); AT.undo = { ...u, left: 5 }; atUndoTimer = setInterval(atUndoTick, 1000); }
+function atUndoTick() {
+  const u = AT.undo; if (!u) return atStopUndo();
+  const bar = document.getElementById("atUndo"); if (bar && bar.matches(":hover,:focus-within")) return;
+  u.left--; if (u.left <= 0) { atStopUndo(); if (bar) bar.remove(); return; }
+  const b = document.getElementById("atUndoBtn"), mt = document.getElementById("atUndoM");
+  if (b) b.innerHTML = `${ic("arrow-u-up-left")}เลิกทำ (${u.left})`; if (mt) mt.style.width = u.left * 20 + "%";
+}
+function atUndoNow() {
+  const u = AT.undo; if (!u) return; atStopUndo(); const m = AT.marks[u.key];
+  if (u.kind === "void") { m[u.no] = u.prev; AT.hit = u.no; AT.live = `คืนค่า “${ATT_LABEL[u.prev.st]}” ให้${AT.hide ? "เลขที่ " + u.no : " " + aShort(u.no)} แล้ว`; atSaved(); }
+  else { u.nos.forEach((n) => delete m[n]); AT.hit = null; AT.live = `เลิกทำแล้ว — ${u.nos.length} คนกลับเป็นยังไม่เช็ค`; atSaved(u.nos.length); }
+  AT.tmsg = AT.live;
+}
+const atUndoBar = () => { const u = AT.undo; if (!u) return "";
+  const msg = u.kind === "void" ? `ยกเลิกการเช็คของ${AT.hide ? "เลขที่ " + u.no : ` ${aShort(u.no)} (เลขที่ ${u.no})`} แล้ว` : `ให้ “มา” ${u.nos.length} คนแล้ว`;
+  return `<div class="at-undo" id="atUndo" role="group" aria-label="เลิกทำ"><span class="m">${ic(u.kind === "void" ? "arrow-counter-clockwise" : "users-three")}${msg}</span><span class="meter" aria-hidden="true"><i id="atUndoM" style="width:${u.left * 20}%"></i></span><button class="btn" id="atUndoBtn" data-at="undo">${ic("arrow-u-up-left")}เลิกทำ (${u.left})</button></div>`; };
+function atTap(no) {
+  if (AT.loading) { toast("กำลังโหลดรายชื่อ — รอสักครู่แล้วแตะอีกครั้ง"); return false; }
+  const m = atMarks(), cur = m[no], b = AT.brush; AT.hit = no; AT.gridFocus = no;
+  if (cur && cur.st === b) { delete m[no]; atStartUndo({ kind: "void", no, prev: cur, key: atKey() }); AT.live = `ยกเลิกการเช็ค${aWho(no)}`; }
+  else { m[no] = { st: b, t: atClock() };
+    if (cur) AT.tmsg = (`${aWho(no)} · เปลี่ยนจาก ${ATT_LABEL[cur.st]} เป็น ${ATT_LABEL[b]}`); else AT.live = `${aWho(no)} — ${ATT_LABEL[b]}`; }
+  atSaved(); return true;
+}
+function atAllPresent() {
+  const m = atMarks(), n = atN(), nos = [];
+  for (let i = 1; i <= n; i++) if (!m[i]) { m[i] = { st: "present", t: atClock(), bulk: true }; nos.push(i); }
+  atStartUndo({ kind: "bulk", nos, key: atKey() }); AT.hit = null; AT.live = `ให้มา ${nos.length} คน เลิกทำได้ไม่กี่วินาที`; atSaved(nos.length);
+}
+/* ring: 5 status segments over a dashed "ยังไม่เช็ค" track */
+function atRing(c, size, sw) {
+  const r = (size - sw) / 2, C = 2 * Math.PI * r, h = size / 2, tot = c.total || 1, parts = AK.filter((k) => c[k] > 0).length + (c.none ? 1 : 0), gap = parts > 1 ? 2 : 0;
+  let off = 0;
+  const segs = AK.map((k) => { const len = (c[k] / tot) * C, da = `${Math.max(len - (len ? gap : 0), 0).toFixed(1)} ${C.toFixed(1)}`, dof = (-off).toFixed(1); off += len;
+    const p = ARP[k] && ARP[k].C === C ? ARP[k] : { da: `0 ${C.toFixed(1)}`, dof }; ARP[k] = { da, dof, C };
+    return `<circle class="aseg" cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--att-${k})" stroke-width="${sw}" style="stroke-dasharray:${p.da};stroke-dashoffset:${p.dof}" data-da="${da}" data-do="${dof}" transform="rotate(-90 ${h} ${h})"/>`; }).join("");
+  const label = `${AK.map((k) => `${ATT_LABEL[k]} ${c[k]}`).join(" ")} ยังไม่เช็ค ${c.none} จาก ${c.total} คน`;
+  return `<div class="at-plate" role="img" aria-label="${label}"><svg class="at-ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+    <circle cx="${h}" cy="${h}" r="${r}" fill="none" stroke="var(--border-control)" stroke-width="${Math.max(3, sw * 0.4)}" stroke-dasharray="4 5"/>${segs}</svg>
+    <div class="at-rc" aria-hidden="true"><b>${AT.loading ? "–" : c.marked}</b><small>จาก ${c.total}</small></div></div>`;
+}
+const atAnim = () => requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll(".at-ring [data-da]").forEach((el) => { el.style.strokeDasharray = el.dataset.da; el.style.strokeDashoffset = el.dataset.do; })));
+function atTop() {
+  return `<div class="topbar"><div class="where">${ic("user-check")}<span>เช็คชื่อ <span class="long">· ภาคเรียน 2/2569</span></span></div><div class="grow"></div>
+  <button class="chip-btn hide-btn" data-at="hide" aria-pressed="${AT.hide}" aria-label="ซ่อนชื่อนักเรียน (เฉพาะหน้านี้)">${ic(AT.hide ? "eye-slash" : "eye")}<span class="lbl">${AT.hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+  ${AT.noclass ? "" : `<button class="chip-btn no-phone" data-at="proj" aria-pressed="${AT.project}">${ic("projector-screen")}<span class="lbl">ฉายจอ</span></button>
+  <button class="chip-btn no-phone" data-act="sheet:at-cards">${ic("sliders-horizontal")}<span class="lbl">ปรับการ์ด</span></button>
+  <button class="chip-btn only-phone" data-act="sheet:at-more" aria-label="เพิ่มเติม: ฉายจอ ปรับการ์ด">${ic("dots-three")}</button>`}</div>`;
+}
+function atBanners() {
+  let h = AT.hide ? `<div class="banner" role="status">${ic("eye-slash")}<div><b>ซ่อนชื่อนักเรียนอยู่ (เฉพาะหน้านี้)</b><br>ทุกจุดแสดงเฉพาะเลขที่ · ปิดคัดลอกรายชื่อ · หน้าอื่นไม่เปลี่ยน</div><button class="btn" data-at="hide">${ic("eye")}แสดงชื่อ</button></div>` : "";
+  if (AT.date < TODAY) h += `<div class="banner sc-acc" role="status">${ic("clock-counter-clockwise")}<div><b>กำลังดูวันที่ผ่านมา · ${dLabel(AT.date)}</b><br>แก้ได้ตามปกติ · เช็คย้อนหลังไม่คิด “สาย” อัตโนมัติจากการสแกน</div><button class="btn" data-at="today">${ic("arrow-counter-clockwise")}กลับเป็นวันนี้</button></div>`;
+  if (AT.err) h += `<div class="banner banner-off" role="status">${ic("cloud-x")}<div><b>โหลดข้อมูลจากระบบไม่สำเร็จ</b><br>แสดงเฉพาะที่แตะไว้ในเครื่องนี้ ระบบจะส่งและตรวจกับข้อมูลในระบบให้เมื่อต่อเน็ตได้ · เช็คต่อได้เลย</div><button class="btn" data-at="online">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div>`;
+  else if (!AT.online) h += `<div class="banner banner-off" role="status">${ic("wifi-slash")}<div><b>ออฟไลน์ — เก็บในเครื่อง</b><br>แสดงเฉพาะที่แตะไว้ในเครื่องนี้ ระบบจะส่งและตรวจกับข้อมูลในระบบให้เมื่อต่อเน็ตได้</div></div>`;
+  if (AT.failed) h += `<section class="fail at-fail" role="alert" aria-labelledby="atf-h"><h2 class="fail-h" id="atf-h">${ic("cloud-x")}บันทึกไม่สำเร็จ · ยังไม่ได้ส่ง ${AT.failed} รายการ</h2><p style="font-size:var(--t-sm)">เก็บไว้ในเครื่องนี้แล้ว ไม่ถูกลบ — กด “ลองอีกครั้ง” เพื่อส่งขึ้นระบบ · เช็คต่อได้ตามปกติ</p><div class="fr-acts" style="margin-top:var(--s2)"><button class="btn btn-primary" data-at="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button></div></section>`;
+  return h;
+}
+const atAllWhy = (c) => (AT.loading ? "กำลังโหลดรายชื่อ — รอสักครู่" : !c.total ? "ห้องนี้ยังไม่มีนักเรียน" : !c.none ? "เช็คครบทุกคนแล้ว" : "");
+const atAllBtn = (c, cls = "") => { const why = atAllWhy(c);
+  return `<button class="btn at-allbtn ${cls} ${c.marked === 0 && c.total && !AT.loading ? "hl" : ""}" data-act="sheet:at-all" ${why ? `disabled aria-describedby="atAllWhy"` : ""}>${ic("users-three")}มาทั้งห้อง${c.none && !why ? ` ${c.none} คน` : ""}</button>`; };
+function atHero(c) {
+  const room = atRoom(), done = c.total && !c.none && !AT.loading, ph = S.device === "phone", b = atBadge();
+  const canPrev = stepD(AT.date, -1) >= YEAR0, canNext = AT.date < TODAY;
+  const count = AT.loading ? `<div class="count" aria-live="off"><div class="row"><small>กำลังโหลด…</small><span class="num">–</span><b>จาก ${c.total} คน</b></div></div>`
+    : !c.total ? `<div class="count"><div class="row"><span class="num">0</span><b>คน</b></div><small>ห้องนี้ยังไม่มีนักเรียน</small></div>`
+    : done ? `<div class="at-done"><span class="at-done-ic" aria-hidden="true">${ic("check-circle")}</span><div><p class="display at-big">เช็คครบแล้ว</p><p class="at-det">มา ${c.came} · ขาด ${c.absent}${c.leave + c.sick ? ` · ลา/ป่วย ${c.leave + c.sick}` : ""}</p></div></div>`
+    : !c.marked ? `<div class="count" aria-live="off"><div class="row"><small>ยังไม่ได้เช็ค</small><span class="num">${c.total}</span><b>คน</b></div><small>เริ่มที่ “มาทั้งห้อง” ได้</small></div>`
+    : `<div class="count" aria-live="off"><div class="row"><small>เช็คแล้ว</small><span class="num">${c.marked}</span><b>จาก ${c.total} คน</b></div><small>ยังไม่เช็ค ${c.none} คน</small></div>`;
+  const leg = `<ul class="at-leg" aria-hidden="true">${AK.map((k) => `<li class="a-${k}"><i class="sw"></i>${ic(ATT_ICON[k])}${ATT_LABEL[k]}<b>${c[k]}</b></li>`).join("")}<li class="a-none"><i class="sw"></i>${ic("circle-dashed")}ยังไม่เช็ค<b>${c.none}</b></li></ul>`;
+  const sz = ph ? [76, 10] : S.device === "desk" ? [72, 10] : S.device === "ipadP" ? [96, 12] : [104, 14];
+  return `<section class="at-hero on-hero" aria-label="เช็คชื่อ ${room} ${dLabel(AT.date)}">
+  <div class="t"><p class="kicker">${ic("user-check")}เช็คชื่อรายวัน · ภาคเรียน 2/2569</p><h1 class="display">${room} · ${dLabel(AT.date)}</h1></div>
+  <div class="pills">
+    <button class="hp only-phone" data-act="sheet:at-room" aria-label="ห้อง ${room} แตะเพื่อเปลี่ยนห้อง">${ic("chalkboard")}${room}${ic("caret-down", "cv")}</button>
+    <span class="at-date" role="group" aria-label="เลือกวัน"><button class="hp ico" data-at="prev" aria-label="วันก่อนหน้า" ${canPrev ? "" : "disabled"}>${ic("caret-left")}</button><button class="hp" data-at="today" aria-label="${AT.date === TODAY ? "วันนี้ " + dLabel(AT.date) : "กลับเป็นวันนี้ (กำลังดู " + dLabel(AT.date) + ")"}">${ic("calendar-dots")}${AT.date === TODAY ? "วันนี้" : dLabel(AT.date)}</button><button class="hp ico" data-at="next" aria-label="วันถัดไป${canNext ? "" : " (เป็นวันนี้แล้ว)"}" ${canNext ? "" : "disabled"}>${ic("caret-right")}</button></span>
+    <button class="hp no-phone" data-toast="รายวัน / รายคาบ (คาบ 1–8) — ตัวอย่างนี้แสดงรายวัน · รายคาบไม่ส่งผลต่อสุ่มชื่อ" aria-label="เช็ครายวัน แตะเลือก แตะเพื่อเปลี่ยนเป็นรายคาบหรือสแกน">${ic("hand-tap")}<span class="lng">รายวัน · แตะเลือก</span><span class="sht">รายวัน</span>${ic("caret-down", "cv")}</button>
+    <span class="hp info ${b[0] === "warn" ? "warn" : b[0] === "bad" ? "bad" : ""}">${badgeIc(b)}${b[2]}</span>
+    ${done ? `<button class="btn" data-toast="ไปหน้าสุ่มชื่อ · ${room} · ${c.came} คนที่มา">${ic("dice-five")}สุ่มชื่อเฉพาะคนที่มา (${c.came})</button><span class="at-q4">${ic("info")}สุ่มชื่ออ่านเฉพาะการเช็ครายวัน · รายคาบไม่ส่งผลต่อสุ่มชื่อ</span>` : ""}
+    ${ph && !done ? atAllBtn(c, "only-phone") : ""}
+  </div>
+  ${count}<div class="at-ringwrap">${atRing(c, ...sz)}${leg}</div></section>${leg.replace('class="at-leg"', 'class="at-leg at-legbar"')}`;
+}
+function atNav() {
+  const rooms = atRooms().map((cid) => { const s = atStats(cid), k = !s.total ? ["", "minus-circle", "ไม่มีนักเรียน"] : !s.marked ? ["", "clock", "ยังไม่เช็ค"] : s.none ? ["part", "circle-half", `บางส่วน ${s.marked}/${s.total}`] : ["ok", "check-circle", "ครบ"];
+    return `<button class="at-room ${k[0]}" aria-pressed="${cid === AT.cls}" data-at="room:${cid}">${ic(k[1])}<span>${atRoom(cid)}<small>${s.total} คน · ${k[2]}</small></span></button>`; }).join("");
+  const wk = weekOf(AT.date).map((d) => { const fut = d > TODAY, pre = d < YEAR0, o = dObj(d); let txt, icn;
+    if (fut) { txt = "ยังไม่ถึง"; icn = "hourglass"; } else if (pre) { txt = "ก่อนเปิดปี"; icn = "prohibit"; }
+    else if (AT.err && d !== AT.date) { txt = "ยังโหลดไม่ได้"; icn = "minus"; }
+    else { const s = atStats(AT.cls, d); [txt, icn] = !s.total ? ["ไม่มีนักเรียน", "minus-circle"] : !s.marked ? ["ยังไม่เช็ค", "clock"] : s.none ? [`เช็ค ${s.marked}/${s.total}`, "circle-half"] : [`มา ${s.came} · ขาด ${s.absent}`, "check-circle"]; }
+    return `<button class="at-day" data-at="day:${d}" ${d === AT.date ? 'aria-current="date"' : ""} ${fut || pre ? "disabled" : ""} aria-label="${DOWL[o.getDay()]} ${thDate(d)}${d === TODAY ? " วันนี้" : ""} · ${txt}"><b>${DOW[o.getDay()]} ${o.getDate()}${d === TODAY ? " · วันนี้" : ""}</b><small>${ic(icn)}${txt}</small></button>`; }).join("");
+  return `<div class="at-nav"><div class="at-rooms" role="group" aria-label="เลือกห้อง">${rooms}</div><div class="at-week" role="group" aria-label="สัปดาห์ของวันที่เลือก">${wk}</div></div>`;
+}
+function atTools(c) {
+  const why = atAllWhy(c);
+  return `<div class="at-tools"><div class="at-brush" role="radiogroup" aria-label="เลือกสถานะ แล้วแตะชื่อเด็ก">${AK.map((k) => { const on = AT.brush === k;
+    return `<button role="radio" class="ab a-${k}" aria-checked="${on}" tabindex="${on ? 0 : -1}" data-at="brush:${k}">${ic(ATT_ICON[k])}<span>${ATT_LABEL[k]}</span>${on ? `<span class="ok" aria-hidden="true">${ic("check")}</span>` : ""}</button>`; }).join("")}</div>
+    ${atAllBtn(c)}<p class="at-hint" id="atAllWhy">${ic(why ? "info" : "hand-tap")}${why ? `มาทั้งห้องใช้ไม่ได้ตอนนี้ · ${why}` : "เลือกสถานะ แล้วแตะชื่อเด็ก · แตะซ้ำสถานะเดิมเพื่อยกเลิกการเช็ค"}</p></div>`;
+}
+function atCell(no, m, gf) {
+  const x = m[no], k = x ? x.st : "none", full = AT.hide ? "" : aName(no).join(" ");
+  const word = x ? (k === "late" ? `สาย ${x.t}` : ATT_LABEL[k]) : "แตะเพื่อเช็ค";
+  const label = `เลขที่ ${no}${full ? " " + full : ""} ${x ? ATT_LABEL[k] + (k === "late" ? " " + x.t : "") : "ยังไม่เช็ค"}`;
+  return `<button class="acell a-${k} ${AT.hit === no ? "hit" : ""}" data-no="${no}" data-at="tap:${no}" tabindex="${no === gf ? 0 : -1}" aria-label="${label}" ${full ? `title="${full}${x && x.t ? " · " + x.t + " น." : ""}"` : ""}><span class="no num" aria-hidden="true">${no}</span>${full ? `<span class="nm" aria-hidden="true">${aShort(no)}</span>` : ""}<span class="sw2" aria-hidden="true">${ic(A_IC[k])}${word}</span></button>`;
+}
+function atGrid(c, m) {
+  const room = atRoom(), n = c.total; let body;
+  if (!n) body = `<div class="nostu-g"><p><b>ห้องนี้ยังไม่มีนักเรียน</b></p><p class="sec">นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน</p><button class="btn btn-primary" style="margin-top:var(--s3)" data-toast="ไปหน้านักเรียน · นำเข้านักเรียน">${ic("upload-simple")}นำเข้านักเรียน</button></div>`;
+  else if (AT.loading) body = `<p class="sec" style="margin-bottom:var(--s3)">${ic("circle-notch", "spin")} กำลังโหลดรายชื่อ… (แตะตอนนี้ยังไม่ได้ รอสักครู่)</p><div class="acells" role="group" aria-label="รายชื่อ ${room}" aria-busy="true">${Array.from({ length: Math.min(n, 12) }, (_, i) => `<button class="acell a-none at-sk" data-at="loadtap" tabindex="${i ? -1 : 0}" aria-label="กำลังโหลดรายชื่อ"><span class="sk-line" style="width:38%"></span><span class="sk-line" style="width:82%;margin-top:8px"></span></button>`).join("")}</div>`;
+  else { let first = 1; while (first < n && m[first]) first++;
+    const gf = AT.gridFocus && AT.gridFocus <= n ? AT.gridFocus : AT.hit && AT.hit <= n ? AT.hit : first;
+    body = `<div class="acells" role="group" aria-label="รายชื่อ ${room} · ใช้ลูกศรเลื่อนช่อง กด Enter เพื่อเช็ค">${Array.from({ length: n }, (_, i) => atCell(i + 1, m, gf)).join("")}</div>`; }
+  return `<section class="card at-gcard" aria-labelledby="ag-h"><div class="g-head"><h2 id="ag-h">รายชื่อ ${room}</h2><span class="sec small">${n} คน · เรียงตามเลขที่</span></div>${body}</section>`;
+}
+function atSide(c, m) {
+  const ids = Object.keys(m).map(Number).sort((a, b) => a - b), b = atBadge();
+  const grp = ["absent", "sick", "leave"].map((k) => [k, ids.filter((n) => m[n].st === k)]).filter((x) => x[1].length);
+  const nAway = c.absent + c.sick + c.leave, todo = []; for (let i = 1; i <= c.total; i++) if (!m[i]) todo.push(i);
+  const tabs = [AT.cards.away && ["away", `ไม่มา (${nAway})`], AT.cards.todo && ["todo", `ยังไม่เช็ค (${todo.length})`], ["queue", `รอส่ง (${AT.pend + AT.failed})`], AT.cards.month && ["month", "เดือนนี้"]].filter(Boolean);
+  const cur = tabs.some((t) => t[0] === AT.sideTab) ? AT.sideTab : tabs[0][0], on = (k) => (cur === k ? "on" : "");
+  const streak = S.tags && grp[0] && grp[0][0] === "absent" ? grp[0][1][0] : null;
+  const row = (n, k) => `<li><span class="nb2 num a-${k}" aria-hidden="true">${n}</span><span class="t a-${k}">${AT.hide ? `<b>เลขที่ ${n}</b>` : `<button class="at-link" data-toast="เปิดหน้านักเรียน ${aName(n).join(" ")}" aria-label="เลขที่ ${n} ${aName(n).join(" ")} ${ATT_LABEL[k]} เปิดหน้านักเรียน">${aName(n).join(" ")}</button>`}<small>${ic(ATT_ICON[k])}${ATT_LABEL[k]}${n === streak ? ` · ขาดติดกัน 3 วัน ${tag("next")}` : ""}</small></span></li>`;
+  const away = !AT.cards.away ? "" : `<section class="card sp ${on("away")}" role="tabpanel" aria-labelledby="aw-h"><div class="card-head"><span class="h-ic">${ic("user-minus")}</span><h2 id="aw-h">ใครไม่มา</h2><span class="grow"></span><span class="big num">${nAway}</span><span class="sec">คน</span></div>
+    ${nAway ? grp.map(([k, ns]) => `<h3 class="at-gh a-${k}"><span class="gi2" aria-hidden="true">${ic(ATT_ICON[k])}</span>${ATT_LABEL[k]} ${ns.length} คน</h3><ul class="rec">${ns.map((n) => row(n, k)).join("")}</ul>`).join("")
+      + `<div class="at-copy"><button class="btn" data-at="copy" ${AT.hide ? "disabled" : ""}>${ic(AT.copied ? "check" : "copy")}${AT.copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</button><span class="sec small">${AT.hide ? "ปิดอยู่ระหว่างซ่อนชื่อ" : "เลขที่. ชื่อ · ไว้แจ้งฝ่ายวิชาการ"}</span></div>`
+      : c.marked ? `<p class="all-done sm">${ic("smiley")}ไม่มีใครขาด ลา หรือป่วย</p>` : `<p class="sec">ยังไม่ได้เช็ค — รายชื่อคนขาด ลา ป่วย จะขึ้นที่นี่</p>`}</section>`;
+  const todoC = !AT.cards.todo ? "" : `<section class="card sp ${on("todo")}" role="tabpanel" aria-labelledby="td-h"><div class="card-head"><span class="h-ic">${ic("circle-dashed")}</span><h2 id="td-h">ยังไม่เช็ค</h2><span class="grow"></span><span class="big num">${AT.loading ? "–" : todo.length}</span><span class="sec">คน</span></div>
+    ${AT.loading ? `<p class="sec">รอโหลดรายชื่อ…</p>` : !c.total ? `<p class="sec">ห้องนี้ยังไม่มีนักเรียน</p>` : todo.length ? `<div class="at-chips">${todo.slice(0, 24).map((n) => `<button class="at-chip" data-at="jump:${n}" aria-label="ไปที่เลขที่ ${n}${AT.hide ? "" : " " + aShort(n)}">${n}</button>`).join("")}${todo.length > 24 ? `<span class="at-chip more">และอีก ${todo.length - 24} คน</span>` : ""}</div><p class="sec small" style="margin-top:var(--s2)">แตะเลขที่เพื่อไปที่ช่องนั้น</p>`
+      : `<p class="all-done sm">${ic("check-circle")}เช็คครบทุกคนแล้ว</p>`}</section>`;
+  const queue = `<section class="card sp ${on("queue")}" role="tabpanel" aria-labelledby="qu-h"><div class="card-head"><span class="h-ic">${ic("cloud-arrow-up")}</span><h2 id="qu-h">ร่าง / คิวรอส่ง</h2></div>
+    <p class="at-qbig ${b[0]}">${badgeIc(b)}${b[2]}</p>
+    ${AT.failed ? `<p style="font-size:var(--t-sm)">ยังไม่ได้บันทึกบนระบบ ${AT.failed} รายการ — เก็บไว้ในเครื่องนี้ ไม่ถูกลบ</p><button class="btn btn-primary" style="margin-top:var(--s2)" data-at="retry">${ic("arrow-clockwise")}ลองอีกครั้ง</button>`
+      : !AT.online ? `<p class="sec small">ระบบจะส่งเองเมื่อต่อเน็ตได้ · เช็คต่อได้ตามปกติ</p><button class="btn" style="margin-top:var(--s2)" data-at="online">${ic("wifi-high")}จำลอง: กลับมาออนไลน์</button>`
+      : `<p class="sec small">แตะแล้วบันทึกเอง ไม่ต้องกดบันทึก · ส่งขึ้นระบบหลังแตะไม่ถึง 1 วินาที</p>`}</section>`;
+  let month = "";
+  if (AT.cards.month && c.total) { const days = []; for (let d = "2026-11-02"; d <= TODAY; d = addD(d, 1)) if (![0, 6].includes(dObj(d).getDay())) days.push(d);
+    const v = days.map((d) => { const s = d === AT.date ? c : atStats(AT.cls, d); return [d, s.marked && !(AT.err && d !== AT.date) ? s.pct : null]; }), got = v.filter((x) => x[1] != null);
+    const avg = got.length ? Math.round(got.reduce((s, x) => s + x[1], 0) / got.length) : null, low = got.reduce((a, x) => (!a || x[1] < a[1] ? x : a), null);
+    month = `<section class="card sp ${on("month")}" role="tabpanel" aria-labelledby="mo-h"><div class="card-head"><span class="h-ic">${ic("calendar-dots")}</span><h2 id="mo-h">เดือนนี้ · พ.ย.</h2><span class="grow"></span>${tag("old")}</div>
+      <p style="font-size:var(--t-sm)">${avg == null ? "ยังไม่มีข้อมูลเดือนนี้" : `มาเรียนเฉลี่ย <b class="num">${avg}%</b>${low ? ` · ต่ำสุด ${low[1]}% (${dLabel(low[0])})` : ""}`}</p>
+      <div class="at-month" role="img" aria-label="ร้อยละมาเรียนรายวันของ ${atRoom()}: ${v.map(([d, p]) => `${dLabel(d)} ${p == null ? "ยังไม่เช็ค" : p + "%"}`).join(" · ")}">${v.map(([d, p]) => `<div class="bar ${p != null && p < 90 ? "low" : ""}" aria-hidden="true">${p == null ? "<span>–</span>" : `<b>${p}</b>`}<i style="height:${p == null ? 4 : Math.max(8, (p - 60) * 2.2)}%"></i><span>${dObj(d).getDate()}</span></div>`).join("")}</div>
+      <p class="sec small">นับเฉพาะเช็ครายวัน · แถบลายทาง = ต่ำกว่า 90% · ดูละเอียดที่หน้ารายงาน</p></section>`; }
+  const next = S.tags ? `<section class="card wide"><div class="card-head"><span class="h-ic">${ic("clock-counter-clockwise")}</span><h2>ประวัติการแก้ไข · วันหยุด</h2></div><div class="chips">${tag("next")}<span class="tag tag-api">ต้องเพิ่ม API</span></div>
+    <ul class="rec" style="margin-top:var(--s3)"><li><span class="t"><b>P9 ใครแก้เมื่อไร เครื่องไหน</b><small>เช่น 08:41 iPad ห้องเรียน เปลี่ยน ขาด → มา</small></span></li><li><span class="t"><b>P10 ปฏิทินวันหยุดโรงเรียน</b><small>ซ่อนวันที่ไม่ต้องเช็คในแถบสัปดาห์</small></span></li></ul></section>` : "";
+  return `<div class="side-tabs" role="tablist" aria-label="แผงข้าง">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${cur === k}" data-at="tab:${k}">${l}</button>`).join("")}</div>${away}${todoC}${queue}${month}${next}`;
+}
+function pageAtt() {
+  if (AT.noclass) return atTop() + emptyCard({ icon: "chalkboard", title: "ยังไม่มีห้องเรียน", sub: "เพิ่มห้องในตั้งค่าก่อนเริ่มเช็คชื่อ", btn: "ตั้งค่าห้องเรียน", btnIcon: "gear-six" });
+  const c = atStats(), m = atMarks(), b = atBadge();
+  return `${atTop()}${atBanners()}${atHero(c)}${atNav()}
+  <div class="sc-grid at-grid"><div class="sc-mainc">${atTools(c)}${atGrid(c, m)}
+    <div class="at-savebar"><span class="st st-${b[0] === "bad" ? "bad" : b[0] === "warn" ? "warn" : b[0] === "mute" ? "mute" : "ok"}">${badgeIc(b)}${b[2]}</span><span class="sec">แตะแล้วบันทึกเอง ไม่ต้องกดบันทึก</span><span class="grow"></span><b class="num">เช็คแล้ว ${AT.loading ? "–" : c.marked}/${c.total}</b></div></div>
+  <aside class="sc-side at-side" aria-label="แผงข้าง">${atSide(c, m)}</aside></div>`;
+}
+function atProjector() {
+  const c = atStats(), m = atMarks(), L = AT.last, pct = c.total ? Math.round((c.came / c.total) * 100) : 0;
+  const who = L ? (AT.pjHide ? `เลขที่ ${L} มาแล้ว` : `น้อง${aShort(L)} มาแล้ว`) : "รอสแกน…";
+  return `<div class="proj at-proj" role="dialog" aria-modal="true" aria-label="โหมดฉายจอ เช็คชื่อ">
+  <div class="proj-top"><span class="hp info">${ic("projector-screen")}ฉายจอ</span><b class="display proj-title ell">เช็คชื่อ ${atRoom()} · ${dLabel(AT.date)}</b><span class="grow"></span><button class="btn" data-at="pjhide" aria-pressed="${AT.pjHide}">${ic(AT.pjHide ? "eye-slash" : "eye")}${AT.pjHide ? "ซ่อนชื่อบนจออยู่" : "ซ่อนชื่อบนจอ"}</button><button class="btn" id="atProjOff" data-at="projoff">${ic("x")}ปิดฉายจอ (กดค้าง 1 วินาที)</button></div>
+  <div class="proj-last" role="status" aria-live="polite"><span class="pj-ic" aria-hidden="true">${ic(L ? "check" : "scan")}</span><div><p class="nm">${who}</p></div></div>
+  <p class="proj-count">มาแล้ว <span class="num">${c.came}</span> จาก ${c.total} คน</p><div class="proj-bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+  <div class="proj-cells" aria-label="ผังเลขที่ ติ๊ก = มาแล้ว">${Array.from({ length: c.total }, (_, i) => { const n = i + 1, on = m[n] && ["present", "late"].includes(m[n].st); return `<span class="pcell ${on ? "on" : ""}">${on ? ic("check") : ""}${n}</span>`; }).join("")}</div>
+  <div class="proj-in"><input id="atProjIn" inputmode="numeric" autocomplete="off" aria-label="รหัสนักเรียน" placeholder="ยิง QR หรือพิมพ์เลขที่แล้วกด Enter (บันทึกเป็น “มา”)"></div>
+  <p class="proj-note">${ic("eye-slash")}จอนี้ไม่แสดง ลา / ป่วย / ขาด และเวลา · ซ่อนชื่อ = แสดงเฉพาะเลขที่</p></div>`;
+}
+function attSheet() {
+  const k = S.sheet, c = atStats(); let h = "", body = "", foot = true;
+  if (k === "at-all") { h = `มาทั้งห้อง ${c.none} คน?`; foot = false;
+    body = `<p>ให้ “มา” ${c.none} คนที่ยังไม่เช็ค (คนที่เช็คไว้แล้วไม่เปลี่ยน) · เลิกทำได้ในไม่กี่วินาทีหลังกด</p><button class="btn btn-primary btn-lg" data-at="all-yes">${ic("users-three")}มาทั้งห้อง ${c.none} คน</button><button class="btn" data-act="close">ยกเลิก</button>`; }
+  if (k === "at-room") { h = "เลือกห้อง"; body = `<p class="sec small">จำห้องล่าสุดไว้ในเครื่องนี้ · วันที่เดิม (${dLabel(AT.date)})</p>` + atRooms().map((cid) => { const s = atStats(cid);
+    return `<button class="btn mrow ${cid === AT.cls ? "btn-primary" : ""}" aria-pressed="${cid === AT.cls}" data-at="room:${cid}">${ic("chalkboard")}${atRoom(cid)} · ${!s.total ? "ไม่มีนักเรียน" : !s.marked ? "ยังไม่เช็ค" : s.none ? `เช็คแล้ว ${s.marked}/${s.total}` : "เช็คครบแล้ว"}</button>`; }).join(""); }
+  if (k === "at-cards") { h = "ปรับการ์ดหน้าเช็คชื่อ"; body = `<p class="sec small">ซ่อน/แสดงการ์ดในแผงข้าง (จำต่อเครื่อง)</p>` + [["away", "ใครไม่มา"], ["todo", "ยังไม่เช็ค"], ["month", "เดือนนี้"]].map(([x, l]) => `<button class="btn mrow" aria-pressed="${AT.cards[x]}" data-at="card:${x}">${ic(AT.cards[x] ? "toggle-right" : "toggle-left")}${l} · ${AT.cards[x] ? "แสดงอยู่" : "ซ่อนอยู่"}</button>`).join("") + `<p class="sec small">${ic("lock-simple")} แสดงเสมอ: ปุ่มสถานะ · ช่องรายชื่อ · แถบบันทึก · ร่าง/คิวรอส่ง</p>`; }
+  if (k === "at-more") { h = "เพิ่มเติม"; body = `<button class="btn mrow" data-at="proj">${ic("projector-screen")}ฉายจอ</button><button class="btn mrow" data-act="sheet:at-cards">${ic("sliders-horizontal")}ปรับการ์ด</button>`; }
+  return `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-h"><div class="sheet-h"><h2 class="display" id="sh-h">${h}</h2><button class="icon-btn" data-act="close" aria-label="ปิด">${ic("x")}</button></div>${body}${foot ? `<button class="btn btn-primary" data-act="close">เสร็จ</button>` : ""}</div></div>`;
+}
+function attAct(v, e) {
+  const i = v.indexOf(":"), k = i < 0 ? v : v.slice(0, i), arg = i < 0 ? "" : v.slice(i + 1); let f = null, keep = true;
+  const go = (d) => { atStopUndo(); AT.date = d; AT.hit = null; AT.gridFocus = null; };
+  switch (k) {
+    case "tap": if (!atTap(+arg)) return; f = `.acell[data-no="${arg}"]`; break;
+    case "loadtap": toast("กำลังโหลดรายชื่อ — รอสักครู่แล้วแตะอีกครั้ง"); return;
+    case "brush": AT.brush = arg; f = `.ab.a-${arg}`; break;
+    case "all-yes": S.sheet = null; atAllPresent(); f = ".acells .acell[tabindex='0']"; break;
+    case "undo": atUndoNow(); f = AT.hit ? `.acell[data-no="${AT.hit}"]` : ".acells .acell[tabindex='0']"; break;
+    case "room": S.sheet = null; atStopUndo(); AT.cls = arg; AT.hit = null; AT.gridFocus = null; AT.tmsg = `เปลี่ยนเป็น ${atRoom(arg)}`; f = `[data-at="room:${arg}"]`; break;
+    case "day": go(arg); f = `[data-at="day:${arg}"]`; break;
+    case "prev": go(stepD(AT.date, -1)); f = '[data-at="prev"]'; break;
+    case "next": go(stepD(AT.date, 1) > TODAY ? TODAY : stepD(AT.date, 1)); f = AT.date < TODAY ? '[data-at="next"]' : '[data-at="today"]'; break;
+    case "today": go(TODAY); f = '[data-at="today"]'; break;
+    case "hide": AT.hide = !AT.hide; AT.tmsg = (AT.hide ? "ซ่อนชื่อนักเรียนแล้ว (เฉพาะหน้านี้)" : "แสดงชื่อนักเรียนแล้ว"); f = '.topbar [data-at="hide"]'; break;
+    case "proj": S.sheet = null; AT.project = !AT.project; f = AT.project ? "#atProjIn" : null; break;
+    case "projoff": if (e && e.detail === 0) { AT.project = false; break; } toast("กดค้าง 1 วินาทีเพื่อปิดฉายจอ"); return;
+    case "jump": { const n = +arg; AT.hit = n; AT.gridFocus = n; render(true); const el = document.querySelector(`.acell[data-no="${n}"]`); if (el) { el.scrollIntoView({ block: "center" }); el.focus({ preventScroll: true }); } return; }
+    case "pjhide": AT.pjHide = !AT.pjHide; f = '[data-at="pjhide"]'; break;
+    case "tab": AT.sideTab = arg; f = `[data-at="tab:${arg}"]`; break;
+    case "card": AT.cards[arg] = !AT.cards[arg]; f = `[data-at="card:${arg}"]`; break;
+    case "retry": AT.failed = 0; AT.save = "saved"; AT.savedAt = "10:42"; AT.live = "ส่งขึ้นระบบแล้ว · บันทึกแล้ว 10:42"; AT.tmsg = "ส่งขึ้นระบบแล้ว"; break;
+    case "online": AT.online = true; AT.err = false; AT.pend = 0; AT.savedAt = "10:42"; AT.live = "กลับมาออนไลน์ · ส่งขึ้นระบบครบแล้ว"; AT.tmsg = AT.live; break;
+    case "copy": if (AT.hide) return; AT.copied = true; setTimeout(() => { AT.copied = false; if (S.page === "attendance") render(true); }, 2000); f = '[data-at="copy"]'; break;
+  }
+  render(keep); if (AT.tmsg) { toast(AT.tmsg); AT.tmsg = ""; }
+  if (f) { const el = [...document.querySelectorAll(f)].find((x) => x.offsetParent) || document.querySelector(f); if (el) el.focus({ preventScroll: true }); }
+}
+function atKey_(e) { // keyboard: radiogroup arrows · roving grid arrows · projector Enter
+  const t = e.target;
+  if (e.key === "Enter" && t.id === "atProjIn") { e.preventDefault(); const v = t.value.trim(), no = +v, c = atStats();
+    if (!v) return true; if (!/^\d+$/.test(v) || no < 1 || no > c.total) { toast(`ไม่มีเลขที่ ${v} ใน ${atRoom()}`); t.value = ""; return true; }
+    const m = atMarks(); if (!m[no] || !["present", "late"].includes(m[no].st)) { m[no] = { st: "present", t: atClock() }; atSaved(); }
+    AT.last = no; render(true); focusEl("#atProjIn", true); return true; }
+  if (t.classList && t.classList.contains("ab") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+    e.preventDefault(); const j = (AK.indexOf(AT.brush) + (["ArrowLeft", "ArrowUp"].includes(e.key) ? 4 : 1)) % 5; attAct("brush:" + AK[j]); return true; }
+  if (t.classList && t.classList.contains("acell") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
+    e.preventDefault(); const cs = [...t.parentElement.querySelectorAll(".acell")], i = cs.indexOf(t), cols = getComputedStyle(t.parentElement).gridTemplateColumns.split(" ").length;
+    const j = Math.max(0, Math.min(cs.length - 1, { ArrowLeft: i - 1, ArrowRight: i + 1, ArrowUp: i - cols, ArrowDown: i + cols, Home: 0, End: cs.length - 1 }[e.key]));
+    cs.forEach((c, x) => (c.tabIndex = x === j ? 0 : -1)); cs[j].focus(); if (cs[j].dataset.no) AT.gridFocus = +cs[j].dataset.no; return true; }
+  return false;
+}
+atScenario("partial");
+
 /* ======================= sheets ======================= */
 function sheet() {
   if (!S.sheet) return "";
   if (S.sheet.startsWith("sc-")) return scanSheet();
+  if (S.sheet.startsWith("at-")) return attSheet();
   let h = "", body = "";
   if (S.sheet === "todo") { h = `ต้องทำตอนนี้ทั้งหมด (${TODOS.length})`;
     body = TODOS.map((t) => `<div class="sheet-row">${ic(t.icon)}<span class="t"><b class="clamp2">${t.title}</b><small class="clamp2">${t.why}</small></span><button class="btn ${t.tone === "mute" ? "" : "btn-primary"}" data-toast="${t.act}">${t.act}</button></div>`).join(""); }
@@ -2234,7 +2705,7 @@ function sheet() {
 /* ======================= render + chrome ======================= */
 const DEV = { ipadP: [820, 1180, 18, "iPad ตั้ง"], ipadL: [1180, 820, 18, "iPad นอน"], desk: [1536, 729, 16, "คอม"], phone: [390, 844, 16, "มือถือ"] };
 const GROUPS = {
-  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["gradebook", "สมุดคะแนน"]],
+  page: [["home", "หน้าหลัก"], ["settings", "ตั้งค่า › หน้าตา"], ["scan", "สแกน"], ["attendance", "เช็คชื่อ"], ["gradebook", "สมุดคะแนน"]],
   layout: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]],
   theme: THEMES.map(([k, l]) => [k, l]),
   mode: [["light", "สว่าง"], ["dark", "มืด"]],
@@ -2245,6 +2716,8 @@ const GROUPS = {
   menu: [["A", "ก คงเดิม"], ["B", "ข ลด"], ["C", "ค เพิ่ม"], ["D", "ง แนะนำ"]],
   sstate: [["normal", "ปกติ"], ["late", "ส่งช้า"], ["dup", "ส่งซ้ำ"], ["unknown", "ไม่รู้จักรหัส"], ["excused", "นักเรียนยกเว้น (ถามก่อน)"], ["ambig", "เลขซ้ำหลายห้อง"], ["offline", "ออฟไลน์ + คิวรอส่ง"],
     ["failed", "ส่งไม่สำเร็จ (ลองใหม่)"], ["camera", "กล้องใช้ไม่ได้"], ["closed", "งานปิดรับแล้ว"], ["noasg", "ไม่มีงาน"], ["resume", "ต่อรอบเดิม"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"]],
+  astate: [["none", "ยังไม่เช็ค"], ["partial", "เช็คบางส่วน"], ["complete", "ครบแล้ว"], ["past", "แก้ย้อนหลัง"], ["offline", "ออฟไลน์ + ร่าง"], ["failed", "ส่งไม่สำเร็จ (ลองใหม่)"],
+    ["noclass", "ไม่มีห้อง"], ["nostudent", "ไม่มีนักเรียน"], ["hidden", "ซ่อนชื่อ"], ["project", "ฉายจอ"], ["loading", "กำลังโหลด"], ["error", "โหลดไม่สำเร็จ"], ["many", "ข้อมูลเยอะ (45 คน ชื่อยาว)"]],
   phase: [["setup", "ตั้งรอบ"], ["scan", "กำลังสแกน"], ["summary", "สรุปรอบ"]],
   meth: Object.entries(METH).map(([k, v]) => [k, v[0]]),
   q1: [["a", "ก ไม่มีแผง"], ["b", "ข สรุปอ่านอย่างเดียว (แนะนำ)"], ["c", "ค กดเพื่อกรองตาราง"]],
@@ -2259,14 +2732,15 @@ const INFO = {
   playful: "ธีม <b>สดใส</b>: เหลือง + น้ำเงิน ขอบหมึกแบบสติกเกอร์ · Mali / Anuphan · ไอคอน Phosphor Fill",
 };
 function chrome() {
-  const onScan = S.page === "scan";
-  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
-  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group;
+  const onScan = S.page === "scan", onAtt = S.page === "attendance";
+  const val = (g) => (g === "mode" ? S.modePref : g === "sstate" ? S.sstate : g === "astate" ? AT.sstate : g === "phase" ? SS.phase : g === "meth" ? SS.method : g === "q1" ? SS.q1 : g === "cam" ? SS.camProb : S[g]);
+  document.querySelectorAll(".seg").forEach((el) => { const g = el.dataset.group === "state" && onScan ? "sstate" : el.dataset.group === "state" && onAtt ? "astate" : el.dataset.group;
     el.innerHTML = GROUPS[g].map(([v, l]) => { const on = g === "tags" ? S.tags : val(g) === v; return `<button aria-pressed="${on}" data-set="${g}:${v}">${l}</button>`; }).join(""); });
   document.querySelectorAll(".scan-only").forEach((el) => (el.hidden = !onScan));
   document.querySelector(".scan-cam").hidden = !(onScan && SS.cam === "prob");
   document.getElementById("menuInfo").innerHTML = MENU_INFO[S.menu];
-  document.getElementById("info").innerHTML = onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
+  document.getElementById("info").innerHTML = onAtt ? `<b>หน้าเช็คชื่อ</b> — เลือกสถานะ มา/สาย/ลา/ป่วย/ขาด แล้วแตะช่องนักเรียน · แตะซ้ำสถานะเดิม = ยกเลิกการเช็ค + เลิกทำ 5 วินาที · “มาทั้งห้อง” ให้เฉพาะคนที่ยังไม่เช็ค · เปลี่ยนห้อง/วันได้ · แตะชิปเลขที่ใน “ยังไม่เช็ค” = ไปที่ช่อง · แถว “สถานะ” = สถานการณ์ตาม ux-attendance.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P8 ขาดติดกัน · P9 ประวัติการแก้ไข · P10 วันหยุด)`
+    : onScan ? `<b>หน้าสแกน</b> — ลองแตะช่องเลขที่ในตาราง หรือพิมพ์เลขที่ 1–32 (หรือรหัสอื่น) ในช่องแล้วกด Enter · แตะช่องที่ส่งแล้ว = เมนูแก้/ยกเลิก · ไม่มีเสียงจริง (การ์ดแสดงไอคอนเสียง/สั่นแทน) · แถว “สถานะ” = สถานการณ์ตาม ux-scan.md<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ยังไม่มีในรอบนี้ (P6 ประวัติรอบสแกน)`
     : `${INFO[S.layout]}<br>${INFO[S.theme]} · ป้ายข้อเสนอ = แสดงของที่ “ยังไม่มีในรอบนี้” (ปิดไว้ = หน้าตาที่จะปล่อยจริง)`;
 }
 let toastTimer;
@@ -2278,10 +2752,12 @@ function render(keepScroll) {
   if (S.dsKey !== key) { load(DS[key]()); S.dsKey = key; S.order = TODOS.map((t) => t.key); S.focus = null; S.cls = null; }
   dev.dataset.theme = S.theme; dev.dataset.mode = mode(); dev.classList.toggle("no-tags", !S.tags); dev.classList.toggle("short", h < 760);
   dev.style.width = w + "px"; dev.style.height = h + "px"; dev.style.setProperty("--fs", fs + "px");
-  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : pageGradebook();
-  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
+  dev.dataset.page = S.page;
+  const body = S.page === "home" ? home() : S.page === "settings" ? pageSettings() : S.page === "scan" ? pageScan() : S.page === "attendance" ? pageAtt() : pageGradebook();
+  dev.innerHTML = `<div class="app">${rail()}<main class="main" id="appMain" ${S.page === "scan" ? `data-scan="${SS.phase}"` : ""} ${S.page === "attendance" ? "data-att" : ""} ${S.page === "home" && S.state === "loading" ? 'aria-busy="true"' : ""}><div class="inner">${body}</div></main></div>${tabbar()}${S.page === "scan" && SS.project && SS.phase === "scan" ? projector() : ""}${S.page === "attendance" && AT.project && !AT.noclass && atN() ? atProjector() : ""}${S.page === "attendance" ? atUndoBar() : ""}${sheet()}<div class="toast" role="status" aria-live="polite" id="toast"></div>`;
   if (st0) dev.querySelector(".main").scrollTop = st0;
   chrome(); fit(); railShadow(rt0); animRings();
+  if (S.page === "attendance") { atAnim(); if (AT.live) { const lv = document.getElementById("atLive"), msg = AT.live; AT.live = ""; lv.textContent = ""; setTimeout(() => (lv.textContent = msg), 60); } }
 }
 function fit() {
   const [w, h] = DEV[S.device], box = document.getElementById("box"), dev = document.getElementById("device");
@@ -2306,6 +2782,7 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b || b.disabled) return; const d = b.dataset;
   if (d.set) { const [g, v] = d.set.split(":");
     if (g === "sstate") { scenario(v); render(); return; }
+    if (g === "astate") { atScenario(v); render(); return; }
     if (g === "phase") { setPhase(v); render(); return; }
     if (g === "meth") { SS.method = v; SS.pad = null; if (SS.phase === "scan") scenario(S.sstate); render(true); return; }
     if (g === "q1") { SS.q1 = v; SS.filterMiss = false; render(true); return; }
@@ -2325,10 +2802,11 @@ document.addEventListener("click", (e) => {
   if (d.focus) { S.focus = d.focus; render(true); document.getElementById("appMain").scrollTop = 0; return; }
   if (d.cls) { S.cls = d.cls; render(true); toast(`เลือกห้อง ${CL[d.cls].name}`); const det = document.querySelector(".detail"); if (det && S.device === "phone") det.scrollIntoView({ block: "start" }); return; }
   if (d.sc) { scanAct(d.sc, e); return; }
+  if (d.at) { attAct(d.at, e); return; }
   if (d.toast) toast(d.toast);
 });
-document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#projOff")) return; clearTimeout(holdTimer);
-  holdTimer = setTimeout(() => { SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
+document.addEventListener("pointerdown", (e) => { const at = e.target.closest("#atProjOff"); if (!e.target.closest("#projOff") && !at) return; clearTimeout(holdTimer);
+  holdTimer = setTimeout(() => { if (at) AT.project = false; else SS.project = false; render(true); toast("ปิดฉายจอแล้ว"); }, 1000); });
 ["pointerup", "pointerleave", "pointercancel"].forEach((t) => document.addEventListener(t, () => clearTimeout(holdTimer), true));
 document.addEventListener("change", (e) => { const t = e.target; if (!t.name) return;
   if (t.name === "ap-layout" || t.name === "sh-layout") applyAppearance({ layout: t.value }, t.name);
@@ -2338,6 +2816,8 @@ document.addEventListener("keydown", (e) => {
   const t = e.target;
   if (e.key === "Escape" && S.sheet) { closeSheet(); return; }
   if (e.key === "Escape" && S.page === "scan" && SS.project) { SS.project = false; render(true); return; }
+  if (e.key === "Escape" && S.page === "attendance" && AT.project) { AT.project = false; render(true); return; }
+  if (S.page === "attendance" && atKey_(e)) return;
   if (e.key === "Enter" && (t.id === "scanIn" || t.id === "projIn")) { e.preventDefault(); const v = t.value.trim(); if (!v) return; doScan(v, /^\d+$/.test(v) ? "key" : "hid"); render(true); focusEl("#" + t.id, true); return; }
   if (e.key === "Enter" && t.id === "padIn") { e.preventDefault(); padSave(); render(true); focusEl(SS.pad ? "#padIn" : "#scanIn", !!SS.pad); return; }
   if (t.classList && t.classList.contains("cell") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) {
