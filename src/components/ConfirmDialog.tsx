@@ -43,8 +43,8 @@ export function useConfirm() {
         </div>
         <div style="font-size:var(--fs-sm);line-height:1.6;margin-bottom:10px">{open.body}</div>
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
-          {/* the safe answer comes first in the tab order, so Dialog's focus-first lands on it */}
-          <button onClick={() => answer(false)}>{open.no ?? "ยกเลิก"}</button>
+          {/* the safe answer takes the first focus on open (data-autofocus); it is also before the confirm button in the tab order */}
+          <button data-autofocus onClick={() => answer(false)}>{open.no ?? "ยกเลิก"}</button>
           <button class={open.danger ? "danger" : "primary"} onClick={() => answer(true)}>{open.yes}</button>
         </div>
       </Dialog>

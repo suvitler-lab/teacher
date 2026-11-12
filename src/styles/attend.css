@@ -130,7 +130,7 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
 .att-alert .att-rrow { min-height: 3.5rem; }
 
 /* ---- save bar: sticks to the bottom (above the tab bar on a phone) ---- */
-.att-savebar { position: sticky; bottom: 0; z-index: 35; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 56px; margin: 10px -4px 0; padding: 8px 12px; background: var(--surface-2); border-top: 0.5px solid var(--border); box-shadow: 0 -2px 8px rgba(20, 28, 46, 0.08); }
+.att-savebar { position: sticky; bottom: 0; z-index: 35; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 56px; margin: 10px -4px 0; padding: 8px 12px; background: var(--surface-2); border-top: 0.5px solid var(--border); box-shadow: 0 -2px 8px color-mix(in srgb, var(--ink) 10%, transparent); }
 .att-savebar .att-count { margin-left: auto; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
 .att-savebar .att-hint { font-size: var(--fs-xs); color: var(--text-secondary); }
 /* the floating "ส่งไม่สำเร็จ n" button sits at the bottom right: keep the count out from under it */
@@ -138,4 +138,194 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
 @media (max-width: 720px) {
   .att-savebar { bottom: calc(80px + env(safe-area-inset-bottom)); } /* above the phone tab bar (79px with the raised scan button) */
   .att-savebar .att-hint { display: none; }
+}
+
+/* ---- hero: room · day, "เช็คแล้ว n จาก N", status ring, controls (T-41) ---- */
+.att-hero { position: relative; background: var(--hero-bg); color: var(--hero-fg); border-radius: var(--radius-hero); padding: var(--s4) var(--s5); margin-bottom: var(--s3);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "t n r" "p p r"; gap: var(--s3) var(--s5); align-items: center; }
+.att-hero-t { grid-area: t; min-width: 0; }
+.att-kicker { background: var(--hero-bg); margin: 0; font-size: var(--t-sm); font-weight: 600; color: var(--hero-muted); display: flex; align-items: center; gap: 6px; }
+.att-hero-h { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--t-xl); line-height: 1.3; overflow-wrap: anywhere; }
+.att-count-b { grid-area: n; text-align: right; line-height: 1.15; display: flex; align-items: baseline; justify-content: flex-end; flex-wrap: wrap; gap: 4px 8px; }
+.att-count-b .num { font-family: var(--font-num); font-size: var(--t-4xl); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.att-count-b small, .att-count-b b { font-size: var(--t-md); font-weight: 700; }
+.att-done { grid-area: n; display: flex; align-items: center; gap: var(--s3); justify-content: flex-end; }
+.att-done-ic { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--hero-fg); color: var(--hero-bg); flex: none; animation: attPop 0.25s ease-out 1; }
+.att-big { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--t-xl); line-height: 1.25; }
+@keyframes attPop { from { transform: scale(0.8); opacity: 0.4; } to { transform: scale(1); opacity: 1; } }
+.att-hero > .att-plate { grid-area: r; }
+.att-plate { position: relative; border-radius: 50%; background: var(--surface-2); color: var(--text-primary); padding: 6px; flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--hero-fg) 28%, transparent); }
+.att-plate svg { display: block; }
+.att-seg { transition: stroke-dasharray 0.25s ease, stroke-dashoffset 0.25s ease; }
+.att-rc { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1.1; }
+.att-rc b { font-size: var(--t-xl); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.att-rc small { font-size: var(--t-xs); font-weight: 600; color: var(--text-secondary); }
+.att-pills { grid-area: p; display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; min-width: 0; }
+.att-date { display: inline-flex; gap: 4px; align-items: center; }
+.att-hp { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); height: var(--tap); padding: 0 12px; border-radius: var(--radius-btn); border: 1.5px solid color-mix(in srgb, var(--hero-fg) 35%, transparent);
+  background: var(--hero-bg); color: var(--hero-fg); font-weight: 600; font-size: var(--fs-sm); }
+.att-hp.ico { min-width: var(--tap); padding: 0; }
+.att-hp:disabled { opacity: 0.5; }
+.att-hp.att-info { border-style: dashed; padding: 0 10px; height: auto; min-height: var(--tap); }
+.att-hp.att-info .chip { border: 0; }
+.att-hero .seg { background: var(--hero-bg); border-color: color-mix(in srgb, var(--hero-fg) 35%, transparent); }
+.att-hero .seg button { background: var(--hero-bg); color: var(--hero-fg); }
+.att-hero .seg button.on { background: var(--surface-2); color: var(--text-primary); }
+.att-hero .att-allp { background: var(--accent-2); border-color: var(--accent-2); color: var(--on-accent-2); flex: 1 1 100%; }
+.att-toolbar { margin-top: var(--s2); }
+
+/* ---- the way back from a past day ---- */
+.att-history { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+
+/* ---- the status bar sticks while the children scroll; the last action is written under it ---- */
+.att-brush { position: sticky; top: 0; z-index: 4; background: var(--surface-0); padding: var(--s2) 0; margin-top: 0; }
+.att-allp { background: var(--accent-2); border-color: var(--accent-2); color: var(--on-accent-2); font-weight: 600; }
+.att-live { min-height: 1.4em; margin-bottom: 6px; font-size: var(--fs-sm); font-weight: 600; color: var(--text-primary); }
+.att-live.none { min-height: 0; margin: 0; }
+.att-tile .att-time { font-variant-numeric: tabular-nums; }
+@media (max-width: 1699px) { .att-tile .att-time { display: none; } } /* a tile is too narrow for the time below this */
+.att-tile.late .att-time { display: inline; }
+
+/* ---- side cards ---- */
+.att-n { margin-left: auto; font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.att-gh { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; font-size: var(--fs-sm); font-weight: 600; }
+.att-gh.absent { color: var(--text-danger); } .att-gh.sick { color: var(--text-purple); } .att-gh.leave { color: var(--text-accent); }
+.att-copy { margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+.att-month-sum { margin: 6px 0 0; font-size: var(--fs-sm); }
+.att-month-sum b { font-family: var(--font-num); font-size: var(--t-lg); }
+.att-bars { display: flex; align-items: flex-end; gap: 4px; height: 96px; margin-top: 8px; }
+.att-bar { flex: 1 1 0; min-width: 0; max-width: 28px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; font-size: var(--fs-xs); line-height: 1.2; }
+.att-bar i { display: block; width: 100%; border-radius: 4px 4px 0 0; background: var(--accent); min-height: 4px; }
+.att-bar span { color: var(--text-secondary); }
+.att-bar b { font-family: var(--font-num); font-weight: 600; font-size: var(--fs-xs); }
+
+/* ---- narrow: hero stacks (phone: short hero, ring 64px) ---- */
+@media (max-width: 899px) {
+  .att-hero { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t r" "n r" "p p"; padding: var(--s3) var(--s4); }
+  .att-count-b, .att-done { justify-content: flex-start; text-align: left; }
+  .att-count-b .num { font-size: var(--t-3xl); }
+}
+@media (max-width: 560px) {
+  .att-rc small { display: none; }
+  .att-done-ic { width: 44px; height: 44px; }
+  .att-big { font-size: var(--t-lg); }
+  .att-hero .att-plate svg { width: 64px; height: 64px; }
+  .att-hero-h { font-size: var(--t-lg); }
+}
+@media (prefers-reduced-motion: reduce) { .att-seg, .att-done-ic { transition: none; animation: none; } }
+
+.att-hleg { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: var(--fs-xs); font-weight: 600; font-variant-numeric: tabular-nums; }
+.att-hleg li { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ======== T-43: grid columns, compact hero, status bar at the thumb, side column (AC-104) ======== */
+.att-hidenote { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.att-hidebtn[aria-pressed="true"] { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.att-meth { display: inline-flex; color: var(--text-secondary); }
+.att-rand { display: flex; flex-direction: column; gap: 4px; }
+.att-linkbtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 3.5rem; padding: 0 16px; border-radius: var(--radius-btn); background: var(--surface-2); color: var(--text-primary);
+  border: 1.5px solid var(--border-control); font-weight: 600; text-decoration: none; }
+.att-linkbtn:focus-visible { box-shadow: var(--ring-focus); }
+.att-randnote { flex: 1 1 100%; }
+.att-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: var(--s6, 32px) var(--s4); border: 1.5px dashed var(--border-control); border-radius: var(--radius); color: var(--text-secondary); }
+.att-empty button { min-height: var(--tap); }
+
+/* children: one line of name with "…" (the full name is in title + aria-label); columns by width: 2 phone · 4 iPad upright · 5 iPad on its side · 6 computer */
+.att-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.att-tile { min-height: 56px; }
+.att-tile .nm { display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; -webkit-line-clamp: unset; line-clamp: unset; overflow-wrap: normal; }
+.att-tile .tx { overflow: hidden; }
+.att-tile .stt { white-space: nowrap; max-width: 100%; }
+.att-tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; box-shadow: var(--ring-focus); }
+@media (min-width: 600px) { .att-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } .att-tile { min-height: 64px; } .att-tile .nm { font-size: max(1rem, 12pt); } }
+@media (min-width: 1000px) { .att-tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (min-width: 1400px) { .att-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); } .att-tile { min-height: 56px; padding-block: 4px; } .att-tile .nm { font-size: 0.95rem; } }
+.att-tile { scroll-margin-top: 90px; scroll-margin-bottom: 90px; }
+
+/* side column on a wide screen: beside the children, it stays in view */
+@media (min-width: 1000px) {
+  .att-body.two { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+  .att-body.two .att-cards { position: sticky; top: var(--s2); }
+}
+@media (min-width: 1000px) and (max-width: 1399px) { .att-body.two { grid-template-columns: minmax(0, 1fr) minmax(0, 17rem); } }
+
+/* compact week strip and summary: the children get the screen */
+@media (min-width: 900px) {
+  .att-week > button { min-height: 2.75rem; padding-block: 3px; }
+  .att-sum { padding-block: 6px; margin-bottom: 6px; }
+  .att-sum-top { margin-bottom: 2px; }
+  .att-legend { margin-top: 2px; }
+}
+
+/* computer: hero on two short lines, ring small */
+@media (min-width: 1000px) {
+  .att-hero { padding: 8px var(--s4); margin-bottom: var(--s2); gap: 6px var(--s4); }
+  .att-hero .att-kicker { display: none; }
+  .att-hero-h { font-size: var(--t-lg); line-height: 1.2; }
+  .att-count-b .num { font-size: var(--t-2xl); }
+  .att-count-b small, .att-count-b b { font-size: var(--t-sm); }
+  .att-done-ic { width: 40px; height: 40px; }
+  .att-big { font-size: var(--t-lg); }
+  .att-hero .att-plate { padding: 3px; }
+  .att-hero .att-plate svg { width: 64px; height: 64px; }
+  .att-rc b { font-size: var(--t-md); } .att-rc small { display: none; }
+}
+/* iPad upright: hero in as few lines as the width allows (the save chip lives in the bar below) */
+@media (min-width: 721px) and (max-width: 999px) {
+  .att-hero { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "t n r" "p p p"; padding: 8px var(--s4); gap: 6px var(--s3); }
+  .att-hero .att-plate svg { width: 64px; height: 64px; } .att-hero .att-plate { padding: 3px; } .att-rc small { display: none; } .att-rc b { font-size: var(--t-md); }
+  .att-hero-h { font-size: var(--t-lg); line-height: 1.2; } .att-hero .att-kicker { display: none; }
+  .att-count-b, .att-done { justify-content: flex-end; text-align: right; }
+  .att-count-b .num { font-size: var(--t-2xl); } .att-count-b small, .att-count-b b { font-size: var(--t-sm); }
+  .att-done-ic { width: 40px; height: 40px; } .att-big { font-size: var(--t-lg); }
+  .att-pills > .att-info { display: none; }
+  .att-pills { gap: 6px; flex-wrap: nowrap; }
+  .att-pills .seg button { padding-inline: 8px; }
+  .att-pills .att-hp { padding-inline: 8px; }
+}
+
+/* phone: status bar at the thumb, above the tab bar; hero short */
+@media (max-width: 720px) {
+  .att-brush { position: fixed; left: 0; right: 0; bottom: calc(92px + env(safe-area-inset-bottom)); top: auto; z-index: 40; margin: 0; padding: 6px 8px; border-top: 0.5px solid var(--border); box-shadow: 0 -2px 8px color-mix(in srgb, var(--ink) 12%, transparent); }
+  .att-brush .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .att-brush .att-stbtns { gap: 6px; flex: 1 1 100%; }
+  .stbtn { min-height: 56px; padding: 4px 0; }
+  .att-body { padding-bottom: calc(96px + 92px); }
+  .att-savebar { position: static; margin: 10px 0 0; }
+  .att-hero { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t r" "n r" "p p"; padding: var(--s3); gap: 6px var(--s3); }
+  .att-hero .att-kicker { display: none; }
+  .att-hero-h { font-size: var(--t-lg); }
+  .att-count-b .num { font-size: var(--t-2xl); }
+  .att-done-ic { width: 40px; height: 40px; }
+  .att-big { font-size: var(--t-md); }
+  .att-hero .att-plate svg { width: 56px; height: 56px; }
+  .att-hero .att-plate { padding: 3px; }
+  .att-rc small { display: none; } .att-rc b { font-size: var(--t-md); }
+  .att-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .att-pills > .att-date { grid-column: 1 / -1; }
+  .att-pills > .att-date .att-today { flex: 1; }
+  .att-pills > .att-info { display: none; }
+  .att-pills > .att-allp { grid-column: 1 / -1; }
+  .att-pills .seg { display: flex; } .att-pills .seg button { flex: 1; padding-inline: 4px; }
+  .att-week { display: flex; overflow-x: auto; scroll-snap-type: x proximity; } /* only the strip scrolls sideways, not the page */
+  .att-week > button { flex: 0 0 8.5rem; scroll-snap-align: start; }
+}
+@media (prefers-reduced-motion: reduce) { .att-tile, .stbtn { transition: none; } .att-tile.hit { box-shadow: none; } }
+
+/* ---- T-43 review round ---- */
+.att-linkbtn:disabled { opacity: 0.6; cursor: default; }
+.att-top { display: block; }
+@media (min-width: 1000px) {
+  .att-top.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; align-items: stretch; margin-bottom: 6px; }
+  .att-top.two > * { margin-bottom: 0; min-width: 0; }
+  .att-top.two .att-week { margin-bottom: 0; }
+  .att-top.two .att-week > button { min-height: 100%; padding-inline: 6px; }
+}
+.att-fold { border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--surface-2); }
+.att-fold > summary { min-height: var(--tap); display: flex; align-items: center; padding: 0 14px; font-weight: 600; cursor: pointer; }
+.att-fold[open] > summary { border-bottom: 0.5px solid var(--border); }
+.att-fold > .att-card { border: 0; box-shadow: none; }
+.att-fold .att-h { display: none; }
+/* phone: the toast and the "ส่งไม่สำเร็จ" button rise above the status bar (92px + its own height) while this page is open */
+@media (max-width: 720px) {
+  body:has(.att-brush) .toast-stack, body:has(.att-brush) .failed-fab { bottom: calc(92px + 76px + env(safe-area-inset-bottom)); }
 }

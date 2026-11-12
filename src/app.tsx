@@ -1,10 +1,11 @@
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import "./styles/shell.css";
 import { accountEmailSet, authState, classes, onboardingOn, terms, loadBootstrap, loadBootstrapCached, loadSelectedTerm, settings } from "./store";
 import { kvGet } from "./lib/idb";
 import { pauseSync } from "./lib/outbox";
 import { requestPersist } from "./lib/storage";
-import { route, routeName } from "./router";
+import { adoptServerAppearance, deferAppearanceAdoption } from "./lib/appearance";
+import { navigate, route, routeName } from "./router";
 import { api } from "./lib/api";
 import { authRequired } from "./lib/session";
 import { retryUntilReachable } from "./lib/reconnect";
@@ -37,12 +38,39 @@ const REACH_TIMEOUT_MS = 8000;
 /** Ask the server who we are; while it can't be reached this throws. Live data replaces the saved copy on success. */
 async function goLive() {
   const me = await api.get<Me>("/api/auth/me", { timeoutMs: REACH_TIMEOUT_MS });
-  if (me.authenticated) await loadBootstrap();
+  if (me.authenticated) { await loadBootstrap(); adoptServerAppearance(); }
   else authRequired.value = true; // the session ended while we were away: sign in again (unsent work is kept)
+}
+
+const PAGES = ["home", "scan", "attendance", "random", "gradebook", "reports", "students", "settings"];
+
+/** The page a signed-out visitor asked for (`#/scan`, `#/settings?section=catalog`), or null for none / the home page / unknown. */
+export function deepLinkOf(path: string): string | null {
+  const name = path.split("?")[0].split("/")[1] || "home";
+  return name !== "home" && PAGES.includes(name) ? path : null;
 }
 
 export function App() {
   const state = authState.value;
+  // A deep link opened before signing in is kept (the address itself is untouched while the sign-in page shows) and
+  // opened once sign-in finishes; the sign-in page sends everyone to #/home, which would otherwise lose it.
+  const wanted = useRef<string | null>(deepLinkOf(route.value));
+  const was = useRef(state);
+  // a link tapped while the sign-in page is already open (a hashchange, not a new start) is kept too
+  useEffect(() => route.subscribe((r) => {
+    if (authState.peek() === "ready") return;
+    const d = deepLinkOf(r);
+    if (d) wanted.current = d;
+  }), []);
+  useEffect(() => {
+    const signedInNow = state === "ready" && (was.current === "login" || was.current === "setup");
+    was.current = state;
+    if (signedInNow && wanted.current) {
+      const to = wanted.current;
+      wanted.current = null;
+      navigate(to);
+    } else if (state === "ready") wanted.current = null;
+  }, [state]);
 
   useEffect(() => {
     (async () => {
@@ -67,6 +95,7 @@ export function App() {
         }
       } catch {
         // offline: if we have a cached session's data, keep working
+        deferAppearanceAdoption(); // the saved copy's look may be older than what was chosen here: wait for the server's
         const cached = await loadBootstrapCached();
         if (cached) {
           await loadSelectedTerm();
@@ -77,6 +106,7 @@ export function App() {
           // working from saved data: keep asking, and the moment the server answers show its data instead
           retryUntilReachable(goLive);
         } else {
+          adoptServerAppearance(); // nothing saved here to wait for: the next sign-in brings the server's look
           authState.value = "login";
         }
       }

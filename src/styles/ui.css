@@ -21,6 +21,10 @@
   transition: background 0.12s, border-color 0.12s;
 }
 .pill:hover { background: var(--surface-1); }
+/* "จัดการภาคเรียน ›" inside the term chip: sits flush at the chip's right edge, takes the chip's height */
+.tp-manage { display: inline-flex; align-items: center; justify-content: center; align-self: stretch; min-width: 28px; margin: 0 -12px 0 0; padding: 0 8px; border-left: 0.5px solid var(--border-control); border-radius: 0 999px 999px 0; color: inherit; text-decoration: none; }
+.tp-manage:hover { background: var(--bg-accent); color: var(--text-accent); }
+@media (pointer: coarse) { .tp-manage { min-width: var(--tap); } }
 .pill.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
 .pill .n { opacity: 1; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -78,7 +82,7 @@ button.uc-stat:hover { background: var(--surface-1); }
 .uc-empty .ei { font-size: 2rem; color: var(--text-muted); margin-bottom: 6px; }
 
 /* drawer: right panel on desktop, full-height sheet on phone */
-.drawer-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(10,14,22,0.4); display: flex; justify-content: flex-end; }
+.drawer-scrim { position: fixed; inset: 0; z-index: 120; background: color-mix(in srgb, var(--ink) 40%, transparent); display: flex; justify-content: flex-end; }
 .drawer {
   width: min(420px, 100%); background: var(--surface-2); height: 100%; overflow-y: auto;
   border-left: 0.5px solid var(--border); padding: 14px 16px calc(20px + env(safe-area-inset-bottom));

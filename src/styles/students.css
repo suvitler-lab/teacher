@@ -168,3 +168,136 @@ button.stu-tile:hover { background: var(--surface-1); }
 .stu-sidecard .hm-cardhead { margin-bottom: 0; }
 .stu-ibtn { gap: 6px; }
 @media (max-width: 900px) { .stu-ibtn { padding: 0 11px; } .stu-ibtn .stu-lbl { display: none; } }
+
+/* ---- T-51: hero · meta · tabs · banners · 44px targets everywhere (G-S11) ---- */
+.stu-hero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.stu-hero .stu-tile { flex: none; min-height: 3.5rem; max-height: 5.5rem; }
+.stu-hero div.stu-tile { cursor: default; }
+.stu-tile .ts { font-size: var(--fs-xs); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stu-tile:disabled { opacity: .72; cursor: not-allowed; }
+@media (max-width: 1000px) { .stu-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .stu-hero .stu-tile { padding: 6px 8px; gap: 4px 6px; } .stu-tile .tv { font-size: 1.05rem; } }
+.stu-row2 { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; min-width: 0; }
+.stu-meta { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; flex: 1 1 18rem; min-width: 0; font-size: var(--fs-xs); color: var(--text-secondary); }
+.stu-meta .stu-found { margin-inline-start: auto; }
+.stu-reload { min-height: 44px; font-size: var(--fs-sm); }
+.stu-tabs { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-sm); background: var(--surface-1); border: 0.5px solid var(--border); flex: none; }
+.stu-tab { min-height: 44px; padding: 0 12px; border-radius: 6px; border: 0.5px solid transparent; background: transparent; color: var(--text-secondary); font-size: var(--fs-sm); }
+.stu-tab[aria-pressed="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-control); }
+.stu-hidebanner, .stu-offline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 12px; min-height: 44px; border-radius: var(--radius-sm); font-size: var(--fs-sm); }
+.stu-hidebanner { background: var(--bg-accent); color: var(--text-accent); border: 0.5px solid var(--border-accent); }
+.stu-hidebanner button { margin-inline-start: auto; min-height: 44px; }
+.stu-hidebtn[aria-pressed="true"] { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.stu-lkbtn { background: none; border: none; padding: 0 4px; min-height: 44px; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+.stu-stats .stu-lkbtn { color: var(--text-accent); }
+.stu-retry { min-height: 44px; }
+.stu-lhead2 { padding: 8px 12px 0; font-size: var(--fs-sm); }
+.stu-bad { background: var(--bg-danger); color: var(--text-danger); display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+.stu-qrnew.warn { background: var(--bg-warning); color: var(--text-warning); }
+.stu-nick { flex: 0 1 auto; }
+.stu-qrnames { overflow-wrap: anywhere; margin-bottom: 6px; }
+.stu-nofound { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.stu-allrooms { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 32rem; }
+.stu-allrow { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.stu-frow { padding: 6px 12px; min-height: 3rem; }
+.stu-sub2 { display: block; }
+.sd-facts { margin-bottom: 8px; overflow-wrap: anywhere; }
+.sd-mtitle.lk { background: none; border: none; text-align: left; justify-content: flex-start; color: var(--text-danger); min-height: 44px; cursor: pointer; font: inherit; }
+/* a mouse screen gets the same 44px targets as a finger (the agreed rule of this round) */
+.stu-search, .stu-search input, .stu-sortsel, .stu-sortsel select, .stu-hbtn { min-height: 44px; }
+.stu-search input { height: 42px; } .stu-sortsel select { height: 42px; }
+.stu-menu button, .stu-rowmenu button { min-height: 44px; }
+.stu-more { width: 44px; height: 44px; }
+.stu-lrow { min-height: 48px; }
+@media (pointer: coarse) { .stu-lrow { min-height: 56px; } }
+/* TV frame numbers */
+.stu-pj-nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--pj-u) * 24); flex: none; text-align: center; }
+.stu-pj-nums .stat { font-size: calc(var(--pj-u) * 120); font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stu-pj-nums .s2 { font-size: calc(var(--pj-u) * 30); }
+@media (prefers-reduced-motion: reduce) { .stu-page .spin { animation: none; } }
+/* the list title ("รายชื่อ · n คน") is read by screen readers; on screen the meta line already says how many (saves a row on the 729px laptop) */
+.stu-lhead2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; padding: 0; }
+.stu-listcard { position: relative; }
+.stu-hero .stu-tile { min-height: 3.25rem; padding-top: 4px; padding-bottom: 4px; }
+.stu-page { gap: 6px; }
+/* 729px laptop: the list must still show 9 whole rows (AC-185) */
+.stu-page { gap: 4px; }
+.stu-hero .stu-tile { min-height: 0; padding-top: 2px; padding-bottom: 2px; }
+.stu-hero .stu-tile .tv { line-height: 1.15; }
+.stu-hero .stu-tile .tl, .stu-hero .stu-tile .ts { line-height: 1.25; }
+.stu-tab { min-height: 44px; margin: 0; }
+.stu-tabs { padding: 0; }
+.stu-row2 { gap: 0 12px; }
+.stu-reload { min-height: 44px; padding-top: 0; padding-bottom: 0; }
+/* tablet / phone: fewer words so the list keeps its rows (iPad upright must show 12) */
+@media (max-width: 1000px) {
+  .stu-meta .stu-found { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .stu-printbtn .stu-lbl { display: none; }
+  .stu-meta { flex-basis: 0; flex-grow: 1; }
+}
+@media (max-width: 560px) {
+  .stu-meta > span:first-child { display: none; }
+  .stu-meta { flex: 0 0 auto; }
+  .stu-reload { white-space: nowrap; }
+  .stu-row2 { justify-content: space-between; flex-wrap: nowrap; }
+  .stu-tab { padding: 0 8px; font-size: var(--fs-xs); }
+}
+@media (max-width: 560px) { .stu-row2 { flex-wrap: wrap; } .stu-tabs { max-width: 100%; } .stu-tab { flex: 1 1 auto; white-space: nowrap; padding: 0 6px; } }
+
+/* ---- T-52: phone sheets · floating add button · row heights per device · form details ---- */
+/* row height per screen: the base.css touch rule (min-height: var(--row-h) !important) reads --row-h from the row itself, so each screen sets its own */
+.stu-lrow { --row-h: 52px; }
+@media (max-width: 1000px) { .stu-lrow { --row-h: 56px; } }
+@media (max-width: 720px) { .stu-lrow { --row-h: 60px; } }
+.stu-bar-phone { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; }
+.stu-bar-phone .stu-search { flex: 1 1 0; min-width: 0; }
+.stu-fbtn { min-height: 44px; flex: none; gap: 6px; }
+.stu-fab { position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 56px; height: 56px; min-width: 56px; padding: 0; border-radius: 50%; z-index: 30; box-shadow: var(--shadow-pop); display: inline-flex; align-items: center; justify-content: center; }
+.stu-page.phone { padding-bottom: 76px; }
+.stu-sheet { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
+.stu-sheet > button { justify-content: flex-start; min-height: 48px; gap: 10px; }
+.stu-sheet-h { font-size: var(--fs-sm); color: var(--text-secondary); margin-top: 6px; }
+.stu-sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; }
+.stu-sheet-seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.stu-sheet-seg > button { flex: 1 1 auto; min-height: 44px; }
+.stu-sheet-go { min-height: 48px; margin-top: 8px; justify-content: center; }
+.stu-okline { display: flex; align-items: center; gap: 6px; font-size: var(--fs-sm); color: var(--text-success); margin: 6px 0; }
+.stu-roomtext { min-height: 44px; display: flex; align-items: center; padding: 0 10px; border-radius: var(--radius-sm); background: var(--surface-1); border: 0.5px solid var(--border); }
+.stu-tplbtn { margin-top: 8px; min-height: 44px; }
+/* the phone row: number · name … ⚠ ค้าง n, then "รหัส · มา n%" (AC-204) — no nickname line, so a row is 60px */
+@container stu (max-width: 34rem) {
+  .stu-lrow .stu-nick, .stu-sub .sx { display: none; }
+  .stu-lrow { padding-top: 2px; padding-bottom: 2px; }
+}
+/* the list title is back on a tablet / phone (AC-179); on the laptop the sticky column head says it */
+@media (max-width: 1000px) {
+  .stu-lhead2 { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; padding: 4px 12px 0; font-size: var(--fs-sm); line-height: 1.3; }
+}
+/* the phone meta line: the stats note (AC-176) and "พบ n จาก n คน" (AC-178) over two short lines, [โหลดใหม่] beside them */
+@media (max-width: 560px) {
+  .stu-row2 { flex-wrap: nowrap; }
+  .stu-meta { flex: 1 1 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; }
+  .stu-meta > span:first-child { display: block; grid-column: 1; grid-row: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.25; }
+  .stu-meta .stu-found { position: static; width: auto; height: auto; clip: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; grid-column: 1; grid-row: 2; margin: 0; line-height: 1.25; }
+  .stu-meta .stu-reload { grid-column: 2; grid-row: 1 / 3; }
+  .stu-reload .page-sub { display: none; }
+}
+/* phone: the title and its two buttons share one line (rows get the room) */
+@media (max-width: 720px) {
+  .stu-page.phone > .uh { flex-wrap: nowrap; align-items: center; margin-bottom: 0; gap: 8px; }
+  .stu-page.phone .uh-l { flex: 1 1 0; }
+  .stu-page.phone .uh-sub { flex-wrap: nowrap; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .stu-page.phone .uh-act { flex-wrap: nowrap; flex: none; }
+}
+/* R-5207: "พบ n จาก n คน" shows from 561px up too (the row already is 44px tall), and the list title sticks above the column head */
+@media (min-width: 561px) and (max-width: 1000px) {
+  .stu-meta .stu-found { position: static; width: auto; height: auto; clip: auto; overflow: visible; white-space: nowrap; }
+}
+@media (max-width: 1000px) {
+  .stu-listcard { --lh2: 1.4rem; }
+  .stu-lhead2 { position: sticky; top: 0; z-index: 4; min-height: var(--lh2); display: flex; align-items: center; background: var(--surface-2); border-radius: var(--radius) var(--radius) 0 0; }
+  .stu-list-head { top: var(--lh2); border-radius: 0; }
+}
+
+/* T-67 (ST-S03): the three empty-state buttons keep 44px and wrap */
+.stu-tplempty { margin-top: 0; }

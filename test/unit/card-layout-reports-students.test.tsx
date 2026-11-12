@@ -55,7 +55,7 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
-const REPORT_ALL = ["stats", "works", "att", "follow", "hist"];
+const REPORT_ALL = ["stats", "works", "att", "follow", "hist", "absent"];
 const STUDENT_ALL = ["sum", "qr", "moved", "recent"];
 /** the body measures itself after it is on screen: wait for the width to land */
 const settled = (want: "lg" | "stack") => waitFor(() => expect(document.querySelector(".rp-body")!.getAttribute("data-split")).toBe(want));
@@ -80,7 +80,7 @@ describe("Reports layout", () => {
     await screen.findByText("อัตราการส่งรายงาน");
     let body = document.querySelector(".rp-body")!;
     expect(body.classList.contains("lg")).toBe(false);
-    expect(classes_(body)).toEqual(["pg-aside", "pg-main"]);
+    expect(classes_(body)).toEqual(["pg-main", "pg-aside"]); // one DOM order at every width (AC-154): CSS grid areas put the cards above
     await waitFor(() => expect(body.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("1"));
     narrow.unmount();
     vi.restoreAllMocks();
@@ -117,7 +117,7 @@ describe("Reports layout", () => {
 
   it("the teacher's order is kept: the first card is top-left, the next goes to the lighter column", async () => {
     boxWidth(55); // stacked, 2 columns
-    settings.value = baseSettings({ reports_cards: layout(["works", "follow", "att", "stats", "hist"], ["works", "follow", "att", "stats"]) });
+    settings.value = baseSettings({ reports_cards: layout(["works", "follow", "att", "stats", "hist", "absent"], ["works", "follow", "att", "stats"]) });
     render(<ReportsPage />);
     await screen.findByText("อัตราการส่งรายงาน");
     await waitFor(() => expect(document.querySelectorAll(".pg-col").length).toBe(2));
@@ -126,15 +126,15 @@ describe("Reports layout", () => {
     expect(cols[0].textContent).toContain("อัตราการส่งรายงาน");
     expect(cols[0].textContent).toContain("การมาเรียน");
     expect(cols[1].textContent).toContain("ต้องติดตาม");
-    expect(cols[1].querySelector(".rp-stats")).toBeTruthy();
+    expect(cols[1].querySelector(".rp-dl")).toBeTruthy();
   });
 
-  it("the stats are a card like the others: four tiles in a container-sized grid", async () => {
+  it("the numbers are a card like the others (AC-164 list); the four tiles are the hero band above the table", async () => {
     boxWidth(62);
     render(<ReportsPage />);
     await screen.findByText("อัตราส่งงาน");
-    expect(document.querySelectorAll(".rp-statwrap .rp-stats .rp-stat").length).toBe(4);
-    expect(document.querySelector(".pg-aside .pg-card .rp-statwrap")).toBeTruthy();
+    expect(document.querySelectorAll(".rp-hero .rp-k").length).toBe(4);
+    expect(document.querySelector(".pg-aside .pg-card .rp-dl")).toBeTruthy();
   });
 
   it("a page with nothing measured (jsdom: width 0) is stacked: cards above the table, as on a phone", async () => {
@@ -149,7 +149,7 @@ describe("Reports layout", () => {
 describe("Students layout", () => {
   const withSum = () => waitFor(() => expect(document.querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy());
 
-  it("a wide body (>= 54rem): list left, every card in the sticky side column (the numbers first)", async () => {
+  it("a wide body (>= 54rem): list left, the cards in the sticky side column — the hero is above, not in it (AC-176)", async () => {
     boxWidth(60);
     render(<StudentsPage />);
     await withSum();
@@ -159,33 +159,33 @@ describe("Students layout", () => {
     expect(document.querySelector(".stu-pin")).toBeNull();
     const aside = grid.querySelector(".pg-aside")!;
     expect(aside.getAttribute("role")).toBe("complementary");
-    expect(aside.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("1");
-    expect(aside.querySelector(".pg-card")!.querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy();
+    expect(aside.querySelector('[aria-labelledby="sk-sum"]')).toBeNull(); // the numbers are the hero, not a card
+    expect(document.querySelector(".stu-hero")!.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(grid.querySelectorAll(".stu-lrow").length).toBe(3);
   });
 
-  it("a narrower body: the numbers pinned above the list, the other cards below it", async () => {
+  it("a narrower body: ONE order in the DOM — list first, then the cards (G-S12)", async () => {
     boxWidth(40);
     render(<StudentsPage />);
     await withSum();
     const body = document.querySelector(".stu-body")!;
-    expect(classes_(body)).toEqual(["stu-pin", "pg-split"]);
-    expect(body.querySelector(".stu-pin")!.querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy();
+    expect(classes_(body)).toEqual(["pg-split"]);
     const grid = body.querySelector(".pg-split")!;
     expect(grid.classList.contains("sm")).toBe(false);
     expect(classes_(grid)).toEqual(["stu-main", "pg-aside"]);
-    expect(grid.querySelector('[aria-labelledby="sk-sum"]')).toBeNull(); // not twice
+    expect(grid.querySelector('[aria-labelledby="sk-sum"]')).toBeNull();
     expect(grid.querySelector(".pg-aside")!.textContent).toContain("สติกเกอร์ / QR ใหม่");
   });
 
-  it("'sum' stays first even when the saved order puts another card before it", async () => {
+  it("'sum' is locked: the hero stays even when the saved layout lists it hidden, and the cards keep their saved order", async () => {
     boxWidth(60);
     settings.value = baseSettings({ students_cards: layout(["qr", "sum", "moved", "recent"], ["qr", "sum"]) });
     render(<StudentsPage />);
     await withSum();
     const cards = [...document.querySelectorAll(".pg-aside .pg-card")];
-    expect(cards[0].querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy();
-    expect(cards[1].textContent).toContain("สติกเกอร์ / QR ใหม่");
+    expect(document.querySelector(".stu-hero")).toBeTruthy();
+    expect(cards[0].textContent).toContain("สติกเกอร์ / QR ใหม่"); // the saved order is kept: qr first (sum is the hero)
+    expect(cards.some((c) => c.querySelector('[aria-labelledby="sk-sum"]'))).toBe(false);
   });
 
   it("no card on: the list alone, no side column", async () => {
@@ -199,19 +199,22 @@ describe("Students layout", () => {
     expect(document.querySelector(".pg-cols")).toBeNull();
   });
 
-  it("the numbers keep their place while they load (the list does not change width when they arrive)", async () => {
+  it("the hero shows \"—\" (never 0) and the filter buttons are off while the numbers load (AC-177)", async () => {
     boxWidth(60);
     let release = () => {};
-    get.mockImplementation((p: string) => (p.startsWith("/api/audit") ? Promise.resolve({ rows: [] }) : new Promise((r) => { release = () => r(payload()); })));
-    settings.value = baseSettings({ students_cards: layout(STUDENT_ALL, ["sum"]) });
+    get.mockImplementation((p: string) => (p.startsWith("/api/audit") ? Promise.resolve({ rows: [] }) : p.startsWith("/api/students") ? Promise.resolve({ students: [] }) : new Promise((r) => { release = () => r(payload()); })));
     render(<StudentsPage />);
-    await waitFor(() => expect(document.querySelector(".stu-skel")).toBeTruthy());
+    await waitFor(() => expect(document.querySelector(".stu-hero")!.getAttribute("aria-busy")).toBe("true"));
+    const hero = document.querySelector(".stu-hero")!;
+    expect(hero.textContent).not.toMatch(/0 คน/);
+    expect(hero.textContent).toContain("—");
+    expect((hero.querySelectorAll("button.stu-tile")[0] as HTMLButtonElement).disabled).toBe(true);
     expect(document.querySelector(".stu-body > .pg-split")!.classList.contains("sm")).toBe(true);
     release();
-    await withSum();
-    expect(document.querySelector(".stu-skel")).toBeNull();
+    await waitFor(() => expect(document.querySelector(".stu-hero")!.getAttribute("aria-busy")).toBeNull());
     expect(document.querySelector(".stu-body > .pg-split")!.classList.contains("sm")).toBe(true);
   });
+
 
   it("'ปรับการ์ด': the line about columns is shown and the arrows of the pinned 'สรุปห้อง' are off", async () => {
     render(<StudentsPage />);

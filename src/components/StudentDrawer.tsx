@@ -7,7 +7,8 @@ import { computeReport, type ReportModel, type ReportPayload, type StudentReport
 import { classById, selectedTermId, studentsById, subjectById, workTypeById } from "../store";
 import { fullName } from "../lib/names";
 import type { Student } from "@shared/types";
-import { scorePercent, attendancePercent } from "@shared/metrics";
+import { scorePercent, attendancePercent, workState } from "@shared/metrics";
+import { bkkToday } from "@shared/time";
 import { formatThaiDate, formatThaiDayMonthMs } from "../lib/dates";
 import { navigate } from "../router";
 
@@ -28,9 +29,9 @@ function describeAudit(r: any): string {
   return ENTITY_LABEL[r.entity] ?? r.action;
 }
 
-interface MissingRow { title: string; subject: string | null; type: string | null; due: string | null }
+interface MissingRow { id: string | null; title: string; subject: string | null; type: string | null; due: string | null }
 
-export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissing, data, scopeLabel, onFullTerm, from = "students", onRotate }: {
+export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissing, data, scopeLabel, onFullTerm, from = "students", onRotate, hide = false, readOnly = false, onMove, onLeave }: {
   studentId: string; classId: string; onClose: () => void;
   onEdit: (s: Student) => void; onCopyMissing?: (titles: string[]) => void;
   /** the report the page already shows (its subject / month filters): used as it is, no second request */
@@ -43,13 +44,21 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
   from?: "reports" | "students";
   /** the students page: issue a new QR for this child (the page asks first) */
   onRotate?: (s: Student) => void;
+  /** names hidden on the page that opened it: the name, nickname and code become "เลขที่ N" everywhere in here (default false = as before) */
+  hide?: boolean;
+  /** an earlier school year: no button that writes (AC-185) */
+  readOnly?: boolean;
+  /** the students page: move class / move out (the page opens its own dialog) */
+  onMove?: (s: Student) => void;
+  onLeave?: (s: Student) => void;
 }) {
   const student = studentsById.value.get(studentId);
   const [report, setReport] = useState<StudentReport | null>(null);
   const [missing, setMissing] = useState<MissingRow[]>([]);
   const [audit, setAudit] = useState<any[]>([]);
   const [copied, setCopied] = useState(false);
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [copyFailed, setCopyFailed] = useState(false);
+  const [status, setStatus] = useState<"loading" | "ready" | "error" | "unknown">("loading");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(copyTimer.current), []);
 
@@ -59,31 +68,41 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
     let live = true;
     setReport(null); setMissing([]); setAudit([]); setStatus("loading");
     (async () => {
-      let p: ReportPayload, model: ReportModel;
-      if (data) { p = data.payload; model = data.model; }
-      else {
-        const q = new URLSearchParams({ class: classId });
+      let p: ReportPayload | null = null, model: ReportModel | null = null;
+      let sr: StudentReport | null = null;
+      if (data) { p = data.payload; model = data.model; sr = model.students.find((s) => s.student.id === studentId) ?? null; }
+      if (!sr) {
+        // not in the set the page loaded (a child of another class, or added a moment ago): ask for that child's own class — never guess "complete"
+        const q = new URLSearchParams({ class: studentsById.value.get(studentId)?.class_id ?? classId });
         if (selectedTermId.value) q.set("term", selectedTermId.value);
         p = await api.get<ReportPayload>(`/api/reports/summary?${q}`);
         if (!live) return;
         model = computeReport(p);
+        sr = model.students.find((s) => s.student.id === studentId) ?? null;
       }
-      const sr = model.students.find((s) => s.student.id === studentId) ?? null;
+      if (!p || !model) return;
       setReport(sr);
       const fu = model.followUp.find((f) => f.student.id === studentId);
       // map missing titles to their work (subject, type, due day) for display
-      const miss = (fu?.missing ?? []).map((title) => {
-        const a = p.assignments.find((x) => x.title === title);
-        return { title, subject: a ? subjectById(a.subject_id)?.name ?? null : null, type: a?.type_id ? workTypeById(a.type_id)?.name ?? null : null, due: a?.due_date ?? null };
+      // matched by assignment id (two works may share a title): the works this child is "missing" on, by the same rule as the numbers
+      const today = bkkToday();
+      const subOf = (aid: string) => p.submissions.find((x) => x.assignment_id === aid && x.student_id === studentId);
+      const missingWorks = p.assignments.filter((x) => workState(subOf(x.id), x, today) === "missing");
+      const titles = fu?.missing ?? [];
+      const miss = titles.map((title, i) => {
+        const same = missingWorks.filter((x) => x.title === title);
+        const nth = titles.slice(0, i).filter((t) => t === title).length;
+        const a = same[nth] ?? same[0] ?? p.assignments.find((x) => x.title === title);
+        return { id: a?.id ?? null, title, subject: a ? subjectById(a.subject_id)?.name ?? null : null, type: a?.type_id ? workTypeById(a.type_id)?.name ?? null : null, due: a?.due_date ?? null };
       });
       setMissing(miss);
-      setStatus("ready");
+      setStatus(sr ? "ready" : "unknown");
     })().catch(() => { if (live) setStatus("error"); });
     api.get<{ rows: any[] }>(`/api/audit?student=${studentId}&limit=6`).then((r) => { if (live) setAudit(r.rows); }).catch(() => {});
     return () => { live = false; };
   }, [studentId, classId, selectedTermId.value, data?.payload]);
 
-  const cls = classById(classId);
+  const cls = classById(student?.class_id ?? classId);
   const att = report?.attendance;
   const attTotal = att ? att.present + att.late + att.leave + att.sick + att.absent : 0;
   const scorePct = report ? scorePercent(report.score, report.fullScore) : null;
@@ -92,20 +111,30 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
   function copyMissing() {
     const titles = missing.map((m) => m.title);
     onCopyMissing?.(titles);
-    const text = `${student ? fullName(student) : ""} ค้างส่ง ${titles.length} งาน:\n` + titles.map((t) => "· " + t).join("\n");
-    navigator.clipboard?.writeText(text).then(() => { setCopied(true); clearTimeout(copyTimer.current); copyTimer.current = setTimeout(() => setCopied(false), 2000); });
+    // students page: "5. กานดา ค้างส่ง 2 งาน:" (number + first name, as the LINE text of BR-37)
+    const head = from === "students" && student ? `${student.number != null ? student.number + ". " : ""}${student.first_name}` : student ? fullName(student) : "";
+    const text = `${head} ค้างส่ง ${titles.length} งาน:\n` + titles.map((t) => "· " + t).join("\n");
+    setCopyFailed(false);
+    const done = () => { setCopied(true); clearTimeout(copyTimer.current); copyTimer.current = setTimeout(() => setCopied(false), 2000); };
+    const fail = () => { setCopyFailed(true); clearTimeout(copyTimer.current); copyTimer.current = setTimeout(() => setCopyFailed(false), 4000); };
+    if (!navigator.clipboard?.writeText) { fail(); return; }
+    navigator.clipboard.writeText(text).then(done, fail);
   }
+  const label = student ? (hide ? `เลขที่ ${student.number ?? "–"}` : fullName(student)) : studentId;
+  const nameLine = from === "students" && student && !hide ? `เลขที่ ${student.number ?? "–"} ${fullName(student)}` : label;
 
   const edit = student && (
     <button class={from === "students" ? "primary" : "ghost"} onClick={() => onEdit(student)}><Icon name="edit" size={20} /> แก้ไขข้อมูล</button>
   );
   return (
-    <Drawer label={student ? `ข้อมูล ${fullName(student)}` : "ข้อมูลนักเรียน"} onClose={onClose} title={
+    <Drawer label={student ? `ข้อมูล ${label}` : "ข้อมูลนักเรียน"} onClose={onClose} title={
       <div class="sd-id">
-        <Avatar student={student} size={44} tone="accent" />
+        <Avatar {...(hide && student ? { text: String(student.number ?? "–") } : { student })} size={44} tone="accent" />
         <div style="min-width:0">
-          <h2 class="sd-name" title={student ? fullName(student) : undefined}>{student ? fullName(student) : studentId}</h2>
-          <div class="page-sub">{student?.nickname ? `“${student.nickname}” · ` : ""}{cls?.name} เลขที่ {student?.number ?? "-"} · รหัส {student?.code}</div>
+          <h2 class="sd-name" title={student ? nameLine : undefined}>{student ? nameLine : studentId}</h2>
+          {hide ? <div class="page-sub">{cls?.name}{from === "students" ? " · ทุกวิชา · ทั้งเทอม" : ""}</div>
+            : from === "students" ? <div class="page-sub">{cls?.name} · ทุกวิชา · ทั้งเทอม · รหัส {student?.code}{student?.nickname ? ` · ชื่อเล่น ${student.nickname}` : ""}</div>
+            : <div class="page-sub">{student?.nickname ? `“${student.nickname}” · ` : ""}{cls?.name} เลขที่ {student?.number ?? "-"} · รหัส {student?.code}</div>}
         </div>
       </div>
     }>
@@ -120,21 +149,32 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
         <div><div class="l">คะแนนสะสม</div><div class="v">{scorePct != null ? scorePct + "%" : "—"}</div></div>
         <div><div class="l">มาเรียน</div><div class="v">{attPct != null ? attPct + "%" : "—"}</div></div>
       </div>
+      {from === "students" && report && (
+        <div class="sd-facts page-sub">
+          ค้างส่ง {report.missing} · ยังไม่ถึงกำหนด {report.pending} · รอตรวจ {report.awaiting} · คะแนนสะสม {report.score}/{report.fullScore} · ร้อยละสะสม {scorePct != null ? scorePct + "%" : "—"} · มาเรียน {att ? att.present + att.late : 0}/{attTotal} · ร้อยละมา {attPct != null ? attPct + "%" : "—"}
+        </div>
+      )}
 
       <div class="sd-sec">
         <b>งานค้างส่ง{status === "ready" ? ` ${missing.length} ชิ้น` : ""}</b>
-        {missing.length > 0 && <button class="ghost sd-copy" onClick={copyMissing}><Icon name={copied ? "check" : "brand-line"} size={18} /> {copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>}
+        {missing.length > 0 && (hide
+          ? <button class="ghost sd-copy" disabled><Icon name="brand-line" size={18} /> คัดลอกไป LINE · ปิดอยู่ตอนซ่อนชื่อ</button>
+          : <button class="ghost sd-copy" onClick={copyMissing}><Icon name={copied ? "check" : "brand-line"} size={18} /> {copied ? "คัดลอกแล้ว" : "คัดลอกไป LINE"}</button>)}
       </div>
+      {copyFailed && <div class="page-sub" role="status" style="color:var(--text-warning);margin-bottom:6px">คัดลอกไม่สำเร็จ — เลือกข้อความแล้วคัดลอกเอง</div>}
       {status === "error" ? (
         <div class="page-sub" style="color:var(--text-warning);margin-bottom:10px"><Icon name="cloud-off" size={16} /> โหลดสถิติไม่สำเร็จ{navigator.onLine ? "" : " (ออฟไลน์)"}</div>
       ) : status === "loading" ? (
         <div class="page-sub" style="margin-bottom:10px"><Icon name="loader-2" size={16} class="spin" /> กำลังโหลด…</div>
+      ) : status === "unknown" ? (
+        <div class="page-sub" style="margin-bottom:10px" role="status"><Icon name="alert-circle" size={16} /> ยังไม่ทราบ — ยังไม่มีสถิติของนักเรียนคนนี้</div>
       ) : missing.length === 0 ? (
         <div class="page-sub" style="color:var(--text-success);margin-bottom:10px"><Icon name="circle-check" size={16} /> ส่งงานครบ</div>
       ) : missing.map((m) => (
         <div class="sd-mrow">
           <Icon name="alert-circle" size={16} class="sd-bad" />
-          <span class="grow sd-mtitle" title={m.title}>{m.title}</span>
+          {m.id ? <button type="button" class="lk grow sd-mtitle" title={m.title} aria-label={`ไปสมุดคะแนน งาน ${m.title}`} onClick={() => { onClose(); navigate("/gradebook", { class: classId, asg: m.id! }); }}>⚠ {m.title} →</button>
+            : <span class="grow sd-mtitle" title={m.title}>{m.title}</span>}
           {(m.type || m.subject) && <span class="chip sd-mtag">{m.type ?? m.subject}</span>}
           {m.due && <span class="page-sub sd-mdue"><Icon name="calendar" size={16} /> {formatThaiDate(m.due)}</span>}
         </div>
@@ -175,10 +215,13 @@ export function StudentDrawer({ studentId, classId, onClose, onEdit, onCopyMissi
       )}
 
       <div class="drawer-actions sd-actions">
-        {from === "students" && student && onRotate && <button onClick={() => onRotate(student)}><Icon name="qrcode" size={20} /> ออก QR ใหม่</button>}
-        {from === "reports" && edit}
+        {from === "students" && student && onRotate && !readOnly && <button onClick={() => onRotate(student)}><Icon name="qrcode" size={20} /> ออก QR ใหม่…</button>}
+        {from === "students" && student && onMove && !readOnly && <button onClick={() => onMove(student)}><Icon name="arrows-exchange" size={20} /> ย้ายห้อง…</button>}
+        {from === "students" && student && onLeave && !readOnly && <button onClick={() => onLeave(student)} style="color:var(--text-danger)"><Icon name="user-off" size={20} /> ย้ายออก/ไม่ใช้งาน…</button>}
+        {from === "students" && readOnly && <div class="page-sub">ปีการศึกษาเก่า — อ่านอย่างเดียว ไม่มีปุ่มแก้ไขหรือย้าย</div>}
+        {from === "reports" && !readOnly && edit}
         <button class={from === "reports" ? "primary" : ""} onClick={() => { onClose(); navigate("/gradebook", { class: classId }); }}><Icon name="notebook" size={20} /> ไปสมุดคะแนน</button>
-        {from === "students" && edit}
+        {from === "students" && !readOnly && edit}
       </div>
     </Drawer>
   );

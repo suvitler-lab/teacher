@@ -8,8 +8,11 @@ import type { Plugin } from "vite";
 const PLACEHOLDER_FILES = '"__PRECACHE__"';
 const PLACEHOLDER_VERSION = '"__BUILD_ID__"';
 
-/** Never worth sending to a phone: source maps, and the font formats a browser only asks for when it can't read woff2. */
-const SKIP = /\.(map|ttf|woff|eot)$/;
+/**
+ * Never worth sending to a phone: source maps, and the font formats a browser only asks for when it can't read woff2
+ * (the icon fonts also ship an .svg font for very old browsers — D45).
+ */
+const SKIP = /\.(map|ttf|woff|eot)$|^\/assets\/Phosphor-[A-Za-z]+-[^/]*\.svg$/;
 /** Not fetched by the app (the shell is downloaded from "/", the worker updates itself, the rest are host config). */
 const NEVER = new Set(["index.html", "sw.js", "_headers", "_redirects"]);
 /**

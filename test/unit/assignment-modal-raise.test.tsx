@@ -251,7 +251,7 @@ describe("undo from the toast and the Gradebook page", () => {
 
   it("undo does not close a different form that is open, and keeps what was typed", async () => {
     render(<GradebookPage />);
-    await screen.findByRole("columnheader", { name: /งาน A/ });
+    await screen.findByRole("button", { name: "จัดการงาน" }); // no children in this room: the table gives way to ST-02, the work bar stays
     openEdit();
     // the page-level form for A: raise it
     fireEvent.input(await screen.findByLabelText("คะแนนเต็ม"), { target: { value: "20" } });

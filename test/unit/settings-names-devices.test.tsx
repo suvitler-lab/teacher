@@ -137,7 +137,7 @@ describe("settings: rename a device", () => {
   async function openDevices() {
     render(<SettingsPage />);
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
-    goTo("อุปกรณ์และรหัสผ่าน");
+    goTo("บัญชีและอุปกรณ์");
     await screen.findByRole("heading", { level: 2, name: /อุปกรณ์ที่เข้าสู่ระบบ/ });
     await waitFor(() => expect(screen.getAllByText("Chrome · Windows", { exact: false }).length).toBeGreaterThan(0));
   }

@@ -18,7 +18,7 @@ import { route } from "@client/router";
 import { draftAll, draftUpdate } from "@client/lib/idb";
 import { flushDraft } from "@client/lib/attSync";
 import { defaultPageLayout } from "@client/lib/pageCards";
-import { serializeLayout, toggleLayoutCard } from "@client/lib/cardLayout";
+import { serializeLayout } from "@client/lib/cardLayout";
 import { projectorOn } from "@client/lib/projector";
 
 const kid = (n: number): Student => ({
@@ -104,7 +104,7 @@ describe("a second tap on the selected status takes the mark back", () => {
 describe("who is not checked yet", () => {
   it("a tap on a number marks the tile it points to", async () => {
     rows = [{ student_id: "s1", status: "present", updated_at: 1 }];
-    settings.value = baseSettings({ attendance_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("attendance"), "todo")) });
+    settings.value = baseSettings({ attendance_cards: serializeLayout(defaultPageLayout("attendance")) });
     render(h(AttendancePage, {}));
     await waitFor(() => expect(document.body.textContent).toContain("ใครยังไม่เช็ค 3 คน"));
     const chip = screen.getByRole("button", { name: /^ไปที่เลขที่ 3 / });

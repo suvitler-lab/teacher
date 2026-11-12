@@ -10,7 +10,7 @@ vi.mock("@client/lib/api", async (orig) => {
 });
 
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/preact";
-import { CatalogEditor } from "@client/components/CatalogEditor";
+import { CatalogEditor, TypeEditor } from "@client/components/CatalogEditor";
 import { classes, subjects, workTypes, terms, currentTermId } from "@client/store";
 import { ApiError } from "@client/lib/api";
 import { toasts } from "@client/lib/notify";
@@ -39,7 +39,7 @@ beforeEach(() => {
   get.mockImplementation(async () => bootstrapOf());
 });
 
-const tab = (name: string) => fireEvent.click(screen.getByRole("button", { name }));
+const tab = (name: string) => fireEvent.click(screen.getByRole("tab", { name }));
 const posted = () => post.mock.calls.map(([path, body]) => ({ path, ...(body as object) })) as any[];
 
 describe("catalog editor", () => {
@@ -62,7 +62,7 @@ describe("catalog editor", () => {
     tab("วิชา");
     fireEvent.click(screen.getAllByRole("button", { name: "แก้ไข" })[0]);
     fireEvent.input(screen.getByLabelText("ชื่อวิชา วิทย์"), { target: { value: "วิทยาศาสตร์" } });
-    fireEvent.input(screen.getByLabelText("สีของ วิทย์"), { target: { value: "red" } });
+    fireEvent.click(within(screen.getByRole("radiogroup", { name: "สีของ วิทย์" })).getByRole("radio", { name: "แดง" }));
     fireEvent.click(screen.getByRole("button", { name: "บันทึก" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
     expect(posted()[0]).toMatchObject({ path: "/api/subjects", id: "s1", name: "วิทยาศาสตร์", code: "ว16101", color: "red", sort: 10, archived: false });
@@ -76,8 +76,7 @@ describe("catalog editor", () => {
   });
 
   it("a work type's default full score must be a whole number 1–100", async () => {
-    render(<CatalogEditor />);
-    tab("ประเภทงาน");
+    render(<TypeEditor />);
     fireEvent.click(screen.getAllByRole("button", { name: "แก้ไข" })[0]);
     const full = screen.getByLabelText("คะแนนเต็มเริ่มต้นของ ใบงาน");
     const save = () => screen.getByRole("button", { name: "บันทึก" }) as HTMLButtonElement;
@@ -98,7 +97,7 @@ describe("catalog editor", () => {
     fireEvent.click(screen.getByRole("button", { name: "เลื่อน คณิต ขึ้น" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(2));
     const byId = Object.fromEntries(posted().map((p) => [p.id, p.sort]));
-    expect(byId).toEqual({ s2: 10, s1: 20 });
+    expect(byId).toEqual({ s2: 1, s1: 2 }); // BR-54: numbered 1..n, only the rows whose number changed are written
   });
 
   it("rows that all share one order number are renumbered, so a move always changes the order", async () => {
@@ -107,7 +106,7 @@ describe("catalog editor", () => {
     tab("วิชา");
     fireEvent.click(screen.getByRole("button", { name: "เลื่อน ข ขึ้น" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(3));
-    expect(Object.fromEntries(posted().map((p) => [p.id, p.sort]))).toEqual({ b: 10, a: 20, c: 30 });
+    expect(Object.fromEntries(posted().map((p) => [p.id, p.sort]))).toEqual({ b: 1, a: 2, c: 3 });
   });
 
   it("the first row cannot move up and the last cannot move down", () => {
@@ -118,39 +117,41 @@ describe("catalog editor", () => {
     expect((screen.getByRole("button", { name: "เลื่อน วิทย์ ลง" }) as HTMLButtonElement).disabled).toBe(false);
   });
 
-  it("a name that is already taken is told in the server's own Thai sentence — for a class, a subject and a work type", async () => {
+  it("a name that is already taken is told in the server's own Thai sentence under the name field — for a class, a subject and a work type (AC-222)", async () => {
     const taken = (what: string, name: string) => new ApiError(409, "duplicate_name", `มี${what}ชื่อ "${name}" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน`);
-    const toastText = () => toasts.value.map((t) => t.message);
-    render(<CatalogEditor />);
+    const { unmount } = render(<CatalogEditor />);
 
     post.mockRejectedValueOnce(taken("ห้อง", "ป.6/1"));
-    fireEvent.input(screen.getByPlaceholderText("เพิ่มห้อง เช่น ป.6/3"), { target: { value: "ป.6/1" } });
+    const room = screen.getByPlaceholderText("เพิ่มห้อง เช่น ป.6/3") as HTMLInputElement;
+    fireEvent.input(room, { target: { value: "ป.6/1" } });
     fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
-    await waitFor(() => expect(toastText()).toContain('มีห้องชื่อ "ป.6/1" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน'));
-    expect((screen.getByPlaceholderText("เพิ่มห้อง เช่น ป.6/3") as HTMLInputElement).value).toBe("ป.6/1"); // what was typed stays
+    const alert = await screen.findByRole("alert");
+    expect(alert.textContent).toContain('มีห้องชื่อ "ป.6/1" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน');
+    expect(room.getAttribute("aria-invalid")).toBe("true");
+    expect(room.getAttribute("aria-describedby")).toContain(alert.id);
+    expect(room.value).toBe("ป.6/1"); // what was typed stays
 
     tab("วิชา");
     post.mockRejectedValueOnce(taken("วิชา", "คณิต"));
     fireEvent.input(screen.getByPlaceholderText("ชื่อวิชา"), { target: { value: "คณิต" } });
     fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
-    await waitFor(() => expect(toastText().some((m) => m.includes('มีวิชาชื่อ "คณิต"'))).toBe(true));
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain('มีวิชาชื่อ "คณิต"'));
+    unmount();
 
-    tab("ประเภทงาน");
+    render(<TypeEditor />);
     post.mockRejectedValueOnce(taken("ประเภทงาน", "ใบงาน"));
     fireEvent.input(screen.getByPlaceholderText("เพิ่มประเภทงาน"), { target: { value: "ใบงาน" } });
     fireEvent.click(screen.getByRole("button", { name: /เพิ่ม/ }));
-    await waitFor(() => expect(toastText().some((m) => m.includes('มีประเภทงานชื่อ "ใบงาน"'))).toBe(true));
-    expect(toasts.value.every((t) => t.kind === "error")).toBe(true);
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain('มีประเภทงานชื่อ "ใบงาน"'));
   });
 
-  it("renaming a work type to a taken name keeps the editor open and says so; other failures keep the generic message", async () => {
-    render(<CatalogEditor />);
-    tab("ประเภทงาน");
+  it("renaming a work type to a taken name keeps the editor open and says so under the field; other failures keep the generic message", async () => {
+    render(<TypeEditor />);
     fireEvent.click(screen.getAllByRole("button", { name: "แก้ไข" })[0]);
     fireEvent.input(screen.getByLabelText("ชื่อประเภทงาน ใบงาน"), { target: { value: "สอบ" } });
     post.mockRejectedValueOnce(new ApiError(409, "duplicate_name", 'มีประเภทงานชื่อ "สอบ" อยู่แล้ว — ใช้ชื่ออื่น หรือแก้ชื่อรายการเดิมก่อน'));
     fireEvent.click(screen.getByRole("button", { name: "บันทึก" }));
-    await waitFor(() => expect(toasts.value.map((t) => t.message).join("|")).toContain('มีประเภทงานชื่อ "สอบ"'));
+    await waitFor(() => expect(screen.getAllByRole("alert").map((a) => a.textContent).join("|")).toContain('มีประเภทงานชื่อ "สอบ"'));
     expect((screen.getByLabelText("ชื่อประเภทงาน ใบงาน") as HTMLInputElement).value).toBe("สอบ");
 
     post.mockRejectedValueOnce(new ApiError(500, "internal", "เกิดข้อผิดพลาด"));

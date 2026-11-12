@@ -599,7 +599,7 @@ async function login(email, password) {
         ok(ppage.url().includes("#/" + hash), `“${label}” went to ${ppage.url().split("#")[1]}`);
       }
       for (const [label, hash] of [["รายงาน", "reports"], ["นักเรียน", "students"], ["สุ่มชื่อ", "random"], ["ตั้งค่า", "settings"]]) {
-        await ppage.locator(".bottom-tabs .tab-item", { hasText: "เมนู" }).click();
+        await ppage.locator(".bottom-tabs .tab-item", { hasText: "เพิ่มเติม" }).click();
         await ppage.locator(".menu-sheet .sheet-item", { hasText: label }).click();
         await ppage.waitForTimeout(300);
         ok(ppage.url().includes("#/" + hash), `menu “${label}” went to ${ppage.url().split("#")[1]}`);
@@ -607,7 +607,7 @@ async function login(email, password) {
         const sw = await ppage.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
         ok(sw <= 2, `${label}: page is ${sw}px wider than the phone`);
       }
-      await ppage.locator(".bottom-tabs .tab-item", { hasText: "เมนู" }).click();
+      await ppage.locator(".bottom-tabs .tab-item", { hasText: "เพิ่มเติม" }).click();
       await ppage.locator(".menu-sheet .sheet-item", { hasText: "ออกจากระบบ" }).click();
       await ppage.waitForSelector("input[type=email]", { timeout: 8000 });
     } finally { page = main; await pctx.close(); }

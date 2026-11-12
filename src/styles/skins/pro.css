@@ -1,0 +1,10 @@
+/* ธีมมืออาชีพ · fonts (IBM Plex Sans Thai) + Phosphor bold. Loaded only when this skin is chosen (D45). */
+@import "@fontsource/ibm-plex-sans-thai/thai-400.css";
+@import "@fontsource/ibm-plex-sans-thai/latin-400.css";
+@import "@fontsource/ibm-plex-sans-thai/thai-500.css";
+@import "@fontsource/ibm-plex-sans-thai/latin-500.css";
+@import "@fontsource/ibm-plex-sans-thai/thai-600.css";
+@import "@fontsource/ibm-plex-sans-thai/latin-600.css";
+@import "@fontsource/ibm-plex-sans-thai/thai-700.css";
+@import "@fontsource/ibm-plex-sans-thai/latin-700.css";
+@import "@phosphor-icons/web/bold";

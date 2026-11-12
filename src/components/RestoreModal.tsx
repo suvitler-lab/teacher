@@ -1,10 +1,12 @@
 import { Dialog } from "./Dialog";
-import { useState } from "preact/hooks";
+import { useLayoutEffect, useRef, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { api, ApiError } from "../lib/api";
 import { runBackup, BackupInconsistentError, type BackupFile } from "../lib/backup";
 import { loadBootstrap } from "../store";
 import { formatThaiDateTimeMs } from "../lib/dates";
+import { online } from "../lib/outbox";
+import { projectorOn } from "../lib/projector";
 
 const TABLES = [
   "settings", "terms", "classes", "subjects", "work_types", "students",
@@ -62,11 +64,16 @@ export function BackupWarning({ onConfirm, onClose }: { onConfirm: () => void; o
 export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
   const [file, setFile] = useState<BackupFile | null>(null);
   const [restoreId, setRestoreId] = useState("");
-  const [confirmText, setConfirmText] = useState("");
+  const [accepted, setAccepted] = useState(false); // SE-S13 / BR-59: "ตรวจแล้ว ยอมรับ" before the red button
+  const cancelBtn = useRef<HTMLButtonElement>(null);
+  const offline = !online.value;
+  const projecting = projectorOn.value;
   // "unknown" = the switch-over was sent but we lost the connection before hearing back: it may or may not have happened
   const [stage, setStage] = useState<"pick" | "validated" | "running" | "done" | "unknown">("pick");
   const [err, setErr] = useState("");
   const [progress, setProgress] = useState("");
+  // once the file is checked the safe answer (cancel) takes the focus, not the red button
+  useLayoutEffect(() => { if (stage === "validated") cancelBtn.current?.focus(); }, [stage]);
 
   // Closing without finishing must not leave an uploaded copy or a "restore in progress" behind.
   function close() {
@@ -173,7 +180,7 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
       const x = explain(e);
       setErr(x.text);
       if (x.retry) setStage("validated"); // the uploaded chunks are still valid: just press restore again
-      else { api.post("/api/restore/cancel", { restoreId }).catch(() => {}); setFile(null); setRestoreId(""); setConfirmText(""); setStage("pick"); }
+      else { api.post("/api/restore/cancel", { restoreId }).catch(() => {}); setFile(null); setRestoreId(""); setAccepted(false); setStage("pick"); }
     }
   }
 
@@ -209,12 +216,14 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
               <div class="row" style="gap:8px"><Icon name="loader-2" class="spin" /> {progress}</div>
             ) : (
               <>
-                <label class="field"><span>พิมพ์คำว่า "ยืนยัน" เพื่อดำเนินการ</span>
-                  <input value={confirmText} onInput={(e) => setConfirmText((e.target as HTMLInputElement).value)} />
+                <label class="dz-check">
+                  <input type="checkbox" checked={accepted} onChange={(e) => setAccepted((e.target as HTMLInputElement).checked)} />
+                  <span>ตรวจแล้ว ยอมรับว่าข้อมูลปัจจุบันจะถูกแทนที่ด้วยไฟล์นี้ และข้อมูลที่เกิดหลังวันที่สำรองจะหายไป</span>
                 </label>
-                <div class="row" style="justify-content:flex-end;gap:8px;margin-top:8px">
-                  <button onClick={close}>ยกเลิก</button>
-                  <button class="primary" onClick={execute} disabled={confirmText !== "ยืนยัน"}><Icon name="database-import" size={16} /> กู้คืน</button>
+                <div class="dz-modal-actions">
+                  {(offline || projecting) && <span class="page-sub set-need-online">{projecting ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</span>}
+                  <button ref={cancelBtn} onClick={close}>ยกเลิก</button>
+                  <button class="danger" onClick={execute} disabled={!accepted || offline || projecting}><Icon name="database-import" size={20} /> กู้คืนและแทนที่ข้อมูล</button>
                 </div>
               </>
             )}

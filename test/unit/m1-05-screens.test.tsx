@@ -49,11 +49,12 @@ describe("AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere", () => {
     };
     get.mockResolvedValue(d);
     render(<Home />);
-    await screen.findByText("ใบงาน");
-    const bar = document.querySelector(".hm-prog .pbar > div") as HTMLElement;
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
+    const bar = document.querySelector(".hma-room .pbar > div") as HTMLElement;
     expect(bar.style.width).toBe("75%");
+    expect(document.querySelector(".hma-room .pct")!.textContent).toBe("75%");
     // AC-04 on Home: (3 + 1) / 6
-    expect(screen.getByText("67%")).toBeTruthy();
+    expect(document.querySelector(".hma-summary")!.textContent).toContain("67%");
   });
 
   it("Gradebook: the column header progress bar and the toolbar rate", async () => {
@@ -129,6 +130,8 @@ describe("AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = -", () => {
     render(<StudentsPage />);
     await waitFor(() => expect(document.querySelector(".stu-stat.att")?.textContent).toBe("—"));
     await waitFor(() => expect(document.querySelector('[aria-labelledby="sk-sum"]')).toBeTruthy());
-    expect(document.querySelector('[aria-labelledby="sk-sum"]')!.textContent).not.toContain("มาเรียนเฉลี่ย");
+    const sum = document.querySelector('[aria-labelledby="sk-sum"]')!.textContent!;
+    expect(sum).toContain("มาเรียนเฉลี่ย—");
+    expect(sum).not.toMatch(/[0-9]+%/);
   });
 });

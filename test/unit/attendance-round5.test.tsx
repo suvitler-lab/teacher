@@ -21,7 +21,7 @@ import { route } from "@client/router";
 import { draftAll, draftGet, draftUpdate } from "@client/lib/idb";
 import { stopAttSync, draftEdit, withdrawRows, flushDraft, ctxKey, type AttCtx } from "@client/lib/attSync";
 import { defaultPageLayout } from "@client/lib/pageCards";
-import { serializeLayout, toggleLayoutCard } from "@client/lib/cardLayout";
+import { serializeLayout } from "@client/lib/cardLayout";
 import { projectorOn } from "@client/lib/projector";
 
 const kid = (n: number): Student => ({
@@ -67,7 +67,7 @@ beforeEach(async () => {
 describe("second tap clears", () => {
   it("clears the mark, updates every count, and sends a clear to the server", async () => {
     rows = [{ student_id: "s1", status: "present", updated_at: 7 }, { student_id: "s2", status: "absent", updated_at: 8 }];
-    settings.value = baseSettings({ attendance_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("attendance"), "todo")) });
+    settings.value = baseSettings({ attendance_cards: serializeLayout(defaultPageLayout("attendance")) });
     mount();
     await waitFor(() => expect(tile(1).getAttribute("aria-label")).toContain("มา"));
     expect(document.body.textContent).toContain("เช็คแล้ว 2/4");

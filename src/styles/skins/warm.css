@@ -1,0 +1,16 @@
+/* ธีมอบอุ่น · fonts (Sarabun + Mitr) + Phosphor duotone. Loaded only when this skin is chosen (D45). */
+@import "@fontsource/sarabun/thai-400.css";
+@import "@fontsource/sarabun/latin-400.css";
+@import "@fontsource/sarabun/thai-500.css";
+@import "@fontsource/sarabun/latin-500.css";
+@import "@fontsource/sarabun/thai-600.css";
+@import "@fontsource/sarabun/latin-600.css";
+@import "@fontsource/sarabun/thai-700.css";
+@import "@fontsource/sarabun/latin-700.css";
+@import "@fontsource/mitr/thai-400.css";
+@import "@fontsource/mitr/latin-400.css";
+@import "@fontsource/mitr/thai-500.css";
+@import "@fontsource/mitr/latin-500.css";
+@import "@fontsource/mitr/thai-600.css";
+@import "@fontsource/mitr/latin-600.css";
+@import "@phosphor-icons/web/duotone";

@@ -76,6 +76,9 @@ export function AssignmentModal({
   // the server says people hold the old full score: ask before saving (numbers come from the server)
   const [ask, setAsk] = useState<{ count: number; from: number; to: number } | null>(null);
   const saveBtn = useRef<HTMLButtonElement>(null);
+  const titleInput = useRef<HTMLInputElement>(null);
+  // AC-140: the form opens with the cursor on "ชื่องาน" (Dialog's own focus-first would land on the close button)
+  useEffect(() => { titleInput.current?.focus(); }, []);
   const hadAsk = useRef(false);
   // leaving the question (cancel / Esc / outside tap / error) puts focus back on the save button of the form
   useEffect(() => { if (hadAsk.current && !ask) saveBtn.current?.focus(); hadAsk.current = !!ask; }, [ask]);
@@ -144,14 +147,19 @@ export function AssignmentModal({
     }
   }
 
+  // AC-141: a copy says so in its head (it used to read "สร้างงานใหม่")
+  const heading = existing ? "แก้ไขงาน" : copyFrom ? "คัดลอกงาน" : "สร้างงานใหม่";
   return (
-    <div class="modal-overlay" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
-      <Dialog label={existing ? "แก้ไขงาน" : "สร้างงาน"} onClose={onClose} dismissible={!busy}>
+    <div class="modal-overlay asg-ov" onClick={(e) => { if (!busy && e.target === e.currentTarget) onClose(); }}>
+      <Dialog label={heading} class="modal asg-modal" onClose={onClose} dismissible={!busy}>
         <div class="row" style="justify-content:space-between;margin-bottom:12px">
-          <h2 style="font-size:1.2rem">{existing ? "แก้ไขงาน" : "สร้างงานใหม่"}</h2>
+          <h2 style="font-size:1.2rem">{heading}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
 
+        {copyFrom && !existing && (
+          <div class="imp-warn asg-copybar" style="margin:0 0 10px"><Icon name="copy" size={15} /> <span>คัดลอกจาก “{copyFrom.title}” — วันที่สั่ง = วันนี้ · ไม่มีกำหนดส่ง · ไม่คัดลอกคะแนนและการส่ง</span></div>
+        )}
         <label class="field"><span>ประเภทงาน</span></label>
         <div class="row wrap" style="gap:6px;margin-bottom:12px">
           {wts.map((w) => (
@@ -167,7 +175,7 @@ export function AssignmentModal({
 
         <label class="field">
           <span>ชื่องาน / เรื่อง</span>
-          <input value={title} maxLength={MAX_TITLE} onInput={(e) => setTitle((e.target as HTMLInputElement).value)} placeholder="เช่น ใบงานที่ 5 เรื่อง ระบบหายใจ" />
+          <input ref={titleInput} value={title} maxLength={MAX_TITLE} onInput={(e) => setTitle((e.target as HTMLInputElement).value)} placeholder="เช่น ใบงานที่ 5 เรื่อง ระบบหายใจ" />
         </label>
 
         <div class="modal-grid3">
@@ -226,13 +234,15 @@ export function AssignmentModal({
           <textarea rows={2} value={note} onInput={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
         </label>
 
-        {err && <div style="color:var(--text-danger);font-size:var(--fs-sm);margin:6px 0">{err}</div>}
-
-        <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
-          <button onClick={onClose} disabled={busy}>ยกเลิก</button>
-          <button ref={saveBtn} class="primary" onClick={() => save()} disabled={busy}>
-            {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึกงาน
-          </button>
+        <div class="asg-foot">
+          <div class="row" style="justify-content:flex-end;gap:8px">
+            <button onClick={onClose} disabled={busy}>ยกเลิก</button>
+            <button ref={saveBtn} class="primary" onClick={() => save()} disabled={busy} aria-busy={busy}>
+              {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="device-floppy" />} บันทึกงาน
+            </button>
+          </div>
+          {/* under the buttons; the live region stays in the page when empty so a new message is read out */}
+          <div role="alert" class="asg-err">{err ? <><Icon name="alert-circle" size={15} /> {err}</> : null}</div>
         </div>
       </Dialog>
       {ask && (

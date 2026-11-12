@@ -85,6 +85,10 @@ export function TermPicker() {
         {list.map((t) => <option value={t.id}>{t.name}{t.is_current ? " · ปัจจุบัน" : ""}</option>)}
         <option value={UNASSIGNED}>ยังไม่ระบุเทอม</option>
       </select>
+      {/* AC-211 P6: a way into the terms list, inside the same chip (no new row, no taller header) */}
+      <a class="tp-manage" href="#/settings?section=catalog&tab=terms" aria-label="จัดการภาคเรียน" title="จัดการภาคเรียน ›">
+        <Icon name="settings" size={16} />
+      </a>
     </label>
   );
 }

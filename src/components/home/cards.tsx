@@ -329,7 +329,7 @@ export function QueueCard() {
             <span class="row"><b class="num">{attDraftCount.value}</b>{attDrafts.value.length > 0 && <ChipButton onClick={() => navigate("/attendance", { class: attDrafts.value[0]?.ctx.classId })}>ดูเช็คชื่อ</ChipButton>}</span></div>
           <div class="hm-kv"><span class="row" style="color:var(--text-danger)"><Icon name="cloud-x" size={20} /> ส่งไม่สำเร็จ</span>
             <span class="row"><b class="num" style="color:var(--text-danger)">{failedCount.value}</b>{failedCount.value > 0 && <ChipButton tone="danger" onClick={() => { failedPanelOpen.value = true; }}>ดูรายการ</ChipButton>}</span></div>
-          <div class="page-sub" style="margin-top:6px">จะส่งให้เองเมื่อกลับมาออนไลน์ · <button class="lk" style="min-height:0;padding:0" onClick={() => navigate("/settings", { section: "general" })}>ที่เก็บข้อมูลในเครื่อง ›</button></div>
+          <div class="page-sub" style="margin-top:6px">จะส่งให้เองเมื่อกลับมาออนไลน์ · <button class="lk" style="min-height:0;padding:0" onClick={() => navigate("/settings", { section: "device" })}>ที่เก็บข้อมูลในเครื่อง ›</button></div>
         </>
       )}
     </section>

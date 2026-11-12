@@ -1,0 +1,2255 @@
+[
+  {
+    "check": "Q-2901",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-theme-* gradebook-header-a home-states home-ui random-page",
+    "artifact": "",
+    "expected": "",
+    "actual": "Code Reviewer T-29: 114/115; fail home-ui phone five tabs (T-31 Shell label) not T-29 code",
+    "reason": "",
+    "snapshot": "tree:3b4d2dd908f89993958f30e2795ec99fdcad9aa6",
+    "at": "2026-11-12T02:38:36.841Z"
+  },
+  {
+    "check": "Q-2902",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-37"
+    ],
+    "br": [
+      "BR-10"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "contrast script on src/styles/tokens.css (same parser as hr-theme-tokens.test.ts)",
+    "artifact": "",
+    "expected": ">=4.5 on-danger on fill-danger (button text)",
+    "actual": "Code Reviewer T-29: pro light 4.44, warm light 4.49, playful light 5.60, dark 5.42-6.20",
+    "reason": "",
+    "snapshot": "tree:3b4d2dd908f89993958f30e2795ec99fdcad9aa6",
+    "at": "2026-11-12T02:38:37.416Z"
+  },
+  {
+    "check": "Q-3101",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-45",
+      "AC-47",
+      "AC-49",
+      "AC-50"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run --project dom test/unit/hr-menu-nav.test.tsx test/unit/home-ui.test.tsx",
+    "artifact": "code-review.md",
+    "expected": "all pass",
+    "actual": "25 passed, 1 failed home-ui.test.tsx:277 (button renamed to เพิ่มเติม)",
+    "reason": "",
+    "snapshot": "tree:e667d85ecd25f2bfe264de60aca9b3f1ebe11f8e",
+    "at": "2026-11-12T02:40:27.148Z"
+  },
+  {
+    "check": "Q-3102",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-50"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "scratchpad mutation test: navigate mocked no-op",
+    "artifact": "code-review.md",
+    "expected": "deep link lands on /scan after sign-in",
+    "actual": "real code PASS with 100ms wait; mutant FAIL; original test cannot tell them apart (R-01)",
+    "reason": "",
+    "snapshot": "tree:e667d85ecd25f2bfe264de60aca9b3f1ebe11f8e",
+    "at": "2026-11-12T02:40:27.728Z"
+  },
+  {
+    "check": "Q-3103",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-46",
+      "AC-47",
+      "AC-49"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "code review only: rail height / VoiceOver not measured in a browser (no playwright, no server running)",
+    "snapshot": "tree:e667d85ecd25f2bfe264de60aca9b3f1ebe11f8e",
+    "at": "2026-11-12T02:40:28.313Z"
+  },
+  {
+    "check": "Q-6501",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09"
+    ],
+    "br": [
+      "BR-03",
+      "BR-04",
+      "BR-06"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/fixture-datasets.test.ts --project dom",
+    "artifact": "",
+    "expected": "",
+    "actual": "26/26 passed (59.7s); port 4109 not left listening",
+    "reason": "",
+    "snapshot": "tree:86bae1c58dae4d1435f58facbe8b0c2ffc2a7f7e",
+    "at": "2026-11-12T02:45:19.256Z"
+  },
+  {
+    "check": "Q-6502",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep -rn '__fixture\\|fixture-server' src worker shared public dist package.json; node scripts/fixture-server.cjs --home --scan",
+    "artifact": "",
+    "expected": "no refs; exit 2",
+    "actual": "no refs in src/worker/shared/public/dist; exit 2 'pick one data set flag'",
+    "reason": "",
+    "snapshot": "tree:86bae1c58dae4d1435f58facbe8b0c2ffc2a7f7e",
+    "at": "2026-11-12T02:45:21.101Z"
+  },
+  {
+    "check": "Q-6503",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-09"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "startFixtureServer({dataset:'home', today:'2026-11-20'}) then GET /api/dashboard?term=term_h2 without date (as src/lib/dashboard.ts:30)",
+    "artifact": "",
+    "expected": "self-check refuses or page numbers = BR (missing 22, marked 32/30)",
+    "actual": "selfCheck ok; app sees date 2026-11-12 missing 0 marked [0,0,0] (R-6501, ควรแก้)",
+    "reason": "",
+    "snapshot": "tree:86bae1c58dae4d1435f58facbe8b0c2ffc2a7f7e",
+    "at": "2026-11-12T02:45:22.634Z"
+  },
+  {
+    "check": "Q-3201",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-01",
+      "AC-02",
+      "AC-05",
+      "AC-44",
+      "AC-48"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/settings-page.test.tsx test/unit/hr-appearance-section.test.tsx test/unit/hr-appearance-save.test.tsx",
+    "artifact": "",
+    "expected": "",
+    "actual": "3 files 25/25 passed",
+    "reason": "",
+    "snapshot": "tree:8cc5320be92ff4ff9fe5c2433e118a5ef7334137",
+    "at": "2026-11-12T02:47:56.066Z"
+  },
+  {
+    "check": "Q-3202",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-48"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep -rn ข้อมูลพื้นฐาน src | wc -l",
+    "artifact": "",
+    "expected": "0",
+    "actual": "0",
+    "reason": "",
+    "snapshot": "tree:fec73345eef0477916668e6bd1c5f5e1f6651546",
+    "at": "2026-11-12T02:47:56.722Z"
+  },
+  {
+    "check": "Q-3203",
+    "kind": "regression",
+    "status": "BLOCKED",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit -p .",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "tsc ล้ม 2 จุดเฉพาะ src/lib/appearance.ts (TS6196 Bootstrap, TS6133 kvUpdate) ซึ่งอยู่ในรอบแก้ T-29 ขนาน · ไฟล์ของ T-32 ไม่มี error",
+    "snapshot": "tree:fec73345eef0477916668e6bd1c5f5e1f6651546",
+    "at": "2026-11-12T02:47:57.322Z"
+  },
+  {
+    "check": "Q-3001",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-08",
+      "AC-34",
+      "AC-37"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sweep-colors.test.ts test/unit/hr-sweep-login.test.tsx -> 2 files 22/22 pass",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:979ea4334469f61f2996a5f543eeb8918d618a55",
+    "at": "2026-11-12T02:50:33.686Z"
+  },
+  {
+    "check": "Q-3002",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-37"
+    ],
+    "br": [
+      "BR-10"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "node scratchpad/xpairs.mjs src/styles/tokens.css (คู่ข้ามกฎ ใช้ resolver เดียวกับเทสต์)",
+    "artifact": "",
+    "expected": ">=3:1 icon .ob-done ทุกชุด",
+    "actual": "playful light 2.23:1 (fill-success บน .card surface-2); .fb.* ทุกคู่ผ่าน",
+    "reason": "",
+    "snapshot": "tree:979ea4334469f61f2996a5f543eeb8918d618a55",
+    "at": "2026-11-12T02:50:34.273Z"
+  },
+  {
+    "check": "Q-3701",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-34",
+      "AC-35",
+      "AC-37",
+      "AC-40",
+      "AC-51",
+      "AC-52",
+      "AC-53",
+      "AC-54"
+    ],
+    "br": [
+      "BR-13",
+      "BR-15"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/scan- test/unit/c0 (18 files 159/159) + npm run typecheck",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:9cb29fcef86612e8e62cf40ca6c3bad4c151270d",
+    "at": "2026-11-12T03:26:04.416Z"
+  },
+  {
+    "check": "Q-3702",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-51"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/m1-05 -t \"Scan|scan\" (3/3; 2 Gradebook fails in m1-05-screens belong to T-46)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:9cb29fcef86612e8e62cf40ca6c3bad4c151270d",
+    "at": "2026-11-12T03:26:06.314Z"
+  },
+  {
+    "check": "Q-3703",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-51",
+      "AC-52",
+      "AC-53",
+      "AC-54"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "code-review.part-3.md",
+    "expected": "",
+    "actual": "code reading: labels/roles/focus/reduced-motion ok; R-3704/R-3705 suggestions; screen reader NOT RUN",
+    "reason": "",
+    "snapshot": "tree:e79bb7cf7f656b88735f02ef595e2c3778400bd5",
+    "at": "2026-11-12T03:26:08.081Z"
+  },
+  {
+    "check": "Q-4101",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35",
+      "AC-84",
+      "AC-88",
+      "AC-91",
+      "AC-92",
+      "AC-93",
+      "AC-94",
+      "AC-95"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/attendance- test/unit/hr-att-",
+    "artifact": "",
+    "expected": "",
+    "actual": "7 files 61/61 passed",
+    "reason": "",
+    "snapshot": "tree:c892c2444b96590faa1f50e24d2bb7a18586604a",
+    "at": "2026-11-12T03:31:25.559Z"
+  },
+  {
+    "check": "Q-4102",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -i attend",
+    "artifact": "",
+    "expected": "",
+    "actual": "no attendance type errors",
+    "reason": "",
+    "snapshot": "tree:c892c2444b96590faa1f50e24d2bb7a18586604a",
+    "at": "2026-11-12T03:31:26.214Z"
+  },
+  {
+    "check": "Q-4103",
+    "kind": "expected-from-br",
+    "status": "FAIL",
+    "ac": [
+      "AC-81",
+      "AC-94"
+    ],
+    "br": [
+      "BR-19"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read AttRing.tsx:10 vs BR-19 example",
+    "artifact": "",
+    "expected": "held 2 -> ยังไม่เช็ค 9",
+    "actual": "AttRing label ยังไม่เช็ค 11 (total-marked)",
+    "reason": "",
+    "snapshot": "tree:c892c2444b96590faa1f50e24d2bb7a18586604a",
+    "at": "2026-11-12T03:31:27.954Z"
+  },
+  {
+    "check": "Q-4104",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-87",
+      "AC-91",
+      "AC-37"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read Attendance.tsx tap()/todo chips, AttRing",
+    "artifact": "",
+    "expected": "",
+    "actual": "R-4102 announce before save; R-4103 no focus on chip tap; rest PASS",
+    "reason": "",
+    "snapshot": "tree:c892c2444b96590faa1f50e24d2bb7a18586604a",
+    "at": "2026-11-12T03:31:29.983Z"
+  },
+  {
+    "check": "Q-4601",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-125",
+      "AC-126",
+      "AC-127",
+      "AC-128",
+      "AC-129",
+      "AC-130",
+      "AC-131",
+      "AC-133",
+      "AC-135",
+      "AC-136"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/gradebook- test/unit/qa-gb- test/unit/lows-gradebook test/unit/perf- test/unit/hr-gb- test/unit/assignment-modal-raise test/unit/hr-sweep-colors (21 files 187 passed) ; npm run typecheck (0 errors)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:fd24f6c5d6082ca7a7b51b96e8ec142339b81c53",
+    "at": "2026-11-12T03:33:22.614Z"
+  },
+  {
+    "check": "Q-4602",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-128"
+    ],
+    "br": [
+      "BR-30"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่านโค้ด Gradebook.tsx:1052-1056 scorePercent->percentOf (metrics.ts:39) กับตัวอย่าง BR-30",
+    "artifact": "",
+    "expected": "49/55->89, 29.5/40->74, 9.5/35->27, 0/0->ไม่มี %",
+    "actual": "49/55->89, 29.5/40->74, 9.5/35->27, 0/0->null ไม่แสดง",
+    "reason": "",
+    "snapshot": "tree:fd24f6c5d6082ca7a7b51b96e8ec142339b81c53",
+    "at": "2026-11-12T03:33:23.213Z"
+  },
+  {
+    "check": "Q-4603",
+    "kind": "expected-from-br",
+    "status": "FAIL",
+    "ac": [
+      "AC-132"
+    ],
+    "br": [
+      "BR-35"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่านโค้ด Gradebook.tsx:237 onResult ทับ Sub ไม่มี method/updatedAt",
+    "artifact": "",
+    "expected": "หลังกรอก 9 แล้วส่งขึ้นระบบสำเร็จ เปิดตัวแก้ไข = รับด้วย: กรอก · แก้ล่าสุด HH:MM",
+    "actual": "รับด้วย: – (ไม่มีเวลา) จนกว่าจะโหลดหน้าใหม่",
+    "reason": "",
+    "snapshot": "tree:fd24f6c5d6082ca7a7b51b96e8ec142339b81c53",
+    "at": "2026-11-12T03:33:23.809Z"
+  },
+  {
+    "check": "Q-4604",
+    "kind": "offline-replay",
+    "status": "FAIL",
+    "ac": [
+      "AC-136"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่านโค้ด Gradebook.tsx ปุ่มเปิดรับงาน (สถานะ closed) + เมนู gb-only-narrow + mobile manage ไม่ปิดใช้ตอนออฟไลน์",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:fd24f6c5d6082ca7a7b51b96e8ec142339b81c53",
+    "at": "2026-11-12T03:33:32.067Z"
+  },
+  {
+    "check": "Q-3801",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-34",
+      "AC-35",
+      "AC-55",
+      "AC-56",
+      "AC-57",
+      "AC-58",
+      "AC-59",
+      "AC-60",
+      "AC-61",
+      "AC-62",
+      "AC-63",
+      "AC-64",
+      "AC-65",
+      "AC-66",
+      "AC-67",
+      "AC-68",
+      "AC-69",
+      "AC-70",
+      "AC-71"
+    ],
+    "br": [
+      "BR-13",
+      "BR-14",
+      "BR-15"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/scan- test/unit/c0 test/unit/m1-05 test/unit/page-cards (23 files 216/216)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:f15e1fd9b4cebc5f099434f14fac0ad235891a8b",
+    "at": "2026-11-12T03:55:10.068Z"
+  },
+  {
+    "check": "Q-3802",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npm run typecheck",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "TS2833 in test/unit/hr-gb2-t47.test.tsx:96 (T-47 parallel task, not T-38); no errors in scan files",
+    "snapshot": "tree:f15e1fd9b4cebc5f099434f14fac0ad235891a8b",
+    "at": "2026-11-12T03:55:10.696Z"
+  },
+  {
+    "check": "Q-3803",
+    "kind": "a11y-audit",
+    "status": "PASS",
+    "ac": [
+      "AC-37",
+      "AC-40",
+      "AC-55",
+      "AC-56",
+      "AC-58",
+      "AC-62",
+      "AC-64",
+      "AC-66",
+      "AC-69"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read of src/components/scan/ScanHero.tsx ScanSide.tsx ScanView.tsx ScanParts.tsx + scan.css (no real SR; see code-review.part-6.md R-3803/R-3809/R-3810)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:f15e1fd9b4cebc5f099434f14fac0ad235891a8b",
+    "at": "2026-11-12T03:55:11.282Z"
+  },
+  {
+    "check": "Q-3301",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-11",
+      "AC-12",
+      "AC-13",
+      "AC-14",
+      "AC-35"
+    ],
+    "br": [
+      "BR-01",
+      "BR-02",
+      "BR-03",
+      "BR-04",
+      "BR-05",
+      "BR-06",
+      "BR-12"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/home- test/unit/hr-homecore-",
+    "artifact": "",
+    "expected": "",
+    "actual": "6 files 67 tests passed",
+    "reason": "",
+    "snapshot": "tree:fd36395b917022e08c2ea034b3a380c48fcf9f86",
+    "at": "2026-11-12T03:57:02.343Z"
+  },
+  {
+    "check": "Q-3302",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npm run typecheck (filter home)",
+    "artifact": "",
+    "expected": "",
+    "actual": "0 errors in home files; 1 error in hr-gb2-t47 (T-47)",
+    "reason": "",
+    "snapshot": "tree:f9d8427701f411f926b4013df8360471d3733413",
+    "at": "2026-11-12T03:57:13.473Z"
+  },
+  {
+    "check": "Q-3303",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-14"
+    ],
+    "br": [
+      "BR-01",
+      "BR-03",
+      "BR-04",
+      "BR-05",
+      "BR-06",
+      "BR-09"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code reading of homeLogic.ts todayList/roomStats/attSummary/followGroups/dueGroups + hr-homecore-logic tests",
+    "artifact": "",
+    "expected": "5->4, 88%, 94/90/92%, 30/22, 14",
+    "actual": "5->4, 88%, 94/90/92%, 30/22, 14",
+    "reason": "",
+    "snapshot": "tree:f9d8427701f411f926b4013df8360471d3733413",
+    "at": "2026-11-12T03:57:14.072Z"
+  },
+  {
+    "check": "Q-3304",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-34"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep hex/rgb/rgba/@import/transition/animation in src/styles/home.css",
+    "artifact": "",
+    "expected": "",
+    "actual": "none found",
+    "reason": "",
+    "snapshot": "tree:f9d8427701f411f926b4013df8360471d3733413",
+    "at": "2026-11-12T03:57:14.688Z"
+  },
+  {
+    "check": "Q-3305",
+    "kind": "pii-handling",
+    "status": "FAIL",
+    "ac": [
+      "AC-19",
+      "AC-15"
+    ],
+    "br": [
+      "BR-06"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read src/components/home/today.tsx:9-14 vs cards.tsx:204-208",
+    "artifact": "",
+    "expected": "copy per room",
+    "actual": "one text merges all rooms (R-3301)",
+    "reason": "",
+    "snapshot": "tree:f9d8427701f411f926b4013df8360471d3733413",
+    "at": "2026-11-12T03:57:15.311Z"
+  },
+  {
+    "check": "Q-4701",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-137",
+      "AC-139",
+      "AC-141",
+      "AC-142",
+      "AC-145",
+      "AC-146",
+      "AC-147"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-gb2- test/unit/hr-gb- test/unit/assignment-modal test/unit/gradebook- test/unit/hr-sweep-colors ; npm run typecheck",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:9f7da2d82e917a3c73247c12dadef9785b9a4b9a",
+    "at": "2026-11-12T04:02:48.865Z"
+  },
+  {
+    "check": "Q-4702",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-138",
+      "AC-143",
+      "AC-144"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: Dialog.tsx:24 focusable()[0] + ConfirmDialog.tsx:42 (x before no) + Gradebook.tsx:1168 (วันนี้ before ยกเลิก)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "focus แรกไม่ตกปุ่มปลอดภัย R-4701 R-4702",
+    "snapshot": "tree:9f7da2d82e917a3c73247c12dadef9785b9a4b9a",
+    "at": "2026-11-12T04:02:49.513Z"
+  },
+  {
+    "check": "Q-3901",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-72",
+      "AC-73",
+      "AC-74",
+      "AC-75"
+    ],
+    "br": [
+      "BR-13"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/scan- test/unit/c0 test/unit/m1-05 test/unit/hr-scan-summary test/unit/hr-sweep-colors",
+    "artifact": "",
+    "expected": "",
+    "actual": "255 pass / 2 fail (Home m1-05-screens, m1-05-verify1 — out of T-39 scope); all scan files pass",
+    "reason": "",
+    "snapshot": "tree:d5111f1ccdd1d14674b62ebc7df36325d4da0823",
+    "at": "2026-11-12T04:27:08.082Z"
+  },
+  {
+    "check": "Q-3902",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-72",
+      "AC-73",
+      "AC-74",
+      "AC-75"
+    ],
+    "br": [
+      "BR-14",
+      "BR-16"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-scan-summary-t39",
+    "artifact": "",
+    "expected": "",
+    "actual": "19/19 pass; gaps R-3901..R-3904 not covered",
+    "reason": "",
+    "snapshot": "tree:d5111f1ccdd1d14674b62ebc7df36325d4da0823",
+    "at": "2026-11-12T04:27:08.764Z"
+  },
+  {
+    "check": "Q-3903",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-72"
+    ],
+    "br": [
+      "BR-13"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "diff -w per function: git show HEAD:src/pages/Scan.tsx vs src/components/scan/state.ts (handleScan, commitStudent, submitTypedScore, enqueueRevertible, onResult, makeOp, undo, startSession)",
+    "artifact": "",
+    "expected": "",
+    "actual": "identical except export + T-38 parts",
+    "reason": "",
+    "snapshot": "tree:d5111f1ccdd1d14674b62ebc7df36325d4da0823",
+    "at": "2026-11-12T04:27:09.369Z"
+  },
+  {
+    "check": "Q-4901",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-154",
+      "AC-155",
+      "AC-156",
+      "AC-157",
+      "AC-159",
+      "AC-160",
+      "AC-161",
+      "AC-162",
+      "AC-163",
+      "AC-164",
+      "AC-169",
+      "AC-170"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-rp- test/unit/reports- test/unit/card-layout-reports test/unit/audit-reports test/unit/page-cards test/unit/swr-pages test/unit/hr-sweep-colors (8 files 90 passed)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:ce35825cd34a24d306506be9544ab9b5915a8331",
+    "at": "2026-11-12T04:28:18.895Z"
+  },
+  {
+    "check": "Q-4902",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-154"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -i report (no lines)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:ce35825cd34a24d306506be9544ab9b5915a8331",
+    "at": "2026-11-12T04:28:19.583Z"
+  },
+  {
+    "check": "Q-4903",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-175"
+    ],
+    "br": [
+      "BR-37",
+      "BR-40"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff --stat HEAD -- shared worker src/lib/reportExport.ts src/lib/excel.ts src/components/cards/meta.ts (empty); git diff HEAD -- src/lib/report.ts (additions only)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:ce35825cd34a24d306506be9544ab9b5915a8331",
+    "at": "2026-11-12T04:28:20.286Z"
+  },
+  {
+    "check": "Q-4904",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-154",
+      "AC-157",
+      "AC-161",
+      "AC-163",
+      "AC-164"
+    ],
+    "br": [
+      "BR-37",
+      "BR-38",
+      "BR-39",
+      "BR-40",
+      "BR-41"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code trace vs F-R8 + npx vitest run test/unit/hr-rp-t49",
+    "artifact": "",
+    "expected": "85%;4/2;71->72;90;awaiting 4->3;86/83/83/75;absent 5,8",
+    "actual": "85%;4/2;71->72;90;awaiting 4->3;86/83/83/75;absent 5,8",
+    "reason": "",
+    "snapshot": "tree:ce35825cd34a24d306506be9544ab9b5915a8331",
+    "at": "2026-11-12T04:28:20.927Z"
+  },
+  {
+    "check": "Q-4905",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-154",
+      "AC-156",
+      "AC-158",
+      "AC-161",
+      "AC-169",
+      "AC-173"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: ReportParts.tsx:179-183,213; Reports.tsx:194-205,229 (R-4901..R-4904)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:67f485822789b4c2f2140eddbe2d0039ad39e8a5",
+    "at": "2026-11-12T04:28:21.637Z"
+  },
+  {
+    "check": "Q-3401",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-17",
+      "AC-18",
+      "AC-19",
+      "AC-20",
+      "AC-21",
+      "AC-22",
+      "AC-23",
+      "AC-24"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-layout-a test/unit/hr-homecore- test/unit/hr-sweep-colors (63/64 ผ่าน; ล้ม 1 = hr-homecore-page R-3306 ผูกหัว Legacy 'งานที่กำลังเก็บ' ไม่ใช่ T-34; hr-layout-a 17/17 + hr-sweep-colors ผ่าน)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:12abe1cc716e480cb9782b6c84ca2214858c2337",
+    "at": "2026-11-12T04:39:14.716Z"
+  },
+  {
+    "check": "Q-3402",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-09",
+      "AC-17",
+      "AC-18",
+      "AC-19"
+    ],
+    "br": [
+      "BR-01",
+      "BR-03",
+      "BR-04",
+      "BR-06"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่านโค้ด a/** + homeLogic + ภาพ evidence/shots/t34-after/home-1536x729.png",
+    "artifact": "",
+    "expected": "5 อย่าง · มา 92% ยังเหลือ 1 ห้อง · ครบวันนี้ 1 งาน · รอตรวจ 30 · ค้าง 22 · 92/88/89% · ยังไม่ส่ง 14 คน",
+    "actual": "ตรงทุกค่า (hero/ชิป/การ์ด อ่านจาก model เดียว)",
+    "reason": "",
+    "snapshot": "tree:12abe1cc716e480cb9782b6c84ca2214858c2337",
+    "at": "2026-11-12T04:39:15.348Z"
+  },
+  {
+    "check": "Q-3403",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-37",
+      "AC-38",
+      "AC-39"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ตรวจโค้ดเท่านั้น: โหมดมืด/ธีมอื่น/VoiceOver/ส่วนใต้จอแรก ยังไม่มีภาพ · พบ .hm-cardhead .lk 32px บนคอม (R-3406)",
+    "snapshot": "tree:f90d5de653be792f17a883a2602ea4de949a1fe1",
+    "at": "2026-11-12T04:39:21.370Z"
+  },
+  {
+    "check": "Q-3501",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-25",
+      "AC-26",
+      "AC-27",
+      "AC-28",
+      "AC-29",
+      "AC-38",
+      "AC-39"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-layout-b test/unit/hr-sweep-colors",
+    "artifact": "",
+    "expected": "",
+    "actual": "2 files 45 tests passed",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:15.524Z"
+  },
+  {
+    "check": "Q-3502",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit 2>&1 | grep -i home",
+    "artifact": "",
+    "expected": "",
+    "actual": "no home errors",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:16.649Z"
+  },
+  {
+    "check": "Q-3503",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-25",
+      "AC-28"
+    ],
+    "br": [
+      "BR-03",
+      "BR-04"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read b/*.tsx + homeLogic.roomStats; hr-layout-b-ui.test.tsx",
+    "artifact": "",
+    "expected": "92/88/89%; 94/90/ยังไม่เช็ค; 92% ยังเหลือ 1 ห้อง; awaiting 30 missing 22",
+    "actual": "92/88/89%; 94/90/ยังไม่เช็ค; 92% ยังเหลือ 1 ห้อง; 30/22",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:17.600Z"
+  },
+  {
+    "check": "Q-3504",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-34",
+      "AC-40"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep -rn Legacy src/components/home/b; grep hex/rgb/transition src/styles/home-b.css",
+    "artifact": "",
+    "expected": "",
+    "actual": "no Legacy import; only #000 in mask-image; no undefined vars",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:18.669Z"
+  },
+  {
+    "check": "Q-3505",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-37"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "contrast calc tokens.css: --surface-2 on --fill-danger (home-b.css:36)",
+    "artifact": "",
+    "expected": ">=4.5:1 all 6 sets",
+    "actual": "playful light 3.21, warm light 4.48 (R-3501)",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:19.604Z"
+  },
+  {
+    "check": "Q-3506",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-39"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read home-b.css:87 vs base.css:181; Detail.tsx:78",
+    "artifact": "",
+    "expected": "",
+    "actual": "pressed panel focus ring overridden (R-3503); focus lost after ดูทั้งหมด (R-3505)",
+    "reason": "",
+    "snapshot": "tree:531a470db655b75421ec5d07068ecd8e857062bf",
+    "at": "2026-11-12T04:43:20.412Z"
+  },
+  {
+    "check": "Q-3601",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-30",
+      "AC-31",
+      "AC-32",
+      "AC-33"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-layout-c test/unit/hr-sweep-colors",
+    "artifact": "",
+    "expected": "",
+    "actual": "2 files 41/41 pass",
+    "reason": "",
+    "snapshot": "tree:44a00239c71dd82f56f7158e624ba4c679d0fef4",
+    "at": "2026-11-12T04:46:08.343Z"
+  },
+  {
+    "check": "Q-3602",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit 2>&1 | grep -i home",
+    "artifact": "",
+    "expected": "",
+    "actual": "no home errors",
+    "reason": "",
+    "snapshot": "tree:44a00239c71dd82f56f7158e624ba4c679d0fef4",
+    "at": "2026-11-12T04:46:09.611Z"
+  },
+  {
+    "check": "Q-3603",
+    "kind": "offline-replay",
+    "status": "PASS",
+    "ac": [
+      "AC-31"
+    ],
+    "br": [
+      "BR-02"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: pages/Home.tsx:38-41,65-70; c/index.tsx:175-181",
+    "artifact": "",
+    "expected": "",
+    "actual": "defer = in-memory per visit, reset on reload/term change, count unchanged (todayCount over withDeferred)",
+    "reason": "",
+    "snapshot": "tree:44a00239c71dd82f56f7158e624ba4c679d0fef4",
+    "at": "2026-11-12T04:46:10.757Z"
+  },
+  {
+    "check": "Q-3604",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-37",
+      "AC-38",
+      "AC-39"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "code read only; dark/other themes, --home-many, VoiceOver not run",
+    "snapshot": "tree:44a00239c71dd82f56f7158e624ba4c679d0fef4",
+    "at": "2026-11-12T04:46:16.975Z"
+  },
+  {
+    "check": "Q-5001",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-163",
+      "AC-166",
+      "AC-167",
+      "AC-168",
+      "AC-251"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-rp- test/unit/reports- test/unit/card-layout-reports test/unit/audit-reports test/unit/page-cards test/unit/swr-pages test/unit/hr-sweep-colors (9 files 104 passed first run; rerun: card-layout-reports-students 'Students layout' 6 fail = T-51 editing Students.tsx concurrently, Reports describe passes)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a8784dc3e70554440c91f9c13569ed7bc3bb5993",
+    "at": "2026-11-12T04:55:52.566Z"
+  },
+  {
+    "check": "Q-5002",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-171"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit 2>&1 | grep -i report (no lines, exit 1)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a8784dc3e70554440c91f9c13569ed7bc3bb5993",
+    "at": "2026-11-12T04:55:54.321Z"
+  },
+  {
+    "check": "Q-5003",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-168"
+    ],
+    "br": [
+      "BR-38"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff HEAD -- src/lib/report.ts (11 + lines = same as Q-4903) · mtime report.ts 11:07:52 reportView.ts 11:07:43 < T-49 review 11:28 · git diff report.css | grep new hex/rgb (none)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a8784dc3e70554440c91f9c13569ed7bc3bb5993",
+    "at": "2026-11-12T04:55:56.802Z"
+  },
+  {
+    "check": "Q-5004",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-165"
+    ],
+    "br": [
+      "BR-42"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep StudentDrawer src/pages/Reports.tsx:338 -> no hide prop passed; StudentDrawer.tsx (T-51, in progress) now accepts hide",
+    "artifact": "",
+    "expected": "drawer shows เลขที่ N when hidden",
+    "actual": "Reports does not pass hide -> full name in drawer h2/label",
+    "reason": "",
+    "snapshot": "tree:a8784dc3e70554440c91f9c13569ed7bc3bb5993",
+    "at": "2026-11-12T04:55:59.322Z"
+  },
+  {
+    "check": "Q-5005",
+    "kind": "regression",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-172",
+      "AC-174"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "AC-172 bottom sheets and kebab menu not built; AC-174 contrast not measured (dev-notes T-50)",
+    "snapshot": "tree:a8784dc3e70554440c91f9c13569ed7bc3bb5993",
+    "at": "2026-11-12T04:56:12.693Z"
+  },
+  {
+    "check": "Q-5101",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-176",
+      "AC-177",
+      "AC-178",
+      "AC-183",
+      "AC-184",
+      "AC-196",
+      "AC-197",
+      "AC-206"
+    ],
+    "br": [
+      "BR-44",
+      "BR-46"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-st- test/unit/students- test/unit/card-layout-reports test/unit/hr-rp- test/unit/reports- test/unit/m1-05-screens test/unit/hr-sweep-colors test/unit/hr-theme-icons",
+    "artifact": "",
+    "expected": "เทสต์ผ่านทั้งหมด",
+    "actual": "11 ไฟล์ 151/151 ผ่าน",
+    "reason": "",
+    "snapshot": "tree:7a8978c9edde917326936b84c002ce567efc6a72",
+    "at": "2026-11-12T05:16:11.696Z"
+  },
+  {
+    "check": "Q-5102",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-176"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit 2>&1 | grep -i -E 'student|drawer'",
+    "artifact": "",
+    "expected": "ไม่มี error ในไฟล์ students/drawer",
+    "actual": "0 บรรทัด (error เดียวของโปรเจกต์อยู่ที่ test/unit/projector.test.tsx:47 นอกขอบเขต)",
+    "reason": "",
+    "snapshot": "tree:aa138a25ee14dbf363caff374e5ac1cebbc1070d",
+    "at": "2026-11-12T05:16:13.951Z"
+  },
+  {
+    "check": "Q-5103",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-182",
+      "AC-179",
+      "AC-183"
+    ],
+    "br": [
+      "BR-46",
+      "BR-44"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่านโค้ด: src/app.tsx:139-149, src/pages/Students.tsx:47,54,305, src/components/StudentDrawer.tsx:80,166-167",
+    "artifact": "",
+    "expected": "[ไปห้องนี้] เปิดห้อง+ลิ้นชัก · ลิ้นชักไม่บอกส่งครบเมื่อไม่มีสถิติ",
+    "actual": "R-5101 ปุ่มไม่เปลี่ยนห้อง (state อ่าน params ตอน mount เท่านั้น) · R-5102 ลิ้นชักเด็กห้องอื่นขึ้น ส่งงานครบ",
+    "reason": "",
+    "snapshot": "tree:aa138a25ee14dbf363caff374e5ac1cebbc1070d",
+    "at": "2026-11-12T05:16:15.384Z"
+  },
+  {
+    "check": "Q-5104",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-205",
+      "AC-203"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "reviewer ไม่ได้เปิดภาพ/pane; ภาพ 4 อุปกรณ์และ a11y เชิงลึกเป็นของ QA/Gate V",
+    "snapshot": "tree:aa138a25ee14dbf363caff374e5ac1cebbc1070d",
+    "at": "2026-11-12T05:16:16.684Z"
+  },
+  {
+    "check": "Q-5301",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35",
+      "AC-207",
+      "AC-210",
+      "AC-213",
+      "AC-214",
+      "AC-215",
+      "AC-223",
+      "AC-248",
+      "AC-249"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg- test/unit/settings- test/unit/hr-appearance- test/unit/hr-sweep-colors test/unit/hr-theme-icons (8 files, 92 tests passed)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:6517ecc4f69e60bdf892aefbc3e5bfe8ca4c5a1c",
+    "at": "2026-11-12T05:23:55.196Z"
+  },
+  {
+    "check": "Q-5302",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-249"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -i setting -> test/unit/hr-sg-settings-shell.test.tsx(4,10) TS6133 'act' unused",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:6517ecc4f69e60bdf892aefbc3e5bfe8ca4c5a1c",
+    "at": "2026-11-12T05:23:55.834Z"
+  },
+  {
+    "check": "Q-4001",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35",
+      "AC-76",
+      "AC-77",
+      "AC-78"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-scan- test/unit/scan- test/unit/c0 test/unit/m1-05 test/unit/projector test/unit/hr-sweep-colors",
+    "artifact": "",
+    "expected": "",
+    "actual": "26 files / 281 tests passed",
+    "reason": "",
+    "snapshot": "tree:8e68fb78ae37df4e2c361b39b1b37573fd826467",
+    "at": "2026-11-12T05:26:52.038Z"
+  },
+  {
+    "check": "Q-4002",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [
+      "BR-13"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "diff -w <(git show HEAD:src/pages/Scan.tsx | sed -n 299,720p) <(sed -n 290,661p src/components/scan/state.ts)",
+    "artifact": "",
+    "expected": "",
+    "actual": "makeOp ต่างแค่ export + const opId/opMethods.set (payload เท่าเดิม); T-40 แตะแค่ข้อความ undoToast + hidLog.who; ไม่มีการเปลี่ยน enqueue/outbox/resolveScan/beep",
+    "reason": "",
+    "snapshot": "tree:8e68fb78ae37df4e2c361b39b1b37573fd826467",
+    "at": "2026-11-12T05:26:52.680Z"
+  },
+  {
+    "check": "Q-4003",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -i -E 'scan|projector'",
+    "artifact": "",
+    "expected": "",
+    "actual": "0 บรรทัด (error เดียวที่เหลือ hr-sg-settings-shell.test.tsx ไม่ใช่ของ T-40)",
+    "reason": "",
+    "snapshot": "tree:8e68fb78ae37df4e2c361b39b1b37573fd826467",
+    "at": "2026-11-12T05:26:53.290Z"
+  },
+  {
+    "check": "Q-4004",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-78",
+      "AC-80"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "อ่าน src/styles/scan.css:116-117,132,179,182 + src/lib/display.ts:6-10",
+    "artifact": "",
+    "expected": "ชื่อการ์ดผล >= 28px; เลิกทำ/แป้นคะแนน >= 56px",
+    "actual": ".fb .name 1.25rem = 20px (คอม 16) / 22.5px (สัมผัส 18); .fb-undo 44px; แป้นคะแนน pointer:fine 3.4rem = 54.4px",
+    "reason": "",
+    "snapshot": "tree:8e68fb78ae37df4e2c361b39b1b37573fd826467",
+    "at": "2026-11-12T05:26:53.910Z"
+  },
+  {
+    "check": "Q-4005",
+    "kind": "pii-handling",
+    "status": "PASS",
+    "ac": [
+      "AC-77",
+      "AC-76"
+    ],
+    "br": [
+      "BR-18"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep fullName/shortName ใน src/components/scan/*.tsx + อ่านทุกจุด",
+    "artifact": "",
+    "expected": "",
+    "actual": "ทุกจุด render ที่มีชื่อผูกกับ scanHiding(); จอฉายอ่าน pjHideNames อย่างเดียว; เหลือข้อความ snapshot (hidLog, toast เลิกทำ) ไม่ตามสวิตช์ที่เปิดทีหลัง = R-4003",
+    "reason": "",
+    "snapshot": "tree:8e68fb78ae37df4e2c361b39b1b37573fd826467",
+    "at": "2026-11-12T05:26:54.526Z"
+  },
+  {
+    "check": "Q-4801",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-130",
+      "AC-131",
+      "AC-148",
+      "AC-149",
+      "AC-152"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-gb test/unit/gradebook- test/unit/qa-gb- test/unit/page-cards test/unit/hr-sweep-colors (22 files 195 passed) + npx tsc --noEmit (0 errors)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:7c1e73ad24a551501722a6ef1920a350b4c5d9cd",
+    "at": "2026-11-12T05:42:47.493Z"
+  },
+  {
+    "check": "Q-4802",
+    "kind": "pii-handling",
+    "status": "PASS",
+    "ac": [
+      "AC-148"
+    ],
+    "br": [
+      "BR-36"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: nameOf/whoOf (Gradebook.tsx:186-189), fullName( only at :1081 guarded by hide and GradebookCards.tsx:98 copy (button disabled when hide)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:7c1e73ad24a551501722a6ef1920a350b4c5d9cd",
+    "at": "2026-11-12T05:42:48.318Z"
+  },
+  {
+    "check": "Q-4803",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-152"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: grouped mode tabIndex=0 on th.sumcol (Gradebook.tsx:1032), td.sumc (:1095), button.gh-btn -> many Tab stops; td role=rowheader (:1079) not th scope=row",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:7c1e73ad24a551501722a6ef1920a350b4c5d9cd",
+    "at": "2026-11-12T05:42:49.104Z"
+  },
+  {
+    "check": "Q-5201",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-186",
+      "AC-187",
+      "AC-188",
+      "AC-189",
+      "AC-190",
+      "AC-191",
+      "AC-194",
+      "AC-195",
+      "AC-206"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-st test/unit/students- test/unit/audit-student-import test/unit/import-parse test/unit/card-layout-reports test/unit/hr-rp- test/unit/hr-sweep-colors test/unit/hr-theme-icons (11 files 164/164)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:21.728Z"
+  },
+  {
+    "check": "Q-5202",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-206"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -i -E 'student|import' (no lines)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:22.716Z"
+  },
+  {
+    "check": "Q-5203",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-191",
+      "AC-206"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff HEAD -- test/unit/students-round3.test.tsx (ST-S18 label only, assertion kept)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:23.583Z"
+  },
+  {
+    "check": "Q-5204",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-186",
+      "AC-190"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read: Students.tsx:403,408,520 + StudentDrawer.tsx:55 + StudentParts.tsx:164 (R-5201)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:24.350Z"
+  },
+  {
+    "check": "Q-5205",
+    "kind": "perf-measure",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-203"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "real touch device / pointer:coarse not available; dev values simulated",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:25.149Z"
+  },
+  {
+    "check": "Q-5206",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-195",
+      "AC-204"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "grep .ph-download/.ph-funnel in @phosphor-icons/web bold css",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:a3a77b3f0bed115cccbd3451256cb959516e636d",
+    "at": "2026-11-12T05:50:26.074Z"
+  },
+  {
+    "check": "Q-4301",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-34",
+      "AC-35",
+      "AC-37",
+      "AC-40",
+      "AC-96",
+      "AC-99",
+      "AC-101",
+      "AC-102",
+      "AC-103",
+      "AC-105"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/attendance- test/unit/hr-att test/unit/page-cards test/unit/hr-sweep-colors test/unit/random test/unit/hr-rndclass (137/137)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:54e1a96480ee8a96d5261f67900447ed21987378",
+    "at": "2026-11-12T05:52:20.548Z"
+  },
+  {
+    "check": "Q-4304",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-81",
+      "AC-82"
+    ],
+    "br": [
+      "BR-19"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff -w -U0 -- src/pages/Attendance.tsx (applyEdits/statusOf/counts unchanged)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:54e1a96480ee8a96d5261f67900447ed21987378",
+    "at": "2026-11-12T05:52:22.999Z"
+  },
+  {
+    "check": "Q-4305",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-102"
+    ],
+    "br": [
+      "BR-19"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read Random.tsx:78-96 vs Attendance.tsx:707 (R-4301)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:54e1a96480ee8a96d5261f67900447ed21987378",
+    "at": "2026-11-12T05:52:25.681Z"
+  },
+  {
+    "check": "Q-4306",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-104",
+      "AC-106"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read shell.css:159,184 vs attend.css:286,237 (R-4304,R-4305)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:54e1a96480ee8a96d5261f67900447ed21987378",
+    "at": "2026-11-12T05:52:27.756Z"
+  },
+  {
+    "check": "Q-4307",
+    "kind": "a11y-audit",
+    "status": "FAIL",
+    "ac": [
+      "AC-104"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "view t43-after 390/1536 shots (R-4302)",
+    "artifact": "evidence/shots/t43-after/attendance-1536x729.png",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:54e1a96480ee8a96d5261f67900447ed21987378",
+    "at": "2026-11-12T05:52:28.940Z"
+  },
+  {
+    "check": "Q-4308",
+    "kind": "pii-handling",
+    "status": "FAIL",
+    "ac": [
+      "AC-101"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "read Attendance.tsx:287,372,390 + notify.ts dismiss (R-4303)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:ce7f89a94ec1641c3ca62431db6b69fc7709d85e",
+    "at": "2026-11-12T05:52:30.177Z"
+  },
+  {
+    "check": "Q-5401",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35",
+      "AC-207",
+      "AC-222",
+      "AC-226",
+      "AC-227",
+      "AC-228",
+      "AC-229",
+      "AC-230",
+      "AC-231",
+      "AC-233",
+      "AC-234"
+    ],
+    "br": [
+      "BR-54"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg test/unit/settings- test/unit/catalog- test/unit/hr-appearance- test/unit/hr-sweep-colors test/unit/hr-theme-icons",
+    "artifact": "",
+    "expected": "",
+    "actual": "10 files 140 passed",
+    "reason": "",
+    "snapshot": "tree:5bbc0ebfeea49bd42f812b8b1a68d875ecec25ff",
+    "at": "2026-11-12T06:12:14.343Z"
+  },
+  {
+    "check": "Q-5402",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-35"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit",
+    "artifact": "",
+    "expected": "",
+    "actual": "rc=0 no errors",
+    "reason": "",
+    "snapshot": "tree:5bbc0ebfeea49bd42f812b8b1a68d875ecec25ff",
+    "at": "2026-11-12T06:12:15.144Z"
+  },
+  {
+    "check": "Q-5403",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-232"
+    ],
+    "br": [
+      "BR-59"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "scratchpad probe sure.test.tsx (StartTermModal tick 2/2569 then switch to 1/2570)",
+    "artifact": "",
+    "expected": "checkbox reset, start disabled",
+    "actual": "checked=true disabled=false",
+    "reason": "",
+    "snapshot": "tree:5bbc0ebfeea49bd42f812b8b1a68d875ecec25ff",
+    "at": "2026-11-12T06:12:15.946Z"
+  },
+  {
+    "check": "Q-5405",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-228",
+      "AC-231"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "scratchpad probe focus.test.tsx",
+    "artifact": "",
+    "expected": "focus on a row/heading",
+    "actual": "activeElement=BODY",
+    "reason": "",
+    "snapshot": "tree:5bbc0ebfeea49bd42f812b8b1a68d875ecec25ff",
+    "at": "2026-11-12T06:12:16.699Z"
+  },
+  {
+    "check": "Q-5404",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-226",
+      "AC-234"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "scratchpad probe probe.test.tsx (projector read-only + offline/online)",
+    "artifact": "",
+    "expected": "",
+    "actual": "all write buttons disabled, 0 POST",
+    "reason": "",
+    "snapshot": "tree:5bbc0ebfeea49bd42f812b8b1a68d875ecec25ff",
+    "at": "2026-11-12T06:12:17.492Z"
+  },
+  {
+    "check": "Q-5501",
+    "kind": "regression",
+    "status": "FAIL",
+    "ac": [
+      "AC-235",
+      "AC-236",
+      "AC-237",
+      "AC-238"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg3 test/unit/hr-sg-settings test/unit/settings- test/unit/device-check test/unit/hr-theme-hide test/unit/hr-theme-icons test/unit/hr-sweep-colors",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "138/140 ผ่าน · 2 ข้อล้มใน hr-sweep-colors เป็น .rnd-* (random.css ของ T-44) ไม่ใช่ T-55",
+    "snapshot": "tree:5738f30c3f1b380ea4e84433d75159aec53d5046",
+    "at": "2026-11-12T06:18:45.870Z"
+  },
+  {
+    "check": "Q-5502",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-235"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:5738f30c3f1b380ea4e84433d75159aec53d5046",
+    "at": "2026-11-12T06:18:46.607Z"
+  },
+  {
+    "check": "Q-5601",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-239",
+      "AC-240",
+      "AC-241",
+      "AC-242",
+      "AC-243",
+      "AC-244",
+      "AC-245"
+    ],
+    "br": [
+      "BR-58",
+      "BR-59"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg test/unit/settings- test/unit/audit-dialog test/unit/sec-backup-warning test/unit/hr-sweep-colors test/unit/hr-theme-icons",
+    "artifact": "",
+    "expected": "",
+    "actual": "12 files 174 passed",
+    "reason": "",
+    "snapshot": "tree:de3911d9f3d8792efdfde52845aa825c21d93f3c",
+    "at": "2026-11-12T06:22:06.483Z"
+  },
+  {
+    "check": "Q-5602",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-245"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx tsc --noEmit | grep -iE setting|restore|reset|audit|account|danger",
+    "artifact": "",
+    "expected": "",
+    "actual": "0 errors",
+    "reason": "",
+    "snapshot": "tree:de3911d9f3d8792efdfde52845aa825c21d93f3c",
+    "at": "2026-11-12T06:22:09.124Z"
+  },
+  {
+    "check": "Q-4401",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-107",
+      "AC-110",
+      "AC-112",
+      "AC-113",
+      "AC-115",
+      "AC-117",
+      "AC-118"
+    ],
+    "br": [
+      "BR-24",
+      "BR-25",
+      "BR-28"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/random test/unit/hr-random test/unit/hr-rndclass test/unit/hr-sweep-colors test/unit/hr-theme-icons test/unit/page-cards",
+    "artifact": "",
+    "expected": "",
+    "actual": "8 files 89/89 passed",
+    "reason": "",
+    "snapshot": "tree:321b0f40dd1469f1c988a90a49c53b994761ab3a",
+    "at": "2026-11-12T06:26:56.322Z"
+  },
+  {
+    "check": "Q-4402",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-110",
+      "AC-112"
+    ],
+    "br": [
+      "BR-25"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff -w --quiet -- src/lib/random.ts; git diff -- src/lib/sound.ts; npx tsc --noEmit | grep -i -E 'random|sound'",
+    "artifact": "",
+    "expected": "",
+    "actual": "random.ts no diff; sound.ts +17 additions only; tsc no random/sound errors",
+    "reason": "",
+    "snapshot": "tree:321b0f40dd1469f1c988a90a49c53b994761ab3a",
+    "at": "2026-11-12T06:26:56.948Z"
+  },
+  {
+    "check": "Q-4403",
+    "kind": "expected-from-br",
+    "status": "PASS",
+    "ac": [
+      "AC-113"
+    ],
+    "br": [
+      "BR-24"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "code read src/components/random/model.ts:22-27",
+    "artifact": "",
+    "expected": "N=41 m=24 n=17 pct=41",
+    "actual": "roundCounts: N=pool.length, m=remainingInRound, n=N-m, percentOf(17,41)=41",
+    "reason": "",
+    "snapshot": "tree:321b0f40dd1469f1c988a90a49c53b994761ab3a",
+    "at": "2026-11-12T06:26:57.581Z"
+  },
+  {
+    "check": "Q-4404",
+    "kind": "offline-replay",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-112",
+      "AC-108"
+    ],
+    "br": [
+      "BR-27"
+    ],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "R-4401: reset-undo after room change not tested; found by code read",
+    "snapshot": "tree:321b0f40dd1469f1c988a90a49c53b994761ab3a",
+    "at": "2026-11-12T06:27:04.947Z"
+  },
+  {
+    "check": "Q-4405",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-110",
+      "AC-114",
+      "AC-115"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "real-device sound (R-4405) and stage timer ring visual (R-4402) not observed",
+    "snapshot": "tree:321b0f40dd1469f1c988a90a49c53b994761ab3a",
+    "at": "2026-11-12T06:27:05.579Z"
+  },
+  {
+    "check": "Q-6701",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-179",
+      "AC-195",
+      "AC-200",
+      "AC-203",
+      "AC-204"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-st test/unit/students- ... hr-rp- (12 files 183/183)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:33:32.225Z"
+  },
+  {
+    "check": "Q-6801",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-211"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run (รวม hr-term-chip-t68, hr-layout-a-ui, home-ui) + npx tsc --noEmit (0 error)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:33:33.547Z"
+  },
+  {
+    "check": "Q-6702",
+    "kind": "offline-replay",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-195"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "อ่านโค้ด: dynamic import exceljs + sw-precache walk ทั้ง dist -> chunk ถูก precache; ไม่ได้ build/ทดสอบในเบราว์เซอร์จริง",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:33:39.363Z"
+  },
+  {
+    "check": "Q-6802",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-211"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "ไม่ได้วัดหัวหน้าสมุดคะแนน/สแกน บน iPad ตั้ง/มือถือ coarse หลังชิปกว้างขึ้น",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:33:40.005Z"
+  },
+  {
+    "check": "Q-4501",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-119",
+      "AC-120",
+      "AC-121",
+      "AC-123"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/random test/unit/hr-random test/unit/hr-rndclass test/unit/page-cards test/unit/hr-sweep-colors test/unit/hr-theme-icons test/unit/hr-sg3 (10 files 121/121) + tsc grep empty",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:34:42.994Z"
+  },
+  {
+    "check": "Q-4502",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-119",
+      "AC-120"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "git diff -w --stat -- src/lib/random.ts (empty)",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:34:43.632Z"
+  },
+  {
+    "check": "Q-4503",
+    "kind": "a11y-audit",
+    "status": "NOT RUN",
+    "ac": [
+      "AC-122",
+      "AC-124"
+    ],
+    "br": [],
+    "by": "team-code-reviewer",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "",
+    "actual": "",
+    "reason": "reviewer read-only: iPad portrait after, dark/other themes, TV at 1536/1180/390, phone long names not captured; R-4501/R-4502 need screenshots",
+    "snapshot": "tree:2c2f976fafcfc39f306fa0dcb6f199b90d36bb98",
+    "at": "2026-11-12T08:34:44.288Z"
+  }
+]

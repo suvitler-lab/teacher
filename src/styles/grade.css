@@ -45,14 +45,14 @@ table.gb thead th.col-w.closed .ht { color: var(--text-secondary); }
 table.gb thead th .hs > span { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 table.gb thead th .hs { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; display: flex; align-items: center; justify-content: flex-start; margin-top: 2px; padding-bottom: 5px; white-space: nowrap; overflow: hidden; }
 table.gb thead th.sumcol .hs { justify-content: center; margin: 0; padding: 0; }
-table.gb thead th .hbar { height: 5px; margin: 0 -0.35rem; background: rgba(255, 255, 255, 0.7); background: color-mix(in srgb, var(--surface-2) 70%, transparent); overflow: hidden; }
+table.gb thead th .hbar { height: 5px; margin: 0 -0.35rem; background: color-mix(in srgb, var(--surface-2) 70%, transparent); overflow: hidden; }
 table.gb thead th .hbar > div { height: 100%; background: var(--f, var(--fill-success)); }
 /* the corner: closed lock above the eye. The eye of a column that shows its scores appears only on the picked column; one that hides them always shows (crossed eye). */
 table.gb thead th .hd-corner { position: absolute; top: 2px; right: 2px; display: flex; flex-direction: column; align-items: center; gap: 2px; width: 24px; }
 table.gb thead th .hd-lock { display: block; width: 16px; text-align: center; }
 table.gb thead th .hs-eye { display: none; position: relative; align-items: center; justify-content: center; height: 24px; width: 24px; min-width: 0; min-height: 0; padding: 0; border: none; background: transparent; color: inherit; cursor: pointer; border-radius: 6px; }
 table.gb thead th.sel .hs-eye, table.gb thead th .hs-eye.off { display: inline-flex; }
-table.gb thead th .hs-eye:hover { background: rgba(255, 255, 255, 0.6); }
+table.gb thead th .hs-eye:hover { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
 table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
 /* touch: the eye's tappable box grows to a full 44px square (it hangs over the corner and the title's end, which is only a bigger tap target) */
 @media (pointer: coarse) {
@@ -62,10 +62,10 @@ table.gb thead th .hs-eye[aria-busy="true"] { opacity: 0.45; }
 }
 
 /* left: number + name */
-table.gb .name-col { box-sizing: border-box; text-align: left; padding: 0 0.6rem; position: sticky; left: 0; z-index: 3; width: var(--gb-name-w); min-width: var(--gb-name-w); max-width: var(--gb-name-w); overflow: hidden; text-overflow: ellipsis; border-right: 0.5px solid var(--border-strong); box-shadow: 6px 0 6px -6px rgba(20, 28, 46, 0.25); }
+table.gb .name-col { box-sizing: border-box; text-align: left; padding: 0 0.6rem; position: sticky; left: 0; z-index: 3; width: var(--gb-name-w); min-width: var(--gb-name-w); max-width: var(--gb-name-w); overflow: hidden; text-overflow: ellipsis; border-right: 0.5px solid var(--border-strong); box-shadow: 6px 0 6px -6px color-mix(in srgb, var(--ink) 25%, transparent); }
 table.gb thead .name-col { z-index: 6; background: var(--surface-1); vertical-align: middle; }
 /* right: สะสม */
-table.gb .tot-col { position: sticky; right: 0; z-index: 3; box-sizing: border-box; width: var(--gb-tot-w); min-width: var(--gb-tot-w); max-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px rgba(20, 28, 46, 0.25); font-variant-numeric: tabular-nums; }
+table.gb .tot-col { position: sticky; right: 0; z-index: 3; box-sizing: border-box; width: var(--gb-tot-w); min-width: var(--gb-tot-w); max-width: var(--gb-tot-w); border-left: 0.5px solid var(--border-strong); box-shadow: -6px 0 6px -6px color-mix(in srgb, var(--ink) 25%, transparent); font-variant-numeric: tabular-nums; }
 table.gb thead .tot-col { z-index: 6; background: var(--surface-1); vertical-align: middle; border-top: 4px solid var(--text-muted); }
 table.gb thead .gh-tot { border-top: 4px solid var(--text-muted); vertical-align: middle; border-bottom: 0.5px solid var(--border-strong); }
 
@@ -116,8 +116,8 @@ table.gb input.cell-input { width: 3.07rem; height: 2.4rem; text-align: center; 
 /* gb-1b: edge shadows, one-column-at-a-time scrolling, minimap + jump buttons, column picker */
 .gb-frame { position: relative; --gb-name-w: clamp(12rem, 16vw, 16rem); --gb-col-w: 7.6rem; --gb-tot-w: 5.2rem; --gb-gh: max(var(--tap), 2.4rem); }
 .gb-frame::before, .gb-frame::after { content: ""; position: absolute; top: 0; bottom: 0; width: 1.1rem; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 7; }
-.gb-frame::before { left: var(--gb-name-w); background: linear-gradient(to right, rgba(20, 28, 46, 0.22), transparent); }
-.gb-frame::after { right: var(--gb-tot-w); background: linear-gradient(to left, rgba(20, 28, 46, 0.22), transparent); }
+.gb-frame::before { left: var(--gb-name-w); background: linear-gradient(to right, color-mix(in srgb, var(--ink) 22%, transparent), transparent); }
+.gb-frame::after { right: var(--gb-tot-w); background: linear-gradient(to left, color-mix(in srgb, var(--ink) 22%, transparent), transparent); }
 .gb-frame.no-tot::after { right: 0; }
 .gb-frame.can-l::before, .gb-frame.can-r::after { opacity: 1; }
 .gb-frame .gb-scroll { scroll-snap-type: x mandatory; scroll-padding-left: var(--gb-name-w); scroll-padding-right: var(--gb-tot-w); }
@@ -272,7 +272,7 @@ td.cell { position: relative; }
 .gb-toolbar { min-height: var(--tap); }
 .gb-toolbar .seg button { min-height: var(--tap); }
 @media (hover: hover) and (pointer: fine) { .gb-toolbar .seg button, .gb-toolbar button { min-height: 2.5rem; } }
-.gb-scrim { position: fixed; inset: 0; z-index: 59; background: rgba(0, 0, 0, 0.35); }
+.gb-scrim { position: fixed; inset: 0; z-index: 59; background: color-mix(in srgb, var(--ink) 35%, transparent); }
 .gb-filter .gb-checks { display: flex; flex-wrap: wrap; gap: 6px; }
 .gb-filter .gb-checks button { min-height: var(--tap); gap: 6px; border: 1.5px solid var(--border-control); background: var(--surface-2); font-size: var(--fs-sm); }
 .gb-filter .gb-checks button.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
@@ -311,3 +311,263 @@ table.gb thead th .hs .over, table.gb thead th .hs .over .hs-cal { color: var(--
 /* "ส่งออก Excel" in the toolbar: 44px target; up to 900px (iPad upright, phones) the label folds away so the toolbar stays on one row (aria-label + title keep the name) */
 .gb-toolbar .gb-export { min-height: var(--tap, 44px); min-width: var(--tap, 44px); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin-left: auto; }
 @media (max-width: 900px) { .gb-toolbar .gb-export { padding: 0 11px; } .gb-toolbar .gb-export .gb-export-lbl { display: none; } }
+
+/* ---- redesign (T-46): hero band · 6-part bar · side drawer · total with percent ---- */
+.gbh {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "t n a" "p p p"; gap: 6px 16px; align-items: center;
+  background: var(--hero-bg); color: var(--hero-fg); border-radius: var(--radius-hero, var(--radius)); padding: 8px 10px 8px 18px; margin-bottom: 8px;
+}
+.gbh-t { grid-area: t; min-width: 0; display: flex; align-items: baseline; gap: 2px 12px; flex-wrap: wrap; }
+.gbh-h { font-family: var(--font-display); font-weight: var(--display-weight, 600); font-size: 1.25rem; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; color: inherit; }
+.gbh-k { background: var(--hero-bg); font-size: var(--fs-xs); font-weight: 600; color: var(--hero-muted); white-space: nowrap; }
+.gbh-n { grid-area: n; display: flex; align-items: center; gap: 8px; }
+.gbh-big { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap, 44px); padding: 0 12px 0 10px; border-radius: var(--radius); border: 1.5px solid color-mix(in srgb, var(--hero-fg) 40%, transparent); background: var(--hero-bg); color: var(--hero-fg); line-height: 1; }
+.gbh-big .num { font-family: var(--font-num, inherit); font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.gbh-big small { font-size: var(--fs-xs); font-weight: 700; }
+.gbh-big[aria-pressed="true"] { background: var(--hero-fg); color: var(--hero-bg); border-color: var(--hero-fg); }
+.gbh-big:disabled { cursor: default; opacity: 0.8; }
+.gbh-sm { display: inline-flex; flex-direction: column-reverse; line-height: 1.2; padding: 0 8px; border-left: 1.5px solid color-mix(in srgb, var(--hero-fg) 30%, transparent); }
+.gbh-sm b { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.gbh-sm small { background: var(--hero-bg); font-size: var(--fs-xs); font-weight: 600; color: var(--hero-muted); white-space: nowrap; }
+.gbh-a { grid-area: a; display: flex; align-items: center; gap: 8px; justify-content: flex-end; min-width: 0; }
+.gbh-pill { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap, 44px); padding: 0 12px; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--hero-fg) 40%, transparent); background: var(--hero-bg); color: var(--hero-fg); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
+.gbh-pill .sht { display: none; }
+.gbh-off { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: var(--bg-warning); color: var(--text-warning); font-size: var(--fs-xs); font-weight: 600; }
+.gbh-p { grid-area: p; display: flex; align-items: center; gap: 4px 14px; min-width: 0; flex-wrap: wrap; background: var(--surface-2); color: var(--text-primary); border-radius: var(--radius-sm); padding: 3px 10px; min-height: 28px; }
+.gbh-bar { display: flex; gap: 2px; height: 10px; flex: 1 1 100px; min-width: 90px; max-width: 360px; border-radius: 5px; overflow: hidden; background: var(--surface-1); }
+.gbh-bar i { display: block; min-width: 3px; background: var(--gf); }
+.gl-scored { --gf: var(--fill-success); } .gl-late { --gf: var(--fill-warning); } .gl-awaiting { --gf: var(--accent); }
+.gl-missing { --gf: var(--fill-danger); } .gl-excused { --gf: var(--text-muted); }
+.gl-pending { --gf: repeating-linear-gradient(135deg, var(--text-muted) 0 2px, transparent 2px 5px); }
+.gbh-leg { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 10px; font-size: var(--fs-xs); font-weight: 600; line-height: 1.4; }
+.gbh-leg li { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.gbh-leg .sw { width: 12px; height: 12px; border-radius: 3px; background: var(--gf); box-shadow: inset 0 0 0 1px var(--text-secondary); flex: none; }
+.gbh-leg .tot { color: var(--text-secondary); }
+@media (max-width: 900px) {
+  .gbh { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "t a" "n p"; padding: 5px 8px 5px 14px; gap: 5px 12px; }
+  .gbh-p { flex-direction: column; align-items: stretch; gap: 3px; padding: 3px 8px; }
+  .gbh-bar { max-width: none; flex: none; }
+  .gbh-pill .lng { display: none; } .gbh-pill .sht { display: inline; }
+  .gbh-k { display: none; }
+}
+@media (pointer: coarse) and (max-width: 1400px) { .gbh-pill .lng { display: none; } .gbh-pill .sht { display: inline; } .gbh-k { display: none; } .gbh-big .num { font-size: 1.5rem; } }
+@media (max-width: 560px) {
+  .gbh { grid-template-columns: 1fr; grid-template-areas: "t" "n" "p" "a"; padding: 12px 14px; }
+  .gbh-n { flex-wrap: wrap; } .gbh-a { justify-content: flex-start; flex-wrap: wrap; }
+}
+.hide-btn[aria-pressed="true"] { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
+.gb-hidebar { margin: 0 0 8px; }
+
+/* total column: score/full over the percent (the column keeps its width) */
+table.gb td.tot-col .tot-pct { display: block; font-size: var(--fs-xs); line-height: 1.1; color: var(--text-secondary); font-weight: 600; }
+table.gb td.tot-col { line-height: 1.15; }
+
+.gb-fnote { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: var(--fs-sm); font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.ce-note.fail { background: var(--bg-danger); color: var(--text-danger); }
+
+/* the side drawer: right 360px on a wide screen · a sheet from the bottom on a narrow one */
+.gb-drawer-scrim { position: fixed; inset: 0; z-index: 120; background: color-mix(in srgb, var(--ink) 35%, transparent); display: flex; justify-content: flex-end; }
+.gb-drawer { width: min(360px, 100%); height: 100%; overflow-y: auto; background: var(--surface-0, var(--surface-2)); border-left: 0.5px solid var(--border); box-shadow: var(--shadow-pop); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.gb-drawer.btm { width: 100%; height: auto; max-height: 72dvh; align-self: flex-end; border-left: 0; border-top: 0.5px solid var(--border); border-radius: 16px 16px 0 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.gd-head { display: flex; align-items: center; gap: 8px; } .gd-head h2 { flex: 1; font-size: 1.25rem; margin: 0; }
+.gd-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; flex: none; }
+.gd-h { display: flex; align-items: center; gap: 6px; font-size: var(--fs-md, 1rem); margin: 0; }
+.gd-n { margin-left: auto; font-variant-numeric: tabular-nums; }
+.gd-tt { font-weight: 700; overflow-wrap: anywhere; }
+.gd-dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; font-size: var(--fs-sm); } .gd-dl dt { color: var(--text-secondary); font-weight: 600; } .gd-dl dd { margin: 0; }
+.gd-card .gb-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
+.gd-card .gb-legend > span { display: flex; align-items: center; gap: 8px; }
+
+/* T-46: the picked-work bar stays ONE line (≤ 48px) on a wide screen: the title shrinks (…), the buttons never wrap */
+.gb-wb button { white-space: nowrap; }
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  .gb-w1 { flex-wrap: nowrap; overflow: hidden; }
+  .gb-wl { flex-wrap: nowrap; min-width: 0; flex: 0 1 auto; }
+  .gb-wn { flex-wrap: nowrap; flex: none; white-space: nowrap; }
+  .gb-work { padding: 2px 8px 2px 12px; min-height: 0; margin-bottom: 6px; }
+  .gb-wb button { padding: 0 10px; }
+  .gb-wb .icon { padding: 0; }
+}
+
+/* T-46: iPad upright / narrow — hero ≤ 120px (two rows), picked-work bar ≤ 88px (two lines) */
+.gbh-big small { white-space: nowrap; }
+@media (max-width: 900px) {
+  .gbh { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "t a" "n p"; align-items: center; }
+  .gbh-t { grid-area: t; } .gbh-h { font-size: 1.1rem; }
+  .gbh-a { grid-area: a; }
+  .gbh-p { flex-direction: row; align-items: center; flex-wrap: wrap; padding: 3px 8px; gap: 3px 8px; }
+  .gbh-bar { flex: 1 1 100%; max-width: none; height: 8px; }
+  .gbh-leg { display: grid; grid-template-columns: repeat(3, auto); gap: 0 10px; line-height: 1.3; }
+  .gbh-leg .tot { display: none; }
+  .gbh-big { padding: 0 8px; } .gbh-big .num { font-size: 1.4rem; } .gbh-sm b { font-size: 1.1rem; }
+  .gb-work { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 4px 10px; }
+  .gb-w1 { display: contents; }
+  .gb-wl { flex: 1 1 100%; flex-wrap: nowrap; overflow: hidden; }
+  .gb-wn { flex: 1 1 auto; flex-wrap: nowrap; gap: 6px; }
+  .gb-wb { margin-left: auto; flex-wrap: nowrap; }
+}
+@media (max-width: 900px) and (min-width: 561px) {
+  .gbh { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "t n a" "p p p"; }
+  .gbh-n { justify-content: flex-start; }
+  .gbh-p { flex-wrap: nowrap; flex-direction: column; align-items: stretch; }
+  .gbh-leg { grid-template-columns: repeat(6, auto); gap: 0 8px; justify-content: space-between; }
+}
+/* phone: one column, nothing wider than the screen (the page never scrolls sideways) */
+@media (max-width: 560px) {
+  .gbh { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t" "n" "p" "a"; padding: 10px 12px; min-width: 0; overflow: hidden; }
+  .gbh-p { flex-direction: column; align-items: stretch; min-width: 0; }
+  .gbh-leg { display: flex; flex-wrap: wrap; gap: 0 10px; }
+  .gbh-a { justify-content: flex-start; flex-wrap: wrap; }
+  .gbh-pill { max-width: 100%; }
+}
+
+/* T-46 / AC-150: iPad upright — the page head spends as little height as it can (inside this page only): one row of icons + create, no sub-title, tighter chips */
+@media (max-width: 900px) and (min-width: 561px) {
+  .gb-page .uh-sub { display: none; }
+  .gb-page > .uh { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .gb-page .uh-act { flex-wrap: nowrap; margin-left: auto; gap: 6px; }
+  .gb-page .uh-act .att-hide-sm { display: none; }
+  .gb-page .uh-act button.ghost { min-width: var(--tap, 44px); padding: 0; justify-content: center; }
+  .gb-page .gb-chips { margin-bottom: 6px !important; }
+  .gb-toolbar { margin-bottom: 6px; }
+  .gb-fnote { margin-bottom: 4px; }
+}
+@media (max-width: 900px) and (min-width: 561px) {
+  .gbh { grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 10px; }
+  .gbh-leg { gap: 0 6px; flex-wrap: nowrap; display: flex; justify-content: space-between; }
+  .gbh-leg li { gap: 3px; } .gbh-leg .sw { width: 10px; height: 10px; }
+  .gbh-p { overflow: hidden; }
+}
+
+/* T-47 · AC-145: what the Excel button exports, written beside it */
+.gb-toolbar .gb-export-scope { font-size: var(--fs-sm); color: var(--text-secondary); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+.gb-toolbar .gb-export-scope.warn { color: var(--text-warning); background: var(--bg-warning); border-radius: 999px; padding: 4px 10px; }
+.gb-toolbar .gb-export-wrap { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+.gb-toolbar .gb-export-wrap .gb-export { margin-left: 0; }
+@media (max-width: 900px) { .gb-toolbar .gb-export-scope:not(.warn) { display: none; } }
+
+/* T-47 · AC-146 ST-04: faint table frame while loading */
+.gb-skel { padding: 12px; display: grid; gap: 8px; }
+.gb-skel-head, .gb-skel-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; }
+.gb-skel i { display: block; height: 14px; border-radius: 6px; background: var(--surface-1); }
+.gb-skel-row { padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+.gb-skel-msg { color: var(--text-secondary); font-size: var(--fs-sm); display: flex; align-items: center; gap: 6px; justify-content: center; }
+.gb-skel-head i { height: 18px; background: var(--border); opacity: .6; }
+
+/* T-47 · AC-140/141: work form — box up to 640px with the buttons stuck to the bottom; a full-height sheet on iPad/phone */
+.asg-modal { max-width: 640px; }
+.modal-overlay.asg-ov { padding: 0 16px; }
+.asg-ov .asg-modal { margin: 4vh auto; }
+.asg-foot { position: sticky; bottom: 0; z-index: 2; margin: 10px -20px -20px; padding: 10px 20px 14px; background: var(--surface-2); border-top: 0.5px solid var(--border); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+.asg-err { color: var(--text-danger); font-size: var(--fs-sm); line-height: 1.5; overflow-wrap: anywhere; text-align: right; }
+.asg-err:not(:empty) { margin-top: 6px; }
+.asg-err .ti { vertical-align: -2px; }
+.asg-copybar { overflow-wrap: anywhere; }
+/* full-height sheet on iPad (both ways, 1180 wide) and phone; the 640px box is for the computer */
+@media (max-width: 1200px) {
+  .modal-overlay.asg-ov { padding: 0; align-items: stretch; }
+  .asg-ov .asg-modal { max-width: none; margin: 0; min-height: 100%; border-radius: 0; border-width: 0; display: flex; flex-direction: column; }
+  .asg-foot { margin-top: auto; border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .gb-skel .spin { animation: none; } }
+.asg-copybar { display: flex; align-items: flex-start; gap: 8px; height: auto; max-height: none; overflow: visible; }
+.asg-copybar > span { flex: 1 1 auto; min-width: 0; }
+.asg-copybar > .ti { flex: none; margin-top: 3px; }
+.asg-modal > * { flex-shrink: 0; } /* the sheet is a column: a child with its own min-height must not be squeezed under its text */
+
+/* ---- T-48 ---- */
+/* AC-150 computer: a mouse needs no 44px target, so a row is at most 2.3rem (set again below; this block is kept for the note) (a compact density still goes lower) — 11 rows in 1536x729 */
+@media (hover: hover) and (pointer: fine) {
+  .gb-scroll, .gb-frame { --gb-row: min(var(--row-h), 2.3rem); }
+}
+/* AC-149: pinned drawer = docked 360px on the right of a wide mouse screen; the page makes room, nothing is modal */
+.gb-drawer.pinned { position: fixed; right: 0; top: 0; bottom: 0; z-index: 30; width: 360px; height: auto; }
+.gb-page.gb-pinned { margin-right: 372px; }
+.gd-head .icon.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--accent); }
+
+/* AC-151 phone: the hero is small — room · pill on one row, the two big numbers, the thin 6-part bar (the legend is spoken by the bar's aria-label and lives in the sheet) */
+@media (max-width: 560px) {
+  .gbh { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t a" "n n" "p p"; gap: 6px 8px; padding: 8px 12px; }
+  .gbh-h { font-size: 1.05rem; }
+  .gbh-n { flex-wrap: nowrap; gap: 6px; }
+  .gbh-big { padding: 0 8px; } .gbh-big .num { font-size: 1.35rem; }
+  .gbh-p { padding: 4px 8px; min-height: 0; }
+  .gbh-bar { height: 7px; }
+  .gbh-leg { display: none; }
+  .gbh-a { justify-content: flex-end; flex-wrap: nowrap; }
+  .gbh-off { display: none; }
+}
+
+/* AC-150 iPad: widths are in rem and the iPad's text is 18px, so the "n columns" budget is met by trimming them (measured: 8 at 1180, 6 at 820) */
+@media (pointer: coarse) and (min-width: 901px) and (max-width: 1400px) {
+  .gb-scroll, .gb-frame { --gb-name-w: 9rem; --gb-col-w: 5.4rem; --gb-tot-w: 3.5rem; }
+  /* title · class chips · term / create share ONE row (as on the computer); the picked work is ONE line, its buttons icon-only */
+  .gb-page { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
+  .gb-page > * { flex: 0 0 100%; order: 5; min-width: 0; }
+  .gb-page > .uh { display: contents; }
+  .gb-page .uh-l { flex: 0 0 auto; order: 0; margin-bottom: 6px; }
+  .gb-page .uh-act { flex: 0 0 auto; order: 1; margin-bottom: 6px; gap: 6px; }
+  .gb-page .gb-chips { flex: 1 1 0; order: 2; margin-bottom: 6px !important; }
+  .gb-page > .year-banner { order: 3; }
+  .gb-page .uh-sub { display: none; }
+  .gb-page .uh-act .att-hide-sm { display: none; }
+  .gb-page .uh-act button.ghost { min-width: var(--tap, 44px); padding: 0; justify-content: center; }
+  .gb-work { flex-direction: row; flex-wrap: nowrap; align-items: center; padding: 2px 8px 2px 12px; min-height: 0; margin-bottom: 6px; }
+  .gb-w1 { flex-wrap: nowrap; overflow: hidden; display: flex; }
+  .gb-wl { flex-wrap: nowrap; flex: 0 1 auto; }
+  .gb-wn { flex-wrap: nowrap; flex: none; }
+  .gb-wb { margin-left: auto; flex-wrap: nowrap; }
+  .gb-bl { display: none; }
+  .gb-closebtn { display: inline-flex !important; }
+  .gb-only-narrow { display: none !important; }
+  table.gb thead th .hs2, table.gb thead th .hbar { display: none; }
+}
+@media (pointer: coarse) and (min-width: 721px) and (max-width: 900px) and (orientation: portrait) {
+  .gb-scroll, .gb-frame { --gb-name-w: 7rem; --gb-col-w: 4.5rem; --gb-tot-w: 3.5rem; }
+  table.gb thead th .hs2, table.gb thead th .hbar { display: none; }
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .gb-toolbar { min-height: 0; margin-bottom: 4px; }
+  .gbh { margin-bottom: 6px; }
+}
+/* iPad upright: every px of height is a row — tighter gaps, the head's date line goes (full mark + due day stay in the title / work bar) */
+@media (pointer: coarse) and (min-width: 721px) and (max-width: 900px) and (orientation: portrait) {
+  table.gb thead th .hs { display: none; }
+  table.gb thead th .ht { -webkit-line-clamp: 2; }
+  .gbh { margin-bottom: 4px; padding-top: 4px; padding-bottom: 4px; }
+  .gb-work { margin-bottom: 4px; padding-top: 2px; padding-bottom: 2px; gap: 2px 10px; min-height: 0; }
+  .gb-toolbar { min-height: 0; margin-bottom: 4px; }
+  .gb-page > .uh { margin-bottom: 2px; }
+  .gb-page .gb-chips { margin-bottom: 4px !important; }
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .gb-toolbar .seg button, .gb-toolbar button, .gb-toolbar .gb-export { min-height: 2.13rem; }
+  .gb-toolbar .seg { padding: 2px; }
+}
+@media (pointer: coarse) and (min-width: 721px) and (max-width: 900px) and (orientation: portrait) {
+  .gb-toolbar .seg { padding: 2px; }
+  .gbh { padding-top: 3px; padding-bottom: 3px; gap: 3px 10px; }
+  .gb-work { padding-top: 1px; padding-bottom: 1px; }
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 1100px) {
+  .gb-wb button { min-height: 2.13rem; height: 2.13rem; }
+  .gb-work { margin-bottom: 4px; }
+}
+@media (pointer: coarse) and (min-width: 721px) and (max-width: 900px) and (orientation: portrait) {
+  .gbh, .gb-work, .gb-toolbar { margin-bottom: 2px; }
+}
+/* the picked-work bar on iPad landscape: the title keeps room (the hero already carries รอตรวจ / ค้าง) */
+@media (pointer: coarse) and (min-width: 901px) and (max-width: 1400px) {
+  .gb-wn .chip { display: none; }
+  .gb-wt { min-width: 8rem; }
+}
+@media (max-width: 560px) { .gbh-bar { flex: none; width: 100%; min-width: 0; height: 7px; } }
+
+/* R-48xx: phone — "คัดลอกงาน" / "ปิดรับ" straight on the work card (AC-151), ≥ 44px */
+.gb-mbtns { display: flex; gap: 8px; margin: 6px 0; }
+.gb-mbtns button { flex: 1; min-height: var(--tap, 44px); gap: 6px; white-space: nowrap; }
+/* computer: rows are 2.3rem (11 rows fit); the typing box is 4px shorter than its row so a row never grows while a score is typed */
+@media (hover: hover) and (pointer: fine) {
+  .gb-scroll, .gb-frame { --gb-row: min(var(--row-h), 2.3rem); }
+  table.gb input.cell-input { height: calc(var(--gb-row, 2.3rem) - 4px); }
+}

@@ -50,3 +50,25 @@ export function vibrate(pattern: number | number[]) {
     /* ignore */
   }
 }
+
+// ---- random-name page: the soft "ting" when a name has settled (T-44, D44) ----
+// Off by default, remembered per device (localStorage, never synced). The app-wide sound switch (`sound_enabled`) still
+// wins: with it off `ting()` is silent whatever this device remembers. Existing cues above are untouched.
+export const RANDOM_TICK_KEY = "ngankrob-random-tick";
+
+export function getRandomTick(): boolean {
+  try { return localStorage.getItem(RANDOM_TICK_KEY) === "1"; } catch { return false; }
+}
+export function setRandomTick(on: boolean) {
+  try { localStorage.setItem(RANDOM_TICK_KEY, on ? "1" : "0"); } catch { /* storage blocked: stays off after a reload */ }
+}
+
+/** Wake the audio context. Called inside a tap so a later (timer-driven) ting is allowed to play on iOS. */
+export function primeAudio() {
+  ac();
+}
+
+/** One short high note. Silent when the app sound is off. */
+export function ting() {
+  tones([[1568, 0.16]]);
+}

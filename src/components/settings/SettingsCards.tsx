@@ -11,6 +11,8 @@ import { attDraftCount } from "../../lib/attSync";
 import { isPersisted, isInstalledApp, requestPersist } from "../../lib/storage";
 import { offlineState, applyUpdate } from "../../lib/offline";
 import { err } from "../../lib/notify";
+import { deviceLabel, NeedOnline, useOffline } from "./sections/shared";
+import { projectorOn } from "../../lib/projector";
 import { bkkToday } from "@shared/time";
 import type { DeviceInfo } from "@shared/types";
 import { settingsLayout } from "../../lib/pageCards";
@@ -73,12 +75,13 @@ function StatusCard() {
 
 function BackupCard({ last, onBackup, onRestore }: { last: number; onBackup: () => void; onRestore: () => void }) {
   const b = backupLine(last);
+  const offline = useOffline();
   return (
     <section class="card" aria-labelledby="sc-bk">
       <CardHead id="sc-bk" icon="database-export" title="สำรองล่าสุด" />
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style={b.stale ? "color:var(--text-warning)" : ""}>{b.stale && <Icon name="alert-triangle" size={16} />} {b.text}</div>
-        <div class="row" style="gap:8px"><button onClick={onBackup}><Icon name="download" size={20} /> ดาวน์โหลด</button><button onClick={onRestore}><Icon name="database-import" size={20} /> กู้คืน</button></div>
+        <div class="row" style="gap:8px"><button onClick={onBackup} disabled={offline}><Icon name="download" size={20} /> ดาวน์โหลด</button><button onClick={onRestore} disabled={offline}><Icon name="database-import" size={20} /> กู้คืน</button>{offline && <NeedOnline />}</div>
       </div>
     </section>
   );
@@ -87,28 +90,30 @@ function BackupCard({ last, onBackup, onRestore }: { last: number; onBackup: () 
 function TermCard({ goCatalog }: { goCatalog: () => void }) {
   const t = currentTerm.value;
   const l = termLine(t);
+  const offline = useOffline();
   return (
     <section class="card" aria-labelledby="sc-tm">
       <CardHead id="sc-tm" icon="calendar-stats" title="ภาคเรียนปัจจุบัน" />
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div>{l.text}</div>
-        {l.ended && <button class="primary" onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button>}
+        {l.ended && <button class="primary" disabled={offline} onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button>}
         {!l.ended && (l.noEnd || l.none) && <button onClick={goCatalog}><Icon name="calendar" size={20} /> {l.none ? "ตั้งภาคเรียน" : "ตั้งวันที่"}</button>}
-        {!l.ended && !l.noEnd && !l.none && <button onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button>}
+        {!l.ended && !l.noEnd && !l.none && <button disabled={offline} onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button>}
       </div>
     </section>
   );
 }
 
 function DevicesCard({ goDevices }: { goDevices: () => void }) {
+  const ro = projectorOn.value; // a device can carry a person's name: the projected screen shows "เครื่อง N" instead (AC-248)
   const [list, setList] = useState<DeviceInfo[] | null>(null);
   useEffect(() => { api.get<{ devices: DeviceInfo[] }>("/api/devices").then((r) => setList(r.devices), () => setList([])); }, []);
   const shown = (list ?? []).slice(0, 3);
   return (
     <section class="card" aria-labelledby="sc-dv">
       <CardHead id="sc-dv" icon="devices" title="อุปกรณ์ล่าสุด" link="ดูทั้งหมด ›" onLink={goDevices} />
-      {list === null ? <div class="page-sub">กำลังโหลด…</div> : shown.length === 0 ? <div class="page-sub">ยังไม่มีข้อมูลอุปกรณ์</div> : shown.map((d) => (
-        <div class="hm-kv" key={d.id}><span>{d.name}{d.current ? " · เครื่องนี้" : ""}</span><b>{formatThaiDayMonthMs(d.last_seen)}</b></div>
+      {list === null ? <div class="page-sub">กำลังโหลด…</div> : shown.length === 0 ? <div class="page-sub">ยังไม่มีข้อมูลอุปกรณ์</div> : shown.map((d, i) => (
+        <div class="hm-kv" key={d.id}><span>{deviceLabel(d.name, i, ro)}{d.current ? " · เครื่องนี้" : ""}</span><b>{formatThaiDayMonthMs(d.last_seen)}</b></div>
       ))}
     </section>
   );
@@ -119,13 +124,14 @@ const ENTITY: Record<string, string> = { submission: "ส่งงาน/คะ�
 export const ACTION_TH: Record<string, string> = { create: "เพิ่ม", update: "แก้ไข", void: "ยกเลิก", delete: "ลบ", revoke: "ยกเลิก", reissue: "ออกใหม่", restore: "กู้คืน", reset: "ล้างข้อมูล", login: "เข้าสู่ระบบ", logout: "ออกจากระบบ", upsert: "แก้ไข", close: "ปิดรับ", reopen: "เปิดรับ" };
 interface AuditLite { id: number; at: number; entity: string; action: string; device_name: string | null }
 function HistoryCard({ goHistory }: { goHistory: () => void }) {
+  const ro = projectorOn.value;
   const [rows, setRows] = useState<AuditLite[] | null>(null);
   useEffect(() => { api.get<{ rows: AuditLite[] }>("/api/audit?limit=5").then((r) => setRows(r.rows ?? []), () => setRows([])); }, []);
   return (
     <section class="card" aria-labelledby="sc-hs">
       <CardHead id="sc-hs" icon="history" title="แก้ไขล่าสุด" link="ดูทั้งหมด ›" onLink={goHistory} />
-      {rows === null ? <div class="page-sub">กำลังโหลด…</div> : rows.length === 0 ? <div class="page-sub">ยังไม่มีการแก้ไข</div> : rows.map((r) => (
-        <div class="hm-kv" key={r.id}><span>{ENTITY[r.entity] ?? r.entity} · {ACTION_TH[r.action] ?? r.action}{r.device_name ? ` · ${r.device_name}` : ""}</span><b>{formatThaiDateMs(r.at)}</b></div>
+      {rows === null ? <div class="page-sub">กำลังโหลด…</div> : rows.length === 0 ? <div class="page-sub">ยังไม่มีการแก้ไข</div> : rows.map((r, i) => (
+        <div class="hm-kv" key={r.id}><span>{ENTITY[r.entity] ?? r.entity} · {ACTION_TH[r.action] ?? r.action}{r.device_name ? ` · ${deviceLabel(r.device_name, i, ro)}` : ""}</span><b>{formatThaiDateMs(r.at)}</b></div>
       ))}
     </section>
   );
@@ -135,15 +141,17 @@ function HistoryCard({ goHistory }: { goHistory: () => void }) {
 const SETTINGS_WEIGHT: Record<SettingsCard, number> = { status: W.S, backup: W.S, term: W.M, devices: W.M, history: W.M };
 
 /** The cards on top of the "ทั่วไป" section, in the order and with the visibility the teacher chose. */
-export function SettingsCards({ lastBackup, onBackup, onRestore, goSection }: {
+export function SettingsCards({ lastBackup, onBackup, onRestore, goSection, goTerms }: {
   lastBackup: number; onBackup: () => void; onRestore: () => void; goSection: (s: "catalog" | "devices" | "history") => void;
+  /** AC-211: the term card opens the terms tab of the catalog. Without it the card opens the catalog's first tab. */
+  goTerms?: () => void;
 }) {
   const keys = visibleCards(settingsLayout.value) as SettingsCard[];
   if (keys.length === 0) return null;
   const view: Record<SettingsCard, () => preact.JSX.Element> = {
     status: () => <StatusCard />,
     backup: () => <BackupCard last={lastBackup} onBackup={onBackup} onRestore={onRestore} />,
-    term: () => <TermCard goCatalog={() => goSection("catalog")} />,
+    term: () => <TermCard goCatalog={goTerms ?? (() => goSection("catalog"))} />,
     devices: () => <DevicesCard goDevices={() => goSection("devices")} />,
     history: () => <HistoryCard goHistory={() => goSection("history")} />,
   };

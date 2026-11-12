@@ -156,7 +156,7 @@ describe("students page", () => {
     fireEvent.click(await screen.findByRole("menuitem", { name: /ย้ายออก\/ไม่ใช้งาน…/ }));
     const d = await screen.findByRole("dialog", { name: /ย้ายออก/ });
     fireEvent.click(within(d).getByRole("button", { name: "ไม่ใช้งาน" }));
-    await act(async () => { fireEvent.click(within(d).getByRole("button", { name: "บันทึก" })); });
+    await act(async () => { fireEvent.click(within(d).getByRole("button", { name: "ตั้งเป็นไม่ใช้งาน" })); });
     await waitFor(() => expect(post.mock.calls.some((c) => c[0] === "/api/students" && (c[1] as any).id === "s3" && (c[1] as any).status === "inactive")).toBe(true));
   });
 
@@ -192,7 +192,8 @@ describe("students page", () => {
     settings.value = baseSettings({ students_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("students"), "sum")) });
     render(<StudentsPage />);
     expect(await screen.findByRole("button", { name: /พิมพ์เฉพาะ QR ใหม่ \(2\)/ })).toBeTruthy();
-    expect(screen.queryByText("สรุปห้อง")).toBeNull();
+    // AC-176/202: "sum" is the hero now — locked on, not a card that can be switched off
+    expect(screen.getByText("สรุปห้อง")).toBeTruthy();
   });
 
   it("'finished' is not a status to pick by hand (only shown for a child who already has it)", async () => {

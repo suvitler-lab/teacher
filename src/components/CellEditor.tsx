@@ -41,6 +41,17 @@ export function dateLine(day: string, due: string | null, today: string): string
 /** The Thai day a cell was received on (its `submitted_at`), or null when nothing is handed in. */
 export const receivedDayOf = (c: CellNow | undefined): string | null => (c && c.status === "submitted" && c.submittedAt ? bkkToday(c.submittedAt) : null);
 
+const METHOD_LABEL: Record<string, string> = { camera: "สแกน", hid: "สแกน", grid: "กรอก", manual: "กรอก", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน" };
+
+/** BR-35: "รับด้วย: กรอก · แก้ล่าสุด 14:02" (Thai time; another day adds the date). Nothing known = "–" for the way, no edit time. */
+export function receivedByLine(method: string | null | undefined, updatedAt: number | null | undefined, today: string): string {
+  const way = (method && METHOD_LABEL[method]) || "–";
+  if (!updatedAt) return `รับด้วย: ${way}`;
+  const hm = new Intl.DateTimeFormat("th-TH-u-nu-latn", { timeZone: "Asia/Bangkok", hour: "2-digit", minute: "2-digit", hour12: false }).format(updatedAt).replace(/^24/, "00");
+  const day = bkkToday(updatedAt);
+  return `รับด้วย: ${way} · แก้ล่าสุด ${day === today ? "" : formatThaiDate(day).replace(/ \d{4}$/, "") + " "}${hm}`;
+}
+
 /** The quick scores offered under the box (touch): full, full−1, full−2 and half — each once, none below 0. */
 export function quickScores(full: number): number[] {
   return [full, full - 1, full - 2, Math.round(full / 2)].filter((x, i, a) => x >= 0 && a.indexOf(x) === i);
@@ -57,7 +68,11 @@ const STATUS_OPTIONS: { value: CellStatus; label: string; icon: string }[] = [
  * moments the quick input in the cell is not enough. It never decides "late": that is derived from the received day and
  * the due date by the server (BR-04); the line under the date only previews it.
  */
-export function CellEditor({ studentName, title, fullScore, assignedDate, dueDate, now, onClose, onSave }: {
+export function CellEditor({ studentName, title, fullScore, assignedDate, dueDate, now, onClose, onSave, receivedBy, failReason, lead }: {
+  /** the heading when it differs from the dialog name: "เลขที่ 3 ภูมิ" */
+  lead?: string;
+  /** receivedBy: BR-35 line; failReason: why this device's edit was refused (Thai) */
+  receivedBy?: string; failReason?: string;
   studentName: string; title: string; fullScore: number; assignedDate: string | null; dueDate: string | null;
   now: CellNow | undefined; onClose: () => void; onSave: (c: CellChange) => void;
 }) {
@@ -93,10 +108,12 @@ export function CellEditor({ studentName, title, fullScore, assignedDate, dueDat
     <div class="modal-overlay" style="z-index:150" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <Dialog label={`แก้ไขช่อง ${studentName} · ${title}`} style="max-width:440px" onClose={onClose}>
         <div class="row" style="justify-content:space-between;margin-bottom:6px">
-          <h2 style="font-size:1.2rem;overflow-wrap:anywhere">{studentName}</h2>
+          <h2 style="font-size:1.2rem;overflow-wrap:anywhere">{lead ?? studentName}</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
         </div>
         <div class="page-sub" style="margin-bottom:10px;overflow-wrap:anywhere">{title} · เต็ม {fullScore}</div>
+        {failReason && <div class="ce-note fail" role="status"><Icon name="alert-triangle" size={16} /> ส่งไม่สำเร็จ: {failReason}</div>}
+        {receivedBy && <div class="page-sub" style="margin:6px 0">{receivedBy}</div>}
 
         <div class="page-sub" id="ce-status" style="margin-bottom:4px">สถานะ</div>
         <div class="seg ce-status" role="radiogroup" aria-labelledby="ce-status">

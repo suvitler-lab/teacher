@@ -15,16 +15,17 @@
 .rnd-left, .rnd-right { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .rnd-right:empty { display: none; }
 @media (min-width: 1000px) {
-  .rnd-cols { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
+  .rnd-cols { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; }
 }
 
 /* ---- the stage: always the same size, so the button below it never moves ---- */
 .rnd-stage {
-  position: relative; min-height: 15rem; border-radius: 16px; background: var(--surface-2); box-shadow: var(--shadow-card);
+  position: relative; isolation: isolate; overflow: hidden; min-height: 15rem; border-radius: var(--radius-hero, 16px); background: var(--hero-bg); color: var(--hero-fg); box-shadow: var(--shadow-card);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  border: 2px solid var(--border-accent); text-align: center; padding: 56px 12px 16px;
+  border: 2px solid var(--border-accent); text-align: center; padding: 20px 12px 16px;
 }
-.rnd-stage.idle { border-style: dashed; border-color: var(--border-strong); }
+.rnd-stage.idle { border-style: dashed; border-color: color-mix(in srgb, var(--hero-fg) 45%, transparent); }
+.rnd-stage.compact { min-height: 8rem; }
 @media (min-width: 1000px) { .rnd-stage { min-height: 17rem; } }
 .rnd-stage .rnd-poolchip { position: absolute; top: 8px; left: 8px; height: var(--tap); }
 .rnd-empty-ic { color: var(--text-muted); }
@@ -69,7 +70,7 @@
 .rnd-pbar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 6px 0 8px; }
 .rnd-pbar > div { height: 100%; border-radius: 4px; background: var(--fill-accent); }
 .rnd-hist { display: flex; flex-wrap: wrap; gap: 6px; }
-.rnd-chip { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 0 12px 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border); font-size: var(--fs-sm); }
+.rnd-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px 0 8px; border-radius: 999px; background: var(--surface-1); border: 0.5px solid var(--border); font-size: var(--fs-sm); }
 .rnd-chip b { width: 1.75rem; height: 1.75rem; border-radius: 50%; font-weight: 600; font-size: var(--fs-xs); display: inline-flex; align-items: center; justify-content: center; background: var(--surface-2); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .rnd-chip.last { background: var(--bg-accent); border-color: var(--border-accent); color: var(--text-accent); }
 .rnd-chip.last b { background: var(--surface-2); color: var(--text-accent); }
@@ -102,3 +103,167 @@
 .pj .rtimer.done { color: var(--pj-warn); }
 .pj .rbtns { display: flex; justify-content: center; gap: calc(var(--pj-u) * 16); align-items: center; }
 .pj .rbtns .pjbtn.sec { height: calc(var(--pj-u) * 64); font-size: calc(var(--pj-u) * 28); }
+
+/* ======== T-44: hero (room, numbers, ring, base chip, mode), stage on the hero colour, side panels ======== */
+.rnd-hero { position: relative; background: var(--hero-bg); color: var(--hero-fg); border-radius: var(--radius-hero, 16px); padding: var(--s3) var(--s5); margin-bottom: var(--s3);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "t n r" "p p p"; gap: var(--s2) var(--s5); align-items: center; }
+.rnd-hero-t { grid-area: t; min-width: 0; }
+.rnd-kicker { background: var(--hero-bg); margin: 0; font-size: var(--t-sm); font-weight: 600; color: var(--hero-muted); display: flex; align-items: center; gap: 6px; }
+.rnd-hero-h { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--t-xl); line-height: 1.3; overflow-wrap: anywhere; }
+.rnd-stats { grid-area: n; display: flex; gap: var(--s5); align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; }
+.rnd-stat { display: flex; flex-direction: column; line-height: 1.2; font-size: var(--t-sm); font-weight: 600; }
+.rnd-stat small { background: var(--hero-bg); font-size: var(--t-sm); font-weight: 600; display: flex; align-items: center; gap: 4px; color: var(--hero-muted); }
+.rnd-stat .num { font-family: var(--font-num); font-size: var(--t-3xl); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.rnd-stat.dim { opacity: 0.7; }
+.rnd-hero > .rnd-plate { grid-area: r; }
+.rnd-plate { position: relative; width: var(--sz, 84px); height: var(--sz, 84px); border-radius: 50%; background: var(--surface-2); color: var(--text-primary); flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--hero-fg) 28%, transparent); }
+.rnd-plate svg { display: block; width: 100%; height: 100%; }
+.rnd-rc { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1.05; color: var(--text-primary); }
+.rnd-rc b { font-size: var(--t-lg); font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.rnd-rc small { font-size: var(--t-xs); font-weight: 600; color: var(--text-secondary); }
+.rnd-hero-p { grid-area: p; display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; min-width: 0; }
+.rnd-hp { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--tap); padding: 0 12px; border-radius: var(--radius-btn, 12px); border: 1.5px solid color-mix(in srgb, var(--hero-fg) 35%, transparent);
+  background: var(--hero-bg); color: var(--hero-fg); font-weight: 600; font-size: var(--fs-sm); }
+.rnd-hp.on { background: var(--hero-fg); color: var(--hero-bg); border-color: var(--hero-fg); }
+.rnd-hp.info { border-style: dashed; }
+.rnd-hero .seg { background: var(--hero-bg); border-color: color-mix(in srgb, var(--hero-fg) 35%, transparent); }
+.rnd-hero .seg button { background: var(--hero-bg); color: var(--hero-fg); height: var(--tap); min-width: 44px; }
+.rnd-hero .seg button.on { background: var(--surface-2); color: var(--text-primary); }
+.rnd-basis { background: var(--hero-bg); font-size: var(--fs-xs); color: var(--hero-muted); flex: 1 1 14em; }
+
+/* stage: hero colour, soft rings behind, result pops once */
+.rnd-stage::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(circle at 50% 46%, transparent 0 21%, color-mix(in srgb, var(--hero-fg) 7%, transparent) 21% 22%, transparent 22% 37%, color-mix(in srgb, var(--hero-fg) 6%, transparent) 37% 38%, transparent 38%); }
+.rnd-stage .rnd-empty-ic, .rnd-stage .rnd-sub, .rnd-stage .rnd-name.dim { color: var(--hero-muted); }
+.rnd-stage .rnd-badge { background: var(--hero-fg); color: var(--hero-bg); width: 7.5rem; height: 7.5rem; font-size: 3.2rem; font-family: var(--font-num); }
+.rnd-stage .rnd-name { font-family: var(--font-display); font-size: 4rem; text-wrap: balance; }
+.rnd-stage .rnd-name.long { font-size: 2.75rem; }
+.rnd-stage .rnd-name.dim { font-size: 1.2rem; font-family: inherit; }
+.rnd-stage .rnd-sub { font-size: 1.15rem; }
+.rnd-stage .rnd-pair { background: color-mix(in srgb, var(--hero-fg) 12%, transparent); border-color: color-mix(in srgb, var(--hero-fg) 35%, transparent); }
+.rnd-stage .rnd-pair .rnd-badge { width: 4.5rem; height: 4.5rem; font-size: 1.8rem; }
+.rnd-stage .rnd-pair .nm { font-size: 2rem; text-wrap: balance; }
+.rnd-stage .rnd-with { background: transparent; color: var(--hero-fg); border-color: color-mix(in srgb, var(--hero-fg) 35%, transparent); }
+.rnd-stage .rnd-chip.big { min-height: 56px; font-size: 2.5rem; padding: 0 20px 0 10px; gap: 12px; background: var(--hero-bg); border-color: color-mix(in srgb, var(--hero-fg) 35%, transparent); color: var(--hero-fg); }
+.rnd-stage .rnd-chip.big b { width: 3rem; height: 3rem; font-size: 1.6rem; background: var(--hero-fg); color: var(--hero-bg); }
+.rnd-stage .rnd-gobtn { background: var(--hero-fg); color: var(--hero-bg); border-color: var(--hero-fg); }
+.rnd-stage-in { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; max-width: 100%; min-width: 0; }
+.rnd-stage-in.pop { animation: rndPop 0.24s ease-out 1; }
+@keyframes rndPop { from { transform: scale(0.88); opacity: 0.5; } 60% { transform: scale(1.03); } to { transform: scale(1); opacity: 1; } }
+.rnd-stage-timer { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.rnd-stage-timer .rnd-ring { --c: var(--hero-fg); width: 88px; height: 88px; background: conic-gradient(var(--c) calc(var(--p) * 1%), color-mix(in srgb, var(--hero-fg) 25%, transparent) 0); }
+.rnd-stage-timer .rnd-ring::before { background: var(--hero-bg); }
+.rnd-stage-timer .rnd-timer { inset: 10px; background: var(--hero-bg); border-radius: 50%; color: var(--hero-fg); }
+.rnd-stage-timer button { min-height: var(--tap); }
+.rnd-stage-timer .rnd-timeup { background: var(--hero-bg); display: inline-flex; color: var(--hero-fg); font-size: 1.4rem; }
+@media (prefers-reduced-motion: reduce) { .rnd-stage-in.pop { animation: none; } .rnd-stage { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--hero-fg) 40%, transparent); } }
+
+/* controls: the big button first, then skip / undo, then the one-line summary */
+.rnd-controls { display: flex; }
+.rnd-go { margin-left: 0; width: 100%; min-height: 72px; font-size: 1.3rem; justify-content: center; }
+.rnd-why { font-size: var(--fs-sm); color: var(--text-secondary); text-align: center; }
+.rnd-fullnote { text-align: center; color: var(--text-success); }
+.rnd-passrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.rnd-passrow button { flex: 1 1 14rem; min-height: 48px; }
+.rnd-summary { align-self: flex-start; min-height: var(--tap); border-radius: 999px; border: 0.5px solid var(--border-control); background: var(--surface-2); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; font-size: var(--fs-sm); text-align: left; }
+@media (max-width: 720px) {
+  .rnd-controls { position: sticky; bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 5; }
+  .rnd-go { min-height: 64px; }
+  .rnd-hero { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t r" "n r" "p p"; padding: var(--s3) var(--s4); gap: var(--s1, 4px) var(--s3); }
+  .rnd-kicker { display: none; }
+  .rnd-hero-h { font-size: var(--t-lg); }
+  .rnd-stats { justify-content: flex-start; gap: var(--s4); }
+  .rnd-stat .num { font-size: var(--t-2xl, 1.6rem); }
+  .rnd-plate { --sz: 64px; }
+  .rnd-basis { font-size: var(--fs-xs); }
+  .rnd-stage .rnd-badge { width: 5rem; height: 5rem; font-size: 2.2rem; }
+  .rnd-stage .rnd-name { font-size: 2.75rem; }
+  .rnd-stage .rnd-chip.big { font-size: 2.5rem; }
+}
+
+.rnd-stage.compact .rnd-badge { width: 4rem; height: 4rem; font-size: 1.8rem; }
+.rnd-stage.compact .rnd-name { font-size: 2rem; }
+
+/* side panels */
+.rnd-card { scroll-margin-top: 8px; }
+.rnd-hist { max-height: 14rem; overflow-y: auto; }
+.rnd-chip .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 9em; }
+.rnd-chip.left { background: transparent; border: 1.5px dashed var(--border-strong); }
+.rnd-chip.done { background: var(--surface-1); }
+.rnd-chip.last { border-width: 2px; }
+.rnd-out { margin-top: 8px; }
+.rnd-swrow { display: flex; align-items: center; gap: 10px; margin-top: 10px; min-height: var(--tap); }
+.rnd-swrow .switch { flex: none; }
+
+/* groups: 4 / 3 / 2 / 1 columns by device, the leader word beside the star */
+.rnd-groups { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 8px; }
+@media (max-width: 1300px) { .rnd-groups { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1000px) { .rnd-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .rnd-groups { grid-template-columns: minmax(0, 1fr); } }
+.rnd-group .gl.two { columns: 2; column-gap: 12px; }
+.rnd-group .gm { break-inside: avoid; }
+.rnd-group .lead-tag { font-size: var(--fs-xs); font-weight: 600; margin: 0 4px 0 2px; }
+.rnd-grouphead { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* ---- hide names (T-45): the button in the header and the banner ---- */
+.rnd-hidebtn[aria-pressed="true"] { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+.rnd-hidenote { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); }
+
+/* ---- TV (T-45): tally line, one stage card, several children as cards, buttons >= 72px ---- */
+.pj .pj-tally { text-align: center; font-size: calc(var(--pj-u) * 30); font-weight: 600; color: var(--pj-t2); font-variant-numeric: tabular-nums; }
+.pj .pj-stage { margin: auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: calc(var(--pj-u) * 12); padding: calc(var(--pj-u) * 30); }
+.pj .pj-sub { font-size: calc(var(--pj-u) * 36); color: var(--pj-t2); }
+.pj .pj-cards { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: calc(var(--pj-u) * 16); width: 100%; }
+.pj .pj-person { display: flex; flex-direction: column; align-items: center; gap: calc(var(--pj-u) * 8); padding: calc(var(--pj-u) * 16) calc(var(--pj-u) * 24); border: calc(var(--pj-u) * 3) solid var(--pj-bd); border-radius: calc(var(--pj-u) * 20); background: var(--pj-bg); min-width: 0; }
+.pj .pj-person .rbadge { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; }
+.pj .pj-person .big { font-size: calc(var(--pj-u) * var(--nm) * .6); }
+.pj .pj-with { font-size: calc(var(--pj-u) * 30); color: var(--pj-t2); font-weight: 600; }
+.pj .rbtns .pjbtn { min-height: max(72px, calc(var(--pj-u) * var(--bt))); }
+.pj .rbtns .pjbtn.sec { min-height: 72px; }
+.pj .rtimer { display: inline-flex; align-items: center; gap: calc(var(--pj-u) * 12); }
+
+/* ---- phone (AC-122 / R-4411): short hero, the stage ends above the sticky draw button ---- */
+@media (max-width: 720px) {
+  .rnd-basis { display: none; }
+  .rnd-hero { padding: var(--s2) var(--s3); margin-bottom: var(--s2); }
+  .rnd-hero-p { gap: var(--s1, 4px); }
+  .rnd-stage { min-height: 11rem; padding: 12px 10px 10px; }
+  .rnd-stage .rnd-badge { width: 3.5rem; height: 3.5rem; font-size: 1.6rem; margin-bottom: 0; }
+  .rnd-stage .rnd-name { font-size: 2.75rem; }
+  .rnd-stage .rnd-name.long { font-size: 2.5rem; } /* a long name is never bigger than a short one (R-4501) */
+  .rnd-stage-timer .rnd-ring { width: 72px; height: 72px; }
+  .rnd-left { padding-bottom: 8px; }
+  .rnd-controls { background: var(--surface-0); padding-top: 6px; }
+}
+
+/* phone: the side panels fold into one <details>, closed at first (AC-122) */
+.rnd-fold > summary { min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-radius: 12px; border: 0.5px solid var(--border-control); background: var(--surface-2); color: var(--text-secondary); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
+.rnd-fold[open] > summary { margin-bottom: 8px; }
+
+/* iPad upright: tall stage, 80px button, the side panels in two columns under the stage (AC-122) */
+@media (min-width: 721px) and (max-width: 999px) {
+  .rnd-stage { min-height: 440px; }
+  .rnd-go { min-height: 80px; }
+  .rnd-right { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+/* wide screens: the room, the figures and the buttons share one slim hero row (computer: hero <= 110px) */
+@media (min-width: 1000px) {
+  .rnd-kicker { display: none; }
+  .rnd-stage { min-height: 380px; }
+}
+@media (min-width: 1280px) {
+  .rnd-hero { grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "t p n r"; padding: 8px var(--s5); gap: var(--s4); }
+  .rnd-hero .rnd-stat .num { font-size: var(--t-2xl, 1.6rem); }
+  .rnd-hero .rnd-plate { --sz: 60px; }
+  .rnd-stage { min-height: 330px; }
+}
+
+/* the draw button beats the generic button.primary height on every device: phone 64, iPad upright 80, others 72 (AC-122) */
+.rnd-controls .rnd-go.primary { min-height: 72px !important; }
+@media (max-width: 720px) { .rnd-controls .rnd-go.primary { min-height: 64px !important; } }
+@media (min-width: 721px) and (max-width: 999px) { .rnd-controls .rnd-go.primary { min-height: 80px !important; } }
+
+/* wide screens: the side panels scroll on their own (45 chips never push the page) */
+@media (min-width: 1000px) {
+  .rnd-right { position: sticky; top: 8px; max-height: calc(100vh - 16px); overflow-y: auto; overscroll-behavior: contain; }
+}

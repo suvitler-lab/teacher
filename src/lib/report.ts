@@ -22,6 +22,7 @@ export interface StudentReport {
   applicable: number;
   pending: number; // work not yet due and not handed in: left out of the rate until its due date passes
   missing: number;
+  awaiting: number; // handed in, no score yet (BR-40): a count only — the rate and the score are unchanged
   percent: number;
   score: number;
   fullScore: number;
@@ -42,6 +43,8 @@ export interface ReportModel {
   followUp: { student: Student; missing: string[] }[];
   // attendanceRate is null when nothing was checked in this range ("no data" is not 0%)
   metrics: { submitRate: number; missingCount: number; avgScorePercent: number; attendanceRate: number | null };
+  // counters for the screen (BR-37/38/40): the screen shows "—" when a denominator is 0, where `metrics` keeps its old 0
+  totals: { submitted: number; applicable: number; pending: number; awaiting: number; fullScore: number };
   // what one attendance "mark" means here: a school day (daily) or a period (per subject)
   attendance: { unit: "day" | "period"; sessions: number; marks: number };
   today: string;
@@ -74,6 +77,7 @@ export function computeReport(p: ReportPayload): ReportModel {
       applicable: sum.submitted + sum.missing,
       pending: sum.pending,
       missing: sum.missing,
+      awaiting: sum.awaiting,
       percent: sum.submitRate,
       score: sum.score,
       fullScore: sum.fullScore,
@@ -130,6 +134,13 @@ export function computeReport(p: ReportPayload): ReportModel {
       missingCount: students.reduce((n, s) => n + s.missing, 0),
       avgScorePercent: scorePercent(totScore, totFull) ?? 0,
       attendanceRate: averageAttendancePercent(students.map((s) => s.attendance)), // the Students page's rule (D24)
+    },
+    totals: {
+      submitted: students.reduce((n, s) => n + s.submitted, 0),
+      applicable: students.reduce((n, s) => n + s.applicable, 0),
+      pending: students.reduce((n, s) => n + s.pending, 0),
+      awaiting: students.reduce((n, s) => n + s.awaiting, 0),
+      fullScore: totFull,
     },
     attendance: {
       unit: p.range?.att === "subject" ? "period" : "day",

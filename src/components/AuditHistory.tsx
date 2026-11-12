@@ -4,6 +4,7 @@ import { api } from "../lib/api";
 import { studentsById, assignments } from "../store";
 import { fullName } from "../lib/names";
 import { formatThaiTimeMs } from "../lib/dates";
+import { hideSignal } from "../lib/hideNames";
 
 interface AuditRow {
   id: number;
@@ -54,6 +55,7 @@ export function AuditHistory({ entity }: { entity?: string }) {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [tries, setTries] = useState(0);
+  const hide = hideSignal("home").value; // names follow the home switch (BR-52 / P2): hidden = "เลขที่ N"
 
   useEffect(() => {
     let current = true; // a slower answer for an earlier filter must not replace the one the teacher is looking at now
@@ -66,33 +68,33 @@ export function AuditHistory({ entity }: { entity?: string }) {
     return () => { current = false; };
   }, [entity, tries]);
 
-  if (loading) return <div class="page-sub" style="padding:8px 0">กำลังโหลด…</div>;
+  if (loading) return <div class="page-sub" role="status" aria-busy="true" style="padding:8px 0">กำลังโหลด…</div>;
   if (failed) return (
-    <div class="page-sub" style="padding:8px 0;color:var(--text-warning)">
-      <Icon name="cloud-off" size={14} /> โหลดประวัติไม่สำเร็จ · <button class="lk" style="background:none;border:none;color:var(--text-accent);cursor:pointer;padding:0;font:inherit" onClick={() => setTries((n) => n + 1)}>ลองอีกครั้ง</button>
+    <div class="page-sub" role="alert" style="padding:8px 0;color:var(--text-warning)">
+      <Icon name="cloud-off" size={14} /> โหลดประวัติไม่สำเร็จ · <button class="hist-retry" onClick={() => setTries((n) => n + 1)}>ลองอีกครั้ง</button>
     </div>
   );
   if (rows.length === 0) return <div class="page-sub" style="padding:8px 0">ยังไม่มีประวัติการแก้ไข</div>;
 
   return (
-    <div style="max-height:340px;overflow-y:auto">
+    <div>
       {rows.map((r) => {
         const st = r.student_id ? studentsById.value.get(r.student_id) : null;
         const asg = r.assignment_id ? assignments.value.find((a) => a.id === r.assignment_id) : null;
         return (
-          <div class="row" style="gap:10px;padding:8px 0;border-top:0.5px solid var(--border)">
+          <div class="hist-row" key={r.id}>
             <Icon name="history" size={16} class="muted" />
-            <div class="grow" style="min-width:0">
+            <div class="hist-main">
               <div style="font-size:var(--fs-sm)">
                 <span style="font-weight:500">{describe(r)}</span>
-                {st && <span class="muted"> · {fullName(st)}</span>}
+                {st && <span class="muted"> · {hide ? `เลขที่ ${st.number ?? "-"}` : fullName(st)}</span>}
               </div>
-              <div class="page-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              <div class="page-sub">
                 {ENTITY_LABEL[r.entity] ?? r.entity}{asg ? ` · ${asg.title}` : ""}
                 {r.method ? ` · ${METHOD_LABEL[r.method] ?? r.method}` : ""}
               </div>
             </div>
-            <div class="page-sub" style="text-align:right;white-space:nowrap">
+            <div class="page-sub hist-when">
               <div>{formatThaiTimeMs(r.at)}</div>
               {r.device_name && <div>{r.device_name}</div>}
             </div>
