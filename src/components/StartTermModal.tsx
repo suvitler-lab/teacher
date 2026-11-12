@@ -8,6 +8,8 @@ import { ok } from "../lib/notify";
 import { pendingCount } from "../lib/outbox";
 import { attDraftCount } from "../lib/attSync";
 import { DateField } from "./ui";
+import { online } from "../lib/outbox";
+import { projectorOn } from "../lib/projector";
 
 function todayBkk(): string {
   return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
@@ -53,7 +55,11 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
   const problem = backwards ? "ภาคเรียนใหม่ต้องมาหลังภาคเรียนปัจจุบัน"
     : exists ? `มีภาคเรียน ${name} อยู่แล้ว — ตั้งเป็นปัจจุบันได้จากรายการภาคเรียน`
     : badDates ? (start ? "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม" : "ใส่วันเริ่มภาคเรียน") : "";
-  const canStart = !busy && !problem && (!cur || sure);
+  // BR-59: no new term while projecting (read only, AC-248) or without a connection — read live so it follows the signals
+  const offline = !online.value;
+  const projecting = projectorOn.value;
+  const blocked = offline || projecting;
+  const canStart = !busy && !blocked && !problem && (!cur || sure);
 
   function toggle(id: string) {
     setKeep((k) => { const n = new Set(k); if (n.has(id)) n.delete(id); else n.add(id); return n; });
@@ -163,6 +169,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px">
+          {blocked && <span class="page-sub set-need-online">{projecting ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</span>}
           <button onClick={onClose} disabled={busy}>ยกเลิก</button>
           <button class="primary" onClick={go} disabled={!canStart}>
             {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="calendar-plus" />} เริ่มภาคเรียน {name}

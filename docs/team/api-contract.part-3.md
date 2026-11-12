@@ -1,0 +1,116 @@
+### EP-02 `GET /api/assignments/:id/submissions` — ช่องทั้งหมดของงาน (หน้าสแกนดึงทุก 60 วิ)
+
+- ไม่เปลี่ยนในงาน integrity-c01 และ v3 (คืน `submitted_at` = วันที่รับงาน อยู่แล้ว)
+- 200: `{ "submissions": Submission[], "snapshot": true, "assignment": { "status": "open|closed", "full_score": number, "deleted": boolean } | null, "serverTime": number }` (ส่ง snapshot เต็มเสมอ แม้ client ส่ง `since`)
+
+### EP-03 `POST /api/assignments/:id/bulk` — ปุ่มทั้งห้อง (ทั้งห้องส่งแล้ว / ให้เต็มทั้งห้อง / ล้างทั้งห้อง)
+
+- ไม่เปลี่ยนในงาน integrity-c01 (เป็นงานให้คะแนนของครู ไม่ถูกกันด้วย `already_submitted`)
+- Request: `{ "action": "all-submitted | full-score | clear", "classId": "string", "receivedDate": "string ≤ 32 ตัว | null (optional · ใหม่ v3 · ใช้ได้กับ all-submitted เท่านั้น)" }`
+- 200: `{ "ok": true, "changed": number, "batchId": "string" }` (ไม่แตะช่อง excused) — รูปเดิม
+- v3 `all-submitted` + `receivedDate`: ทุกช่องที่ถูกเปลี่ยน (ไม่มีแถว/void — ข้าม submitted/excused เหมือนเดิม) ได้ `submitted_at = receivedAtMs(receivedDate, now, now)` (วันนี้ = `now` เดิม · วันอื่น = 12:00 ไทยของวันนั้น) · `late` จาก `submitted_at` นั้นตามกฎเดิม (`lateFixForCells` + `auditLateSyncStmt` เดิม) · `event_at`/`updated_at` = `now` (ครูทำตอนนี้) · audit `bulk` ช่องละ 1 แถว `after.submitted_at` = ค่าที่เขียน → EP-04 คืนได้ตรงทุก ms · ไม่ส่ง = `now` เหมือนเดิม · จำนวน statement/แถวที่อ่านเท่าเดิม (อ่าน `assigned_date` เพิ่มในคำสั่งเดิม)
+- Errors (ลำดับ v3 — ตัวแรกที่เข้าชนะ): `422 validation` (schema: ชนิด `receivedDate` ผิด) → **`400 received_date_not_applicable`** (มี `receivedDate` ที่ไม่ใช่ null กับ action `full-score`/`clear`) → **`400 received_date_invalid`** → **`400 received_date_future`** (v4: เทียบกับ `latest` = วันไทยของ now + 5 นาที เหมือน EP-01) → `404 not_found` (งาน) → `409 assignment_closed` (เฉพาะ all-submitted) → `400 class_not_assigned` → **`400 received_date_before_assigned`** (`checkReceivedDate` กับ `assigned_date` ของงาน) → `400 no_students` → (ตอนเขียน) `409 full_score_changed` · `409 modified_since` · `409 epoch_changed` · error ใหม่ไม่มีช่องใดเปลี่ยนและไม่มี audit
+- message ภาษาไทยของ error ใหม่: `received_date_not_applicable` "วันที่รับงานใช้ได้กับ \"ทั้งห้องส่งแล้ว\" เท่านั้น" · `received_date_invalid` "วันที่รับงานไม่ถูกต้อง (ใช้ ค.ศ. ปปปป-ดด-วว)" · `received_date_future` "วันที่รับงานเป็นวันในอนาคต" · `received_date_before_assigned` "วันที่รับงานอยู่ก่อนวันมอบหมายงาน"
+
+### EP-04 `POST /api/assignments/:id/bulk-undo` — ย้อนกลับปุ่มทั้งห้อง
+
+- ไม่เปลี่ยนในงาน integrity-c01 · v3 ไม่แก้โค้ด (เพิ่มเทสต์): คืน `submitted_at` จาก `before` ใน audit ตรงทุก ms, `late` ตัดสินใหม่จากกำหนดส่งปัจจุบัน · การแก้วันที่ (EP-01 `dateOnly`) ของช่องใน batch หลังกด = `409 modified_since` (เทียบทุกฟิลด์ยกเว้น `late` รวม `submitted_at`) ไม่มีช่องใดถูกกู้คืน
+- Request: `{ "batchId": "string" }`
+- 200: `{ "ok": true, "changed": number }` หรือ `{ "ok": true, "changed": 0, "alreadyUndone": true }`
+- Errors: `404 not_found` (batch) · `409 modified_since` · `409 epoch_changed`
+
+### EP-05 `POST /api/assignments` — สร้าง/แก้งาน (+ ถามปรับคนที่ได้เต็มเดิมเมื่อเพิ่มคะแนนเต็ม · v2 งาน integrity-c02)
+
+- ผู้เรียก: `src/components/AssignmentModal.tsx` (สร้างงาน / แก้ไขงาน / คัดลอกงาน — เปิดจากสมุดคะแนน) · server: `worker/routes/assignments.ts`
+- Request (ฟิลด์เดิมทั้งหมดไม่เปลี่ยน · เพิ่ม 2 ฟิลด์ optional · request แบบเดิมยังผ่าน schema):
+
+```json
+{ "id": "a1 (ไม่ส่ง = สร้างใหม่)", "term_id": "t1 | null", "subject_id": "s1", "type_id": "wt_worksheet",
+  "title": "ใบงานที่ 5", "unit": "string | null", "full_score": "integer 1–100 (v4: ไม่ส่งได้เมื่องานมีอยู่แล้ว = คงค่าในฐานข้อมูล)",
+  "assigned_date": "YYYY-MM-DD (ค.ศ.) | null | \"\"", "due_date": "YYYY-MM-DD | null | \"\"", "note": "string | null",
+  "publish_scores": "boolean", "status": "open | closed", "class_ids": ["c1", "c2"],
+  "raise_choice": "adjust | keep  (ใหม่ v2 · optional — คำตอบของครูในกล่องถาม)",
+  "raise_from": "integer (ใหม่ v2 · บังคับเมื่อมี raise_choice — คะแนนเต็มเดิมที่ครูเห็นในกล่องถาม)" }
+```
+
+- schema: มี `raise_choice` แต่ไม่มี `raise_from` (หรือกลับกัน) = `422 validation` · ค่าอื่นของ `raise_choice` = `422 validation`
+- v4 (`full_score` ไม่ส่ง): งานที่มีอยู่ → คง `full_score` ที่อยู่ในฐานข้อมูล **ณ ตอนเขียน** (SQL ใน upsert เดียวกัน — เครื่องอื่นแก้ระหว่างนั้นก็ไม่ถูกทับ) ไม่ใช่การเพิ่ม/ลดคะแนนเต็ม (ไม่ถาม ไม่มี guard ลด/เพิ่ม · `raise_choice`/`raise_from` ที่ส่งมาด้วยถูกเพิกเฉยทั้งหมด รวมข้อ 3) · `assignment.full_score` ใน 200 และ `after.full_score` ของ audit งาน = ค่าที่เก็บจริง · งานใหม่ (ไม่มี `id` หรือ `id` ที่ไม่มีอยู่) ไม่ส่ง = `422 validation` · ผู้เรียก: `Gradebook.tsx` `saveAsgPatch` (ปิด/เปิดรับงาน, ซ่อน/แสดงคะแนน) ไม่ส่ง `full_score` · AssignmentModal ส่งเหมือนเดิม
+- นิยาม: **เพิ่มคะแนนเต็ม** = มีงานนี้อยู่แล้ว และ `full_score` ใหม่ > `full_score` ในฐานข้อมูล · **คนที่ได้เต็มเดิม** = แถว submissions ของงานนี้ (ทุกห้อง ทุกสถานะนักเรียน ทุก method) ที่ `status = 'submitted'` และ `score = full_score ในฐานข้อมูล ณ ตอนเขียน` (BR-01) · v4: **ยกเว้น** เด็กที่ห้อง (`students.class_id`) เป็นห้องที่งานผูกอยู่แต่ถูกเอาออกใน `class_ids` ของคำขอเดียวกัน — ไม่นับใน `count` ของ 409/200 และไม่ถูกปรับ (ทุกคำสั่งที่นับ/ปรับรันก่อนเขียนห้องใหม่ใน batch)
+
+#### ผลตามกรณี (ตรวจตามลำดับนี้ ตัวแรกที่เข้าชนะ)
+
+| # | กรณี | ผล | เขียนอะไร |
+|---|---|---|---|
+| 1 | ไม่ล็อกอิน | `401 unauthorized` | ไม่มี |
+| 2 | schema / วันที่ไม่ใช่ ค.ศ. | `422 validation` (เดิม) | ไม่มี |
+| 3 | มี `raise_choice` + งานมีอยู่ + `full_score` ในฐานข้อมูล ≠ `raise_from` | `409 full_score_changed` (ใหม่ใน EP นี้) | ไม่มี |
+| 4 | ลดคะแนนเต็ม และมี score > เต็มใหม่ | `409 score_over_full` `{ over }` (เดิม) | ไม่มี |
+| 5 | ห้องผิดปีการศึกษา | `422 class_year_mismatch` (เดิม) | ไม่มี |
+| 5b | งานมีอยู่ และ `class_ids` ถอดห้องที่นักเรียนของห้องนั้นมีแถว `submissions` ของงานนี้ (สถานะใดก็ได้: submitted/excused/void/awaiting) | `409 class_has_scores` `{ message: "ห้อง ป.6/1 มีคะแนน/การส่งของงานนี้แล้ว ถอดห้องไม่ได้ — ล้างการส่งของห้องนั้นก่อน" }` (ใส่ชื่อทุกห้องที่ติด) — กันที่ต้นทางไม่ให้เกิดคะแนนนอกห้องของงาน ซึ่ง restore ปฏิเสธ (`not_in_assignment_class`) | ไม่มี |
+| 6 | เพิ่มคะแนนเต็ม + ไม่มี `raise_choice` + คนที่ได้เต็มเดิม ≥ 1 | `409 raise_choice_required` (ใหม่) | ไม่มี |
+| 7 | เพิ่มคะแนนเต็ม + `raise_choice: "adjust"` | `200` + `raise.choice = "adjust"` | งาน + ช่องที่ปรับ + audit (ด้านล่าง) |
+| 8 | เพิ่มคะแนนเต็ม + `raise_choice: "keep"` | `200` + `raise.choice = "keep"` | งาน + audit งาน (ไม่แตะช่อง) |
+| 9 | อื่น ๆ: สร้างใหม่, คัดลอก, เท่าเดิม, ลดได้, เพิ่มแต่ไม่มีใครได้เต็มเดิม (ไม่มี `raise_choice`) | `200` + `raise: null` (เหมือนเดิม) | เหมือนเดิม |
+
+- `raise_choice` ที่ส่งมากับคำขอที่ไม่ใช่การเพิ่มคะแนนเต็ม (สร้างใหม่ / เท่าเดิม / ลด) → ไม่สนใจ (`raise: null`) แต่ข้อ 3 ยังตรวจถ้างานมีอยู่
+- ข้อ 5b ตรวจใน batch เท่านั้น (`abortIf` ก่อนเขียนห้องใหม่) แล้วดูใหม่หลัง batch ล้มเพื่อบอกชื่อห้อง · ห้องที่ไม่มี submissions ถอดได้ · เพิ่มห้อง/แก้ฟิลด์อื่นไม่กระทบ · AssignmentModal แสดง `message` ของ server อยู่แล้ว (`setErr(e.message)`) จึงไม่ต้องแก้ฝั่งแอป
+- ข้อ 3, 4, 5, 6 ตรวจทั้งก่อนเขียนและซ้ำ **ใน batch เดียวกับการเขียน** (`abortIf`) — batch ล้มแล้วดูใหม่ตามลำดับเดิม ตอบ error ของข้อแรกที่เข้า ไม่เข้าข้อใดเลย = โยนต่อ (5xx) · data epoch เปลี่ยน = `409 epoch_changed` (เดิม) · ทุกกรณีที่ไม่ใช่ 200 = ไม่มีอะไรลงเลย (งาน, ช่อง, audit)
+
+#### 200 Response
+
+```json
+{ "ok": true, "assignment": { "...Assignment เดิม": "" },
+  "raise": null }
+```
+
+```json
+{ "ok": true, "assignment": { "...": "" },
+  "raise": { "choice": "adjust", "from": 10, "to": 20, "count": 3, "batchId": "01J…" } }
+```
+
+| ฟิลด์ `raise` (ใหม่ v2) | ความหมาย |
+|---|---|
+| `null` | ไม่มีการถาม (กรณี 9) — แอปเก่าไม่อ่านฟิลด์นี้ |
+| `choice` | `adjust` / `keep` ตามคำขอ |
+| `from` / `to` | คะแนนเต็มเดิม (= `raise_from`) / ใหม่ |
+| `count` | `adjust`: จำนวนช่องที่ปรับจริงใน batch นี้ · `keep`: จำนวนคนที่ได้เต็มเดิม ณ ตอนเขียน (ไม่ได้แตะ) |
+| `batchId` | `adjust` และ `count ≥ 1`: batch_id ของการปรับ (ใช้กับ EP-04 เพื่อย้อนกลับ) · อื่น ๆ: `null` |
+
+#### Errors ใหม่
+
+```json
+{ "error": "raise_choice_required", "message": "มี 3 คนได้คะแนนเต็มเดิม — อัปเดตแอปแล้วบันทึกอีกครั้ง",
+  "count": 3, "from": 10, "to": 20 }
+```
+
+```json
+{ "error": "full_score_changed", "message": "คะแนนเต็มของงานนี้เพิ่งถูกแก้จากเครื่องอื่น (ตอนนี้ 15) — ปิดแล้วเปิดแก้ไขงานใหม่",
+  "currentFullScore": 15 }
+```
+
+- `409 raise_choice_required`: `count` = คนที่ได้เต็มเดิม ณ ตอนตัดสิน (ตัวเลขจาก server ไม่ใช่จากเครื่อง — AC-12) · `message` เขียนไว้สำหรับ **แอปรุ่นเก่า** ซึ่งแสดง `message` ในฟอร์มอยู่แล้ว (BR-10) · แอปรุ่นใหม่ไม่แสดง message นี้ แต่เปิดกล่องถามจาก `count`/`from`/`to`
+- `409 full_score_changed`: ครูตอบกล่องถามจากตัวเลขเก่า (อีกเครื่องแก้คะแนนเต็มระหว่างถาม — AC-06) · ไม่ปรับอะไรจากตัวเลขเก่า
+
+#### สิ่งที่ลงใน batch เดียว (`batchAtEpoch`) เมื่อ `raise_choice: "adjust"` (BR-02, BR-04, BR-05)
+
+1. guard เดิม (epoch, ลดต่ำกว่าคะแนน, ห้องผิดปี) + guard ใหม่ `full_score ในฐานข้อมูล = raise_from`
+2. audit ช่องละ 1 แถว — เลือกช่องด้วย SQL **ใน batch** (`status='submitted' AND score = raise_from`) ไม่ใช้รายชื่อจาก client หรือจากการอ่านก่อนเขียน: `entity: "submission"`, `entity_id: "<aid>:<student_id>"`, `assignment_id`, `student_id`, **`action: "bulk"`**, **`method: "bulk"`**, `batch_id` = batchId, `before` = ค่าช่องก่อนปรับ, `after` = ค่าช่องหลัง batch — ทั้งสองในรูป `Submission` (10 ฟิลด์ของ `mapSubmission`: `late` เป็น boolean) เพื่อให้ EP-04 ย้อนได้โดยไม่แก้โค้ด
+3. ช่องเดียวกัน: `score = full_score ใหม่`, `method = 'bulk'`, `device_id` = เครื่องที่บันทึก, `updated_at = event_at = เวลาบันทึก` · `status`, `late`, `submitted_at`, `scan_session_id` ไม่เปลี่ยน (ยกเว้น `late` ที่ `lateFixForAssignment` ตัดสินใหม่ถ้าครูแก้กำหนดส่งในคำขอเดียวกัน — พฤติกรรมเดิม; `after` ต้องเป็นค่าหลังขั้นนี้)
+4. upsert งาน + ห้อง + `lateFixForAssignment` (เดิม)
+5. audit งาน 1 แถว (เดิม `action: "update"`) **batch_id เดียวกับข้อ 2** · `after` เพิ่ม `raise: { choice, from, to, count }` โดย `count` นับใน SQL ภายใน batch
+- `keep`: ข้อ 1, 4, 5 (`batch_id` ของ audit งาน = batchId ใหม่, `count` = คนที่ได้เต็มเดิม ณ ตอนเขียน) ไม่มี audit ช่อง
+- ไม่มีการถาม (กรณี 9): เหมือนเดิมทุกอย่าง (audit งานไม่มี `raise`, `batch_id` null) · เพิ่ม guard ใน batch: เพิ่มคะแนนเต็ม + ไม่มี `raise_choice` + มีคนได้เต็มเดิม ณ ตอนเขียน → batch ล้ม → `409 raise_choice_required` (กันคนที่สแกนเต็มเข้ามาระหว่างอ่านกับเขียน)
+
+#### ย้อนกลับการปรับ (BR-09) — ใช้ EP-04 เดิม ไม่แก้โค้ด
+
+- client เรียก `POST /api/assignments/:id/bulk-undo` `{ "batchId": raise.batchId }` → `200 { ok, changed }` (คืน score เดิม ช่องละ 1 แถว audit `restore`, คะแนนเต็มคงเป็นค่าใหม่) · ซ้ำ = `{ ok, changed: 0, alreadyUndone: true }` · ช่องถูกแก้หลังปรับ = `409 modified_since` (message ของ EP-04 พูดถึง "การล้าง" → client แสดงข้อความของตัวเอง ดูหัวข้อ client)
+- EP-04 อ่านเฉพาะแถว `action = 'bulk'` ของ batch นั้น → audit งาน (action `update`) ที่ใช้ batch_id เดียวกันไม่ถูกย้อน (คะแนนเต็มคงไว้ ตาม BR-09)
+
+#### การจัดการฝั่ง client (แอปรุ่นใหม่ — AssignmentModal)
+
+- กดบันทึก → ส่งคำขอแบบเดิม (ไม่มี `raise_choice`) เสมอ → `200` จบ (ไม่ถาม) · `409 raise_choice_required` → เปิดกล่องถาม (Dialog เดิม) ด้วย `count`/`from`/`to` จาก server — ไม่นับจากข้อมูลในเครื่อง
+- กล่องถาม: ยกเลิก / Esc / แตะนอกกล่อง → กลับฟอร์มพร้อมค่าที่กรอก ไม่ส่งคำขอ · "คงไว้" / "ปรับ" → ส่งคำขอเดิม + `raise_choice` + `raise_from = from` · ปุ่มทั้งหมด disabled จนได้ผล
+- `200` + `raise.choice = "adjust"` + `count ≥ 1` → ปิดฟอร์ม, toast ค้าง "บันทึกแล้ว · ปรับเป็นเต็มใหม่ N คน" (N = `raise.count` จาก server) พร้อมปุ่ม "ย้อนกลับ" → EP-04 · `409 modified_since` จาก EP-04 → "มีคะแนนถูกแก้หลังปรับ — ย้อนกลับไม่ได้ แก้ในสมุดคะแนนแทน"
+- `409 full_score_changed` → ปิดกล่องถาม แสดง `message` ในฟอร์ม (ค่าที่กรอกคงอยู่) · error อื่น → แสดงในฟอร์มแบบเดิม
+- แอปรุ่นเก่า (ก่อน v2): ไม่ส่ง `raise_choice` → เพิ่มคะแนนเต็มที่มีคนได้เต็มเดิมได้ `409 raise_choice_required` → ฟอร์มแสดง `message` (บันทึกไม่ได้จนอัปเดตแอป — Gate 1 Q3) · กรณีอื่นบันทึกได้เหมือนเดิม
+

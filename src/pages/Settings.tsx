@@ -160,6 +160,7 @@ export function SettingsPage() {
   }
 
   async function backup() {
+    if (ro) return; // projecting: the file holds every child's name, never written out from a shared screen (AC-248)
     setBusy("backup");
     try { await runBackup({ onRetry: () => ok("มีการบันทึกจากเครื่องอื่นระหว่างสำรอง — กำลังอ่านใหม่") }); ok("ดาวน์โหลดไฟล์สำรองแล้ว"); }
     catch (e) { err(e instanceof BackupInconsistentError ? e.message : "สำรองข้อมูลไม่สำเร็จ"); }

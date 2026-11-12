@@ -49,12 +49,20 @@ async function openTable() {
   // "ซ่อน/แสดงคะแนนทั้งหมด" lives in the ⋮ menu of the picked work (round 3); it stays open while the columns are saved
   fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" }));
 }
-const hideAll = () => screen.getByRole("menuitem", { name: "ซ่อนคะแนนทั้งหมด" }) as HTMLButtonElement;
-const showAll = () => screen.getByRole("menuitem", { name: "แสดงคะแนนทั้งหมด" }) as HTMLButtonElement;
+// the menu closes after the action (B-73c), so reopen it when a helper needs the item again
+const reopen = () => { if (!screen.queryByRole("menu")) fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" })); };
+const hideAll = () => (reopen(), screen.getByRole("menuitem", { name: "ซ่อนคะแนนทั้งหมด" })) as HTMLButtonElement;
+const showAll = () => (reopen(), screen.getByRole("menuitem", { name: "แสดงคะแนนทั้งหมด" })) as HTMLButtonElement;
 const cells = () => within(screen.getByRole("table")).getAllByRole("row")[1].querySelectorAll("td");
 const scoreText = (c: Element) => { const k = c.cloneNode(true) as HTMLElement; k.querySelector(".tot-pct")?.remove(); return k.textContent; }; // the percent is its own line (BR-30)
 
 describe("gradebook score visibility", () => {
+  it("closes the menu after hide/show all (B-73c)", async () => {
+    await openTable();
+    fireEvent.click(hideAll());
+    expect(screen.queryByRole("menu")).toBeNull();
+  });
+
   it("hides and shows every displayed column, including fractions, and updates totals and averages", async () => {
     await openTable();
     fireEvent.click(hideAll());

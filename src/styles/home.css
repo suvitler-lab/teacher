@@ -24,6 +24,12 @@
   .hm-top-act button.ghost { width: var(--tap); padding: 0; flex: none; }
   .hm-top-act .pill { flex: 1 1 auto; min-width: 0; }
   .hm-top-act .pill select { min-width: 0; width: 100%; text-overflow: ellipsis; }
+  /* T-73 B-7: the term chip (picker + gear) with the two icon buttons takes the first line so "ภาคเรียนที่ 2/2569" shows whole;
+     the date (one line, never broken) sits under it */
+  .hm-top { flex-wrap: wrap; gap: 4px 4px; }
+  .hm-top-act { order: 1; flex: 1 1 100%; gap: 4px; }
+  .hm-top-l { order: 2; flex: 1 1 100%; }
+  .hm-top-date { white-space: nowrap; }
 }
 
 /* status labels: icon + words */
@@ -183,3 +189,7 @@ button.hm-cls-main:hover { background: var(--surface-2); }
 /* the "ปรับหน้าหลัก" panel is page content: every control is a 44 px target (AC-38); an end-of-list arrow stays focusable but looks off */
 .hm-pref .mv button.icon, .hm-pref .switch { min-width: var(--tap); min-height: var(--tap); }
 .hm-pref .mv button[aria-disabled="true"] { opacity: 0.4; cursor: default; }
+
+/* T-75 (R-4706): a very long work title takes two lines at most (CSS clamp, not a cut string: the DOM and screen readers keep the
+   whole title, the title attribute shows it on hover/long-press) */
+.hm-asg .ttl, .hma-due-h .ttl, .sc-asg .ttl { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; max-width: 100%; min-width: 0; }

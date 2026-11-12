@@ -38,7 +38,7 @@ function Extra({ row, model, firstRoom }: { row: TodayRow; model: HomeModel; fir
           <Chip tone="danger" icon="calendar-x">{overdueText(o)}</Chip>
           {o.shouldClose && (
             <button type="button" class="hma-btn" aria-label={`ปิดรับงานนี้ ${o.title}`}
-              onClick={() => navigate("/gradebook", { class: o.classId, subject: o.subjectId ?? undefined, asg: o.assignmentId })}><Icon name="x" size={20} />ปิดรับงานนี้</button>
+              onClick={() => navigate("/gradebook", { class: o.classId, subject: o.subjectId ?? undefined, asg: o.assignmentId })}><Icon name="lock" size={20} />ปิดรับงานนี้</button>
           )}
         </li>
       ))}</ul>

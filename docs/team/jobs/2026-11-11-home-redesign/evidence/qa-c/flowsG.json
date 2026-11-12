@@ -1,0 +1,74 @@
+{
+  "label": "flowsG",
+  "at": "2026-11-12T11:00:25.164Z",
+  "passed": 11,
+  "total": 11,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 406
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 509
+    },
+    {
+      "id": "G01",
+      "name": "gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column",
+      "pass": true,
+      "ms": 1138
+    },
+    {
+      "id": "G02",
+      "name": "gradebook: a score typed into a cell is saved, and the running total follows",
+      "pass": true,
+      "ms": 830
+    },
+    {
+      "id": "G03",
+      "name": "gradebook: a score above the full mark is refused, not saved",
+      "pass": true,
+      "ms": 645
+    },
+    {
+      "id": "G04",
+      "name": "gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total",
+      "pass": true,
+      "ms": 5018
+    },
+    {
+      "id": "G05",
+      "name": "gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it",
+      "pass": true,
+      "ms": 2691
+    },
+    {
+      "id": "G06",
+      "name": "gradebook: edit the work (rename) and the column follows",
+      "pass": true,
+      "ms": 665
+    },
+    {
+      "id": "G07",
+      "name": "gradebook: delete the work; the column is gone",
+      "pass": true,
+      "ms": 1259
+    },
+    {
+      "id": "D01",
+      "name": "random: “ใช้ทั้งห้อง” then “สุ่มเลย” shows a name; group mode makes groups",
+      "pass": true,
+      "ms": 4436
+    },
+    {
+      "id": "D02",
+      "name": "random: clicking an option (เฉพาะคนที่มา / ไม่ซ้ำจนครบ) flips it exactly once, and the boxes are normal-sized",
+      "pass": true,
+      "ms": 646
+    }
+  ]
+}

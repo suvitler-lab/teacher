@@ -11,7 +11,7 @@ import { attDraftCount } from "../../lib/attSync";
 import { isPersisted, isInstalledApp, requestPersist } from "../../lib/storage";
 import { offlineState, applyUpdate } from "../../lib/offline";
 import { err } from "../../lib/notify";
-import { deviceLabel, NeedOnline, useOffline } from "./sections/shared";
+import { deviceLabel, NeedOnline, useOffline, useReadOnly } from "./sections/shared";
 import { projectorOn } from "../../lib/projector";
 import { bkkToday } from "@shared/time";
 import type { DeviceInfo } from "@shared/types";
@@ -73,24 +73,25 @@ function StatusCard() {
   );
 }
 
-function BackupCard({ last, onBackup, onRestore }: { last: number; onBackup: () => void; onRestore: () => void }) {
+export function BackupCard({ last, onBackup, onRestore }: { last: number; onBackup: () => void; onRestore: () => void }) {
   const b = backupLine(last);
-  const offline = useOffline();
+  const ro = useReadOnly(); // projecting = read only (AC-248): not left to the page-level observer
+  const offline = useOffline() || ro;
   return (
     <section class="card" aria-labelledby="sc-bk">
       <CardHead id="sc-bk" icon="database-export" title="สำรองล่าสุด" />
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style={b.stale ? "color:var(--text-warning)" : ""}>{b.stale && <Icon name="alert-triangle" size={16} />} {b.text}</div>
-        <div class="row" style="gap:8px"><button onClick={onBackup} disabled={offline}><Icon name="download" size={20} /> ดาวน์โหลด</button><button onClick={onRestore} disabled={offline}><Icon name="database-import" size={20} /> กู้คืน</button>{offline && <NeedOnline />}</div>
+        <div class="row" style="gap:8px"><button onClick={onBackup} disabled={offline}><Icon name="download" size={20} /> ดาวน์โหลด</button><button onClick={onRestore} disabled={offline}><Icon name="database-import" size={20} /> กู้คืน</button>{offline && (ro ? <span class="page-sub set-need-online">ปิดอยู่ตอนฉายจอ</span> : <NeedOnline />)}</div>
       </div>
     </section>
   );
 }
 
-function TermCard({ goCatalog }: { goCatalog: () => void }) {
+export function TermCard({ goCatalog }: { goCatalog: () => void }) {
   const t = currentTerm.value;
   const l = termLine(t);
-  const offline = useOffline();
+  const offline = useOffline() || useReadOnly();
   return (
     <section class="card" aria-labelledby="sc-tm">
       <CardHead id="sc-tm" icon="calendar-stats" title="ภาคเรียนปัจจุบัน" />

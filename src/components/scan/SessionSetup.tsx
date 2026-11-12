@@ -138,7 +138,7 @@ export function SessionSetup() {
                     {wt && <span class={"chip " + wt.color}><Icon name={wt.icon} size={13} /> {wt.name}</span>}
                     <span class="tip">{subjectById(a.subject_id)?.name} · เต็ม {a.full_score}</span>
                   </div>
-                  <div class="ttl">{a.title}</div>
+                  <div class="ttl" title={a.title}>{a.title}</div>
                   <div class="pc">
                     {a.class_ids.map((cid) => {
                       const p = progressFor(a.id, cid);

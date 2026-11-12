@@ -42,7 +42,8 @@ function PasswordField({ id, label, value, auto, error, onInput, inputRef }: {
   id: string; label: string; value: string; auto: "current-password" | "new-password"; error?: string;
   onInput: (v: string) => void; inputRef?: (el: HTMLInputElement | null) => void;
 }) {
-  const [show, setShow] = useState(false);
+  const [shown, setShow] = useState(false);
+  const show = shown && !useReadOnly(); // a password shown before projecting starts is hidden again on the projected screen (S-05)
   return (
     <div class="field">
       <label for={id}><span>{label}</span></label>

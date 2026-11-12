@@ -485,6 +485,7 @@ export function GradebookPage() {
   }
 
   async function toggleAllScores() {
+    setMenuOpen(false);
     if (act.anyBusy || assignments.length === 0) return;
     // A mixed table hides the remaining visible columns; a fully hidden table shows them all.
     const publish = assignments.every((a) => !a.publish_scores);
@@ -567,11 +568,12 @@ export function GradebookPage() {
   const scrollSig = dgroups.map((x) => `${x.group.key}:${folded(x.group) ? "f" : x.shown.length}`).join("|") + `|${colPrefs.showTotal}|${colPrefs.showBars}|${shownStudents.length}`;
   const scrollFlags = useScrollFlags(scrollRef, hasTable, scrollSig);
   // Desktop (mouse): size the table to the room left on screen, so the TABLE is the one thing that scrolls up/down
-  // and the page itself does not (two stacked vertical scrollbars were confusing). Touch screens keep the CSS height.
+  // and the page itself does not (two stacked vertical scrollbars were confusing). Tablets (iPad, >= 721px wide) fit the same way
+  // (AC-150: the frame used to hang 200-360px below the screen); a phone has no table, so it keeps the CSS height.
   useEffect(() => {
     const sc = scrollRef.current;
     if (!sc || !hasTable) return;
-    const mq = typeof matchMedia === "function" ? matchMedia("(hover: hover) and (pointer: fine)") : null;
+    const mq = typeof matchMedia === "function" ? matchMedia("(hover: hover) and (pointer: fine), (min-width: 721px)") : null;
     const fit = () => {
       if (!mq?.matches) { sc.style.maxHeight = ""; return; }
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
@@ -585,7 +587,7 @@ export function GradebookPage() {
       const top = frame.getBoundingClientRect().top + window.scrollY;
       const pad = parseFloat(getComputedStyle(document.querySelector(".main") ?? document.body).paddingBottom || "0")
         + (parseFloat(getComputedStyle(frame.parentElement as HTMLElement).marginBottom || "0") || 0);
-      sc.style.maxHeight = `${Math.max(12 * rem, window.innerHeight - top - below - pad - 4)}px`;
+      sc.style.maxHeight = `${Math.max(12 * rem, window.innerHeight - top - below - pad - 2)}px`;
     };
     fit();
     window.addEventListener("resize", fit);

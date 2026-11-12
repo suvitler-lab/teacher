@@ -11,7 +11,8 @@ import { formatThaiDate, formatThaiDateMs } from "../../lib/dates";
 import { fullName, shortName } from "../../lib/names";
 import { dashboard } from "../../lib/dashboard";
 import { hideNames } from "../../lib/homePrefs";
-import { pendingCount, failedCount } from "../../lib/outbox";
+import { pendingCount, failedCount, online } from "../../lib/outbox";
+import { projectorOn } from "../../lib/projector";
 import { attDrafts, attDraftCount } from "../../lib/attSync";
 import { failedPanelOpen } from "../Overlays";
 import { followUpText } from "../../lib/report";
@@ -94,7 +95,7 @@ export function OpenCard() {
                   {wt && <span class={"chip " + wt.color}>{wt.name}</span>}
                   <span class="page-sub">{subj?.name} · เต็ม {a.assignment.full_score}{!isOpen ? " · ปิดรับแล้ว" : ""}</span>
                 </div>
-                <div class="ttl">{a.assignment.title}</div>
+                <div class="ttl" title={a.assignment.title}>{a.assignment.title}</div>
               </div>
               <span class="row" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">
                 <Chip tone={due.tone} icon={due.icon}>{!a.assignment.due_date && filter === "close" ? `ไม่มีกำหนดส่ง · เปิดมา ${openDays(a.assignment, t)} วัน` : due.text}</Chip>
@@ -218,7 +219,7 @@ export function DueCard() {
         return (
           <div class="hm-asg">
             <div class="row" style="justify-content:space-between;gap:6px;align-items:flex-start">
-              <div style="min-width:0"><div class="ttl">{a.assignment.title}</div><div class="page-sub">{classById(r.classId)?.name} · {subjectById(a.assignment.subject_id)?.name}</div></div>
+              <div style="min-width:0"><div class="ttl" title={a.assignment.title}>{a.assignment.title}</div><div class="page-sub">{classById(r.classId)?.name} · {subjectById(a.assignment.subject_id)?.name}</div></div>
               <Chip tone={due.tone} icon={due.icon}>{due.text}</Chip>
             </div>
             <div class="row" style="margin-top:6px;flex-wrap:wrap;gap:6px">
@@ -372,7 +373,7 @@ export function TermCard() {
             </>
           )}
           <div class="hm-kv"><span>ห้องในปีนี้</span><b>{rooms.length} ห้อง · {pupils} คน</b></div>
-          {ended && <div class="row" style="justify-content:flex-end;margin-top:8px"><button onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button></div>}
+          {ended && <div class="row" style="justify-content:flex-end;margin-top:8px">{(!online.value || projectorOn.value) && <span class="page-sub set-need-online">{projectorOn.value ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</span>}<button disabled={!online.value || projectorOn.value} onClick={() => { startTermOpen.value = true; }}><Icon name="calendar-event" size={20} /> เริ่มภาคเรียนใหม่</button></div>}
         </>
       )}
     </section>

@@ -35,9 +35,22 @@ function explain(e: unknown): { text: string; retry: boolean } {
 }
 
 /**
- * Said before every backup download (security review S-04): the file is the whole school's data about children,
- * unencrypted — once it leaves the app, keeping it safe is up to the teacher.
+ * The one wording about the backup file (AC-242, security review S-04/S-01): the file is the whole school's data about children,
+ * unencrypted. Used before every download — the plain one and the safety copy taken before a restore.
  */
+export function BackupWarningText() {
+  return (
+    <>
+      <div class="imp-warn" style="margin:0 0 10px"><Icon name="alert-triangle" size={15} /> ไฟล์นี้มีข้อมูลส่วนบุคคลของนักเรียน (ผู้เยาว์) และไม่ได้เข้ารหัส</div>
+      <div style="font-size:var(--fs-sm);line-height:1.6;margin-bottom:10px">
+      <div><b style="font-weight:500">ในไฟล์มี:</b> ชื่อ-นามสกุล รหัส เลขที่ ห้อง คะแนน การเข้าเรียน รหัส PIN และรหัส QR ของบัตรนักเรียน</div>
+      <div><b style="font-weight:500">เก็บให้ปลอดภัย:</b> เก็บไว้ในเครื่องหรือไดรฟ์ส่วนตัวที่มีรหัสผ่าน · อย่าส่งทาง LINE อีเมล หรือกลุ่มแชต · ลบไฟล์เก่าที่ไม่ใช้แล้ว</div>
+      <div><b style="font-weight:500">ถ้าไฟล์หลุดไป:</b> ออกบัตร QR ใหม่ให้นักเรียนในหน้านักเรียน</div>
+      </div>
+    </>
+  );
+}
+
 export function BackupWarning({ onConfirm, onClose }: { onConfirm: () => void; onClose: () => void }) {
   return (
     <div class="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -46,12 +59,7 @@ export function BackupWarning({ onConfirm, onClose }: { onConfirm: () => void; o
           <h2 style="font-size:1.2rem">ก่อนดาวน์โหลดไฟล์สำรอง</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose}><Icon name="x" /></button>
         </div>
-        <div class="imp-warn" style="margin:0 0 10px"><Icon name="alert-triangle" size={15} /> ไฟล์นี้มีข้อมูลส่วนบุคคลของนักเรียน (ผู้เยาว์) และไม่ได้เข้ารหัส</div>
-        <div style="font-size:var(--fs-sm);line-height:1.6;margin-bottom:10px">
-          <div><b style="font-weight:500">ในไฟล์มี:</b> ชื่อ-นามสกุล รหัส เลขที่ ห้อง คะแนน การเข้าเรียน รหัส PIN และรหัส QR ของบัตรนักเรียน</div>
-          <div><b style="font-weight:500">เก็บให้ปลอดภัย:</b> เก็บไว้ในเครื่องหรือไดรฟ์ส่วนตัวที่มีรหัสผ่าน · อย่าส่งทาง LINE อีเมล หรือกลุ่มแชต · ลบไฟล์เก่าที่ไม่ใช้แล้ว</div>
-          <div><b style="font-weight:500">ถ้าไฟล์หลุดไป:</b> ออกบัตร QR ใหม่ให้นักเรียนในหน้านักเรียน</div>
-        </div>
+        <BackupWarningText />
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:10px">
           <button onClick={onClose}>ยกเลิก</button>
           <button class="primary" onClick={onConfirm}><Icon name="download" size={16} /> เข้าใจแล้ว ดาวน์โหลด</button>
@@ -197,7 +205,8 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
         {stage === "pick" && (
           <>
             <div class="page-sub" style="margin-bottom:10px">เลือกไฟล์สำรอง (.json) ที่เคยดาวน์โหลดไว้ ระบบจะตรวจความถูกต้องก่อน</div>
-            <input type="file" accept="application/json,.json" onChange={onPick} />
+            <input type="file" accept="application/json,.json" onChange={onPick} disabled={offline || projecting} aria-label="เลือกไฟล์สำรอง" />
+            {(offline || projecting) && <div class="page-sub set-need-online" style="margin-top:6px">{projecting ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</div>}
           </>
         )}
 
@@ -212,13 +221,14 @@ export function RestoreModal({ onClose, onDone }: { onClose: () => void; onDone:
               <div><Icon name="alert-triangle" size={14} /> <b style="font-weight:500">กู้คืนแทนข้อมูลปัจจุบัน</b> — ข้อมูลที่เกิดหลังวันที่สำรองจะหายไป</div>
               <div style="margin-top:4px;opacity:.9">ระบบดาวน์โหลดสำรองข้อมูลปัจจุบันให้อัตโนมัติก่อน และเปลี่ยนข้อมูลทีเดียวทั้งหมด ถ้าล้มเหลวจะไม่มีอะไรเปลี่ยน · รหัสผ่านและเครื่องที่เข้าระบบไว้ไม่ถูกแตะ</div>
             </div>
+            {stage === "validated" && <div style="margin-bottom:10px"><BackupWarningText /></div>}
             {stage === "running" ? (
               <div class="row" style="gap:8px"><Icon name="loader-2" class="spin" /> {progress}</div>
             ) : (
               <>
                 <label class="dz-check">
                   <input type="checkbox" checked={accepted} onChange={(e) => setAccepted((e.target as HTMLInputElement).checked)} />
-                  <span>ตรวจแล้ว ยอมรับว่าข้อมูลปัจจุบันจะถูกแทนที่ด้วยไฟล์นี้ และข้อมูลที่เกิดหลังวันที่สำรองจะหายไป</span>
+                  <span>ตรวจแล้ว ยอมรับว่าข้อมูลปัจจุบันจะถูกแทนที่ด้วยไฟล์นี้ และข้อมูลที่เกิดหลังวันที่สำรองจะหายไป · ระบบจะดาวน์โหลดสำรองข้อมูลปัจจุบันของคุณลงเครื่องนี้ก่อนกู้คืน — ไฟล์มีข้อมูลนักเรียนทั้งหมด ไม่เข้ารหัส ต้องเก็บให้ปลอดภัย</span>
                 </label>
                 <div class="dz-modal-actions">
                   {(offline || projecting) && <span class="page-sub set-need-online">{projecting ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</span>}

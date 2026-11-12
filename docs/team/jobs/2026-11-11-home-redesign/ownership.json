@@ -559,6 +559,205 @@
         "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-68.md",
         "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
       ]
+    },
+    "T-69": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/styles/grade.css",
+        "src/styles/report.css",
+        "src/styles/students.css",
+        "src/styles/attend.css",
+        "src/styles/ui.css",
+        "src/styles/home.css",
+        "src/pages/Gradebook.tsx",
+        "src/components/gradebook/**",
+        "src/pages/Reports.tsx",
+        "src/components/reports/**",
+        "src/pages/Students.tsx",
+        "src/components/students/**",
+        "src/pages/Attendance.tsx",
+        "src/components/ui.tsx",
+        "test/unit/hr-gb*.test.tsx",
+        "test/unit/hr-rp*.test.tsx",
+        "test/unit/hr-st*.test.tsx",
+        "test/unit/hr-att*.test.tsx",
+        "test/unit/hr-term-chip-*.test.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-69.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-70": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/RestoreModal.tsx",
+        "src/components/StartTermModal.tsx",
+        "src/components/settings/SettingsCards.tsx",
+        "src/components/settings/sections/BackupSection.tsx",
+        "src/components/settings/sections/AccountSection.tsx",
+        "src/components/home/cards.tsx",
+        "src/components/home/Todo.tsx",
+        "src/components/home/model.tsx",
+        "src/pages/Settings.tsx",
+        "src/pages/Students.tsx",
+        "test/unit/hr-sg*.test.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "test/unit/sec-backup-warning.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-70.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-71": {
+      "role": "team-qa-tester",
+      "paths": [
+        "scripts/qa-flows.cjs",
+        "scripts/qa-sweep.cjs",
+        "scripts/offline-e2e.cjs",
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-c.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**",
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-a.md",
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-b.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-2.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-3.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-4.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-5.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-6.md"
+      ]
+    },
+    "T-72": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "test/unit/hr-sg*.test.tsx",
+        "test/unit/hr-gb*.test.tsx",
+        "test/unit/hr-st*.test.tsx",
+        "test/unit/hr-random*.test.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-72.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-73": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/attendance/**",
+        "src/pages/Attendance.tsx",
+        "src/styles/attend.css",
+        "src/components/ui.tsx",
+        "src/styles/ui.css",
+        "src/components/reports/**",
+        "src/pages/Reports.tsx",
+        "src/styles/report.css",
+        "src/components/settings/sections/AppearanceSection.tsx",
+        "src/styles/home.css",
+        "test/unit/hr-att*.test.tsx",
+        "test/unit/hr-term-chip*.test.tsx",
+        "test/unit/hr-rp*.test.tsx",
+        "test/unit/hr-sg*.test.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-73.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-74": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-d.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-75": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/styles/ui.css",
+        "src/styles/scan.css",
+        "src/styles/home.css",
+        "src/styles/base.css",
+        "src/styles/report.css",
+        "src/styles/attend.css",
+        "src/styles/students.css",
+        "src/components/home/**",
+        "src/components/scan/**",
+        "src/components/ui.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "test/unit/hr-scan*.test.tsx",
+        "test/unit/hr-sweep-colors*.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-75.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-76": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-e.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-77": {
+      "role": "team-code-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/code-review.part-27.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-78": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-f.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-79": {
+      "role": "team-security-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/security-review.part-2.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-80": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-g.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-81": {
+      "role": "team-code-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/code-review.part-28.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-82": {
+      "role": "team-security-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/security-review.part-3.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-83": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-h.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-84": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/styles/grade.css",
+        "src/styles/home-a.css",
+        "src/styles/students.css",
+        "src/styles/ui.css",
+        "src/components/home/a/**",
+        "src/components/gradebook/**",
+        "src/pages/Gradebook.tsx",
+        "src/components/students/**",
+        "test/unit/hr-gb*.test.tsx",
+        "test/unit/hr-vfix-*.test.tsx",
+        "test/unit/hr-st*.test.tsx",
+        "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-84.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
     }
   },
   "shared": [

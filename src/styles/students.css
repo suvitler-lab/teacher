@@ -102,7 +102,8 @@ button.stu-tile:hover { background: var(--surface-1); }
   .stu-lrow .who > .page-sub { flex: 0 100 auto; min-width: 0; }
 }
 @container stu (max-width: 34rem) { .stu-lrow .who { flex-direction: column; align-items: stretch; gap: 0; } }
-@media (pointer: coarse) { .stu-lrow { min-height: 56px; } .stu-hbtn { min-height: 44px; } }
+/* T-69 · AC-185/203: 3px above and below the two text lines (44px) -> a 51px row, held at 52px by --row-h below; 6px made it 57 and cost iPad upright its 12th row */
+@media (pointer: coarse) { .stu-lrow { min-height: 56px; padding-top: 3px; padding-bottom: 3px; } .stu-hbtn { min-height: 44px; } }
 
 /* print toolbar (sticker sheet) */
 .print-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
@@ -180,7 +181,7 @@ button.stu-tile:hover { background: var(--surface-1); }
 .stu-row2 { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; min-width: 0; }
 .stu-meta { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; flex: 1 1 18rem; min-width: 0; font-size: var(--fs-xs); color: var(--text-secondary); }
 .stu-meta .stu-found { margin-inline-start: auto; }
-.stu-reload { min-height: 44px; font-size: var(--fs-sm); }
+.stu-reload { position: relative; min-height: 44px; font-size: var(--fs-sm); }
 .stu-tabs { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-sm); background: var(--surface-1); border: 0.5px solid var(--border); flex: none; }
 .stu-tab { min-height: 44px; padding: 0 12px; border-radius: 6px; border: 0.5px solid transparent; background: transparent; color: var(--text-secondary); font-size: var(--fs-sm); }
 .stu-tab[aria-pressed="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-control); }
@@ -299,5 +300,19 @@ button.stu-tile:hover { background: var(--surface-1); }
   .stu-list-head { top: var(--lh2); border-radius: 0; }
 }
 
+/* T-69 · AC-185/203 iPad upright: the note and "พบ n จาก n คน" sit on two short lines beside an icon-only [โหลดใหม่] (aria-label keeps the word)
+   instead of wrapping to three lines (74px -> 48px) — the 12th row of the list fits on 820x1180 */
+@media (min-width: 561px) and (max-width: 1000px) {
+  .stu-row2 { flex-wrap: nowrap; }
+  .stu-meta { flex: 1 1 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; }
+  .stu-meta > span:first-child { grid-column: 1; grid-row: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.25; }
+  .stu-meta .stu-found { grid-column: 1; grid-row: 2; margin: 0; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+  .stu-meta .stu-reload { grid-column: 2; grid-row: 1 / 3; }
+  .stu-reload .stu-rl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
 /* T-67 (ST-S03): the three empty-state buttons keep 44px and wrap */
 .stu-tplempty { margin-top: 0; }
+
+/* T-75: same rule for a disabled tile (opacity .72 stays; primary text for >= 4.5:1 on the light skins) */
+.stu-tile:disabled, .stu-tile:disabled .ts { color: var(--text-primary); }

@@ -1,0 +1,326 @@
+{
+ "reports|820x1180t": {
+  "sw": 820,
+  "iw": 820,
+  "sh": 3350,
+  "ih": 1180,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 54,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "rpRatio": 96.2,
+  "rpRows": 0,
+  "rpRowH": 45,
+  "rpLg": false,
+  "nameBtnH": [
+   44,
+   44,
+   44
+  ]
+ },
+ "attendance|820x1180t": {
+  "sw": 820,
+  "iw": 820,
+  "sh": 2009,
+  "ih": 1180,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 54,
+  "attHero": 142,
+  "tiles": 45,
+  "tilesVis": 36,
+  "tileH": 57,
+  "tileLast": 1353
+ },
+ "students|820x1180t": {
+  "sw": 820,
+  "iw": 820,
+  "sh": 3177,
+  "ih": 1180,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 112,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "stuRows": 12,
+  "stuRowH": 56,
+  "stuFirst": 489
+ },
+ "gradebook|820x1180t": {
+  "sw": 820,
+  "iw": 820,
+  "sh": 1180,
+  "ih": 1180,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 46,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "gbRows": 18,
+  "gbCols": 20,
+  "gbBottom": 1178,
+  "gbRowH": 44
+ },
+ "reports|1180x820t": {
+  "sw": 1180,
+  "iw": 1180,
+  "sh": 2517,
+  "ih": 820,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 54,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "rpRatio": 57.7,
+  "rpRows": 10,
+  "rpRowH": 45,
+  "rpLg": true,
+  "nameBtnH": [
+   44,
+   44,
+   44
+  ]
+ },
+ "attendance|1180x820t": {
+  "sw": 1180,
+  "iw": 1180,
+  "sh": 1193,
+  "ih": 820,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 54,
+  "attHero": 156,
+  "tiles": 45,
+  "tilesVis": 20,
+  "tileH": 57,
+  "tileLast": 1087
+ },
+ "students|1180x820t": {
+  "sw": 1180,
+  "iw": 1180,
+  "sh": 2742,
+  "ih": 820,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 112,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "stuRows": 8,
+  "stuRowH": 52,
+  "stuFirst": 361
+ },
+ "gradebook|1180x820t": {
+  "sw": 1180,
+  "iw": 1180,
+  "sh": 820,
+  "ih": 820,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 0,
+  "chip": [
+   264,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   44,
+   44
+  ],
+  "gbRows": 10,
+  "gbCols": 20,
+  "gbBottom": 818,
+  "gbRowH": 44
+ },
+ "reports|1536x729m": {
+  "sw": 1521,
+  "iw": 1536,
+  "sh": 1953,
+  "ih": 729,
+  "coarse": false,
+  "ovf": false,
+  "hdr": 48,
+  "chip": [
+   261,
+   32
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   34,
+   30
+  ],
+  "rpRatio": 58.5,
+  "rpRows": 10,
+  "rpRowH": 44,
+  "rpLg": true,
+  "nameBtnH": [
+   36,
+   36,
+   36
+  ]
+ },
+ "attendance|1536x729m": {
+  "sw": 1521,
+  "iw": 1536,
+  "sh": 1039,
+  "ih": 729,
+  "coarse": false,
+  "ovf": false,
+  "hdr": 48,
+  "attHero": 94,
+  "tiles": 45,
+  "tilesVis": 24,
+  "tileH": 56,
+  "tileLast": 933
+ },
+ "students|1536x729m": {
+  "sw": 1521,
+  "iw": 1536,
+  "sh": 2485,
+  "ih": 729,
+  "coarse": false,
+  "ovf": false,
+  "hdr": 48,
+  "chip": [
+   261,
+   32
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   34,
+   30
+  ],
+  "stuRows": 9,
+  "stuRowH": 48,
+  "stuFirst": 284
+ },
+ "gradebook|1536x729m": {
+  "sw": 1536,
+  "iw": 1536,
+  "sh": 729,
+  "ih": 729,
+  "coarse": false,
+  "ovf": false,
+  "hdr": 0,
+  "chip": [
+   261,
+   32
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 · ปัจจุบัน",
+  "gear": [
+   34,
+   30
+  ],
+  "gbRows": 11,
+  "gbCols": 20,
+  "gbBottom": 711,
+  "gbRowH": 37
+ },
+ "reports|375x812t": {
+  "sw": 375,
+  "iw": 375,
+  "sh": 3488,
+  "ih": 812,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 112,
+  "rpRatio": 92.5,
+  "rpRows": 0,
+  "rpRowH": 69,
+  "rpLg": false,
+  "nameBtnH": [
+   44,
+   44,
+   44
+  ]
+ },
+ "attendance|375x812t": {
+  "sw": 375,
+  "iw": 375,
+  "sh": 2473,
+  "ih": 812,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 112,
+  "attHero": 191,
+  "tiles": 45,
+  "tilesVis": 8,
+  "tileH": 56,
+  "tileLast": 1985
+ },
+ "students|375x812t": {
+  "sw": 375,
+  "iw": 375,
+  "sh": 3307,
+  "ih": 812,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 54,
+  "stuRows": 8,
+  "stuRowH": 60,
+  "stuFirst": 323
+ },
+ "gradebook|375x812t": {
+  "sw": 375,
+  "iw": 375,
+  "sh": 3813,
+  "ih": 812,
+  "coarse": true,
+  "ovf": false,
+  "hdr": 164,
+  "chip": [
+   216,
+   46
+  ],
+  "selClip": false,
+  "selTxt": "ภาคเรียนที่ 2/2569 ●",
+  "gear": [
+   44,
+   44
+  ]
+ }
+}

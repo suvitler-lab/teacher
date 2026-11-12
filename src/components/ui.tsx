@@ -70,19 +70,36 @@ export function ClassChips({ items, value, onPick }: {
 }
 
 // ---- term picker (shared selected term) ----------------------------------
+/** T-73 B-7: a phone-wide screen (the chip has no room for " · ปัจจุบัน") */
+function useNarrow(): boolean {
+  const q = "(max-width: 720px)";
+  const get = () => { try { return typeof matchMedia === "function" && matchMedia(q).matches; } catch { return false; } };
+  const [on, setOn] = useState(get);
+  useEffect(() => {
+    if (typeof matchMedia !== "function") return;
+    const m = matchMedia(q), f = () => setOn(m.matches);
+    m.addEventListener?.("change", f);
+    return () => m.removeEventListener?.("change", f);
+  }, []);
+  return on;
+}
+
 export function TermPicker() {
+  const narrow = useNarrow();
   const list = terms.value;
   if (list.length === 0) return null;
   return (
-    <label class="pill" style="cursor:pointer;gap:5px">
+    <label class="pill tp-pill" style="cursor:pointer;gap:5px">
       <Icon name="calendar-event" size={15} />
       <select
         aria-label="ภาคเรียนที่แสดง"
+        title={(() => { const t = list.find((x) => x.id === selectedTermId.value); return t ? `ภาคเรียนที่แสดง: ${t.name}${t.is_current ? " · ปัจจุบัน" : ""}` : undefined; })()}
         value={selectedTermId.value ?? ""}
         onChange={(e) => setSelectedTerm((e.target as HTMLSelectElement).value)}
         style="border:none;background:transparent;height:auto;width:auto;padding:0;color:inherit;font-size:var(--fs-sm)"
       >
-        {list.map((t) => <option value={t.id}>{t.name}{t.is_current ? " · ปัจจุบัน" : ""}</option>)}
+        {/* narrow: a dot (●) stands for "ปัจจุบัน" so the name is never cut; the full words stay in aria-label / title */}
+        {list.map((t) => <option value={t.id} aria-label={t.is_current ? `${t.name} · ปัจจุบัน` : undefined} title={t.is_current ? `${t.name} · ปัจจุบัน` : undefined}>{t.name}{t.is_current ? (narrow ? " ●" : " · ปัจจุบัน") : ""}</option>)}
         <option value={UNASSIGNED}>ยังไม่ระบุเทอม</option>
       </select>
       {/* AC-211 P6: a way into the terms list, inside the same chip (no new row, no taller header) */}

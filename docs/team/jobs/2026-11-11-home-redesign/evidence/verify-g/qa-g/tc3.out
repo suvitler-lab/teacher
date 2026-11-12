@@ -1,0 +1,9 @@
+TC-700 visible: {"rpSubVisible":0,"rowsIn":10,"tableTop":247}
+TC-701 visible: {"rpSubVisible":0,"rowsIn":11,"tableTop":296}
+TC-701 w1000 visible: {"rpSubVisible":0,"rowsIn":0,"tableTop":1140}
+TC-702 ตั้ง visible: {"rpSubVisible":0,"rowsIn":0,"tableTop":1511}
+TC-702 ตั้ง rows in view after scrolling table to top: {"rpSubVisible":0,"rowsIn":21,"tableTop":181}
+TC-702 มือถือ visible: {"rpSubVisible":32,"rowsIn":0,"tableTop":1842}
+TC-711 phone toolbar buttons: ["ซ่อนชื่อนักเรียน","เมนูเพิ่มเติม","งานค้าง 7 ชิ้น · น","มาเรียน 94 เปอร์เซ","ป.6/132","ป.6/230","ป.5/128","ป.4/110","ป.4/20","ตัวกรอง (0)","ส่งออก","เรียงตาม ส่งงาน","เรียงตามเลขที่","เรียงตามส่งงาน"]
+ERR home 1440x900: locator.click: Timeout 8000ms exceeded. Call log:
+exit 0

@@ -24,7 +24,13 @@
 /* "จัดการภาคเรียน ›" inside the term chip: sits flush at the chip's right edge, takes the chip's height */
 .tp-manage { display: inline-flex; align-items: center; justify-content: center; align-self: stretch; min-width: 28px; margin: 0 -12px 0 0; padding: 0 8px; border-left: 0.5px solid var(--border-control); border-radius: 0 999px 999px 0; color: inherit; text-decoration: none; }
 .tp-manage:hover { background: var(--bg-accent); color: var(--text-accent); }
-@media (pointer: coarse) { .tp-manage { min-width: var(--tap); } }
+/* touch: the gear keeps a full 44px target, so the chip pays for it by dropping its decorative calendar icon and 2px of left padding
+   (net +7px instead of +37px) — a header that fitted on one line before T-68 must still fit (AC-150, R-6802) */
+@media (pointer: coarse) {
+  .tp-manage { min-width: var(--tap); padding: 0; margin-left: -5px; }
+  .pill.tp-pill { padding-left: 10px; }
+  .pill.tp-pill > .ti { display: none; }
+}
 .pill.on { background: var(--bg-accent); color: var(--text-accent); border-color: var(--border-accent); font-weight: 500; }
 .pill .n { opacity: 1; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
 .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -129,3 +135,14 @@ button.uc-stat:hover { background: var(--surface-1); }
 
 /* drawers: the action buttons stay in view while a long list scrolls */
 .drawer-actions { position: sticky; bottom: 0; background: var(--surface-2); padding: 8px 0; border-top: 0.5px solid var(--border); }
+
+/* T-75 (verify QA-D, header on a touch iPad 744-819px wide): the sidebar leaves ~600-680px for the header, which is where the gear
+   (T-68) and the term chip made every header wrap to 112-164px (820px and wider keep one row). In this band the action buttons of
+   the work headers go icon-only (the aria-labels / titles stay) and the report header's subtitle gives up width (one line, ellipsis)
+   so the title, chip, gear and buttons share the row as they do at 820. */
+@media (pointer: coarse) and (min-width: 721px) and (max-width: 819px) {
+  .uh-act .att-hide-sm { display: none; }
+  .uh-act > button.ghost, .uh-act > .pj-pre-wrap > button { min-width: var(--tap); padding-left: 0; padding-right: 0; justify-content: center; }
+  .rp-page > .uh > .uh-l { flex: 1 1 11rem; min-width: 0; }
+  .rp-page > .uh .uh-sub > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

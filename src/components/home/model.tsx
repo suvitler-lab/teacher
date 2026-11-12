@@ -1,7 +1,9 @@
 // Works the home page's numbers out once, so ก / ข / ค show the same figures (BR-09), and runs what a row's button does.
 import { settings, classById, currentTerm, viewClasses, studentsByClass, viewingPastYear, startTermOpen } from "../../store";
 import { navigate } from "../../router";
-import { pendingCount, failedCount } from "../../lib/outbox";
+import { pendingCount, failedCount, online } from "../../lib/outbox";
+import { projectorOn } from "../../lib/projector";
+import { err } from "../../lib/notify";
 import { attDraftCount, attDrafts } from "../../lib/attSync";
 import { dashboardAt, dashboardStale } from "../../lib/dashboard";
 import { failedPanelOpen } from "../Overlays";
@@ -56,6 +58,13 @@ export function buildHomeModel(raw: DashboardPayload, deferred: string[], hide =
 /** What the button of a row does: the same places the old "ต้องทำตอนนี้" card went to (BR-09). */
 export function runTodayGo(go: TodayGo): void {
   if (go.type === "failed") failedPanelOpen.value = true;
-  else if (go.type === "term") startTermOpen.value = true;
+  else if (go.type === "term") startTermOrExplain();
   else navigate(go.path, go.params);
+}
+
+/** Starting a term cannot be undone (BR-59): not while projecting, not without a connection — say why instead of opening the box. */
+export function startTermOrExplain(): void {
+  if (projectorOn.value) { err("เริ่มภาคเรียนใหม่ไม่ได้ขณะฉายจอ — ปิดโหมดฉายจอก่อน"); return; }
+  if (!online.value) { err("เริ่มภาคเรียนใหม่ต้องออนไลน์"); return; }
+  startTermOpen.value = true;
 }

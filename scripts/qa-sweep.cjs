@@ -21,7 +21,7 @@ const arg = (name, dflt) => { const m = process.argv.find((a) => a.startsWith(`-
 const LATENCY = Number(arg("latency", "200"));
 const LABEL = arg("label", "run");
 const SHOTS = process.env.QA_SHOTS || path.join(os.tmpdir(), "qa-shots-" + LABEL);
-const OUT = path.join(__dirname, "..", "docs", "qa-2026-10-01", "results");
+const OUT = process.env.QA_OUT || path.join(__dirname, "..", "docs", "qa-2026-10-01", "results");
 fs.mkdirSync(SHOTS, { recursive: true }); fs.mkdirSync(OUT, { recursive: true });
 
 const PAGES = [
@@ -36,9 +36,14 @@ const PAGES = [
   { name: "settings-time", hash: "/settings?section=time" },
   { name: "settings-scan", hash: "/settings?section=scan" },
   { name: "settings-catalog", hash: "/settings?section=catalog" },
-  { name: "settings-devices", hash: "/settings?section=devices" },
+  { name: "settings-worktypes", hash: "/settings?section=worktypes" },        // new section (was a tab of catalog)
+  { name: "settings-appearance", hash: "/settings?section=appearance" },      // new section (T-53/T-54)
+  { name: "settings-privacy", hash: "/settings?section=privacy" },            // new section
+  { name: "settings-device", hash: "/settings?section=device" },              // "ตรวจเครื่องและออฟไลน์" (new)
+  { name: "settings-devices", hash: "/settings?section=devices" },            // now "บัญชีและอุปกรณ์"
   { name: "settings-backup", hash: "/settings?section=backup" },
   { name: "settings-history", hash: "/settings?section=history" },
+  { name: "settings-reset", hash: "/settings?section=reset" },                // "เริ่มใหม่ (ล้างข้อมูล)" (danger zone, was inside backup)
 ];
 const SIZES = [{ name: "desktop", width: 1440, height: 900 }, { name: "tablet", width: 768, height: 1024 }, { name: "phone", width: 390, height: 844 }];
 const THEMES = ["light", "dark"];
@@ -52,7 +57,7 @@ const note = (sev, where, what, extra = {}) => { findings.push({ sev, where, wha
 /** Page-side audit: sideways scroll, small tap targets, unnamed controls, broken images. */
 const audit = () => {
   const vw = window.innerWidth;
-  const out = { overflowX: document.documentElement.scrollWidth - vw, small: [], unnamed: [], wide: [], imgNoAlt: 0, h1: null, hasHeader: !!document.querySelector(".uh"), title: document.querySelector(".uh-title")?.textContent || null };
+  const out = { overflowX: document.documentElement.scrollWidth - vw, small: [], unnamed: [], wide: [], imgNoAlt: 0, h1: null, hasHeader: !!document.querySelector(".uh") || !!document.querySelector("h1.hm-greet"), /* the redesigned home has the greeting h1 instead of the icon+title header */ title: document.querySelector(".uh-title")?.textContent || document.querySelector("h1.hm-greet")?.textContent || null };
   const vis = (el) => { const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none"; };
   const label = (el) => (el.getAttribute("aria-label") || el.getAttribute("title") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 40);
   for (const el of document.querySelectorAll("button, a[href], [role=button], select, input:not([type=hidden])")) {
@@ -66,14 +71,16 @@ const audit = () => {
   for (const el of document.querySelectorAll("body *")) {
     if (!vis(el)) continue;
     const r = el.getBoundingClientRect();
-    if (r.right > vw + 2 && out.wide.length < 6 && !el.closest(".gb-scroll, .gb-mchips, .set-nav-chips, .chips-row, [style*='overflow']")) out.wide.push(`${el.tagName.toLowerCase()}.${String(el.className).slice(0, 30)} → ${Math.round(r.right)}px`);
+    // (anything inside a box that scrolls sideways on purpose — e.g. the attendance week strip — is not a leak: judged by the computed style, not a class list)
+    const inScroller = () => { for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) { const ox = getComputedStyle(p).overflowX; if (ox === "auto" || ox === "scroll") return true; } return false; };
+    if (r.right > vw + 2 && out.wide.length < 6 && !el.closest(".gb-scroll, .gb-mchips, .set-nav-chips, .chips-row, [style*='overflow']") && !inScroller()) out.wide.push(`${el.tagName.toLowerCase()}.${String(el.className).slice(0, 30)} → ${Math.round(r.right)}px`);
   }
   out.imgNoAlt = [...document.querySelectorAll("img")].filter((i) => !i.hasAttribute("alt")).length;
   return out;
 };
 
 (async () => {
-  const server = await startFixtureServer({ port: 5310 });
+  const server = await startFixtureServer({ port: Number(process.env.QA_PORT || 5310), assetsDir: process.env.QA_ASSETS || undefined });
   const browser = await playwright.chromium.launch();
   const apiFailures = () => server.apiLog.filter((c) => c.status >= 400 && c.status !== 401);
 
@@ -173,33 +180,44 @@ const audit = () => {
 
   // gradebook: the eye that hides an assignment's scores
   await go("/gradebook", "table.gb tbody tr");
-  const eye = page.locator("table.gb thead .hs-eye").first();
+  // (the eye now only shows on the SELECTED column header, or on one that is already hidden: select a column first, as a teacher would)
+  await page.locator("table.gb thead th.col-w[data-aid]").nth(2).click();
+  const eye = page.locator("table.gb thead th.sel .hs-eye").first();
   if (await eye.count()) {
     const off = () => page.locator("table.gb thead .hs-eye.off").count();
-    // the first eye may already be "off" (an exam the demo data keeps hidden): expect the count to move the other way
+    // the selected eye may already be "off" (an exam the demo data keeps hidden): expect the count to move the other way
     const wasOff = await eye.evaluate((el) => el.classList.contains("off"));
     const n0 = await off();
     await measure("gradebook: click the eye (toggle)", () => eye.click(), (n) => document.querySelectorAll("table.gb thead .hs-eye.off").length === n, wasOff ? n0 - 1 : n0 + 1);
     await measure("gradebook: click the eye again (toggle back)", () => eye.click(), (n) => document.querySelectorAll("table.gb thead .hs-eye.off").length === n, n0);
     // an impatient teacher taps twice: whatever the screen ends up showing must be what the server holds
     await eye.click(); await eye.click(); await quiet();
-    const shownState = await page.evaluate(() => [...document.querySelectorAll("table.gb thead th")].filter((th) => th.querySelector(".hs-eye")).map((th) => ({ title: th.getAttribute("title"), off: th.querySelector(".hs-eye").classList.contains("off") })));
+    // (th title attribute now carries type · full mark · % submitted too, so the work's title is read from .ht)
+    const shownState = await page.evaluate(() => [...document.querySelectorAll("table.gb thead th")].filter((th) => th.querySelector(".hs-eye")).map((th) => ({ title: (th.querySelector(".ht")?.textContent || "").trim(), off: th.querySelector(".hs-eye").classList.contains("off") })));
     const held = await server.DB.prepare("SELECT title, publish_scores FROM assignments WHERE deleted_at IS NULL").all();
     const heldMap = new Map(held.results.map((r) => [r.title, r.publish_scores === 0]));
-    const wrong = shownState.filter((x) => heldMap.has(x.title) && heldMap.get(x.title) !== x.off).map((x) => x.title);
+    const compared = shownState.filter((x) => heldMap.has(x.title));
+    if (compared.length === 0) note("P2", "gradebook: eye tapped twice quickly", "sweep could not match any column title to a database row (check is vacuous)");
+    const wrong = compared.filter((x) => heldMap.get(x.title) !== x.off).map((x) => x.title);
     if (wrong.length) note("P1", "gradebook: eye tapped twice quickly", `the screen and the server disagree about: ${wrong.join(", ")}`);
-  } else note("P2", "gradebook", "no eye button found in the column headers");
+  } else note("P2", "gradebook", "no eye button found on the selected column header");
   await go("/gradebook", "table.gb tbody tr");
-  await measure("gradebook: click a column header (select)", () => page.locator("table.gb thead th").nth(2).click(), () => document.querySelectorAll("table.gb thead th.sel").length === 1 && !document.querySelector("table.gb thead th:nth-child(2).sel"), null, { expectCalls: false });
+  await measure("gradebook: click a column header (select)", () => page.locator("table.gb thead th.col-w[data-aid]").nth(2).click(), () => document.querySelectorAll("table.gb thead th.sel").length === 1, null, { expectCalls: false });
+  // (the whole-class actions moved into the "ทำทั้งห้อง" menu of the selected work and ask first: open the menu, pick the item, then time the confirm button)
   const openCells = await page.locator("table.gb td .wcell.missing, table.gb td .wcell.pending").count();
-  await measure("gradebook: “ทั้งห้องส่งแล้ว” (whole class)", () => page.getByRole("button", { name: /ทั้งห้องส่งแล้ว/ }).click(), (n) => document.querySelectorAll("table.gb td .wcell.missing, table.gb td .wcell.pending").length !== n, openCells);
+  await page.locator("table.gb thead th.col-w[data-aid]").nth(3).click();
+  await page.getByRole("button", { name: "ทำทั้งห้อง" }).click();
+  await page.getByRole("menuitem", { name: /ทั้งห้องส่งแล้ว/ }).click();
+  await measure("gradebook: “ทั้งห้องส่งแล้ว” (whole class, confirm)", () => page.locator(".modal-overlay").getByRole("button", { name: /^ส่งแล้ว \d+ คน$/ }).click(), (n) => document.querySelectorAll("table.gb td .wcell.missing, table.gb td .wcell.pending").length !== n, openCells);
 
   // attendance
   await go("/attendance", ".att-tile");
   const c0 = await page.locator(".att-tile").nth(3).getAttribute("class");
   await measure("attendance: tap one student", () => page.locator(".att-tile").nth(3).click(), (c) => document.querySelectorAll(".att-tile")[3].className !== c, c0);
   const present0 = await page.locator(".att-tile.present").count();
-  await measure("attendance: “มาทั้งหมด”", () => page.getByRole("button", { name: /มาทั้งหมด/ }).click(), (n) => document.querySelectorAll(".att-tile.present").length > n, present0);
+  // ("มาทั้งหมด" is now "มาทั้งห้อง" and asks first: open the question, then time the confirm button)
+  await page.getByRole("button", { name: /^มาทั้งห้อง/ }).first().click();
+  await measure("attendance: “มาทั้งห้อง” (confirm)", () => page.getByRole("alertdialog").getByRole("button", { name: /^มาทั้งห้อง \d+ คน$/ }).click(), (n) => document.querySelectorAll(".att-tile.present").length > n, present0);
 
   // students
   await go("/students", ".stu-lrow");
@@ -209,9 +227,10 @@ const audit = () => {
   await page.keyboard.press("Escape"); await page.locator(".modal-overlay").click({ position: { x: 4, y: 4 } }).catch(() => {});
 
   // settings: theme (applies + saves)
-  await go("/settings?section=general", ".set-cols");
-  await measure("settings: pick the dark theme", () => page.getByRole("button", { name: "มืด", exact: true }).click(), () => document.documentElement.getAttribute("data-theme") === "dark");
-  await measure("settings: pick the light theme", () => page.getByRole("button", { name: "สว่าง", exact: true }).click(), () => document.documentElement.getAttribute("data-theme") === "light");
+  // (the theme moved from the overview to Settings ▸ หน้าตา, as radio cards that save at once)
+  await go("/settings?section=appearance", ".ap-modes");
+  await measure("settings: pick the dark theme", () => page.locator("label.ap-mode", { hasText: "มืด" }).click(), () => document.documentElement.getAttribute("data-theme") === "dark");
+  await measure("settings: pick the light theme", () => page.locator("label.ap-mode", { hasText: "สว่าง" }).click(), () => document.documentElement.getAttribute("data-theme") === "light");
 
   // reports: month view
   await go("/reports", ".rp-range");

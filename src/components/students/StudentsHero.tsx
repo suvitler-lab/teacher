@@ -49,7 +49,7 @@ export function StatsMeta({ updatedAt, onReload, found, total, sortText }: { upd
       <span>ตัวเลขสถิติ: ทุกวิชา · ทั้งเทอม{hhmm ? ` · ข้อมูลล่าสุด ${hhmm}` : ""}</span>
       <span role="status" aria-live="polite" class="stu-found">พบ {found} จาก {total} คน · เรียงตาม {sortText}</span>
       <button type="button" class="ghost stu-reload" onClick={onReload} disabled={!online} title={online ? undefined : "โหลดใหม่ได้เมื่อมีเน็ต"}>
-        <Icon name="refresh" size={16} /> โหลดใหม่{!online && <span class="page-sub"> · โหลดใหม่ได้เมื่อมีเน็ต</span>}
+        <Icon name="refresh" size={16} /> <span class="stu-rl">โหลดใหม่</span>{!online && <span class="page-sub"> · โหลดใหม่ได้เมื่อมีเน็ต</span>}
       </button>
     </div>
   );

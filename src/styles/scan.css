@@ -48,6 +48,8 @@
   background: var(--surface-0); border-top: 0.5px solid var(--border); box-shadow: 0 -6px 8px -6px color-mix(in srgb, var(--ink) 25%, transparent);
   display: flex; gap: 10px 14px; align-items: center; flex-wrap: wrap;
 }
+/* Verify B-9: the main padding is 20px (not 24) between 721 and 999px — a -24px bleed there made the page 4px wider than the screen */
+@media (min-width: 721px) and (max-width: 999px) { .sc-startbar { margin: 12px -20px -32px; padding: 8px 20px 12px; } }
 .sc-startbar .sb-info { min-width: 12em; }
 .sc-startbar .sb-t { overflow-wrap: anywhere; }
 .sc-startbar .sb-t b { font-weight: 500; }

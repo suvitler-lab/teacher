@@ -717,6 +717,13 @@ export function AttendancePage() {
   // phone: the side cards fold to one line each (a queue that is stuck stays open, it is never folded)
   const sideBox = (k: "scans" | "todo" | "away" | "month") => { const n = sideNode(k); return n && phone ? <details class="att-fold"><summary>{foldTitle[k]}</summary>{n}</details> : n; };
   const sideNodes = [randomNode, ...sideCards.map((k) => sideBox(k)), queueNode].filter(Boolean);
+  const modeSegs = <>
+    <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} label="รายวันหรือรายคาบ" options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
+    <Segmented value={method} onChange={setMethod} label="วิธีเช็คชื่อ" options={[
+          { value: "tap", label: <><Icon name="hand-finger" size={18} /> แตะเลือก</> },
+          { value: "scan", label: <><Icon name="qrcode" size={18} /> สแกน QR</> },
+        ]} />
+  </>;
   const allBtn = <button class="att-allp" onClick={askMarkAll} disabled={!loaded || slow || students.length === 0} title={!loaded ? "กำลังโหลดรายชื่อ…" : slow ? "รอโหลดข้อมูลจากระบบให้เสร็จก่อน" : undefined}><Icon name="checks" size={20} /> มาทั้งห้อง{unmarked > 0 && loaded ? ` · ${unmarked} คน` : ""}</button>;
   const hasAside = method === "scan" || sideNodes.length > 0;
 
@@ -807,15 +814,13 @@ export function AttendancePage() {
           <button class="att-hp att-today" onClick={() => setDate(todayBkk())}><Icon name="calendar" size={20} /> {date === todayBkk() ? "วันนี้ · " : ""}{TH_DOW[dowOf(date)]} {dayMonth(date)}</button>
           <button class="att-hp ico" aria-label="วันถัดไป" onClick={() => setDate(addDays(date, 1))} disabled={date >= todayBkk()}><Icon name="chevron-right" size={20} /></button>
         </span>
-        <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} label="รายวันหรือรายคาบ" options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
-        <Segmented value={method} onChange={setMethod} label="วิธีเช็คชื่อ" options={[
-          { value: "tap", label: <><Icon name="hand-finger" size={18} /> แตะเลือก</> },
-          { value: "scan", label: <><Icon name="qrcode" size={18} /> สแกน QR</> },
-        ]} />
+        {!phone && modeSegs}
         <span class="att-hp att-info"><SaveBadge busy={!!sync?.busy} pending={pending} review={review.length} conflicts={conflicts.length} error={draft?.error} retrying={(sync?.tries ?? 0) > 0} offline={offline} loaded={loaded} savedAt={savedAt} onRetry={() => retryDraft(key)} /></span>
         {loaded && unmarked > 0 && <span class="att-hp att-info"><Icon name="circle-dashed" size={16} /> ยังไม่เช็ค {unmarked}</span>}
         {phone && allBtn}
       </AttHero>
+      {/* T-73 B-6: on a phone the two switches leave the hero (it stays <= 200px) and sit in their own row right under it */}
+      {phone && <div class="att-modes">{modeSegs}</div>}
 
       <div class="att-toolbar">
         <ClassChips items={classItems} value={classId} onPick={changeClass} />

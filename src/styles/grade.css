@@ -444,7 +444,8 @@ table.gb td.tot-col { line-height: 1.15; }
 .gb-toolbar .gb-export-scope.warn { color: var(--text-warning); background: var(--bg-warning); border-radius: 999px; padding: 4px 10px; }
 .gb-toolbar .gb-export-wrap { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
 .gb-toolbar .gb-export-wrap .gb-export { margin-left: 0; }
-@media (max-width: 900px) { .gb-toolbar .gb-export-scope:not(.warn) { display: none; } }
+/* the explanation also lives in the button's title; below 1200px it would wrap the toolbar to a second row (iPad landscape: 107px tall, one row less of the table) */
+@media (max-width: 1200px) { .gb-toolbar .gb-export-scope:not(.warn) { display: none; } }
 
 /* T-47 · AC-146 ST-04: faint table frame while loading */
 .gb-skel { padding: 12px; display: grid; gap: 8px; }
@@ -571,3 +572,30 @@ table.gb td.tot-col { line-height: 1.15; }
   .gb-scroll, .gb-frame { --gb-row: min(var(--row-h), 2.3rem); }
   table.gb input.cell-input { height: calc(var(--gb-row, 2.3rem) - 4px); }
 }
+
+/* T-69 · AC-150 iPad: the table is fitted to the screen (Gradebook.tsx), so the page's own bottom padding must not push the page past it */
+@media (pointer: coarse) and (min-width: 721px) {
+  .main:has(.gb-frame) { padding-bottom: 0; }
+}
+
+/* ---- T-84 (B-H1 / AC-150): the toolbar stays ONE row and the picked-work bar TWO rows with 4 work types (minimap + 4 jump buttons) ---- */
+/* computer: the jump buttons are mouse-sized and the strip never shows a scrollbar (that was the extra 6px: 46 > 44) */
+@media (hover: hover) and (pointer: fine) {
+  .gb-toolbar .gb-nav { gap: 6px; scrollbar-width: none; }
+  .gb-toolbar .gb-nav::-webkit-scrollbar { display: none; }
+  .gb-toolbar .gb-nav-lbl { white-space: nowrap; flex: none; }
+  .gb-toolbar .gb-mini { min-width: 5rem; }
+  .gb-toolbar .gb-jump { padding: 0 0.6rem; min-height: 2.13rem; height: 2.13rem; }
+}
+/* iPad landscape: the minimap takes what is left, the label is spoken not drawn, Excel is icon-only, jump buttons are compact (still >= 44px tall) */
+@media (pointer: coarse) and (min-width: 901px) and (max-width: 1400px) {
+  .gb-toolbar .gb-nav { flex: 1 1 0; min-width: 0; flex-wrap: nowrap; margin-bottom: 0; overflow-x: auto; scrollbar-width: none; gap: 6px; }
+  .gb-toolbar .gb-nav::-webkit-scrollbar { display: none; }
+  .gb-toolbar .gb-nav-lbl { display: none; }
+  .gb-toolbar .gb-mini { flex: 1 1 3rem; min-width: 3rem; }
+  .gb-toolbar .gb-jump { flex: none; padding: 0 0.45rem; font-size: var(--fs-xs); }
+  .gb-toolbar .gb-export { padding: 0 11px; }
+  .gb-toolbar .gb-export .gb-export-lbl { display: none; }
+}
+/* iPad upright / narrow: the work bar's buttons are icon-only so counts + buttons share one row (3 rows -> 2) */
+@media (max-width: 900px) { .gb-wb .gb-bl { display: none; } }

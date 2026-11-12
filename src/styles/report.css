@@ -221,7 +221,7 @@ button.rp-k:hover { border-color: var(--hero-fg); }
 .rp-body > .pg-main, .rp-body > .pg-solo { grid-area: tbl; min-width: 0; }
 .rp-body > .pg-aside { grid-area: cards; min-width: 0; }
 .rp-body > .rp-alloff { grid-area: cards; margin: 0; font-size: var(--fs-sm); color: var(--text-secondary); }
-.rp-body.lg { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-areas: "tbl cards"; }
+.rp-body.lg { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); grid-template-areas: "tbl cards"; }
 .rp-body > .pg-solo { max-width: 64rem; }
 .rp-people .rp-scroll { overflow: auto; max-height: calc(100dvh - 14rem); min-height: 0; }
 .rp-sub { display: none; font-size: var(--fs-xs); color: var(--text-secondary); }
@@ -301,5 +301,7 @@ button.rp-k.danger { background: var(--hero-bg); color: inherit; font-weight: in
 .rp-mob > button { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .rp-sheetbody { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
 .rp-sheetbody > button, .rp-sheetbody .rp-sel { min-height: 44px; }
-@container rp (max-width: 26rem) { .rp-body:not(.lg) table.rp-table td { height: 56px; } .rp-body:not(.lg) .rp-namebtn { min-height: 28px; } }
+@container rp (max-width: 26rem) { .rp-body:not(.lg) table.rp-table td { height: 56px; } .rp-body:not(.lg) .rp-namebtn { min-height: 32px; } }
+/* T-73 B-73b: on a touch screen the name button keeps the full tap size inside the phone card too (declared after the container rules so it wins) */
+@media (pointer: coarse) { .rp-body:not(.lg) .rp-namebtn { min-height: var(--tap); } }
 .rp-mob > button { border: 1px solid var(--border-strong); background: var(--surface-2); border-radius: var(--radius); }

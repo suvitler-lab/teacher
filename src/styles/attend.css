@@ -25,7 +25,7 @@
 /* each day is a card (day + status, stacked): block and natural height, not the inline-flex of a plain button */
 .att-week > button { display: block; height: auto; min-height: max(3.5rem, var(--row-h)); text-align: left; border-radius: 10px; padding: 6px 8px; background: var(--surface-2); border: 0.5px solid var(--border); cursor: pointer; }
 .att-week > button.on { border: 2px solid var(--border-accent); padding: 5px 7px; background: var(--bg-accent); color: var(--text-accent); }
-.att-week > button:disabled { opacity: 0.5; cursor: default; }
+.att-week > button:disabled { opacity: 0.72; border-style: dashed; cursor: default; } /* T-69 B-11: 0.5 gave 2.46:1 on the day letter; still reads as off (dashed) */
 .att-week .wd { font-size: var(--fs-xs); color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; gap: 4px; }
 .att-week > button.on .wd, .att-week > button.on .ws { color: var(--text-accent); }
 .att-week .wd.today { color: var(--text-accent); font-weight: 500; }
@@ -309,6 +309,14 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
   .att-week { display: flex; overflow-x: auto; scroll-snap-type: x proximity; } /* only the strip scrolls sideways, not the page */
   .att-week > button { flex: 0 0 8.5rem; scroll-snap-align: start; }
 }
+/* T-69 B-6 phone: the legend repeats the counts the status bar and ring already carry (aria-hidden), and a number never parts from its word */
+.att-nw { white-space: nowrap; }
+@media (max-width: 720px) { .att-hero .att-hleg { display: none; } }
+/* T-73 B-6 phone: the day-kind and method switches leave the hero (hero <= 200px at 375) and sit in a row of their own under it */
+.att-modes { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 6px; margin-bottom: var(--s2); }
+.att-modes .seg { display: flex; } .att-modes .seg button { flex: 1; padding-inline: 4px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+@media (pointer: coarse) { .att-modes .seg button { min-height: calc(var(--tap) - 4px); } }
+@media (max-width: 720px) { .att-hero .att-pills { gap: 6px; } }
 @media (prefers-reduced-motion: reduce) { .att-tile, .stbtn { transition: none; } .att-tile.hit { box-shadow: none; } }
 
 /* ---- T-43 review round ---- */
@@ -329,3 +337,6 @@ label.att-scanin input, label.att-scanin input:focus { flex: 1; min-width: 0; bo
 @media (max-width: 720px) {
   body:has(.att-brush) .toast-stack, body:has(.att-brush) .failed-fab { bottom: calc(92px + 76px + env(safe-area-inset-bottom)); }
 }
+
+/* T-75: disabled day keeps opacity .72 + dashed border; its small texts use the primary colour so pro/warm light reach 4.5:1 (was 4.09/4.13 with secondary) */
+.att-week > button:disabled, .att-week > button:disabled .wd, .att-week > button:disabled .ws { color: var(--text-primary); }

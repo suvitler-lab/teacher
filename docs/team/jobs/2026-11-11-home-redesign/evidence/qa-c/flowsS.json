@@ -1,0 +1,80 @@
+{
+  "label": "flowsS",
+  "at": "2026-11-12T10:50:37.559Z",
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 419
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 565
+    },
+    {
+      "id": "S01",
+      "name": "students: adding with nothing filled in says what is missing (and saves nothing)",
+      "pass": true,
+      "ms": 1024
+    },
+    {
+      "id": "S02",
+      "name": "students: add a student; appears in the list; count goes up",
+      "pass": true,
+      "ms": 590
+    },
+    {
+      "id": "S03",
+      "name": "students: the same student code twice is refused with a readable message",
+      "pass": true,
+      "ms": 1334
+    },
+    {
+      "id": "S04",
+      "name": "students: search narrows the list",
+      "pass": true,
+      "ms": 420
+    },
+    {
+      "id": "S05",
+      "name": "students: open a student, edit the nickname, it is saved",
+      "pass": true,
+      "ms": 2837
+    },
+    {
+      "id": "S05b",
+      "name": "students: “ออก QR ใหม่” really changes the child's QR",
+      "pass": true,
+      "ms": 5045
+    },
+    {
+      "id": "S06",
+      "name": "students: Excel paste with a repeated-ID column previews and imports (new children + an update)",
+      "pass": true,
+      "ms": 1322
+    },
+    {
+      "id": "S06b",
+      "name": "students: re-importing a list that has NO class-number column keeps everyone's existing class numbers",
+      "pass": true,
+      "ms": 1419
+    },
+    {
+      "id": "S07",
+      "name": "students: Excel paste with a clashing class number is blocked with a clear warning",
+      "pass": true,
+      "ms": 1114
+    },
+    {
+      "id": "S08",
+      "name": "students: print-stickers page opens and closes",
+      "pass": true,
+      "ms": 786
+    }
+  ]
+}

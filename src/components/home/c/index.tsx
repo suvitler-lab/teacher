@@ -75,7 +75,7 @@ function FocusBox({ row, pos, total, model, hide, onSkip, headRef }: FocusProps)
           ))}
           {row.overdue?.filter((o) => o.shouldClose).map((o) => (
             <button type="button" key={o.assignmentId} class="hmc-btn" aria-label={`ปิดรับงานนี้ ${o.title}`}
-              onClick={() => navigate("/gradebook", { class: o.classId, subject: o.subjectId ?? undefined, asg: o.assignmentId })}><Icon name="x" size={22} />ปิดรับงานนี้</button>
+              onClick={() => navigate("/gradebook", { class: o.classId, subject: o.subjectId ?? undefined, asg: o.assignmentId })}><Icon name="lock" size={22} />ปิดรับงานนี้</button>
           ))}
           {total > 1 && (
             <button type="button" class="hmc-btn skip" aria-label={`ทำทีหลัง: ${row.title}`} onClick={onSkip}><Icon name="arrow-bend-down-right" size={22} />ทำทีหลัง</button>

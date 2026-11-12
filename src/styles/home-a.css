@@ -68,6 +68,7 @@
 .hma-ov { list-style: none; margin: var(--s3) 0 0; padding: 0; display: grid; gap: var(--s2); }
 .hma-ov li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
 .hma-ov .hm-chip { white-space: normal; }
+.hma-ov .hma-btn { margin-inline-start: auto; }
 .hma-sub { list-style: none; margin: var(--s3) 0 0; padding: 0; display: grid; gap: var(--s3); }
 .hma-sub .hma-body { box-shadow: none; background: var(--surface-1); }
 @media (max-width: 720px) {

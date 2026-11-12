@@ -648,6 +648,7 @@ interface ImportPreview {
   blockedMoves?: { studentId: string; code: string; fromClassId: string | null; toClassId: string | null; reason: "cross_year" | "has_history" }[];
 }
 const MAX_IMPORT = 200;
+export const MAX_IMPORT_FILE = 5 * 1024 * 1024; // a class list is a few KB: refuse a huge file before it is read (S-08)
 
 const ACTION_LABEL = {
   create: { text: "ใหม่", style: "background:var(--bg-success);color:var(--text-success)" },
@@ -676,7 +677,9 @@ function ImportModal({ classId, hide = false, onClose, onDone }: { classId: stri
 
   async function pickFile(file: File | undefined) {
     if (!file) return;
-    setErr(""); setFileBusy(true); setFileName(file.name);
+    setErr(""); setFileName(file.name);
+    if (file.size > MAX_IMPORT_FILE) { setSheets([]); setErr("ไฟล์ใหญ่เกินไป (เกิน 5 MB) — รายชื่อนักเรียนไม่ควรใหญ่ขนาดนี้ ตรวจว่าเลือกไฟล์ถูกต้อง"); return; }
+    setFileBusy(true);
     try { const s = await fileToSheets(file); setSheets(s); setSheetIdx(bestSheet(s)); }
     catch (e: any) { setSheets([]); setErr(e?.message || "อ่านไฟล์ไม่ได้ — ลองบันทึกเป็น .xlsx หรือ .csv ใหม่"); }
     finally { setFileBusy(false); }

@@ -119,7 +119,7 @@ function DueCard({ model }: P) {
         const info = dueInfo(g.assignment.due_date, model.today);
         return (
           <div class="hma-due" key={g.assignment.id}>
-            <div class="hma-due-h"><b class="ttl">{g.assignment.title}</b><Chip tone={info.tone} icon={info.icon}>{info.text}</Chip></div>
+            <div class="hma-due-h"><b class="ttl" title={g.assignment.title}>{g.assignment.title}</b><Chip tone={info.tone} icon={info.icon}>{info.text}</Chip></div>
             <div class="hma-due-rooms">
               {g.classes.map((c) => <Chip key={c.classId} tone="danger" icon="alert-circle">{model.rooms.find((r) => r.classId === c.classId)?.name ?? ""} ยังไม่ส่ง {c.n} คน</Chip>)}
             </div>

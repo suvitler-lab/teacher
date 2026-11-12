@@ -1,0 +1,29 @@
+TC-700 คอม: {"scrollY":0,"ratio":0.58,"rows":32,"rowH":"44","fullRowsInView":10,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-703 ซ่อนชื่อ (คอม): {"scrollY":0,"ratio":0.58,"rows":32,"rowH":"44","fullRowsInView":8,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-701 iPad นอน: {"scrollY":0,"ratio":0.58,"rows":32,"rowH":"44","fullRowsInView":11,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-701 w1000: {"scrollY":0,"ratio":0.95,"rows":32,"rowH":"44","fullRowsInView":0,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-701 w1100: {"scrollY":0,"ratio":0.57,"rows":32,"rowH":"44","fullRowsInView":10,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-701 w1280: {"scrollY":0,"ratio":0.58,"rows":32,"rowH":"44","fullRowsInView":11,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-702 iPad ตั้ง: {"scrollY":0,"ratio":0.94,"rows":32,"rowH":"44","fullRowsInView":0,"rpSub":32,"cAtt":34,"sideScroll":0}
+TC-702 มือถือ: {"scrollY":0,"ratio":0.93,"rows":32,"rowH":"56","fullRowsInView":0,"rpSub":32,"cAtt":0,"sideScroll":0}
+TC-712 room with kids: {"excel":false,"print":false,"pj":false}
+TC-710 room 0 kids (disabled excel/print/projector): {"excel":true,"print":true,"pj":true}
+TC-712 back to room with kids: {"excel":false,"print":false,"pj":false}
+TC-711 phone menu button: count=1
+TC-711 menu items (name:disabled): []
+TC-720/721 home (layout default): has "เลย 0 วัน"=false | "เลย N วัน" matches=["เลย 7 วัน","เลย 3 วัน","เลย 2 วัน"] | lines with "ค้าง": ["แบบฝึกหัดร้อยละ · เลย 7 วัน · ค้าง 10","ใบงานอัตราส่วน · เลย 3 วัน · ค้าง 7","สอบย่อยบทที่ 3 · เลย 2 วัน · ค้าง 5","ค้าง 7","ค้าง 10","ค้าง 5"]
+TC-800 layout asked=a actual=a: ["ความคืบหน้ารายห้อง ส่งแล=true","ต้องติดตาม นักเรียนที่ค้=true","ไม่มาวันนี้ ขาด ลา ป่วย =true","ครบกำหนด งานที่ครบกำหนดว=true","ห้องของฉัน จำนวนคน อัตรา=false"]
+TC-800 layout asked=b actual=a: ["ความคืบหน้ารายห้อง ส่งแล=true","ต้องติดตาม นักเรียนที่ค้=true","ไม่มาวันนี้ ขาด ลา ป่วย =true","ครบกำหนด งานที่ครบกำหนดว=true","ห้องของฉัน จำนวนคน อัตรา=false"]
+TC-800 layout asked=c actual=a: ["ความคืบหน้ารายห้อง ส่งแล=true","ต้องติดตาม นักเรียนที่ค้=true","ไม่มาวันนี้ ขาด ลา ป่วย =true","ครบกำหนด งานที่ครบกำหนดว=true","ห้องของฉัน จำนวนคน อัตรา=false"]
+TC-801 attendance card sheet: ["สรุปวันนี้ มา x จาก y คน=true","แถบสัปดาห์ จันทร์–ศุกร์ =true","เดือนนี้ใหม่ มาเรียนรวมท=true","สแกนล่าสุด แสดงเฉพาะตอนใ=true","ใครยังไม่เช็คใหม่ รายเลข=true","ใครไม่มาใหม่ ขาด ลา ป่วย=true"]
+TC-700 visible: {"rpSubVisible":0,"rowsIn":10,"tableTop":247}
+TC-701 visible: {"rpSubVisible":0,"rowsIn":11,"tableTop":296}
+TC-701 w1000 visible: {"rpSubVisible":0,"rowsIn":0,"tableTop":1140}
+TC-702 ตั้ง visible: {"rpSubVisible":0,"rowsIn":0,"tableTop":1511}
+TC-702 ตั้ง rows in view after scrolling table to top: {"rpSubVisible":0,"rowsIn":21,"tableTop":181}
+TC-702 มือถือ visible: {"rpSubVisible":32,"rowsIn":0,"tableTop":1842}
+TC-711 phone toolbar buttons: ["ซ่อนชื่อนักเรียน","เมนูเพิ่มเติม","งานค้าง 7 ชิ้น · น","มาเรียน 94 เปอร์เซ","ป.6/132","ป.6/230","ป.5/128","ป.4/110","ป.4/20","ตัวกรอง (0)","ส่งออก","เรียงตาม ส่งงาน","เรียงตามเลขที่","เรียงตามส่งงาน"]
+ERR home 1440x900: locator.click: Timeout 8000ms exceeded. Call log:
+TC-711 phone 0-kid room export menu: [":dis=false","โหมดฉายจอ:dis=true","พิมพ์:dis=true","ส่งออก Excel:dis=true"]
+TC-711 menu closes on Esc: true
+TC-712 phone room with kids menu: []

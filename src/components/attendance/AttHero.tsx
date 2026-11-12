@@ -19,7 +19,7 @@ export function AttHero(p: AttHeroProps) {
     : done ? (
       <div class="att-done">
         <span class="att-done-ic" aria-hidden="true"><Icon name="circle-check" size={32} /></span>
-        <div><p class="att-big">เช็คครบแล้ว · มา {came} · ขาด {p.counts[4]}</p></div>
+        <div><p class="att-big">เช็คครบแล้ว · <span class="att-nw">มา {came} · ขาด {p.counts[4]}</span></p></div>
       </div>
     ) : p.marked === 0 && p.held === 0 ? <div class="att-count-b" aria-live="off"><small>ยังไม่ได้เช็ค ·</small><span class="num">{p.total}</span><b>คน</b></div>
     : <div class="att-count-b" aria-live="off"><small>เช็คแล้ว</small><span class="num">{p.marked}</span><b>จาก {p.total} คน</b></div>;

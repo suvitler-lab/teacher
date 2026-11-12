@@ -1,0 +1,18 @@
+ก1 sticker sheet hide=false: warning-before-print=false "" | print hits {"last":32,"first":32} len=2226
+ก1 sticker sheet hide=true: warning-before-print=true "หน้าพิมพ์แสดงชื่อจริง ตอนนี้ซ่อนชื่ออยู่ แต่สติกเกอร์ QR ต้องมีชื่อเต็มของนักเรียน ยกเลิก ไปหน้าพิมพ์" | print hits {"last":32,"first":32} len=2226
+ก2 report print hide=false: hits {"last":32,"first":32} len=4205 has "เลขที่ n"=false header-note=false
+ก2 report print hide=true: hits {"last":0,"first":0} len=3637 has "เลขที่ n"=true header-note=true
+ก3 /students hide=true, print media: {"last":0,"first":0}
+ก3 /attendance hide=true, print media: {"last":0,"first":0}
+ก3 /gradebook hide=true, print media: {"last":0,"first":0}
+ข projector: start-term button on settings: count=1 disabled=true
+ค AC-229 focus on open: INPUT type=number in=ปีการศึกษา (พ.ศ.)
+ค confirm initial: disabled=true
+ค focus after close: เริ่มภาคเรียนใหม่
+ง catalog classes screen: ห้องเรียน วิชา ภาคเรียน ห้องเรียน วิชา ภาคเรียน ป.6/1 · ปีการศึกษา 2569 · 32 คน แก้ไข เก็บ ป.6/2 · ปีการศึกษา 2569 · 4 คน แก้ไข เก็บ ป.6/3 · ปีการศึกษา 2569 · 3 คน แก้ไข เก็บ เพิ่ม
+ง catalog subjects screen: ห้องเรียน วิชา ภาคเรียน ห้องเรียน วิชา ภาคเรียน วิทยาศาสตร์ ว16101 · 5 งาน แก้ไข เก็บ คณิตศาสตร์ ค16101 · 0 งาน แก้ไข เก็บ น้ำเงิน เพิ่ม
+ง worktypes screen: ประเภทงาน ใช้เลือกตอนสร้างงาน เช่น ใบงาน การบ้าน สอบ · แก้ที่นี่แล้วมีผลกับงานที่สร้างใหม่ แบบฝึกหัด เต็ม 10 · 1 งาน แก้ไข เก็บ ใบงาน เต็ม 10 · 1 งาน แก้ไข เก็บ ใบกิจกรรม เต็ม 10 · 0 งาน แก้ไข เก็บ ชิ้นงาน/โครงงาน เต็ม 20 · 1 งาน แก้ไข เก็บ การบ้าน เต็ม 10 · 1 งาน แก้ไข เก็บ สอบย่อย เต็ม 20 · สอบ · 1 งาน แก้ไข �
+ง DB classes: [{"name":"ป.6/1","n":32},{"name":"ป.6/2","n":4},{"name":"ป.6/3","n":3}]
+ง DB assignments by subject, current term: [{"name":"วิทยาศาสตร์","n":5}]
+ง DB assignments by type, current term: [{"type_id":"wt_exercise","n":1},{"type_id":"wt_homework","n":1},{"type_id":"wt_project","n":1},{"type_id":"wt_quiz","n":1},{"type_id":"wt_worksheet","n":1}]
+ง DB assignments by type, all terms: [{"type_id":"wt_exercise","n":1},{"type_id":"wt_homework","n":1},{"type_id":"wt_project","n":1},{"type_id":"wt_quiz","n":1},{"type_id":"wt_worksheet","n":1}]
