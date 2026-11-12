@@ -1,0 +1,325 @@
+{
+  "_": "งาน 2026-11-11-home-redesign · ชุด A (QA) · หน้าที่ถ่าย after ทุกหน้า × 4 อุปกรณ์ (context.md §อุปกรณ์เป้าหมาย) · fixture: node scripts/fixture-server.cjs --home --port <พอร์ตที่ PM ให้> (หน้าสแกนใช้ --scan · ดู fixtures.md) · ข้อมูลสมมติเท่านั้น · setup/ready ใช้แบบเดิมของ docs/team/pages.json ไม่เดา selector ของโค้ดใหม่ · setup = หมวด ห้องเรียน วิชา ภาคเรียน ของตั้งค่า (settings-catalog) · settings-appearance = หมวดหน้าตาใหม่ (AC-01, AC-44)",
+  "base": "http://127.0.0.1:4101",
+  "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);return 'ok'})()",
+  "pages": [
+    {
+      "name": "home",
+      "path": "/?pg=home#/",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/\")location.hash=\"#/\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "scan",
+      "path": "/?pg=scan#/scan",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/scan\")location.hash=\"#/scan\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "attendance",
+      "path": "/?pg=attendance#/attendance",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/attendance\")location.hash=\"#/attendance\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "random",
+      "path": "/?pg=random#/random",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/random\")location.hash=\"#/random\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "gradebook",
+      "path": "/?pg=gradebook#/gradebook",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/gradebook\")location.hash=\"#/gradebook\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "reports",
+      "path": "/?pg=reports#/reports",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/reports\")location.hash=\"#/reports\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "students",
+      "path": "/?pg=students#/students",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/students\")location.hash=\"#/students\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "settings",
+      "path": "/?pg=settings#/settings",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/settings\")location.hash=\"#/settings\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "settings-appearance",
+      "path": "/?pg=settings-appearance#/settings?section=appearance",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/settings?section=appearance\")location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    },
+    {
+      "name": "settings-catalog",
+      "path": "/?pg=settings-catalog#/settings?section=catalog",
+      "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));if(location.hash!==\"#/settings?section=catalog\")location.hash=\"#/settings?section=catalog\";for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');return true})()",
+      "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+      "wait": 800
+    }
+  ],
+  "_variants": {
+    "_": "ตัวแปรที่ต้องถ่ายเพิ่ม (shots.mjs ยังไม่อ่านฟิลด์นี้) · วิธีตั้งค่าแต่ละตัวแปร (ผ่าน ตั้งค่า > หน้าตา หรือคีย์ค่าตั้งที่ Tech Lead กำหนดใน plan.md) ให้ Full-Stack เติมเป็น setup ตอน Build · ทุกตัวแปร × 4 อุปกรณ์",
+    "home_layout_theme_mode": [
+      {
+        "name": "home-a-1-light",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "มืออาชีพ",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-a-1-dark",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "มืออาชีพ",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-a-2-light",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "อบอุ่น",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-a-2-dark",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "อบอุ่น",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-a-3-light",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "สดใส",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-a-3-dark",
+        "page": "home",
+        "layout": "ก วันนี้ของครู",
+        "theme": "สดใส",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-b-1-light",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "มืออาชีพ",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-b-1-dark",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "มืออาชีพ",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-b-2-light",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "อบอุ่น",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-b-2-dark",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "อบอุ่น",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-b-3-light",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "สดใส",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-b-3-dark",
+        "page": "home",
+        "layout": "ข แผงรายห้อง",
+        "theme": "สดใส",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-c-1-light",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "มืออาชีพ",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-c-1-dark",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "มืออาชีพ",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-c-2-light",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "อบอุ่น",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-c-2-dark",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "อบอุ่น",
+        "mode": "มืด"
+      },
+      {
+        "name": "home-c-3-light",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "สดใส",
+        "mode": "สว่าง"
+      },
+      {
+        "name": "home-c-3-dark",
+        "page": "home",
+        "layout": "ค โฟกัสงานถัดไป",
+        "theme": "สดใส",
+        "mode": "มืด"
+      }
+    ],
+    "all_pages_themes": {
+      "_": "AC-34: ทุกหน้าใน pages + login × 6 ชุด (3 ธีม × สว่าง/มืด) · โครงหน้าหลักใช้ค่าเริ่มต้น ก",
+      "themes": [
+        "มืออาชีพ",
+        "อบอุ่น",
+        "สดใส"
+      ],
+      "modes": [
+        "สว่าง",
+        "มืด"
+      ],
+      "pages": [
+        "home",
+        "scan",
+        "attendance",
+        "random",
+        "gradebook",
+        "reports",
+        "students",
+        "settings",
+        "settings-appearance",
+        "settings-catalog",
+        "login"
+      ]
+    },
+    "home_states": [
+      {
+        "name": "home-loading",
+        "note": "AC-11 · fixture latency 4000 ms · ถ่ายหลัง 3.5 วิ ทั้ง 3 โครง"
+      },
+      {
+        "name": "home-offline-cached",
+        "note": "AC-12 · โหลดแล้ว down แล้วรีโหลด"
+      },
+      {
+        "name": "home-offline-nocache",
+        "note": "AC-12 · down ก่อนโหลดครั้งแรก"
+      },
+      {
+        "name": "home-error",
+        "note": "AC-12 · fault EP-06 500"
+      },
+      {
+        "name": "home-empty-year",
+        "note": "AC-13 · --home-empty-year"
+      },
+      {
+        "name": "home-no-students",
+        "note": "AC-14 · --home-no-students"
+      },
+      {
+        "name": "home-hide-names",
+        "note": "AC-15 · เปิดซ่อนชื่อ ทั้ง 3 โครง"
+      },
+      {
+        "name": "home-clear",
+        "note": "AC-23, AC-32 · --home-clear ทั้ง 3 โครง"
+      },
+      {
+        "name": "home-many",
+        "note": "AC-29, AC-38 · --home-many ทั้ง 3 โครง"
+      },
+      {
+        "name": "home-drawer",
+        "note": "AC-07 · ลิ้นชักปรับหน้าหลัก ทั้ง 3 โครง"
+      },
+      {
+        "name": "home-b-room-selected",
+        "note": "AC-27 · โครง ข เลือกแผง ป.6/2"
+      },
+      {
+        "name": "home-max-font",
+        "note": "AC-46 · ตัวอักษรใหญ่สุด (rail เลื่อนได้)"
+      },
+      {
+        "name": "mobile-more-sheet",
+        "note": "AC-47 · มือถือ เปิดแผ่นเพิ่มเติม"
+      }
+    ],
+    "scan_states": [
+      {
+        "name": "scan-setup",
+        "note": "AC-51 · --scan หน้าตั้งรอบ"
+      },
+      {
+        "name": "scan-running",
+        "note": "AC-55 · S1 ป.6/1 หลังสแกนเลขที่ 7"
+      },
+      {
+        "name": "scan-running-40",
+        "note": "AC-64, AC-78 · S4 ป.6/4 40 คน"
+      },
+      {
+        "name": "scan-offline-queue",
+        "note": "AC-67 · ออฟไลน์ รอส่ง 3"
+      },
+      {
+        "name": "scan-failed",
+        "note": "AC-68 · ส่งไม่สำเร็จ 2 รายการ"
+      },
+      {
+        "name": "scan-summary",
+        "note": "AC-72 · จบรอบ S1 ป.6/1"
+      },
+      {
+        "name": "scan-projector",
+        "note": "AC-76 · จอฉาย"
+      },
+      {
+        "name": "scan-hide-names",
+        "note": "AC-77 · ซ่อนชื่อหน้าสแกน"
+      }
+    ],
+    "login": {
+      "name": "login",
+      "note": "AC-08, AC-34 · ต้องออกจากระบบก่อน (beforeAll ล็อกอินอัตโนมัติ) — ถ่ายแยก context ที่ไม่มี beforeAll"
+    }
+  }
+}
