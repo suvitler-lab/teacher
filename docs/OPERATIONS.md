@@ -9,12 +9,19 @@
 
 อัปเดต25ต.ค.2569: ตรวจบัญชี/ฐานข้อมูล, D1 exportและตรวจไฟล์, migrations list, deployจริงและhealthผ่านแล้วตาม [บันทึกrelease](team/jobs/2026-10-25-release/verification.md) คำเตือน“ยังไม่ได้ทดสอบบัญชีจริง”ด้านบนยังใช้กับคำสั่งreset/restore/Time Travelที่ไม่ได้รันในreleaseนี้
 
-## รุ่นล่าสุด (ออก 4 พ.ย. 2569)
+## รุ่นล่าสุด (ออก 13 พ.ย. 2569)
 
-- commits `f405a43`, `4dea5b8`, `2780f8b` บน branch `team/2026-11-04-ui-redesign` · **ไม่มี migration** (schema ยัง v6) · API contract v9 (`POST /api/attendance/batch` รับ `status: "none"` = ยกเลิกการเช็ค)
-- เทสต์ตอนปล่อย: **148 ไฟล์ · 1,665 เทสต์** ผ่าน
-- **ย้อนรุ่น:** รุ่นนี้ไม่มี migration จึงย้อนโค้ดได้ตรง ๆ (`npx wrangler rollback` หรือ dashboard → Deployments → Rollback) ข้อมูลไม่ต้องแตะ ผลที่ต้องรู้: ถ้าย้อนไปรุ่นก่อน v9 ปุ่มยกเลิกการเช็คจะหายและเครื่องที่ยังมีคิว `none` ค้างอยู่จะส่งไม่ผ่านจนอัปเดตกลับ (ยังไม่ได้ทดสอบการย้อนจริง) ค่า "ปรับการ์ด" ที่เก็บไว้เป็น setting จะไม่เสีย
-- ที่ยังไม่ได้ทดสอบ: เครื่องจริงของครู (iPad สแกนผ่านเมื่อ 4 พ.ย.) · ไฟล์ Excel บนโปรแกรมเปิดต่าง ๆ
+- commit `dcface5` (merge ของ branch `team/2026-11-12-timetable` ซึ่งพางาน `team/2026-11-11-home-redesign` มาด้วย) · Worker เวอร์ชัน `355da053-0752-4f38-8b21-31e94275488f` · tag `release-2026-11-13`
+- **สิ่งที่เปลี่ยน:** หน้าตาใหม่ทั้ง 8 หน้า (หน้าหลัก 3 โครง × 3 ธีม ตั้งใน ตั้งค่า › หน้าตา) + เมนูใหม่ + **ตารางสอน** (3 รูปแบบ ก/ข/ค, พิมพ์ A4 แนวนอน, แถบ "ตอนนี้/ต่อไป" และทางลัดเช็คชื่อบนหน้าหลัก) · API contract v11.1 (EP-11 `/api/timetable`, EP-12 `/api/timetable/frame`, EP-13 สำรอง/กู้คืน/ล้างข้อมูลรวมตารางสอน)
+- **มี migration:** `0008_timetable.sql` → schema **7** (ตาราง `timetable_slots`, คอลัมน์ `terms.timetable_rev`) · ลำดับที่ใช้จริง: สำรองข้อมูลจากแอป → `npm run db:migrate:remote` → `npm run deploy` → `npm run check:health` · ช่วงระหว่าง migrate กับ deploy (ไม่กี่วินาที) โค้ดเก่าตอบ `schema_mismatch` ตามที่เขียนไว้ใน §6
+- เทสต์ตอนปล่อย: **224 ไฟล์ · 2,867 เทสต์** ผ่าน (บางข้อไม่นิ่งเมื่อรันทั้งชุดหนัก: `sec-auth`, `fixture-datasets`, `hr-menu-nav` deep link, `hr-st2-t52` — รันแยกผ่าน)
+- **จุดย้อน Time Travel ก่อน migrate:** bookmark `000000b0-00000000-00005122-6843369175a81422ce6e649c70015326` (ใช้ได้ถึง 7 วันหลัง 13 พ.ย. 2569 — ตรวจ `npx wrangler d1 time-travel info kru-db-apac` ก่อนใช้)
+- **ย้อนรุ่น:** รุ่นนี้มี migration จึง **อย่าย้อนโค้ดอย่างเดียว** (จะ `schema_mismatch`) — แก้ไปข้างหน้า หรือกู้จากไฟล์สำรอง/Time Travel ตามหัวข้อ 4–5 · ไฟล์สำรองรุ่นเก่า (schema 6) ยังกู้ได้ (ตารางสอนว่าง) · ยังไม่ได้ทดสอบการย้อนบนระบบจริง
+- **ที่ยังไม่ได้ทดสอบ:** iPad/Safari/VoiceOver/เครื่องพิมพ์จริง · หลักฐานภาพของ QA เปิดดูไม่ครบ (ดู `team/jobs/2026-11-12-timetable/report.md` และ `team/jobs/2026-11-11-home-redesign/report.md`)
+
+### รุ่นก่อนหน้า (4 พ.ย. 2569)
+
+- commits `f405a43`, `4dea5b8`, `2780f8b` · ไม่มี migration (schema v6) · API contract v9
 
 ## 1. Deploy ทุกครั้ง (checklist)
 
