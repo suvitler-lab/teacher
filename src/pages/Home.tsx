@@ -22,6 +22,10 @@ import { dashboard, dashboardStale, dashboardAt, dashboardStatus, loadDashboard 
 import { hideNames } from "../lib/homePrefs";
 import { appearance, type Layout } from "../lib/appearance";
 import { layoutCardsOf, visibleLayoutCards } from "../lib/homeLayout";
+import { TimetableStrip } from "../components/home/TimetableStrip";
+import { ttToday } from "../lib/timetable/store";
+import { startTimetableClock } from "../lib/timetable/clock";
+import { route } from "../router";
 
 const BODY: Record<Layout, (p: HomeLayoutProps) => JSX.Element> = { a: LayoutA, b: LayoutB, c: LayoutC };
 
@@ -39,6 +43,17 @@ export function Home() {
   const [said, setSaid] = useState<string | undefined>(undefined);
 
   useEffect(() => { loadDashboard(selectedTermId.value); setDeferred([]); }, [selectedTermId.value]);
+  // now / next of the timetable are recalculated every minute while the home page is open (AC-23)
+  useEffect(() => startTimetableClock(), []);
+  // a link from ตั้งค่า > หน้าตา can open "ปรับหน้าหลัก" straight away (`#/?customize=1`); the flag is taken off the address so a reload does not reopen it
+  const wantPrefs = route.value.includes("customize=1");
+  useEffect(() => {
+    if (!wantPrefs) return;
+    setPrefsOpen(true);
+    const clean = route.value.replace(/([?&])customize=1&?/, "$1").replace(/[?&]$/, "");
+    history.replaceState(null, "", "#" + clean);
+    route.value = clean;
+  }, [wantPrefs]);
 
   const d = dashboard.value;
   const status = dashboardStatus.value;
@@ -57,9 +72,12 @@ export function Home() {
   const count = model?.todayCount ?? 0;
   useEffect(() => { setSaid(undefined); }, [count]);
 
+  // the timetable strip is a card of its own in every layout (D53): switched on / off in "ปรับหน้าหลัก", drawn here under the header, never by the layouts
+  const visible = visibleLayoutCards(layoutCardsOf(layout));
+  const tt = !pastYear && visible.includes("timetable") ? ttToday.value : null;
   const props: HomeLayoutProps | null = model ? {
     layout, model,
-    cards: visibleLayoutCards(layoutCardsOf(layout)),
+    cards: visible.filter((k) => k !== "timetable"),
     hide: hideNames.value,
     pastYear,
     onDefer: (key) => {
@@ -78,6 +96,7 @@ export function Home() {
       <HomeTopbar stale={dashboardStale.value} at={dashboardAt.value} onCustomize={() => setPrefsOpen(true)} />
       <YearBanner note="สิ่งที่ค้างของปีนั้นยังตรวจและแก้คะแนนได้" />
       <HideBanner />
+      {tt && <TimetableStrip snap={tt} />}
       {showBody && !pastYear && <TodayLive count={count} said={said} />}
 
       {showBody && props ? <Body {...props} /> : (<>

@@ -112,7 +112,7 @@ describe("home page cards (layout ก: its own five sub-cards, BR-12)", () => {
     await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
     const dlg = await screen.findByRole("dialog", { name: /^ปรับหน้าหลัก · โครง ก/ });
-    expect(within(dlg).getAllByRole("switch")).toHaveLength(5);
+    expect(within(dlg).getAllByRole("switch")).toHaveLength(6); // the five sub-cards + the fixed timetable strip
     expect(within(dlg).getAllByRole("radio")).toHaveLength(3);
     expect(dlg.textContent).toContain("ปิดไม่ได้: ลำดับงานวันนี้ · ปุ่มลัด · ตัวเลขสรุป");
     expect(dlg.textContent).toContain("เปลี่ยนโครง/ธีมที่ ตั้งค่า > หน้าตา");
@@ -128,7 +128,7 @@ describe("home page cards (layout ก: its own five sub-cards, BR-12)", () => {
 
     fireEvent.click(within(dlg).getByRole("button", { name: "เลื่อน ต้องติดตาม ขึ้น" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(2));
-    expect(JSON.parse(put.mock.calls[1][1].home_cards).a.order.slice(0, 2)).toEqual(["follow", "open"]);
+    expect(JSON.parse(put.mock.calls[1][1].home_cards).a.order.slice(0, 3)).toEqual(["timetable", "follow", "open"]) // the fixed strip stays first;
     expect(within(dlg).getByRole("status").textContent).toContain("ย้าย ต้องติดตาม ไปลำดับ 1");
   });
 
@@ -283,13 +283,13 @@ describe("the day's list in ก ('do this now')", () => {
 });
 
 describe("the menu", () => {
-  it("has four labelled groups holding the eight pages in the day's order, and marks the current page", () => {
+  it("has four labelled groups holding the nine pages in the day's order, and marks the current page", () => {
     route.value = "/attendance";
     render(<Shell><div /></Shell>);
     const rail = screen.getByRole("navigation", { name: "เมนูหลัก" });
     const groups = within(rail).getAllByRole("group").map((g) => [g.getAttribute("aria-label"), within(g).getAllByRole("link").map((a) => a.textContent)]);
     expect(groups).toEqual([
-      ["วันนี้", ["หน้าหลัก"]], ["ในห้องเรียน", ["สแกน", "เช็คชื่อ", "สุ่มชื่อ"]], ["ตรวจงาน", ["คะแนน", "รายงาน"]], ["จัดการ", ["นักเรียน", "ตั้งค่า"]],
+      ["วันนี้", ["หน้าหลัก", "ตารางสอน"]], ["ในห้องเรียน", ["สแกน", "เช็คชื่อ", "สุ่มชื่อ"]], ["ตรวจงาน", ["คะแนน", "รายงาน"]], ["จัดการ", ["นักเรียน", "ตั้งค่า"]],
     ]);
     const current = within(rail).getAllByRole("link").filter((a) => a.getAttribute("aria-current") === "page");
     expect(current.map((a) => a.textContent)).toEqual(["เช็คชื่อ"]);
@@ -310,7 +310,7 @@ describe("the menu", () => {
     const sheet = screen.getByRole("dialog", { name: "เพิ่มเติม" });
     expect(btn.getAttribute("aria-controls")).toBe(sheet.id);
     expect(btn.getAttribute("aria-expanded")).toBe("true");
-    expect([...sheet.querySelectorAll(".sheet-gl")].map((e) => e.textContent)).toEqual(["ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
-    expect(within(sheet).getAllByRole("link").filter((a) => !a.classList.contains("tp-manage")).map((a) => a.textContent!.trim())).toEqual(["สุ่มชื่อ", "รายงาน", "นักเรียน", "ตั้งค่า"]);
+    expect([...sheet.querySelectorAll(".sheet-gl")].map((e) => e.textContent)).toEqual(["วันนี้", "ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
+    expect(within(sheet).getAllByRole("link").filter((a) => !a.classList.contains("tp-manage")).map((a) => a.textContent!.trim())).toEqual(["ตารางสอน", "สุ่มชื่อ", "รายงาน", "นักเรียน", "ตั้งค่า"]);
   });
 });

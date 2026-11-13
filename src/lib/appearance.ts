@@ -1,4 +1,4 @@
-// Look of the app: skin (มืออาชีพ / อบอุ่น / สดใส) and home layout (ก / ข / ค). D41 / EP-07 (v10).
+// Look of the app: skin (มืออาชีพ / อบอุ่น / สดใส) home layout (ก / ข / ค) and timetable style (ก / ข / ค, BR-13). D41 / EP-07 (v10).
 // Kept in the existing setting `accent` as JSON, copied on this device (ngankrob-skin / ngankrob-layout) so a reload
 // paints the right colours at once. The server's value is adopted once, when the app opens (AC-03: nothing changes
 // under the teacher's hands). An app that starts from the copy saved on this device (offline) does NOT adopt that copy's
@@ -15,17 +15,22 @@ import { loadSkinAssets } from "./fonts";
 
 export type Skin = "pro" | "warm" | "playful";
 export type Layout = "a" | "b" | "c";
-export interface Appearance { skin: Skin; layout: Layout }
+export type TimetableStyle = "a" | "b" | "c";
+export interface Appearance { skin: Skin; layout: Layout; timetable: TimetableStyle }
 
 export const SKINS: readonly Skin[] = ["pro", "warm", "playful"];
 export const LAYOUTS: readonly Layout[] = ["a", "b", "c"];
-export const DEFAULT_APPEARANCE: Appearance = { skin: "warm", layout: "a" };
+export const TIMETABLE_STYLES: readonly TimetableStyle[] = ["a", "b", "c"];
+export const DEFAULT_APPEARANCE: Appearance = { skin: "warm", layout: "a", timetable: "a" };
 
 export const SKIN_KEY = "ngankrob-skin";
 export const LAYOUT_KEY = "ngankrob-layout";
+export const TIMETABLE_KEY = "ngankrob-timetable";
 
 const asSkin = (v: unknown): Skin => (SKINS as readonly unknown[]).includes(v) ? (v as Skin) : DEFAULT_APPEARANCE.skin;
 const asLayout = (v: unknown): Layout => (LAYOUTS as readonly unknown[]).includes(v) ? (v as Layout) : DEFAULT_APPEARANCE.layout;
+
+const asTimetable = (v: unknown): TimetableStyle => (TIMETABLE_STYLES as readonly unknown[]).includes(v) ? (v as TimetableStyle) : DEFAULT_APPEARANCE.timetable;
 
 /** Saved `accent` text -> a valid look. Each field falls back alone ("blue", "", not JSON, `luxe` ... -> defaults). */
 export function parseAppearance(raw: string | null | undefined): Appearance {
@@ -33,12 +38,17 @@ export function parseAppearance(raw: string | null | undefined): Appearance {
   let j: unknown;
   try { j = JSON.parse(raw); } catch { return { ...DEFAULT_APPEARANCE }; }
   if (!j || typeof j !== "object" || Array.isArray(j)) return { ...DEFAULT_APPEARANCE };
-  const o = j as { skin?: unknown; layout?: unknown };
-  return { skin: asSkin(o.skin), layout: asLayout(o.layout) };
+  const o = j as { skin?: unknown; layout?: unknown; timetable?: unknown };
+  return { skin: asSkin(o.skin), layout: asLayout(o.layout), timetable: asTimetable(o.timetable) };
 }
 
-export function serializeAppearance(a: Appearance): string {
-  return JSON.stringify({ v: 1, skin: a.skin, layout: a.layout });
+/** A look -> `accent` text. Fields this app does not know are kept from `base` (the text it was read from), so a newer app's fields survive a save. */
+export function serializeAppearance(a: Pick<Appearance, "skin" | "layout"> & { timetable?: TimetableStyle }, base?: string | null): string {
+  let extra: Record<string, unknown> = {};
+  if (base) {
+    try { const j: unknown = JSON.parse(base); if (j && typeof j === "object" && !Array.isArray(j)) extra = { ...(j as Record<string, unknown>) }; } catch { /* not JSON: nothing to keep */ }
+  }
+  return JSON.stringify({ ...extra, v: 1, skin: a.skin, layout: a.layout, timetable: a.timetable ?? asTimetable(extra.timetable) });
 }
 
 const state = signal<Appearance>({ ...DEFAULT_APPEARANCE });
@@ -58,12 +68,12 @@ function show(a: Appearance) {
 }
 
 function remember(a: Appearance) {
-  try { localStorage.setItem(SKIN_KEY, a.skin); localStorage.setItem(LAYOUT_KEY, a.layout); } catch { /* private window */ }
+  try { localStorage.setItem(SKIN_KEY, a.skin); localStorage.setItem(LAYOUT_KEY, a.layout); localStorage.setItem(TIMETABLE_KEY, a.timetable); } catch { /* private window */ }
 }
 
 function readStored(): Appearance {
   try {
-    return { skin: asSkin(localStorage.getItem(SKIN_KEY)), layout: asLayout(localStorage.getItem(LAYOUT_KEY)) };
+    return { skin: asSkin(localStorage.getItem(SKIN_KEY)), layout: asLayout(localStorage.getItem(LAYOUT_KEY)), timetable: asTimetable(localStorage.getItem(TIMETABLE_KEY)) };
   } catch { return { ...DEFAULT_APPEARANCE }; }
 }
 
@@ -89,7 +99,7 @@ function adoptFrom(s: Settings | null) {
   const a = parseAppearance(s.accent);
   remember(a);
   const cur = state.peek();
-  if (a.skin !== cur.skin || a.layout !== cur.layout) show(a);
+  if (a.skin !== cur.skin || a.layout !== cur.layout || a.timetable !== cur.timetable) show(a);
 }
 
 /** The app is about to start from the copy saved on this device: do not take its look as the server's (R-01). */
@@ -108,15 +118,15 @@ let chain: Promise<unknown> = Promise.resolve();
 // `confirmed + pending`, and every request carries `confirmed + its own change` only: a save that failed never
 // rides along in the next request, and a failed save puts the screen back to what the server really has (R-03, R-3205).
 interface Saved { accent: string; theme: Settings["theme"] }
-interface Change { skin?: Skin; layout?: Layout; theme?: ThemeChoice }
+interface Change { skin?: Skin; layout?: Layout; timetable?: TimetableStyle; theme?: ThemeChoice }
 let confirmed: Saved | null = null;
 let pending: Change[] = [];
 
 function applyChange(base: Saved, c: Change): Saved {
-  const touchesLook = c.skin !== undefined || c.layout !== undefined;
+  const touchesLook = c.skin !== undefined || c.layout !== undefined || c.timetable !== undefined;
   const cur = parseAppearance(base.accent);
   return {
-    accent: touchesLook ? serializeAppearance({ skin: c.skin ?? cur.skin, layout: c.layout ?? cur.layout }) : base.accent,
+    accent: touchesLook ? serializeAppearance({ skin: c.skin ?? cur.skin, layout: c.layout ?? cur.layout, timetable: c.timetable ?? cur.timetable }, base.accent) : base.accent,
     theme: c.theme ?? base.theme,
   };
 }
@@ -130,7 +140,7 @@ function paint(): void {
   const shown = state.peek();
   const themeWas = cur.theme;
   if (cur.accent !== want.accent || cur.theme !== want.theme) settings.value = { ...cur, accent: want.accent, theme: want.theme };
-  if (look.skin !== shown.skin || look.layout !== shown.layout) { show(look); remember(look); }
+  if (look.skin !== shown.skin || look.layout !== shown.layout || look.timetable !== shown.timetable) { show(look); remember(look); }
   if (want.theme !== themeWas) { setThemeAttr(want.theme); saveThemeLocal(want.theme); }
 }
 
@@ -151,8 +161,9 @@ export function saveAppearance(next: Partial<Appearance> & { theme?: ThemeChoice
   const change: Change = {};
   if (next.skin !== undefined && next.skin !== prev.skin) change.skin = next.skin;
   if (next.layout !== undefined && next.layout !== prev.layout) change.layout = next.layout;
+  if (next.timetable !== undefined && next.timetable !== prev.timetable) change.timetable = next.timetable;
   if (next.theme !== undefined && next.theme !== before.theme) change.theme = next.theme;
-  if (change.skin === undefined && change.layout === undefined && change.theme === undefined) return Promise.resolve(true);
+  if (change.skin === undefined && change.layout === undefined && change.timetable === undefined && change.theme === undefined) return Promise.resolve(true);
   if (typeof navigator !== "undefined" && navigator.onLine === false) {
     say.err("ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์");
     return Promise.resolve(false);
@@ -164,7 +175,7 @@ export function saveAppearance(next: Partial<Appearance> & { theme?: ThemeChoice
     const base = confirmed as Saved;
     const sent = applyChange(base, change);
     const body: Record<string, string> = {};
-    if (change.skin !== undefined || change.layout !== undefined) body.accent = sent.accent;
+    if (change.skin !== undefined || change.layout !== undefined || change.timetable !== undefined) body.accent = sent.accent;
     if (change.theme !== undefined) body.theme = sent.theme;
     const done = () => { pending = pending.filter((c) => c !== change); };
     try {

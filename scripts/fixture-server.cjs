@@ -185,7 +185,8 @@ const { percentOf, attendancePercent, attendanceProgress } = require(path.join(r
 
 const HOME_DATASETS = ["home", "home-empty-year", "home-no-students", "home-clear", "home-many", "home-extra", "home-extra-b", "home-one"];
 const SCAN_DATASETS = ["scan", "scan-all-62", "scan-noroom", "scan-empty"];
-const DATASETS = ["demo", "empty", ...HOME_DATASETS, ...SCAN_DATASETS];
+const TIMETABLE_DATASETS = ["timetable"]; // F-T1 + F-T4 (job 2026-11-12-timetable): the reference timetable, schema 7
+const DATASETS = ["demo", "empty", ...HOME_DATASETS, ...SCAN_DATASETS, ...TIMETABLE_DATASETS];
 
 const DAY_MS = 86_400_000;
 /** The calendar day `n` days after (or before, n < 0) a YYYY-MM-DD date. */
@@ -383,8 +384,174 @@ function addManyRooms(ctx) {
 }
 
 /** Fill the database for one data set. Returns what the self-check needs. */
-function seedDataset(ctx, dataset) {
+/**
+ * F-T1 / F-T4: the reference week as 14 periods of term 2/2569 (9 teaching + 5 activity), the same 14 in term 1/2569, and 6 in the
+ * closed term 2/2568 (read-only year). Synthetic: no person's name. Slot = [weekday, period, kind, classKey|null, subjectId|null, label|null].
+ */
+const TT_WEEK = [
+  [1, 2, "class", "g62", "sub_math"], [1, 5, "class", "g64", "sub_music"], [1, 7, "activity", null, null, "PLC กลุ่มสาระ"],
+  [2, 2, "class", "g61", "sub_math"], [2, 6, "class", "g62", "sub_math"],
+  [3, 2, "class", "g64", "sub_math"], [3, 4, "class", "g63", "sub_math"],
+  [4, 2, "class", "g63", "sub_math"], [4, 6, "activity", null, null, "ลูกเสือ"],
+  [5, 3, "class", "g64", "sub_math"], [5, 4, "class", "g61", "sub_math"],
+  [5, 5, "activity", null, null, "ชุมนุม"], [5, 6, "activity", null, null, "สวดมนต์"], [5, 7, "activity", null, null, "PLC สายชั้น"],
+];
+const TT_OLD = [
+  [1, 1, "class", "o51", "sub_math"], [1, 3, "class", "o52", "sub_math"], [2, 2, "class", "o51", "sub_math"],
+  [3, 4, "class", "o52", "sub_math"], [4, 5, "activity", null, null, "ลูกเสือ"], [5, 6, "activity", null, null, "สวดมนต์"],
+];
+function addTimetableSlots(ctx, termId, rows, classIds) {
+  for (const [wd, pd, kind, key, sub, label] of rows) {
+    put(ctx, "INSERT INTO timetable_slots (term_id, weekday, period, kind, class_id, subject_id, label, updated_at) VALUES (?,?,?,?,?,?,?,0)",
+      termId, wd, pd, kind, key ? classIds[key] : null, sub, label ?? null);
+  }
+  put(ctx, "UPDATE terms SET timetable_rev = 7 WHERE id = ?", termId); // rev 7 as in AC-52
+}
+// ---- timetable sets (selected with --tt-set=<name> / startFixtureServer({ dataset: "timetable", ttSet })) --------------
+// `want` = rows the self-check reads back: termId -> [slots, teaching, activity].
+const { serializeFrame, periodTimesOf } = require(path.join(root, "shared/timetable.ts"));
+const hourAfter = (s) => `${String(Number(s.slice(0, 2)) + 1).padStart(2, "0")}:${s.slice(3)}`;
+const mkPeriods = (starts) => starts.map((s) => ({ start: s, end: hourAfter(s) }));
+const FRAME_8 = { // F-T2: 7 days, 8 periods of 60 min from 08:30, lunch after period 3
+  periods: mkPeriods(["08:30", "09:30", "10:30", "12:30", "13:30", "14:30", "15:30", "16:30"]),
+  breaks: [{ name: "พักกลางวัน", start: "11:30", end: "12:30" }], days: [1, 2, 3, 4, 5, 6, 7],
+};
+const FRAME_T8 = { // F-T8 (a): 8 periods, a morning break, school days Mon-Sat
+  periods: mkPeriods(["08:00", "09:00", "10:10", "11:10", "13:00", "14:00", "15:00", "16:00"]),
+  breaks: [{ name: "พักเช้า", start: "10:00", end: "10:10" }, { name: "พักกลางวัน", start: "12:10", end: "13:00" }], days: [1, 2, 3, 4, 5, 6],
+};
+/** F-T2 longest activity label: exactly 40 UTF-16 units (LABEL_MAX counts .length), ends with the emoji pair */
+const LONG_LABEL = (() => {
+  const tail = "🏕️✅"; let s = "";
+  for (const ch of "ประชุมกลุ่มสาระการเรียนรู้ภาษาไทยและคณิตศาสตร์") if ((s + ch).length <= 40 - tail.length) s += ch;
+  while (s.length < 40 - tail.length) s += "ๆ";
+  return s + tail;
+})();
+const ACCENTS = { // F-T9: the `accent` setting exactly as stored
+  "t9-blue": { accent: "blue" },
+  "t9-warm": { accent: '{"v":1,"skin":"warm","layout":"b"}' },
+  "t9-c": { accent: '{"v":1,"skin":"pro","layout":"b","timetable":"c"}' },
+  "t9-z": { accent: '{"v":1,"skin":"pro","layout":"b","timetable":"z"}' },
+  "t9-bad": { accent: "{{" },
+};
+const NAMES = { // F-T9 / TC-065 (a)..(f)
+  "t9-names-a": { teacher_name: "ครูทดสอบ", school_name: "โรงเรียนบ้านตัวอย่าง" },
+  "t9-names-b": { teacher_name: "ครูทดสอบ", school_name: "" },
+  "t9-names-c": { teacher_name: "", school_name: "โรงเรียนบ้านตัวอย่าง" },
+  "t9-names-d": { teacher_name: "   ", school_name: "   " },
+  "t9-names-e": { teacher_name: "  ครูทดสอบ ", school_name: "  โรงเรียนบ้านตัวอย่าง " },
+  "t9-names-f": { teacher_name: "ครูทดสอบ", school_name: "โรงเรียนตัวอย่าง".padEnd(80, "ๆ") },
+};
+const W14 = [14, 9, 5], WOLD = [6, 4, 2];
+const TT_SETS = {
+  t1: { text: "F-T1 + F-T4 (default): 2/2569 and 1/2569 with 14 each, closed 2/2568 with 6", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  "t1-archr": { text: "F-T1-archR (= F-T5): t1 + room ป.6/3 archived", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  "t1-archs": { text: "F-T1-archS (= F-T5): t1 + subject คณิตศาสตร์ archived (8 faded slots)", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  t0: { text: "F-T0: current term has no slots", want: { "t2569-2": [0, 0, 0] } },
+  t2: { text: "F-T2 stress: 7 days x 8 periods = 56 slots, 5 rooms, 40-unit label", want: { "t2569-2": [56, 28, 28] } },
+  t3: { text: "F-T3: one slot (พ ค2 ป.6/4 คณิต)", want: { "t2569-2": [1, 1, 0] } },
+  t4: { text: "F-T4: 1/2569 has 14, 2/2569 empty, 2/2568 has 6", want: { "t2569-2": [0, 0, 0], "t2569-1": W14, "t2568-2": WOLD } },
+  t4b: { text: "F-T4 variant: as t4 but 2/2569 already has 3 slots (TC-039)", want: { "t2569-2": [3, 2, 1], "t2569-1": W14, "t2568-2": WOLD } },
+  t6: { text: "F-T6 cross-year: current term 1/2570 (empty), source 2/2569 (14); 2570 rooms 'ป.6/1 ' ป.6/2 ป.6/3", want: { "t2569-2": W14, "t2570-1": [0, 0, 0] } },
+  t7: { text: "F-T7: t1 + legacy period_times {1:08:00,2:09:00}, no period_frame", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  t8: { text: "F-T8 (a): t1 + saved frame (8 periods, morning break, Mon-Sat); (b) old-format file at GET /__fixture/backup-file?variant=old", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  t10a: { text: "F-T10 (a): no terms and no rooms at all", want: {} },
+  t10b: { text: "F-T10 (b): terms exist, this year has no rooms", want: {} },
+  t11: { text: "F-T11: t1 + period_times empty, no period_frame", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } },
+  twoterm: { text: "F4 delete-confirm: 2/2569 (14) and 1/2569 (15) both have period-7 slots; no closed year", want: { "t2569-2": W14, "t2569-1": [15, 9, 6] } },
+  ...Object.fromEntries(Object.keys({ ...ACCENTS, ...NAMES }).map((k) => [k, { text: "F-T9 settings variant on t1", want: { "t2569-2": W14, "t2569-1": W14, "t2568-2": WOLD } }])),
+};
+const BACKUP_FILE_TABLES = ["settings", "terms", "classes", "subjects", "work_types", "students", "revoked_qr_tokens", "assignments", "assignment_classes", "scan_sessions", "submissions", "attendance_sessions", "attendance", "timetable_slots"];
+const TT_SET_NAMES = Object.keys(TT_SETS);
+const TT_ALIASES = { "t1-archR": "t1-archr", "t1-archS": "t1-archs", t5: "t1-archr", "t5-archr": "t1-archr", "t5-archs": "t1-archs", t9: "t9-warm" };
+const ttKey = (name) => TT_ALIASES[name] ?? name;
+
+function seedTimetable(ctx, setName = "t1") {
+  const key = ttKey(setName);
+  if (!TT_SETS[key]) throw new Error(`unknown tt-set "${setName}" — one of: ${TT_SET_NAMES.join(", ")}`);
+  const extra = {}, unset = []; // settings written after the base ones / removed
+  const t = (id, term, name, current, start, end) => addTerm(ctx, { id, year: term.year, term: term.t, name, current, start, end });
+  const subs = (archivedMath) => put(ctx, `INSERT OR REPLACE INTO subjects (id, code, name, color, sort, archived, updated_at) VALUES ('sub_math','ค16101','คณิตศาสตร์','magenta',20,${archivedMath ? 1 : 0},0), ('sub_music','ศ16101','ดนตรี','blue',30,0,0)`);
+  const ids = {};
+  const rooms = (list, year, archived) => list.forEach(([k, name, sort]) => {
+    ids[k] = `cls_tt_${k}`;
+    addClass(ctx, { id: ids[k], key: "tt" + k, name, sort, year, archived: archived ? 1 : 0 }, seqSpecs(5));
+  });
+  const R69 = [["g61", "ป.6/1", 10], ["g62", "ป.6/2", 20], ["g63", "ป.6/3", 30], ["g64", "ป.6/4", 40]];
+  const oldRooms = () => [["o51", "ป.5/1", 10], ["o52", "ป.5/2", 20]].forEach(([k, name, sort]) => {
+    ids[k] = `cls_tt_${k}`;
+    addClass(ctx, { id: ids[k], key: "tt" + k, name, sort, year: 2568, archived: true }, seqSpecs(3).map((s) => ({ ...s, status: "finished" })));
+  });
+  const terms3 = () => {
+    t("t2569-2", { year: 2569, t: 2 }, "ภาคเรียนที่ 2/2569", true, "2026-10-26", "2027-03-12");
+    t("t2569-1", { year: 2569, t: 1 }, "ภาคเรียนที่ 1/2569", false, "2026-05-16", "2026-10-10");
+    t("t2568-2", { year: 2568, t: 2 }, "ภาคเรียนที่ 2/2568", false, "2025-11-03", "2026-03-13");
+  };
+  /** F-T1's two older home rows (TC-054): only ป.6/4 has no roll call today, and one piece of work is due today */
+  const homeRows = () => {
+    const cls = (k, name) => ({ id: ids[k], key: "tt" + k, name, students: Array.from({ length: 5 }, (_, i) => ({ id: `stu_tt${k}_${i + 1}`, number: i + 1 })) });
+    ["g61", "g62", "g63"].forEach((k, i) => addAttendance(ctx, cls(k, R69[i][1]), { present: 5 }));
+    addWork(ctx, { id: "asg_tt_today", termId: "t2569-2", title: "ใบงานทดสอบ ครบกำหนดวันนี้", due: ctx.T, classes: [{ cls: cls("g64", "ป.6/4"), none: [1, 2] }] });
+  };
+  const t1 = (o = {}) => {
+    subs(o.archS); terms3(); rooms(R69, 2569, false); oldRooms();
+    if (o.archR) put(ctx, "UPDATE classes SET archived = 1 WHERE id = ?", ids.g63);
+    addTimetableSlots(ctx, "t2569-2", TT_WEEK, ids); addTimetableSlots(ctx, "t2569-1", TT_WEEK, ids); addTimetableSlots(ctx, "t2568-2", TT_OLD, ids);
+    homeRows();
+  };
+  switch (key) {
+    case "t1": t1(); break;
+    case "t1-archr": t1({ archR: true }); break;
+    case "t1-archs": t1({ archS: true }); break;
+    case "t0": subs(); terms3(); rooms(R69, 2569); oldRooms(); homeRows(); break;
+    case "t2": {
+      subs(); terms3(); rooms([...R69, ["g65", "ห้องเรียนพิเศษ ป.6/5", 50]], 2569); oldRooms();
+      const rows = []; let n = 0, c = 0;
+      for (let wd = 1; wd <= 7; wd++) for (let p = 1; p <= 8; p++) {
+        if ((wd + p) % 2) { c++; rows.push([wd, p, "class", ["g61", "g62", "g63", "g64", "g65"][c % 5], c % 3 ? "sub_math" : "sub_music"]); }
+        else rows.push([wd, p, "activity", null, null, ++n === 1 ? LONG_LABEL : `กิจกรรม ${n}`]);
+      }
+      addTimetableSlots(ctx, "t2569-2", rows, ids);
+      extra.period_frame = serializeFrame(FRAME_8, 1); extra.period_times = periodTimesOf(FRAME_8);
+      break;
+    }
+    case "t3": subs(); terms3(); rooms(R69, 2569); oldRooms(); addTimetableSlots(ctx, "t2569-2", [[3, 2, "class", "g64", "sub_math"]], ids); homeRows(); break;
+    case "t4": case "t4b":
+      subs(); terms3(); rooms(R69, 2569); oldRooms();
+      addTimetableSlots(ctx, "t2569-1", TT_WEEK, ids); addTimetableSlots(ctx, "t2568-2", TT_OLD, ids);
+      if (key === "t4b") addTimetableSlots(ctx, "t2569-2", [[1, 2, "class", "g62", "sub_math"], [3, 2, "class", "g64", "sub_math"], [5, 6, "activity", null, null, "สวดมนต์"]], ids);
+      break;
+    case "t6":
+      subs();
+      t("t2570-1", { year: 2570, t: 1 }, "ภาคเรียนที่ 1/2570", true, "2027-05-17", "2027-10-10");
+      t("t2569-2", { year: 2569, t: 2 }, "ภาคเรียนที่ 2/2569", false, "2026-10-26", "2027-03-12");
+      rooms(R69, 2569, true); // last year's rooms: archived, with the 14 slots
+      rooms([["n61", "ป.6/1 ", 10], ["n62", "ป.6/2", 20], ["n63", "ป.6/3", 30]], 2570);
+      addTimetableSlots(ctx, "t2569-2", TT_WEEK, ids);
+      break;
+    case "t7": t1(); extra.period_times = JSON.stringify({ 1: "08:00", 2: "09:00" }); unset.push("period_frame"); break;
+    case "t11": t1(); extra.period_times = ""; unset.push("period_frame"); break;
+    case "t8": t1(); extra.period_frame = serializeFrame(FRAME_T8, 3); extra.period_times = periodTimesOf(FRAME_T8); break;
+    case "t10a": break;
+    case "t10b": subs(); terms3(); oldRooms(); break;
+    case "twoterm":
+      subs();
+      t("t2569-2", { year: 2569, t: 2 }, "ภาคเรียนที่ 2/2569", true, "2026-10-26", "2027-03-12");
+      t("t2569-1", { year: 2569, t: 1 }, "ภาคเรียนที่ 1/2569", false, "2026-05-16", "2026-10-10");
+      rooms(R69, 2569);
+      addTimetableSlots(ctx, "t2569-2", TT_WEEK, ids); addTimetableSlots(ctx, "t2569-1", [...TT_WEEK, [3, 7, "activity", null, null, "ชมรม"]], ids);
+      break;
+    default: t1(); Object.assign(extra, ACCENTS[key] ?? NAMES[key] ?? {}); // F-T9
+  }
+  ctx.ttExtra = extra; ctx.ttUnset = unset;
+}
+
+/** names used by every timetable set (fixtures.md: "ครูทดสอบ" / "โรงเรียนบ้านตัวอย่าง") */
+const TT_DEFAULT_SETTINGS = { teacher_name: "ครูทดสอบ", school_name: "โรงเรียนบ้านตัวอย่าง" };
+
+function seedDataset(ctx, dataset, ttSet) {
   const T = ctx.T;
+  if (dataset === "timetable") return seedTimetable(ctx, ttSet);
   if (SCAN_DATASETS.includes(dataset)) return seedScan(ctx, dataset);
   addSubjects(ctx);
   addCurrentTerm(ctx);
@@ -636,7 +803,9 @@ function selfCheckPlan(dataset, T, termDate) {
 /** Settings a data set starts with, then the caller's overrides (X-4). `undefined` in `set` = leave the default; a key in `unset` is deleted. */
 function startSettings(dataset, o, nowMs) {
   const set = {};
-  if (HOME_DATASETS.includes(dataset) || SCAN_DATASETS.includes(dataset)) Object.assign(set, HOME_DEFAULTS);
+  if (HOME_DATASETS.includes(dataset) || SCAN_DATASETS.includes(dataset) || TIMETABLE_DATASETS.includes(dataset)) Object.assign(set, HOME_DEFAULTS);
+  if (TIMETABLE_DATASETS.includes(dataset)) Object.assign(set, TT_DEFAULT_SETTINGS);
+  Object.assign(set, o.ttExtra ?? {});
   if (o.teacherName !== undefined) set.teacher_name = o.teacherName;
   if (o.lateAfter !== undefined) set.late_after = o.lateAfter;
   const days = o.backupDaysAgo !== undefined ? o.backupDaysAgo : DEFAULT_BACKUP_DAYS[dataset] ?? (SCAN_DATASETS.includes(dataset) ? 1 : HOME_DATASETS.includes(dataset) ? 9 : undefined);
@@ -659,6 +828,9 @@ async function startFixtureServer({
   backupDaysAgo, // X-4: days since the last backup (number), or null = never
   settings: settingsOverride, // X-4: { key: value } written to the settings table after the data set (e.g. accent: "luxe")
   unsetSettings = [], // X-4: keys removed from the settings table
+  ttSet = "t1", // --tt-set=<name> for dataset "timetable": see TT_SETS (F-T0 .. F-T11, twoterm)
+  ttFail, // "500" | "timeout" (+ ":get" / ":put"): every matching /api/timetable* request fails (AC-43) until /__fixture/fault is cleared
+  ttConflict = false, // true | "once": a PUT /api/timetable first gets overtaken by "another device" so the app answers 409 timetable_changed
   selfCheck = true, // X-5: leave on; only a test of the check itself turns it off
   afterSeed, // optional async (DB) => void: extra rows after the data set, before the self-check (also how the check itself is tested)
 } = {}) {
@@ -666,6 +838,9 @@ async function startFixtureServer({
   if (!DATASETS.includes(dataset)) throw new Error(`unknown data set "${dataset}" — one of: ${DATASETS.join(", ")}`);
   if (dataset !== "demo" && (gradebook14 || layout)) throw new Error("--gb14 / --layout only go with the default data set");
   if (dataset === "empty") seed = false;
+  if (dataset === "timetable" && !TT_SETS[ttKey(ttSet)]) throw new Error(`unknown tt-set "${ttSet}" — one of: ${TT_SET_NAMES.join(", ")}`);
+  if (ttFail !== undefined && !/^(500|timeout)(:(get|put))?$/i.test(String(ttFail))) throw new Error(`ttFail must be 500 or timeout (optionally :get / :put), got "${ttFail}"`);
+  if (ttSet !== "t1" && dataset !== "timetable") throw new Error("--tt-set only goes with --timetable");
   if (today !== undefined && !(/^\d{4}-\d{2}-\d{2}$/.test(today) && new Date(today + "T00:00:00Z").toISOString().slice(0, 10) === today)) throw new Error(`today must be a real YYYY-MM-DD date, got "${today}"`);
   const T = today ?? bkkToday();
   const demo = dataset === "demo";
@@ -684,7 +859,8 @@ async function startFixtureServer({
     ...(demo ? [path.join(root, "scripts/seed-demo.sql")] : []),
   ];
   const nowMs = Date.now();
-  let app, cookie, info = { dataset, today: T };
+  let app, cookie, info = { dataset, today: T }, ttExtra = {}, ttUnset = [];
+  if (dataset === "timetable") info.ttSet = ttKey(ttSet);
   try {
     for (const file of files) {
       const sql = fs.readFileSync(file, "utf8").replace(/--[^\n]*/g, "");
@@ -694,8 +870,9 @@ async function startFixtureServer({
     if (layout && demo) await addLayout(DB);
     if (!demo && dataset !== "empty") {
       const ctx = newCtx(DB, T);
-      seedDataset(ctx, dataset);
+      seedDataset(ctx, dataset, ttSet);
       await flush(ctx);
+      ttExtra = ctx.ttExtra ?? {}; ttUnset = ctx.ttUnset ?? [];
     }
     if (afterSeed) await afterSeed(DB);
     ({ app } = require(path.join(root, "worker/app.ts")));
@@ -719,13 +896,35 @@ async function startFixtureServer({
     }
 
     // X-4: settings the data set starts with, then the caller's overrides
-    const set = startSettings(dataset, { teacherName, lateAfter, backupDaysAgo, settings: settingsOverride }, nowMs);
+    const set = startSettings(dataset, { teacherName, lateAfter, backupDaysAgo, settings: settingsOverride, ttExtra }, nowMs);
     const settingStmts = Object.entries(set).map(([k, v]) => DB.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)").bind(k, String(v)));
-    for (const k of unsetSettings) settingStmts.push(DB.prepare("DELETE FROM settings WHERE key = ?").bind(k));
+    for (const k of [...ttUnset, ...unsetSettings]) settingStmts.push(DB.prepare("DELETE FROM settings WHERE key = ?").bind(k));
     if (settingStmts.length) await DB.batch(settingStmts);
 
     // X-5: read the numbers back through EP-06 and compare with the tables in fixtures.md — never test on wrong data
-    if (selfCheck && dataset !== "demo" && dataset !== "empty") {
+    // F-T1 / F-T4: read the table back and compare with fixtures.md (14 periods = 9 teaching + 5 activity; 14; 6)
+    if (selfCheck && TIMETABLE_DATASETS.includes(dataset)) {
+      const rows = (await DB.prepare("SELECT term_id, COUNT(*) n, SUM(kind = 'class') c, SUM(kind = 'activity') a FROM timetable_slots GROUP BY term_id").all()).results;
+      const want = TT_SETS[ttKey(ttSet)].want;
+      const problems = Object.entries(want).filter(([id, w]) => { const r = rows.find((x) => x.term_id === id); return !(r ? [r.n, r.c, r.a] : [0, 0, 0]).every((v, i) => v === w[i]); }).map(([id]) => `timetable ${id}: slot counts differ from fixtures.md`);
+      for (const r of rows) if (!(r.term_id in want)) problems.push(`timetable ${r.term_id}: has ${r.n} slots but fixtures.md says none`);
+      const nTerms = (await DB.prepare("SELECT COUNT(*) n FROM terms").first()).n;
+      if (ttKey(ttSet) === "t10a" && nTerms !== 0) problems.push("t10a must have no terms");
+      if (["t2", "t8"].includes(ttKey(ttSet))) { // the app must accept the saved frame (not fall back to the default)
+        const fr = await (await asTeacher("/api/timetable")).json();
+        if (!fr.frame?.saved) problems.push("the saved frame was refused by the app (frame.saved is false)");
+        else if (ttKey(ttSet) === "t2" && (fr.frame.periods.length !== 8 || fr.frame.days.length !== 7)) problems.push("t2 frame is not 8 periods x 7 days");
+      }
+      if (ttKey(ttSet) === "t2") {
+        const lab = (await DB.prepare("SELECT label FROM timetable_slots WHERE label LIKE '%🏕%'").first())?.label;
+        if (!lab || lab.length !== 40) problems.push("t2 long label is not 40 UTF-16 units");
+        const room = (await DB.prepare("SELECT name FROM classes WHERE name LIKE 'ห้องเรียนพิเศษ%'").first())?.name;
+        if (!room || room.length !== 20) problems.push("t2 special room name is not 20 chars");
+      }
+      if (problems.length) { const err = new Error(`fixture self-check FAILED for data set "${dataset}": ` + problems.join("; ")); err.code = "FIXTURE_SELF_CHECK"; err.problems = problems; throw err; }
+      info.selfCheck = "ok";
+    }
+    if (selfCheck && dataset !== "demo" && dataset !== "empty" && !TIMETABLE_DATASETS.includes(dataset)) {
       const problems = [];
       for (const step of selfCheckPlan(dataset, T, today !== undefined)) {
         const res = await asTeacher("/api/dashboard" + step.query);
@@ -762,6 +961,12 @@ async function startFixtureServer({
   };
   const faults = []; // X-3: { method, path, status, times } — the next `times` matching API requests fail with `status` (null = until cleared)
 
+  if (ttFail !== undefined) {
+    const [kind, only] = String(ttFail).toLowerCase().split(":");
+    for (const m of only ? [only.toUpperCase()] : ["*"]) faults.push({ method: m, path: "/api/timetable*", status: kind === "timeout" ? "hang" : 500, times: null });
+  }
+  const ttConflictState = { on: !!ttConflict, once: ttConflict === "once" };
+
   /** X-3: /__fixture/* — controls for the checks themselves, outside /api/ (the app never calls them). Answered even while "down". */
   async function control(req, res, url) {
     const reply = (status, body) => { res.writeHead(status, { "Content-Type": "application/json", "Cache-Control": "no-store" }); res.end(JSON.stringify(body)); };
@@ -786,10 +991,25 @@ async function startFixtureServer({
       const status = Number(body.status ?? 500);
       const times = body.times == null ? null : Number(body.times);
       if (typeof body.path !== "string" || !body.path.startsWith("/")) return reply(422, { error: "path must start with /" });
-      if (!Number.isInteger(status) || (status !== 0 && (status < 100 || status > 599))) return reply(422, { error: "status must be 100..599 (0 = cut the connection)" });
+      const hang = body.status === "hang"; // never answers: the app's own load timeout fires (AC-43)
+      if (!hang && (!Number.isInteger(status) || (status !== 0 && (status < 100 || status > 599)))) return reply(422, { error: "status must be 100..599 (0 = cut the connection, \"hang\" = never answer)" });
       if (times !== null && (!Number.isInteger(times) || times < 1)) return reply(422, { error: "times must be a positive integer (or left out)" });
-      faults.push({ method, path: body.path, status, times });
+      faults.push({ method, path: body.path, status: hang ? "hang" : status, times });
       return reply(200, state());
+    }
+    if (route === "POST /__fixture/tt-conflict") { ttConflictState.on = !!body.on; ttConflictState.once = !!body.once; return reply(200, { ok: true, ...ttConflictState }); }
+    if (route === "GET /__fixture/backup-file") { // F-T8: the data as a backup file; ?variant=old = an old-format file (no timetable table, schema 6, legacy period_times only)
+      const old = url.searchParams.get("variant") === "old";
+      const data = {};
+      for (const tb of BACKUP_FILE_TABLES) { if (old && tb === "timetable_slots") continue; data[tb] = ((await DB.prepare(`SELECT * FROM ${tb}`).all()).results ?? []); }
+      if (old) {
+        data.settings = data.settings.filter((r) => r.key !== "period_frame");
+        if (!data.settings.some((r) => r.key === "period_times")) data.settings.push({ key: "period_times", value: JSON.stringify({ 1: "08:00", 2: "09:00" }) });
+        data.terms = data.terms.map(({ timetable_rev, ...r }) => r);
+      }
+      const counts = Object.fromEntries(Object.entries(data).map(([k, v]) => [k, v.length]));
+      const sha256 = require("node:crypto").createHash("sha256").update(JSON.stringify(data)).digest("hex");
+      return reply(200, { app: "ngankrob", schema_version: old ? 6 : 7, exported_at: Date.now(), counts, sha256, data });
     }
     if (route === "POST /__fixture/kill-sessions") {
       const out = await DB.prepare("DELETE FROM sessions").run();
@@ -835,9 +1055,23 @@ async function startFixtureServer({
         if (fault) {
           apiLog.push({ at: Date.now(), method: req.method, path: url.pathname, status: fault.status, ms: 0, db: 0, fault: true });
           if (fault.status === 0) { req.socket.destroy(); return; }
+          if (fault.status === "hang") return; // leave the request open; close() drops it
           res.writeHead(fault.status, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "fixture_fault", message: "failure injected by /__fixture/fault" }));
           return;
+        }
+        if (ttConflictState.on && req.method === "PUT" && url.pathname === "/api/timetable") {
+          // "another device" saves first: the term's version moves (and one slot appears), so the app's own check answers 409 timetable_changed + current
+          let termId = null;
+          try { termId = JSON.parse(Buffer.concat(parts).toString("utf8")).termId; } catch { /* the app will answer 4xx */ }
+          const term = termId ? await DB.prepare("SELECT id FROM terms WHERE id = ?").bind(termId).first() : null;
+          if (term) {
+            await DB.batch([
+              DB.prepare("INSERT OR IGNORE INTO timetable_slots (term_id, weekday, period, kind, class_id, subject_id, label, updated_at) VALUES (?, 3, 7, 'activity', NULL, NULL, 'จากเครื่องอื่น', ?)").bind(term.id, Date.now()),
+              DB.prepare("UPDATE terms SET timetable_rev = timetable_rev + 1 WHERE id = ?").bind(term.id),
+            ]);
+            if (ttConflictState.once) ttConflictState.on = false;
+          }
         }
         const t0 = Date.now(), before = stats.count;
         const out = await app.request(url.href, { method: req.method, headers: req.headers, ...(parts.length ? { body: Buffer.concat(parts) } : {}) }, timedEnv);
@@ -877,6 +1111,7 @@ async function startFixtureServer({
     /** T: today in Asia/Bangkok that every relative date in the data set was built from (X-1) */
     today: T,
     info, // { dataset, today, selfCheck?: "ok", cards?: {…} }
+    ttConflict: ttConflictState, // { on, once } — live
     faults, // armed /__fixture/fault entries (live array)
     hits,
     apiLog,
@@ -894,11 +1129,11 @@ async function startFixtureServer({
   };
 }
 
-module.exports = { startFixtureServer, PASSWORD, EMAIL, DATASETS, CLS, TERM, dayAdd, dashboardProblems, LONG_SCAN_TITLE, OLD_CARD_VALID, OLD_CARD_LITERAL, NEW_CARD };
+module.exports = { TT_SETS, TT_SET_NAMES, startFixtureServer, PASSWORD, EMAIL, DATASETS, CLS, TERM, dayAdd, dashboardProblems, LONG_SCAN_TITLE, OLD_CARD_VALID, OLD_CARD_LITERAL, NEW_CARD };
 
 if (require.main === module) {
   // node scripts/fixture-server.cjs [--home | --home-empty-year | --home-no-students | --home-clear | --home-many | --home-extra | --home-extra-b | --home-one
-  //                                  | --scan | --scan-all-62 | --scan-noroom | --scan-empty | --empty | --gb14 | --layout]
+  //                                  | --scan | --scan-all-62 | --scan-noroom | --scan-empty | --timetable [--tt-set=NAME] [--tt-fail=500|timeout[:get|:put]] [--tt-conflict[=once]] | --empty | --gb14 | --layout]
   //   [--port N] [--assets DIR] [--teacher-name TEXT] [--late-after HH:MM] [--backup-days N|never] [--set key=value ...] [--unset key ...]
   // (no --today: the app always asks for the real Bangkok day, so a fixture built for another day would only look checked — R-6501)
   const argv = process.argv.slice(2);
@@ -906,9 +1141,13 @@ if (require.main === module) {
   const WITH_VALUE = new Set(["--port", "--assets", "--teacher-name", "--late-after", "--backup-days", "--set", "--unset"]);
   const SWITCHES = new Set(["--gb14", "--layout", ...DATASETS.filter((d) => d !== "demo").map((d) => "--" + d)]);
   const values = {}; // flag -> [values]
+  let ttSetArg, ttFailArg, ttConflictArg;
   for (let k = 0; k < argv.length; k++) {
     const a = argv[k];
     if (a === "--today") fail("--today is not supported: the app uses the real Bangkok day, so the data set must be built for it");
+    if (a.startsWith("--tt-set=")) { ttSetArg = a.slice(9); continue; }
+    if (a.startsWith("--tt-fail=")) { ttFailArg = a.slice(10); continue; }
+    if (a === "--tt-conflict" || a === "--tt-conflict=once") { ttConflictArg = a.endsWith("once") ? "once" : true; continue; }
     if (WITH_VALUE.has(a)) {
       if (k + 1 >= argv.length) fail(a + " needs a value");
       (values[a] ??= []).push(argv[++k]);
@@ -925,8 +1164,10 @@ if (require.main === module) {
   if (port !== undefined && !(/^\d+$/.test(port) && Number(port) <= 65535)) fail("--port wants a number 0..65535, got \"" + port + "\"");
   const lateAfter = opt("--late-after");
   if (lateAfter !== undefined && !/^([01]?\d|2[0-3]):[0-5]\d$/.test(lateAfter)) fail("--late-after wants HH:MM, got \"" + lateAfter + "\"");
+  if ((ttSetArg !== undefined || ttFailArg !== undefined || ttConflictArg) && flags[0] !== "timetable") fail("--tt-set / --tt-fail / --tt-conflict only go with --timetable");
   startFixtureServer({
     ...(flags[0] ? { dataset: flags[0] } : {}),
+    ...(ttSetArg !== undefined ? { ttSet: ttSetArg } : {}), ...(ttFailArg !== undefined ? { ttFail: ttFailArg } : {}), ...(ttConflictArg ? { ttConflict: ttConflictArg } : {}),
     gradebook14: argv.includes("--gb14"), layout: argv.includes("--layout"),
     ...(port !== undefined ? { port: Number(port) } : {}), ...(opt("--assets") ? { assetsDir: path.resolve(opt("--assets")) } : {}),
     ...(opt("--teacher-name") !== undefined ? { teacherName: opt("--teacher-name") } : {}),
@@ -934,7 +1175,7 @@ if (require.main === module) {
     ...(backup !== undefined ? { backupDaysAgo: backup === "never" ? null : Number(backup) } : {}),
     settings, unsetSettings: values["--unset"] ?? [],
   }).then((s) => {
-    console.log(`fixture server on ${s.url} — data set: ${s.dataset} — today (Bangkok): ${s.today}${s.info.selfCheck ? " — self-check ok" : ""} — password: ${s.password} — synthetic data only`);
+    console.log(`fixture server on ${s.url} — data set: ${s.dataset}${s.info.ttSet ? " (tt-set " + s.info.ttSet + ")" : ""} — today (Bangkok): ${s.today}${s.info.selfCheck ? " — self-check ok" : ""} — password: ${s.password} — synthetic data only`);
     for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, async () => { await s.close(); process.exit(0); });
   }).catch((e) => { console.error(e.code === "FIXTURE_SELF_CHECK" ? e.message : e); process.exit(1); });
 }

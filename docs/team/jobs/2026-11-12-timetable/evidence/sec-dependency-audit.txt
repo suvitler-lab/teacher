@@ -1,0 +1,12 @@
+# Security Reviewer — dependency audit (read-only, 2026-11-13)
+command: npm audit --json (from package-lock.json, no install)
+package.json / package-lock.json changed in this job: no (git diff HEAD --stat empty)
+summary {"info":0,"low":0,"moderate":1,"high":0,"critical":0,"total":1}
+hono moderate range <=4.13.15 direct true
+  - https://github.com/advisories/GHSA-4m76-xfj5-7975 Hono: `mount()` and `app.mount()` can forward a path that bypasses middleware scoped inside the mount prefix
+  - https://github.com/advisories/GHSA-h7mg-cq63-vhpq Hono: RegExpRouter skips wildcard middleware for some route sets and for paths with an encoded line terminator
+  - https://github.com/advisories/GHSA-3gg2-335m-rxc6 Hono: `css` helper does not escape a closing tag split between the template and an interpolated value, allowing HTML injection
+  - https://github.com/advisories/GHSA-46wx-v44x-9hh2 Hono: `csrf()` does not check requests sent by hyperlink auditing (`text/ping`)
+  - https://github.com/advisories/GHSA-4h7h-rv7c-7m2v Hono: `validator('form')` skips validation for `multipart/form-data` requests with extra parameters
+installed hono: 4.13.13
+reachability: no route registered with '*'-suffix or custom regex param (grep worker/routes) -> GHSA-h7mg cases 1/2 not present; case 3 (encoded line terminator) falls to notFound, no handler runs. css helper / csrf() / validator('form') / mount() not used.

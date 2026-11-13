@@ -1,0 +1,378 @@
+{
+ "_": "งาน 2026-11-12-timetable · QA เฟส 3 · หน้า/สถานะที่ถ่าย after × 4 อุปกรณ์ (context.md §อุปกรณ์เป้าหมาย: มือถือ 390x844 · iPad ตั้ง 820x1180 · iPad นอน 1180x820 · คอม 1536x729) · fixture: node scripts/fixture-server.cjs --timetable --port <พอร์ตที่ PM ให้> (มีแล้ว: ชุด F-T1+F-T4 · ชุด F-T0/T2–T3/T5–T11 ยังไม่มี → variant ที่ fixture อื่นรอ Build) · ข้อมูลสมมติเท่านั้น (fixtures.md) · pages = route จริงจาก src/app.tsx (#/timetable #/ · ตั้งค่า #/settings?section=…) — ยืนยันแล้วจากโค้ด 2026-11-13 · _variants = ชุดที่ต้องถ่ายเพิ่ม (shots.mjs ยังไม่อ่านฟิลด์นี้ Full-Stack เติม setup ตอน Build) · now = ค่า ?now= ของ fixture (G1) · ผลที่คาดของนาฬิกา K = test-plan.md §4",
+ "base": "http://127.0.0.1:4121",
+ "devices": [
+  {
+   "name": "mobile",
+   "w": 390,
+   "h": 844,
+   "dpr": 3,
+   "touch": true
+  },
+  {
+   "name": "ipad-portrait",
+   "w": 820,
+   "h": 1180,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "ipad-landscape",
+   "w": 1180,
+   "h": 820,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "desktop",
+   "w": 1536,
+   "h": 729,
+   "dpr": 2,
+   "touch": false
+  }
+ ],
+ "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);await w(300);await(async()=>{try{const s=await (await fetch(\"/api/settings\",{credentials:\"include\"})).json();let a={};try{a=JSON.parse(s.accent)||{}}catch{};a.v=1;a.skin=a.skin||\"warm\";a.layout=a.layout||\"a\";a.timetable=\"c\";await fetch(\"/api/settings\",{method:\"PUT\",credentials:\"include\",headers:{\"content-type\":\"application/json\"},body:JSON.stringify({accent:JSON.stringify(a)})});}catch(e){return String(e)}})();return 'ok'})()",
+ "pages": [
+  {
+   "name": "ha-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=ha-pro-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ha-pro-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=ha-warm-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ha-warm-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=ha-playful-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ha-playful-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=hb-pro-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hb-pro-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'b',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=hb-warm-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hb-warm-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=hb-playful-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hb-playful-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'b',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=hc-pro-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'c',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hc-pro-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'c',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=hc-warm-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'c',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hc-warm-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'c',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=hc-playful-light#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'c',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hc-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=hc-playful-dark#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'c',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-light-lunch",
+   "path": "/?now=2026-11-11T12:00&pg=ha-warm-light-lunch#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-light-lunch",
+   "path": "/?now=2026-11-11T12:00&pg=hb-warm-light-lunch#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-light-fri1540",
+   "path": "/?now=2026-11-13T15:40&pg=ha-warm-light-fri1540#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-light-fri1540",
+   "path": "/?now=2026-11-13T15:40&pg=hb-warm-light-fri1540#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-light-sat1000",
+   "path": "/?now=2026-11-14T10:00&pg=ha-warm-light-sat1000#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-light-sat1000",
+   "path": "/?now=2026-11-14T10:00&pg=hb-warm-light-sat1000#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ha-warm-light-fri1730",
+   "path": "/?now=2026-11-13T17:30&pg=ha-warm-light-fri1730#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "hb-warm-light-fri1730",
+   "path": "/?now=2026-11-13T17:30&pg=hb-warm-light-fri1730#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'b',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-pro-light#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'c'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-pro-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-pro-light#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-pro-dark#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'c'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-pro-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-pro-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-pro-dark#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'pro',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='pro'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-warm-light#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'c'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-warm-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-warm-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-warm-light#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-warm-dark#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'c'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-warm-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-warm-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-warm-dark#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'warm',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='warm'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-playful-light#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'c'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-playful-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-playful-light",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-playful-light#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'light'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "ttc-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=ttc-playful-dark#/timetable",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'c'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-look-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-look-playful-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  },
+  {
+   "name": "set-time-playful-dark",
+   "path": "/?now=2026-11-11T09:46&pg=set-time-playful-dark#/settings?section=time",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('nav');i++)await w(100);await fetch('/api/settings',{method:'PUT',credentials:'include',headers:{'content-type':'application/json'},body:JSON.stringify({accent:JSON.stringify({v:1,skin:'playful',layout:'a',timetable:'a'}),theme:'dark'})});sessionStorage.setItem('qaT',String(Date.now()));localStorage.removeItem('ngankrob-font-size');setTimeout(()=>location.reload(),30);return 1})()",
+   "ready": "(()=>{try{return Number(performance.timeOrigin)>Number(sessionStorage.getItem('qaT')||1e18)&&document.documentElement.getAttribute('data-skin')==='playful'&&!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')}catch(e){return false}})()",
+   "wait": 1500
+  }
+ ],
+ "_now": "นาฬิกา (src/lib/timetable/clock.ts): ?now= ใช้ได้เฉพาะ localhost/127.0.0.1/*.localhost/*.test · ใส่ได้ทั้ง query (/?now=2026-11-11T09:45#/timetable) หรือหลัง hash (#/timetable?now=…) · ไม่มี Z = เวลา Bangkok · มี Z/+07:00 = instant · เปลี่ยนกลางหน้า: window.__ttSetNow(\"2026-11-11T09:50\") แล้วรอ tick ≤60 วิ (หรือ visibilitychange) · __ttSetNow(null) = คืนเวลาจริง · pages ใช้ search ?now= เพื่อไม่ชน setup ที่เช็ค location.hash",
+ "_selectors": {
+  "settings_appearance": {
+   "timetable_style": "input[type=radio][name=\"ap-timetable\"][value=a|b|c] (fieldset role=radiogroup aria-label=\"รูปแบบตารางสอน\")",
+   "home_layout": "input[name=\"ap-layout\"][value=a|b|c]",
+   "skin": "input[name=\"ap-skin\"][value=pro|warm|playful]",
+   "mode": "input[name=\"ap-mode\"][value=system|light|dark] (aria-label สว่าง/มืด/ตามเครื่อง)",
+   "note": "ไม่มีปุ่มบันทึก (autosave ช้า ~SETTLE_MS) → รอ ≥1 วิ หลังคลิก"
+  },
+  "timetable_page": {
+   "page": ".tt-page[data-tt-layout=a|b|c]",
+   "cell": "[data-tt-cell=\"<weekday 1-7>:<period>\"] เช่น 3:4 = พุธ คาบ 4",
+   "states": "[data-tt-state=loading|empty|error|no-term|term-not-found]",
+   "summary": "[data-testid=tt-summary]",
+   "print": "[data-testid=tt-print] / button[aria-label=\"พิมพ์ตารางสอน\"]",
+   "term_select": "select[aria-label=\"ภาคเรียนที่แสดง\"]",
+   "more_menu": "button[aria-label^=\"เมนูเพิ่มเติม\"] → [role=menu][aria-label=\"ตารางสอน\"] [role=menuitem] (กรอบเวลา/คัดลอก/ล้าง อยู่ในเมนูนี้ — ยังไม่มี testid tt-copy/tt-clear/tt-timesheet/tt-layout-*; ใช้ role+ชื่อ)"
+  },
+  "home_strip": {
+   "strip": "section[data-tt-strip] (aria-label=\"ตารางสอนวันนี้\")",
+   "now_line": "[data-line=now]",
+   "next_line": "[data-line=next]",
+   "cells": "ol[aria-label=\"คาบของวันนี้\"] li.hmt-cell (live = aria-current=time)",
+   "buttons": ".hmt-btn (primary=เช็คชื่อ, ถัดมา=สแกน, ghost=ดูทั้งสัปดาห์)",
+   "live_region": "[role=status][aria-live=polite].sr-only"
+  },
+  "home_layout_a_rows": {
+   "row": "li[data-tt-row][data-kind=tt]",
+   "more": "li[data-kind=ttMore]",
+   "past": "li[data-kind=ttPast]"
+  },
+  "guess_until_built": "ปุ่ม/แผ่นเพิ่ม-แก้คาบ (SlotSheet) · แผ่นตั้งเวลา (FrameEditor ใช้ [data-f=count|periods.N.start|…]) · ConfirmBox · ฝั่งเค้าโครง ข/ค ในหน้าตาราง — ยังเดา จนกว่า T-19 เสร็จ"
+ }
+}

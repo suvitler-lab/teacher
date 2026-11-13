@@ -202,3 +202,8 @@
 .pv-inline { border: 0; margin: 0; padding: 0; min-width: 0; }
 .pv-inline:disabled { opacity: .55; }
 .dv-howto { padding: 8px 0 0; overflow-wrap: anywhere; }
+/* รูปแบบตารางสอน: pointer to where the "ตอนนี้/ต่อไป" strip is switched (D53: no switch here) */
+.ap-tt-link { margin: 8px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; }
+.ap-tt-link .lk { font-size: inherit; color: var(--text-accent); background: none; border: none; cursor: pointer; padding: 0 8px; min-height: var(--tap, 44px); text-decoration: underline; text-align: left; border-radius: 8px; }
+/* phone: the "ใช้อยู่" tag sits on the card edge so it never covers a long title (ก ตารางกระดาษ) */
+@media (max-width: 720px) { .ap-card .ap-used { top: -12px !important; } }

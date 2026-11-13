@@ -392,3 +392,158 @@ describe("F-S1 / F-S2 (--scan) and X-6 reissued card", () => {
     });
   }, 180_000);
 });
+
+// =====================================================================================================================
+// Timetable sets (job 2026-11-12-timetable, fixtures.md F-T0 .. F-T11) and the mock failure modes of AC-43 / D59.
+// =====================================================================================================================
+const TT_SET_NAMES: string[] = fx.TT_SET_NAMES;
+type Get = (p: string, init?: RequestInit) => Promise<Res>;
+
+async function withTt<T>(opts: Record<string, unknown>, fn: (s: Fixture, get: Get) => Promise<T>): Promise<T> {
+  return withFixture({ dataset: "timetable", ...opts }, async (s) => fn(s, await signedIn(s) as Get));
+}
+const ttCounts = async (s: Fixture) => Object.fromEntries((await rows(s, "SELECT term_id, COUNT(*) n FROM timetable_slots GROUP BY term_id")).map((r) => [r.term_id, r.n]));
+const ttSettings = async (s: Fixture) => (await (await ctl(s, "GET", "/__fixture/settings")).json()).settings as Record<string, string>;
+const TTT = 180_000;
+
+describe("tt-set: every set of fixtures.md starts and passes its self-check", () => {
+  it("lists F-T0..F-T11 + the F4 two-term set", () => {
+    for (const n of ["t0", "t1", "t1-archr", "t1-archs", "t2", "t3", "t4", "t4b", "t6", "t7", "t8", "t10a", "t10b", "t11", "twoterm", "t9-blue", "t9-names-f"]) expect(TT_SET_NAMES).toContain(n);
+  });
+  it("starts every set (self-check ok) and rejects an unknown one", async () => {
+    for (const n of TT_SET_NAMES) await withTt({ ttSet: n }, async (s) => { expect(s.info.selfCheck).toBe("ok"); });
+    await expect(startFixtureServer({ port: 0, dataset: "timetable", ttSet: "nope" })).rejects.toThrow(/unknown tt-set/);
+    await expect(startFixtureServer({ port: 0, dataset: "home", ttSet: "t0" })).rejects.toThrow(/only goes with/);
+  }, TTT * 4);
+});
+
+describe("tt-set contents", () => {
+  it("t1: 14 periods (9 + 5), rev 7, fictional names, the home rows' data", async () => {
+    await withTt({}, async (s, get) => {
+      const d = await (await get("/api/timetable")).json();
+      expect(d.slots).toHaveLength(14);
+      expect(d.slots.filter((x: any) => x.kind === "class")).toHaveLength(9);
+      const st = await ttSettings(s);
+      expect(st.teacher_name).toBe("ครูทดสอบ"); expect(st.school_name).toBe("โรงเรียนบ้านตัวอย่าง");
+      expect(await rows(s, "SELECT timetable_rev r FROM terms WHERE id = 't2569-2'")).toEqual([{ r: 7 }]);
+      expect(await rows(s, "SELECT id FROM assignments WHERE due_date IS NOT NULL")).toHaveLength(1);
+      expect(await rows(s, "SELECT DISTINCT class_id FROM attendance_sessions")).toHaveLength(3);
+    });
+  }, TTT);
+  it("archR / archS: one room / the subject archived, slots stay", async () => {
+    await withTt({ ttSet: "t1-archr" }, async (s) => {
+      expect(await rows(s, "SELECT name FROM classes WHERE archived = 1 AND year = 2569")).toEqual([{ name: "ป.6/3" }]);
+      expect(await ttCounts(s)).toMatchObject({ "t2569-2": 14 });
+    });
+    await withTt({ ttSet: "t1-archs" }, async (s) => {
+      expect(await rows(s, "SELECT archived FROM subjects WHERE id = 'sub_math'")).toEqual([{ archived: 1 }]);
+      expect(await rows(s, "SELECT COUNT(*) n FROM timetable_slots WHERE term_id = 't2569-2' AND subject_id = 'sub_math'")).toEqual([{ n: 8 }]);
+    });
+  }, TTT);
+  it("t0 / t3 / t4 / t4b slot counts", async () => {
+    await withTt({ ttSet: "t0" }, async (s) => expect(await ttCounts(s)).toEqual({}));
+    await withTt({ ttSet: "t3" }, async (s) => expect(await ttCounts(s)).toEqual({ "t2569-2": 1 }));
+    await withTt({ ttSet: "t4" }, async (s) => expect(await ttCounts(s)).toEqual({ "t2569-1": 14, "t2568-2": 6 }));
+    await withTt({ ttSet: "t4b" }, async (s) => expect(await ttCounts(s)).toEqual({ "t2569-2": 3, "t2569-1": 14, "t2568-2": 6 }));
+  }, TTT);
+  it("t2: 56 slots, 7 days x 8 periods, special room of 20 chars, label of 40 units, saved frame", async () => {
+    await withTt({ ttSet: "t2" }, async (s, get) => {
+      const d = await (await get("/api/timetable")).json();
+      expect(d.slots).toHaveLength(56);
+      expect(d.frame.saved).toBe(true); expect(d.frame.periods).toHaveLength(8); expect(d.frame.days).toEqual([1, 2, 3, 4, 5, 6, 7]);
+      expect(d.frame.breaks).toHaveLength(1);
+      const label = d.slots.map((x: any) => x.label).find((l: string) => l?.includes("🏕"));
+      expect(label.length).toBe(40); expect(label.endsWith("🏕️✅")).toBe(true);
+      expect((await rows(s, "SELECT name FROM classes WHERE name LIKE 'ห้องเรียนพิเศษ%'"))[0].name).toHaveLength(20);
+    });
+  }, TTT);
+  it("t6: current term 1/2570 is empty; 2/2569 has ป.6/4 with 3 slots; rooms of 2570 are 'ป.6/1 ' ป.6/2 ป.6/3", async () => {
+    await withTt({ ttSet: "t6" }, async (s, get) => {
+      expect((await (await get("/api/timetable")).json()).slots).toHaveLength(0);
+      expect((await rows(s, "SELECT name FROM classes WHERE year = 2570 ORDER BY sort")).map((r) => r.name)).toEqual(["ป.6/1 ", "ป.6/2", "ป.6/3"]);
+      expect(await rows(s, "SELECT COUNT(*) n FROM timetable_slots t JOIN classes c ON c.id = t.class_id WHERE c.name = 'ป.6/4'")).toEqual([{ n: 3 }]);
+    });
+  }, TTT);
+  it("t7 / t11 have no period_frame; t8 has a saved 8-period frame with 2 breaks, Mon-Sat, and two backup files", async () => {
+    await withTt({ ttSet: "t7" }, async (s, get) => {
+      const st = await ttSettings(s);
+      expect(st.period_frame).toBeUndefined(); expect(JSON.parse(st.period_times)).toEqual({ 1: "08:00", 2: "09:00" });
+      expect((await (await get("/api/timetable")).json()).frame.saved).toBe(false);
+    });
+    await withTt({ ttSet: "t11" }, async (s) => { const st = await ttSettings(s); expect(st.period_frame).toBeUndefined(); expect(st.period_times).toBe(""); });
+    await withTt({ ttSet: "t8" }, async (s, get) => {
+      const f = (await (await get("/api/timetable")).json()).frame;
+      expect(f.saved).toBe(true); expect(f.periods).toHaveLength(8); expect(f.breaks).toHaveLength(2); expect(f.days).toEqual([1, 2, 3, 4, 5, 6]);
+      const nu = await (await ctl(s, "GET", "/__fixture/backup-file")).json();
+      expect(nu.counts.timetable_slots).toBe(34); expect(nu.schema_version).toBe(7);
+      const old = await (await ctl(s, "GET", "/__fixture/backup-file?variant=old")).json();
+      expect(old.data.timetable_slots).toBeUndefined(); expect(old.schema_version).toBe(6);
+      expect(old.data.settings.some((r: any) => r.key === "period_frame")).toBe(false);
+      expect(old.data.settings.some((r: any) => r.key === "period_times")).toBe(true);
+    });
+  }, TTT);
+  it("t10a has no terms; t10b has terms but no room this year; twoterm has period 7 in both terms", async () => {
+    await withTt({ ttSet: "t10a" }, async (s) => { expect(await rows(s, "SELECT id FROM terms")).toEqual([]); });
+    await withTt({ ttSet: "t10b" }, async (s) => {
+      expect((await rows(s, "SELECT id FROM terms")).length).toBeGreaterThan(0);
+      expect(await rows(s, "SELECT id FROM classes WHERE year = 2569")).toEqual([]);
+    });
+    await withTt({ ttSet: "twoterm" }, async (s) => {
+      expect(await rows(s, "SELECT term_id, COUNT(*) n FROM timetable_slots WHERE period = 7 GROUP BY term_id ORDER BY term_id")).toEqual([{ term_id: "t2569-1", n: 3 }, { term_id: "t2569-2", n: 2 }]);
+    });
+  }, TTT);
+  it("t9 variants write the accent / names exactly", async () => {
+    const cases: [string, string, string][] = [["t9-blue", "accent", "blue"], ["t9-z", "accent", '{"v":1,"skin":"pro","layout":"b","timetable":"z"}'], ["t9-bad", "accent", "{{"], ["t9-names-d", "school_name", "   "], ["t9-names-e", "teacher_name", "  ครูทดสอบ "]];
+    for (const [set, key, value] of cases) await withTt({ ttSet: set }, async (s) => { expect((await ttSettings(s))[key]).toBe(value); });
+    await withTt({ ttSet: "t9-names-f" }, async (s) => { expect((await ttSettings(s)).school_name).toHaveLength(80); });
+  }, TTT);
+});
+
+describe("tt failure modes", () => {
+  it("--tt-fail=500 answers 500 to /api/timetable* only; :get leaves PUT alone", async () => {
+    await withTt({ ttFail: "500" }, async (_s, get) => {
+      expect((await get("/api/timetable")).status).toBe(500);
+      expect((await get("/api/timetable/frame", { method: "PUT", body: "{}" })).status).toBe(500);
+      expect((await get("/api/bootstrap")).status).toBe(200);
+    });
+    await withTt({ ttFail: "500:get" }, async (_s, get) => {
+      expect((await get("/api/timetable")).status).toBe(500);
+      expect((await get("/api/timetable", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ termId: "t2569-2", baseRev: 7, slots: [] }) })).status).not.toBe(500);
+    });
+    await expect(startFixtureServer({ port: 0, dataset: "timetable", ttFail: "418" })).rejects.toThrow(/ttFail/);
+  }, TTT);
+  it("--tt-fail=timeout never answers (the caller's own timeout fires); clearing the fault restores it", async () => {
+    await withTt({ ttFail: "timeout:get" }, async (s, get) => {
+      const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 1500);
+      await expect(get("/api/timetable", { signal: ac.signal })).rejects.toThrow();
+      clearTimeout(t);
+      await ctl(s, "DELETE", "/__fixture/fault");
+      expect((await get("/api/timetable")).status).toBe(200);
+    });
+  }, TTT);
+  it("the generic fault endpoint accepts status hang", async () => {
+    await withTt({}, async (s) => {
+      expect((await (await ctl(s, "POST", "/__fixture/fault", { path: "/api/timetable", status: "hang", times: 1 })).json()).faults[0].status).toBe("hang");
+    });
+  }, TTT);
+  it("--tt-conflict: PUT gets 409 timetable_changed with current (every time; =once only the first)", async () => {
+    const put = (get: Get, baseRev: number) => get("/api/timetable", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ termId: "t2569-2", baseRev, slots: [] }) });
+    await withTt({ ttConflict: true }, async (_s, get) => {
+      for (let i = 0; i < 2; i++) {
+        const res = await put(get, 7 + i);
+        const body = await res.json();
+        expect(res.status).toBe(409); expect(body.error).toBe("timetable_changed"); expect(body.current).toBeTruthy();
+      }
+    });
+    await withTt({ ttConflict: "once" }, async (s, get) => {
+      expect((await put(get, 7)).status).toBe(409);
+      expect((await rows(s, "SELECT timetable_rev r FROM terms WHERE id = 't2569-2'"))[0].r).toBe(8);
+      expect((await put(get, 8)).status).toBe(200);
+      expect((await (await ctl(s, "POST", "/__fixture/tt-conflict", { on: true })).json()).on).toBe(true);
+    });
+  }, TTT);
+  it("CLI: tt flags need --timetable", () => {
+    const r = spawnSync(process.execPath, ["scripts/fixture-server.cjs", "--tt-set=t0", "--port", "0"], { encoding: "utf8" });
+    expect(r.status).toBe(2); expect(r.stderr).toContain("only go with --timetable");
+  });
+});

@@ -1,0 +1,158 @@
+{
+  "job": "2026-11-12-timetable",
+  "tasks": {
+    "T-10": {
+      "role": "team-backend-dev",
+      "paths": [
+        "shared/timetable.ts",
+        "test/unit/tt-shared*.test.ts"
+      ]
+    },
+    "T-11": {
+      "role": "team-database-specialist",
+      "paths": [
+        "migrations/0008_timetable.sql",
+        "shared/types.ts",
+        "scripts/fixture-server.cjs",
+        "test/api/tt-migration*.test.ts",
+        "docs/team/database.md"
+      ]
+    },
+    "T-12": {
+      "role": "team-backend-dev",
+      "paths": [
+        "worker/routes/timetable.ts",
+        "worker/lib/timetable.ts",
+        "worker/app.ts",
+        "worker/routes/bootstrap.ts",
+        "worker/routes/catalog.ts",
+        "worker/lib/db.ts",
+        "test/api/tt-api*.test.ts",
+        "test/api/read-shape.golden.json",
+        "test/api/read-shape.test.ts",
+        "test/api/helpers.ts",
+        "test/api/auth.test.ts"
+      ]
+    },
+    "T-13": {
+      "role": "team-backend-dev",
+      "paths": [
+        "worker/routes/backup.ts",
+        "worker/lib/restore-validation.ts",
+        "worker/routes/reset.ts",
+        "src/lib/backup.ts",
+        "src/components/RestoreModal.tsx",
+        "test/api/tt-backup*.test.ts",
+        "test/api/backup-*.ts",
+        "test/api/restore*.test.ts",
+        "test/api/reset.test.ts",
+        "test/unit/backup.test.ts"
+      ]
+    },
+    "T-14": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/lib/timetable/**",
+        "src/store.ts",
+        "test/unit/tt-logic*.test.ts",
+        "test/unit/tt-store*.test.ts"
+      ]
+    },
+    "T-15": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/lib/appearance.ts",
+        "src/lib/localPrefs.ts",
+        "src/components/settings/AppearanceSection.tsx",
+        "src/styles/settings.css",
+        "test/unit/tt-appearance*.test.tsx",
+        "test/unit/hr-appearance-*.test.tsx",
+        "test/unit/hr-theme-appearance.test.ts"
+      ]
+    },
+    "T-16": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/timetable/frame/**",
+        "src/styles/timetable-frame.css",
+        "test/unit/tt-frame*.test.tsx"
+      ]
+    },
+    "T-17": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/timetable/print/**",
+        "src/styles/timetable-print.css",
+        "test/unit/tt-print*.test.tsx"
+      ]
+    },
+    "T-18": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/home/TimetableStrip.tsx",
+        "src/components/home/a/**",
+        "src/components/home/b/index.tsx",
+        "src/components/home/c/index.tsx",
+        "src/pages/Home.tsx",
+        "src/lib/homeLayout.ts",
+        "src/components/home/CardSettings.tsx",
+        "src/styles/home-tt.css",
+        "test/unit/tt-home*.test.tsx",
+        "test/unit/hr-layout-a-ui.test.tsx",
+        "test/unit/hr-layout-b-ui.test.tsx",
+        "test/unit/hr-layout-c-ui.test.tsx",
+        "test/unit/hr-homecore-*.test.ts*",
+        "test/unit/home-ui.test.tsx",
+        "test/unit/home-states.test.tsx"
+      ]
+    },
+    "T-19": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/pages/Timetable.tsx",
+        "src/components/timetable/*.tsx",
+        "src/components/timetable/a/**",
+        "src/components/timetable/b/index.tsx",
+        "src/components/timetable/c/index.tsx",
+        "src/styles/timetable.css",
+        "src/styles/timetable-a.css",
+        "src/components/Shell.tsx",
+        "src/app.tsx",
+        "src/lib/menuKeys.ts",
+        "test/unit/tt-page*.test.tsx",
+        "test/unit/tt-layout-a*.test.tsx",
+        "test/unit/hr-menu-nav.test.tsx"
+      ]
+    },
+    "T-20": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/timetable/b/**",
+        "src/styles/timetable-b.css",
+        "test/unit/tt-layout-b*.test.tsx"
+      ]
+    },
+    "T-21": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/timetable/c/**",
+        "src/styles/timetable-c.css",
+        "test/unit/tt-layout-c*.test.tsx"
+      ]
+    },
+    "T-22": {
+      "role": "team-frontend-dev",
+      "paths": [
+        "src/components/settings/sections/TimeSection.tsx",
+        "src/pages/Settings.tsx",
+        "src/components/AuditHistory.tsx",
+        "test/unit/tt-settings*.test.tsx",
+        "test/unit/settings-page.test.tsx",
+        "test/unit/hr-sg-settings-shell.test.tsx",
+        "test/unit/audit-dialog.test.tsx"
+      ]
+    }
+  },
+  "shared": [],
+  "shared_by_role": {}
+}

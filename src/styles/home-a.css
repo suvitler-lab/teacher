@@ -22,11 +22,13 @@
 .hma-grid > .hma-qs { margin-bottom: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .hma-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); align-items: start; min-width: 0; }
 .hma-side > .hma-card:only-child { grid-column: 1 / -1; }
+.hma-sidecol { min-width: 0; }
 @media (min-width: 1000px) {
   .hma-grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); grid-template-areas: "tl qs" "tl sd"; gap: var(--s4) var(--s5); }
   .hma-grid > .hma-qs { grid-area: qs; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hma-grid > .hma-tl-wrap { grid-area: tl; }
-  .hma-grid > .hma-side { grid-area: sd; grid-template-columns: minmax(0, 1fr); }
+  .hma-grid > .hma-sidecol { grid-area: sd; }
+  .hma-sidecol > .hma-side { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 599px) { .hma-grid > .hma-qs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .hma-qs .hm-action { min-height: 4rem; }
@@ -125,3 +127,45 @@
 
 /* R-3406: card-head links are real buttons: 44px high on every device (AC-38); the shared rule in home.css is 32px */
 .hma-card .hm-cardhead .lk { min-height: var(--tap); }
+
+/* ---- fit (คอม 1536×729, iPad นอน 1180×820): the page does not scroll. Header, strip, hero, quick buttons stay in view; the day's
+   list and the side cards each scroll inside their own box (ScrollArea: a focusable named region + a 44px "เลื่อนดูต่อ" cue).
+   The height is the screen less the .main padding of these widths (20px top + 40px bottom, shell.css). Narrower or shorter
+   screens keep the old page scroll. Only spacing is tightened here; nothing is hidden. ---- */
+.hma-more { flex: none; display: none; align-items: center; justify-content: center; gap: 6px; width: 100%; height: auto; min-height: var(--tap);
+  margin-top: var(--s2); padding: 4px 14px; border-radius: var(--radius-btn); background: var(--surface-1); color: var(--text-accent);
+  border: 1px solid var(--border); font-size: var(--t-sm); font-weight: 600; }
+.hma-more:hover { background: var(--bg-accent); }
+@media (min-width: 1000px) and (min-height: 600px) {
+  .hm[data-hm-layout="a"]:has(> .hma-grid) { display: flex; flex-direction: column; height: calc(100dvh - 60px); min-height: 0; }
+  .hm[data-hm-layout="a"]:has(> .hma-grid) > * { flex: none; }
+  .hm[data-hm-layout="a"] > .hma-grid { flex: 1 1 0; min-height: 0; grid-template-rows: auto minmax(0, 1fr); align-items: stretch; gap: var(--s3) var(--s5); }
+  .hm[data-hm-layout="a"] > .hmt { margin-bottom: var(--s3); }
+
+  /* hero: greeting and the big number on one line, the pills under them */
+  .hma-hero { padding: var(--s3) var(--s5); margin-bottom: var(--s3); }
+  .hma-hero-t { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 0 var(--s4); }
+  .hma-hero-t > * { grid-column: 2; }
+  .hma-hero-t > .hma-greet { grid-column: 1; }
+  .hma-hero-t > .hma-summary { grid-column: 1 / -1; margin-top: var(--s2); }
+  .hma-big { margin: 0; }
+  .hma-past { margin: 0; }
+  .hma-big .num { font-size: var(--t-3xl); }
+  .hma-illo { width: 5rem; }
+
+  /* quick buttons: icon beside the words (one tile = two text lines) */
+  .hma-grid > .hma-qs { align-self: start; gap: var(--s2); }
+  .hma-qs .hm-action { flex-direction: row; align-items: center; gap: var(--s3); min-height: 3.6rem; }
+
+  /* the two scroll boxes */
+  .hma-grid > .hma-tl-wrap { display: flex; flex-direction: column; min-height: 0; padding: var(--s3) var(--s4); }
+  .hma-tl-head { flex: none; }
+  .hma-tl-box, .hma-grid > .hma-sidecol { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+  .hma-tl-scroll, .hma-sidecol > .hma-side { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; border-radius: var(--radius-lg); }
+  .hma-sidecol > .hma-side { align-content: start; gap: var(--s3); }
+  .hma-tl-scroll { padding-right: var(--s1); }
+  .hma-tl-scroll:focus-visible, .hma-sidecol > .hma-side:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  [data-scrolls] > .hma-more { display: inline-flex; }
+  /* a line under the last visible row says "there is more", in colour and in the cue's word */
+  [data-scrolls] > .hma-tl-scroll, [data-scrolls] > .hma-side { border-bottom: 2px solid var(--border-strong); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+}

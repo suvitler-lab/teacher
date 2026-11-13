@@ -4,7 +4,7 @@ import { settings } from "../store";
 const TABLES = [
   "settings", "terms", "classes", "subjects", "work_types", "students",
   "revoked_qr_tokens", "assignments", "assignment_classes", "scan_sessions",
-  "submissions", "attendance_sessions", "attendance",
+  "submissions", "attendance_sessions", "attendance", "timetable_slots",
 ];
 
 async function sha256Hex(s: string): Promise<string> {

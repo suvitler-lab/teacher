@@ -7,7 +7,7 @@ import { getMeta, setMeta, getEpoch } from "../lib/db";
 import { auditInsertStmt } from "../lib/audit";
 import { id } from "@shared/ids";
 import { SCHEMA_VERSION } from "@shared/types";
-import { restoreRowIssues, restoreDomainGuard, stagedRestoreIssues } from "../lib/restore-validation";
+import { restoreRowIssues, restoreDomainGuard, stagedRestoreIssues, stagedFrameIssues } from "../lib/restore-validation";
 
 export const backupRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 backupRoutes.use("/api/backup", requireAuth);
@@ -29,6 +29,7 @@ export const BACKUP_TABLES = [
   "submissions",
   "attendance_sessions",
   "attendance",
+  "timetable_slots",
 ] as const;
 
 const COLUMNS: Record<string, string[]> = {
@@ -45,6 +46,7 @@ const COLUMNS: Record<string, string[]> = {
   submissions: ["assignment_id", "student_id", "status", "score", "late", "submitted_at", "method", "device_id", "scan_session_id", "updated_at", "event_at"],
   attendance_sessions: ["id", "date", "class_id", "subject_id", "period", "updated_at"],
   attendance: ["session_id", "student_id", "status", "time", "method", "device_id", "updated_at"],
+  timetable_slots: ["term_id", "weekday", "period", "kind", "class_id", "subject_id", "label", "updated_at"],
 };
 
 const PAGE = 500;
@@ -92,6 +94,7 @@ export async function dataFingerprint(env: Env): Promise<string> {
     stamped("submissions", "updated_at"),
     stamped("attendance_sessions", "updated_at"),
     stamped("attendance", "updated_at"),
+    stamped("timetable_slots", "updated_at"),
     stamped("revoked_qr_tokens", "revoked_at"),
     // links and scan sessions have no update stamp of their own: count + the newest row (+ what a finished round adds)
     "(SELECT COUNT(*) || ':' || COALESCE(MAX(rowid), 0) FROM assignment_classes)",
@@ -140,7 +143,8 @@ backupRoutes.post("/api/restore/validate", async (c) => {
   // The counts are what commit checks the upload against — and a table missing from the file
   // would otherwise be silently emptied, so a partial file is refused up front.
   const counts = manifest.counts ?? {};
-  const missing = BACKUP_TABLES.filter((t) => typeof counts[t] !== "number");
+  // timetable_slots may be absent (any file version): no table = no rows (D54, AC-44)
+  const missing = BACKUP_TABLES.filter((t) => t !== "timetable_slots" && typeof counts[t] !== "number");
   if (missing.length > 0) {
     return c.json({ ok: false, error: "incomplete_backup", missing }, 422);
   }
@@ -207,6 +211,12 @@ export async function commitRestore(
     if ((staged.get(t) ?? 0) !== (expected[t] ?? 0)) {
       return { status: 409, body: { ok: false, error: "incomplete_upload", table: t, expected: expected[t] ?? 0, got: staged.get(t) ?? 0 } };
     }
+  }
+
+  // the timetable must fit the frame the file carries (D56): refuse before anything is touched
+  const frameIssues = await stagedFrameIssues(env, restoreId);
+  if (frameIssues.length > 0) {
+    return { status: 422, body: { ok: false, error: "invalid_backup", message: "ไฟล์สำรองมีข้อมูลไม่ถูกต้อง — ข้อมูลเดิมไม่เปลี่ยน", issues: frameIssues } };
   }
 
   if (opts.afterChecks) await opts.afterChecks(); // (tests only)

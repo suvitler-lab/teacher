@@ -1,0 +1,15 @@
+T-11 dry-run / restore / reconciliation — LOCAL ONLY (wrangler d1 --local --persist-to scratch dir; no remote, no production)
+Data: scripts/seed-demo.sql (synthetic). Migrations 0001-0007 applied, then 0008.
+
+PRE  (schema 6): terms 1 · classes 3 · subjects 2 · students 40 · assignments 5 · attendance 160 · submissions 88 · settings 10
+backup  : VACUUM INTO consistent copy of the local sqlite (a raw file copy is NOT a backup: D1 local runs in WAL mode, the .sqlite
+          alone was 4 KB) — `wrangler d1 export` crashed on Windows (libuv assert) and wrote nothing.
+MIGRATE : `wrangler d1 migrations apply --local` -> 0008_timetable.sql OK · meta.schema_version = 7 · timetable_slots 0 rows ·
+          terms.timetable_rev = 0 · same table counts as PRE (reconciliation before = after, only schema 6 -> 7)
+WRITE   : 2 slots inserted (1 class, 1 activity) · a class slot with unknown class -> FOREIGN KEY constraint failed (rejected)
+RESTORE : backup copied back (WAL/SHM removed) -> counts identical to PRE, schema 6, no timetable objects, d1_migrations has no 0008 row
+RE-APPLY: 0008 applies again cleanly -> schema 7, same counts
+Manual down (alternative, no backup): DROP INDEX idx_timetable_slots_class; DROP TABLE timetable_slots;
+  ALTER TABLE terms DROP COLUMN timetable_rev; UPDATE meta SET value='6' WHERE key='schema_version';
+  DELETE FROM d1_migrations WHERE name='0008_timetable.sql';   -- without this row delete, `migrations apply` skips 0008 (found in the rehearsal)
+  -> counts identical to PRE.

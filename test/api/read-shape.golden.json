@@ -430,6 +430,7 @@
    "onboarding_done": false,
    "last_backup_at": "",
    "period_times": "",
+   "period_frame": "",
    "home_cards": "",
    "scan_cards": "",
    "attendance_cards": "",
@@ -641,6 +642,12 @@
     "deleted_at": null
    }
   ],
+  "timetable": {
+   "termId": "t1",
+   "rev": 0,
+   "readOnly": false,
+   "slots": []
+  },
   "dataEpoch": 1
  }
 }

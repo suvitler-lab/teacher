@@ -1,10 +1,11 @@
 import { useState } from "preact/hooks";
+import "../../styles/home-tt.css";
 import { Icon } from "../Icon";
 import { Drawer, Switch } from "../ui";
 import { navigate } from "../../router";
 import { LAYOUTS, saveAppearance, type Layout } from "../../lib/appearance";
 import {
-  LAYOUT_CARD_META, LAYOUT_LETTER, LAYOUT_LOCKED, LAYOUT_NAME, isLayoutCardHidden, layoutCardsOf, layoutTitle, moveLayoutCard,
+  LAYOUT_CARD_META, LAYOUT_LETTER, isFixedCard, LAYOUT_LOCKED, LAYOUT_NAME, isLayoutCardHidden, layoutCardsOf, layoutTitle, moveLayoutCard,
   resetLayoutPrefs, saveLayoutPrefs, toggleLayoutCard, type LayoutCardKey,
 } from "../../lib/homeLayout";
 
@@ -19,8 +20,11 @@ export function CardSettings({ layout, onClose }: { layout: Layout; onClose: () 
   const [say, setSay] = useState("");
   const [confirmReset, setConfirmReset] = useState(false);
   /** a step at either end does nothing; the button stays focusable (aria-disabled, not disabled) so the keyboard focus never falls out of the panel (R-3306) */
+  // a fixed card (the timetable strip, D53) has a switch only: it stays out of the list that can be moved
+  const fixed = prefs.order.filter(isFixedCard);
+  const movable = prefs.order.filter((k) => !isFixedCard(k));
   const step = (k: LayoutCardKey, dir: -1 | 1, i: number, pos: number) => {
-    const edge = dir === -1 ? i === 0 : i === prefs.order.length - 1;
+    const edge = dir === -1 ? i === 0 : i === movable.length - 1;
     if (edge) return;
     void saveLayoutPrefs(layout, moveLayoutCard(prefs, k, dir)); setSay(`ย้าย ${name(k)} ไปลำดับ ${pos}`);
   };
@@ -42,18 +46,22 @@ export function CardSettings({ layout, onClose }: { layout: Layout; onClose: () 
       </fieldset>
 
       <div class="page-sub hm-lock"><Icon name="info-circle" size={16} /> ปิดไม่ได้: {LAYOUT_LOCKED[layout]}</div>
-      {prefs.order.map((k, i) => {
+      {[...fixed, ...movable].map((k) => {
+        const i = movable.indexOf(k);
+        const isFixed = i < 0;
         const on = !isLayoutCardHidden(prefs, k);
         const m = meta[k] ?? { title: k, icon: "layout-grid", desc: "" };
         return (
-          <div class={"hm-pref" + (on ? "" : " off")} key={k}>
+          <div class={"hm-pref" + (on ? "" : " off")} key={k} data-card={k}>
             <span class="ic"><Icon name={on ? m.icon : "eye-off"} size={20} /></span>
             <span class="grow"><div class="nm">{m.title}</div><div class="ds">{m.desc}</div></span>
             <Switch on={on} label={`แสดงการ์ด ${m.title}`} onToggle={() => { void saveLayoutPrefs(layout, toggleLayoutCard(prefs, k)); setSay(`${m.title}: ${on ? "ซ่อน" : "แสดง"}`); }} />
-            <span class="mv">
-              <button class="icon ghost" aria-label={`เลื่อน ${m.title} ขึ้น`} aria-disabled={i === 0} onClick={() => step(k, -1, i, i)}><Icon name="chevron-up" size={20} /></button>
-              <button class="icon ghost" aria-label={`เลื่อน ${m.title} ลง`} aria-disabled={i === prefs.order.length - 1} onClick={() => step(k, 1, i, i + 2)}><Icon name="chevron-down" size={20} /></button>
-            </span>
+            {!isFixed && (
+              <span class="mv">
+                <button class="icon ghost" aria-label={`เลื่อน ${m.title} ขึ้น`} aria-disabled={i === 0} onClick={() => step(k, -1, i, i)}><Icon name="chevron-up" size={20} /></button>
+                <button class="icon ghost" aria-label={`เลื่อน ${m.title} ลง`} aria-disabled={i === movable.length - 1} onClick={() => step(k, 1, i, i + 2)}><Icon name="chevron-down" size={20} /></button>
+              </span>
+            )}
           </div>
         );
       })}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { Icon } from "./Icon";
 import { api } from "../lib/api";
-import { studentsById, assignments } from "../store";
+import { studentsById, assignments, terms } from "../store";
 import { fullName } from "../lib/names";
 import { formatThaiTimeMs } from "../lib/dates";
 import { hideSignal } from "../lib/hideNames";
@@ -11,6 +11,7 @@ interface AuditRow {
   at: number;
   device_name: string | null;
   entity: string;
+  entity_id?: string | null;
   action: string;
   before: any;
   after: any;
@@ -21,7 +22,7 @@ interface AuditRow {
 
 const ENTITY_LABEL: Record<string, string> = {
   submission: "ส่งงาน/คะแนน", attendance: "เช็คชื่อ", assignment: "งาน",
-  student: "นักเรียน", qr: "บัตร QR", settings: "ตั้งค่า", restore: "กู้คืน", auth: "บัญชี",
+  student: "นักเรียน", qr: "บัตร QR", settings: "ตั้งค่า", restore: "กู้คืน", auth: "บัญชี", timetable: "ตารางสอน", period_frame: "โครงเวลา",
 };
 const METHOD_LABEL: Record<string, string> = {
   camera: "สแกนกล้อง", hid: "เครื่องยิง", manual: "กรอกเอง", grid: "ตาราง", bulk: "ทั้งห้อง", import: "นำเข้า", restore: "กู้คืน",
@@ -34,7 +35,21 @@ const ACTION_LABEL: Record<string, string> = {
   start_term: "เริ่มภาคเรียนใหม่", signout: "ออกจากระบบ", login: "เข้าสู่ระบบ", archive: "เก็บเข้าคลัง", close: "ปิดรับงาน", reopen: "เปิดรับงานอีกครั้ง",
 };
 
+/** "2/2569" for a term id (the timetable audit row keeps the term in entity_id); empty when the term is unknown. */
+function termText(id: string | null | undefined): string {
+  const t = id ? terms.value.find((x) => x.id === id) : null;
+  return t ? `${t.term}/${t.year}` : "";
+}
+
 function describe(r: AuditRow): string {
+  if (r.entity === "timetable") {
+    const t = termText(r.entity_id);
+    return `${t ? `${t} · ` : ""}${r.before?.slots ?? 0} → ${r.after?.slots ?? 0}`; // 14 → 15 (BR-10: counts only, no names)
+  }
+  if (r.entity === "period_frame") {
+    const b = r.before?.periods?.length, a = r.after?.periods?.length;
+    return b == null ? `ตั้งครั้งแรก ${a ?? 0} คาบ` : `${b} → ${a ?? 0} คาบ`;
+  }
   if (r.entity === "submission") {
     const b = r.before?.score, a = r.after?.score;
     if (r.action === "void") return "ยกเลิกการส่ง";

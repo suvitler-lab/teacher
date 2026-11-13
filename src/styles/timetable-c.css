@@ -1,0 +1,27 @@
+/* Layout ค (today first): a now/next card, today's period list, and the week editor beside (wide) or below it. Tokens only; no motion. */
+.ttc { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.ttc-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); align-items: start; }
+.ttc-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ttc-h { font-size: var(--t-lg); margin: 0 0 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.ttc-hint { font-size: var(--t-sm); font-weight: 400; color: var(--text-secondary); }
+.ttc-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); overflow: hidden; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface-2); }
+.ttc-blk { padding: 14px 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; }
+.ttc-blk + .ttc-blk { border-left: 1px solid var(--border); }
+.ttc-blk.main { background: var(--accent); color: var(--on-accent); }
+.ttc-v { margin: 0; font-size: var(--t-xl); line-height: 1.35; font-weight: 700; overflow-wrap: anywhere; }
+.ttc-k { margin: 0; font-size: var(--t-sm); color: var(--text-secondary); }
+.ttc-blk.main .ttc-k { color: var(--on-accent); }
+.ttc-none { padding: 14px 18px; display: block; }
+.ttc-tag { font-size: var(--t-sm); font-weight: 700; padding: 0 10px; border-radius: 999px; background: var(--on-accent); color: var(--accent); line-height: 1.6; }
+.ttc-tag.next { background: var(--bg-accent); color: var(--text-accent); border: 1px solid var(--text-accent); }
+.ttc-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ttc-btn { min-height: var(--tap); min-width: var(--tap); height: auto; padding: 4px 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: normal; text-align: center; }
+.ttc-blk.main .ttc-btn { border-color: var(--on-accent); }
+.ttc-today, .ttc-week { min-width: 0; }
+.ttd-row.past .ttd-cell { opacity: 0.8; }
+/* the week editor has its own column: the table uses the column's width and the page's scroll, not a second scroll box */
+.ttc-two .ttc-week .tta-frame { max-height: none; --tta-min: 3.6rem; --tta-day: 4.2rem; --tta-brk: 2.2rem; }
+@media (max-width: 640px) { .ttc-btn { flex: 1 1 100%; } }
+/* a period's time is one unit: "08:30–09:30" never breaks after the dash (V-22, phone) */
+.ttc .ttd-t { white-space: nowrap; }
+@media (max-width: 640px) { .ttc .ttd-cell { grid-template-columns: max-content minmax(0, 1fr) auto; } }

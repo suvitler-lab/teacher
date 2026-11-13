@@ -69,8 +69,8 @@ describe("preflight: source", () => {
   });
 
   it("migrations: a migration that forgets to set the schema version is caught", () => {
-    put("migrations/0008_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
-    expect(pre.checkMigrations(dir).join()).toMatch(/0008_forgot\.sql does not set meta\.schema_version/);
+    put("migrations/0009_forgot.sql", "ALTER TABLE meta ADD COLUMN note TEXT;");
+    expect(pre.checkMigrations(dir).join()).toMatch(/0009_forgot\.sql does not set meta\.schema_version/);
   });
 });
 

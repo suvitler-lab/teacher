@@ -1,0 +1,869 @@
+{
+ "note": "216 images (9 scenes x 6 skin-mode x 4 devices) from cap4.mjs; automated DOM metrics in meta4-*.json cover all 216 (hscroll/clip/alerts/touch size/focus); viewed=true ONLY for images the QA opened after the final capture; earlier-capture views of overwritten files are NOT counted",
+ "images": {
+  "confirm-copy-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-copy-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-light-d.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "confirm-delete-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "confirm-delete-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-playful-light-m.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "f3-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-pro-light-p.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "f3-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "f3-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-focus-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-dark-m.png": {
+   "viewed": true,
+   "verdict": "ok; native 12h time input clipped (V-60)"
+  },
+  "frame-invalid-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-invalid-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-playful-light-m.png": {
+   "viewed": true,
+   "verdict": "time inputs clipped AM/PM (V-60)"
+  },
+  "frame-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "frame-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-pro-light-p.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "page-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-warm-dark-p.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "page-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "page-warm-light-m.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "page-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-dark-d.png": {
+   "viewed": true,
+   "verdict": "ok"
+  },
+  "slot-invalid-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-invalid-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-playful-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-pro-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-dark-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-dark-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-dark-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-dark-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-light-d.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-light-l.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-light-m.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  },
+  "slot-warm-light-p.png": {
+   "viewed": false,
+   "verdict": "not viewed"
+  }
+ }
+}

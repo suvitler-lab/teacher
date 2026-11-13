@@ -55,15 +55,16 @@ describe("AC-44 / AC-01: the appearance section", () => {
     // the saved server value is adopted once, when the app opens
     await open();
     const groups = screen.getAllByRole("radiogroup");
-    expect(groups.map((g) => g.getAttribute("aria-label"))).toEqual(["โครงหน้าหลัก", "ธีม", "สว่าง หรือ มืด"]);
+    expect(groups.map((g) => g.getAttribute("aria-label"))).toEqual(["โครงหน้าหลัก", "ธีม", "รูปแบบตารางสอน", "สว่าง หรือ มืด"]);
     for (const g of groups) expect(within(g).getAllByRole("radio")).toHaveLength(3);
     expect(checkedLabel(groups[0])[0]).toContain("แผงรายห้อง");
     expect(checkedLabel(groups[1])[0]).toContain("สดใส");
-    expect(checkedLabel(groups[2])).toEqual(["มืด"]);
+    expect(checkedLabel(groups[2])[0]).toContain("ตารางกระดาษ"); // timetable style defaults to ก (AC-46)
+    expect(checkedLabel(groups[3])).toEqual(["มืด"]);
     for (const g of groups) expect(checkedLabel(g)).toHaveLength(1);
     expect(document.querySelectorAll('input[type="radio"][aria-checked]')).toHaveLength(0); // native radios: `checked` only (R-3206)
     expect(document.querySelectorAll('[role="radiogroup"] [role="radiogroup"]')).toHaveLength(0); // no group inside a group
-    expect(screen.getAllByText("ใช้อยู่")).toHaveLength(3); // a word, not colour alone
+    expect(screen.getAllByText("ใช้อยู่")).toHaveLength(4); // a word, not colour alone
   });
 
   it("each layout card has a picture, a name and a one-line hint; each skin card has 4 swatches and กขค 123", async () => {
@@ -76,11 +77,21 @@ describe("AC-44 / AC-01: the appearance section", () => {
     expect(skins.querySelectorAll("[data-skin]")).toHaveLength(3);
   });
 
+  it("timetable style: 3 cards with a picture, a name and a hint; a link (no switch) to ปรับหน้าหลัก (AC-46, D53)", async () => {
+    await open();
+    const tt = screen.getAllByRole("radiogroup")[2];
+    expect(tt.querySelectorAll("svg.ap-thumb")).toHaveLength(3);
+    for (const t of ["ก ตารางกระดาษ", "ข ปฏิทิน", "ค วันนี้เป็นหลัก", "เหมือนตารางที่โรงเรียนแจก เห็นทั้งสัปดาห์"]) expect(within(tt).getByText(t)).toBeTruthy();
+    expect(tt.querySelector('[role="switch"], input[type="checkbox"]')).toBeNull();
+    expect(within(tt.closest("fieldset")!).getByRole("button", { name: /หน้าหลัก › ปรับหน้าหลัก/ })).toBeTruthy();
+  });
+
   it("nothing saved: ก + อบอุ่น + ตามเครื่อง", async () => {
     await open();
-    const [a, b, c] = screen.getAllByRole("radiogroup");
+    const [a, b, t, c] = screen.getAllByRole("radiogroup");
     expect(checkedLabel(a)[0]).toContain("ก วันนี้ของครู");
     expect(checkedLabel(b)[0]).toContain("อบอุ่น");
+    expect(checkedLabel(t)[0]).toContain("ก ตารางกระดาษ");
     expect(checkedLabel(c)).toEqual(["ตามเครื่อง"]);
   });
 
@@ -98,7 +109,7 @@ describe("AC-44 / AC-01: the appearance section", () => {
 
   it("the focus order follows layout, skin, mode, text size, reset", async () => {
     await open();
-    expect([...document.querySelectorAll(".ap-opts fieldset > legend")].map((l) => l.textContent)).toEqual(["โครงหน้าหลัก", "ธีม", "สว่าง / มืด", "ขนาดตัวอักษรและความหนาแน่น"]);
+    expect([...document.querySelectorAll(".ap-opts fieldset > legend")].map((l) => l.textContent)).toEqual(["โครงหน้าหลัก", "ธีม", "รูปแบบตารางสอน", "สว่าง / มืด", "ขนาดตัวอักษรและความหนาแน่น"]);
     const opts = document.querySelector(".ap-opts")!;
     expect(opts.lastElementChild!.className).toContain("ap-reset");
   });

@@ -8,7 +8,11 @@ import { settings } from "../store";
 import { parseHomeCards } from "./homeCards";
 import { savedLayoutCards, saveLayoutCards, resetLayoutCards } from "./homePrefs";
 
-export type LayoutCardKey = "open" | "att" | "follow" | "due" | "absent" | "classes";
+export type LayoutCardKey = "timetable" | "open" | "att" | "follow" | "due" | "absent" | "classes";
+
+/** Cards that have a fixed place (the "ตารางสอน" strip under the header, D53): they can be turned on / off but never moved or reordered. */
+export const FIXED_CARDS: readonly LayoutCardKey[] = ["timetable"];
+export const isFixedCard = (k: LayoutCardKey) => FIXED_CARDS.includes(k);
 
 export const LAYOUT_NAME: Record<Layout, string> = { a: "วันนี้ของครู", b: "แผงรายห้อง", c: "โฟกัสงานถัดไป" };
 export const LAYOUT_LETTER: Record<Layout, string> = { a: "ก", b: "ข", c: "ค" };
@@ -17,9 +21,9 @@ export const layoutTitle = (l: Layout) => `โครง ${LAYOUT_LETTER[l]} ${LA
 
 /** What each layout can show (BR-12), in the default order. */
 export const LAYOUT_CARDS: Record<Layout, readonly LayoutCardKey[]> = {
-  a: ["open", "follow", "absent", "due", "classes"],   // ความคืบหน้ารายห้อง · ต้องติดตาม · ไม่มาวันนี้ · ครบกำหนด · ห้องของฉัน
-  b: ["follow", "absent"],                              // in the room detail
-  c: ["att", "open", "follow"],                         // มาเรียนวันนี้ · งานแต่ละห้อง · ต้องติดตาม
+  a: ["timetable", "open", "follow", "absent", "due", "classes"],   // ความคืบหน้ารายห้อง · ต้องติดตาม · ไม่มาวันนี้ · ครบกำหนด · ห้องของฉัน
+  b: ["timetable", "follow", "absent"],                            // in the room detail
+  c: ["timetable", "att", "open", "follow"],                       // มาเรียนวันนี้ · งานแต่ละห้อง · ต้องติดตาม
 };
 
 /** Off until the teacher turns them on: they repeat what another card already says. */
@@ -33,8 +37,10 @@ export const LAYOUT_LOCKED: Record<Layout, string> = {
 };
 
 /** Names in the drawer: a card keeps its key but may be called differently in each layout (the key "open" is a different card in ก and ค). */
+const TT_CARD = { title: "ตารางสอน (ตอนนี้/ต่อไป)", icon: "calendar-event", desc: "แถบใต้หัวหน้าหลัก · ตำแหน่งตายตัว เปิด/ปิดได้อย่างเดียว" };
 export const LAYOUT_CARD_META: Record<Layout, Partial<Record<LayoutCardKey, { title: string; icon: string; desc: string }>>> = {
   a: {
+    timetable: TT_CARD,
     open: { title: "ความคืบหน้ารายห้อง", icon: "clipboard-list", desc: "ส่งแล้ว รอตรวจ ค้าง แยกตามห้อง" },
     follow: { title: "ต้องติดตาม", icon: "flag", desc: "นักเรียนที่ค้างส่งมากที่สุด จัดกลุ่มตามจำนวนชิ้น" },
     absent: { title: "ไม่มาวันนี้", icon: "user-x", desc: "ขาด ลา ป่วย สาย รายห้อง หลังเช็คชื่อ" },
@@ -42,10 +48,12 @@ export const LAYOUT_CARD_META: Record<Layout, Partial<Record<LayoutCardKey, { ti
     classes: { title: "ห้องของฉัน", icon: "school", desc: "จำนวนคน อัตราส่ง และมาเรียนรายห้อง" },
   },
   b: {
+    timetable: TT_CARD,
     follow: { title: "ต้องติดตาม", icon: "flag", desc: "ในรายละเอียดห้อง: นักเรียนที่ค้างส่งมากที่สุดของห้องนั้น" },
     absent: { title: "ไม่มาวันนี้", icon: "user-x", desc: "ในรายละเอียดห้อง: ขาด ลา ป่วย สาย ของห้องนั้น" },
   },
   c: {
+    timetable: TT_CARD,
     att: { title: "มาเรียนวันนี้", icon: "user-check", desc: "ห้องไหนเช็คแล้ว ยังเหลือใคร" },
     open: { title: "งานแต่ละห้อง", icon: "clipboard-list", desc: "งานที่เปิดรับและความคืบหน้าแยกตามห้อง" },
     follow: { title: "ต้องติดตาม", icon: "flag", desc: "นักเรียนที่ค้างส่งมากที่สุด" },
@@ -86,12 +94,14 @@ export function toggleLayoutCard(p: LayoutCardPrefs, k: LayoutCardKey): LayoutCa
   return { order: [...p.order], hidden: isLayoutCardHidden(p, k) ? p.hidden.filter((x) => x !== k) : [...p.hidden, k] };
 }
 
-/** Move one card a step up (-1) or down (+1); at either end nothing changes. */
+/** Move one card a step up (-1) or down (+1) among the cards that can move; at either end nothing changes (a fixed card never moves and is never swapped). */
 export function moveLayoutCard(p: LayoutCardPrefs, k: LayoutCardKey, dir: -1 | 1): LayoutCardPrefs {
-  const i = p.order.indexOf(k), j = i + dir;
-  if (i < 0 || j < 0 || j >= p.order.length) return p;
+  if (isFixedCard(k)) return p;
+  const slots = p.order.map((x, idx) => (isFixedCard(x) ? -1 : idx)).filter((idx) => idx >= 0); // positions of the movable cards
+  const at = slots.findIndex((idx) => p.order[idx] === k), to = at + dir;
+  if (at < 0 || to < 0 || to >= slots.length) return p;
   const order = [...p.order];
-  [order[i], order[j]] = [order[j], order[i]];
+  [order[slots[at]], order[slots[to]]] = [order[slots[to]], order[slots[at]]];
   return { order, hidden: [...p.hidden] };
 }
 

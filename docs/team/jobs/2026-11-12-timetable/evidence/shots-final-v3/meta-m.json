@@ -1,0 +1,188 @@
+{
+ "pro-light-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ },
+ "pro-dark-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ },
+ "warm-light-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ },
+ "warm-dark-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ },
+ "playful-light-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ },
+ "playful-dark-m": {
+  "page": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-focus": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "frame-invalid": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "slot-invalid": {
+   "x": "NOACT/NOBTN",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-delete": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "confirm-copy": {
+   "x": "ok|2nd",
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  },
+  "f3": {
+   "m": "EXC \"SyntaxError: Invalid regular expression: missing /\""
+  }
+ }
+}

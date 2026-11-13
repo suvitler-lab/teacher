@@ -1,0 +1,81 @@
+/* Layout ข (calendar time axis): sticky time axis + sticky day header, blocks as tall as their length (60 min = --ttb-px),
+   narrow striped break band, solid "now" line with a word in the axis. Scrolls inside its own frame; the page never scrolls sideways. Tokens only; no motion. */
+.ttb { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ttb-bar { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; }
+.ttb-bar .ttb-add { margin-left: auto; min-height: var(--tap); display: inline-flex; align-items: center; gap: 6px; }
+.ttb-sw { display: inline-flex; border: 1px solid var(--border-control); border-radius: var(--radius-sm); overflow: hidden; }
+.ttb-sw-b { min-height: var(--tap); min-width: var(--tap); padding: 0 16px; border: 0; border-radius: 0; background: var(--surface-2); color: var(--text-primary); }
+.ttb-sw-b[aria-checked="true"] { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.ttb-pick { display: flex; align-items: flex-end; gap: 8px 12px; flex-wrap: wrap; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface-1); }
+.ttb-pick label { display: flex; flex-direction: column; gap: 4px; font-size: var(--t-sm); min-width: 0; flex: 1 1 14rem; }
+.ttb-pick select { min-height: var(--tap); max-width: 100%; border: 1px solid var(--border-control); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text-primary); padding: 0 10px; font-size: var(--t-md); }
+.ttb-pick button { min-height: var(--tap); min-width: var(--tap); }
+.ttb-note { margin: 0; font-size: var(--t-sm); color: var(--text-secondary); }
+
+.ttb-frame { --ttb-px: 64px; --ttb-axis: 6.2rem; --ttb-min: 96px; overflow: auto; max-height: calc(100dvh - 17rem); min-height: 12rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface-0); padding: 3px; }
+.ttb-grid { display: grid; gap: 4px; min-width: min-content; position: relative; }
+.ttb-row { display: contents; }
+.ttb-ch { position: sticky; top: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px; min-height: 2.8rem; border-radius: var(--radius-xs); background: var(--surface-1); font-size: var(--t-sm); color: var(--text-primary); text-align: center; box-sizing: border-box; }
+.ttb-ch.today { background: var(--accent); color: var(--on-accent); }
+.ttb-corner { left: 0; z-index: 6; font-size: var(--t-xs); font-weight: 700; }
+.ttb-tag { font-style: normal; font-size: var(--t-xs); font-weight: 700; padding: 0 8px; border-radius: 999px; background: var(--accent); color: var(--on-accent); line-height: 1.5; align-self: flex-start; }
+.ttb-ch .ttb-tag { background: var(--on-accent); color: var(--accent); align-self: center; }
+
+.ttb-ax { position: sticky; left: 0; z-index: 3; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: 4px 6px; border-radius: var(--radius-xs); background: var(--surface-1); font-size: var(--t-xs); color: var(--text-secondary); box-sizing: border-box; line-height: 1.35; }
+.ttb-ax b { font-size: var(--t-sm); color: var(--text-primary); }
+.ttb-ax-b { justify-content: center; }
+.ttb-ax.now.late { justify-content: flex-end; }
+.ttb-ax.now { box-shadow: inset 3px 0 0 var(--accent); }
+.ttb-nowtag { position: absolute; left: 2px; right: 2px; transform: translateY(-50%); z-index: 5; font-style: normal; font-size: var(--t-xs); font-weight: 700; line-height: 1.4; padding: 1px 6px; border-radius: 999px; background: var(--accent); color: var(--on-accent); text-align: center; white-space: nowrap; }
+.ttb-line { position: relative; z-index: 1; pointer-events: none; }
+.ttb-line::before { content: ""; position: absolute; left: 0; right: 0; top: var(--ttb-y); border-top: 2px solid var(--accent); }
+
+.ttb-c { position: relative; z-index: 2; min-height: var(--tap); padding: 6px 8px; border-radius: var(--radius-xs); border: 1px solid var(--border-control); background: var(--surface-2); color: var(--text-primary); display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 0; box-sizing: border-box; cursor: default; }
+.ttb-c.act { cursor: pointer; }
+.ttb-c.act:hover { background: var(--surface-1); }
+.ttb-c.empty { border-style: dashed; background: transparent; align-items: center; }
+.ttb-c.now { border: 2px solid var(--accent); }
+.ttb-c:focus-visible, .ttb-c:focus { outline: 3px solid var(--accent); outline-offset: -1px; z-index: 4; }
+.ttb-c[aria-disabled="true"] { opacity: 0.6; }
+.ttb-plus { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 999px; color: var(--text-secondary); }
+.ttb-brk { display: flex; align-items: center; justify-content: center; padding: 0 8px; border-radius: var(--radius-xs); border: 1px solid var(--border-strong); background: repeating-linear-gradient(135deg, var(--surface-1) 0 6px, var(--surface-0) 6px 12px); min-width: 0; }
+.ttb-brk span { font-size: var(--t-xs); color: var(--text-primary); font-weight: 600; background: var(--surface-0); padding: 0 10px; border-radius: 6px; white-space: nowrap; }
+.ttb-nowtag.lo { transform: none; bottom: 4px; }
+.ttb-ax.now.late { padding-top: 30px; }
+.ttb-ax.now:not(.late):not(.ttb-ax-b) { padding-bottom: 30px; }
+
+/* the summary sits in the bar right under the header (ux.md: ข "ใต้หัว"); the add button keeps the right edge */
+.ttb-sum { flex: 1 1 14rem; min-width: 0; margin: 0; font-size: var(--t-sm); font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; }
+.ttb-bar .ttb-add { flex: none; }
+
+/* wide screens (คอม 1536×729, iPad นอน): the whole week of 7 periods + lunch band + header fits the page height without
+   scrolling (ux.md ≈ 516px): 60px per hour, a 36px day header with the "วันนี้" word beside the day, the axis on one line,
+   and the "ตอนนี้" word in the corner of the block. 8 periods / Sat-Sun may still scroll inside the frame (allowed). */
+@media (min-width: 1100px) {
+  .ttb { gap: 6px; }
+  .ttb-frame { --ttb-px: 60px; --ttb-axis: 6.6rem; max-height: calc(100dvh - 11.5rem); }
+  .ttb-grid { gap: 3px; }
+  .ttb-ch { flex-direction: row; gap: 8px; min-height: 36px; padding: 4px; }
+  .ttb-ax { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 6px; padding: 4px 8px; }
+  .ttb-ax.now.late { padding-top: 28px; justify-content: flex-start; align-content: flex-end; }
+  .ttb-ax.now:not(.late):not(.ttb-ax-b) { padding-bottom: 28px; }
+  .ttb-c { padding: 4px 8px; gap: 2px; }
+  /* V-42: the "ตอนนี้" word sits bottom-right on the chip's last line; only that line keeps room for it, so the name
+     keeps the block's full width and nothing overlaps (also in compact density, whose padding used to undo the room) */
+  .ttb-c.now > .ttb-tag { position: absolute; right: 5px; bottom: 2px; padding: 0 6px; line-height: 1.3; }
+  .ttb-c.now .ttp > :last-child { padding-right: 3.5rem; }
+}
+
+/* a long activity label stays on one line with an ellipsis (full text in the chip title + the cell's spoken label), so a 60-minute block stays one hour tall */
+.ttb-c .ttp-act .ttp-name { display: block; -webkit-line-clamp: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; }
+
+/* V-11 compact density (8+ periods, set by the grid): a shorter hour on wide screens so the whole day fits the frame
+   without scrolling; the 7-period week keeps 60px per hour. Text sizes stay the tokens; blocks stay ≥ 44px (var(--tap)). */
+@media (min-width: 1100px) {
+  .ttb-frame[data-density="compact"] { --ttb-px: 50px; }
+  .ttb-frame[data-density="compact"] .ttb-c { padding: 2px 8px; gap: 0; }
+  .ttb-frame[data-density="compact"] .ttp { gap: 0; }
+  .ttb-frame[data-density="compact"] .ttp-name { line-height: 1.5; }
+  .ttb-frame[data-density="compact"] .ttp-l2 { line-height: 1.35; }
+  .ttb-frame[data-density="compact"] .ttp-tag { line-height: 1.25; }
+}

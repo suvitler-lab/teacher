@@ -1,0 +1,185 @@
+{
+ "tt-a-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-b-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-c-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "frame-sheet-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "slot-sheet-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-a-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-b-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-c-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-appearance-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-time-pro-light-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_RESET at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sectio"
+ },
+ "tt-a-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-pro-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "tt-a-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-pro-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "tt-a-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-pro-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ }
+}

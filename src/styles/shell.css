@@ -80,7 +80,8 @@
 /* the current page: a solid light tile (a shape, not only a colour) + a 3px bar on the edge */
 .rail-item.on { background: var(--rail-active-bg); color: var(--rail-active-fg); font-weight: 500; }
 .rail-item.on::before { content: ""; position: absolute; left: -6px; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: var(--rail-active-bg); }
-.rail-spacer { flex: 1; }
+.rail > * { flex-shrink: 0; } /* a short screen scrolls the menu; items never squash into each other (AC-29) */
+.rail-spacer { flex: 1 0 0; }
 .rail-sync { display: flex; justify-content: center; padding: 2px 0 2px; }
 .rail-sync .sync { font-size: var(--fs-xs); padding: 2px 4px; flex-direction: column; gap: 0; white-space: normal; text-align: center; max-width: 100%; overflow-wrap: anywhere; }
 

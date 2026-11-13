@@ -99,17 +99,18 @@ describe("BR-01 / BR-02 the list for today", () => {
 describe("BR-12 cards per layout", () => {
   it("each layout has its own list; unknown keys are dropped and a missing card is added at the end", () => {
     expect(defaultLayoutCards("a").hidden).toEqual(["classes"]);
-    expect(visibleLayoutCards(defaultLayoutCards("b"))).toEqual(["follow", "absent"]);
-    expect(visibleLayoutCards(defaultLayoutCards("c"))).toEqual(["att", "open", "follow"]);
-    expect(parseLayoutCards("b", { order: ["absent", "ghost", "att"], hidden: ["absent"] })).toEqual({ order: ["absent", "follow"], hidden: ["absent"] });
+    expect(visibleLayoutCards(defaultLayoutCards("b"))).toEqual(["timetable", "follow", "absent"]);
+    expect(visibleLayoutCards(defaultLayoutCards("c"))).toEqual(["timetable", "att", "open", "follow"]);
+    expect(parseLayoutCards("b", { order: ["absent", "ghost", "att"], hidden: ["absent"] })).toEqual({ order: ["absent", "timetable", "follow"], hidden: ["absent"] });
     expect(parseLayoutCards("c", "junk")).toEqual(defaultLayoutCards("c"));
   });
   it("toggle and move touch only the list given", () => {
     const p = defaultLayoutCards("c");
     expect(toggleLayoutCard(p, "att").hidden).toEqual(["att"]);
-    expect(moveLayoutCard(p, "att", -1)).toBe(p);
-    expect(moveLayoutCard(p, "att", 1).order).toEqual(["open", "att", "follow"]);
-    expect(LAYOUT_CARDS.a).toHaveLength(5);
+    expect(moveLayoutCard(p, "att", -1)).toBe(p); // the fixed timetable card is not a neighbour to swap with
+    expect(moveLayoutCard(p, "att", 1).order).toEqual(["timetable", "open", "att", "follow"]);
+    expect(moveLayoutCard(p, "timetable", 1)).toBe(p); // fixed: never moves
+    expect(LAYOUT_CARDS.a).toHaveLength(6);
   });
 });
 

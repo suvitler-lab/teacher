@@ -1,0 +1,193 @@
+{
+ "LF24-tt-a-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 ele"
+ },
+ "LF24-tt-c-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "LF24-frame-sheet-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    26 × locator resolved to 2 ele"
+ },
+ "LF24-slot-sheet-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    17 × locator resolved to 2 ele"
+ },
+ "LF24-home-a-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "LF24-set-time-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    27 × locator resolved to 2 ele"
+ },
+ "LF24-tt-a-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-tt-c-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-frame-sheet-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-slot-sheet-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-home-a-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 788>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 252>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-set-time-warm-light-820x1180": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 142>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-tt-a-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-tt-c-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-frame-sheet-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-slot-sheet-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-home-a-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 788>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 252>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-set-time-warm-light-1180x820": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 142>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-tt-a-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\""
+  ],
+  "contrastN": 0
+ },
+ "LF24-tt-c-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\""
+  ],
+  "contrastN": 0
+ },
+ "LF24-frame-sheet-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\""
+  ],
+  "contrastN": 0
+ },
+ "LF24-slot-sheet-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\""
+  ],
+  "contrastN": 0
+ },
+ "LF24-home-a-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 788>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 252>1 clip"
+  ],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\"",
+   "select 270x30 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 43x46 \"จัดการภาคเรียน\""
+  ],
+  "contrastN": 0
+ },
+ "LF24-set-time-warm-light-1536x729": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 142>1 clip"
+  ],
+  "small": [
+   "button.rail-item 126x11 \"ออกจากระบบ\""
+  ],
+  "contrastN": 0
+ }
+}

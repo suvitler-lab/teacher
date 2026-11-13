@@ -1,0 +1,4 @@
+ Test Files  3 passed (3)
+      Tests  30 passed (30)
+tsc: 0 lines
+full suite: 2783 passed, 1 failed (test/unit/home-ui.test.tsx menu 8->9 items, file owned by T-18)

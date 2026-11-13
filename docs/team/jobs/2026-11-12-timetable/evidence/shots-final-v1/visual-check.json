@@ -1,0 +1,711 @@
+{
+ "t1/tt-a-playful-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t1/tt-a-playful-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-playful-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-playful-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-playful-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-playful-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน",
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "viewed at ~2000px | V-40: row ศุกร์ clipped at bottom of table, rows 1-4 only complete"
+ },
+ "t1/tt-a-playful-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-playful-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน",
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "viewed at ~2000px | V-40: row ศุกร์ clipped at bottom of table, rows 1-4 only complete"
+ },
+ "t1/tt-a-pro-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-pro-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t1/tt-a-pro-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน",
+   "ไม่ตัด/พอดีกรอบ": "ไม่ผ่าน"
+  },
+  "note": "viewed at ~2000px | V-40: row ศุกร์ clipped at bottom of table, rows 1-4 only complete"
+ },
+ "t1/tt-a-warm-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-a-warm-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t1/tt-b-playful-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px"
+ },
+ "t1/tt-b-playful-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-playful-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px"
+ },
+ "t1/tt-b-pro-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t1/tt-b-pro-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-pro-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px"
+ },
+ "t1/tt-b-warm-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t1/tt-b-warm-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-playful-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px | fits all 7 days x 8 periods + lunch; V-41 current cell title truncated to 3 chars when ตอนนี้ chip shown"
+ },
+ "t2/tt-a-pro-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-pro-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px | fits all 7 days x 8 periods + lunch; V-41 current cell title truncated to 3 chars when ตอนนี้ chip shown"
+ },
+ "t2/tt-a-warm-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-a-warm-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t2/tt-b-playful-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-playful-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-playful-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-playful-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t2/tt-b-playful-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-playful-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px | fits; V-42 ตอนนี้ chip overlaps title in พ. ค2 cell"
+ },
+ "t2/tt-b-playful-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-playful-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px | fits; V-42 ตอนนี้ chip overlaps title in พ. ค2 cell"
+ },
+ "t2/tt-b-pro-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-pro-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-warm-dark-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-warm-dark-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-warm-dark-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-warm-dark-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "t2/tt-b-warm-light-1180x820": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t2/tt-b-warm-light-1536x729": {
+  "by": "team-qa-tester",
+  "viewed": true,
+  "viewedThumbOnly": false,
+  "checks": {
+   "ดูแล้ว": "ผ่านบางส่วน"
+  },
+  "note": "viewed at ~2000px | fits; V-42 ตอนนี้ chip overlaps title in พ. ค2 cell"
+ },
+ "t2/tt-b-warm-light-390x844": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": true,
+  "checks": {},
+  "note": "viewed only as half-size thumbnail (not readable size) - not counted as viewed"
+ },
+ "t2/tt-b-warm-light-820x1180": {
+  "by": "team-qa-tester",
+  "viewed": false,
+  "viewedThumbOnly": false,
+  "checks": {},
+  "note": "NOT viewed"
+ },
+ "_summary": {
+  "viewedFull": 11,
+  "thumbOnly": 8,
+  "notViewed": 77,
+  "total": 96
+ }
+}

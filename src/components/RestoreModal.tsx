@@ -11,7 +11,7 @@ import { projectorOn } from "../lib/projector";
 const TABLES = [
   "settings", "terms", "classes", "subjects", "work_types", "students",
   "revoked_qr_tokens", "assignments", "assignment_classes", "scan_sessions",
-  "submissions", "attendance_sessions", "attendance",
+  "submissions", "attendance_sessions", "attendance", "timetable_slots",
 ];
 const CHUNK = 500;
 

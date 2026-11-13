@@ -1,6 +1,6 @@
 # API Contract: งานครบ (ส่วนการส่งงาน/คะแนน)
 
-เวอร์ชัน: v9 · อัปเดต 2026-11-04 (เช็คชื่อ: แตะซ้ำเพื่อยกเลิกการเช็ค — `POST /api/attendance/batch` รับ `status: "none"` ดู EP-08 และ changelog v9) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
+เวอร์ชัน: v9 (ส่วนนี้) · ล่าสุดทั้งชุด **v11** (ตารางสอน → `api-contract.part-5.md` · 2026-11-13) · อัปเดต 2026-11-04 (เช็คชื่อ: แตะซ้ำเพื่อยกเลิกการเช็ค — `POST /api/attendance/batch` รับ `status: "none"` ดู EP-08 และ changelog v9) · แก้ได้เฉพาะ Tech Lead (เปลี่ยนแล้วบันทึกใน changelog และ decisions)
 
 > ไฟล์นี้เริ่มบันทึกในงาน `2026-11-02-integrity-c01` เฉพาะ endpoint ของ submissions (`worker/routes/submissions.ts`) — endpoint อื่นยังไม่ได้บันทึก ให้ Tech Lead งานถัดไปเพิ่มเป็น EP-05 ขึ้นไป · ID ของ EP เป็นของทั้งโปรเจกต์ ห้ามนำเลขกลับมาใช้ใหม่
 

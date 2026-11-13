@@ -36,7 +36,7 @@ import { useConfirm } from "../components/ConfirmDialog";
 import { schoolLabel, teacherLabel, nameField } from "../lib/orgNames";
 
 /** The keys the text form edits and the save bar counts. Switches save at once (the look: AppearanceSection); cards and last_backup_at have their own writers. */
-const FORM_KEYS = ["school_name", "teacher_name", "late_after", "period_times"] as const satisfies readonly (keyof Settings)[];
+const FORM_KEYS = ["school_name", "teacher_name", "late_after"] as const satisfies readonly (keyof Settings)[];
 
 /** The settings as the text form holds them: the built-in school / teacher names show as placeholders (empty), not as text. */
 const formOf = (s: Settings): Settings => ({ ...s, school_name: nameField(s.school_name), teacher_name: nameField(s.teacher_name) });

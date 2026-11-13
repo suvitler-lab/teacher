@@ -58,7 +58,7 @@ describe("AC-02: a tap shows at once and is saved", () => {
     await waitFor(() => expect(status().textContent).toContain("บันทึกแล้ว · ใช้กับทุกเครื่อง"));
     expect(put).toHaveBeenCalledTimes(1);
     expect(put.mock.calls[0][0]).toBe("/api/settings");
-    expect(parseAppearance((put.mock.calls[0][1] as { accent: string }).accent)).toEqual({ skin: "playful", layout: "a" });
+    expect(parseAppearance((put.mock.calls[0][1] as { accent: string }).accent)).toEqual({ skin: "playful", layout: "a", timetable: "a" });
   });
 
   it("only the chip announces the save: no toast (R-3204)", async () => {
@@ -187,7 +187,7 @@ describe("reset to default", () => {
     fireEvent.click(within(await screen.findByRole("alertdialog")).getByRole("button", { name: "ใช่ คืนค่า" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
     const body = put.mock.calls[0][1] as { accent: string; theme: string };
-    expect(parseAppearance(body.accent)).toEqual({ skin: "warm", layout: "a" });
+    expect(parseAppearance(body.accent)).toEqual({ skin: "warm", layout: "a", timetable: "a" });
     expect(body.theme).toBe("system");
     expect(localStorage.getItem("ngankrob-font-size")).toBe("20");
   });

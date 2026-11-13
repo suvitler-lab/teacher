@@ -10,6 +10,7 @@ import { navigate } from "../../../router";
 import type { HomeLayoutProps } from "../meta";
 import { Timeline } from "./Timeline";
 import { SideCards } from "./Cards";
+import { ScrollArea } from "./ScrollArea";
 
 /** A picture only: no data in it (A5), so a screen reader skips it. Colours come from the theme's illustration tokens. */
 function Illo() {
@@ -60,11 +61,11 @@ export function LayoutA({ model, cards, hide, pastYear, openList, openCustomize 
       {pastYear ? (
         <section class="card hma-tl-wrap"><p class="page-sub">ปีเก่าไม่มีรายการของวันนี้ · ดูห้องและงานของปีนั้นได้จากการ์ดด้านข้าง</p></section>
       ) : <Timeline model={model} hide={hide} />}
-      <aside class="hma-side" aria-label="ภาพรวมห้อง">
+      <ScrollArea tag="aside" wrap="hma-sidecol" class="hma-side" label="ภาพรวมห้อง">
         {cards.length === 0
           ? <section class="card hma-card"><p class="page-sub">ยังไม่ได้เปิดการ์ดใดไว้</p><button type="button" class="hma-btn" onClick={openCustomize}><Icon name="layout-grid" size={20} />ปรับหน้าหลัก</button></section>
           : <SideCards cards={cards} model={model} hide={hide} pastYear={pastYear} />}
-      </aside>
+      </ScrollArea>
     </div>
   </>);
 }

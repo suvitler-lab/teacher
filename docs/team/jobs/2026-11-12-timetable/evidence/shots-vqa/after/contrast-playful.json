@@ -1,0 +1,178 @@
+{
+ "tt-a-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-b-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-c-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "frame-sheet-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "slot-sheet-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-a-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-b-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-c-playful-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-appearance-playful-light-ipad-l": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav:visible')"
+ },
+ "set-time-playful-light-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "tt-a-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-playful-light-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "tt-a-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-playful-dark-ipad-l": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "tt-a-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-b-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "tt-c-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "frame-sheet-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "slot-sheet-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/timetable\nCal"
+ },
+ "home-a-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-b-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "home-c-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:50#/\nCall log:\n\u001b["
+ },
+ "set-appearance-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ },
+ "set-time-playful-dark-mobile": {
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4400/?now=2026-11-11T09:45#/settings?sect"
+ }
+}

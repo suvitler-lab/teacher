@@ -7,6 +7,9 @@ import { runTodayGo } from "../model";
 import { copyDueToLine } from "../today";
 import type { TodayKind, TodayRow } from "../../../lib/homeLogic";
 import type { HomeLayoutProps, HomeModel } from "../meta";
+import { ttToday } from "../../../lib/timetable/store";
+import { TtCurrent, TtLater } from "./TtRows";
+import { ScrollArea } from "./ScrollArea";
 import { LEVEL_ICON, LEVEL_TONE, attTotals, dueRoomBars, overdueText, roomChips, timelineItems, type TimelineItem } from "./logic";
 
 const GO_ICON: Record<TodayKind, string> = {
@@ -107,6 +110,8 @@ export function Timeline({ model, hide }: Pick<HomeLayoutProps, "model" | "hide"
   const items = timelineItems(model.todo);
   const firstRoomKey = model.todo.find((r) => r.kind === "room")?.key;
   const counted = model.todayCount;
+  // layout ก only: today's timetable periods (null when there is nothing to show — no box, no hint, AC-24)
+  const tt = ttToday.value;
   // tomorrow's rows come last, after the "nothing left" line when the day is clear
   const main = items.filter((it) => it.type === "dueFold" || !it.row.later);
   const tail = items.filter((it) => it.type === "row" && it.row.later);
@@ -116,7 +121,9 @@ export function Timeline({ model, hide }: Pick<HomeLayoutProps, "model" | "hide"
   return (
     <section class="card hma-tl-wrap" aria-labelledby="hma-tl-h">
       <div class="hma-tl-head"><h2 id="hma-tl-h"><Icon name="path" size={20} />ลำดับงานวันนี้</h2><span class="page-sub">รายการหายเองเมื่อข้อมูลเปลี่ยน</span></div>
+      <ScrollArea wrap="hma-tl-box" class="hma-tl-scroll" label="ลำดับงานวันนี้">
       <ol class="hma-tl">
+        <TtCurrent snap={tt} />
         {main.map(draw)}
         {counted === 0 && (
           <li class="hma-item clear" data-kind="clear">
@@ -126,8 +133,10 @@ export function Timeline({ model, hide }: Pick<HomeLayoutProps, "model" | "hide"
               <div class="hma-acts"><button type="button" class="hma-btn" onClick={() => navigate("/gradebook", { new: 1 })}><Icon name="plus" size={20} />สร้างงาน</button></div></div>
           </li>
         )}
+        <TtLater snap={tt} />
         {tail.map(draw)}
       </ol>
+      </ScrollArea>
     </section>
   );
 }

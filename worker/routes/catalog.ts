@@ -62,11 +62,24 @@ catalogRoutes.put("/api/settings", async (c) => {
   // all the settings and the audit line in ONE batch: one round trip to the database, and all-or-nothing
   const allowed = Object.entries(body).filter(([k]) => ALLOWED_SETTINGS.has(k));
   const stmts = allowed.map(([k, v]) => setSettingStmt(c.env, k, boolKey(k) ? Boolean(v) : String(v ?? "")));
+  // Once the timetable frame owns the period times (EP-12), a settings save may only repeat them (D49). Checked in the
+  // batch itself, first, so a frame saved from another device in the meantime still refuses this save.
+  const periodTimes = allowed.find(([k]) => k === "period_times");
+  const ownedSql = "COALESCE((SELECT value FROM settings WHERE key = 'period_frame'), '') != '' AND COALESCE((SELECT value FROM settings WHERE key = 'period_times'), '') != ?1";
+  if (periodTimes) stmts.unshift(abortIf(c.env, ownedSql, String(periodTimes[1] ?? "")));
   // the history keeps only what was saved: keys outside the allowed list are neither written nor recorded
   stmts.push(auditInsertStmt(c.env, [
     { entity: "settings", action: "update", device_id: c.get("deviceId"), after: Object.fromEntries(allowed) },
   ]));
-  await batchAtEpoch(c.env, await requestEpoch(c), stmts);
+  try {
+    await batchAtEpoch(c.env, await requestEpoch(c), stmts);
+  } catch (e) {
+    if (periodTimes && !(e instanceof ApiError)) {
+      const owned = await c.env.DB.prepare(`SELECT CASE WHEN ${ownedSql} THEN 1 ELSE 0 END AS v`).bind(String(periodTimes[1] ?? "")).first<{ v: number }>();
+      if (owned?.v) throw conflict("period_frame_owned", "เวลาคาบตั้งที่ ตารางสอน › ตั้งเวลาคาบ — โหลดแอปใหม่แล้วลองอีกครั้ง");
+    }
+    throw e;
+  }
   return c.json({ ok: true });
 });
 

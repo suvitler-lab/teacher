@@ -8,7 +8,7 @@ import { Segmented } from "../ui";
 import { useConfirm } from "../ConfirmDialog";
 import { settings } from "../../store";
 import { navigate } from "../../router";
-import { appearance, saveAppearance, DEFAULT_APPEARANCE, type Layout, type Skin } from "../../lib/appearance";
+import { appearance, saveAppearance, DEFAULT_APPEARANCE, type Layout, type Skin, type TimetableStyle } from "../../lib/appearance";
 import { loadSkinAssets } from "../../lib/fonts";
 import { Scope, SaveMode } from "./sections/shared";
 import { notify } from "../../lib/notify";
@@ -19,6 +19,11 @@ export const LAYOUT_OPTIONS: readonly { key: Layout; name: string; hint: string 
   { key: "a", name: "ก วันนี้ของครู", hint: "ไล่งานตามลำดับของวัน เหมาะกับคนที่อยากเห็นภาพรวมทั้งวัน" },
   { key: "b", name: "ข แผงรายห้อง", hint: "ดูทีละห้อง เหมาะกับครูที่สอนหลายห้อง" },
   { key: "c", name: "ค โฟกัสงานถัดไป", hint: "ทีละเรื่อง ใหญ่ ชัด เหมาะกับใช้ในห้องเรียน" },
+];
+export const TIMETABLE_OPTIONS: readonly { key: TimetableStyle; name: string; hint: string }[] = [
+  { key: "a", name: "ก ตารางกระดาษ", hint: "เหมือนตารางที่โรงเรียนแจก เห็นทั้งสัปดาห์" },
+  { key: "b", name: "ข ปฏิทิน", hint: "แกนเวลา เห็นว่าตอนนี้ถึงคาบไหน" },
+  { key: "c", name: "ค วันนี้เป็นหลัก", hint: "เห็นคาบถัดไปก่อน แก้ทีละวัน" },
 ];
 export const SKIN_OPTIONS: readonly { key: Skin; name: string; hint: string }[] = [
   { key: "pro", name: "มืออาชีพ", hint: "สะอาดตา จริงจัง" },
@@ -31,7 +36,7 @@ export const MODE_OPTIONS: readonly { key: ThemeChoice; name: string; icon: stri
   { key: "dark", name: "มืด", icon: "moon" },
 ];
 
-type Patch = { skin?: Skin; layout?: Layout; theme?: ThemeChoice };
+type Patch = { skin?: Skin; layout?: Layout; timetable?: TimetableStyle; theme?: ThemeChoice };
 const SETTLE_MS = 350;
 type Status = "idle" | "saving" | "saved" | "offline" | "failed";
 const STATUS_TEXT: Record<Exclude<Status, "idle">, { text: string; icon: string }> = {
@@ -63,6 +68,32 @@ function LayoutThumb({ k }: { k: Layout }) {
         <rect class="t-hero" x="12" y="6" width="72" height="26" rx="4" />
         <rect class="t-ac" x="18" y="22" width="22" height="6" rx="3" />
         <rect class="t-card" x="6" y="37" width="26" height="18" rx="2" /><rect class="t-card" x="35" y="37" width="26" height="18" rx="2" /><rect class="t-card" x="64" y="37" width="26" height="18" rx="2" />
+      </>}
+    </svg>
+  );
+}
+
+/** A plain picture of a timetable style (ก paper grid, ข time-axis calendar, ค today first), in the skin's colours. */
+function TimetableThumb({ k }: { k: TimetableStyle }) {
+  return (
+    <svg class="ap-thumb" viewBox="0 0 96 60" aria-hidden="true" focusable="false">
+      <rect class="t-bg" x="0.5" y="0.5" width="95" height="59" rx="5" />
+      {k === "a" && <>
+        {[0, 1, 2, 3, 4].map((r) => <rect class="t-ln" x="6" y={8 + r * 10} width="10" height="7" rx="1.5" />)}
+        {[0, 1, 2, 3, 4].map((r) => [0, 1, 2, 3, 4].map((c) => <rect class={(r + c) % 3 === 0 ? "t-ac" : "t-card"} x={19 + c * 15} y={8 + r * 10} width="13" height="7" rx="1.5" />))}
+      </>}
+      {k === "b" && <>
+        {[0, 1, 2, 3].map((c) => <rect class="t-ln" x={14 + c * 20} y="6" width="16" height="4" rx="1" />)}
+        {[0, 1, 2].map((r) => <rect class="t-ln" x="5" y={16 + r * 15} width="6" height="3" rx="1" />)}
+        <rect class="t-ac" x="14" y="14" width="16" height="14" rx="2" /><rect class="t-card" x="34" y="20" width="16" height="12" rx="2" />
+        <rect class="t-card" x="54" y="14" width="16" height="10" rx="2" /><rect class="t-ac" x="74" y="30" width="16" height="14" rx="2" />
+        <rect class="t-hero" x="8" y="36" width="82" height="2.5" rx="1" />
+      </>}
+      {k === "c" && <>
+        <rect class="t-hero" x="6" y="6" width="84" height="20" rx="3" />
+        <rect class="t-ac" x="10" y="10" width="24" height="6" rx="2" />
+        {[0, 1, 2].map((r) => <rect class="t-card" x="6" y={30 + r * 10} width="56" height="7" rx="2" />)}
+        <rect class="t-card" x="66" y="30" width="24" height="27" rx="2" />
       </>}
     </svg>
   );
@@ -128,14 +159,14 @@ export function AppearanceSection() {
   const inflight = useRef(0);
   const anyFailed = useRef(false);
   const timer = useRef<number | undefined>(undefined);
-  const look = { skin: pend.skin ?? saved.skin, layout: pend.layout ?? saved.layout };
+  const look = { skin: pend.skin ?? saved.skin, layout: pend.layout ?? saved.layout, timetable: pend.timetable ?? saved.timetable };
   const mode: ThemeChoice = pend.theme ?? savedMode;
 
   // the cards show the fonts of all three skins: ask for them while this section is open (they are cached after that)
   useEffect(() => { for (const s of SKIN_OPTIONS) void loadSkinAssets(s.key); return () => { window.clearTimeout(timer.current); window.clearTimeout(settle.current); }; }, []);
 
   async function save(patch: Patch, withUndo = true) {
-    const same = (patch.skin === undefined || patch.skin === appearance.value.skin) && (patch.layout === undefined || patch.layout === appearance.value.layout) && (patch.theme === undefined || patch.theme === (settings.value?.theme ?? "system"));
+    const same = (patch.skin === undefined || patch.skin === appearance.value.skin) && (patch.layout === undefined || patch.layout === appearance.value.layout) && (patch.timetable === undefined || patch.timetable === appearance.value.timetable) && (patch.theme === undefined || patch.theme === (settings.value?.theme ?? "system"));
     if (same) return;
     const prevTheme: ThemeChoice = settings.value?.theme ?? "system";
     window.clearTimeout(timer.current);
@@ -172,7 +203,7 @@ export function AppearanceSection() {
   }
 
   async function reset() {
-    const yes = await ask({ title: "คืนค่าหน้าตาเป็นค่าเริ่มต้น?", body: "โครง ก · อบอุ่น · ตามเครื่อง (ไม่แตะขนาดตัวอักษรและการซ่อนการ์ด)", yes: "ใช่ คืนค่า", no: "ไม่" });
+    const yes = await ask({ title: "คืนค่าหน้าตาเป็นค่าเริ่มต้น?", body: "โครง ก · อบอุ่น · ตารางสอน ก · ตามเครื่อง (ไม่แตะขนาดตัวอักษรและการซ่อนการ์ด)", yes: "ใช่ คืนค่า", no: "ไม่" });
     resetBtn.current?.focus(); // the dialog closes: put focus back where the teacher was
     if (yes) { pending.current = {}; setPend({}); window.clearTimeout(settle.current); void save({ ...DEFAULT_APPEARANCE, theme: "system" }); }
   }
@@ -233,6 +264,20 @@ export function AppearanceSection() {
             </div>
           </fieldset>
 
+          <fieldset class="ap-fs" role="radiogroup" aria-label="รูปแบบตารางสอน">
+            <legend>รูปแบบตารางสอน</legend>
+            <p class="ap-scope"><Scope all /> <SaveMode mode="now" /></p>
+            <div class="ap-choices">
+              {TIMETABLE_OPTIONS.map((o) => (
+                <ChoiceCard name="ap-timetable" value={o.key} label={`${o.name} — ${o.hint}`} checked={look.timetable === o.key} onPick={() => choose({ timetable: o.key })}>
+                  <TimetableThumb k={o.key} />
+                  <span class="ap-txt"><b>{o.name}</b><small>{o.hint}</small></span>
+                </ChoiceCard>
+              ))}
+            </div>
+            <p class="page-sub ap-tt-link">เปิด/ปิดแถบ ตอนนี้/ต่อไป ได้ที่ <button type="button" class="lk" onClick={() => navigate("/?customize=1")}>หน้าหลัก › ปรับหน้าหลัก ›</button></p>
+          </fieldset>
+
           <fieldset class="ap-fs" role="radiogroup" aria-label="สว่าง หรือ มืด">
             <legend>สว่าง / มืด</legend>
             <p class="ap-scope"><Scope all /> <SaveMode mode="now" /></p>
@@ -255,7 +300,7 @@ export function AppearanceSection() {
           <div class="ap-reset">
             <div class="row" style="gap:10px;flex-wrap:wrap;align-items:center">
               <button ref={resetBtn} onClick={reset}><Icon name="arrow-counter-clockwise" size={20} /> คืนค่าเริ่มต้น</button>
-              <span class="page-sub">ค่าเริ่มต้น: โครง ก · อบอุ่น · ตามเครื่อง (ไม่แตะขนาดตัวอักษรและการซ่อนการ์ด)</span>
+              <span class="page-sub">ค่าเริ่มต้น: โครง ก · อบอุ่น · ตารางสอน ก · ตามเครื่อง (ไม่แตะขนาดตัวอักษรและการซ่อนการ์ด)</span>
             </div>
           </div>
         </div>

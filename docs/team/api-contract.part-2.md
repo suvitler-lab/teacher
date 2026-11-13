@@ -85,17 +85,13 @@
 - นิยาม (BR-11): วันเรียน = วันที่มีการเช็คชื่อหรือมีการส่งงานอย่างน้อย 1 แถว ≤ วันนี้ · เอา `days` วันล่าสุด เรียงเก่า→ใหม่ · `count` = แถว `submissions.status = 'submitted'` ของงานในภาคเรียนนั้น ทุกห้อง ตามวันที่รับตามเวลาไทย (`event_at` ถ้ามี ไม่งั้น `submitted_at` — กติกาเดียวกับการตัดสินส่งช้า) · วันเรียนน้อยกว่า `days` = ส่งเท่าที่มี
 - error: 401 · 422 · ปล่อย: server ก่อนแอป · 404 = ไม่มีการ์ด · ไม่มี migration
 
-### EP-11 `GET /api/timetable` · `PUT /api/timetable` — ตารางสอนรายคาบ (ร่าง · วางแผน — ยังไม่สร้าง · งานแยก C)
+#### (ร่างเดิม EP-11 — ยกเลิก 2026-11-13) ตารางสอนรายคาบ
 
-- ใช้กับ: AC-43 แถว "ต่อไป: คาบ 4 11:30 ป.6/2 คณิตศาสตร์" โครง ก + หน้า/หมวดกรอกตารางสอน + เมนู "ตารางสอน" (BR-17)
-- ต้องมีตารางใหม่ (DB Specialist งาน C): `timetable_slots(id TEXT PK, term_id TEXT NOT NULL REFERENCES terms(id), weekday INTEGER 1–7, period INTEGER ≥ 1, class_id TEXT NOT NULL REFERENCES classes(id), subject_id TEXT REFERENCES subjects(id), updated_at INTEGER NOT NULL, UNIQUE(term_id, weekday, period))`
-- `GET ?term=` → `{ "termId": "t1", "slots": [ { "weekday": 1, "period": 4, "classId": "c2", "subjectId": "s1" } ] }`
-- `PUT` body `{ "termId": "t1", "slots": [ … ] }` = แทนทั้งตารางของภาคเรียนนั้นใน batch เดียว + audit (`entity: "timetable"`) · ≤ 7 × 12 แถว · 422 `validation` (ซ้ำวัน+คาบ, ห้อง/วิชาไม่มีหรือเก็บแล้ว) · 409 `epoch_changed` ตามกติกาเดิม
-- "คาบถัดไป" คิดที่ client จาก `slots` + `period_times` เดิม (เวลาเริ่มคาบ) + เวลาไทย — ไม่มี endpoint แยก
-- ปล่อย: migration → server → แอป · requirements ของงาน C ยืนยัน/แก้สัญญานี้ก่อนสร้าง (BR-11 "นิยามละเอียดเมื่อเจ้าของงานเลือกทำ")
+- ร่างนี้ (`class_id NOT NULL` · ไม่มีเวลาคาบ/พัก · ≤ 7 × 12 แถว · ล่าสุดชนะ) **ใช้ไม่ได้** กับ requirements ของงาน `2026-11-12-timetable` → สัญญาจริง **EP-11 / EP-12 / EP-13 อยู่ใน `api-contract.part-5.md` (v11)** · ID EP-11 ใช้ต่อในส่วนที่ 5 (ไม่นำไปใช้กับเรื่องอื่น)
 
 ## Changelog
 
 | เวอร์ชัน | วันที่ | เปลี่ยน | เหตุ | กระทบ |
 |---|---|---|---|---|
+| v11 | 2026-11-13 | ร่าง EP-11 ยกเลิก → สัญญาจริงย้ายไป `api-contract.part-5.md` (EP-11 EP-12 EP-13 + EP-07 v11) | 2026-11-12-timetable เฟส 3 · D48 | ดู changelog ใน part-5 |
 | v10 (ร่าง) | 2026-11-12 | EP-07: รูปแบบค่า `accent` (หน้าตา) + `home_cards` ต่อโครง + การ์ดใหม่ใน `*_cards` · ทะเบียนค่าในเครื่อง · ร่าง EP-09 EP-10 EP-11 | home-redesign เฟส 3 · D41 D44 D47 | server ไม่เปลี่ยนในงานนี้ · แอปเก่าอ่าน `home_cards` ได้ ไม่อ่าน `accent` · EP-09–11 สร้างในงานแยก A/B/C |

@@ -1,0 +1,1 @@
+T-18 npx tsc --noEmit: PASS (no output). npx vitest run: 218 files / 2760 tests PASS (incl. test/unit/tt-home.test.tsx 22 cases). npm run build: PASS

@@ -11,9 +11,12 @@ import { attDraftCount } from "../lib/attSync";
 import { useConfirm } from "./ConfirmDialog";
 
 interface NavItem { key: string; label: string; icon: string }
-// The eight pages (names kept, D22) in the order a teacher's day goes: today · in the room · after class · manage
+// The nine pages (names kept, D22; ตารางสอน added after หน้าหลัก) in the order a teacher's day goes: today · in the room · after class · manage
 export const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
-  { label: "วันนี้", items: [{ key: "home", label: "หน้าหลัก", icon: "home" }] },
+  { label: "วันนี้", items: [
+    { key: "home", label: "หน้าหลัก", icon: "home" },
+    { key: "timetable", label: "ตารางสอน", icon: "calendar-event" },
+  ] },
   { label: "ในห้องเรียน", items: [
     { key: "scan", label: "สแกน", icon: "scan" },
     { key: "attendance", label: "เช็คชื่อ", icon: "user-check" },
@@ -34,6 +37,7 @@ const NAV: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 const TABS = ["home", "attendance", "scan", "gradebook", "more"];
 // pages reached through the "more" sheet, under the same group headings as the rail
 const SHEET_GROUPS = [
+  { label: "วันนี้", keys: ["timetable"] },
   { label: "ในห้องเรียน", keys: ["random"] },
   { label: "ตรวจงาน", keys: ["reports"] },
   { label: "จัดการ", keys: ["students", "settings"] },

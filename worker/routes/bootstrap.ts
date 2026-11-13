@@ -3,6 +3,7 @@ import type { Env, Vars } from "../env";
 import { requireAuth } from "../lib/auth";
 import { getSettings, getEpoch } from "../lib/db";
 import { mapTerm, mapClass, mapSubject, mapWorkType, mapStudent, mapAssignment } from "../lib/rows";
+import { mapSlot, SLOT_COLUMNS, DEFAULT_TERM_SQL } from "../lib/timetable";
 import type { Bootstrap } from "@shared/types";
 
 export const bootstrapRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -10,7 +11,7 @@ export const bootstrapRoutes = new Hono<{ Bindings: Env; Variables: Vars }>();
 bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
   const db = c.env.DB;
   const sixtyDaysAgo = Date.now() - 60 * 24 * 3600 * 1000;
-  const [settings, terms, classes, subjects, workTypes, students, assignments, links, revoked, rotated] =
+  const [settings, terms, classes, subjects, workTypes, students, assignments, links, revoked, rotated, ttSlots] =
     await Promise.all([
       getSettings(c.env),
       db.prepare("SELECT * FROM terms ORDER BY year DESC, term DESC").all(),
@@ -28,6 +29,11 @@ bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
       db.prepare(
         "SELECT student_id, MAX(revoked_at) AS at FROM revoked_qr_tokens WHERE revoked_at >= ? GROUP BY student_id",
       ).bind(sixtyDaysAgo).all<{ student_id: string; at: number }>(),
+      // the current term's timetable (EP-11): the term is picked in SQL so this runs beside the other reads
+      db.prepare(
+        `SELECT t.id AS term_id, t.timetable_rev AS rev, ${SLOT_COLUMNS.split(", ").map((c) => `s.${c}`).join(", ")}
+         FROM (${DEFAULT_TERM_SQL}) t LEFT JOIN timetable_slots s ON s.term_id = t.id ORDER BY s.weekday, s.period`,
+      ).all(),
     ]);
 
   const linkMap = new Map<string, string[]>();
@@ -48,6 +54,8 @@ bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
   const dataEpoch = c.get("dataEpoch") ?? (await getEpoch(c.env));
   const termList = (terms.results ?? []).map(mapTerm);
   const currentTerm = termList.find((t) => t.is_current) ?? termList[0];
+  // term, rev and slots come from one statement (one snapshot): a PUT between two reads can't pair a new rev with old slots
+  const ttRows = (ttSlots.results ?? []) as any[];
 
   const payload: Bootstrap = {
     settings,
@@ -62,6 +70,9 @@ bootstrapRoutes.get("/api/bootstrap", requireAuth, async (c) => {
     assignments: (assignments.results ?? []).map((a: any) =>
       mapAssignment(a, linkMap.get(a.id) ?? []),
     ),
+    timetable: ttRows.length
+      ? { termId: ttRows[0].term_id, rev: ttRows[0].rev ?? 0, readOnly: false, slots: ttRows.filter((r) => r.weekday != null).map(mapSlot) }
+      : null,
     dataEpoch,
     serverTime: Date.now(),
   };

@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 
 const { get } = vi.hoisted(() => ({ get: vi.fn() }));
 vi.mock("@client/lib/api", async (orig) => ({ ...await orig<typeof import("@client/lib/api")>(), api: { get, post: vi.fn(), put: vi.fn() } }));
-for (const [m, n] of [["Setup", "Setup"], ["Onboarding", "Onboarding"], ["Home", "Home"], ["Scan", "ScanPage"], ["Gradebook", "GradebookPage"], ["Attendance", "AttendancePage"], ["Random", "RandomPage"], ["Students", "StudentsPage"], ["Settings", "SettingsPage"], ["Reports", "ReportsPage"]]) {
+for (const [m, n] of [["Setup", "Setup"], ["Onboarding", "Onboarding"], ["Home", "Home"], ["Scan", "ScanPage"], ["Gradebook", "GradebookPage"], ["Attendance", "AttendancePage"], ["Random", "RandomPage"], ["Students", "StudentsPage"], ["Settings", "SettingsPage"], ["Reports", "ReportsPage"], ["Timetable", "TimetablePage"]]) {
   vi.doMock(`@client/pages/${m}`, () => ({ [n]: () => <div data-page={m} /> }));
 }
 
@@ -22,7 +22,7 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 describe("hr-menu: rail (AC-45, AC-49)", () => {
-  it("holds exactly the eight pages in four text-labelled groups and nothing else", () => {
+  it("holds exactly the nine pages in four text-labelled groups and nothing else", () => {
     route.value = "/reports";
     render(<Shell><div /></Shell>);
     const rail = screen.getByRole("navigation", { name: "เมนูหลัก" });
@@ -31,9 +31,9 @@ describe("hr-menu: rail (AC-45, AC-49)", () => {
     // the heading words exist in the page (visible text), one per group
     expect([...rail.querySelectorAll(".rail-gl")].map((e) => e.textContent)).toEqual(["วันนี้", "ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
     const links = within(rail).getAllByRole("link");
-    expect(links.map((a) => a.textContent)).toEqual(["หน้าหลัก", "สแกน", "เช็คชื่อ", "สุ่มชื่อ", "คะแนน", "รายงาน", "นักเรียน", "ตั้งค่า"]);
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(["#/home", "#/scan", "#/attendance", "#/random", "#/gradebook", "#/reports", "#/students", "#/settings"]);
-    expect(rail.textContent).not.toMatch(/ตารางสอน|บัตร QR|สำรองข้อมูล/);
+    expect(links.map((a) => a.textContent)).toEqual(["หน้าหลัก", "ตารางสอน", "สแกน", "เช็คชื่อ", "สุ่มชื่อ", "คะแนน", "รายงาน", "นักเรียน", "ตั้งค่า"]);
+    expect(links.map((a) => a.getAttribute("href"))).toEqual(["#/home", "#/timetable", "#/scan", "#/attendance", "#/random", "#/gradebook", "#/reports", "#/students", "#/settings"]);
+    expect(rail.textContent).not.toMatch(/บัตร QR|สำรองข้อมูล/);
     expect(links.filter((a) => a.getAttribute("aria-current") === "page").map((a) => a.textContent)).toEqual(["รายงาน"]);
   });
 
@@ -61,9 +61,9 @@ describe("hr-menu: phone bar and the more sheet (AC-47)", () => {
     const btn = screen.getByRole("button", { name: "เพิ่มเติม" });
     fireEvent.click(btn);
     const sheet = screen.getByRole("dialog");
-    expect(within(sheet).getAllByRole("group").map((g) => g.getAttribute("aria-label"))).toEqual(["ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
+    expect(within(sheet).getAllByRole("group").map((g) => g.getAttribute("aria-label"))).toEqual(["วันนี้", "ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
     expect(within(sheet).getAllByRole("link").map((a) => [a.textContent!.trim(), a.getAttribute("href")])).toEqual([
-      ["สุ่มชื่อ", "#/random"], ["รายงาน", "#/reports"], ["นักเรียน", "#/students"], ["ตั้งค่า", "#/settings"],
+      ["ตารางสอน", "#/timetable"], ["สุ่มชื่อ", "#/random"], ["รายงาน", "#/reports"], ["นักเรียน", "#/students"], ["ตั้งค่า", "#/settings"],
     ]);
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
@@ -95,6 +95,7 @@ describe("hr-menu: deep link before sign-in (AC-50)", () => {
   it("only real pages other than home count as a deep link", async () => {
     const { deepLinkOf } = await import("@client/app");
     expect(deepLinkOf("/scan")).toBe("/scan");
+    expect(deepLinkOf("/timetable?term=x")).toBe("/timetable?term=x");
     expect(deepLinkOf("/settings?section=catalog")).toBe("/settings?section=catalog");
     expect(deepLinkOf("/home")).toBeNull();
     expect(deepLinkOf("/")).toBeNull();

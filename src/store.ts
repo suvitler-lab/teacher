@@ -17,6 +17,7 @@ import { pauseSync } from "./lib/outbox";
 import { stopAttSync } from "./lib/attSync";
 import { swrClear } from "./lib/swr";
 import { setThemeAttr, saveThemeLocal } from "./lib/theme";
+import { ttSeedBootstrap, ttResetAll } from "./lib/timetable/state";
 
 export const authState = signal<"loading" | "setup" | "login" | "ready">("loading");
 /** false only for an account made before e-mail sign-in: its next sign-in attaches the e-mail typed. */
@@ -113,7 +114,7 @@ export const studentsByClass = computed(() => {
 });
 
 /** `live` = this came from the server just now (so its serverTime tells us the clock skew); false = a cached copy. */
-export function applyBootstrap(b: Bootstrap, live = true) {
+export function applyBootstrap(b: Bootstrap, live = true, timetableAt = Date.now()) {
   assignmentContextRevision++;
   settings.value = b.settings;
   terms.value = b.terms;
@@ -132,6 +133,8 @@ export function applyBootstrap(b: Bootstrap, live = true) {
     serverSkewMs.value = b.serverTime - Date.now();
     void kvSet("skew", serverSkewMs.value);
   }
+  // the current term's timetable rides on the bootstrap (null = no term; absent = an older server)
+  ttSeedBootstrap(b.timetable, { live, at: timetableAt, epoch: b.dataEpoch ?? null });
   // keep the shared term valid; fall back to the current term
   if (!validTerm(selectedTermId.value, b.terms)) selectedTermId.value = b.currentTermId;
   applyTheme(b.settings.theme);
@@ -171,6 +174,7 @@ export async function loadBootstrap() {
   const b = await api.get<Bootstrap>("/api/bootstrap");
   applyBootstrap(b);
   kvSet("bootstrap", b);
+  void kvSet("ttAt", Date.now()); // the offline copy of the timetable says "ข้อมูลเมื่อ" from this
 }
 
 /** Offline fallback: apply the last cached bootstrap. Returns true if applied. */
@@ -179,7 +183,7 @@ export async function loadBootstrapCached(): Promise<boolean> {
   if (await kvGet<boolean>("loggedOut")) return false;
   const b = await kvGet<Bootstrap>("bootstrap");
   if (b) {
-    applyBootstrap(b, false);
+    applyBootstrap(b, false, (await kvGet<number>("ttAt")) ?? Date.now());
     // a cached bootstrap's serverTime is old — use the skew we measured the last time we were online
     serverSkewMs.value = (await kvGet<number>("skew")) ?? 0;
     return true;
@@ -199,6 +203,7 @@ export async function logout() {
   pauseSync();
   stopAttSync();
   swrClear();
+  ttResetAll(); // the timetable belongs to the teacher who signed out
   try { await api.post("/api/auth/logout"); } catch { /* offline: still clear locally; app start finishes it */ }
   await kvSet("bootstrap", null);
   await kvSet("loggedOut", true);

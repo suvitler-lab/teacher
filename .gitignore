@@ -16,3 +16,8 @@ npm-debug.log*
 # screenshots (never committed)
 **/evidence/shots/
 **/evidence/variants/
+**/evidence/**/*.png
+**/evidence/**/*.jpg
+**/evidence/**/*.jpeg
+**/evidence/**/*.webp
+**/evidence/**/*.pdf

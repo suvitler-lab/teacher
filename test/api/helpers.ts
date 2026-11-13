@@ -4,7 +4,7 @@ import { app } from "../../worker/app";
 // Child-first order so FK enforcement (on in the test runtime) is satisfied.
 // work_types + settings keep their migration defaults (assignments FK -> work_types).
 const ALL_TABLES = [
-  "audit_logs", "attendance", "attendance_sessions", "submissions", "scan_sessions",
+  "audit_logs", "timetable_slots", "attendance", "attendance_sessions", "submissions", "scan_sessions",
   "assignment_classes", "assignments", "revoked_qr_tokens", "students",
   "subjects", "classes", "terms", "login_attempts", "sessions", "devices", "teacher",
   "restore_staging", "restore_jobs",
@@ -13,8 +13,10 @@ const ALL_TABLES = [
 /** Wipe every table and restore the schema_version marker. Run before each test. */
 export async function reset() {
   await env.DB.batch(ALL_TABLES.map((t) => env.DB.prepare(`DELETE FROM ${t}`)));
+  // the timetable frame (and the period times it owns) must not leak from one test into the next
+  await env.DB.prepare("DELETE FROM settings WHERE key IN ('period_frame', 'period_times')").run();
   await env.DB.batch([
-    env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('schema_version','6')"),
+    env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('schema_version','7')"),
     env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('maintenance','0')"),
     env.DB.prepare("INSERT OR REPLACE INTO meta (key,value) VALUES ('data_epoch','1')"),
   ]);

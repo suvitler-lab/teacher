@@ -20,6 +20,7 @@ import { RandomPage } from "./pages/Random";
 import { StudentsPage } from "./pages/Students";
 import { SettingsPage } from "./pages/Settings";
 import { ReportsPage } from "./pages/Reports";
+import { TimetablePage } from "./pages/Timetable";
 import { Icon } from "./components/Icon";
 import { startOutbox } from "./lib/outbox";
 import { setSoundEnabled } from "./lib/sound";
@@ -42,7 +43,7 @@ async function goLive() {
   else authRequired.value = true; // the session ended while we were away: sign in again (unsent work is kept)
 }
 
-const PAGES = ["home", "scan", "attendance", "random", "gradebook", "reports", "students", "settings"];
+const PAGES = ["home", "timetable", "scan", "attendance", "random", "gradebook", "reports", "students", "settings"];
 
 /** The page a signed-out visitor asked for (`#/scan`, `#/settings?section=catalog`), or null for none / the home page / unknown. */
 export function deepLinkOf(path: string): string | null {
@@ -146,6 +147,7 @@ function Page() {
     case "reports": return <ReportsPage />;
     case "students": return <StudentsPage />;
     case "settings": return <SettingsPage />;
+    case "timetable": return <TimetablePage />;
     default: return <Home />;
   }
 }

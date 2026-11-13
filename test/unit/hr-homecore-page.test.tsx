@@ -70,7 +70,7 @@ describe("the shared home page", () => {
     await screen.findByRole("heading", { level: 1 });
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
     const dlg = await screen.findByRole("dialog", { name: "ปรับหน้าหลัก · โครง ข แผงรายห้อง" });
-    expect(within(dlg).getAllByRole("switch")).toHaveLength(2);
+    expect(within(dlg).getAllByRole("switch")).toHaveLength(3); // two cards + the timetable strip
     expect(dlg.textContent).toContain("ปิดไม่ได้: ปุ่มลัด · แถบต้องทำ · แผงห้อง");
     fireEvent.click(within(dlg).getByRole("radio", { name: /โครง ค/ }));
     await screen.findByRole("dialog", { name: "ปรับหน้าหลัก · โครง ค โฟกัสงานถัดไป" });

@@ -39,22 +39,22 @@ afterEach(() => { resetAppearanceForTests(); });
 
 describe("parseAppearance (BR-07, AC-06)", () => {
   it("never set, empty or the old value 'blue' gives warm + a", () => {
-    expect(parseAppearance(undefined)).toEqual({ skin: "warm", layout: "a" });
-    expect(parseAppearance("")).toEqual({ skin: "warm", layout: "a" });
-    expect(parseAppearance("blue")).toEqual({ skin: "warm", layout: "a" });
-    expect(parseAppearance("[1,2]")).toEqual({ skin: "warm", layout: "a" });
-    expect(parseAppearance("null")).toEqual({ skin: "warm", layout: "a" });
+    expect(parseAppearance(undefined)).toEqual({ skin: "warm", layout: "a", timetable: "a" });
+    expect(parseAppearance("")).toEqual({ skin: "warm", layout: "a", timetable: "a" });
+    expect(parseAppearance("blue")).toEqual({ skin: "warm", layout: "a", timetable: "a" });
+    expect(parseAppearance("[1,2]")).toEqual({ skin: "warm", layout: "a", timetable: "a" });
+    expect(parseAppearance("null")).toEqual({ skin: "warm", layout: "a", timetable: "a" });
   });
   it("a wrong field falls back alone", () => {
-    expect(parseAppearance('{"v":1,"skin":"luxe","layout":"b"}')).toEqual({ skin: "warm", layout: "b" });
-    expect(parseAppearance('{"v":1,"skin":"playful","layout":"z"}')).toEqual({ skin: "playful", layout: "a" });
-    expect(parseAppearance('{"v":1,"skin":"pro","layout":"c"}')).toEqual({ skin: "pro", layout: "c" });
+    expect(parseAppearance('{"v":1,"skin":"luxe","layout":"b"}')).toEqual({ skin: "warm", layout: "b", timetable: "a" });
+    expect(parseAppearance('{"v":1,"skin":"playful","layout":"z"}')).toEqual({ skin: "playful", layout: "a", timetable: "a" });
+    expect(parseAppearance('{"v":1,"skin":"pro","layout":"c"}')).toEqual({ skin: "pro", layout: "c", timetable: "a" });
   });
   it("round-trips", () => {
     for (const skin of ["pro", "warm", "playful"] as const) for (const layout of ["a", "b", "c"] as const) {
-      expect(parseAppearance(serializeAppearance({ skin, layout }))).toEqual({ skin, layout });
+      expect(parseAppearance(serializeAppearance({ skin, layout }))).toEqual({ skin, layout, timetable: "a" });
     }
-    expect(JSON.parse(serializeAppearance({ skin: "pro", layout: "b" }))).toEqual({ v: 1, skin: "pro", layout: "b" });
+    expect(JSON.parse(serializeAppearance({ skin: "pro", layout: "b" }))).toEqual({ v: 1, skin: "pro", layout: "b", timetable: "a" });
   });
 });
 
@@ -69,13 +69,13 @@ describe("applyStoredAppearance (AC-04: no flash)", () => {
     localStorage.setItem("ngankrob-skin", "playful"); localStorage.setItem("ngankrob-layout", "c");
     applyStoredAppearance();
     expect(root.getAttribute("data-skin")).toBe("playful");
-    expect(appearance.value).toEqual({ skin: "playful", layout: "c" });
+    expect(appearance.value).toEqual({ skin: "playful", layout: "c", timetable: "a" });
     expect(loadSkinAssets).toHaveBeenCalledWith("playful");
   });
   it("an unknown remembered value falls back for that field only", () => {
     localStorage.setItem("ngankrob-skin", "luxe"); localStorage.setItem("ngankrob-layout", "b");
     applyStoredAppearance();
-    expect(appearance.value).toEqual({ skin: "warm", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "warm", layout: "b", timetable: "a" });
   });
 });
 
@@ -83,18 +83,18 @@ describe("the server's value is adopted once (AC-03)", () => {
   it("uses accent from the first settings, remembers it, and ignores later changes", () => {
     applyStoredAppearance();
     settings.value = base({ accent: serializeAppearance({ skin: "pro", layout: "b" }) });
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
     expect(localStorage.getItem("ngankrob-skin")).toBe("pro");
     expect(root.getAttribute("data-skin")).toBe("pro");
     // another device changed it: this screen does not move under the teacher's hands
     settings.value = base({ accent: serializeAppearance({ skin: "playful", layout: "c" }) });
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
   });
   it("old value 'blue' on the server gives the default", () => {
     localStorage.setItem("ngankrob-skin", "pro");
     applyStoredAppearance();
     settings.value = base({ accent: "blue" });
-    expect(appearance.value).toEqual({ skin: "warm", layout: "a" });
+    expect(appearance.value).toEqual({ skin: "warm", layout: "a", timetable: "a" });
   });
 });
 
@@ -106,7 +106,7 @@ describe("an offline start from the saved copy (T-29 R-01, AC-04)", () => {
     applyStoredAppearance();
     deferAppearanceAdoption(); // App: about to apply the cached bootstrap
     settings.value = base({ accent: stale });
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
     expect(localStorage.getItem("ngankrob-skin")).toBe("pro");
     expect(root.getAttribute("data-skin")).toBe("pro");
   });
@@ -117,17 +117,17 @@ describe("an offline start from the saved copy (T-29 R-01, AC-04)", () => {
     settings.value = base({ accent: stale });
     settings.value = base({ accent: fresh }); // live bootstrap
     adoptServerAppearance();
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
     expect(localStorage.getItem("ngankrob-skin")).toBe("pro");
     settings.value = base({ accent: stale }); // later change elsewhere: not under the teacher's hands
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
   });
   it("with no saved copy at all the next sign-in is adopted as usual", () => {
     applyStoredAppearance();
     deferAppearanceAdoption();
     adoptServerAppearance(); // App: nothing cached, going to the sign-in page
     settings.value = base({ accent: fresh });
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" });
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" });
   });
   it("a successful save also updates the copy kept for an offline start (look and theme)", async () => {
     applyStoredAppearance();
@@ -137,7 +137,7 @@ describe("an offline start from the saved copy (T-29 R-01, AC-04)", () => {
     const [key, change] = kvUpdate.mock.calls[0];
     expect(key).toBe("bootstrap");
     const out = change({ settings: base({ accent: "blue", theme: "system" }), terms: [] });
-    expect(out.settings.accent).toBe('{"v":1,"skin":"playful","layout":"a"}');
+    expect(out.settings.accent).toBe('{"v":1,"skin":"playful","layout":"a","timetable":"a"}');
     expect(out.settings.theme).toBe("dark");
     expect(out.terms).toEqual([]);
     expect(change(null)).toBeNull(); // no copy saved: nothing is invented
@@ -161,13 +161,13 @@ describe("saveAppearance (D41, D38)", () => {
     expect(localStorage.getItem("ngankrob-theme")).toBe("dark");
     expect(await p).toBe(true);
     expect(put).toHaveBeenCalledTimes(1);
-    expect(put).toHaveBeenCalledWith("/api/settings", { accent: '{"v":1,"skin":"playful","layout":"a"}', theme: "dark" });
+    expect(put).toHaveBeenCalledWith("/api/settings", { accent: '{"v":1,"skin":"playful","layout":"a","timetable":"a"}', theme: "dark" });
     expect(ok).toHaveBeenCalledWith("บันทึกแล้ว · ใช้กับทุกเครื่อง");
     expect(settings.value?.accent).toContain("playful");
   });
   it("sends only what changed", async () => {
     await saveAppearance({ layout: "c" });
-    expect(put).toHaveBeenCalledWith("/api/settings", { accent: '{"v":1,"skin":"warm","layout":"c"}' });
+    expect(put).toHaveBeenCalledWith("/api/settings", { accent: '{"v":1,"skin":"warm","layout":"c","timetable":"a"}' });
     put.mockClear();
     expect(await saveAppearance({ layout: "c" })).toBe(true); // nothing changed: no request
     expect(put).not.toHaveBeenCalled();
@@ -241,28 +241,28 @@ describe("saveAppearance: a failed tap never reaches the server in the next requ
     put.mockRejectedValueOnce(new Error("x"));
     const a = saveAppearance({ skin: "pro" });
     const b = saveAppearance({ layout: "b" });
-    expect(appearance.value).toEqual({ skin: "pro", layout: "b" }); // both shown at once
+    expect(appearance.value).toEqual({ skin: "pro", layout: "b", timetable: "a" }); // both shown at once
     expect([await a, await b]).toEqual([false, true]);
     expect(put).toHaveBeenCalledTimes(2);
-    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"warm","layout":"b"}' });
-    expect(appearance.value).toEqual({ skin: "warm", layout: "b" }); // what the server ends up with
+    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"warm","layout":"b","timetable":"a"}' });
+    expect(appearance.value).toEqual({ skin: "warm", layout: "b", timetable: "a" }); // what the server ends up with
     expect(root.getAttribute("data-skin")).toBe("warm");
     expect(localStorage.getItem("ngankrob-skin")).toBe("warm");
-    expect(settings.value?.accent).toBe('{"v":1,"skin":"warm","layout":"b"}');
+    expect(settings.value?.accent).toBe('{"v":1,"skin":"warm","layout":"b","timetable":"a"}');
   });
   it("a failed theme tap does not ride along with the next look tap", async () => {
     put.mockRejectedValueOnce(new Error("x"));
     const a = saveAppearance({ theme: "dark" });
     const b = saveAppearance({ skin: "pro" });
     await Promise.all([a, b]);
-    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"pro","layout":"a"}' });
+    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"pro","layout":"a","timetable":"a"}' });
     expect(settings.value?.theme).toBe("system");
     expect(root.getAttribute("data-theme")).not.toBe("dark");
   });
   it("a tap that worked stays in the base of the next one", async () => {
     await saveAppearance({ skin: "pro" });
     await saveAppearance({ layout: "c" });
-    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"pro","layout":"c"}' });
+    expect(put.mock.calls[1][1]).toEqual({ accent: '{"v":1,"skin":"pro","layout":"c","timetable":"a"}' });
   });
   it("silent: no toast on success or failure, same result; the text stays the AC-02 text otherwise (R-3204)", async () => {
     expect(await saveAppearance({ skin: "pro" }, { silent: true })).toBe(true);

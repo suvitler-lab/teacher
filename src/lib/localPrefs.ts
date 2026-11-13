@@ -11,7 +11,7 @@ import { pjTheme, pjSize, pjHideNames } from "./projector";
 import { reloadHideFromStorage } from "./hideNames";
 
 /** Keys that start with `ngankrob` but must NOT be cleared (copies of synced values). */
-export const LOCAL_PREF_KEEP: readonly string[] = ["ngankrob-theme", "ngankrob-skin", "ngankrob-layout"];
+export const LOCAL_PREF_KEEP: readonly string[] = ["ngankrob-theme", "ngankrob-skin", "ngankrob-layout", "ngankrob-timetable"];
 
 const PREFIX = "ngankrob";
 
