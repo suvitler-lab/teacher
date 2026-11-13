@@ -194,7 +194,7 @@ export function SessionSetup() {
           <div class="sc-startbar">
             <div class="grow sb-info">
               {asg
-                ? (<><div class="sb-t" role="status">รอบนี้: <b>{asg.title}</b>{room?.name ? ` · ${room.name}` : ""} · เต็ม {asg.full_score} · {MODE_LABEL[mode]}</div></>)
+                ? (<><div class="sb-t" role="status">รอบนี้: <b title={asg.title}>{asg.title}</b>{room?.name ? ` · ${room.name}` : ""} · เต็ม {asg.full_score} · {MODE_LABEL[mode]}</div></>)
                 : <div class="page-sub">เลือกงานเพื่อเริ่ม</div>}
             </div>
             <span class="page-sub sb-src"><Icon name="barcode" size={16} /> เครื่องยิง · <Icon name="camera" size={16} /> กล้อง</span>

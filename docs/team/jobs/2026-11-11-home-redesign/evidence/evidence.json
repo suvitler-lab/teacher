@@ -68,13 +68,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน test/unit/hr-menu-nav.test.tsx:94-120 + hr-menu-nav ผ่านใน vitest",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "เทสต์มี await settle() ก่อน expect hash #/scan (R-01 แก้แล้ว: แยก mutant ได้); 293/293 ผ่าน",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:42.944Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:04.482Z"
   },
   {
     "check": "Q-3103",
@@ -106,13 +106,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/fixture-datasets.test.ts --project dom)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:30.004Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:16.126Z"
   },
   {
     "check": "Q-6502",
@@ -124,13 +124,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep -rn '__fixture|fixture-server' src worker shared public dist package.json; อ่าน scripts/fixture-server.cjs:904-919",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไม่มีอ้างอิงใน src/worker/shared/public/dist/package.json; ธงข้อมูลชนกัน >1 ตัวจบด้วย exit 2 (อ่านโค้ด; ไม่ได้รันซ้ำ เพราะรันไม่มีธงจะเปิดเซิร์ฟเวอร์ค้าง)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:43.701Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:40.321Z"
   },
   {
     "check": "Q-6503",
@@ -164,13 +164,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/settings-page.test.tsx test/unit/hr-appearance-section.)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:11.373Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:17.458Z"
   },
   {
     "check": "Q-3202",
@@ -182,13 +182,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep -rn ข้อมูลพื้นฐาน src | wc -l",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "0",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:44.482Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:05.807Z"
   },
   {
     "check": "Q-3203",
@@ -220,13 +220,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-sweep-colors.test.ts test/unit/hr-sweep-login.test.t)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:12.092Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:18.651Z"
   },
   {
     "check": "Q-3002",
@@ -265,13 +265,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/scan- test/unit/c0 (18 files 159/159) + npm run typeche)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:12.745Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:19.879Z"
   },
   {
     "check": "Q-3702",
@@ -283,13 +283,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/m1-05 -t \"Scan|scan\" (3/3; 2 Gradebook fails in m1-05-s)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:13.387Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:21.161Z"
   },
   {
     "check": "Q-3703",
@@ -304,13 +304,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน scan/SessionSetup.tsx ResumeBar.tsx (aria/role 13+1), scan.css reduced-motion 4 จุด; scan-setup-t37 ผ่านใน suite",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "label/role/focus/reduced-motion ยังอยู่; screen reader จริง NOT RUN (code reading เท่านั้น)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:45.161Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:16.594Z"
   },
   {
     "check": "Q-4101",
@@ -329,13 +329,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/attendance- test/unit/hr-att-)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:14.032Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:22.326Z"
   },
   {
     "check": "Q-4102",
@@ -347,13 +347,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit | grep -i attend)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:30.661Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:23.501Z"
   },
   {
     "check": "Q-4103",
@@ -415,13 +415,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/gradebook- test/unit/qa-gb- test/unit/lows-gradebook te)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:14.762Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:24.791Z"
   },
   {
     "check": "Q-4602",
@@ -430,18 +430,16 @@
     "ac": [
       "AC-128"
     ],
-    "br": [
-      "BR-30"
-    ],
+    "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน Gradebook.tsx:1139 scorePercent -> shared/metrics.ts:200,39 percentOf; gradebook-round3 ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "49/55=89, 29.5/40=74, 9.5/35=27, 0/0=null",
-    "actual": "scorePercent=percentOf: whole>0 ? round(part*100/whole) : null; null = ไม่แสดง ตรงตัวอย่าง BR-30",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:46.069Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:29.407Z"
   },
   {
     "check": "Q-4603",
@@ -509,13 +507,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/scan- test/unit/c0 test/unit/m1-05 test/unit/page-cards)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:15.472Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:25.994Z"
   },
   {
     "check": "Q-3802",
@@ -553,13 +551,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน scan/ScanHero ScanSide ScanView ScanParts RoundSummary (aria/role 15/4/18/19/17) + scan.css reduced-motion + hr-scan-* ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ยังมี aria-live/label/role ครบตามเดิม; screen reader จริง NOT RUN",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:46.808Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:18.082Z"
   },
   {
     "check": "Q-3301",
@@ -576,13 +574,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/home- test/unit/hr-homecore-)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:16.186Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:27.238Z"
   },
   {
     "check": "Q-3302",
@@ -594,13 +592,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npm run typecheck (filter home))",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:31.300Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:28.512Z"
   },
   {
     "check": "Q-3303",
@@ -613,13 +611,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  npx vitest run test/unit/hr-homecore-logic → ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "5->4, 88%, 94/90/92%, 30/22, 14",
-    "actual": "เทสต์ homeLogic ผ่านทั้งหมดบนโค้ดสุดท้าย (อยู่ใน 293/293)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:47.730Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:07.274Z"
   },
   {
     "check": "Q-3304",
@@ -631,13 +629,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep hex/rgb/rgba/@import/transition/animation src/styles/home.css",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไม่พบ",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:48.616Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:08.888Z"
   },
   {
     "check": "Q-3305",
@@ -676,13 +674,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-gb2- test/unit/hr-gb- test/unit/assignment-modal tes)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:16.845Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:29.676Z"
   },
   {
     "check": "Q-4702",
@@ -717,13 +715,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/scan- test/unit/c0 test/unit/m1-05 test/unit/hr-scan-su)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:17.483Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:30.900Z"
   },
   {
     "check": "Q-3902",
@@ -738,13 +736,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-scan-summary-t39)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:18.168Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:32.198Z"
   },
   {
     "check": "Q-3903",
@@ -756,13 +754,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main --stat Scan.tsx (ย้ายไป scan/state.ts) + scan-controller/m1-05-scan/hr-scan ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ตรรกะสแกนครอบด้วยเทสต์ scan-controller ผ่าน (ไม่ได้ diff ฟังก์ชันซ้ำ: ใช้เทสต์เป็นหลักฐาน)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:49.350Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:19.366Z"
   },
   {
     "check": "Q-4901",
@@ -785,13 +783,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-rp- test/unit/reports- test/unit/card-layout-reports)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:18.846Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:33.355Z"
   },
   {
     "check": "Q-4902",
@@ -803,13 +801,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit | grep -i report (no lines))",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:33.271Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:34.586Z"
   },
   {
     "check": "Q-4903",
@@ -821,13 +819,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main --stat -- shared worker src/lib/reportExport.ts src/lib/excel.ts",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไม่มีการเปลี่ยนแปลง (มีเฉพาะ cards/meta.ts, report.ts +11, sound.ts +22 เพิ่มอย่างเดียว)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:50.119Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:31.999Z"
   },
   {
     "check": "Q-4904",
@@ -843,13 +841,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  npx vitest run test/unit/hr-rp-t49",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "85%;4/2;71->72;90;awaiting 4->3;86/83/83/75;absent 5,8",
-    "actual": "ผ่านทั้งไฟล์บนโค้ดสุดท้าย",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:50.912Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:33.334Z"
   },
   {
     "check": "Q-4905",
@@ -891,13 +889,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-layout-a test/unit/hr-homecore- test/unit/hr-sweep-c)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:19.484Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:35.767Z"
   },
   {
     "check": "Q-3402",
@@ -912,13 +910,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  hr-homecore-logic + hr-homecore-page + hr-layout-b-ui ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ค่า hero/ชิป/การ์ดอ่านจาก model เดียว ตรงเทสต์",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:51.600Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:10.308Z"
   },
   {
     "check": "Q-3403",
@@ -956,13 +954,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-layout-b test/unit/hr-sweep-colors)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:20.104Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:37.041Z"
   },
   {
     "check": "Q-3502",
@@ -974,13 +972,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit 2>&1 | grep -i home)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:31.937Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:38.244Z"
   },
   {
     "check": "Q-3503",
@@ -993,13 +991,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  npx vitest run test/unit/hr-layout-b-ui test/unit/hr-homecore-logic",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "92/88/89%; 94/90/ยังไม่เช็ค; 30/22",
-    "actual": "ผ่านทั้งหมด",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:52.397Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:12.094Z"
   },
   {
     "check": "Q-3504",
@@ -1012,13 +1010,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep Legacy src/components/home/b; grep hex/rgb/transition src/styles/home-b.css",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไม่มี Legacy import; พบ #000 ใน mask-image (หน้ากาก ไม่ใช่สี) และ transition ใต้ @media reduced-motion เป็น none เท่านั้น",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:53.126Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:13.598Z"
   },
   {
     "check": "Q-3505",
@@ -1069,13 +1067,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-layout-c test/unit/hr-sweep-colors)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:20.730Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:39.479Z"
   },
   {
     "check": "Q-3602",
@@ -1087,13 +1085,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit 2>&1 | grep -i home)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:32.600Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:40.779Z"
   },
   {
     "check": "Q-3603",
@@ -1105,13 +1103,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน pages/Home.tsx:38-70 (deferred state ใน memory, reset เมื่อเปลี่ยนเทอม, ไม่เก็บลง storage)",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "รีโหลดกลับลำดับ BR-01; ไม่มีเขียน outbox/ storage; count ไม่เปลี่ยน",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:53.838Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:15.196Z"
   },
   {
     "check": "Q-3604",
@@ -1147,13 +1145,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-rp- test/unit/reports- test/unit/card-layout-reports)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:21.430Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:41.915Z"
   },
   {
     "check": "Q-5002",
@@ -1165,13 +1163,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit 2>&1 | grep -i report (no lines, exit 1))",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:33.897Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:43.092Z"
   },
   {
     "check": "Q-5003",
@@ -1183,13 +1181,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main -w -- src/lib/report.ts",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "เพิ่ม 11 บรรทัด (awaiting, totals) อย่างเดียว; metrics เดิมไม่แตะ; hr-rp-t49 ผ่าน",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:54.598Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:34.635Z"
   },
   {
     "check": "Q-5004",
@@ -1247,13 +1245,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-st- test/unit/students- test/unit/card-layout-report)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:22.126Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:44.380Z"
   },
   {
     "check": "Q-5102",
@@ -1265,13 +1263,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit 2>&1 | grep -i -E 'student|drawer')",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:34.529Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:45.549Z"
   },
   {
     "check": "Q-5103",
@@ -1333,13 +1331,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-sg- test/unit/settings- test/unit/hr-appearance- tes)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:22.776Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:46.824Z"
   },
   {
     "check": "Q-5302",
@@ -1372,13 +1370,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-scan- test/unit/scan- test/unit/c0 test/unit/m1-05 t)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:23.405Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:48.135Z"
   },
   {
     "check": "Q-4002",
@@ -1390,13 +1388,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  scan-controller + hr-scan-pj-t40 + m1-05-scan ผ่าน; อ่าน state.ts:497,658,676",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "undoToast/hidLog แก้เฉพาะข้อความ (ซ่อนชื่อ); enqueue/outbox ผ่านเทสต์เดิม",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:55.291Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:20.760Z"
   },
   {
     "check": "Q-4003",
@@ -1408,13 +1406,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit | grep -i -E 'scan|projector')",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:35.894Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:49.315Z"
   },
   {
     "check": "Q-4004",
@@ -1443,18 +1441,16 @@
       "AC-77",
       "AC-76"
     ],
-    "br": [
-      "BR-18"
-    ],
+    "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep fullName/shortName ใน src/components/scan/*.tsx + อ่าน RoundSummary:81-92, ScanSummary:20-36, state.ts:658,676",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ทุกจุดแสดงชื่อผูก scanHiding()/pjHideNames; copyMissing ไม่ทำงานเมื่อซ่อน; hidLog ถูก maskNames เมื่อเปิดซ่อนทีหลัง (R-4003 แก้แล้ว)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:55.981Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:22.132Z"
   },
   {
     "check": "Q-4801",
@@ -1470,13 +1466,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-gb test/unit/gradebook- test/unit/qa-gb- test/unit/p)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:24.056Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:50.640Z"
   },
   {
     "check": "Q-4802",
@@ -1488,13 +1484,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep fullName( ใน Gradebook.tsx / GradebookCards.tsx; gradebook-visibility ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "Gradebook.tsx:189-190,1107 ผูก hide; GradebookCards.tsx:100 คัดลอกรายชื่อค้างส่งผ่าน nameOf/hide prop (hide ส่งเข้า :1166); Excel ยังมีชื่อโดยตั้งใจ มีข้อความเตือนบน :839",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:56.680Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:30.715Z"
   },
   {
     "check": "Q-4803",
@@ -1532,13 +1528,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-st test/unit/students- test/unit/audit-student-impor)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:24.778Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:51.848Z"
   },
   {
     "check": "Q-5202",
@@ -1550,13 +1546,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit | grep -i -E 'student|import' (no lines))",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:35.206Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:53.105Z"
   },
   {
     "check": "Q-5203",
@@ -1569,13 +1565,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  npx vitest run test/unit/students-round3",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ผ่านบนโค้ดสุดท้าย",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:57.405Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:36.212Z"
   },
   {
     "check": "Q-5204",
@@ -1625,13 +1621,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  grep 'ph-download:|ph-funnel:' node_modules/@phosphor-icons/web/src/bold/style.css; grep Icon name download",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไอคอน download/funnel มีใน bold css (2 จุด) และถูกใช้จริง",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:58.116Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:37.794Z"
   },
   {
     "check": "Q-4301",
@@ -1652,13 +1648,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/attendance- test/unit/hr-att test/unit/page-cards test/)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:25.459Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:54.283Z"
   },
   {
     "check": "Q-4304",
@@ -1671,13 +1667,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main -w -U0 -- src/pages/Attendance.tsx | grep นิยาม applyEdits/statusOf/counts",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ไม่มีบรรทัดนิยามฟังก์ชันทั้งสามถูกแก้ (เปลี่ยนเฉพาะจุดเรียกและ UI)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:58.813Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:23.501Z"
   },
   {
     "check": "Q-4305",
@@ -1774,13 +1770,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-sg test/unit/settings- test/unit/catalog- test/unit/)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:26.123Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:55.592Z"
   },
   {
     "check": "Q-5402",
@@ -1792,13 +1788,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:36.817Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:56.904Z"
   },
   {
     "check": "Q-5403",
@@ -1850,13 +1846,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  npx vitest run test/unit/hr-sg-settings* (ฉายจอ read-only/ออฟไลน์)",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ผ่านบนโค้ดสุดท้าย",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:28:59.585Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:39.165Z"
   },
   {
     "check": "Q-5501",
@@ -1889,13 +1885,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:37.461Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:58.124Z"
   },
   {
     "check": "Q-5601",
@@ -1913,13 +1909,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-sg test/unit/settings- test/unit/audit-dialog test/u)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:26.733Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:59.489Z"
   },
   {
     "check": "Q-5602",
@@ -1931,13 +1927,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] `npm run typecheck` (tsc --noEmit) exit 0 บน tree:4ee1867055d6 (ครอบ filter เดิม) (เดิม: npx tsc --noEmit | grep -iE setting|restore|reset|audit|acco)",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:38.103Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:31:00.695Z"
   },
   {
     "check": "Q-4401",
@@ -1955,13 +1951,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/random test/unit/hr-random test/unit/hr-rndclass test/u)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:27.386Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:31:01.915Z"
   },
   {
     "check": "Q-4402",
@@ -1974,13 +1970,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main -- src/lib/random.ts; sound.ts",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "random.ts ไม่เปลี่ยน; sound.ts เพิ่มอย่างเดียว (ting/primeAudio/RANDOM_TICK); hr-random* ผ่าน",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:29:00.368Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:25.152Z"
   },
   {
     "check": "Q-4403",
@@ -1992,13 +1988,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  อ่าน random/model.ts:22-27 + random-model.test ผ่าน",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "percentOf(17,41)=41",
-    "actual": "N=pool.length m=remaining n=N-m pct=percentOf(n,N) ตรง",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:29:01.210Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:26.743Z"
   },
   {
     "check": "Q-4404",
@@ -2055,13 +2051,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/hr-st test/unit/students- ... hr-rp- (12 files 183/183))",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:28.030Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:31:03.227Z"
   },
   {
     "check": "Q-6801",
@@ -2073,13 +2069,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run (รวม hr-term-chip-t68, hr-layout-a-ui, home-ui) + npx tsc --noEmi)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:28.710Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:31:04.432Z"
   },
   {
     "check": "Q-6702",
@@ -2130,13 +2126,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80 QA-G] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม (เดิม: npx vitest run test/unit/random test/unit/hr-random test/unit/hr-rndclass test/u)",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] covered by whole suite on final snapshot: npm test 207 files 2461/2461 pass + typecheck exit 0 (sub-suite originally vitest subset/tsc grep)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:29.371Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:31:05.664Z"
   },
   {
     "check": "Q-4502",
@@ -2149,13 +2145,13 @@
     "br": [],
     "by": "team-code-reviewer",
     "mandatory": false,
-    "command": "[re-run final tree:4ee1867055d6]  git diff main -w --stat -- src/lib/random.ts",
+    "command": "[re-run T-86] npx vitest run test/unit + grep/git diff main -w ตาม part-28 (ผล part-29)",
     "artifact": "",
-    "expected": "",
-    "actual": "ว่าง (ไม่เปลี่ยน)",
+    "expected": "ผลเดิมคงอยู่หลัง T-84 (CSS/aria/title เท่านั้น)",
+    "actual": "re-run บน tree ปัจจุบัน: vitest test/unit 152 ไฟล์ 1671 ผ่าน; grep/diff เดิมตรงผลรอบก่อน (ดู code-review.part-29.md); delta T-84 ไม่แตะ logic",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:29:02.013Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:14:28.059Z"
   },
   {
     "check": "Q-4503",
@@ -2190,13 +2186,13 @@
     "br": [],
     "by": "team-security-reviewer",
     "mandatory": false,
-    "command": "re-run grep call sites admin/reset, restore, terms/start, runBackup + read worker/routes/reset.ts",
+    "command": "git diff --stat -- worker; git diff -U0 -- src",
     "artifact": "",
     "expected": "no auth/reset/restore bypass on current tree",
-    "actual": "re-run tree:4ee1867055d6: reset.ts still verifies password+phrase server-side; restore routes requireAuth (backup.ts:15); terms/start unchanged; S-01/S-02 status unchanged, no new finding",
+    "actual": "re-run after T-84: git diff worker/ empty; delta = CSS + title=/aria-label attrs only; no new entry point or permission change; S-01/S-02 unchanged",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:26:31.441Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:09:59.473Z"
   },
   {
     "check": "Q-7202",
@@ -2206,13 +2202,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] npm audit -> found 0 vulnerabilities",
-    "artifact": "evidence/verify-g/audit.log",
+    "command": "[T-85 tree:2df7c74d2598] npm audit -> found 0 vulnerabilities",
+    "artifact": "evidence/verify-i/audit.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:38.769Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:29.949Z"
   },
   {
     "check": "Q-7203",
@@ -2228,13 +2224,13 @@
     "br": [],
     "by": "team-security-reviewer",
     "mandatory": false,
-    "command": "grep clipboard/notify/title/aria with names; localStorage.set* in src",
+    "command": "grep clipboard|localStorage.set in 3 changed tsx; git diff -U0 -- src",
     "artifact": "",
     "expected": "no student-name leak in sinks",
-    "actual": "re-run tree:4ee1867055d6: clipboard writes are explicit teacher actions (follow-up/LINE copy); aria-labels use room/title only or on-screen names; localStorage keys hold prefs only, no names; no new leak",
+    "actual": "re-run after T-84: new title= holds work title only (Timeline row.title, SessionSetup asg.title), GradebookNav aria-label constant; no clipboard/localStorage added in the 3 files",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:26:32.295Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:10:00.919Z"
   },
   {
     "check": "Q-7001",
@@ -2246,13 +2242,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] CDP touch measure on 45-kid x 20-work fixture (measure2.mjs, 4 devices x reports/attendance/students/gradebook): no horizontal overflow, tap >=44 on touch, gear 44x44, rows/tiles fit; 1 diff vs prior run = gradebook phone page height only",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-gb.cjs (CDP mobile+touch, fixture --layout 4 task types x 14 cols, 45 kids): iPad portrait 18 rows (toolbar 50, strip 83), iPad landscape 10 rows (toolbar 50), desk 1536 11 rows, no page scroll/overflow; B-H1 fixed (was 17/8, toolbar 46)",
+    "artifact": "evidence/verify-i/m-gb.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:47.915Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:35.795Z"
   },
   {
     "check": "Q-7002",
@@ -2354,13 +2350,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs: reports table ratio 57.7% (1180) / 58.5% (1536), name button 44px touch, no overflow",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-rnd.cjs random page after a real draw (45 kids, CDP touch): go button fully visible without scroll on all 4 devices (bottom 645/781/845/743 < vh), name font 64/72/72/49.5px, no overflow",
+    "artifact": "evidence/verify-i/rnd-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:48.709Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:01.301Z"
   },
   {
     "check": "Q-7008",
@@ -2372,13 +2368,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs: attendance tiles 45 shown, tileH 56-57, hero fits, no overflow all 4 devices",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-ui.cjs scan result name font 28 (desk) / 31.5 (iPad, phone), no overflow; touch tap targets on scan setup/run/result = 0 small on iPad L/P + phone",
+    "artifact": "evidence/verify-i/ui-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:49.519Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:02.558Z"
   },
   {
     "check": "Q-7009",
@@ -2390,13 +2386,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs: header/term chip never clipped (selClip=false), chip 264x46 touch",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-ui.cjs tap-size audit on 10 pages x iPad landscape/portrait/phone (CDP touch): 0 targets below threshold, no hOverflow; (desktop mouse: 7 attendance/random + 24 gradebook sub-44px = P3 pointer-only, unchanged)",
+    "artifact": "evidence/verify-i/ui-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:50.220Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:03.764Z"
   },
   {
     "check": "Q-7010",
@@ -2409,13 +2405,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] c1.cjs computed contrast, DESKTOP only (3 skins x light/dark x home a/b/c, settings, attendance, scan = 36 combos): 0 failures, min 4.65. Phone viewport not re-run",
-    "artifact": "evidence/verify-g/qa-g/contrast-desk.out",
+    "command": "[T-85 tree:2df7c74d2598] m-con.cjs computed contrast 3 skins x light/dark x (home a/b/c, settings, scan) x desk/phone = 60 combos: 0 fails, min 4.65 incl home-b light (parser fixed for color(srgb) in verify-i copy; forced-skin via accent setting); disabled week chips min 6.26",
+    "artifact": "evidence/verify-i/con-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:53.869Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:42.884Z"
   },
   {
     "check": "Q-7011",
@@ -2461,31 +2457,31 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] npm run typecheck exit0; npm test 2455/2458 (3 timeout under load, rerun 70/70); vite build ok (outDir scratch); npm audit 0 vuln",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] npm run typecheck exit 0; npm test 2461/2461; npm audit 0 vuln; (build see Q-8009)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:39.590Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:43.289Z"
   },
   {
     "check": "Q-7102",
     "kind": "regression",
-    "status": "NOT RUN",
+    "status": "PASS",
     "ac": [
       "ST-S03"
     ],
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run tree:4ee1867] offline-xlsx.cjs rerun: script outdated (button not found even online, no download) - cannot tell product vs script; qa-flows R02 export-xlsx online PASS",
-    "artifact": "evidence/verify-g/qa-g/off.out",
+    "command": "[T-85 tree:2df7c74d2598] m-misc.cjs: Excel template download with SW active returns ตัวอย่างรายชื่อ.xlsx 6793 bytes valid zip (script rewritten)",
+    "artifact": "evidence/verify-i/misc-result.json",
     "expected": "",
     "actual": "",
-    "reason": "ยังไม่ได้ตรวจเทมเพลต Excel ออฟไลน์บนโค้ดสุดท้าย: สคริปต์เดิมหาปุ่มไม่เจอแม้ออนไลน์ ต้องดูมือหรือแก้สคริปต์",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:55:05.059Z"
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:05.052Z"
   },
   {
     "check": "Q-7103",
@@ -2543,13 +2539,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] offline-e2e.cjs (QA_PORT=4102, dist-h): 32/32 incl. offline scan queued, lands after reconnect, queue empties, waiting scan survives app update. NOT covered: clear-local-prefs keeps IDB queue (old CDP script lost)",
-    "artifact": "evidence/verify-g/qa-g/off.out",
+    "command": "[T-85 tree:2df7c74d2598] m-misc.cjs: clear local prefs keeps failed-queue (2 -> 2), font pref cleared, 6 ?section= links all resolve to Settings",
+    "artifact": "evidence/verify-i/misc-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:56.134Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:06.255Z"
   },
   {
     "check": "Q-7107",
@@ -2559,13 +2555,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] pii.cjs: hide-names ON then 8 pages (home,students,attendance,gradebook,scan,reports,random,settings): 0 first/last-name hits in text/aria/title/alt; positive control 32/32 hits with hide off. NOTE: hide toggle is per page (pages visited before toggling showed names until toggled)",
-    "artifact": "evidence/verify-g/qa-g/pii.out",
+    "command": "[T-85 tree:2df7c74d2598] m-misc2.cjs per-page hide-names then revisit: home 0, attendance 0, random 0; caveat: scan/gradebook/reports/students show 1 residual name hit each (same as QA-H, source not identified - PM/Security to confirm)",
+    "artifact": "evidence/verify-i/misc2-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:56.845Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:07.538Z"
   },
   {
     "check": "Q-7301",
@@ -2575,13 +2571,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] QA_PORT=4210 QA_ASSETS=dist-g node scripts/offline-e2e.cjs -> 32/32",
-    "artifact": "evidence/verify-g/offline-e2e.log",
+    "command": "[T-85 tree:2df7c74d2598] QA_PORT=4240 QA_ASSETS=dist-i node scripts/offline-e2e.cjs -> 32/32",
+    "artifact": "evidence/verify-i/offline-e2e.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:40.440Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:32.877Z"
   },
   {
     "check": "Q-7302",
@@ -2591,13 +2587,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] QA_PORT=4211 QA_ASSETS=dist-g node scripts/qa-sweep.cjs -> findings P1 0 P2 0 P3 0",
-    "artifact": "evidence/verify-g/qa-sweep.log",
+    "command": "[T-85 tree:2df7c74d2598] QA_PORT=4241 qa-sweep.cjs -> P1 0 P2 0 P3 0",
+    "artifact": "evidence/verify-i/qa-sweep.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:41.137Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:35.560Z"
   },
   {
     "check": "Q-7303",
@@ -2623,13 +2619,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] tc.cjs print-media: report print hide=true 0 names + shows เลขที่; students/attendance/gradebook hide=true 0 names; hide=false 32 hits control",
-    "artifact": "evidence/verify-g/qa-g/tc.out",
+    "command": "[T-85 tree:2df7c74d2598] m-misc2.cjs print media: attendance 0 names; gradebook/reports/students 1 residual hit each (same as QA-H); number header present",
+    "artifact": "evidence/verify-i/misc2-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:57.571Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:08.729Z"
   },
   {
     "check": "Q-7305",
@@ -2639,13 +2635,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] tc.cjs: StartTermModal while projector on -> start-term button disabled; focus on open = year input; confirm disabled initially; focus returns after close",
-    "artifact": "evidence/verify-g/qa-g/tc.out",
+    "command": "[T-85 tree:2df7c74d2598] probe-pj.cjs: sessionStorage ngankrob-projector=1 (src/lib/projector.ts) -> hint 'ปิดอยู่ตอนฉายจอ' shown, 'เริ่มภาคเรียนใหม่' opener disabled, no dialog; control (flag off): enabled + dialog opens (AC-248)",
+    "artifact": "evidence/verify-i/pj-result.txt",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:58.273Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:10.000Z"
   },
   {
     "check": "Q-7306",
@@ -2671,29 +2667,29 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] QA_PORT=4211 QA_ASSETS=dist-g node scripts/qa-sweep.cjs -> findings P1 0 P2 0 P3 0",
-    "artifact": "evidence/verify-g/qa-sweep.log",
+    "command": "[T-85 tree:2df7c74d2598] QA_PORT=4241 qa-sweep.cjs -> P1 0 P2 0 P3 0",
+    "artifact": "evidence/verify-i/qa-sweep.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:41.758Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:36.879Z"
   },
   {
     "check": "Q-7308",
     "kind": "regression",
-    "status": "PASS",
+    "status": "BLOCKED",
     "ac": [],
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] tc2/tc3/tc4: reports layout ratio .58 desk / .94 narrow, 44px rows, 0 side-scroll, 0-kid room disables excel/print/projector, restore on room with kids, layout asked b/c falls back to a. Same results as earlier run. tc3 home 1440x900 click timeout + phone menu items [] = script limitations (same as before)",
-    "artifact": "evidence/verify-g/qa-g/tc2.out",
+    "command": "[T-85 tree:2df7c74d2598] TC-702/710-712/720/721/800/801 scripts (tc2/3/4) no longer exist and were not rewritten; partial: reports table ratio/rows covered by Q-7602, restore-on-room not re-run",
+    "artifact": "",
     "expected": "",
     "actual": "",
-    "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:59.049Z"
+    "reason": "scripts missing, not rewritten in T-85 budget",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:14.928Z"
   },
   {
     "check": "Q-7309",
@@ -2721,13 +2717,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[re-run T-80] shots.mjs after 12 pages x 4 devices (dist-g) + opened 48/48 thumbs + shots-sheet --diff PASS",
+    "command": "[T-85 tree:2df7c74d2598] shots.mjs after 12x4 (dist-i) opened 48/48 + shots-sheet --diff PASS",
     "artifact": "evidence/shots/sheet.html",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:42.389Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:42.133Z"
   },
   {
     "check": "Q-7601",
@@ -2739,13 +2735,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs same as Q-7001 (touch targets + overflow)",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-gb.cjs layout fixture 4 types: ipadP 18 / ipadL 10 / desk 11 rows, touch toolbar 50>=44; (single-type fixture 18/10/11 per QA-H) -> B-H1 verified fixed",
+    "artifact": "evidence/verify-i/m-gb.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:50.920Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:37.112Z"
   },
   {
     "check": "Q-7602",
@@ -2757,13 +2753,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs: students rows 48-60px, 8-12 rows visible, no overflow",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-rs.cjs reports: table share 58.5% @1536, 57.7% @1180, rows in frame 10/10(cap 11), iPad portrait cap 19, no overflow",
+    "artifact": "evidence/verify-i/rs-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:51.692Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:38.622Z"
   },
   {
     "check": "Q-7603",
@@ -2775,13 +2771,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] measure2.mjs: gradebook 20 cols x 45 rows, rowH 44 touch / 37 desk, frame fits viewport",
-    "artifact": "evidence/verify-g/qa-g/measure2.json",
+    "command": "[T-85 tree:2df7c74d2598] m-rs.cjs students rows full-in-frame: 9 @1536, 8 @1180, 12 @820, 8 @390; no inner scroller/overflow",
+    "artifact": "evidence/verify-i/rs-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:52.458Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:39.990Z"
   },
   {
     "check": "Q-7604",
@@ -2791,13 +2787,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] m.mjs (CDP) 200-char work names: .ttl clamps to 2 lines (58px@375/820, 51px@1536), title attr present, no overflow; home+scan",
-    "artifact": "evidence/verify-g/qa-g/res-fin.json",
+    "command": "[T-85 tree:2df7c74d2598] m-long.cjs 200-char names (home a/b/c timeline + scan) at 375/820/1536: all titles clamp=2 lines overflow hidden, h<=58 @375 (B-H2 fixed: .hma-txt h3 now clamped), no hOverflow",
+    "artifact": "evidence/verify-i/long-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:53.188Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:41.375Z"
   },
   {
     "check": "Q-7605",
@@ -2809,13 +2805,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80 re-run on final code tree:4ee1867, dist rebuilt = identical to dist-g] m.mjs: .stu-tile:disabled text contrast 5.84/5.95 (>=4.5) in playful-dark; other 11 skin/mode combos no disabled text issue",
-    "artifact": "evidence/verify-g/qa-g/res-fin.json",
+    "command": "[T-85 tree:2df7c74d2598] m-con.cjs .stu-tile:disabled contrast incl opacity chain: min 12.56 (warm light) .. 15.35, all 3 skins x light/dark x desk/phone (>=4.5); css now opacity:1 (B-H3 fixed)",
+    "artifact": "evidence/verify-i/con-result.json",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:54:54.632Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:27:44.313Z"
   },
   {
     "check": "Q-7606",
@@ -2842,12 +2838,12 @@
     "by": "team-security-reviewer",
     "mandatory": false,
     "command": "",
-    "artifact": "security-review.part-2.md",
+    "artifact": "security-review.part-5.md",
     "expected": "",
-    "actual": "threat model 6 entry points; 0 ต้องแก้",
+    "actual": "re-record tree:2df7c74d2598: 6 entry points เดิม, diff ใหม่ UI/CSS ไม่เพิ่ม endpoint; 0 ต้องแก้",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:33:36.765Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:33:27.379Z"
   },
   {
     "check": "Q-7902",
@@ -2857,13 +2853,13 @@
     "br": [],
     "by": "team-security-reviewer",
     "mandatory": false,
-    "command": "npm audit --omit=dev --json",
+    "command": "npm audit --json",
     "artifact": "",
     "expected": "",
-    "actual": "critical 0 high 0 moderate 0 low 0 total 0; worker/shared/migrations diff ว่าง",
+    "actual": "critical 0 high 0 moderate 0 low 0 total 0; ไม่มี dependency ใหม่; worker/shared/migrations ไม่เปลี่ยน",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:33:37.404Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:33:28.576Z"
   },
   {
     "check": "Q-7903",
@@ -2874,12 +2870,12 @@
     "by": "team-security-reviewer",
     "mandatory": false,
     "command": "",
-    "artifact": "security-review.part-2.md",
+    "artifact": "security-review.part-5.md",
     "expected": "",
-    "actual": "ไม่มี PII ใหม่ใน URL/log/title; hideNames path ไม่รั่ว; AR-1 QR accepted; S-06/S-07 เสนอ",
+    "actual": "ชื่อเหลือ 1 = ชื่อเล่น fixture 'พิมพ์' ชนคำ UI (ปุ่ม/caption) ไม่รั่ว; ซ่อนต่อหน้า 7 หน้าไม่พบชื่อจริง; AR-1 accepted",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:33:37.991Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:33:29.722Z"
   },
   {
     "check": "Q-7801",
@@ -2891,13 +2887,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "node scratchpad/md.cjs (2 browser contexts, fixture, dist-f): (ก)(ข)(ค)(ง) attendance+scan: 23/24 — the 1 'fail' is my wrong expectation (badge 'รอส่ง 4' = 2 attendance + 2 scans)",
-    "artifact": "",
+    "command": "[T-85 tree:2df7c74d2598] md.cjs 23/24 (4 contexts attendance+scan, dist-i port 4241); the 1 FAIL is script expectation: badge 'รอส่ง 4' = 2 attendance + 2 scans (same as QA-F)",
+    "artifact": "evidence/verify-i/md.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:46:15.067Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:11.253Z"
   },
   {
     "check": "Q-7802",
@@ -2907,13 +2903,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "md.cjs: A offline attendance+2 scans -> online lands once each; response-dropped retry attendance & scan = 1 row; gb.cjs: grade offline->online 1 row 7; same-cell last-write 1 row",
-    "artifact": "",
+    "command": "[T-85 tree:2df7c74d2598] md.cjs offline attendance+2 scans -> online lands once each, retry = 1 row; gb.cjs 5/5 grade offline->online 1 row, same-cell last-write 1 row",
+    "artifact": "evidence/verify-i/gb.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:46:15.748Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:12.397Z"
   },
   {
     "check": "Q-7803",
@@ -2923,13 +2919,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "node -r preload(lateAfter=00:00) scripts/qa-flows.cjs (QA_ASSETS=dist-f, port 4203) -> 49/49 incl. H02",
-    "artifact": "",
+    "command": "[T-85 tree:2df7c74d2598] qa-flows.cjs with preload lateAfter=00:00 (4242, dist-i) -> 49/49 incl. H02",
+    "artifact": "evidence/verify-i/qa-flows.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:46:16.476Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:39.626Z"
   },
   {
     "check": "Q-7804",
@@ -2939,13 +2935,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "lock.cjs: dataset home + accent layout c, port 4204: button name 'ปิดรับงานนี้ <title>', contrast 10.74, size 147x56/159x49/159x46, outline 2px focus, Enter activates, icon aria-hidden; evidence screenshots scratchpad/outf",
-    "artifact": "",
+    "command": "[T-85 tree:2df7c74d2598] lock.cjs: dataset home layout c, port 4246: button name 'ปิดรับงานนี้ <title>', contrast 10.74, 159x46 phone, focus outline 2px, Enter activates",
+    "artifact": "evidence/verify-i/lock.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T17:46:17.158Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:30:13.718Z"
   },
   {
     "check": "Q-8001",
@@ -2959,11 +2955,11 @@
     "mandatory": false,
     "command": "",
     "artifact": "evidence/shots/sheet.html",
-    "expected": "เจ้าของงานดูหน้าจริงใน Browser pane (localhost:5900, fixture) แล้วตอบผ่าน",
-    "actual": "เจ้าของงานตอบ: \"ผ่าน\" (Gate V, 2026-11-13) หลัง PM สรุปผล review/security/QA/multi-device และข้อ P3 ที่ยังเปิด",
+    "expected": "เจ้าของงานดูเวอร์ชันสุดท้ายแล้วตอบผ่าน (Gate V)",
+    "actual": "เจ้าของงานตอบ \"ผ่าน\" (Gate V รอบแรก 2026-11-13) และยืนยัน \"ผ่าน ใช้เวอร์ชันสุดท้าย\" หลัง PM แจ้งว่าแก้เพิ่ม 3 ข้อ (T-84: สมุดคะแนน 4 ชนิดงาน iPad, ชื่องานยาว clamp, ช่องนักเรียน disabled) บน tree:2df7c74d2598",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:02:12.407Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:17:27.699Z"
   },
   {
     "check": "Q-8002",
@@ -2973,13 +2969,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] `npm run typecheck` exit 0",
-    "artifact": "evidence/verify-g/typecheck.log",
+    "command": "[T-85 tree:2df7c74d2598] npm run typecheck (tsc --noEmit) exit 0",
+    "artifact": "evidence/verify-i/typecheck.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:43.034Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:25.790Z"
   },
   {
     "check": "Q-8003",
@@ -2989,13 +2985,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] vitest ทั้งชุด `npm test` = 206 ไฟล์ 2458 tests: ผ่าน 2455; ล้ม 3 (timeout 5000ms ใต้โหลด: sec-auth, fixture-datasets, hr-st2-t52) รันซ้ำ 3 ไฟล์เดี่ยว 70/70 PASS · ครอบชุดย่อยเดิม",
-    "artifact": "evidence/verify-g/npm-test.log",
+    "command": "[T-85 tree:2df7c74d2598] npm test: 207 files, 2461/2461 tests passed, exit 0 (no timeouts this run)",
+    "artifact": "evidence/verify-i/npm-test.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:43.738Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:27.141Z"
   },
   {
     "check": "Q-8004",
@@ -3005,13 +3001,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] npm audit -> 0 vulnerabilities",
-    "artifact": "evidence/verify-g/audit.log",
+    "command": "[T-85 tree:2df7c74d2598] npm audit -> found 0 vulnerabilities",
+    "artifact": "evidence/verify-i/audit.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:44.486Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:28.488Z"
   },
   {
     "check": "Q-8005",
@@ -3021,13 +3017,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] offline-e2e.cjs (QA_PORT=4210, dist-g) -> 32/32",
-    "artifact": "evidence/verify-g/offline-e2e.log",
+    "command": "[T-85 tree:2df7c74d2598] QA_PORT=4240 QA_ASSETS=dist-i node scripts/offline-e2e.cjs -> 32/32",
+    "artifact": "evidence/verify-i/offline-e2e.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:45.300Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:31.401Z"
   },
   {
     "check": "Q-8006",
@@ -3037,13 +3033,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] qa-sweep.cjs (4211, dist-g): 19 pages x sizes x themes P1/P2/P3 = 0",
-    "artifact": "evidence/verify-g/qa-sweep.log",
+    "command": "[T-85 tree:2df7c74d2598] QA_PORT=4241 QA_ASSETS=dist-i node scripts/qa-sweep.cjs -> findings P1 0 P2 0 P3 0",
+    "artifact": "evidence/verify-i/qa-sweep.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:46.014Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:34.236Z"
   },
   {
     "check": "Q-8007",
@@ -3053,13 +3049,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] qa-flows.cjs via preload lateAfter=00:00 (4212, dist-g) -> 49/49",
-    "artifact": "evidence/verify-g/qa-flows.log",
+    "command": "[T-85 tree:2df7c74d2598] node -r preload(lateAfter=00:00) scripts/qa-flows.cjs QA_PORT=4242 dist-i -> 49/49",
+    "artifact": "evidence/verify-i/qa-flows.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:46.755Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:38.393Z"
   },
   {
     "check": "Q-8008",
@@ -3071,13 +3067,13 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] shots after 12x4 on dist-g + visual-check.json (opened 48/48) + shots-sheet --diff PASS",
+    "command": "[T-85 tree:2df7c74d2598] shots.mjs after 12 pages x 4 devices (dist-i) + opened 48/48 thumbs + visual-check.json + shots-sheet --diff PASS (iPad real = NOT RUN D09)",
     "artifact": "evidence/shots/sheet.html",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:47.450Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:40.837Z"
   },
   {
     "check": "Q-8009",
@@ -3087,12 +3083,498 @@
     "br": [],
     "by": "team-qa-tester",
     "mandatory": false,
-    "command": "[T-80] npx vite build --outDir scratch exit 0 (build ok, warnings เดิม exceljs chunk)",
-    "artifact": "evidence/verify-g/build.log",
+    "command": "[T-85 tree:2df7c74d2598] npx vite build --outDir scratchpad/build-i (dist/ untouched) -> built ok exit 0",
+    "artifact": "evidence/verify-i/build.log",
     "expected": "",
     "actual": "",
     "reason": "",
-    "snapshot": "tree:4ee1867055d6ee8bf621ddb6427c329d233458ee",
-    "at": "2026-11-12T18:24:48.122Z"
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T19:16:54.835Z"
+  },
+  {
+    "check": "Q-8101",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-03",
+      "AC-04",
+      "AC-06"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-theme-appearance test/unit/hr-sweep-login test/unit/hr-appearance-save test/unit/hr-appearance-section (part of batch1: 59 files/784 pass)",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "remembered look painted before settings arrive; server look adopted once on sign-in without mid-screen change; unknown/empty/blue value -> default warm+a",
+    "actual": "hr-theme-appearance 26/26, hr-sweep-login 2/2, hr-appearance-save 11/11, hr-appearance-section 7/7 pass on tree (AC-03 'uses accent from first settings... ignores later changes', 'when the server answers its look is adopted (once)'; AC-04 'paints the remembered skin + layout at once, before any settings arrive' + login test; AC-06 'never set, empty or old value blue gives warm + a', 'unknown remembered value falls back for that field only'). Real-browser not re-measured.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:29:33.509Z"
+  },
+  {
+    "check": "Q-8102",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-07",
+      "AC-15",
+      "AC-252"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run (batch1 + batch2 files hr-homecore-*, hr-layout-*, hr-theme-home-prefs, home-ui)",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "drawer follows layout + per-layout card lists; hide-names removes names/initials/copy-to-LINE on every layout with banner; defaults a=4 cards (classes off), b=follow+absent, c=att+open+follow",
+    "actual": "hr-homecore-page 8/8, hr-homecore-logic 16/16, hr-layout-a-ui 20/20, hr-layout-b-ui 30/30, hr-layout-c-ui 21/21, hr-theme-home-prefs 7/7, home-ui 18/18 pass. Asserts: defaultLayoutCards a/b/c == AC-252 lists; 'ห้องของฉัน' off until turned on; hidden card stays hidden per layout (R-3304); 'hide names: no names, no initials, no copy-to-LINE anywhere' on a/b/c; top bar has hide-names (aria-pressed) + adjust chip in every layout; drawer lists only the layout's cards, choosing layout changes page at once. Not covered by a test: legacy-user-off-card migration wording beyond R-3304; locked text 'ปิดไม่ได้:' only via drawer test in hr-attx-t43.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:29:34.692Z"
+  },
+  {
+    "check": "Q-8103",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-45",
+      "AC-47",
+      "AC-49"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-menu-nav test/unit/home-ui test/unit/hr-theme-tokens",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "8 pages in 4 text-labelled groups in DOM order, 5 phone slots with scan in the middle, sheet with group labels / Esc / outside tap / focus returns to เพิ่มเติม; menu colours >= 4.5 in all 6 sets",
+    "actual": "hr-menu-nav 11/11, home-ui 18/18 ('four labelled groups holding the eight pages... marks the current page', 'phone: five tabs...'), hr-theme-tokens 28/28 ('hero, menu and focus colours >= 4.5' x6) pass. Not asserted by test: real VoiceOver reading; aria-current is asserted.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:51.756Z"
+  },
+  {
+    "check": "Q-8104",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-46"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "QA_PORT=4260 node evidence/verify-j/m-rail.cjs (QA_ASSETS=dist-i)",
+    "artifact": "evidence/verify-j/rail-result.json",
+    "expected": "rail shows 8 items + 4 group labels + header/footer with no scroll at 1536x729 and 1180x820 on every page; tap >= 40 desk / >= 44 touch; max text size no overlap/clip, current item visible",
+    "actual": "[T-89 tree:2df7c74d2598, frozen build dist-i, CDP, fixture-server] 8 pages x 2 devices: items 8, labels 4 (วันนี้/ในห้องเรียน/ตรวจงาน/จัดการ), scrollHeight==clientHeight (no scroll), clipped 0, overlap false, aria-current present + visible; min item height 49px desk, 57px iPad landscape (touch emulation). Text size 24 (max): still no overflow, items min 58/64px, last item bottom 721<=729 and 812<=820, no overlap. (At max size the rail did not need to scroll at these heights, so the 'scrolls' branch was not exercised.)",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:52.931Z"
+  },
+  {
+    "check": "Q-8105",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-85",
+      "AC-86",
+      "AC-87",
+      "AC-89",
+      "AC-90"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-att-redesign test/unit/hr-attx-t43 test/unit/attendance-",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "month card Sigma(come+late)/Sigma(checked) with per-day bars + empty wording; status bar = one radiogroup of 5, default มา; announce 'เปลี่ยนจาก … เป็น …' / just the status for unchecked; 'มาทั้งห้อง' asks first and fills only unchecked; away list grouped ขาด→ป่วย→ลา + copy",
+    "actual": "hr-att-redesign 9/9, hr-attx-t43 15/15, attendance-page 7/7, attendance-round3/4/5 (7+12+12), attendance-review-fixes 13, attendance-qa-final 4 pass. Tests: month card; 'are one radio group, move with arrow keys'; 'five status buttons each with a word'; 'names the old and the new status...'; \"'มาทั้งห้อง' asks first, and only fills the children not checked yet\"; 'groups ขาด → ป่วย → ลา and copies the list'. Not asserted: exact 4.5 s undo timing text for bulk, the 'copied' 2 s label, VoiceOver.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:53.997Z"
+  },
+  {
+    "check": "Q-8106",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-98"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/attendance-round4 test/unit/attendance-page; QA_PORT=4265 node evidence/verify-j/m-dom.cjs",
+    "artifact": "evidence/verify-j/dom-result.json",
+    "expected": "period mode: pills 1-8 aria-pressed, week strip + month card hidden, warning when the period has no start time",
+    "actual": "unit: attendance-round4 'a period with no start time is flagged for good', 'period is picked with the pills only', attendance-page 'a link with date, subject and period opens that period (1-8 offered)'; real build DOM [T-89 frozen build, CDP]: after tapping รายคาบ pills คาบ 1..8 present (คาบ 1 pressed), week strip absent, month card absent, warning 'ยังไม่ได้ตั้งเวลาเริ่ม' shown. Not verified: scan in period mode creating a separate round.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:55.054Z"
+  },
+  {
+    "check": "Q-8107",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-108",
+      "AC-111",
+      "AC-114",
+      "AC-116"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-rndclass-link test/unit/random-page test/unit/hr-random test/unit/random-model",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "?class= opens that class, unknown/archived falls back to first; pair 'A คู่กับ B', number range, empty-range message; timer counts down / auto-starts / says time is up; groups summary 'แบ่งได้ n กลุ่ม · กลุ่มละประมาณ n คน', each child in exactly one group, group-size mode",
+    "actual": "hr-rndclass-link 4/4, random-page 18/18, hr-random-t44 16/16, hr-random2-t45 20/20, random-model 5/5 pass. Not asserted by a test: exact BR-26 split 7+7+7+7+7+6 for 41 kids (only 'round(N/k)' and every child in exactly one group), timer beep.dup sound, TV announce 'หมดเวลา' once.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:56.269Z"
+  },
+  {
+    "check": "Q-8108",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-132",
+      "AC-138",
+      "AC-140",
+      "AC-143",
+      "AC-144"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/gradebook-round3 test/unit/hr-gb",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "cell editor (received-date, score steps, radiogroup, undo); close work asks with unsubmitted count; create-work dialog (focus title, role=alert errors); delete asks in dialog; whole-class actions ask with real counts",
+    "actual": "gradebook-round3 17/17, gradebook-round3b 12/12, hr-gb2-t47 9/9, hr-gb2-focus-t47 4/4, hr-gb3-t48 11/11, hr-gb4-gaps-t72 12/12 pass. Asserted: 'opens with ▾ ... shows the day received', 're-dating sends one date-only op and offers เลิกทำ', 'a day before the work was given cannot be saved', 'is a radiogroup, warns before a score is cleared', 'closing asks first and says how many have not handed in', 'opens with the cursor on the title; wrong value in role=alert', 'deleting a work asks in a dialog', 'the whole class handed in names the day and keeps a ย้อนกลับ toast', focus starts on ยกเลิก. Not asserted: popover vs bottom-sheet by device size, 'ลบงานไม่สำเร็จ' failure toast text.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:57.355Z"
+  },
+  {
+    "check": "Q-8109",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-158",
+      "AC-165",
+      "AC-172"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-rp test/unit/reports-round3 test/unit/hr-theme-hide",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "follow-up number scrolls/opens card; hide-names is per page, first time copies home value once, banner + copy closed; phone filter/export/sort sheets",
+    "actual": "hr-rp-t49 23/23, hr-rp-t50 16/16, reports-round3 14/14, hr-theme-hide 8/8 pass: R-4901 'after tapping งานค้าง...', \"'มาเรียน' number opens attendance, 'งานค้าง' scrolls to the follow-up card\", 'another page that was never set copies the home value once', 'hide names: table and follow-up say เลขที่ N; copy to LINE closed', '[ตัวกรอง (0)] opens a sheet; Esc closes and the opener gets focus', '[ส่งออก] sheet: scope label, warning when hidden', 'sort sheet'. Not asserted: row height 56px / hero 132px on 390x844.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:33:58.463Z"
+  },
+  {
+    "check": "Q-8110",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-208",
+      "AC-209"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg-settings-shell; evidence/verify-i/ui-result.json (settings rows)",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "iPad portrait: top bar of groups + pills; phone: list page then page 2 with ‹ ตั้งค่า, Back-equivalent returns to list; no page-level horizontal scroll",
+    "actual": "hr-sg-settings-shell 25/25 pass ('iPad portrait: a bar of groups on top and the pills of the open group', 'phone: page 1 is the list; a row opens page 2 with ‹ ตั้งค่า that goes back', R-5303 focus). Real build (T-85 m-ui, tree:2df7c74d2598): settings hOverflow=false on ipadP and phone, 0 targets <44 on ipadP/phone/ipadL. Not verified: browser Back button behaviour, save bar sitting above the tab bar on phone.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:20.254Z"
+  },
+  {
+    "check": "Q-8111",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-216",
+      "AC-217",
+      "AC-219"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-appearance-save test/unit/hr-sg",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "look/mode save failure or offline = revert at once, notify, never queued; offline: synced values editable only per AC-215, device values fine, download/restore/clear/start-term/password/sign-out-others disabled with ต้องออนไลน์; leaving with unsaved asks (stay keeps value, leave drops it; section switch silent)",
+    "actual": "hr-appearance-save 11/11, hr-theme-appearance 26/26, hr-sg-settings-shell 25/25 (R-5304 offline disabled), hr-sg3-t55 16/16, hr-sg4-t56 32/32, hr-sg5-gaps-t72 16/16 pass ('server error while online: back to the old skin, nothing queued', 'offline: no request, the old look stays', 'offline: download and restore are disabled with ต้องออนไลน์', 'leaving to another page asks first; staying keeps the page and the typed value', 'moving between sections is not leaving: no question', beforeunload).",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:21.397Z"
+  },
+  {
+    "check": "Q-8112",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-225",
+      "AC-232",
+      "AC-236",
+      "AC-237",
+      "AC-246"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-sg3 test/unit/hr-sg2 test/unit/hr-vfix-t70",
+    "artifact": "evidence/verify-j/vitest-batch1.log",
+    "expected": "scan sound = synced sound_enabled; start-term dialog (irreversible warning, focus year field, tick gates confirm, tick cleared on change); device values keep own keys, ting off by default; device check 6 items role=status + copy + about card; <480px row actions in a 44px menu",
+    "actual": "hr-sg3-t55 16/16, hr-sg2-startterm-t54 5/5, hr-sg2-catalog-t54 39/39, hr-vfix-t70 8/8 pass ('scan sound = the synced sound_enabled; the ting is this device only, off at first', 'says it cannot be undone, starts with the keyboard in the year field, stays off until the tick', 'changing the year clears the tick', 'the head follows termLine', 'the check button reports in a role=status line... result can be copied', '< 480px: แก้ไข/เก็บ are inside a จัดการ {ชื่อ} menu; >= 480px shows buttons', 'Esc closes the menu and gives focus back'). Not asserted: scanner/camera test panel buttons (AC-225), 'ไปพิมพ์ที่ นักเรียน ›' link.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:22.490Z"
+  },
+  {
+    "check": "Q-8113",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-250"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "node evidence/verify-i/m-rs.cjs (T-85 result re-used; same snapshot); npx vitest run test/unit/hr-vfix-t69",
+    "artifact": "evidence/verify-i/rs-result.json",
+    "expected": "reports two-column layout: table >= 58% (+-1%), rows single line 44px, >= 10 rows desk / >= 8 iPad landscape visible at scrollY 0",
+    "actual": "[T-85 m-rs.cjs on frozen build tree:2df7c74d2598, 45-child layout fixture] desk 1536x729: table 814/1392 = 58.5%, rowH 44, 10 full rows in frame; iPad landscape 1180x820: 593/1029 = 57.7%, rowH 45, 11 rows capacity. hr-vfix-t69 asserts table column 1.55fr (58% +-1 at 1180 and 1536). Not directly asserted: absence of the .rp-sub 'มา n%' line (single-line row heights imply it).",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:23.614Z"
+  },
+  {
+    "check": "Q-8114",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-254"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "node evidence/verify-i/m-misc.cjs (7102); npx vitest run test/unit/hr-st2-t52 test/unit/hr-st2-t67",
+    "artifact": "evidence/verify-i/misc-result.json",
+    "expected": "sample .xlsx downloads offline from a built app with service worker; import button disabled offline with ต้องออนไลน์",
+    "actual": "real build [T-85 m-misc.cjs 7102, tree:2df7c74d2598]: swRegistrations 1, offline download gave a valid zip .xlsx (6793 bytes) with a made-up-name file; unit: hr-st2-t67 'has [ดาวน์โหลดไฟล์ตัวอย่าง .xlsx] that builds the file locally, also offline', hr-st2-t52 'the sample .xlsx ... reads back as exactly two rows with no warning', 'offline: the import button is off' pass. Not verified: download while projecting.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:24.761Z"
+  },
+  {
+    "check": "Q-8115",
+    "kind": "visual-before-after",
+    "status": "PASS",
+    "ac": [
+      "AC-36"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "QA_PORT=4262 node evidence/verify-j/m-font.cjs",
+    "artifact": "evidence/verify-j/font-result.json",
+    "expected": "fonts/icons come from the app (no CDN), shown after cutting the network; page requests the chosen skin's fonts",
+    "actual": "[T-89 frozen build, CDP, fresh context = first open] skin saved via Settings UI then new empty-cache context: externalRequests [] for warm/pro/playful; chosen skin files requested (pro: IBM Plex Sans Thai + Phosphor-Bold, playful: Anuphan + Mali + Phosphor-Fill); offline reload: document.fonts loaded = chosen skin families, failed []. CAVEAT: on a brand-new device the first paint is the default look, so the default skin's first-paint files (Sarabun 400, Mitr 500, Phosphor-Duotone) are also requested before the server look is adopted; the heavier warm weights (600/700) are not. Returning-device (remembered skin) case not completed (script exited silently).",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:25.827Z"
+  },
+  {
+    "check": "Q-8116",
+    "kind": "visual-before-after",
+    "status": "FAIL",
+    "ac": [
+      "AC-104"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "QA_PORT=4261 node evidence/verify-j/m-att104.cjs",
+    "artifact": "evidence/verify-j/att104-result.json",
+    "expected": "31/40-45 children visible without scrolling (iPad landscape 31, desk 40); hero <=110 desk; iPad portrait cells >=64px; no horizontal scroll",
+    "actual": "[T-89 frozen build, CDP, 45 kids (44 tiles)] desk 1536x729: 24/44 visible, 6 cols, hero 94 (ok); iPad landscape 1180x820: 20/44 visible, 5 cols, hero 156; iPad portrait: 36/44, 4 cols, tile min height 57 (<64), hero 142 (<=150 ok); phone: 2 cols, hero 191, tiles 56px high; hOverflow false on all 4; name font 17.6-19.8px. FAIL vs original target (visible-without-scroll, iPad-portrait 64px cells). OWNER ALREADY ACCEPTED (24/45 @1536, 20/45 @1180 - report.md AC-104 'ยอมรับโดยเจ้าของงาน'); PM to handle in brief.md.",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:26.940Z"
+  },
+  {
+    "check": "Q-8117",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-10"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "QA_PORT=4265 node evidence/verify-j/m-dom.cjs; npx vitest run test/unit/home-logic test/unit/hr-layout-b-ui",
+    "artifact": "evidence/verify-j/dom-result.json",
+    "expected": "home quick buttons go to the same pages as before; attendance button's second line = attendanceHeadline",
+    "actual": "[T-89 frozen build DOM + unit] real home shows quick links เช็คชื่อ -> #/attendance, สุ่มชื่อ -> #/random, สแกนส่งงาน -> #/scan, and under เช็คชื่อ the headline 'ยังไม่ได้เช็คชื่อ 3 ห้อง'; unit home-logic 12/12 ('headline for the attendance button: none / partly / all rooms checked'), hr-layout-b ''สร้างงาน' carries the room'. The สร้างงาน button destination was not read from the real DOM (it is not an <a>).",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:45.815Z"
+  },
+  {
+    "check": "Q-8118",
+    "kind": "regression",
+    "status": "PASS",
+    "ac": [
+      "AC-253"
+    ],
+    "br": [],
+    "by": "team-qa-tester",
+    "mandatory": false,
+    "command": "npx vitest run test/unit/hr-attx-t43; QA_PORT=4265 node evidence/verify-j/m-dom.cjs",
+    "artifact": "evidence/verify-j/dom-result.json",
+    "expected": "attendance cards todo/away/month on by default; a card the teacher hid stays hidden; by-period mode hides the month card",
+    "actual": "hr-attx-t43 15/15: 'todo, away and month are on from the start', 'month can be hidden, and the drawer lists it with the locked parts', 'the card drawer does not crash on a card its list does not know'; real build DOM (m-dom): in รายคาบ mode the month card and week strip are absent. Not asserted: legacy saved attendance_cards with todo/away hidden (only month hide is tested; same serialize/parse path).",
+    "reason": "",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-12T22:34:46.980Z"
+  },
+  {
+    "check": "Q-8201",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-41",
+      "AC-42",
+      "AC-43"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "การ์ดขาดสะสม/กราฟส่งงาน 7 วันรอ API ฝั่ง server ของงานแยก T-57–T-60 (EP-09/10) เจ้าของงานตัดสินแยกงาน — ไม่อยู่ในงานนี้",
+    "reason": "การ์ดขาดสะสม/กราฟส่งงาน 7 วันรอ API ฝั่ง server ของงานแยก T-57–T-60 (EP-09/10) เจ้าของงานตัดสินแยกงาน — ไม่อยู่ในงานนี้",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:25.739Z"
+  },
+  {
+    "check": "Q-8202",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-180",
+      "AC-181",
+      "AC-182",
+      "AC-192",
+      "AC-193",
+      "AC-198",
+      "AC-199",
+      "AC-201",
+      "AC-202"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "หน้านักเรียน: มีเทสต์ครอบบางส่วน ส่วนที่ไม่มีเทสต์ (ข้อความ alert เลขที่ซ้ำ แท็บย้ายออก ค้นทุกห้อง ST-S16/17) เจ้าของงานรับเป็น known gap ปิดงาน 2026-11-13 — เขียนเทสต์ในงานถัดไป (ดู verify-qa-j.md)",
+    "reason": "หน้านักเรียน: มีเทสต์ครอบบางส่วน ส่วนที่ไม่มีเทสต์ (ข้อความ alert เลขที่ซ้ำ แท็บย้ายออก ค้นทุกห้อง ST-S16/17) เจ้าของงานรับเป็น known gap ปิดงาน 2026-11-13 — เขียนเทสต์ในงานถัดไป (ดู verify-qa-j.md)",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:26.963Z"
+  },
+  {
+    "check": "Q-8203",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-212",
+      "AC-218",
+      "AC-220",
+      "AC-221",
+      "AC-224"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "หน้าตั้งค่า: เทสต์ไม่ครอบ SE-S06 โหลดล้ม, 401/term_changed, ชื่อยาว 24 ห้อง, กริดคาบ — เจ้าของงานรับเป็น known gap 2026-11-13 เขียนเทสต์ในงานถัดไป",
+    "reason": "หน้าตั้งค่า: เทสต์ไม่ครอบ SE-S06 โหลดล้ม, 401/term_changed, ชื่อยาว 24 ห้อง, กริดคาบ — เจ้าของงานรับเป็น known gap 2026-11-13 เขียนเทสต์ในงานถัดไป",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:28.112Z"
+  },
+  {
+    "check": "Q-8204",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-16",
+      "AC-79",
+      "AC-83",
+      "AC-97",
+      "AC-100",
+      "AC-109",
+      "AC-134",
+      "AC-151",
+      "AC-173",
+      "AC-255"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "ไม่มีเทสต์หรือครอบบางส่วน (เช่น AC-255 (ก) ข้ามหลังเริ่มรอบใหม่) — เจ้าของงานรับเป็น known gap 2026-11-13 เขียนเทสต์ในงานถัดไป (ดู verify-qa-j.md)",
+    "reason": "ไม่มีเทสต์หรือครอบบางส่วน (เช่น AC-255 (ก) ข้ามหลังเริ่มรอบใหม่) — เจ้าของงานรับเป็น known gap 2026-11-13 เขียนเทสต์ในงานถัดไป (ดู verify-qa-j.md)",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:29.249Z"
+  },
+  {
+    "check": "Q-8205",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-106",
+      "AC-124",
+      "AC-153",
+      "AC-174",
+      "AC-205",
+      "AC-247"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "AC ภาพ/a11y รวม: สีและคอนทราสต์ผ่าน (hr-sweep-colors, Q-7010) แต่การเคลื่อนไหว ≤250ms, ลดการเคลื่อนไหว, ซูม 200% ยังไม่วัด; AC-247 ขัดกันเอง (≥44px รวมคอม vs D22 อนุญาต 40px บนคอม ปุ่มตั้งค่าคอม 3 จุดสูง 40) — เจ้าของงานรับเป็น known gap 2026-11-13",
+    "reason": "AC ภาพ/a11y รวม: สีและคอนทราสต์ผ่าน (hr-sweep-colors, Q-7010) แต่การเคลื่อนไหว ≤250ms, ลดการเคลื่อนไหว, ซูม 200% ยังไม่วัด; AC-247 ขัดกันเอง (≥44px รวมคอม vs D22 อนุญาต 40px บนคอม ปุ่มตั้งค่าคอม 3 จุดสูง 40) — เจ้าของงานรับเป็น known gap 2026-11-13",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:30.307Z"
+  },
+  {
+    "check": "Q-8206",
+    "kind": "regression",
+    "status": "N/A",
+    "ac": [
+      "AC-104"
+    ],
+    "br": [],
+    "by": "PM",
+    "mandatory": false,
+    "command": "",
+    "artifact": "",
+    "expected": "AC มีหลักฐาน PASS",
+    "actual": "วัดจริง 24/44 ช่องที่เห็นไม่เลื่อนบนคอม 20/44 บน iPad นอน (เป้า 40/31): เจ้าของงานยอมรับตามที่วัดและตัดสินแล้ว 2026-11-12 (Q-8116 บันทึกผลจริงเป็น FAIL)",
+    "reason": "วัดจริง 24/44 ช่องที่เห็นไม่เลื่อนบนคอม 20/44 บน iPad นอน (เป้า 40/31): เจ้าของงานยอมรับตามที่วัดและตัดสินแล้ว 2026-11-12 (Q-8116 บันทึกผลจริงเป็น FAIL)",
+    "snapshot": "tree:2df7c74d259817c75a037c82957db9bcf800f716",
+    "at": "2026-11-13T01:49:31.429Z"
   }
 ]

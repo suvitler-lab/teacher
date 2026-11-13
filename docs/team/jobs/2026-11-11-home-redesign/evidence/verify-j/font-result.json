@@ -1,0 +1,97 @@
+{
+ "warm": {
+  "savedSkinAttr": "warm",
+  "freshContextSkinAttr": "warm",
+  "bodyFont": "Sarabun",
+  "fontFilesRequestedByPage": [
+   "Phosphor-Duotone",
+   "sarabun-latin-400-normal",
+   "mitr-latin-500-normal",
+   "mitr-thai-500-normal",
+   "sarabun-thai-400-normal",
+   "sarabun-latin-500-normal",
+   "sarabun-thai-500-normal",
+   "sarabun-latin-700-normal",
+   "mitr-latin-600-normal",
+   "sarabun-latin-600-normal",
+   "sarabun-thai-600-normal",
+   "mitr-thai-600-normal",
+   "sarabun-thai-700-normal"
+  ],
+  "externalRequests": [],
+  "offline": {
+   "bodyChars": 1651,
+   "loaded": [
+    "Sarabun",
+    "Mitr",
+    "Phosphor-Duotone"
+   ],
+   "failed": []
+  }
+ },
+ "pro": {
+  "savedSkinAttr": "pro",
+  "freshContextSkinAttr": "pro",
+  "bodyFont": "\"IBM Plex Sans Thai\"",
+  "fontFilesRequestedByPage": [
+   "Phosphor-Duotone",
+   "sarabun-latin-400-normal",
+   "mitr-latin-500-normal",
+   "mitr-thai-500-normal",
+   "sarabun-thai-400-normal",
+   "ibm-plex-sans-thai-latin-400-normal",
+   "ibm-plex-sans-thai-latin-500-normal",
+   "Phosphor-Bold",
+   "ibm-plex-sans-thai-thai-400-normal",
+   "ibm-plex-sans-thai-thai-500-normal",
+   "ibm-plex-sans-thai-latin-700-normal",
+   "ibm-plex-sans-thai-latin-600-normal",
+   "ibm-plex-sans-thai-thai-700-normal",
+   "ibm-plex-sans-thai-thai-600-normal"
+  ],
+  "externalRequests": [],
+  "offline": {
+   "bodyChars": 1651,
+   "loaded": [
+    "IBM Plex Sans Thai",
+    "Phosphor-Bold"
+   ],
+   "failed": []
+  }
+ },
+ "playful": {
+  "savedSkinAttr": "playful",
+  "freshContextSkinAttr": "playful",
+  "bodyFont": "Anuphan",
+  "fontFilesRequestedByPage": [
+   "Phosphor-Duotone",
+   "sarabun-latin-400-normal",
+   "mitr-latin-500-normal",
+   "sarabun-thai-400-normal",
+   "mitr-thai-500-normal",
+   "anuphan-latin-400-normal",
+   "mali-latin-500-normal",
+   "anuphan-latin-500-normal",
+   "Phosphor-Fill",
+   "anuphan-thai-400-normal",
+   "anuphan-thai-500-normal",
+   "mali-thai-500-normal",
+   "mali-latin-700-normal",
+   "anuphan-latin-700-normal",
+   "anuphan-latin-600-normal",
+   "mali-thai-700-normal",
+   "anuphan-thai-600-normal",
+   "anuphan-thai-700-normal"
+  ],
+  "externalRequests": [],
+  "offline": {
+   "bodyChars": 1651,
+   "loaded": [
+    "Anuphan",
+    "Mali",
+    "Phosphor-Fill"
+   ],
+   "failed": []
+  }
+ }
+}

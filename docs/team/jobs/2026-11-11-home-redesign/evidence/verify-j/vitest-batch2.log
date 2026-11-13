@@ -1,0 +1,298 @@
+﻿node.exe : 
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > passes for the real repository's migrations and schema version 26ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > wrangler config: a real database id passes 23ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > wrangler config: the placeholder id stops the deploy and says what to run 20ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > wrangler config: something that is not a database id is caught 19ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > wrangler config: migrating a different database than the one deployed is caught 24ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > migrations: a gap in the numbering is caught 24ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > migrations: a schema version the app does not expect is caught (it would answer schema_mismatch to everyone) 22ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: source > migrations: a migration that forgets to set the schema version is caught 21ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > a complete build passes 30ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > a worker whose placeholders were never filled in is caught 36ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > an offline list with nothing in it is caught 41ms
+ ✓ |dom| test/unit/home-logic.test.ts > dueInfo: the chip on an assignment > says how late, today, tomorrow, or the date; and 'no due date' when there is none 5ms
+ ✓ |dom| test/unit/home-logic.test.ts > shouldClose: open work the teacher has probably forgotten to close > no due date: after 14 days open (a child who never handed in only counts as missing once the work is closed) 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > shouldClose: open work the teacher has probably forgotten to close > no due date and no assigned date: counts from when it was created 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > shouldClose: open work the teacher has probably forgotten to close > with a due date: more than a week overdue 0ms
+ ✓ |dom| test/unit/home-logic.test.ts > shouldClose: open work the teacher has probably forgotten to close > never for work that is already closed 0ms
+ ✓ |dom| test/unit/home-logic.test.ts > attendance helpers > hmToMin reads HH:MM and falls back on junk 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > attendance helpers > headline for the attendance button: none / partly / all rooms checked 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > attendance helpers > uncheckedRooms: only rooms with children and nothing marked, and only once the late time has passed 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > todoRows: the one 'do this now' card > is empty when nothing needs doing 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > todoRows: the one 'do this now' card > puts failed sends first, then what is waiting on this device, the ended term, rooms, then the backup 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > todoRows: the one 'do this now' card > a backup that never happened is its own message; a recent one is not mentioned 1ms
+ ✓ |dom| test/unit/home-logic.test.ts > todoRows: the one 'do this now' card > only drafts or only queued scores still produce one 'waiting on this device' row 0ms
+ ✓ |dom| test/unit/device-check.test.ts > a device that is ready > passes every check, in the order a teacher reads them 4ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > not https: fail, and says camera and offline are lost 1ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline right now: a warning, not a failure — scanning still works 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > online but the server does not answer: fail, and suggests another signal 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the server says it is not healthy ({"ok":false,"db":{"reachable":false}}) 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the server says it is not healthy ({"ok":false,"db":{"reachable":true,"schema":4,"schemaOk":false}}) 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the server says it is not healthy ({"ok":false,"db":{"reachable":true,"schema":5,"schemaOk":true},"config":{"pepper":false}}) 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the server says it is not healthy ({"ok":false}) 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > a slow server is a warning that nothing is lost 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline readiness preparing → warn 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline readiness update → warn 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline readiness error → fail 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline readiness unsupported → fail 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > offline readiness 'unsupported' on an insecure page is the https problem's echo, not a second failure 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the offline error carries the worker's own reason 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > storage that cannot be written is the worst thing: queued scans would be lost 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > low space, and not installed / not persistent, are warnings — with the honest 'not a guarantee' 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > clock: within 30 s fine, then a warning, past 5 minutes a failure — either direction 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > queue: work waiting is a warning; work the server refused is a failure 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > no camera support is a warning that names the alternatives 0ms
+ ✓ |dom| test/unit/device-check.test.ts > what is wrong, said so the teacher can act > the overall verdict is the worst single one 0ms
+ ✓ |dom| test/unit/device-check.test.ts > the text to paste into the trial log > has the time in Bangkok, the verdict, one line per check with its mark, and which device this was 1ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > Mozilla/5.0 (Linux; Android 14; SM-X710) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 → Android · Chrome 124 0ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1 → iPhone · Chrome 123 0ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0 → Windows · Edge 125 0ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15 → Mac · Safari 17 0ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0 → Linux · Firefox 126 0ms
+ ✓ |dom| test/unit/device-check.test.ts > naming the device > unknown → อุปกรณ์ · เบราว์เซอร์ 0ms
+ ✓ |dom| test/unit/device-check.test.ts > pingServer — the server's clock comes from the HTTP Date header > measures the skew against the middle of the round trip, and reports the latency 9ms
+ ✓ |dom| test/unit/device-check.test.ts > pingServer — the server's clock comes from the HTTP Date header > a 503 with the app's JSON is still 'reachable' — its health says what is wrong 2ms
+ ✓ |dom| test/unit/device-check.test.ts > pingServer — the server's clock comes from the HTTP Date header > no answer at all is 'not reachable'; an answer that is not the app's JSON leaves health empty; no Date header leaves the skew unknown 2ms
+ ✓ |dom| test/unit/device-check.test.ts > pingServer — the server's clock comes from the HTTP Date header > gives up after the timeout instead of hanging (a stalled wifi) 3ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > a missing deploy config, or one carrying the placeholder id, is caught 43ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > a font pasted into the CSS as a data: URL is caught — the site's CSP would refuse it 58ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > downloads the shell and every file of the build into one cache named for the version 12ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > is all-or-nothing: one file that cannot be fetched fails the whole install (the old version keeps serving) 4ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > refuses a missing file that the app's fallback answered with its HTML page 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > keeps the shell as a plain response even when the host answered with a redirect 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > does not download again what the previous version already holds under the same content-hashed name 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > always re-downloads files whose names are not content hashes (a wasm or icon can change under one name) 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > a first install takes over at once; an update waits for the teacher 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: install > an interrupted install picks up where it stopped 1ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: activate > drops every older version's cache (and the old un-versioned one), leaves other caches alone, and takes the open pages 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > every page (whatever the address) is the cached shell — no network involved 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > a navigation while the network is dead still opens the app 1ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > precached assets come from the cache 1ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > an unknown asset goes to the network and is kept; an HTML answer for a missing file is not kept 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > an asset that is neither cached nor reachable is a clean network error, not a crash 2ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > leaves the API, writes, the worker script and other origins entirely to the browser 1ms
+ ✓ |dom| test/unit/offline.test.ts > service worker: serving > answers a version question, for the page that asks 1ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":false,"waiting":false,"failed":false} → preparing 0ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":false,"waiting":false,"failed":true} → error 0ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":true,"waiting":false,"failed":false} → ready 0ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":true,"waiting":false,"failed":true} → ready 0ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":true,"waiting":true,"failed":false} → update 0ms
+ ✓ |dom| test/unit/offline.test.ts > offline status shown to the teacher > {"active":false,"waiting":true,"failed":false} → preparing 0ms
+ ✓ |dom| test/unit/offline.test.ts > retryUntilReachable > keeps trying while the server is out of reach and stops after the first success 4ms
+ ✓ |dom| test/unit/offline.test.ts > retryUntilReachable > tries the moment the browser says it is online, without waiting for the next tick 2ms
+ ✓ |dom| test/unit/offline.test.ts > retryUntilReachable > never runs two probes at once 1ms
+ ✓ |dom| test/unit/offline.test.ts > retryUntilReachable > stop() ends it 1ms
+ ✓ |dom| test/unit/offline.test.ts > build step: what goes into the offline list > lists what the app needs offline, and not maps, fallback font formats, host config, dotfiles, the worker or the shell page 32ms
+ ✓ |dom| test/unit/offline.test.ts > build step: what goes into the offline list > the version is stable for the same build and changes when any file — hashed or not — or the worker changes 56ms
+ ✓ |dom| test/unit/offline.test.ts > build step: what goes into the offline list > the version does not depend on the worker file already being filled in (a rebuild in place gives the same id) 27ms
+ ✓ |dom| test/unit/offline.test.ts > build step: what goes into the offline list > refuses a worker file that is not the template 27ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: build output > an empty folder reports everything that is missing rather than crashing 27ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: a running deploy > a healthy deploy passes 35ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: a running deploy > says a missing pepper in words, and how to set it 24ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: a running deploy > says an empty or old database in words, and what to run 36ms
+ ✓ |dom| test/unit/preflight.test.ts > preflight: a running deploy > says an unreachable database, an unreachable host and a wrong address plainly 29ms
+ ✓ |dom| test/unit/projector.test.tsx > projector mode > starts and exits, and remembers theme and size 4ms
+ ✓ |dom| test/unit/projector.test.tsx > projector mode > the shell shows the page title, 'กำลังฉายจอ', and the other two pages in the menu 39ms
+ ✓ |dom| test/unit/projector.test.tsx > projector mode > Esc leaves the mode; a short tap on × only shows the reminder 6ms
+ ✓ |dom| test/unit/projector.test.tsx > projector mode > the header button opens the look choices and starts the mode 10ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > a hand-in carries today's date by default 8ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > a picked earlier day is sent as the received date 2ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > taking a hand-in back sends a void op without a date 2ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > taking it back offers 'เลิกทำ', and using it puts the hand-in back 2ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > R-03 undo keeps the original received day > a hand-in loaded from the server comes back on its stored day, not today 9ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > R-03 undo keeps the original received day > a back-dated round does not move it to the round's day 2ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > R-03 undo keeps the original received day > a hand-in taken in this round under a picked day is put back on that day 1ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > in type-the-score mode a child scanned and then scored is ONE row 3ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > a new round forgets the last typed score 1ms
+ ✓ |dom| test/unit/scan-round2.test.ts > scan round 2 > an unknown class number names the room it was looked up in 2ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > card order (▲▼ in ปรับการ์ด) > draws the visible cards in the saved order 87ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > pure helpers > sorts by the column and flips on the second tap 6ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > pure helpers > buckets the running score and adds the attendance up 1ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > pure helpers > the TV shows the latest due work first, up to 2N (N = 4, or 3 at the biggest text); beyond that 'and k more' takes one place 14ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > reports page + saved reads > coming back within the fresh window paints at once without a request 226ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page > headers are buttons with aria-sort; a second tap reverses; names are buttons that open the drawer 250ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page > shows the default cards; the teacher can turn one off; 'ดูทั้งหมด' appears only when more than 5 need follow-up 71ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > undo toast > says 'เลิกทำได้ 5 วินาที' once (label stays 'เลิกทำ', R-3803) and goes after 5 seconds 16ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > reader test > a code shot while the test is open is read back and never recorded 3ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > reports page + saved reads > an old answer is painted first and renewed quietly 107ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > reports page + saved reads > a different class never shows another class's saved answer (cold load shows the spinner) 125ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > dashboard + saved reads > a second load inside the fresh window makes no request; force and a write do 8ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > dashboard + saved reads > Scan's 60 s window: numbers 40 s old are reused, 70 s old are renewed 1ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > dashboard + saved reads > Scan's 60 s window does not reuse numbers read before a write 1ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > dashboard + saved reads > another term is never served from the saved answer of this term 1ms
+ ✓ |dom| test/unit/swr-pages.test.tsx > dashboard + saved reads > an old saved answer paints first, then is renewed 1ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > 49/55 shows 89%, 29.5/40 shows 74%, with a spoken form 207ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > a full mark of 0 shows 0/0 and NO percent (not 0%) 62ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > reader test > the ทดสอบ button opens the panel 171ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > TV view > says unknown code only for an unknown code, not for a closed work 29ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > TV view > an exempt child looks like any child who has not handed in 33ms
+ ✓ |dom| test/unit/scan-round4.test.tsx > summary > has one h1 and a primary way to the gradebook 17ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > title and aria-label start with the type name; the submit rate and flags ride in the title 208ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > the ground is the type's tint, the ink of shape / bar is its dark colour; a shape (not colour alone) leads the title 73ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > every work hidden shows ••• and no percent 68ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-34 the work picked on arrival > last OPEN work; none open → last work; empty → null 1ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-34 the work picked on arrival > the page opens on W3 (W4 is closed) and a link ?asg= wins 96ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page > the 'มาเรียน' number opens attendance, the 'งานค้าง' number scrolls to the follow-up card 148ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > meta line: full score, a calendar icon and the due date; no due date shows a dash 68ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > closed = a lock in the corner; the eye shows on a column that hides its scores, and on the picked one only otherwise 70ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > the work panel > is one labelled section: name, full score, due chip, the counts and the buttons 276ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > keyboard on the grid > only one cell is in the Tab order; the arrows move it 89ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-35 way + last edit > maps the methods to words 36ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-35 way + last edit > keeps the way and the time after the queue delivers a typed score (R-4601) 121ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-36 copied list > first line names room and subject, then one line per child, not cut at 8 1ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > the progress bar is still in the head (and still obeys the menu) 50ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > ungrouped: no legend (the shape + the title carry the type) 56ms
+ ✓ |dom| test/unit/gradebook-header-a.test.tsx > gradebook column heads (A: tint head) > grouped by type: the bar carries shape + type name; a one-column group hides its count so the name is never cut 78ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > opens with the ▾ beside the quick input, and shows the day the work was received 361ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > a child marked excused always opens the editor (no silent change) 82ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page > a work row opens that work in the gradebook 128ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > re-dating a handed-in cell sends one date-only op and offers เลิกทำ 173ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page > the drawer uses the page's own numbers (no second report request) and names its scope 166ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > keyboard on the grid > a digit on a focused cell opens the quick input with that digit; on an excused cell it opens the editor instead 113ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > keyboard on the grid > every cell says its state, not only its score 57ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > orgNames helpers > built-in names are not field text; real names are; labels fall back only when empty 6ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > orgNames helpers > a device name is 1-40 characters after trimming 1ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > setting a child as not handed in sends a void op; a day before the work was given cannot be saved 134ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > A4 preview > opens from พิมพ์ with the summary and the people table, and 'สรุปอย่างเดียว' drops the people 147ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > TV view: the page behind > everything outside the TV view is inert while it shows, and free again after 47ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > the filter panel > has a reset that puts the defaults back 242ms
+ ✓ |dom| test/unit/settings-page.test.tsx > the save bar > is not raised by changing a card layout, and saving the form does not put an old card layout back 276ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > a third child with nothing yet: choosing ส่งแล้ว with a score and today sends one receiving op with the day 117ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: school and teacher name fields > a stored default name is a placeholder, not text: empty field, no save bar, the header still shows the words 192ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: school and teacher name fields > typing a name saves exactly what was typed — no default word in front of it 81ms
+ ✓ |dom| test/unit/home-states.test.tsx > loading and empty states > while the dashboard loads: the quick actions are there, grey blocks stand in for numbers, and the words wait 143ms
+ ✓ |dom| test/unit/home-states.test.tsx > loading and empty states > after three seconds the loading words are shown 30ms
+ ✓ |dom| test/unit/home-states.test.tsx > loading and empty states > no classes: one card that says so and goes to the class set-up; the quick actions stay 64ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > TV view > shows class totals and the works, and never a child's name or score 54ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page: round 3 fixes > picking another class closes an open drawer 93ms
+ ✓ |dom| test/unit/settings-page.test.tsx > the save bar > a switch saves at once, never raises the bar, and a failed save puts it back and says so 153ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cell editor > a score that is not a half step blocks saving 120ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > whole-class actions offer undo > the whole class handed in names the day and keeps a ย้อนกลับ toast 115ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > whole-class actions offer undo > a closed work cannot be handed in for the whole class 80ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page: round 3 fixes > the print preview leaves out a card the teacher turned off, and always prints the people 107ms
+ ✓ |dom| test/unit/reports-round3.test.tsx > reports page: round 3 fixes > the attendance bar says its numbers aloud, and sorting is announced 63ms
+ ✓ |dom| test/unit/home-states.test.tsx > loading and empty states > classes but nobody in them: 'ยังไม่มีนักเรียนในห้อง' with the import button 53ms
+ ✓ |dom| test/unit/home-states.test.tsx > loading and empty states > offline with nothing cached says scanning and roll call still work; online failure says it plainly; both can retry 13ms
+ ✓ |dom| test/unit/home-states.test.tsx > the scan button on the work card (ข: the picked room's work) > is offered for open work with children who have not handed in, even when nothing is overdue 67ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > shows the four default sub-cards of layout ก and leaves 'ห้องของฉัน' off; the cards of the other layouts are not there 287ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > follows the saved list of the layout: a hidden card is gone, an enabled one appears, and the order is the saved order 85ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > an old hand-in whose stored day is before the assigned date > can still have its score changed (only a day the teacher picks is checked) 103ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > a hand-in whose day is unknown > is not stamped with today when only the score changes 146ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: school and teacher name fields > cancel puts the empty field back; a real name that is cleared saves as empty 118ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > first-run guide: school step > leaving both names empty saves empty names (the fallback words are display-time only) 35ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > first-run guide: school step > typed names are saved trimmed 35ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > the cell editor > is a radiogroup, warns before a score is cleared, and offers quick scores 96ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > the cell editor > tells a child going from excused to handed in 56ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > the cell editor > quickScores gives full, full−1, full−2 and half, each once 1ms
+ ✓ |dom| test/unit/gradebook-round3b.test.tsx > cards > 'ควรปิดรับ' also takes a work everyone has handed in 1ms
+ ✓ |dom| test/unit/home-states.test.tsx > the scan button on the work card (ข: the picked room's work) > is offered when children are overdue even if the counts leave no one 'not yet' 53ms
+ ✓ |dom| test/unit/home-states.test.tsx > the scan button on the work card (ข: the picked room's work) > is not offered when the page shows an earlier year 41ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > one visible card = one card in ก's side column; the default shows the four cards in the saved order (ก lays them out in its own two-column grid) 81ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: rename a device > every device has a rename button, this one too; the rename box takes at most 40 characters 159ms
+ ✓ |dom| test/unit/home-states.test.tsx > saving, progress bars, sign-out > tells the teacher a card change was saved for every device 188ms
+ ✓ |dom| test/unit/home-states.test.tsx > saving, progress bars, sign-out > the bar of a class row is a progressbar with words 34ms
+ ✓ |dom| test/unit/home-states.test.tsx > saving, progress bars, sign-out > signing out with work waiting asks in a dialog (not window.confirm) and stays when the answer is no 29ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: rename a device > renaming this device posts the trimmed name, keeps a local copy and reloads the list 159ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > the panel is titled with the layout, lists only that layout's five cards, saves every change at once into that layout's field 314ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: rename a device > renaming another device does not touch this one's local name; a duplicate name is allowed 107ms
+ ✓ |dom| test/unit/settings-names-devices.test.tsx > settings: rename a device > an empty name cannot be saved; cancel and Esc leave the name alone; a failed save says why and stays open 163ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > a failed save puts the layout back and says so 102ms
+ ✓ |dom| test/unit/students-round3.test.tsx > pure helpers > sorts by number, name, attendance (least first, unchecked last) and missing (most first) 17ms
+ ✓ |dom| test/unit/students-round3.test.tsx > pure helpers > rotatedIn keeps only the children whose QR was reissued 1ms
+ ✓ |dom| test/unit/students-round3.test.tsx > file import > rowsToText joins the cells of a worksheet row with tabs and drops empty rows 1ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > holding or tapping a cell again opens the editor > a held cell (about half a second) opens the cell editor 594ms
+ ✓ |dom| test/unit/home-ui.test.tsx > home page cards (layout ก: its own five sub-cards, BR-12) > reset asks first, then restores the default of this layout only 160ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the work card (ก: progress per room, ข: the picked room's work with numbers) > ก: a progressbar and the numbers per room; ข: 'ค้าง' and 'รอตรวจ' are buttons per work, with 6/8 · ยกเว้น 2 and the scan for the room that still owes work 65ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the work card (ก: progress per room, ข: the picked room's work with numbers) > an open work more than a week overdue is in the day's list with 'เลยกำหนด' and offers to close it 29ms
+ ✓ |dom| test/unit/home-ui.test.tsx > due-soon and absent cards, and hiding names > due-soon: counts who has not handed in per room; no child's name is on the page, the names go out only through the copy-to-LINE button 47ms
+ ✓ |dom| test/unit/students-round3.test.tsx > file import > reads a .csv (with a BOM) and an .xlsx into rows the paste box would also accept 1936ms
+ ✓ |dom| test/unit/settings-page.test.tsx > the save bar > the light/dark choice lives in the appearance section (not in ทั่วไป): saved at once, and a failed save goes back to the old mode 875ms
+ ✓ |dom| test/unit/settings-page.test.tsx > wide-screen layout > the page body is .pg, the two form cards of the general section sit in .set-forms, and the banners / save bar stay outside it 19ms
+ ✓ |dom| test/unit/home-ui.test.tsx > due-soon and absent cards, and hiding names > a dashboard saved before this update (no dueSoon / absentToday) still renders, with both cards empty 32ms
+ ✓ |dom| test/unit/home-ui.test.tsx > due-soon and absent cards, and hiding names > absent card: groups today's absentees by status with their names 31ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > section titles are h2, the side menu is labelled and marks the current section 133ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > ?section=catalog opens the catalog section, titled ห้องเรียน วิชา ภาคเรียน 12ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > an unknown ?section= falls back to ทั่วไป instead of an empty page (R-3203) 44ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > the link to หน้าตา is not under the 'เครื่องนี้เท่านั้น' card (R-3208) 34ms
+ ✓ |dom| test/unit/home-ui.test.tsx > due-soon and absent cards, and hiding names > 'ซ่อนชื่อ' removes every child's name from every card and shows counts instead; it is remembered on this device 75ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the day's list in ก ('do this now') > is cleared when nothing needs doing: the big line says so and no row is left 24ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the day's list in ก ('do this now') > lists failed sends first and opens the failed list 27ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the day's list in ก ('do this now') > warns about a room not checked yet only once the 'late' time has passed 41ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > sorts by the chosen column and remembers it on this device 181ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > each row has a ⋮ menu with edit · new QR · move class · move out, next to (not inside) the name button 98ms
+ ✓ |dom| test/unit/random-model.test.ts > roundCounts (BR-24) > drawn n = N - m, not the length of the history (people outside the pool are not counted) 3ms
+ ✓ |dom| test/unit/random-model.test.ts > roundCounts (BR-24) > full only when everybody in the pool is drawn and no-repeat is on 1ms
+ ✓ |dom| test/unit/random-model.test.ts > groupPlan (BR-26) > how many groups = min(N, setting); group size = round(N / k) 1ms
+ ✓ |dom| test/unit/random-model.test.ts > groupPlan (BR-26) > group size mode: k = round(N / size), at least 1 0ms
+ ✓ |dom| test/unit/random-model.test.ts > optionSummary > names only what is on 0ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the day's list in ก ('do this now') > says when there has never been a backup, and stays quiet after a recent one 25ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the menu > has four labelled groups holding the eight pages in the day's order, and marks the current page 26ms
+ ✓ |dom| test/unit/home-ui.test.tsx > the menu > phone: five tabs, the current one marked, and the menu button opens the sheet with the same groups 28ms
+ ✓ |dom| test/unit/csp.test.ts > Content-Security-Policy > lets the camera reader compile WebAssembly, without opening up eval() in general 3ms
+ ✓ |dom| test/unit/csp.test.ts > Content-Security-Policy > still only loads scripts and connects to its own origin 1ms
+ ✓ |dom| test/unit/csp.test.ts > Content-Security-Policy > lets the camera's workers and frames stay locked down 1ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > ทั่วไป keeps a link to the look instead of the text-size control 49ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > the backup section shows the personal-data notice, the stale warning with its button, and NO clear-data buttons (they moved to the red section, AC-245) 92ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > new QR for the whole class says how many and asks first; for one child asks and names them 127ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > holding or tapping a cell again opens the editor > a quick tap only starts the quick input 551ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > holding or tapping a cell again opens the editor > the ⋮ menu is a real menu: first item takes focus, ↓ moves, Esc closes 56ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > the red section is last and holds both clear buttons 67ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > the stale-backup dot has words for a screen reader 14ms
+ ✓ |dom| test/unit/settings-page.test.tsx > headings, labels and notices > password fields have labels 61ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > draws only from the children who came (present and late), and says how many 2784ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > when attendance was not taken today it says so and offers the way on, instead of using the whole class 96ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > the picked work's bar > closing asks first and says how many have not handed in 61ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > the picked work's bar > deleting a work asks in a dialog (no browser confirm), and No keeps it 49ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > move class: asks the server first; a blocked child cannot be moved; an allowed one is saved to the chosen class 125ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > move out / not in use saves the chosen status 89ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > the extra cards (timer, skip, range, pair, group options) are off until the teacher turns them on 12ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > import opens on the file tab; the paste tab is one tap away 72ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > two children on one number: the names are buttons that open the child 23ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > cards: the summary and the QR card are on; 'moved' and 'recent' are off; 'พิมพ์เฉพาะ QR ใหม่' only when some QR is new 37ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > a new QR shows its count and a print button; a hidden card is not drawn 25ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > whole class handed in, with the day it was received (AC-23) > today sends no day; yesterday sends it 120ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cards under the table > distribution counts by share of the full score (7.5 of 10 is 75%) 1ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cards under the table > 'ควรปิดรับ' = open work whose due day has passed 0ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cards under the table > the hero always shows the room summary; the drawer holds the default cards, and 'ปรับการ์ด' can turn one off 43ms
+ ✓ |dom| test/unit/gradebook-round3.test.tsx > cards under the table > a hidden card is not drawn in the drawer (the hero is locked) 37ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > the card drawer lists every card with a switch 104ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page > 'finished' is not a status to pick by hand (only shown for a child who already has it) 34ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page: layout round 3 fixes > the class number must match whole: searching 1 does not show 10–19 13ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page: layout round 3 fixes > the 'มีงานค้าง' tile filters the list; clearing brings everyone back 45ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page: layout round 3 fixes > a column head sorts, and a second tap flips; Esc in a row menu puts focus back on its ⋮ 49ms
+ ✓ |dom| test/unit/students-round3.test.tsx > students page: layout round 3 fixes > the import has a sheet picker when the workbook has several sheets, and a drop zone 33ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > undo takes the last child back out of the called list 2576ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > with pairs on, a draw shows two children as 'A คู่กับ B' 2585ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > the number range keeps the draw to numbers x to y 2587ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > an empty range says so in its own words (not 'nobody came') and the way out turns the range off 23ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > skip says who was skipped for a moment, then draws the next child 5826ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > groups: every child who came is in exactly one group, and the leader star shows when that card is on 32ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page > the timer counts down and can be reset 40ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > the 'only those who came' chip on the stage is a button that switches to the whole room and back 13ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > with reduced motion the answer comes at once, the stage does not announce, and the result is read out once 15ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > when everybody has been called it says the next draw starts a new round 35ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > groups: the draw button stays above the groups, and 'how many groups' does not say 'per group ~n' 30ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > the timer starts by itself after a draw when its card is on, and says when time is up 10165ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > the range inputs start as the whole room (1 – last number), not 1 – 99 10ms
+ ✓ |dom| test/unit/random-page.test.tsx > random-name page · design > the cards follow the order saved in 'ปรับการ์ด' 8ms
+
+ Test Files  21 passed (21)
+      Tests  276 passed (276)
+   Start at  05:24:22
+   Duration  33.62s (transform 21.41s, setup 36.08s, import 29.36s, tests 43.05s, environment 58.14s)
+

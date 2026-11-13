@@ -1,0 +1,52 @@
+PASS  A01  wrong password is refused with a message, and stays on the sign-in page
+PASS  A02  the right password gets in (and shows the home page)
+PASS  A03  reload keeps the teacher signed in
+PASS  H01  home: the four big buttons go where they say
+PASS  H02  home: a class row under “เช็คชื่อวันนี้” opens THAT class's attendance
+PASS  S01  students: adding with nothing filled in says what is missing (and saves nothing)
+PASS  S02  students: add a student; appears in the list; count goes up
+PASS  S03  students: the same student code twice is refused with a readable message
+PASS  S04  students: search narrows the list
+PASS  S05  students: open a student, edit the nickname, it is saved
+PASS  S05b  students: “ออก QR ใหม่” really changes the child's QR
+PASS  S06  students: Excel paste with a repeated-ID column previews and imports (new children + an update)
+PASS  S06b  students: re-importing a list that has NO class-number column keeps everyone's existing class numbers
+PASS  S07  students: Excel paste with a clashing class number is blocked with a clear warning
+PASS  S08  students: print-stickers page opens and closes
+PASS  G01  gradebook: create a piece of work (dates picked with the Thai date fields) and it becomes a column
+PASS  G02  gradebook: a score typed into a cell is saved, and the running total follows
+PASS  G03  gradebook: a score above the full mark is refused, not saved
+PASS  G04  gradebook: hiding a work masks its scores and drops it from the total (shown with *); hiding all work masks the total
+PASS  G05  gradebook: “ทั้งห้องส่งแล้ว” marks the whole class and “ล้าง” undoes it
+PASS  G06  gradebook: edit the work (rename) and the column follows
+PASS  G07  gradebook: delete the work; the column is gone
+PASS  T01  attendance: tapping cycles the status and the summary counts follow; reload keeps it
+PASS  T02  attendance: choose a status, then tap students to set it; “มาทั้งหมด” fills everyone
+PASS  T03  attendance: yesterday and back to today
+PASS  N01  scan: pick work + room + mode, start, scan a QR with the keyboard scanner → the score lands
+PASS  N02  scan: the same child twice does not double-count; an unknown code is called out
+PASS  R01  reports: “คัดลอกไป LINE” puts who-owes-what on the clipboard
+PASS  R02  reports: “ส่งออก Excel” downloads a real .xlsx
+PASS  R03  reports: switching room / month / subject keeps the page working
+PASS  D01  random: “ใช้ทั้งห้อง” then “สุ่มเลย” shows a name; group mode makes groups
+PASS  D02  random: clicking an option (เฉพาะคนที่มา / ไม่ซ้ำจนครบ) flips it exactly once, and the boxes are normal-sized
+PASS  E01  settings: change the school name → save bar → saved → header follows → survives reload
+PASS  E02  settings: the theme chosen stays after a reload
+PASS  E03  settings: leaving with unsaved changes asks first
+PASS  E04  settings: edit a term's number, name and dates (Thai date fields) and save
+PASS  E05  settings: devices list shows this device
+PASS  E06  settings: wrong current password is refused; the right one changes it and says so
+PASS  E07  settings: “ดาวน์โหลดไฟล์สำรอง” gives a valid backup file
+PASS  E09  settings: a link to another section (#/settings?section=backup) works even while already on settings
+PASS  E10  settings: side menu OR pills, not both, on a wide screen
+PASS  K01  history: when the server cannot be reached it says so (and offers a retry), not “no history yet”
+PASS  K02  reports: when the server cannot be reached the page says so, print/export are off, the badge goes offline — and all recover
+PASS  E08  settings: history lists what was just done
+PASS  A04  sign out lands on the sign-in page; the new password works
+PASS  Y01  start the next term (same year): the box offers เริ่มภาคเรียน 2/2569, asks for the tick, and cancelling changes nothing
+PASS  Y02  start a new school year: date fields on ONE line; the confirm needs the tick; cancelling deletes nothing
+PASS  M01  phone: bottom tabs and the menu sheet reach every page; the sheet signs out
+PASS  X01  start over (data): needs backup choice, then password + the words; the confirm stays off until both are typed (not pressed)
+
+49/49 flows passed   shots of failures: C:\Users\User\AppData\Local\Temp\claude\a1d12d797197b13b\53adb85b-b13e-4d1b-a9f4-5022ca2a29cb\scratchpad\shots-flows\flows
+exit 0

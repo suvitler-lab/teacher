@@ -1,0 +1,7 @@
+7107.before {"home":14,"scan":1,"attendance":0,"random":0,"gradebook":1,"reports":1,"students":1}
+7107.buttons {"home":"ซ่อนชื่อ pressed=false","scan":"ซ่อนชื่อ pressed=false","attendance":"ซ่อนชื่ออยู่ pressed=true","random":"ซ่อนชื่ออยู่ pressed=true","gradebook":"ซ่อนชื่ออยู่ pressed=true","reports":"ซ่อนชื่ออยู่ pressed=true","students":"ซ่อนชื่ออยู่ pressed=true"}
+7107.after-own-button {"home":0,"scan":1,"attendance":0,"random":0,"gradebook":1,"reports":1,"students":1}
+7107.revisit {"home":0,"scan":1,"attendance":0,"random":0,"gradebook":1,"reports":1,"students":1}
+7304.print {"attendance":{"names":0,"hasNumberHeader":true},"gradebook":{"names":1,"hasNumberHeader":true},"reports":{"names":1,"hasNumberHeader":true},"students":{"names":1,"hasNumberHeader":true}}
+7106.sections {"backup":"สำรองและกู้คืน\nทุกเครื่อง | hash=#/settings?section=backup","worktypes":"ประเภทงาน | hash=#/settings?section=worktypes","catalog&tab=types":"ประเภทงาน | hash=#/settings?section=catalog&tab=types","device":"ตรวจเครื่องนี้\nเครื่องนี้เท่านั้น | hash=#/settings?section=device","devices":"บัญชีและรหัสผ่าน | hash=#/settings?section=devices","danger":"เริ่มใหม่ (ล้างข้อมูล) | hash=#/settings?section=danger","nonsense":"ภาพรวม | hash=#/settings?section=nonsense"}
+exit 0

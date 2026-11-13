@@ -1,0 +1,10 @@
+col idx 5
+PASS  grade offline: not on server yet  — []
+A badge offline: ออฟไลน์ · รอส่ง 1
+PASS  grade lands once after reconnect (score 7)  — [{"score":7,"status":"submitted"}]
+PASS  queue empties  — ออนไลน์
+PASS  B sees 7 after refresh  — 20ด.ญ.เฟิร์น วัฒนา ••• 6 10 – 7 23/50 46%
+INFO same-cell final server: [{"score":9,"status":"submitted"}] | B badge: ออนไลน์ | B text: า ••• 6 10 – 9 25/50 50% 21ด.ช.ภูริช ไชยชนะ ••• – 10 – 10/50 20% 22ด.ญ.แตงโม รุ่งเรือง ••• 7 10 – – 17/50 34% 23ด.ช.ภูผา ส
+PASS  same cell: exactly one row
+5/5
+exit 0

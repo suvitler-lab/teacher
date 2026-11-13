@@ -1,0 +1,11 @@
+desk data-layout= c
+desk {"w":147,"h":56,"name":"ปิดรับงานนี้ แบบฝึกหัดร้อยละ","text":"ปิดรับงานนี้","tag":"BUTTON","type":"button","color":"rgb(42, 31, 22)","bg":"rgb(243, 205, 156)","contrast":10.74,"fs":"16px"}
+desk focus {"focused":true,"outline":"solid 2px rgb(180, 70, 42)","shadow":"none"}
+after Enter url: #/gradebook?class=cls_b_g62&subject=sub_math&asg=asg_h_o1
+ipadP data-layout= c
+ipadP {"w":159,"h":49,"name":"ปิดรับงานนี้ แบบฝึกหัดร้อยละ","text":"ปิดรับงานนี้","tag":"BUTTON","type":"button","color":"rgb(42, 31, 22)","bg":"rgb(243, 205, 156)","contrast":10.74,"fs":"18px"}
+ipadP focus {"focused":true,"outline":"solid 2px rgb(180, 70, 42)","shadow":"none"}
+phone data-layout= c
+phone {"w":159,"h":46,"name":"ปิดรับงานนี้ แบบฝึกหัดร้อยละ","text":"ปิดรับงานนี้","tag":"BUTTON","type":"button","color":"rgb(42, 31, 22)","bg":"rgb(243, 205, 156)","contrast":10.74,"fs":"18px"}
+phone focus {"focused":true,"outline":"solid 2px rgb(180, 70, 42)","shadow":"none"}
+exit 0

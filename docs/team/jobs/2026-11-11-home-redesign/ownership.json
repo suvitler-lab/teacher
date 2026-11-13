@@ -621,7 +621,8 @@
         "docs/team/jobs/2026-11-11-home-redesign/board-history.part-3.md",
         "docs/team/jobs/2026-11-11-home-redesign/board-history.part-4.md",
         "docs/team/jobs/2026-11-11-home-redesign/board-history.part-5.md",
-        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-6.md"
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-6.md",
+        "docs/team/jobs/2026-11-11-home-redesign/board-history.part-7.md"
       ]
     },
     "T-72": {
@@ -756,6 +757,41 @@
         "test/unit/hr-vfix-*.test.tsx",
         "test/unit/hr-st*.test.tsx",
         "docs/team/jobs/2026-11-11-home-redesign/dev-notes/T-84.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-85": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-i.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-86": {
+      "role": "team-code-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/code-review.part-29.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-87": {
+      "role": "team-security-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/security-review.part-4.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-88": {
+      "role": "team-security-reviewer",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/security-review.part-5.md",
+        "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
+      ]
+    },
+    "T-89": {
+      "role": "team-qa-tester",
+      "paths": [
+        "docs/team/jobs/2026-11-11-home-redesign/verify-qa-j.md",
         "docs/team/jobs/2026-11-11-home-redesign/evidence/**"
       ]
     }

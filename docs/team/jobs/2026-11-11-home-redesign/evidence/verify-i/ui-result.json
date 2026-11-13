@@ -1,0 +1,349 @@
+{
+ "taps": {
+  "desk:attendance": {
+   "total": 121,
+   "small": 7,
+   "sample": [
+    "BUTTON.ghost[ซ่อนชื่อนักเรี] 104x40",
+    "BUTTON.ghost[ปรับการ์ด] 118x40",
+    "BUTTON.[โหมดฉายจอ] 135x40",
+    "BUTTON.on[รายวัน] 65x30",
+    "BUTTON.[รายคาบ] 73x30",
+    "BUTTON.on[แตะเลือก] 106x30",
+    "BUTTON.[สแกน QR] 107x30"
+   ],
+   "hOverflow": false
+  },
+  "desk:random": {
+   "total": 27,
+   "small": 7,
+   "sample": [
+    "BUTTON.ghost[ซ่อนชื่อนักเรี] 104x40",
+    "BUTTON.ghost[ปรับการ์ด] 118x40",
+    "BUTTON.[โหมดฉายจอ] 135x40",
+    "BUTTON.pill[ป.6/144] 84x32",
+    "BUTTON.pill[ป.6/24] 75x32",
+    "BUTTON.pill[ป.6/33] 75x32",
+    "BUTTON.switch[เสียงติ๊งตอนได] 64x38"
+   ],
+   "hOverflow": false
+  },
+  "desk:gradebook": {
+   "total": 36,
+   "small": 24,
+   "sample": [
+    "SELECT.[ภาคเรียนที่แสด] 187x20",
+    "A.tp-manage[จัดการภาคเรียน] 34x30",
+    "BUTTON.ghost[ซ่อนชื่อ] 104x40",
+    "BUTTON.ghost[ปรับการ์ด] 118x40",
+    "BUTTON.primary[สร้างงาน] 115x40",
+    "BUTTON.pill[ป.6/144] 84x32",
+    "BUTTON.pill[ป.6/24] 75x32",
+    "BUTTON.pill[ป.6/33] 75x32"
+   ],
+   "hOverflow": false
+  },
+  "desk:reports": {
+   "total": 100,
+   "small": 67,
+   "sample": [
+    "SELECT.[ภาคเรียนที่แสด] 187x20",
+    "A.tp-manage[จัดการภาคเรียน] 34x30",
+    "BUTTON.ghost[ซ่อนชื่อนักเรี] 106x40",
+    "BUTTON.ghost[ปรับการ์ด] 120x40",
+    "BUTTON.pill[ป.6/144] 84x32",
+    "BUTTON.pill[ป.6/24] 75x32",
+    "BUTTON.pill[ป.6/33] 75x32",
+    "SELECT.rp-sel[วิชาของรายงาน] 144x36"
+   ],
+   "hOverflow": false
+  },
+  "desk:students": {
+   "total": 121,
+   "small": 57,
+   "sample": [
+    "SELECT.[ภาคเรียนที่แสด] 187x20",
+    "A.tp-manage[จัดการภาคเรียน] 34x30",
+    "BUTTON.ghost[ซ่อนชื่อนักเรี] 106x40",
+    "BUTTON.stu-ibtn[นำเข้า Excel] 138x40",
+    "BUTTON.primary[เพิ่มนักเรียน] 135x40",
+    "BUTTON.ghost[ปรับการ์ด] 120x40",
+    "BUTTON.pill[ป.6/144] 84x32",
+    "BUTTON.pill[ป.6/24] 75x32"
+   ],
+   "hOverflow": false
+  },
+  "desk:settings": {
+   "total": 31,
+   "small": 3,
+   "sample": [
+    "BUTTON.ghost[ปรับการ์ดภาพรว] 175x40",
+    "INPUT.[] 394x40",
+    "INPUT.[] 394x40"
+   ],
+   "hOverflow": false
+  },
+  "desk:scan-setup": {
+   "total": 30,
+   "small": 2,
+   "sample": [
+    "SELECT.[ภาคเรียนที่แสด] 187x20",
+    "A.tp-manage[จัดการภาคเรียน] 34x30"
+   ],
+   "hOverflow": false
+  },
+  "desk:scan-run": {
+   "total": 63,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "desk:scan-result": {
+   "total": 63,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "desk:home": {
+   "total": 55,
+   "small": 2,
+   "sample": [
+    "SELECT.[ภาคเรียนที่แสด] 187x20",
+    "A.tp-manage[จัดการภาคเรียน] 34x42"
+   ],
+   "hOverflow": false
+  },
+  "ipadL:attendance": {
+   "total": 121,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:random": {
+   "total": 27,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:gradebook": {
+   "total": 36,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:reports": {
+   "total": 100,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:students": {
+   "total": 121,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:settings": {
+   "total": 31,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:scan-setup": {
+   "total": 30,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:scan-run": {
+   "total": 63,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:scan-result": {
+   "total": 63,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadL:home": {
+   "total": 55,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:attendance": {
+   "total": 121,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:random": {
+   "total": 27,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:gradebook": {
+   "total": 30,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:reports": {
+   "total": 100,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:students": {
+   "total": 121,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:settings": {
+   "total": 27,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:scan-setup": {
+   "total": 30,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:scan-run": {
+   "total": 64,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:scan-result": {
+   "total": 64,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "ipadP:home": {
+   "total": 55,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:attendance": {
+   "total": 120,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:random": {
+   "total": 24,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:gradebook": {
+   "total": 83,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:reports": {
+   "total": 86,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:students": {
+   "total": 102,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:settings": {
+   "total": 17,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:scan-setup": {
+   "total": 26,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:scan-run": {
+   "total": 60,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:scan-result": {
+   "total": 60,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  },
+  "phone:home": {
+   "total": 51,
+   "small": 0,
+   "sample": [],
+   "hOverflow": false
+  }
+ },
+ "random": {
+  "desk": {
+   "vh": 729,
+   "btnVisibleNoScroll": false,
+   "nameFs": 0,
+   "nameTxt": "",
+   "pageH": 1039
+  },
+  "ipadL": {
+   "vh": 820,
+   "btnVisibleNoScroll": false,
+   "nameFs": 0,
+   "nameTxt": "",
+   "pageH": 1193
+  },
+  "ipadP": {
+   "vh": 1180,
+   "btnVisibleNoScroll": false,
+   "nameFs": 0,
+   "nameTxt": "",
+   "pageH": 1798
+  },
+  "phone": {
+   "vh": 844,
+   "btnVisibleNoScroll": false,
+   "nameFs": 0,
+   "nameTxt": "",
+   "pageH": 2409
+  }
+ },
+ "scan": {
+  "desk": {
+   "nameFs": 28,
+   "el": "name:ด.ช.กันตภณ พูนผล",
+   "hOverflow": false
+  },
+  "ipadL": {
+   "nameFs": 31.5,
+   "el": "name:ด.ช.กันตภณ พูนผล",
+   "hOverflow": false
+  },
+  "ipadP": {
+   "nameFs": 31.5,
+   "el": "name:ด.ช.กันตภณ พูนผล",
+   "hOverflow": false
+  },
+  "phone": {
+   "nameFs": 31.5,
+   "el": "name:ด.ช.กันตภณ พูนผล",
+   "hOverflow": false
+  }
+ }
+}

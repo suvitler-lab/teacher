@@ -51,7 +51,7 @@
 .hma-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); }
 .hma-top .hm-chip { flex: none; }
 .hma-txt { min-width: 0; flex: 1 1 auto; }
-.hma-body h3 { font-size: var(--t-md); line-height: 1.4; overflow-wrap: anywhere; }
+.hma-body h3 { font-size: var(--t-md); line-height: 1.4; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; max-width: 100%; min-width: 0; } /* T-84 B-H2: a 200-char title is two lines; the full text is in title= */
 .hma-body p { margin: 2px 0 0; font-size: var(--t-sm); color: var(--text-secondary); overflow-wrap: anywhere; }
 .hma-acts { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
 .hma-btn { height: auto; min-height: var(--tap); min-width: var(--tap); padding: 6px 14px; font-size: var(--t-sm); white-space: normal; text-align: center; }

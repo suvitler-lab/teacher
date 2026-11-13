@@ -52,7 +52,7 @@ function RowCard({ row, model, hide, firstRoom }: { row: TodayRow; model: HomeMo
   return (
     <div class="hma-body">
       <div class="hma-top">
-        <div class="hma-txt"><h3>{row.title}</h3>{row.reason && <p>{row.reason}</p>}</div>
+        <div class="hma-txt"><h3 title={row.title}>{row.title}</h3>{row.reason && <p>{row.reason}</p>}</div>
         <Chip tone={later ? "muted" : LEVEL_TONE[row.level]} icon={later ? "calendar-blank" : LEVEL_ICON[row.level]}>{row.levelLabel}</Chip>
       </div>
       <Extra row={row} model={model} firstRoom={firstRoom} />

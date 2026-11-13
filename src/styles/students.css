@@ -175,7 +175,11 @@ button.stu-tile:hover { background: var(--surface-1); }
 .stu-hero .stu-tile { flex: none; min-height: 3.5rem; max-height: 5.5rem; }
 .stu-hero div.stu-tile { cursor: default; }
 .stu-tile .ts { font-size: var(--fs-xs); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stu-tile:disabled { opacity: .72; cursor: not-allowed; }
+/* T-84 B-H3: "off" is told by a dashed edge, the flat surface and a dimmed icon — NOT by opacity (opacity .72 took the text to 4.09:1); the text keeps full colour so it is >= 4.5:1 in every look */
+.stu-tile:disabled { opacity: 1; cursor: not-allowed; border-style: dashed; border-color: var(--border-strong); background: var(--surface-1); }
+.stu-tile:disabled .ti { opacity: .6; }
+.stu-tile:disabled .tl, .stu-tile:disabled .tv, .stu-tile:disabled .tv.ok, .stu-tile:disabled .tv.bad { color: var(--text-primary); }
+.stu-tile:disabled .tv { font-weight: 500; }
 @media (max-width: 1000px) { .stu-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 460px) { .stu-hero .stu-tile { padding: 6px 8px; gap: 4px 6px; } .stu-tile .tv { font-size: 1.05rem; } }
 .stu-row2 { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; min-width: 0; }
@@ -314,5 +318,5 @@ button.stu-tile:hover { background: var(--surface-1); }
 /* T-67 (ST-S03): the three empty-state buttons keep 44px and wrap */
 .stu-tplempty { margin-top: 0; }
 
-/* T-75: same rule for a disabled tile (opacity .72 stays; primary text for >= 4.5:1 on the light skins) */
+/* T-75: primary text on a disabled tile (T-84 removed the opacity, see above) */
 .stu-tile:disabled, .stu-tile:disabled .ts { color: var(--text-primary); }

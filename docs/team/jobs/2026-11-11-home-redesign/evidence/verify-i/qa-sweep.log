@@ -1,0 +1,24 @@
+
+== sweep: 19 pages × 3 sizes × 2 themes
+
+== click timing (desktop, light)
+  open สมุดคะแนน                                 screen answers after:   879 ms   api 1  db round trips  8  server time 767 ms
+  open รายงาน                                    screen answers after:   862 ms   api 1  db round trips  9  server time 759 ms
+  open เช็คชื่อ                                  screen answers after:    13 ms   api 3  db round trips 24  server time 1497 ms
+  open นักเรียน                                  screen answers after:    51 ms   api 1  db round trips  3  server time 453 ms
+  open หน้าหลัก                                  screen answers after:    11 ms   api 1  db round trips 10  server time 734 ms
+  gradebook: click the eye (toggle)              screen answers after:    63 ms   api 1  db round trips  9  server time 835 ms
+  gradebook: click the eye again (toggle back)   screen answers after:    65 ms   api 1  db round trips  9  server time 799 ms
+  gradebook: click a column header (select)      screen answers after:    24 ms   api 0  db round trips  0  server time 0 ms
+  gradebook: “ทั้งห้องส่งแล้ว” (whole class, confirm) screen answers after:  2025 ms   api 2  db round trips 18  server time 1971 ms
+  attendance: tap one student                    screen answers after:    29 ms   api 2  db round trips 17  server time 2363 ms
+  attendance: “มาทั้งห้อง” (confirm)             screen answers after:    53 ms   api 0  db round trips  0  server time 0 ms
+  students: open a student's drawer              screen answers after:    61 ms   api 1  db round trips  3  server time 464 ms
+  students: open นำเข้า Excel                    screen answers after:    38 ms   api 0  db round trips  0  server time 0 ms
+  settings: pick the dark theme                  screen answers after:   467 ms   api 1  db round trips  3  server time 464 ms
+  settings: pick the light theme                 screen answers after:   396 ms   api 1  db round trips  3  server time 472 ms
+  reports: switch to รายเดือน                    screen answers after:    37 ms   api 1  db round trips  8  server time 706 ms
+
+findings: P1 0 · P2 0 · P3 0   → C:\Users\User\AppData\Local\Temp\claude\a1d12d797197b13b\53adb85b-b13e-4d1b-a9f4-5022ca2a29cb\scratchpad\out-sweep\run.json
+shots: C:/Users/User/AppData/Local/Temp/claude/a1d12d797197b13b/53adb85b-b13e-4d1b-a9f4-5022ca2a29cb/scratchpad/shots-sweep
+exit 0

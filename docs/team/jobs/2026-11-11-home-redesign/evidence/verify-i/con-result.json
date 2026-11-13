@@ -1,0 +1,634 @@
+{
+ "con": {
+  "home-a|desk|pro|light": {
+   "n": 169,
+   "min": 5.61,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|desk|pro|dark": {
+   "n": 169,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|desk|warm|light": {
+   "n": 169,
+   "min": 5.45,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|desk|warm|dark": {
+   "n": 169,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|desk|playful|light": {
+   "n": 169,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|desk|playful|dark": {
+   "n": 169,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|pro|light": {
+   "n": 54,
+   "min": 5.61,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|pro|dark": {
+   "n": 54,
+   "min": 8.25,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|warm|light": {
+   "n": 54,
+   "min": 5.53,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|warm|dark": {
+   "n": 54,
+   "min": 7.83,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|playful|light": {
+   "n": 54,
+   "min": 5.49,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|desk|playful|dark": {
+   "n": 54,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|pro|light": {
+   "n": 75,
+   "min": 5.18,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|pro|dark": {
+   "n": 75,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|warm|light": {
+   "n": 75,
+   "min": 5.18,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|warm|dark": {
+   "n": 75,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|playful|light": {
+   "n": 75,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|desk|playful|dark": {
+   "n": 75,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|pro|light": {
+   "n": 160,
+   "min": 5.61,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|pro|dark": {
+   "n": 160,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|warm|light": {
+   "n": 160,
+   "min": 5.45,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|warm|dark": {
+   "n": 160,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|playful|light": {
+   "n": 160,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-a|phone|playful|dark": {
+   "n": 160,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|pro|light": {
+   "n": 25,
+   "min": 5.99,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|pro|dark": {
+   "n": 25,
+   "min": 8.25,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|warm|light": {
+   "n": 25,
+   "min": 5.53,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|warm|dark": {
+   "n": 25,
+   "min": 7.83,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|playful|light": {
+   "n": 25,
+   "min": 5.49,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "settings|phone|playful|dark": {
+   "n": 25,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|pro|light": {
+   "n": 66,
+   "min": 5.18,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|pro|dark": {
+   "n": 66,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|warm|light": {
+   "n": 66,
+   "min": 5.18,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|warm|dark": {
+   "n": 66,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|playful|light": {
+   "n": 66,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "scan|phone|playful|dark": {
+   "n": 66,
+   "min": 7.64,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|pro|light": {
+   "n": 112,
+   "min": 4.69,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|pro|dark": {
+   "n": 112,
+   "min": 5.42,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|warm|light": {
+   "n": 112,
+   "min": 4.65,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|warm|dark": {
+   "n": 112,
+   "min": 5.54,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|playful|light": {
+   "n": 112,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|desk|playful|dark": {
+   "n": 112,
+   "min": 6.2,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|pro|light": {
+   "n": 103,
+   "min": 4.69,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|pro|dark": {
+   "n": 103,
+   "min": 5.42,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|warm|light": {
+   "n": 103,
+   "min": 4.65,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|warm|dark": {
+   "n": 103,
+   "min": 5.54,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|playful|light": {
+   "n": 103,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-b|phone|playful|dark": {
+   "n": 103,
+   "min": 6.2,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|pro|light": {
+   "n": 110,
+   "min": 5.61,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|pro|dark": {
+   "n": 110,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|warm|light": {
+   "n": 110,
+   "min": 5.45,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|warm|dark": {
+   "n": 110,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|playful|light": {
+   "n": 110,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|desk|playful|dark": {
+   "n": 110,
+   "min": 7.02,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|pro|light": {
+   "n": 101,
+   "min": 5.61,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|pro|dark": {
+   "n": 101,
+   "min": 6.79,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|warm|light": {
+   "n": 101,
+   "min": 5.45,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|warm|dark": {
+   "n": 101,
+   "min": 7.08,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|playful|light": {
+   "n": 101,
+   "min": 5.12,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "home-c|phone|playful|dark": {
+   "n": 101,
+   "min": 7.02,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  }
+ },
+ "tile": {
+  "desk|pro|light": {
+   "n": 2,
+   "min": 14.16,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "desk|pro|dark": {
+   "n": 2,
+   "min": 15.19,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "desk|warm|light": {
+   "n": 2,
+   "min": 12.56,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "desk|warm|dark": {
+   "n": 2,
+   "min": 14.4,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "desk|playful|light": {
+   "n": 2,
+   "min": 14.76,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "desk|playful|dark": {
+   "n": 2,
+   "min": 15.35,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|pro|light": {
+   "n": 2,
+   "min": 14.16,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|pro|dark": {
+   "n": 2,
+   "min": 15.19,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|warm|light": {
+   "n": 2,
+   "min": 12.56,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|warm|dark": {
+   "n": 2,
+   "min": 14.4,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|playful|light": {
+   "n": 2,
+   "min": 14.76,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  },
+  "phone|playful|dark": {
+   "n": 2,
+   "min": 15.35,
+   "skipped": 0,
+   "fails": 0,
+   "sample": []
+  }
+ },
+ "tile0": {
+  "desk|pro|light": {
+   "count": 0
+  },
+  "desk|pro|dark": {
+   "count": 0
+  },
+  "desk|warm|light": {
+   "count": 0
+  },
+  "desk|warm|dark": {
+   "count": 0
+  },
+  "desk|playful|light": {
+   "count": 0
+  },
+  "desk|playful|dark": {
+   "count": 0
+  },
+  "phone|pro|light": {
+   "count": 0
+  },
+  "phone|pro|dark": {
+   "count": 0
+  },
+  "phone|warm|light": {
+   "count": 0
+  },
+  "phone|warm|dark": {
+   "count": 0
+  },
+  "phone|playful|light": {
+   "count": 0
+  },
+  "phone|playful|dark": {
+   "count": 0
+  }
+ },
+ "week": {
+  "pro|light": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 6.88,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  },
+  "pro|dark": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 7.88,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  },
+  "warm|light": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 6.26,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  },
+  "warm|dark": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 7.54,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  },
+  "playful|light": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 7.2,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  },
+  "playful|dark": {
+   "disabledChips": 2,
+   "texts": [
+    "พฤ 12ยังไม่ถึง",
+    "ศ 13ยังไม่ถึง"
+   ],
+   "contrast": {
+    "n": 4,
+    "min": 7.91,
+    "skipped": 0,
+    "fails": 0,
+    "sample": []
+   }
+  }
+ }
+}

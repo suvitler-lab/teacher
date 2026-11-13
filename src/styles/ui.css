@@ -146,3 +146,6 @@ button.uc-stat:hover { background: var(--surface-1); }
   .rp-page > .uh > .uh-l { flex: 1 1 11rem; min-width: 0; }
   .rp-page > .uh .uh-sub > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* T-84 B-H2: the scan start bar names the picked work — a 200-char title is two lines, not a wall (scan.css is not ours; the rule only adds clamp) */
+.sc-startbar .sb-t b { display: -webkit-inline-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; max-width: 100%; vertical-align: bottom; }
