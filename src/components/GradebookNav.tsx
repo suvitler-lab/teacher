@@ -123,7 +123,7 @@ export function MiniMap({ info, segments, scrollRef }: { info: ScrollInfo; segme
     scrollFrameTo(sc, Math.min(max, Math.max(0, to)), true);
   }
   return (
-    <div class="gb-mini" ref={setTrack} role="slider"
+    <div class="gb-mini" ref={setTrack} role="slider" aria-label="เลื่อนดูตารางคะแนน"
       aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-valuetext={`เลื่อนมา ${pct}%`}
       onKeyDown={onKey}
       onPointerDown={(e) => {

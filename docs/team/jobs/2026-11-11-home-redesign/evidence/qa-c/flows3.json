@@ -1,0 +1,41 @@
+{
+  "label": "flows3",
+  "at": "2026-11-12T11:08:10.967Z",
+  "passed": 2,
+  "total": 5,
+  "results": [
+    {
+      "id": "A01",
+      "name": "wrong password is refused with a message, and stays on the sign-in page",
+      "pass": true,
+      "ms": 358
+    },
+    {
+      "id": "A02",
+      "name": "the right password gets in (and shows the home page)",
+      "pass": true,
+      "ms": 467
+    },
+    {
+      "id": "T02",
+      "name": "attendance: choose a status, then tap students to set it; “มาทั้งหมด” fills everyone",
+      "pass": false,
+      "error": "locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('radio', { name: /ขาด/ }).first()\u001b[22m",
+      "ms": 8002
+    },
+    {
+      "id": "Y01",
+      "name": "start the next term of the same year: current term moves on, classes and children stay",
+      "pass": false,
+      "error": "locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: /เริ่มภาคเรียน 2\\/2569/ })\u001b[22m",
+      "ms": 8401
+    },
+    {
+      "id": "Y02",
+      "name": "start a new school year: empty same-named rooms open, last year's children become 'finished', nothing is deleted",
+      "pass": false,
+      "error": "locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: /เริ่มภาคเรียน 1\\/2570/ })\u001b[22m",
+      "ms": 8134
+    }
+  ]
+}

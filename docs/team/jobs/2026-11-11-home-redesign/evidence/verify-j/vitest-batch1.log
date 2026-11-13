@@ -1,0 +1,825 @@
+﻿node.exe : 
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+=======================================================================================
+WARNING: @cloudflare/vitest-pool-workers has been renamed to @cloudflare/vitest-plugin.
+This package will not receive future updates.
+Run `npx @cloudflare/codemods vitest:pool-workers-to-vitest-plugin` to migrate.
+=======================================================================================
+
+
+ RUN  v4.1.12 C:/Users/User/Desktop/teacher
+
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 order (BR-54, AC-227) > ↑ on the third class swaps with the second and writes only the two rows whose number changed 216ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > attendance hero and ring > shows the count and a ring that carries every number 214ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 order (BR-54, AC-227) > the first ↑ and the last ↓ are disabled and every arrow is a 44px target 108ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > hero numbers (AC-107, AC-113, BR-24) > drawn = N - m: a history id outside the pool is not counted, and the ring says the same 203ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > hero numbers (AC-107, AC-113, BR-24) > never shows drawn 0 before attendance and history are known 67ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > the late attendance answer of the room we left (useLoadGuard) > room c1 answers after the teacher moved to c2: the page keeps c2's numbers 274ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > the late attendance answer of the room we left (useLoadGuard) > room c1 FAILS after the teacher moved to c2: no error is shown over c2's good answer 67ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > attendance hero and ring > says it is done when everyone is checked 51ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 order (BR-54, AC-227) > a write that fails says the old order stands and loads the real order again 108ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > hide names (AC-101) > the page own switch: banner, number-only tiles, no name in title / aria-label, copy off, home value untouched 330ms
+ ✓ |dom| test/unit/attendance-qa-final.test.tsx > B-4: the sync badge counts attendance drafts too > shows one total of queued scores and unsent attendance, and follows both live 112ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > change message (BR-23) > names the old and the new status, and just the status for an unchecked child 219ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > the late history read of the room we left (histEpoch) > room c1's saved history arrives after the move to c2: c2 keeps its own history and its own count 103ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > hero numbers (AC-107, AC-113, BR-24) > an empty room says so before not-checked or nobody-came, with the way to import 46ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > hero numbers (AC-107, AC-113, BR-24) > offline with no attendance: says whole-room draws still work 70ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > hide names (AC-101) > a tap and the cancel toast say the number only 199ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > hide names (AC-101) > the value is kept per device 3ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 order (BR-54, AC-227) > work types and subjects order the same way 104ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > past day and month card > shows the way back from a past day 65ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > past day and month card > month card: Σ(มา+สาย) ÷ Σเช็คแล้ว, one bar per checked day; empty wording 53ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 keep asks first (AC-228, BR-59) > a class: the dialog tells the result, focus starts on ยกเลิก, cancel writes nothing, the confirm writes archived 170ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > draw, skip, undo, new round (AC-110, AC-112, BR-25) > nobody repeats until everybody has been drawn, and the button becomes next 145ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > the late history read of the room we left (histEpoch) > while room c1's history is still being read nothing can be drawn (no 'drawn 0' guess) 84ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > random-name link (AC-102) > shows only today + daily + complete, with the count of come + late and the note 82ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > who is away > groups ขาด → ป่วย → ลา and copies the list 60ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 keep asks first (AC-228, BR-59) > Esc on the dialog = ยกเลิก 91ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > per child: submitted n/m · running score % (rounded after ×100) · attendance % 9ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > hero: 85% · 4 pieces / 2 people · 71% · 90% · awaiting 4 · pending 4 · absent total 7 3ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > BR-40: awaiting counts per work 1·2·1·0, and checking one (ปวีณ W2 = 18) makes it 3 and the average 72% 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > BR-39: per work 71% / 75% … average 86 · 83 · 83 · 75 and checked n/m; the rate is shown only when final (D42) 16ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > BR-41: absent ≥ 3 only (sick/leave/late do not count): กานดา then ธีรา, ภูมิ (absent 1) out; the edge 2 / 3 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-37 numbers of F-R8 (hand-worked) > the default order of the table: ส่งงาน น้อย→มาก then number = 5 · 8 · 1 · 2 · 3 · 4 · 6 · 7 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-38 '—' where there is no denominator > (1) one open task with no due date, nobody handed in → '—', but the old model still says 0 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-38 '—' where there is no denominator > (2) closed, nobody handed in, 8 children → a real '0%' 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-38 '—' where there is no denominator > (3) everyone excused → the work's rate is '—'; (4) no work → both '—' 1ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > random-name link (AC-102) > not shown when someone is unchecked or on a past day 152ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > empty room (AC-99) > no students: message, import button to /students, the all-present button off 70ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > cards (AC-103, AC-90/91) > todo, away and month are on from the start 23ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > BR-38 '—' where there is no denominator > (5) the BR-37 data has no '—' on the hero 337ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 keep asks first (AC-228, BR-59) > a subject and a work type ask with their own verb 138ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > second tap clears > clears the mark, updates every count, and sends a clear to the server 885ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > registry: groups and deep links (AC-207, AC-210) > lists the sections in their groups, in the order of the design 5ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > registry: groups and deep links (AC-207, AC-210) > opens the section of every old key; tab=types goes to worktypes, tab=terms to the terms tab; unknown -> general 2ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > BR-56: the ต้องทำ strip and the backup dot > backup 6 and 7 days old: not due; 8 days: due; never: due 2ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > BR-56: the ต้องทำ strip and the backup dot > no term, and a term that ended 3 days ago (ending today is not on the strip) 1ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > beforeunload is cancelled while something is edited, and not when nothing is 222ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 keep asks first (AC-228, BR-59) > a kept class sits in the เก็บไว้ fold; นำกลับ with a name that is active again says so under the row (409) and keeps it kept 108ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > cards (AC-103, AC-90/91) > month can be hidden, and the drawer lists it with the locked parts 119ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > grid keyboard (AC-105) > one tab stop; arrows and Home/End move between the children 50ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > a new child starts at ไม่ระบุ and sends prefix null; the next number is 9 after 8 children 476ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-167 print sheet follows the hide switch (R-4911 #1) > hidden: the sheet says "เลขที่ N" everywhere and never a name; the head says แสดงเลขที่แทนชื่อ 441ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > leaving to another page asks first; staying keeps the page and the typed value 149ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > the overview (AC-223) > strip first (only when something is due), then the cards, then the school form; no light/dark choice here 285ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > the overview (AC-223) > nothing due = no strip 40ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > status: loading, saving, failing (AC-214, AC-215, AC-218) > settings not here yet: the list is up at once and the body says it is loading (aria-busy) 25ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > R-4301: the random button waits while a tap of this room is still on this device 149ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 numbers in the row (BR-61, SGQ5) > a class shows its active students; a subject / work type shows only this term's tasks 110ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 numbers in the row (BR-61, SGQ5) > no current term -> — 78ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > a number that is taken says who has it and does not send 150ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > hero shows 85% / 4 ชิ้น · 2 คน / 71% + รอตรวจ 4 / 90% with the BR-37 captions 102ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > DOM order: hero → tools → table → cards (one order) 87ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 tabs and deep link (AC-246) > is a tablist of ห้องเรียน · วิชา · ภาคเรียน (no ประเภทงาน); initialTab opens that tab without clicking buttons 139ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > hidden names: the duplicate message has no name 105ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > status: loading, saving, failing (AC-214, AC-215, AC-218) > a failed save keeps what was typed and says so in an alert with ลองอีกครั้ง; the bar follows into another section 138ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > status: loading, saving, failing (AC-214, AC-215, AC-218) > every row of the scan section says where it applies and how it is saved 75ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > by period there is no random button even when everyone is checked 101ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > confirming ออกโดยไม่บันทึก goes on to the wanted page without saving 177ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-167 print sheet follows the hide switch (R-4911 #1) > shown: full names, no 'แสดงเลขที่แทนชื่อ' 199ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > skin: the screen changes before the server answers, one PUT carries the new accent, then the saved text 612ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > 409 code_taken lands under the code field with focus 101ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > draw, skip, undo, new round (AC-110, AC-112, BR-25) > skip puts the child back (drawn stays one) and the next draw is someone else 836ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > draw, skip, undo, new round (AC-110, AC-112, BR-25) > new round: toast with an undo that brings the old round back 41ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > nothing edited: leaving does not ask 144ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > R-4303: hiding names takes down a toast that carries a name, and clears the live line 134ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > a number chip of 'ใครยังไม่เช็ค' puts the focus on that tile 44ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > R-4311: ArrowDown / ArrowUp jump a whole row (columns read from the grid) 31ms
+ ✓ |dom| test/unit/hr-attx-t43.test.tsx > review round (R-4301, R-4303, R-4311) > the card drawer does not crash on a card its list does not know 69ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 tabs and deep link (AC-246) > CatalogSection hands ?tab= to the editor (no synthetic click) 94ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > the table rows 30% · 75% and the arrow words; the open row is aria-current; Esc-style close returns focus to the name 214ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > the often-absent card is on by default (BR-41) and lists กานดา and ธีรา only, with the rule line 62ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > the nav (AC-213) > groups have text headings (not buttons); every item is a button; Down/Up move the focus 70ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > the nav (AC-213) > switching section moves the focus to that section's heading 44ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข panels (AC-25) > a ring and the four numbers per room, with the BR example: 92 / 88 / 89 % handed in 273ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > review fixes (R-4101..R-4103) > R-4101: a clash is not 'not checked' — the ring, the pill and the button agree (4 kids, 1 clash → 3) 838ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-167 print sheet follows the hide switch (R-4911 #1) > Esc closes the preview and the print button gets the focus back 321ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > draw, skip, undo, new round (AC-110, AC-112, BR-25) > undoing a new round does nothing once something was drawn after it 59ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > moving between sections of the settings page is not leaving: no question 169ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 tabs and deep link (AC-246) > arrow keys move between the tabs 114ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค focus box and 'ต่อจากนี้' (AC-30) > AC-30: the big box is job 1 of 5 with the step line, a word label, reason, the button and ทำทีหลัง; no 'เสร็จแล้ว' 356ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข panels (AC-25) > roll-call per room: 94 % / 90 % / 'ยังไม่ได้เช็คชื่อวันนี้' (never 0 %), and the line under the greeting says 92 % · ยังเหลือ 1 ห้อง 101ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-168 TV view has no 0% without a denominator and never a name (R-4911 #2) > no task is due yet: "—" for the submit rate, not 0% 126ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-168 TV view has no 0% without a denominator and never a name (R-4911 #2) > 85% when there is a denominator, and no name from any child 33ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > review fixes (R-4101..R-4103) > R-4102: a tap that cannot be written (before the start of the year) is not announced as done 132ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > the work row says 'เก็บอยู่' for W2/W3, 71% for W1, and the average with checked n/m 178ms
+ ✓ |dom| test/unit/hr-att-redesign.test.tsx > review fixes (R-4101..R-4103) > R-4103: tapping a number chip moves focus to that child's tile 109ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > layouts (AC-208, AC-209) > phone: page 1 is the list; a row opens page 2 with ‹ ตั้งค่า that goes back to the list 127ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > layouts (AC-208, AC-209) > iPad portrait: a bar of groups on top and the pills of the open group 88ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > 5xx keeps the form and the typed values with the ST-S10 words 137ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 tabs and deep link (AC-246) > WorktypesSection is its own section titled ประเภทงาน 103ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > second tap clears > a different selected status changes the mark; it does not clear it 805ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > while projecting: read only, no e-mail, no names (AC-248, SGQ3) > the page is read only: the controls are inside a disabled fieldset, the notice says why, the teacher's name is off the header 97ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > while projecting: read only, no e-mail, no names (AC-248, SGQ3) > the e-mail shows ซ่อนอยู่; the history and device names are not shown 42ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > while projecting: read only, no e-mail, no names (AC-248, SGQ3) > not projecting: the e-mail is shown 21ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5301: projecting, the scan section does not listen to the scanner and shows no result rows 19ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-251 a room with no children: print / Excel / TV are all off > disables the three buttons, keeps reload and the hide switch, still offers the way to Students 65ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > a draw or a skip in flight when the room changes (clearTimers + epoch, as a pair) > a skip waiting its 700 ms: moving to c2 means no draw happens there and c2's history stays empty 1161ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 classes (AC-226, AC-229) > Enter adds, the field is cleared and keeps focus, and the result is spoken 108ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > hide names: the table and the follow-up say 'เลขที่ N'; copy to LINE and the often-absent card are closed 178ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > a month adds the 'รวมงานที่ไม่ระบุวันมอบ n งาน' note only when n ≥ 1 1ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > no work in the range: hero '—' + 'ยังไม่มีงานในช่วงนี้' and the table still lists the children 78ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค focus box and 'ต่อจากนี้' (AC-30) > AC-30: the other 4 stand in 'ต่อจากนี้' (tomorrow's work is not one of them); a row's button goes to the room's roll-call 148ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > closing with typed values asks first (focus on กลับไปแก้); closing untouched is silent 244ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข panels (AC-25) > 'ต้องติดตาม N คน' per room from that room's own children; names hidden -> no avatar at all 112ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข panels (AC-25) > the room's quick buttons and rooms' labels: one h1, aria-pressed panels, rings are pictures (aria-hidden) with the words in the label (AC-39) 54ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-9 the page guards unsaved edits > after the edit is cancelled (ยกเลิก in the bar) the guard is gone 183ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > only the chip announces the save: no toast (R-3204) 485ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > second tap clears > tapping again after a clear marks the child again (clear is a toggle, not a one-way door) 156ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 classes (AC-226, AC-229) > an empty name keeps เพิ่ม off 104ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5301: not projecting, it listens 20ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > the page > loading: skeleton with 'กำลังโหลดรายงาน…' and no hero numbers before the data 62ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค focus box and 'ต่อจากนี้' (AC-30) > BR-09: the figures in the box are the model's: roll-call chips, per-room bars, late work chips and the page's own count 157ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-251 a room with no children: print / Excel / TV are all off > with children the same buttons are on 132ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-166 the Excel label, and the warning while names are hidden > names the file before the tap; warns only while hidden 76ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > an old child with no prefix stays without one; no status field; QR text follows BR-47 and shows no token 140ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข strip of what to do now (AC-26) > the number is the model's (5), three pills with a button each, 'อีก 2 อย่าง' opens a sheet and does not change the layout 128ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข strip of what to do now (AC-26) > a pill's button does what the row says (the roll-call row goes to the room's roll-call) 62ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-10 the save button cannot be pressed twice > while saving: disabled with กำลังบันทึก…, one request only, then the bar goes 132ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > second tap clears > the week strip and the TV view count a cleared child as unchecked 128ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5302: projecting, no device name anywhere (list, aria-label, latest-edits card) 139ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5309: a key that is also an Object property falls back to general 1ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5304: offline, download / restore / start-term on the overview cards are disabled 75ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค ทำทีหลัง and pulling a row up (AC-31, BR-02) > AC-31: ทำทีหลัง moves the job to the end, the next one is in the box, the move is announced, the count stays 5 and nothing is written 133ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-163 the often-absent card: 5 names, then ดูทั้งหมด (n) opens all > 6 children with absent >= 3 -> the first 5 in order (TC-740 shape) + ดูทั้งหมด (6) + a sheet of 6 115ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 classes (AC-226, AC-229) > the edit field names the grade from the part before “/”; Esc closes it and gives the focus back 164ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-10 the save button cannot be pressed twice > a failed save: the retry button is also off while it retries 142ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > offline: each of the two buttons is off and has its own ต้องออนไลน์ beside it 74ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5305: projecting, the catalog tab for terms still opens; the write buttons stay off 56ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > add / edit form (AC-186/187/189) > rotate inside the form keeps it open with the typed value; failure says the old card still works 155ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > move / leave / come back (AC-190/191, AC-200) > move: checks first, then the check mark and the button opens; hidden names show เลขที่ in the box 95ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข strip of what to do now (AC-26) > nothing to do: 'ไม่มีอะไรค้าง · เคลียร์ครบแล้ว' and no 'อีก' button 86ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค ทำทีหลัง and pulling a row up (AC-31, BR-02) > AC-31: a row of the list comes up into the box without leaving the page; ทำทีหลัง on it sends THAT row to the end 112ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-163 the often-absent card: 5 names, then ดูทั้งหมด (n) opens all > exactly 5 -> 5 rows, no button 138ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > online: both are on and no label is shown 57ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 classes (AC-226, AC-229) > an empty edit name shows the SE-S16 sentence as an alert tied to the field 127ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 classes (AC-226, AC-229) > no class in this year: the SE-S07 empty state with เพิ่มห้องแรก and the field focused; last year's classes are folded and read-only 83ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5303: phone: the heading takes the focus after a pick, and the list row after going back 110ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5307: the look section says its settings apply to every device 40ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > move / leave / come back (AC-190/191, AC-200) > move offline: the button is off and says ย้ายห้องต้องออนไลน์ 96ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-163 the often-absent card: 5 names, then ดูทั้งหมด (n) opens all > 2 children (กานดา, ธีรา): 2 rows, no button 79ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข strip of what to do now (AC-26) > names hidden: the sheet has no copy-to-LINE; shown: one per room, never the other rooms' children 198ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > starts on the room the day's list asks for (ป.5/1: roll-call not done); a tap picks another and the detail follows, no page change 69ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค ทำทีหลัง and pulling a row up (AC-31, BR-02) > BR-02: when the roll-call is done and the data reloads the row is gone and the count is 4 (nothing was 'ticked') 136ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 subject colour (AC-230) and work type (AC-234) > the colour is a radiogroup of named round buttons; ArrowRight picks the next; code over 30 is refused 141ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > review round (R-4901..R-4904) > R-4901: after tapping 'งานค้าง', changing the class does not scroll/focus the follow card again 234ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > review round (R-4901..R-4904) > R-4902: a closed work excused for everyone reads the same on screen and to a screen reader (no 'เก็บอยู่') 88ms
+ ✓ |dom| test/unit/attendance-qa-final.test.tsx > B-5: a clash that waits for the teacher is not shown as saved > the tile says รอเลือก, the summary counts it as ต้องตรวจสอบ (not มา), and picking a side settles it 2096ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > move / leave / come back (AC-190/191, AC-200) > leave: focus starts on ยกเลิก and the main button says ย้ายออก / ตั้งเป็นไม่ใช้งาน 111ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > review round (R-4901..R-4904) > R-4903: reload / print / projector / Excel come after the hero in the DOM 227ms
+ ✓ |dom| test/unit/hr-rp-t49.test.tsx > review round (R-4901..R-4904) > R-4904: aria-busy is on the skeleton only, never on the page root that holds the status boxes 55ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > open work oldest due first (overdue, today), with the bar, the numbers and a scan button that goes to that work and room 61ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > projecting (online): each button is off on its own, no request, and no wrong 'need online' label 89ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > projecting starts while the section is on screen: both buttons go off at once 53ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > R-5001 the student drawer hides the name too > hidden: the drawer says เลขที่ 5 and never the full name 103ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค ทำทีหลัง and pulling a row up (AC-31, BR-02) > with one job left there is nothing to push back: no ทำทีหลัง 131ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 subject colour (AC-230) and work type (AC-234) > a bad full score is told under the field; the hint says it applies to new tasks only; there is no delete 106ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > on the page: the red section while projecting leaves no enabled wipe button and no box 159ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > the box already open when projecting starts: the red button goes off and sends nothing (step 2) 75ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > 'ค้าง' and 'รอตรวจ' go to that work's rows in the gradebook; 'สร้างงาน' carries the room 117ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-172 / AC-251 phone: sheets for filters, export, sort, menu > no desktop tool row; [ตัวกรอง (0)] opens a sheet; Esc closes and the opener gets the focus back 163ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค ทำทีหลัง and pulling a row up (AC-31, BR-02) > the second button of a job: one copy button per room (only that room's names) and ปิดรับงานนี้ only where shouldClose 128ms
+ ✓ |dom| test/unit/hr-sg-settings-shell.test.tsx > review round (R-5301..R-5309) > R-5306: choosing dark saves, toasts with เลิกทำ, and the undo sends the old mode back 422ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 subject colour (AC-230) and work type (AC-234) > a new work type can be marked as an exam 92ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > projecting from the start: even with the right password and phrase the red button stays off, both modes 93ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > follow-up of the room only (never 'ทั้งหมด', with a link to the reports) and who is away by status; the roll-call button of a room not checked 137ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > names hidden: the detail shows counts only (BR-08), no names, no initials 48ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค review round (R-3602, R-3603) > R-3602: two rooms share one work (same seat numbers): each copy button carries only that room's children 120ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > layout and mode save the same way (mode sends only `theme`) 792ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > tapping the one already in use sends nothing 49ms
+ ✓ |dom| test/unit/hr-sg5-gaps-t72.test.tsx > M53-12 / M56-2 the red zone buttons > projecting starts while the personal-data warning is open: confirming it sends no copy and no reset 131ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 guards: double tap, offline > two quick taps on เพิ่ม send one request; the button is off while it is on its way 109ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค review round (R-3602, R-3603) > R-3601: a room whose work is open but not due yet says so (no '0%', no 'ยังไม่มีงานเปิดรับ'); a room with no open work still says that 123ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค review round (R-3602, R-3603) > R-3603: 'all clear' drawn from an old offline copy carries the 'ข้อมูลเก่า' label; from live data it does not 83ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > AC-28: a room with no open work, nobody to follow and everyone present: '—' (not 0%) and the three sentences 85ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข picked room (AC-27, AC-28) > a room with nobody in it: its panel says so and the detail offers 'นำเข้านักเรียน'; the roll-call count leaves it out ('ยังเหลือ 1 ห้อง') 52ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 guards: double tap, offline > offline every write is off and says ต้องออนไลน์; reading and the tabs still work 112ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-172 / AC-251 phone: sheets for filters, export, sort, menu > [ส่งออก] sheet: scope label, warning when hidden, three items on 112ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-172 / AC-251 phone: sheets for filters, export, sort, menu > empty room: the three items in the export sheet are disabled 34ms
+ ✓ |dom| test/unit/hr-rp-t50.test.tsx > AC-172 / AC-251 phone: sheets for filters, export, sort, menu > sort sheet: picking มาเรียน sorts and says so; the ⋮ menu offers ปรับการ์ด 235ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > undo > 'เลิกทำ' puts the previous status back, with its time, and the server ends up with it 826ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > a tap is never dead > while the system is slow to answer the children can be tapped after a moment, and the page says why it is waiting 2808ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 terms (AC-231–233, BR-55) > the head follows termLine; last year's terms are folded and read-only; the current year's other term can be made current after asking, with เลิกทำ 156ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข many rooms (AC-29, AC-38) > more than 3 rooms: compact panels, a chip row to pick the room, the full name in the label and the title (cut with … by CSS only) 85ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข many rooms (AC-29, AC-38) > one room picked at a time: only its work is listed, a long title is a 2-line clamp with the whole title in `title` 34ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > a tap is never dead > tapping a child who already has the selected status rings the tile and takes the mark back, saying so 109ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค clear day and many jobs (AC-32, ux ข้อมูลเยอะ) > AC-32: nothing to do -> 'วันนี้เคลียร์ครบแล้ว', no reset, no ทำทีหลัง; quick buttons and tiles are still there; tomorrow listed 110ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 terms (AC-231–233, BR-55) > no term -> the SE-S09 sentence and ตั้งภาคเรียนแรก opens the start dialog 94ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > quick taps / arrow keys across the cards send only where they stop (R-3207) 455ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค clear day and many jobs (AC-32, ux ข้อมูลเยอะ) > many jobs: 4 in 'ต่อจากนี้' and 'ดูทั้งหมด (N)' opens the rest (nothing is cut off) 152ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 terms (AC-231–233, BR-55) > the add fold offers the year as a list (current ±3), terms 1–3, and shows the server's refusal under the field 142ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข many rooms (AC-29, AC-38) > 30 open works: five are shown, 'ดูทั้งหมด (30)' shows every one (scroll down, nothing hidden) 131ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข logic > defaultRoomId: the room the list asks for, else most missing (first on a tie), else the first with children, else the first 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข logic > roomOpenWork: oldest due first, no due date last, the same date in the server's order 7ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข logic > workSegments adds up to the children counted; attWords never says 0% for a room not checked 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข in an earlier year > no strip, no roll-call on the panels, no 'ไม่มาวันนี้' card; the rest still works 33ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: styles > R-3501: the number on the red 'ต้องทำตอนนี้' badge uses the theme's on-danger text colour 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: styles > R-3503: the picked panel is drawn without `outline`, and its focus ring is offset past the picked ring 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: styles > R-3506: the chip row keeps end padding at least as wide as its fade 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: words and focus > R-3502: open work not yet due is not 'no open work' and never 0%; no open work says so 1ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: words and focus > R-3504: roll-call half done and nobody away yet: never 'มาครบทุกคน'; says how many are checked and offers the roll-call 45ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค tiles (AC-33, BR-03/04/05, BR-08) > AC-33: quick buttons, the roll-call ring (the model's %), per-room progress and follow groups with a link to reports 126ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค tiles (AC-33, BR-03/04/05, BR-08) > BR-12: the tiles follow the teacher's list (visible ones, in order) 74ms
+ ✓ |dom| test/unit/attendance-qa-final.test.tsx > B-5: a clash that waits for the teacher is not shown as saved > choosing this device's value turns the tile into that status once it is sent 960ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 terms (AC-231–233, BR-55) > editing a term offers terms 1–3 and tells that the year cannot change 111ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: words and focus > R-3505: 'ดูทั้งหมด' moves focus to the first work added, and the open list does not follow to another room 154ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: words and focus > S-3505: four rooms are already compact panels (COMPACT_AFTER), three are not 66ms
+ ✓ |dom| test/unit/hr-layout-b-ui.test.tsx > ข review fixes: words and focus > S-3505: Esc closes the 'อีก N อย่าง' sheet and focus goes back to the button that opened it 67ms
+ ✓ |dom| test/unit/attendance-qa-final.test.tsx > N-1: the session expired, then 'มาทั้งห้อง' > shows 'รอส่ง 4' for the children right away (not saved), keeps them in the draft, and sends after login 276ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค tiles (AC-33, BR-03/04/05, BR-08) > hide names: no names, no initials, no copy-to-LINE, counts only (BR-08) 123ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 focus after a write (R-5403) > after keeping a class the keyboard is on the next row's button 196ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค tiles (AC-33, BR-03/04/05, BR-08) > names shown: a child is a button that opens the student 100ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค tiles (AC-33, BR-03/04/05, BR-08) > a past year has no 'today': no job box, no list, no roll-call tile; the other tiles stay 37ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค helpers > focusQueue leaves out tomorrow; pickFocus takes the picked row or the first; a vanished pick falls back 1ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค helpers > nextRows keeps the place in the queue of every row except the one in the box 1ms
+ ✓ |dom| test/unit/hr-layout-c-ui.test.tsx > ค helpers > ringSegments: empty statuses have no arc, one status takes the whole ring, none gives nothing 3ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 focus after a write (R-5403) > a taken name (409) moves the keyboard to the name field — in the add form and in the edit form 300ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-02: a tap shows at once and is saved > taps on different keys: the first save fails, the second works -> the chip must not say saved (R-3201) 952ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 focus after a write (R-5403) > a refused restore keeps the keyboard on นำกลับ; a restore that works puts it on that class's row 298ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-01 · a slow answer does not wipe what was saved while it was on its way > a mark that was confirmed meanwhile stays on screen, and the next tap builds on its version 4144ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > undo > an undo after the clear was already sent writes the status back as a fresh mark 1380ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 focus after a write (R-5403) > making a term current leaves the keyboard on that term's row 220ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 projecting stays read-only (R-5405) > while projecting every write is off — and stays off when the network comes and goes 107ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 projecting stays read-only (R-5405) > the work types section is read-only while projecting too 78ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-05 / D38: a failed or offline save puts the old look back > server error while online: back to the old skin, 'บันทึกหน้าตาไม่สำเร็จ', nothing queued 401ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 phone menu (AC-246) > < 480px: แก้ไข/เก็บ are inside a 'จัดการ {ชื่อ}' menu; the arrows stay on the row; >= 480px shows the buttons 125ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 phone menu (AC-246) > the first item takes the focus; Esc closes the menu and gives the focus back to the menu button 78ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 phone menu (AC-246) > แก้ไข from the menu opens the editor on the name; เก็บ from the menu asks first 94ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 phone menu (AC-246) > offline the เก็บ item is disabled; the menu itself still opens 78ms
+ ✓ |dom| test/unit/hr-sg2-catalog-t54.test.tsx > T-54 phone menu (AC-246) > subjects and work types get the same menu 79ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-05 / D38: a failed or offline save puts the old look back > a failed mode change goes back to the old mode 411ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > offline, reload, retry, clash > offline: the clear waits in the queue, the tile stays unchecked, and it goes out when the network is back 723ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > offline, reload, retry, clash > reload: a clear that was never sent is still a clear — the server's old mark does not come back 134ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > draw, skip, undo, new round (AC-110, AC-112, BR-25) > changing room while the names still spin leaves both rooms history untouched 3692ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > the soft ting (AC-115, BR-28, D44) > is off at first, remembered per device, and sounds once per settled result 51ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > the soft ting (AC-115, BR-28, D44) > comes back on after a reload (a new mount reads this device) 19ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > AC-05 / D38: a failed or offline save puts the old look back > offline: no request, the old look stays, 'ออฟไลน์ — เปลี่ยนหน้าตาได้เมื่อออนไลน์' 407ms
+ ✓ |dom| test/unit/hr-random3-gaps-t72.test.tsx > a draw or a skip in flight when the room changes (clearTimers + epoch, as a pair) > changing the mode while the names spin stops the draw: no result and no saved history afterwards 3671ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > the soft ting (AC-115, BR-28, D44) > one ting for a draw of several people, none in group mode 62ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > groups (AC-116) > says the result is not saved, the live line names the plan, and changing room drops it 48ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > reset to default > asks in a dialog; 'ไม่' and Esc change nothing and give focus back to the reset button (R-3202) 107ms
+ ✓ |dom| test/unit/hr-appearance-save.test.tsx > reset to default > 'ใช่ คืนค่า' saves อบอุ่น + ก + ตามเครื่อง and leaves the text size alone 92ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > review fixes R-4401 / R-4403 / R-4405 > R-4401: new-round undo after moving to another room does not touch that room 53ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > review fixes R-4401 / R-4403 / R-4405 > R-4403: the base chip shows a dash, not (0), while loading or before attendance is taken 14ms
+ ✓ |dom| test/unit/hr-random-t44.test.tsx > review fixes R-4401 / R-4403 / R-4405 > R-4405: the audio context is woken inside the tap only when the ting is on 68ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > offline, reload, retry, clash > another device marked the child after this clear: the page shows what the system holds and says so 713ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > a tap is never dead > many quick taps, with the answers coming back in between, all stay on screen 3130ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > the five status buttons > are one radio group, move with the arrow keys, and stay on screen in scan mode (a hidden brush would still colour taps) 71ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > cards follow the order saved in 'ปรับการ์ด' > the cards beside the children (to do / away) are drawn in the saved order 30ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > cards follow the order saved in 'ปรับการ์ด' > the summary and the week strip swap places when moved 27ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > scan messages > a number that is not in the room says so with the room's name 79ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > scan messages > an unknown card says what to do; a good scan says who and when 206ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > scan messages > the scan box has the focus when the scan mode opens 56ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > move / leave / come back (AC-190/191, AC-200) > come back asks first with the ST-S18 words; a taken number opens the fix box 123ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(23, 40) = 58 3ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(1, 8) = 13 1ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(7, 8) = 88 0ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(29, 200) = 15 0ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(2, 3) = 67 0ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > percentOf(1, 3) = 33 0ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > every per-number function goes through it 1ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-10 one rounding: (part × 100) ÷ whole, .5 rounds up > the scored average and the Students average use the same multiply-first form 1ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > B-05 studentSummary().awaiting counts handed-in work without a score > 1 awaiting of 3 2ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 the fraction next to the rate uses class − excused > assignmentFraction: 6/8 · ยกเว้น 2; without excused it is the old form 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-01 every child excused: per-assignment rate 0 ÷ 0 is 0%, never NaN 7ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-02 / E-14 per-child rate ignores not-yet-due work (0 ÷ 0 → 0, early hand-in → 100%) 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-03 / E-04 / E-11 an exact .5 rounds up once (Math.round) 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > B-01 true 57.5% must show 58% (23 of 40 children, 57.5 of 100 points) 0ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-05 whole-class rate is pooled, not a mean of each child's % 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-08 / E-13 late without a score is awaiting; void follows the due date 1ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > by period > a period with no start time is flagged for good, with the way to set it 86ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > by period > the period is picked with the pills only (no second drop-down for it) 55ms
+ ✓ |dom| test/unit/attendance-round4.test.tsx > the save bar > only the save state is read out; the running count is plain text 23ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > offline, reload, retry, clash > a clear that clashes with another device waits for the teacher, who can take either side 822ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > the sender, without the page > a server that says 'no mark' for a cleared child is an acknowledgement; silence is not 96ms
+ ✓ |dom| test/unit/attendance-round5.test.tsx > the sender, without the page > taking back 'มาทั้งห้อง' restores a clear that had not been sent for a child it touched 75ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > import + sample file (AC-194/195) > the sample .xlsx is built in the browser, has the head + two made-up rows and reads back as exactly two rows with no warning 4260ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > BR-58 password check > 6+ characters and equal to the confirmation; the old one is required 5ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > the e-mail is read only with the advice to ask the administrator; no PIN field 56ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > undo for 'มาทั้งห้อง' > offers เลิกทำ, and taking it back leaves the children unchecked and sends nothing 399ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > three password fields with the right autocomplete; show/hide per field 135ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 Excel > class overview sheet: 6/8 · ยกเว้น 2 next to 75%; no excused = 6/10 next to 60% 5412ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 Excel > score sheet shows an excused child as ยกเว้น, not ลา 43ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 Excel > AC-10 attendance % in Excel: 7 of 8 = 88% 36ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > checks before sending: too short and mismatch are told under the field and nothing is sent 109ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > a wrong old password: role=alert under that field; the form stays 66ms
+stdout | test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-03 with excused children: 13% on every screen
+[B-02] Reports "1/8 · ยกเว้น 2" · Excel "1/8 · ยกเว้น 2" · Gradebook "1/8 · ยกเว้น 2" next to 13% (= 1/8)
+
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-09 / E-10 attendance: nothing checked is no data; checked-but-away is 0% 5741ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > E-12 accumulated score counts overdue as 0 and leaves awaiting out 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > B-05 studentSummary.awaiting counts handed-in work without a score 1ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > BR-05 edge cases through the shared functions > AC-06 one Bangkok 'today' at 23:30 and 00:30, shared by worker and pages 1ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 screens > Home shows 6/8 · ยกเว้น 2 beside the 75% bar 112ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > success: sent once (double press), role=status, the form closes and the fields are empty next time 79ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-239/240 account > offline: the change button is disabled with ต้องออนไลน์ 14ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-241 devices > this device has a chip and no sign-out button in the list; another one asks first with the safe answer focused 48ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > registry: the two new sections > privacy and device are real sections of the 'เครื่องนี้' group; old links keep working 7ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-03 with excused children: 13% on every screen 378ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-06 / E-07 Reports score buckets use the rounded %: 59.5 → 60–69, 59 → 50–59 50ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > AC-09 / AC-11 screens > Reports: the bar reads 6/8 · ยกเว้น 2 · 75% and the score card says what it counts 112ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > full 3, scores 2.5 2.5 3 2.5 -> 10.5 / 12 = 87.5 -> 88 0ms
+ ✓ |dom| test/unit/m1-05-verify1.test.tsx > R-05 scored average divides once: Σscore ÷ (scored × full) > Excel class overview shows the same 88 in the average column 33ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-241 devices > cancelling the question signs nobody out 52ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-241 devices > an empty device name is refused under the field; offline disables signing another device out 72ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-241 devices > while projecting a device shows as เครื่อง N (no name leaks) 10ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: hide names on 7 pages (AC-235, BR-52) > shows 7 rows, one per page, all off at first, each with the 'this device only' chip 227ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > E-16 / AC-08 no excused children: 6 of 10 stays 60% in the model and the Excel sheets 56ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-09 AC-01 data: the count next to 75% is 6/8 · ยกเว้น 2 on Reports and the Excel class sheet 63ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > import + sample file (AC-194/195) > the box offers the sample; a pasted run ends with the BR-49 summary toast 553ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > import + sample file (AC-194/195) > offline: the import button is off 60ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-10 edge .5 values: 23 of 40 → 58% in the model and Excel; 29/200 → 15 40ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > AC-11 Excel score sheet says ยกเว้น (not ลา); Reports score card hint matches its value 48ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > R-05 graded average of half-point work divides once: 62.5 → 63 in the model and Excel; awaiting/excused left out 38ms
+ ✓ |dom| test/unit/qa-m1-05.test.ts > same data → same number on Gradebook, Reports, report model and Excel > R-05 everyone full marks on half-point work → 100 1ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-242/243 backup + restore > no wipe button here; a link to the reports page; the stale strip has its button 21ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-242/243 backup + restore > offline: download and restore are disabled with ต้องออนไลน์ 13ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-242/243 backup + restore > a pending restore: the strip offers ยกเลิกงานนี้ 30ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5201: editing a child of another room keeps that room (no silent move); the move box never offers the child's own room 43ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5203: the fix-number box from come-back saves as active with left_at cleared 18ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5205: hidden names — a 409 number_taken never shows the other child's name 20ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5206: the QR date is the Thai day (00:30 on 9 Nov Bangkok = 8 Nov UTC) 5ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: hide names on 7 pages (AC-235, BR-52) > one row changes only the value of its own page (same key as the switch on that page); no API call 98ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: hide names on 7 pages (AC-235, BR-52) > the home row keeps the old key (ngankrob-hide-names = '1' or absent) 78ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-242/243 backup + restore > restore: after a good file the red button stays disabled until the box is ticked; cancel has the focus 74ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-244 history > five filters with aria-pressed; the name follows the home hide-names switch 55ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > DangerSection only opens the box; offline and projecting disable both buttons 36ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5202: the [บัตร QR] menu on the computer: print all, print new-only (off at 0), rotate all 78ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > step 1 lists what goes / stays, has the safety copy ticked, focuses cancel, and has no password field yet 13ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > step 2: focus on the password; the red button needs the password AND the exact phrase 25ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > 'all' needs its own phrase 46ms
+ ✓ |dom| test/unit/hr-st2-t52.test.tsx > review round (R-5201..R-5211) > R-5211/AC-200: the leave button stays pressable offline; the answer is the ST-S10 failure with the old data kept 195ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: hide names on 7 pages (AC-235, BR-52) > เปิดทั้งหมด turns the 7 values on together and the button becomes ปิดทั้งหมด; the projector switch is not touched 102ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: hide names on 7 pages (AC-235, BR-52) > the section follows a change made on a page (the page switch and this row are one value) 47ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at LocationImpl.reload 
+(C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:226:5)
+    at Location.reload (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\generated\Location.js:102:36)
+    at go (C:/Users/User/Desktop/teacher/src/components/ResetModal.tsx:71:16) undefined
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > with the safety copy ticked the personal-data warning comes first; cancelling it sends nothing 39ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: projector and sound (AC-236, BR-51) > the projector rows write the projector's own keys, never the page values 152ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: projector and sound (AC-236, BR-51) > scan sound = the synced sound_enabled (saved through the API); the 'ting' is this device only, off at first 50ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > confirmed: the copy is made first, then reset is sent once with mode, password and phrase 105ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > a wrong password: role=alert and the box stays (nothing was deleted) 32ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > offline: the red button is disabled with the reason 21ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > AC-245 red zone (BR-59) > Esc closes the box while idle 5ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > BR-44 numbers (pure) > ส่งงานครบ = active − มีงานค้าง · มาเรียนเฉลี่ย pooled 144/160 5ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > BR-44 numbers (pure) > a new child with no work due counts as complete (9 children → 7 complete) and no stats at all is null 1ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > BR-44 numbers (pure) > search BR-46: '5' is child 5 only (not 15) · 'ดา' = ดวงดาว กานดา · hidden = number only · all rooms skips moved and hidden 3ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > BR-44 numbers (pure) > BR-45: duplicates and missing numbers · A16 label 1ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: projector and sound (AC-236, BR-51) > offline: the scan sound switch waits for a connection and says so; this device's own switches still work 51ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > privacy: projector and sound (AC-236, BR-51) > projecting: the section is read only (every control that writes is off) 78ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > undo for 'มาทั้งห้อง' > the send is held back, so nothing reaches the server in the first seconds 1073ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > page: the red section and the old link > ?section=danger (old link) opens the red section; projecting disables its buttons 48ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > students page — hero and search > shows 8 · 6 · 2 · 90% (AC-176) with the names of those who owe, and the filter works (AC-177) 302ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-152 the table is ONE Tab stop, heads included > no work head or eye button is tabbable; one cell is 247ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-01 · a slow answer does not wipe what was saved while it was on its way > a mark that was taken back meanwhile does not come back from the old answer 3897ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at LocationImpl.reload 
+(C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\window\Location-impl.js:226:5)
+    at Location.reload (C:\Users\User\Desktop\teacher\node_modules\jsdom\lib\jsdom\living\generated\Location.js:102:36)
+    at go (C:/Users/User/Desktop/teacher/src/components/ResetModal.tsx:71:16) undefined
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5601 projecting keeps every writing button off, whatever the network does > backup section + account section stay disabled across offline -> online 164ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5602 focus after going back > back from step 2 lands on the safe button of step 1 21ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5603 more confirmation guards > restore while projecting: the red button stays off even with the box ticked 23ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5603 more confirmation guards > a failed safety copy sends no reset and says nothing was deleted 50ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > students page — hero and search > search '5' finds child 5 only and placeholder/empty text follow BR-46 (AC-178) 149ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > device section (AC-237) > holds the check, the offline/storage rows (moved from the overview), the about-app card and the clear button; no version number 97ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > device section (AC-237) > the overview no longer carries the device card; the sign-in section no longer carries the check 86ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5603 more confirmation guards > while it works the box cannot be closed (Esc, backdrop; the X is disabled) 47ms
+ ✓ |dom| test/unit/hr-sg4-t56.test.tsx > R-5603 more confirmation guards > Esc in the backup warning closes only the warning 51ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > undo for 'มาทั้งห้อง' > once the send has started, it says so instead of pretending to undo 265ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > device section (AC-237) > the check button reports in a role=status line with an icon + words, and the result can be copied 123ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > clear what this device remembers (AC-238, BR-60, SGQ4) > localPrefKeys lists the ngankrob keys except the copies of synced values; clearLocalPrefs removes only those 6ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > clear what this device remembers (AC-238, BR-60, SGQ4) > the button asks first: focus on ยกเลิก, the body says what returns and what stays (queue count); cancelling clears nothing 89ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > hide names (AC-196, BR-50) > leaks no name / nickname / code / token anywhere in text, aria-label or title; no all-rooms button; copy closed 136ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-152 the table is ONE Tab stop, heads included > ArrowUp from the first row moves onto the head (now the only stop); arrows move between heads; Enter picks; ArrowDown goes back down 112ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-152 the table is ONE Tab stop, heads included > a cell below the first row still moves up as before 50ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > a second tap on the selected status takes the mark back > tapping a child who already has the selected status clears the mark and says so (details: attendance-round5) 126ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > who is not checked yet > a tap on a number marks the tile it points to 80ms
+ ✓ |dom| test/unit/hr-sg3-t55.test.tsx > clear what this device remembers (AC-238, BR-60, SGQ4) > confirming clears the remembered values; the queue stays 3, the sign-in and synced values stay, no API call 137ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > hide names (AC-196, BR-50) > the switch is this page's own and announces 128ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > TV mode: names > shows the last child by name; the 'hide names' switch shows the number instead 46ms
+ ✓ |dom| test/unit/attendance-round3.test.tsx > TV mode > shows who has come, never who is absent, on leave or sick 12ms
+ ✓ |dom| test/unit/hr-st3-gaps-t72.test.tsx > M52-4 come back: the request body > one POST with the child's own record, status active and left_at cleared; the same class and number; no QR token 459ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-148/149 hidden names reach the drawer; copy is closed with its reason > names shown: copy list works with every child behind (not cut at 8) 266ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > hide names (AC-196, BR-50) > the drawer follows: 'เลขที่ 5' title, no name/code, copy closed 139ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > TV frame (AC-197): no name, code or per-child number whatever the switches > pjHideNames=false page hide=false 44ms
+ ✓ |dom| test/unit/hr-st3-gaps-t72.test.tsx > M52-4 come back: the request body > a child who has no class yet keeps class_id null (nothing is invented) 199ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-148/149 hidden names reach the drawer; copy is closed with its reason > names hidden: copy disabled with 'ปิดไว้ขณะซ่อนชื่อ'; no name anywhere in the drawer, table, titles or labels 105ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > TV frame (AC-197): no name, code or per-child number whatever the switches > pjHideNames=true page hide=false 56ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > TV frame (AC-197): no name, code or per-child number whatever the switches > pjHideNames=false page hide=true 37ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > TV frame (AC-197): no name, code or per-child number whatever the switches > pjHideNames=true page hide=true 35ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-149 pin: only on a wide mouse screen, starts unpinned > no pin button on touch / narrow 125ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > StudentDrawer (shared with reports) > default hide=false keeps the old look; 2 works with one title are matched by id (AC-184) 33ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > StudentDrawer (shared with reports) > past year: no write button, with the read-only note (AC-185) 23ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > StudentDrawer (shared with reports) > this year: edit · new QR · move · leave · gradebook all present; a failed copy says so 73ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > review fixes (R-5101, R-5102) > R-5101: the address changes while the page stays mounted → room and drawer follow 72ms
+ ✓ |dom| test/unit/hr-st-t51.test.tsx > review fixes (R-5101, R-5102) > R-5102: a child missing from the loaded set is never shown as 'ส่งงานครบ' — unknown, and the header is that child's own room 26ms
+ ✓ |dom| test/unit/hr-st3-gaps-t72.test.tsx > M52-4 come back: the request body > saying no sends nothing 127ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-145 Excel scope label + hidden-names warning > says what the file holds; with names hidden it warns, and the toast says so 461ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-17: greeting + teacher name, the big number is the model's count, and the four numbers (AC-09) sit under it 327ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-17: rows in BR-01 order with type labels, icon, title, reason and a button; no time the system does not have 73ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > AC-149 pin: only on a wide mouse screen, starts unpinned > wide mouse: pin docks the drawer (no dialog, page makes room); Esc closes 181ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > R-4801 phone: copy / close straight on the work card > both buttons are on the card (not only inside the manage menu); close is disabled offline 20ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > R-4802 grouped mode: folded group heads / totals / bars are not Tab stops > only ONE stop in the whole table after folding a group 72ms
+ ✓ |dom| test/unit/hr-st3-gaps-t72.test.tsx > M52-4 come back: the request body > a taken number: the fix box opens on the same child, and saving it sends active + left_at null + the same class with the new number 252ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > R-4803 row heads (kept as td role=rowheader: th would shift the first-td offsets of 9 locked tests outside this task) > each child row starts with a row header 33ms
+ ✓ |dom| test/unit/hr-gb3-t48.test.tsx > R-4805 the pill only counts what the drawer shows > a teacher who hid 'ต้องติดตาม' sees no such part on the pill 33ms
+ ✓ |dom| test/unit/hr-st3-gaps-t72.test.tsx > M52-4 come back: the request body > any other failure: nothing changes on screen and the child stays in the list with an error message 153ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-144 whole-class with nobody to change > says there is nothing to change and the confirm button is disabled 154ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-146 ST-04 loading > shows a faint table frame with aria-busy and the words, not old data 13ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-18: a chip per room, the totals of the checked rooms, and the button goes to that room's roll-call 56ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-19: per-room bar and the not-handed-in line, scan goes to that work, copy-to-LINE is one room only 50ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > the shared home page > the top bar has the term picker, hide-names (aria-pressed) and the adjust chip, in every layout 414ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-19 / R-3403: two rooms share one work (same seat numbers): each copy button carries only that room's children 51ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > R-3401: a room whose work is open but not due yet says so (no '0%', no 'ยังไม่มีงานเปิดรับ'); a room with no open work still says that 43ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > T-68 R-3401: the 'ห้องของฉัน' card draws no bar and no 0% for a room whose open work is not due yet; a room with a rate keeps its bar 39ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-140/141 work form > a copy is headed 'คัดลอกงาน' with the copy bar, a new one 'สร้างงานใหม่' 106ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-140/141 work form > opens with the cursor on the title; a wrong value is announced in a role=alert under the buttons 45ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-143 / AC-146 page states > ?asg= naming a work that is gone falls back to the BR-34 pick (last open work) 49ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-20: late-work chips 'ชื่องาน · เลย N วัน · ค้าง X'; 'ปิดรับงานนี้' only where shouldClose, and it only navigates 62ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-20a: a work with no due date never says 'เลย 0 วัน' (the chip is 'ชื่องาน · ค้าง X') 58ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-143 / AC-146 page states > ST-03 no work + a filter: says how many filters and offers to put them back 121ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-143 / AC-146 page states > ST-05 load failed: message + retry that loads again 62ms
+ ✓ |dom| test/unit/hr-gb2-t47.test.tsx > AC-143 / AC-146 page states > ST-01 no class: the way to add one goes to settings, no hero numbers 34ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-20a: an open work with no due date and nobody missing (the usual case) has no chip at all 43ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-21: no tick and no 'เสร็จแล้ว' on any row; when the data changes the row goes and the count 5 -> 4 is spoken 65ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > the shared home page > the drawer follows the layout: ข lists two cards, and choosing ค in it changes the page at once 188ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > the shared home page > each layout keeps its own cards: hide one in ก, switch to ค, it is still shown there 295ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > the shared home page > while loading, the skeleton has the layout's shape and the quick buttons are real 97ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-22: tomorrow's work is last, dimmed, shows not-handed-in per room and is not in the big number 58ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก hero and list (AC-17, AC-21..23) > AC-23: nothing to do -> check mark + 'เคลียร์ครบแล้ว', side cards and quick buttons still there, tomorrow still listed 52ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > review fixes (R-3301..R-3306) > R-3301: copy to LINE is per room: 5 lines for ป.6/1 only, no name of the other room 4ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > review fixes (R-3301..R-3306) > R-3303: an old offline copy without dueSoon / absentToday gives arrays in the model; hide drops the copy buttons 2ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > review fixes (R-3301..R-3306) > R-3304: a card hidden in the old app stays hidden in ก and ค (same name); a layout never set otherwise gets its defaults 2ms
+ ✓ |dom| test/unit/hr-homecore-page.test.tsx > review fixes (R-3301..R-3306) > R-3306: the arrow at the end of the list stays focusable (aria-disabled) and does nothing 129ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > AC-24: quick buttons, room progress (same rate as the model), follow groups with a link to the reports page 84ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > the cards follow the teacher's list: ก has 5, 'ห้องของฉัน' is off until turned on, order and hide are kept 38ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > absent card: per status counts with names; unchecked room says so; hide-names shows counts only 37ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > hide names: no names, no initials, no copy-to-LINE anywhere on the page (BR-08) 87ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > a past year has no 'today': no big number, no today's list, no roll-call / due cards 63ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก side cards (AC-24, BR-12) > many due-today works (> 3) fold into one 'ครบกำหนดวันนี้ N งาน' line that opens 73ms
+ ✓ |dom| test/unit/hr-layout-a-ui.test.tsx > ก helpers > attTotals counts only checked rooms; roomChips leaves out an empty room 1ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > hide names on the page (AC-119) > a draw shows the number alone on the stage, the chips, the announcement and every title / aria-label 320ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-01 · a slow answer does not wipe what was saved while it was on its way > what the system says about children nobody touched still arrives 3283ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > the switch (AC-77) > button + banner: eye icon and words, aria-pressed, 'แสดงชื่อ' turns it back 290ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > the switch (AC-77) > is the page's own value: home and scan do not move each other (BR-18) 1ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > no child name on any surface of the round while hidden (AC-77) > shows names when the switch is off (so the test can tell) 68ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > ?section=appearance opens it, first of the กลุ่ม เครื่องนี้ in the side menu (AC-207: after ใช้บ่อย + การสอน) 264ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > hide names on the page (AC-119) > turning the switch on after a result is shown hides the name at once (nothing was frozen into text) 100ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > hide names on the page (AC-119) > does not touch the other pages' switches (BR-18) 48ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > no child name on any surface of the round while hidden (AC-77) > result card, recent, unsent, grid, options sheet, undo toast: only 'เลขที่ N'; the card keeps 'ส่งแล้ว' but not the score 187ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > no child name on any surface of the round while hidden (AC-77) > a result card already on screen follows the switch when it is turned on 28ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > no child name on any surface of the round while hidden (AC-77) > the score pad (type mode) names the child by number only 29ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > no child name on any surface of the round while hidden (AC-77) > the HID test panel does not say the name either 16ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > 3 layouts, 3 skins, 3 modes as radio groups in that order; the saved ones are checked and marked ใช้อยู่ 125ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > each layout card has a picture, a name and a one-line hint; each skin card has 4 swatches and กขค 123 53ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > hide names on the page (AC-119) > skip says 'ข้ามเลขที่ N แล้ว' with the names hidden, and announces the skip (R-4410) 93ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > hide names on the page (AC-119) > groups: members are numbers, the leader is a star + number, copy is off with the reason, and nothing carries a name 62ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-02 · 'มาทั้งห้อง' judges who is unchecked after the question is answered > a child tapped as late while the question was open keeps 'สาย' 237ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > shows the five status buttons, each with a word, and four tiles that start unchecked 215ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > round summary while hidden (T-39 leftover) > chips are numbers, 'คัดลอกรายชื่อ' is disabled and copies nothing 44ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > round summary while hidden (T-39 leftover) > copy button is enabled when the switch is off 52ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > the TV follows its own switch only (AC-76, SQ1) > scan hidden + TV switch off -> the TV shows the name; starting the TV changes neither switch 21ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > the TV follows its own switch only (AC-76, SQ1) > scan visible + TV switch on -> the TV shows only the number 18ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > the TV follows its own switch only (AC-120) > TV switch on + page switch off: numbers only on the TV 53ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > the TV follows its own switch only (AC-120) > TV switch off + page switch on: the TV still shows the name (the page's button does not hide the TV) 36ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > the TV follows its own switch only (AC-120) > shows 'มาเรียน 4 · เหลือ 3' (no per-child data) 40ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > nothing saved: ก + อบอุ่น + ตามเครื่อง 56ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-02 · 'มาทั้งห้อง' judges who is unchecked after the question is answered > a mark written to the draft behind the page's back (a scan) is not overwritten either 221ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > ProjectorButton disabled (T-50) > default: enabled and opens; disabled: greyed out and never opens 17ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > phone: 'จบรอบ' in the bar's menu (AC-78) > opens, Esc closes and gives the focus back, a choice ends the round 83ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > a tap puts the chosen status on the child (default มา, then ขาด) 244ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > the TV follows its own switch only (AC-120) > cannot draw: a short reason, no 'go and check attendance' button 35ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > the TV follows its own switch only (AC-120) > groups on the TV: '★ เลขที่ N' while the TV switch is on 48ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > cards (AC-121) > 'left' is registered: default on, right after 'hist'; skip / undo stays off as AC-121 says 1ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > 'มาทั้งห้อง' asks first, and only fills the children not checked yet 134ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > the summary card is on by default and disappears when the teacher turns it off 50ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > cards (AC-121) > the drawer lists 'ยังไม่ถูกสุ่ม' with a switch and the new locked words 71ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > cards (AC-121) > hiding 'left' removes the panel 17ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > an old saved layout (before 'left' existed) gains 'left' on, and a card hidden before stays hidden 1ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > phone: 'จบรอบ' in the bar's menu (AC-78) > the wide-screen button still ends the round (same handler) 24ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > texts built once follow a switch turned on later (R-4003) > the undo toast and the HID test log lose the name when hiding starts 44ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > other surfaces while hidden (R-4004) > a result card with no opId is matched by its full name; two kids with the same name -> 'นักเรียน' 17ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > other surfaces while hidden (R-4004) > failed panel (and its drop question), queue card, choose-a-child card, exempt question 94ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > sizes the AC asks for (R-4001, R-4002) > result-card name >= 28px, it wraps instead of cutting 1ms
+ ✓ |dom| test/unit/hr-scan-pj-t40.test.tsx > sizes the AC asks for (R-4001, R-4002) > undo button and every score key >= 56px at any font size 1ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-02 · 'มาทั้งห้อง' judges who is unchecked after the question is answered > taking 'มาทั้งห้อง' back removes only the children it filled 251ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > 'แสดงชื่อ' in the banner hands the focus to the eye button instead of losing it 96ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > side chips: full name in title when shown, 'เลขที่ N' when hidden, and the number is read as 'เลขที่ N' 17ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > new round and undo are announced 61ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > has the moved text-size and density controls, a live preview, a reset button and no save button 159ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-44 / AC-01: the appearance section > the focus order follows layout, skin, mode, text size, reset 36ms
+ ✓ |dom| test/unit/hr-appearance-section.test.tsx > AC-48: the catalog section name > no 'ข้อมูลพื้นฐาน' is left anywhere in src/ 313ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > undo says 'เลิกทำแล้ว' 64ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > TV: the skip button shows when the skip card is on, and skipping says 'ข้ามเลขที่ N แล้ว' with the TV switch on 38ms
+ ✓ |dom| test/unit/hr-random2-t45.test.tsx > review round (R-4503, R-4504, R-4506) > TV: the spinning names carry no name while the TV switch is on 18ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > the 'who is not checked yet' card is on by default (T-43) and lists the unchecked numbers when on 46ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > a link with date, subject and period opens that period (1–8 are offered) 68ms
+ ✓ |dom| test/unit/attendance-page.test.tsx > attendance page > the card drawer opens from the header and says what cannot be turned off 146ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: rail (AC-45, AC-49) > holds exactly the eight pages in four text-labelled groups and nothing else 119ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: rail (AC-45, AC-49) > keeps DOM order = visual order (no tabindex tricks) so Tab goes top to bottom 24ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: phone bar and the more sheet (AC-47) > five slots, scan in the middle 15ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: phone bar and the more sheet (AC-47) > opens with text group labels and the original targets; Esc closes and focus returns to the button 59ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: phone bar and the more sheet (AC-47) > closes on a tap outside the sheet and on choosing an item, focus back on the button 75ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: phone bar and the more sheet (AC-47) > marks the more button as current when the page is one of its items 16ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: deep link before sign-in (AC-50) > only real pages other than home count as a deep link 95ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > R-06 · the clash card follows the tap made after the clash > shows the status now in the draft, and 'use this device' sends that one 811ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: deep link before sign-in (AC-50) > shows no menu while signed out, then opens the requested page after sign-in (which sends everyone to #/home) 77ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > picking a room puts ?class= in the address and remembers it 115ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-1/3 the pill counts only the drawer cards that are on (R-4805) > all three on: the three parts and the short form add up to 3 226ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: deep link before sign-in (AC-50) > keeps a link tapped while the sign-in page is already open (hashchange only, no new start) (T-31 R-04) 137ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: the sheet title and the sign-out question (T-31 R-03, R-07) > the sheet is named like the button that opened it 22ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-179: the list title stays visible at every width (PM reverted the iPad-portrait sr-only rule: review R-6702 — it bought no row) > no portrait-tablet rule re-hides .stu-lhead2 (it is shown at <= 1000px per AC-179) 4ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > a reload (a bare address) opens the room that was looked at last 96ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > an explicit ?class= in the address wins over the remembered room 91ms
+ ✓ |dom| test/unit/hr-menu-nav.test.tsx > hr-menu: the sheet title and the sign-out question (T-31 R-03, R-07) > choosing 'อยู่ต่อ' on the sign-out question puts focus back on the 'เพิ่มเติม' button 115ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > roundNumbers (BR-13 / BR-14) > counts the spec's example: 26 handed in, 5 not, ring over 31 = 84% 5ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > roundNumbers (BR-13 / BR-14) > leaves a method out when it is 0, and a hand-in with no known method uncounted 1ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > roundNumbers (BR-13 / BR-14) > nobody counted → no percentage (never 0 %) 1ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > nextRoom (BR-16) > is the next room in the work's order with someone not handed in: ป.6/2 ส่งแล้ว 0/30 1ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > nextRoom (BR-16) > skips a room that is all handed in, and wraps round to the start 1ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > nextRoom (BR-16) > none: a one-room work, or every other room done, and a room not in use is skipped 1ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > nextRoom (BR-16) > an excused child is not counted in x/y 1ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-179: the list title stays visible at every width (PM reverted the iPad-portrait sr-only rule: review R-6702 — it bought no row) > the title stays in the DOM, before the column head 195ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-1/3 the pill counts only the drawer cards that are on (R-4805) > each part leaves the pill (label, long text and short sum) when its card is hidden, and only that part 200ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-1/3 the pill counts only the drawer cards that are on (R-4805) > all three hidden: the pill falls back to ดูสรุป without a number 53ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > a remembered room that no longer exists falls back to the first one 82ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > ST-S03: the empty page offers the sample file > has [ดาวน์โหลดไฟล์ตัวอย่าง .xlsx] that builds the file locally, also offline 115ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > the address changing under the page (a link, back/forward) switches the room 103ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > summary page (AC-72) > shows the ring, the numbers, late, and the line of how this round received 125ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > summary page (AC-72) > chips: at most 18 then 'และอีก n คน'; everyone in gives 'ทุกคนส่งครบแล้ว' and no copy button 37ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > summary page (AC-72) > this device's unsent hand-ins count with their method; an unsent undo takes one away 26ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > summary page (AC-72) > a score typed onto a hand-in the server holds keeps the way it came in (not the way the score was typed) 13ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-1/3 the pill counts only the drawer cards that are on (R-4805) > the drawer agrees with the pill: a hidden card is not drawn, a shown one is 83ms
+ ✓ |dom| test/unit/attendance-review-fixes.test.tsx > B-03 · the room is kept in the address and on this device > blocked storage costs only the memory: the page still opens and switches rooms 123ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > ST-S03: the empty page offers the sample file > a failed build says so (not a silent nothing) 123ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > summary page (AC-72) > never says 0 for a round whose hand-ins were not read 48ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3901: read by the reader, score typed, server answers 'manual' — still 'เครื่องยิง' (and undo removes it) 21ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3901: taking a hand-in back removes its way; a later scan with another way is counted as that 12ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3902: past the due date with unsent hand-ins → 'ส่งช้า 0 · รอตัดสิน n', never a bare 0; no due date → no box; none waiting → plain 38ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3903: a closed work has no next-room button and 'กลับไปสแกนต่อ' is off with the reason; closing from here changes it at once 17ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-5 cap of 8 on screen, none in the copied list (BR-36) > the follow card draws 8 rows and says 8 of 10; the head count is all 10 147ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-204: the ⋮ of a row on a phone is a bottom sheet > opens with the 5 items, the first one focused, and no small menu 108ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-204: the ⋮ of a row on a phone is a bottom sheet > Esc closes and focus goes back to that row's ⋮ 73ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3903: pressing 'ปิดรับงาน' successfully removes the next-room button and disables scan-again 46ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > review fixes (R-3901..R-3904) > R-3904: the focus goes to the top of the summary when it opens, and stays on the page after the work is closed 36ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-5 cap of 8 on screen, none in the copied list (BR-36) > the copied list holds all 10 children, not 8 159ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-5 cap of 8 on screen, none in the copied list (BR-36) > 8 children: no 'first 8 of n' note 89ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere > Home: the class progress bar of an open assignment (and AC-04 attendance card) 191ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > next room: label from BR-16, starts a new round of that room with the same work and mode 169ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > one-room work: no next-room button 13ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > go-to-gradebook and give-scores go where they always went 41ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-5 cap of 8 on screen, none in the copied list (BR-36) > nine works waiting: the waiting card draws 8 rows 113ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-5 cap of 8 on screen, none in the copied list (BR-36) > drawerLists: the waiting list is cut at 8 (9 works waiting); the follow list shows 8 but keeps all 9 1ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-204: the ⋮ of a row on a phone is a bottom sheet > แก้ไข opens the form of that child 135ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-10 order: most waiting first (BR-36) > drawer: waiting works go wB (3), wC (2), wA (1); children go most behind first; the copy keeps that order 102ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-10 order: most waiting first (BR-36) > drawerLists: the children kept are the ones with the most; ties keep the table order 1ms
+ ✓ |dom| test/unit/hr-gb4-gaps-t72.test.tsx > M48-10 order: most waiting first (BR-36) > drawerLists: with 10 works waiting, the 8 kept are the biggest, biggest first 1ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere > Gradebook: the column header progress bar and the toolbar rate 169ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > copy: the old text, 'คัดลอกแล้ว' for 2 s; when it cannot copy it says how to do it by hand 57ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > close the work: offline / waiting disable with the reason; confirm names the room's count; one post when pressed fast 61ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > a failed close keeps the button so it can be tried again 30ms
+ ✓ |dom| test/unit/hr-scan-summary-t39.test.tsx > actions (AC-73/74/75) > a work already closed has no close button 16ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-204: the ⋮ of a row on a phone is a bottom sheet > offline: edit / move / QR are off, leave stays pressable (R-5211) 187ms
+ ✓ |dom| test/unit/hr-st2-t67.test.tsx > AC-204: the ⋮ of a row on a phone is a bottom sheet > hidden names: the ⋮ says the number, not the name 90ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-01 per-assignment rate = 6 / (10 - 2) = 75% everywhere > Reports: the per-assignment bar 98ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-03 per-child submit rate = 2 / (2 + 1) = 67% > Gradebook toolbar 66ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-02: start a new term while projecting / offline (BR-59) > projecting: box opens, the ticked confirm button stays off and says why; no request goes out 188ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-02: start a new term while projecting / offline (BR-59) > offline: off across offline -> online -> projecting -> offline (read live, not once) 83ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-03 per-child submit rate = 2 / (2 + 1) = 67% > Reports: the child's row reads 2/3 42ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-03 per-child submit rate = 2 / (2 + 1) = 67% > Students: the child's bar is 67% wide and reads 2/3 58ms
+ ✓ |dom| test/unit/hr-gb2-focus-t47.test.tsx > R-4701 first focus of a confirm dialog > lands on the safe answer, not the close button 136ms
+ ✓ |dom| test/unit/hr-gb2-focus-t47.test.tsx > R-4701 first focus of a confirm dialog > a Dialog without data-autofocus still starts on its first focusable 12ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = - > Reports: the child's row 44ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = - > Students: per-child % and the class average 27ms
+ ✓ |dom| test/unit/m1-05-screens.test.tsx > AC-04 attendance = (3 + 1) / 6 = 67%, nothing checked = - > Students: no attendance checked shows a dash and no average 21ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-02: start a new term while projecting / offline (BR-59) > home entry points: the term card button is off, the todo handler does not open the box 18ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-02: start a new term while projecting / offline (BR-59) > S-03 settings cards: the term + backup buttons are off while projecting by themselves 20ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-01 / S-04: restore > validated step warns about the safety-copy download (same wording as BackupWarning) and the tick covers it 57ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-01 / S-04: restore > the file picker is off while projecting and offline 11ms
+ ✓ |dom| test/unit/hr-gb2-focus-t47.test.tsx > R-4702 whole-class 'all submitted' with people to change > opens focused on ยกเลิก, not on วันนี้ 228ms
+ ✓ |dom| test/unit/hr-gb2-focus-t47.test.tsx > R-4703 Excel focus return > does not take focus from where the teacher has moved to meanwhile 148ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-05: a shown password is hidden again when projecting starts > type goes text -> password without the teacher pressing anything 43ms
+ ✓ |dom| test/unit/hr-vfix-t70.test.tsx > S-08: import file size > a file over 5 MB is refused with a message and never read 159ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > 49/55 shows 89%, 29.5/40 shows 74%, with a spoken form 230ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > a full mark of 0 shows 0/0 and NO percent (not 0%) 77ms
+ ✓ |dom| test/unit/m1-05-scan.test.tsx > AC-02 scan legend and ring > lists on time, late, awaiting, not handed in, excused; adds up to the class; ring 6/8 106ms
+ ✓ |dom| test/unit/m1-05-scan.test.tsx > AC-02 scan legend and ring > each swatch uses the same colour tokens as its seat 34ms
+ ✓ |dom| test/unit/m1-05-scan.test.tsx > AC-02 scan legend and ring > hides empty groups; before the due date the not-handed-in swatch is the grey dashed one 28ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-30 cumulative + percent > every work hidden shows ••• and no percent 57ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-34 the work picked on arrival > last OPEN work; none open → last work; empty → null 1ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-34 the work picked on arrival > the page opens on W3 (W4 is closed) and a link ?asg= wins 75ms
+ ✓ |dom| test/unit/hr-sg2-startterm-t54.test.tsx > StartTermModal confirm tick > says it cannot be undone, starts with the keyboard in the year field, and stays off until the tick 177ms
+ ✓ |dom| test/unit/lows-gradebook-patch.test.tsx > AC-04: saveAsgPatch sends no full_score > hiding one column's scores posts the change without full_score, and the screen takes the server's full score 231ms
+ ✓ |dom| test/unit/hr-sg2-startterm-t54.test.tsx > StartTermModal confirm tick > the same-year start also needs the tick (2/2569) 98ms
+ ✓ |dom| test/unit/hr-sg2-startterm-t54.test.tsx > StartTermModal confirm tick > changing the year clears the tick — a tick given for 2/2569 never starts a new year (R-5401) 72ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-35 way + last edit > maps the methods to words 27ms
+ ✓ |dom| test/unit/hr-sg2-startterm-t54.test.tsx > StartTermModal confirm tick > changing the term clears the tick 45ms
+ ✓ |dom| test/unit/hr-sg2-startterm-t54.test.tsx > StartTermModal confirm tick > with the tick the request goes out once 32ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-35 way + last edit > keeps the way and the time after the queue delivers a typed score (R-4601) 191ms
+ ✓ |dom| test/unit/hr-gb-t46.test.tsx > BR-36 copied list > first line names room and subject, then one line per child, not cut at 8 1ms
+ ✓ |dom| test/unit/hr-vfix-t73.test.tsx > B-7 term chip > phone: the name is whole, a dot marks 'current', the full words stay in aria-label and title 122ms
+ ✓ |dom| test/unit/hr-vfix-t73.test.tsx > B-7 term chip > wide screen: the words stay as before 19ms
+ ✓ |dom| test/unit/hr-vfix-t73.test.tsx > B-7 term chip > home header: the chip row comes first and the date never breaks (css) 2ms
+ ✓ |dom| test/unit/hr-vfix-t73.test.tsx > B-6 attendance hero on a phone > the day-kind and method switches live in their own row under the hero, not in it 4ms
+ ✓ |dom| test/unit/hr-vfix-t73.test.tsx > B-73b report name button > keeps the full tap size on touch even inside the phone card (declared after the container rules) 2ms
+ ✓ |dom| test/unit/hr-rndclass-link.test.tsx > random page ?class= link > opens the linked room and asks attendance for that room 61ms
+ ✓ |dom| test/unit/hr-rndclass-link.test.tsx > random page ?class= link > an unknown or archived room falls back to the first room, without breaking 35ms
+ ✓ |dom| test/unit/hr-rndclass-link.test.tsx > random page ?class= link > without the param it still starts on the first room 11ms
+ ✓ |dom| test/unit/hr-rndclass-link.test.tsx > random page ?class= link > a link arriving while the page is open switches the room 17ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > iconMap > finds the icon names the app uses (guards the scan below) 307ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > iconMap > every name used in src/ (and the work-type defaults) has a glyph in bold, duotone and fill 318ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > iconMap > every translation in the table points at a real glyph 9ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > iconMap > a name that is the same in both sets passes through 0ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > <Icon> > keeps the app name in data-icon and uses the Phosphor glyph of the skin on screen 14ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > <Icon> > weights: pro = bold, warm = duotone, playful = fill 7ms
+ ✓ |dom| test/unit/hr-theme-icons.test.tsx > <Icon> > keeps the old props: size, class, title (then it is announced, not hidden) 12ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > home keeps its old key: '1' or absent 24ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > another page that was never set copies the home value once and writes it at once 1ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > a page with '0' stays shown even when home hides 1ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > each page has its own key 1ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > setHideAll sets all 7 pages and leaves the projector screen alone 2ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > the home page's old exports still follow the registry 41ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > storage that throws does not break it 3ms
+ ✓ |dom| test/unit/hr-theme-hide.test.ts > hideNames registry > reloadHideFromStorage reads again after the device values were cleared 1ms
+ ✓ |dom| test/unit/hr-vfix-t69.test.tsx > T-69 verify fixes > B-2/B-8: the term chip pays for the gear on touch (calendar icon off, gear flush) so no header wraps 38ms
+ ✓ |dom| test/unit/hr-vfix-t69.test.tsx > T-69 verify fixes > B-1: the gradebook table is fitted to tablets too, and the Excel note leaves the toolbar below 1200px 5ms
+ ✓ |dom| test/unit/hr-vfix-t69.test.tsx > T-69 verify fixes > B-3: report table column is 1.55fr (58% +-1 at 1180 and 1536) 2ms
+ ✓ |dom| test/unit/hr-vfix-t69.test.tsx > T-69 verify fixes > B-4: touch student rows use 3px padding; iPad upright meta line is two lines beside an icon-only reload 1ms
+ ✓ |dom| test/unit/hr-vfix-t69.test.tsx > T-69 verify fixes > B-6/B-11: phone hero drops the legend and keeps 'ขาด n' together; disabled day is >= 0.72 opaque 3ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > parseAppearance (BR-07, AC-06) > never set, empty or the old value 'blue' gives warm + a 4ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > parseAppearance (BR-07, AC-06) > a wrong field falls back alone 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > parseAppearance (BR-07, AC-06) > round-trips 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > applyStoredAppearance (AC-04: no flash) > paints the default when nothing is remembered 2ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > applyStoredAppearance (AC-04: no flash) > paints the remembered skin + layout at once, before any settings arrive 2ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > applyStoredAppearance (AC-04: no flash) > an unknown remembered value falls back for that field only 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > the server's value is adopted once (AC-03) > uses accent from the first settings, remembers it, and ignores later changes 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > the server's value is adopted once (AC-03) > old value 'blue' on the server gives the default 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > an offline start from the saved copy (T-29 R-01, AC-04) > does not take the saved copy's look; the look chosen on this device stays 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > an offline start from the saved copy (T-29 R-01, AC-04) > when the server answers its look is adopted (once) 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > an offline start from the saved copy (T-29 R-01, AC-04) > with no saved copy at all the next sign-in is adopted as usual 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > an offline start from the saved copy (T-29 R-01, AC-04) > a successful save also updates the copy kept for an offline start (look and theme) 2ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > an offline start from the saved copy (T-29 R-01, AC-04) > a failed save leaves the saved copy alone 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > shows the change at once and sends ONE put with the changed keys 2ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > sends only what changed 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > goes back to the old look and says why when the save fails 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > offline: sends nothing, changes nothing, tells the teacher 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > two quick taps reach the server in the order tapped 42ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > a failed first tap does not undo a later tap 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > two quick taps that both fail go back to what the server confirmed, not the middle look (R-03) 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance (D41, D38) > first tap works, second fails: back to the first 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance: a failed tap never reaches the server in the next request (R-3205) > tap 1 (skin) fails, tap 2 (layout) works: the request carries the confirmed skin + its own layout, and the screen matches the server 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance: a failed tap never reaches the server in the next request (R-3205) > a failed theme tap does not ride along with the next look tap 1ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance: a failed tap never reaches the server in the next request (R-3205) > a tap that worked stays in the base of the next one 0ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > saveAppearance: a failed tap never reaches the server in the next request (R-3205) > silent: no toast on success or failure, same result; the text stays the AC-02 text otherwise (R-3204) 0ms
+ ✓ |dom| test/unit/hr-theme-appearance.test.ts > icons keep the weight whose font has arrived (R-04) > the icon skin follows the look only after that skin's assets have loaded 14ms
+ ✓ |dom| test/unit/hr-term-chip-t68.test.tsx > TermPicker manage link (AC-211 P6) > has a named link to catalog / terms tab inside the same chip 71ms
+ ✓ |dom| test/unit/hr-term-chip-t68.test.tsx > TermPicker manage link (AC-211 P6) > renders nothing when there are no terms (as before) 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > the detector itself > catches the colours it must 3ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > the detector itself > lets tokens and keywords through 0ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > the detector itself > only the exact paper selectors are exempt 0ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > attend.css 3ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > grade.css 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > random.css 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > report.css 3ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > scan.css 3ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > students.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > settings-cards.css 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > stickers.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > print.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > projector.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > onboarding.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > ui.css 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > no fixed colours in the swept stylesheets > the allowed exceptions each carry a reason comment in the css 5ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > finds the pairs to check, including parent-rule and explicit ones 1ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > pro light: every text-on-fill pair in the page styles (unresolvable values fail) 7ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > pro dark: every text-on-fill pair in the page styles (unresolvable values fail) 3ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > warm light: every text-on-fill pair in the page styles (unresolvable values fail) 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > warm dark: every text-on-fill pair in the page styles (unresolvable values fail) 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > playful light: every text-on-fill pair in the page styles (unresolvable values fail) 2ms
+ ✓ |dom| test/unit/hr-sweep-colors.test.ts > contrast of declared colour pairs (AC-37) > playful dark: every text-on-fill pair in the page styles (unresolvable values fail) 3ms
+ ✓ |dom| test/unit/hr-sweep-login.test.tsx > login uses the remembered look > remembered skin and dark mode are on <html> before the form renders 20ms
+ ✓ |dom| test/unit/hr-sweep-login.test.tsx > login uses the remembered look > nothing remembered: the default look, still no data calls and no room/student text 5ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > token sets > there are 6 and each defines every token the pages and the new design read 5ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > token sets > the default (no data-skin) is the warm skin 2ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > token sets > each skin has its own fonts, and display weight/track are set 3ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > token sets > the system-dark rule gives the same dark values as the explicit dark rule 4ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro light: body text >= 4.5 on the page and cards 1ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro light: accent text, button text and status text >= 4.5 1ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro light: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro light: hero, menu and focus colours >= 4.5 1ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro dark: body text >= 4.5 on the page and cards 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro dark: accent text, button text and status text >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro dark: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > pro dark: hero, menu and focus colours >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm light: body text >= 4.5 on the page and cards 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm light: accent text, button text and status text >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm light: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm light: hero, menu and focus colours >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm dark: body text >= 4.5 on the page and cards 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm dark: accent text, button text and status text >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm dark: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > warm dark: hero, menu and focus colours >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful light: body text >= 4.5 on the page and cards 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful light: accent text, button text and status text >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful light: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful light: hero, menu and focus colours >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful dark: body text >= 4.5 on the page and cards 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful dark: accent text, button text and status text >= 4.5 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful dark: edges of buttons and inputs >= 3 on the card 0ms
+ ✓ |dom| test/unit/hr-theme-tokens.test.ts > contrast (AC-37) > playful dark: hero, menu and focus colours >= 4.5 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > 2026-10-30 → true 3ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > 2028-02-29 → true 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > 1900-01-01 → true 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > 2099-12-31 → true 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2569-10-30" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2026-02-30" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2027-02-29" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2026-13-01" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "30/10/2026" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2026-1-5" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "1899-12-31" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > "2100-01-01" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > " 2026-10-30" → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > 20261030 → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > null → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > isCeDate (CE 1900–2099, a real calendar day) > undefined → false 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > bkkNoonMs (12:00 Bangkok = 05:00Z) > 2026-10-30 → 1793336400000 (requirements example) 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > bkkNoonMs (12:00 Bangkok = 05:00Z) > 2026-04-16 → 1776315600000 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > bkkNoonMs (12:00 Bangkok = 05:00Z) > month/year ends do not slip a day 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 2026-10-30 (assigned 10-26, today 11-02) → null 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 2026-11-02 (assigned 10-26, today 11-02) → null 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 2026-10-26 (assigned 10-26, today 11-02) → null 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 2026-11-03 → received_date_future 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 2026-10-25 → received_date_before_assigned 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > "2569-10-30" → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > "2026-02-30" → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > "" → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > 123 → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > null → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > undefined → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > "2569-11-03" → received_date_invalid 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > no cap going back (Q2): 2026-04-16 with no assigned date → null 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > D-04: a Buddhist-era assigned date is not a floor 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > D-04: an assigned date in the future is not a floor — today always passes 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > checkReceivedDate (first match wins: invalid → future → before_assigned) > future wins over before_assigned when both hold (order) 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > no date → eventAt 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > the event's own Thai day → eventAt (real time) 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > another day → noon of that day 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > another day whose noon is after now → now (never in the future) 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > same day at 08:00 → that time 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > receivedAtMs (BR-02) > AC-06 (ก): event clamped to now−7d (10-21), date 10-20 → 10-20 noon 0ms
+ ✓ |dom| test/unit/c03-received-date.test.ts > MIN_RECEIVED_DATE (review R-01 / QA B-01): a typo year must not become a negative submitted_at > 1926, 1969, 1999 are invalid; 2000-01-01 and 200 days back are fine 0ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-03 / BR-04 numbers per room > submit rate is Σsubmitted ÷ Σ(submitted + missing), multiplied first 3ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-03 / BR-04 numbers per room > awaiting adds up to awaitingCount over the rooms 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-03 / BR-04 numbers per room > a room with nothing to divide shows null, not 0% 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-03 / BR-04 numbers per room > attendance: (present + late) ÷ marked; not marked = null 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-03 / BR-04 numbers per room > the summary counts rooms that have children only: ยังเหลือ 1 ห้อง, 57 of 62 = 92% 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-06 / BR-05 > due today: unsubmitted per room, 14 in all 3ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-06 / BR-05 > a payload saved before dueSoon existed gives nothing, without error 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-06 / BR-05 > follow-up groups by pieces owed, most first 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-01 / BR-02 the list for today > the BR-01 example gives 5 things, in the order of the rule 2ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-01 / BR-02 the list for today > before late_after the room row is not there: 4 things 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-01 / BR-02 the list for today > failed sends first, then what waits on this device 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-01 / BR-02 the list for today > work due tomorrow comes last and is not counted 0ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-01 / BR-02 the list for today > ทำทีหลัง sends a row to the end of the queue and the count stays 5; a room checked in the meantime drops the row 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-12 cards per layout > each layout has its own list; unknown keys are dropped and a missing card is added at the end 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > BR-12 cards per layout > toggle and move touch only the list given 1ms
+ ✓ |dom| test/unit/hr-homecore-logic.test.ts > R-3302 an offline copy from another day uses the real today > work that was due on the copy's day is overdue today (no 'วันนี้' row, not counted); tomorrow's becomes today 0ms
+ ✓ |dom| test/unit/hr-vfix-t75.test.tsx > T-75 > long work titles clamp to 2 lines in CSS and keep the full text in DOM + title 6ms
+ ✓ |dom| test/unit/hr-vfix-t75.test.tsx > T-75 > touch 721-819px headers: action labels off, report subtitle ellipsis 1ms
+ ✓ |dom| test/unit/hr-vfix-t75.test.tsx > T-75 > disabled buttons keep dashed + .72 opacity with primary text colour 3ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > saving layout b from an empty setting keeps the old fields an older app reads 4ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > resetting the layout in use forgets only that layout 1ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > the old whole-page save keeps the per-layout fields 1ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > a failed save goes back and the other layouts are untouched 1ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > two saves that both fail go back to the value the server confirmed, not to the middle one (R-03) 0ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > a first save that fails and a second that works keep the second 0ms
+ ✓ |dom| test/unit/hr-theme-home-prefs.test.ts > home_cards per layout > after a success the next failure goes back to that success 1ms
+ ✓ |dom| test/unit/no-fixed-font-size.test.ts > no fixed font-size in the app > scans a meaningful number of files 2ms
+ ✓ |dom| test/unit/no-fixed-font-size.test.ts > no fixed font-size in the app > has no px font-size in css or inline styles 100ms
+ ✓ |dom| test/unit/no-fixed-font-size.test.ts > no fixed font-size in the app > print.css holds nothing outside @media print 2ms
+ ✓ |dom| test/unit/no-fixed-font-size.test.ts > no fixed font-size in the app > the detector itself flags px values 1ms
+ ✓ |dom| test/unit/hr-vfix-t84.test.tsx > T-84 verify fixes > B-H1: gradebook toolbar keeps one row (nav shrinks, no scrollbar, no wrapped label) and the work bar hides button labels under 900px 3ms
+ ✓ |dom| test/unit/hr-vfix-t84.test.tsx > T-84 verify fixes > B-H2: the timeline row title is clamped to 2 lines and keeps its full text in title=; the scan start bar title too 2ms
+ ✓ |dom| test/unit/hr-vfix-t84.test.tsx > T-84 verify fixes > B-H3: a disabled student tile says 'off' with a dashed edge and flat surface, never with opacity < 1 on the text 1ms
+
+ Test Files  59 passed (59)
+      Tests  784 passed (784)
+   Start at  05:19:30
+   Duration  28.26s (transform 26.06s, setup 118.25s, import 44.20s, tests 111.53s, environment 190.89s)
+

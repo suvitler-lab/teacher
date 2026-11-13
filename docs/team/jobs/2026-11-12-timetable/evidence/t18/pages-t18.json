@@ -1,0 +1,78 @@
+{
+ "base": "http://127.0.0.1:4109",
+ "devices": [
+  {
+   "name": "mobile",
+   "w": 390,
+   "h": 844,
+   "dpr": 3,
+   "touch": true
+  },
+  {
+   "name": "ipad-portrait",
+   "w": 820,
+   "h": 1180,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "ipad-landscape",
+   "w": 1180,
+   "h": 820,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "desktop",
+   "w": 1536,
+   "h": 729,
+   "dpr": 2,
+   "touch": false
+  }
+ ],
+ "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);return 'ok'})()",
+ "pages": [
+  {
+   "name": "home-a-wed0950",
+   "path": "/?pg=home-a-wed0950&now=2026-11-11T09%3A50#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='a'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=a]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})()",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  },
+  {
+   "name": "home-b-wed0950",
+   "path": "/?pg=home-b-wed0950&now=2026-11-11T09%3A50#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='b'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=b]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})()",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  },
+  {
+   "name": "home-c-wed0950",
+   "path": "/?pg=home-c-wed0950&now=2026-11-11T09%3A50#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='c'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=c]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})()",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  },
+  {
+   "name": "home-a-mon1540",
+   "path": "/?pg=home-a-mon1540&now=2026-11-16T15%3A40#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='a'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=a]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})()",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  },
+  {
+   "name": "home-a-fri0800",
+   "path": "/?pg=home-a-fri0800&now=2026-11-13T08%3A00#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='a'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=a]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})()",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  },
+  {
+   "name": "home-a-prefs",
+   "path": "/?pg=home-a-prefs&now=2026-11-11T09%3A50#/",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('main,.page,.card');i++)await w(100);localStorage.removeItem('ngankrob-font-size');\nconst cur=document.documentElement.getAttribute('data-layout');\nif(cur!=='a'){const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));if(b){b.click();await w(500);const r=document.querySelector('input[name=hm-layout][value=a]');if(r){r.click();await w(900);}const d=[...document.querySelectorAll('button')].find(x=>/^s*เสร็จs*$/.test(x.textContent));d&&d.click();await w(400);}}\nreturn document.documentElement.getAttribute('data-layout');})().then(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));const b=[...document.querySelectorAll('button')].find(x=>/ปรับหน้าหลัก/.test(x.getAttribute('aria-label')||x.textContent));b&&b.click();await w(700);return true})",
+   "ready": "!!document.querySelector('nav')&&!!document.querySelector('main,.page,.card')&&!document.querySelector('input[type=password]')",
+   "wait": 1200
+  }
+ ]
+}

@@ -1,0 +1,856 @@
+{
+ "tt-a-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "tt-b-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "tt-c-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 ele"
+ },
+ "frame-sheet-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "slot-sheet-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    26 × locator resolved to 2 ele"
+ },
+ "home-a-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    23 × locator resolved to 2 ele"
+ },
+ "home-b-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "home-c-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    24 × locator resolved to 2 ele"
+ },
+ "set-appearance-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    25 × locator resolved to 2 ele"
+ },
+ "set-time-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    27 × locator resolved to 2 ele"
+ },
+ "tt-a-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-b-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-c-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "frame-sheet-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "slot-sheet-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-a-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-b-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 186>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-c-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-appearance-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-time-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-a-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-b-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-c-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "frame-sheet-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "slot-sheet-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-a-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "div..r-only \"กำลังโหลดหน้าหลัก…\" 154>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-b-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 186>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-c-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-appearance-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-time-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-a-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-b-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-c-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "frame-sheet-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "slot-sheet-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-a-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-b-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 165>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "home-c-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-appearance-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 98>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "set-time-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 98>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/light"
+ },
+ "tt-a-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    25 × locator resolved to 2 ele"
+ },
+ "tt-b-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    24 × locator resolved to 2 ele"
+ },
+ "tt-c-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    25 × locator resolved to 2 ele"
+ },
+ "frame-sheet-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    26 × locator resolved to 2 ele"
+ },
+ "slot-sheet-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    26 × locator resolved to 2 ele"
+ },
+ "home-a-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "home-b-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "home-c-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 ele"
+ },
+ "set-appearance-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 ele"
+ },
+ "set-time-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 ele"
+ },
+ "tt-a-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-b-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-c-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "frame-sheet-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "slot-sheet-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-a-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-b-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 186>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-c-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-appearance-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-time-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-a-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-b-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-c-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "frame-sheet-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "slot-sheet-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-a-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-b-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 186>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-c-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 618>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 191>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-appearance-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-time-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 110>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-a-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-b-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "tt-c-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "frame-sheet-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "slot-sheet-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-a-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-b-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip",
+   "h2..r-only \"ภาพรวมรายห้อง\" 165>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "home-c-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "select 190x26 \"ภาคเรียนที่ 2/\"",
+   "a.tp-manage 34x42 \"จัดการภาคเรียน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 549>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 170>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-appearance-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 98>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ },
+ "set-time-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span..r-only \"ควรสำรองข้อมูล\" 98>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "skinAttr": "pro/dark"
+ }
+}

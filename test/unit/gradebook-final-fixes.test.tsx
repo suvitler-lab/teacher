@@ -65,9 +65,9 @@ describe("B-F7: a link used while the gradebook is already open", () => {
   it("picks the work named by the new address (same class and subject)", async () => {
     render(<GradebookPage />);
     await screen.findByRole("table");
+    await waitFor(() => expect(selectedAid()).toBe("a2")); // BR-34: the last open work
+    goto("/gradebook?class=c1&subject=science&asg=a1");
     await waitFor(() => expect(selectedAid()).toBe("a1"));
-    goto("/gradebook?class=c1&subject=science&asg=a2");
-    await waitFor(() => expect(selectedAid()).toBe("a2"));
   });
 
   it("changes class and picks the work there", async () => {
@@ -86,11 +86,11 @@ describe("B-F7: a link used while the gradebook is already open", () => {
     await waitFor(() => expect(selectedAid()).toBe("a3"));
   });
 
-  it("falls back to the first work when the named one does not exist", async () => {
+  it("falls back to the last open work (BR-34) when the named one does not exist", async () => {
     render(<GradebookPage />);
     await screen.findByRole("table");
     goto("/gradebook?class=c1&subject=science&asg=gone");
-    await waitFor(() => expect(selectedAid()).toBe("a1"));
+    await waitFor(() => expect(selectedAid()).toBe("a2"));
   });
 });
 

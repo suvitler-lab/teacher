@@ -1,0 +1,50 @@
+/* Settings ▸ ห้องเรียน วิชา ภาคเรียน + ประเภทงาน (T-54). Tokens only. Buttons and taps >= 44px, text >= 13px. */
+.cat-tabs { display: flex; flex-wrap: wrap; margin-bottom: 12px; }
+.cat-tab[aria-selected="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 500; border-color: var(--border-control); }
+.cat-row { padding: 8px 0; border-top: 0.5px solid var(--border); }
+.cat-line { gap: 8px; flex-wrap: wrap; align-items: center; }
+.cat-name { min-width: 8rem; overflow-wrap: anywhere; }
+.cat-btn { min-height: 44px; font-size: var(--fs-sm); }
+.cat-move { gap: 2px; flex: none; }
+.cat-move button { width: 44px; height: 44px; }
+.cat-edit { margin-top: 6px; display: flex; flex-direction: column; gap: 8px; }
+.cat-edit.modal-grid2 { display: grid; }
+.cat-fields { gap: 8px; flex-wrap: wrap; align-items: center; }
+.cat-grow { flex: 1 1 10rem; min-width: 0; width: auto; min-height: 44px; }
+.cat-code { width: 9rem; max-width: 100%; min-height: 44px; }
+.cat-num { width: 5.5rem; min-height: 44px; }
+.cat-full { gap: 6px; align-items: center; }
+.cat-check { gap: 8px; min-height: 44px; align-items: center; }
+.cat-check input { width: 1.4rem; height: 1.4rem; }
+.cat-add { gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.cat-addbox { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 0.5px solid var(--border); }
+.cat-fold { margin-top: 10px; }
+.cat-fold > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.cat-note { margin: 2px 0 6px; }
+.cat-year { margin-top: 10px; font-weight: 500; }
+.cat-empty { padding: 12px; border: 0.5px dashed var(--border-control); border-radius: var(--radius-sm); margin-bottom: 8px; }
+.cat-offline { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; color: var(--text-warning); }
+.cat-termhead { gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+.cat-err { display: flex; gap: 6px; align-items: flex-start; font-size: var(--fs-sm); color: var(--text-danger); }
+.cat-colors { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.cat-colorname { margin-left: 6px; }
+/* a round colour button: 44px tap area; the picked one carries a tick, the name is always written beside the row */
+.cat-sw { width: 44px; height: 44px; min-height: 44px; padding: 0; border-radius: 50%; border: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; }
+.cat-sw.on { border-color: var(--text-primary); }
+.cat-sw:focus-visible { outline: 2px solid var(--text-accent); outline-offset: 2px; }
+.cat-sw.blue { background: var(--tint-blue-bg); color: var(--tint-blue-fg); }
+.cat-sw.aqua { background: var(--tint-aqua-bg); color: var(--tint-aqua-fg); }
+.cat-sw.violet { background: var(--tint-violet-bg); color: var(--tint-violet-fg); }
+.cat-sw.orange { background: var(--tint-orange-bg); color: var(--tint-orange-fg); }
+.cat-sw.green { background: var(--tint-green-bg); color: var(--tint-green-fg); }
+.cat-sw.magenta { background: var(--tint-magenta-bg); color: var(--tint-magenta-fg); }
+.cat-sw.red { background: var(--tint-red-bg); color: var(--tint-red-fg); }
+/* the small facts of a row ("เต็ม 10 · 2 งาน") never break inside; on a narrow screen the buttons drop to the next line instead */
+.cat-line > .page-sub.grow { flex: 1 1 auto; white-space: nowrap; }
+/* phone < 480px: the menu of a row (AC-246) */
+.cat-menu { position: relative; display: inline-flex; flex: none; margin-left: auto; }
+.cat-more { width: 44px; height: 44px; }
+.cat-menu-back { position: fixed; inset: 0; z-index: 20; }
+.cat-pop { position: absolute; right: 0; top: 100%; z-index: 21; min-width: 9rem; display: flex; flex-direction: column; gap: 2px; padding: 4px; background: var(--surface-0, var(--bg-card)); border: 0.5px solid var(--border-control); border-radius: var(--radius-sm); }
+.cat-pop button { min-height: 44px; justify-content: flex-start; width: 100%; font-size: var(--fs-sm); }
+.cat-line .cat-more.icon { width: 44px; height: 44px; min-width: 44px; min-height: 44px; padding: 0; }

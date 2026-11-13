@@ -62,7 +62,7 @@ describe("restore keeps half-point scores", () => {
     b.data.submissions.find((s) => s.student_id === "st1")!.score = score;
 
     // Same real flow as the app, but the bad row may be stopped at the chunk step already.
-    const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 6, counts: b.counts } }), cookie)).json()) as any;
+    const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 7, counts: b.counts } }), cookie)).json()) as any;
     let res: Response | null = null;
     for (const t of Object.keys(b.data)) {
       if (!b.data[t].length) continue;
@@ -83,7 +83,7 @@ describe("restore keeps half-point scores", () => {
   it("AC-02: the in-transaction SQL guard alone also rejects 7.25 and strings (staged rows bypassing zod)", async () => {
     const before = await takeBackup(cookie);
     for (const score of [7.25, -0.5, "7.5", 10.5]) {
-      const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 6, counts: before.counts } }), cookie)).json()) as any;
+      const v = (await (await call("/api/restore/validate", json({ manifest: { schema_version: 7, counts: before.counts } }), cookie)).json()) as any;
       for (const t of Object.keys(before.data)) {
         if (!before.data[t].length) continue;
         const r = await call("/api/restore/execute", json({ restoreId: v.restoreId, step: "chunk", table: t, seq: 0, rows: before.data[t] }), cookie);

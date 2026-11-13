@@ -1,6 +1,8 @@
 // Shared types between worker and client.
 
-export const SCHEMA_VERSION = 6;
+import type { TimetablePayload } from "./timetable";
+
+export const SCHEMA_VERSION = 7;
 
 export type ID = string;
 
@@ -24,6 +26,7 @@ export interface Settings {
   onboarding_done: boolean; // the first-run welcome guide was finished or skipped
   last_backup_at: string;
   period_times: string; // JSON: {"1":"08:30",...}
+  period_frame?: string; // JSON frame of the timetable (shared/timetable.ts Frame), read-only here (EP-12 writes it); ""/absent = never set
   home_cards: string; // JSON {"v":1,"order":[card keys],"hidden":[card keys]}; "" = the default home layout
   scan_cards: string; // same shape, for the scan page cards
   attendance_cards: string; // same shape, for the attendance page cards
@@ -220,6 +223,7 @@ export interface Bootstrap {
   revokedTokens: Record<string, ID>; // token -> student_id
   qrRotatedAt: Record<ID, number>;   // student_id -> most recent QR revoke time (ms), last 60 days
   assignments: Assignment[];
+  timetable?: TimetablePayload | null; // the current term's timetable (EP-11); null = no term; absent on old servers
   dataEpoch: number;                 // bumped by every restore
   serverTime: number;
 }

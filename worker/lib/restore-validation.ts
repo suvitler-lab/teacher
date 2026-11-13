@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Env } from "../env";
 import { isHalfStep } from "@shared/grade";
+import { resolveFrame, outsideFrame, graphemeCount, LABEL_MAX, type Slot } from "@shared/timetable";
 
 export interface RestoreIssue { table: string; rowId: string; field: string; code: string }
 const text = z.string();
@@ -36,6 +37,7 @@ const schemas: Record<string, z.ZodType> = {
   scan_sessions: z.object({ id: key, assignment_id: optionalKey, class_id: optionalKey, subject_id: optionalKey, mode: z.enum(["full", "type", "later"]), full_score: integer.min(1).max(100), device_id: optionalText, started_at: stamp, ended_at: optionalStamp, scan_count: integer.min(0) }),
   submissions: z.object({ assignment_id: key, student_id: key, status: z.enum(["submitted", "excused", "void"]), score: halfStep.min(0).nullable(), late: flag, submitted_at: optionalStamp, method, device_id: optionalText, scan_session_id: optionalText, event_at: optionalStamp, ...dated }),
   attendance_sessions: z.object({ id: key, date, class_id: key, subject_id: optionalKey, period: integer.nullish(), ...dated }),
+  timetable_slots: z.object({ term_id: key, weekday: integer.min(1).max(7), period: integer.min(1).max(8), kind: z.enum(["class", "activity"]), class_id: optionalKey, subject_id: optionalKey, label: text.max(800).refine((s) => graphemeCount(s.trim()) <= LABEL_MAX).nullish(), ...dated }),
   attendance: z.object({ session_id: key, student_id: key, status: z.enum(["present", "late", "leave", "sick", "absent"]), time: optionalStamp, method, device_id: optionalText, ...dated }),
 };
 
@@ -46,7 +48,7 @@ export function restoreRowIssues(table: string, rows: Record<string, unknown>[])
   for (let i = 0; i < rows.length && issues.length < 50; i++) {
     const row = rows[i];
     const result = schema.safeParse(row);
-    const rowId = String(row.id ?? row.key ?? row.student_id ?? i);
+    const rowId = String(row.id ?? row.key ?? row.student_id ?? row.term_id ?? i);
     if (!result.success) {
       for (const issue of result.error.issues) {
         issues.push({ table, rowId, field: issue.path.map(String).join("."), code: issue.code });
@@ -73,7 +75,7 @@ const ctes = tables.map((t) => {
 const val = (alias: string, field: string) => `${alias}."${field}"`;
 const rules: string[] = [];
 function rule(table: string, field: string, code: string, where: string, rowId = "id") {
-  if (rowId === "id") rowId = ({ revoked_qr_tokens: "token", assignment_classes: "assignment_id" } as Record<string, string>)[table] ?? rowId;
+  if (rowId === "id") rowId = ({ revoked_qr_tokens: "token", assignment_classes: "assignment_id", timetable_slots: "term_id" } as Record<string, string>)[table] ?? rowId;
   rules.push(`SELECT json_object('table','${table}','rowId',CAST(COALESCE(${val("x", rowId)}, '') AS TEXT),'field','${field}','code','${code}') FROM ${table} x WHERE ${where} LIMIT 1`);
 }
 const refs: Record<string, [string, string, string][]> = {
@@ -84,6 +86,7 @@ const refs: Record<string, [string, string, string][]> = {
   scan_sessions: [["assignment_id", "assignments", "id"], ["class_id", "classes", "id"], ["subject_id", "subjects", "id"]],
   submissions: [["assignment_id", "assignments", "id"], ["student_id", "students", "id"]],
   attendance_sessions: [["class_id", "classes", "id"], ["subject_id", "subjects", "id"]],
+  timetable_slots: [["term_id", "terms", "id"], ["class_id", "classes", "id"], ["subject_id", "subjects", "id"]],
   attendance: [["session_id", "attendance_sessions", "id"], ["student_id", "students", "id"]],
 };
 for (const [table, fields] of Object.entries(refs)) for (const [field, parent, parentKey] of fields) {
@@ -97,6 +100,9 @@ rule("assignment_classes", "class_id", "wrong_school_year", `EXISTS (
 // Legacy assignments with no room links are global, as in submissions.stillValid().
 rule("submissions", "student_id", "not_in_assignment_class", `EXISTS (SELECT 1 FROM assignment_classes linked WHERE ${val("linked", "assignment_id")}=${val("x", "assignment_id")}) AND EXISTS (SELECT 1 FROM students p WHERE ${val("p", "id")}=${val("x", "student_id")} AND NOT EXISTS (SELECT 1 FROM assignment_classes ac WHERE ${val("ac", "assignment_id")}=${val("x", "assignment_id")} AND ${val("ac", "class_id")}=${val("p", "class_id")}))`, "student_id");
 rule("attendance", "student_id", "not_in_session_class", `EXISTS (SELECT 1 FROM students p, attendance_sessions a WHERE ${val("p", "id")}=${val("x", "student_id")} AND ${val("a", "id")}=${val("x", "session_id")} AND ${val("p", "class_id")} IS NOT ${val("a", "class_id")})`, "student_id");
+rule("timetable_slots", "kind", "kind_fields", `(${val("x", "kind")}='class' AND (${val("x", "class_id")} IS NULL OR ${val("x", "label")} IS NOT NULL)) OR (${val("x", "kind")}='activity' AND (${val("x", "class_id")} IS NOT NULL OR ${val("x", "subject_id")} IS NOT NULL OR ${val("x", "label")} IS NULL OR length(trim(${val("x", "label")})) NOT BETWEEN 1 AND 800))`);
+rule("timetable_slots", "class_id", "wrong_school_year", `EXISTS (SELECT 1 FROM terms t JOIN classes c ON c.id=x.class_id WHERE t.id=x.term_id AND c.year IS NOT NULL AND c.year!=t.year)`);
+rule("timetable_slots", "period", "duplicate_slot", `(SELECT COUNT(*) FROM timetable_slots p WHERE ${val("p", "term_id")}=${val("x", "term_id")} AND ${val("p", "weekday")}=${val("x", "weekday")} AND ${val("p", "period")}=${val("x", "period")})>1`);
 rule("terms", "term", "duplicate_term", `(SELECT COUNT(*) FROM terms p WHERE ${val("p", "year")}=${val("x", "year")} AND ${val("p", "term")}=${val("x", "term")})>1`);
 rule("terms", "is_current", "multiple_current_terms", `${val("x", "is_current")}=1 AND (SELECT COUNT(*) FROM terms p WHERE ${val("p", "is_current")}=1)>1`);
 rule("students", "number", "duplicate_active_number", `${val("x", "status")}='active' AND ${val("x", "class_id")} IS NOT NULL AND ${val("x", "number")} IS NOT NULL AND (SELECT COUNT(*) FROM students p WHERE ${val("p", "status")}='active' AND ${val("p", "class_id")}=${val("x", "class_id")} AND ${val("p", "number")}=${val("x", "number")})>1`);
@@ -113,4 +119,27 @@ export const restoreDomainGuard = (env: Env, restoreId: string) => env.DB.prepar
 export async function stagedRestoreIssues(env: Env, restoreId: string): Promise<RestoreIssue[]> {
   const row = await env.DB.prepare(`${issueSql} SELECT detail FROM issue`).bind(restoreId).first<{ detail: string | null }>();
   return row?.detail ? [JSON.parse(row.detail) as RestoreIssue] : [];
+}
+
+/**
+ * Timetable vs. frame in the staged file (D56 · EP-13): a stored `period_frame` that does not pass
+ * `validateFrame`, or a slot outside the file's own frame, is refused so a restore never creates a
+ * state the app cannot repair. Runs after the row counts are checked, before the swap batch is built.
+ */
+export async function stagedFrameIssues(env: Env, restoreId: string): Promise<RestoreIssue[]> {
+  const rows = async (tbl: string): Promise<Record<string, any>[]> => {
+    const res = await env.DB.prepare(
+      "SELECT j.value AS row FROM restore_staging s, json_each(s.rows_json) j WHERE s.job_id = ?1 AND s.tbl = ?2",
+    ).bind(restoreId, tbl).all<{ row: string }>();
+    return (res.results ?? []).map((r) => JSON.parse(r.row));
+  };
+  const settings = new Map((await rows("settings")).map((r) => [String(r.key), typeof r.value === "string" ? r.value : ""]));
+  const periodFrame = settings.get("period_frame") ?? "";
+  const frame = resolveFrame(periodFrame || undefined, settings.get("period_times") ?? "");
+  if (periodFrame && !frame.saved) return [{ table: "settings", rowId: "period_frame", field: "value", code: "bad_frame" }];
+  const slots = await rows("timetable_slots");
+  const bad = outsideFrame(slots as unknown as Slot[], frame);
+  return bad.slice(0, 50).map((sl) => ({
+    table: "timetable_slots", rowId: String((sl as any).term_id ?? ""), field: "period", code: "outside_frame",
+  }));
 }

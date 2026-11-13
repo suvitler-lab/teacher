@@ -1,3 +1,4 @@
+/* hex below on purpose: projector mode has its own fixed high-contrast palette (--pj-*), independent of the app skin */
 /* งานครบ · projector mode (classroom TV): dark by default, three sizes, nothing personal on screen. Sizes follow --pj-u = the screen / 768 */
 .pj{--pj-u:min(calc(100vh / 768),calc(100vw / 1024));position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;overflow:hidden;font-size:calc(var(--pj-u)*30);line-height:1.25;
   --pj-bg:#0b1220;--pj-card:#151e33;--pj-t1:#ffffff;--pj-t2:#cdd5e3;--pj-bd:#5b6a8a;--pj-ac:#9cc2f2;--pj-on-ac:#0b1220;--pj-ok:#6ee7a8;--pj-okbg:#0f3a26;--pj-bad:#ff9a9a;--pj-warn:#ffd166;

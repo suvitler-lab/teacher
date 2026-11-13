@@ -1,0 +1,87 @@
+/* Layout ก (paper grid): rows = days, columns = periods, tall break band. Sticky day column and header; scrolls inside its own frame. */
+.tta-frame { --tta-day: 5.2rem; --tta-min: 88px; --tta-brk: 2.6rem; overflow: auto; max-height: calc(100dvh - 15rem); min-height: 12rem; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface-0); padding: 3px; }
+.tta-grid { display: grid; gap: 4px; min-width: min-content; }
+.tta-row { display: contents; }
+.tta-ch { position: sticky; top: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 4px; border-radius: var(--radius-xs); background: var(--surface-1); font-size: var(--t-xs); line-height: 1.35; color: var(--text-secondary); text-align: center; min-height: 3.2rem; box-sizing: border-box; }
+.tta-ch b { font-size: var(--t-sm); color: var(--text-primary); }
+.tta-ch.now { background: var(--accent); color: var(--on-accent); }
+.tta-ch.now b { color: var(--on-accent); }
+.tta-corner { left: 0; z-index: 5; font-weight: 700; color: var(--text-primary); }
+.tta-chb span { font-weight: 600; }
+.tta-dn { position: sticky; left: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 2px; padding: 6px 8px; border-radius: var(--radius-xs); background: var(--surface-1); font-size: var(--t-sm); box-sizing: border-box; }
+.tta-dn.today { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--accent); }
+.tta-today, .tta-now { font-style: normal; font-size: var(--t-xs); font-weight: 700; padding: 0 8px; border-radius: 999px; background: var(--accent); color: var(--on-accent); line-height: 1.5; align-self: flex-start; }
+.tta-ch .tta-now { background: var(--on-accent); color: var(--accent); align-self: center; margin-top: 2px; }
+.tta-c { position: relative; min-height: 4.2rem; padding: 6px 8px; border-radius: var(--radius-xs); border: 1px solid var(--border-control); background: var(--surface-2); color: var(--text-primary); display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 0; box-sizing: border-box; cursor: default; }
+.tta-c.act { cursor: pointer; }
+.tta-c.act:hover { background: var(--surface-1); }
+.tta-c.empty { border-style: dashed; background: transparent; align-items: center; }
+.tta-c.now { border: 2px solid var(--accent); }
+.tta-c:focus-visible, .tta-c:focus { outline: 3px solid var(--accent); outline-offset: -1px; z-index: 4; }
+.tta-c[aria-disabled="true"] { opacity: 0.6; }
+.tta-plus { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 999px; color: var(--text-secondary); }
+.tta-brk { display: flex; align-items: center; justify-content: center; border-radius: var(--radius-xs); border: 1px solid var(--border-strong); background: repeating-linear-gradient(135deg, var(--surface-1) 0 6px, var(--surface-0) 6px 12px); min-height: 0; }
+.tta-brk span { writing-mode: vertical-rl; font-size: var(--t-xs); color: var(--text-primary); font-weight: 600; background: var(--surface-0); padding: 8px 2px; border-radius: 6px; white-space: nowrap; }
+
+/* V-02: at tablet-portrait widths the cell padding gives the subject line (ttp-l2) the room it needs, so "คณิตศาสตร์" is not cut */
+@media (max-width: 900px) { .tta-c { padding-left: 3px; padding-right: 3px; } }
+
+/* V-08: at tablet-portrait width the 7-period week fits without clipping: narrower day column, break band and period minimum, tighter gaps.
+   Wider weeks (8 periods, Sat/Sun) scroll inside the frame, which then takes focus and shows a hint line. */
+@media (max-width: 900px) {
+  .tta-frame { --tta-day: 3.3rem; --tta-min: 72px; --tta-brk: 1.9rem; padding: 2px; }
+  .tta-grid { gap: 3px; }
+  .tta-dn { padding: 6px 4px; }
+  .tta-ch { padding: 6px 2px; }
+}
+.tta-frame:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tta-hint { margin: 6px 2px 0; font-size: var(--t-sm); color: var(--text-secondary); }
+
+/* V-10 compact density: a big week (6+ school days or 8+ periods, set by the grid) fits one screen. Tighter padding,
+   gaps and line boxes only; text sizes stay the tokens (≥ 13px) and every cell stays ≥ 44px tall (var(--tap)). */
+.tta-frame[data-density="compact"] .tta-grid { gap: 3px; }
+.tta-frame[data-density="compact"] .tta-ch { min-height: 0; padding: 3px 4px; }
+.tta-frame[data-density="compact"] .tta-dn { padding: 3px 8px; }
+.tta-frame[data-density="compact"] .tta-c { min-height: var(--tap); padding: 3px 8px; gap: 2px; }
+.tta-frame[data-density="compact"] .ttp { gap: 0; }
+.tta-frame[data-density="compact"] .ttp-l2 { line-height: 1.45; }
+.tta-frame[data-density="compact"] .ttp-tag { line-height: 1.3; }
+@media (max-width: 900px) { .tta-frame[data-density="compact"] .tta-c { padding: 3px 3px; } }
+@media (min-width: 1100px) {
+  .tta-frame[data-density="compact"] { max-height: calc(100dvh - 10rem); }
+  .tta-frame[data-density="compact"] .tta-ch { flex-direction: row; flex-wrap: wrap; column-gap: 6px; row-gap: 0; }
+  .tta-frame[data-density="compact"] .tta-ch .tta-now { margin-top: 0; }
+}
+
+/* V-12: a long activity name keeps two lines with an ellipsis (full text in the chip title and the cell's spoken label).
+   Thai marks on the hidden third line (e.g. the tone mark of "ชั้น") reach up into the second line's bottom leading, so a
+   two-line name is clipped 0.4em above two full line boxes (only leading is lost; below-vowels of the second line stay whole).
+   One-line names are not touched; a cell with a two-line name is up to 0.4em shorter. */
+.tta-c .ttp-act .ttp-name { line-height: 1.6; max-height: 2.8em; overflow: hidden; }
+
+/* V-40/V-41: wide screens. The frame only reserves what really sits above/below it (page header ≈ 5.6rem + summary ≈ 3rem),
+   so a 5-day week still fits at the larger "touch" text size (18px) on 1536×729. The "ตอนนี้" word sits in the cell's
+   bottom-right corner on the chip's last line (that line alone keeps room for it), so the name keeps the full width and
+   the now row is no taller than the others. */
+@media (min-width: 1100px) {
+  .tta-frame { max-height: calc(100dvh - 10rem); }
+  .tta-c.now > .tta-now { position: absolute; right: 5px; bottom: 5px; padding: 0 6px; }
+  .tta-frame[data-density="compact"] .tta-c.now > .tta-now { bottom: 2px; line-height: 1.3; }
+  .tta-c.now .ttp > :last-child { padding-right: 3.5rem; }
+  .tta-c.now .ttp-l2 { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow-wrap: break-word; }
+}
+
+/* V-44: tablet-portrait cells are narrow. The icon flows inline with the name so the name may use the whole second
+   line, and the subject may wrap to two lines instead of being cut ("คณิตศาสตร์", "PLC กลุ่มสาระ" show in full). */
+@media (max-width: 1099px) {
+  .tta-frame:not([data-density="compact"]) .tta-c .ttp-l1 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; line-height: 1.55; }
+  .tta-frame:not([data-density="compact"]) .tta-c .ttp-l1 > i, .tta-frame:not([data-density="compact"]) .tta-c .ttp-l1 > svg { display: inline-block; vertical-align: -2px; margin-right: 3px; }
+  .tta-frame:not([data-density="compact"]) .tta-c .ttp-l1 .ttp-name, .tta-frame:not([data-density="compact"]) .tta-c .ttp-act .ttp-name { display: inline; white-space: normal; overflow: visible; max-height: none; line-height: inherit; overflow-wrap: break-word; }
+}
+
+/* V-43/V-40: when the week is larger than the frame, a soft edge on the side that has more (right / bottom) plus the hint line */
+.tta-wrap { position: relative; }
+.tta-wrap::before, .tta-wrap::after { content: ""; position: absolute; pointer-events: none; z-index: 6; opacity: 0; border-radius: var(--radius-sm); }
+.tta-wrap::after { top: 1px; right: 1px; bottom: 1px; width: 22px; background: linear-gradient(to left, var(--border-strong), transparent); }
+.tta-wrap::before { left: 1px; right: 1px; bottom: 1px; height: 18px; background: linear-gradient(to top, var(--border-strong), transparent); }
+.tta-wrap[data-more-x]::after, .tta-wrap[data-more-y]::before { opacity: 0.55; }

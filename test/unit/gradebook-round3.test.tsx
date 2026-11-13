@@ -232,18 +232,20 @@ describe("cards under the table", () => {
     expect(shouldClose([mk("a", "2020-01-05", "open"), mk("b", "2020-01-05", "closed"), mk("c", null, "open"), mk("d", "2999-01-01", "open")], "2026-11-04").map((a) => a.id)).toEqual(["a"]);
   });
 
-  it("shows the default cards, and 'ปรับการ์ด' can turn one off", async () => {
-    await open();
-    expect(await screen.findByRole("group", { name: "สรุปห้อง" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /ควรปิดรับ \d+ งาน/ })).toBeTruthy(); // a small drop-down above the table, not a card
-    expect(screen.getByRole("note", { name: "คำอธิบายสัญลักษณ์" })).toBeTruthy();       // the legend is one line under the table
-    expect(screen.queryByLabelText("การกระจายคะแนน")).toBeNull(); // off by default
+  const openDrawer = async () => { await open(); fireEvent.click(await screen.findByRole("button", { name: /รอตรวจ [0-9]+ งาน/ })); return await screen.findByRole("dialog", { name: "สรุปสมุดคะแนน" }); };
+
+  it("the hero always shows the room summary; the drawer holds the default cards, and 'ปรับการ์ด' can turn one off", async () => {
+    const d = await openDrawer();
+    expect(screen.getByRole("group", { name: "สรุปห้อง" })).toBeTruthy();
+    expect(within(d).getByRole("region", { name: "ควรปิดรับ" })).toBeTruthy();
+    expect(within(d).getByRole("note", { name: "คำอธิบายสัญลักษณ์" })).toBeTruthy();
+    expect(within(d).queryByLabelText("การกระจายคะแนน")).toBeNull(); // off by default
   });
 
-  it("a hidden card is not drawn", async () => {
-    settings.value = { ...(settings.value as object), gradebook_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("gradebook"), "summary")) } as never;
-    await open();
-    await waitFor(() => expect(screen.getByRole("button", { name: /ควรปิดรับ \d+ งาน/ })).toBeTruthy());
-    expect(screen.queryByRole("group", { name: "สรุปห้อง" })).toBeNull();
+  it("a hidden card is not drawn in the drawer (the hero is locked)", async () => {
+    settings.value = { ...(settings.value as object), gradebook_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("gradebook"), "close")) } as never;
+    const d = await openDrawer();
+    expect(within(d).queryByRole("region", { name: "ควรปิดรับ" })).toBeNull();
+    expect(screen.getByRole("group", { name: "สรุปห้อง" })).toBeTruthy();
   });
 });

@@ -1,0 +1,114 @@
+T-11 dry-run 2 (redo on the CURRENT tree, migration 0008 with label CHECK BETWEEN 1 AND 800) — LOCAL ONLY
+Date 2026-11-13 · agent team-database-specialist · wrangler --local --persist-to <scratch dir>; no --remote, no production, no port opened.
+Replaces t11-migration-dry-run.txt (that run predates the 40 -> 800 widening). Scripts: scratchpad/rehearsal/{run.sh,q.mjs,w.mjs} (sqlite via node:sqlite).
+Backup = VACUUM INTO (raw .sqlite copy is not a backup in WAL mode; `wrangler d1 export` crashed on Windows in the first rehearsal and was not retried).
+Table-drawing lines of wrangler output are omitted below. Restore here = file swap of the VACUUM INTO copy (DB-level restore).
+The app restore path (v6 file, 41-grapheme refusal) was exercised separately by vitest, see PART B.
+Note: step 7 of the first two script runs picked the wrong .sqlite (metadata file) and did not swap; fixed script re-run from scratch — the output below is the final, complete run.
+
+=============== PART A: scratch D1 rehearsal (run.sh) ===============
+== 0. env: node v24.15.0 · wrangler 4.152.0 · scratch persist: <scratchpad>/rehearsal/persist (LOCAL only; no --remote)
+== 1. migrations 0001-0007 (pre) --local
+== 2. seed-demo.sql --local
+🚣 9 commands executed successfully.
+== 3. PRE counts
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=7 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"6"}]
+sql> select name from d1_migrations order by id -> [{"name":"0001_init.sql"},{"name":"0002_defaults.sql"},{"name":"0003_term_dates.sql"},{"name":"0004_restore_staging.sql"},{"name":"0005_integrity.sql"},{"name":"0006_school_year.sql"},{"name":"0007_teacher_email.sql"}]
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 4. backup: VACUUM INTO
+ok: VACUUM INTO '<scratchpad>/rehearsal/backup.sqlite'
+backup.sqlite bytes: 315392
+backup counts: assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=7 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 work_types=8
+== 5. migrate 0008 (real migrations dir) --local
+? About to apply 1 migration(s)
+Your database may not be available to serve requests during the migration, continue?
+🤖 Using fallback value in non-interactive context: yes
+🌀 Executing on local database kru-db-apac (86cbb410-14a8-4d46-9b5f-89982e957815) from ..\..\AppData\Local\Temp\claude\1c70dacc8a82bbc5\82292970-eca3-43d0-a3c3-a99ffbc1e3f5\scratchpad\rehearsal\persist\v3\d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 5 commands executed successfully.
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=8 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 timetable_slots=0 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"7"}]
+sql> select name from d1_migrations order by id desc limit 1 -> [{"name":"0008_timetable.sql"}]
+sql> select sql from sqlite_master where name='timetable_slots' -> [{"sql":"CREATE TABLE timetable_slots (\n  term_id    TEXT    NOT NULL REFERENCES terms(id),\n  weekday    INTEGER NOT NULL CHECK (weekday BETWEEN 1 AND 7),\n  period     INTEGER NOT NULL CHECK (period BETWEEN 1 AND 8),\n  kind       TEXT    NOT NULL CHECK (kind IN ('class','activity')),\n  class_id   TEXT    REFERENCES classes(id),\n  subject_id TEXT    REFERENCES subjects(id),\n  label      TEXT,\n  updated_at INTEGER NOT NULL,\n  PRIMARY KEY (term_id, weekday, period),\n  CHECK (\n    (kind = 'class' AND class_id IS NOT NULL AND label IS NULL)\n    OR\n    (kind = 'activity' AND class_id IS NULL AND subject_id IS NULL AND 
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 6. write timetable rows
+emoji label: 80 code points, 40 graphemes, JS length 80
+INSERT class slot cls_61 -> accepted
+INSERT activity emoji x40 (80 cp) -> accepted
+INSERT activity 41 graphemes (82 cp) at DB level -> accepted
+INSERT activity 800 cp -> accepted
+INSERT activity 801 cp (over widened bound) -> REJECTED: CHECK constraint failed: (kind = 'class' AND class_id IS NOT NULL AND label IS NULL)
+    OR
+    (kind = 'activity' AND class_id IS NULL AND subject_id IS NULL AND label IS NOT NULL
+       AND length(trim(label)) BETWEEN 1 AND 800)
+INSERT activity empty/blank label -> REJECTED: CHECK constraint failed: (kind = 'class' AND class_id IS NOT NULL AND label IS NULL)
+    OR
+    (kind = 'activity' AND class_id IS NULL AND subject_id IS NULL AND label IS NOT NULL
+       AND length(trim(label)) BETWEEN 1 AND 800)
+INSERT class slot unknown class (FK) -> REJECTED: FOREIGN KEY constraint failed
+INSERT duplicate PK (term,1,1) -> REJECTED: UNIQUE constraint failed: timetable_slots.term_id, timetable_slots.weekday, timetable_slots.period
+INSERT class slot with label -> REJECTED: CHECK constraint failed: (kind = 'class' AND class_id IS NOT NULL AND label IS NULL)
+    OR
+    (kind = 'activity' AND class_id IS NULL AND subject_id IS NULL AND label IS NOT NULL
+       AND length(trim(label)) BETWEEN 1 AND 800)
+timetable_slots rows now: 4 | max length(label): 800
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=8 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 timetable_slots=4 work_types=8
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 7. restore from backup (swap DB file, drop WAL/SHM)
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=7 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"6"}]
+sql> select name from d1_migrations order by id desc limit 1 -> [{"name":"0007_teacher_email.sql"}]
+sql> select name from sqlite_master where name like '%timetable%' -> []
+sql> select count(*) c from pragma_table_info('terms') where name='timetable_rev' -> [{"c":0}]
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 8. re-apply 0008 after restore
+? About to apply 1 migration(s)
+Your database may not be available to serve requests during the migration, continue?
+🤖 Using fallback value in non-interactive context: yes
+🌀 Executing on local database kru-db-apac (86cbb410-14a8-4d46-9b5f-89982e957815) from ..\..\AppData\Local\Temp\claude\1c70dacc8a82bbc5\82292970-eca3-43d0-a3c3-a99ffbc1e3f5\scratchpad\rehearsal\persist\v3\d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 5 commands executed successfully.
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=8 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 timetable_slots=0 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"7"}]
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 9. rewrite a slot, then MANUAL ROLLBACK SQL from database.md
+INSERT activity emoji x40 (80 cp) -> accepted
+timetable_slots rows now: 4 | max length(label): 800
+sql> DROP INDEX idx_timetable_slots_class -> []
+sql> DROP TABLE timetable_slots -> []
+sql> ALTER TABLE terms DROP COLUMN timetable_rev -> []
+sql> UPDATE meta SET value='6' WHERE key='schema_version' -> []
+sql> DELETE FROM d1_migrations WHERE name='0008_timetable.sql' -> []
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=7 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"6"}]
+sql> select count(*) c from pragma_table_info('terms') where name='timetable_rev' -> [{"c":0}]
+sql> select name from sqlite_master where name like '%timetable%' -> []
+sql> select name from d1_migrations order by id desc limit 1 -> [{"name":"0007_teacher_email.sql"}]
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+== 10. re-apply 0008 after manual rollback
+? About to apply 1 migration(s)
+Your database may not be available to serve requests during the migration, continue?
+🤖 Using fallback value in non-interactive context: yes
+🌀 Executing on local database kru-db-apac (86cbb410-14a8-4d46-9b5f-89982e957815) from ..\..\AppData\Local\Temp\claude\1c70dacc8a82bbc5\82292970-eca3-43d0-a3c3-a99ffbc1e3f5\scratchpad\rehearsal\persist\v3\d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 5 commands executed successfully.
+assignment_classes=7 assignments=5 attendance=160 attendance_sessions=5 audit_logs=0 classes=3 d1_migrations=8 devices=0 login_attempts=0 meta=3 restore_jobs=0 restore_staging=0 revoked_qr_tokens=0 scan_sessions=0 sessions=0 settings=10 students=40 subjects=2 submissions=88 teacher=0 terms=1 timetable_slots=0 work_types=8
+sql> select value from meta where key='schema_version' -> [{"value":"7"}]
+sql> select count(*) c from timetable_slots -> [{"c":0}]
+file: 1117ea20e8ed701f95a0f93c5c2d47355bcdad8e5701436041584c7c8ae666e7.sqlite
+
+=============== PART B: app restore path / API guards (vitest run this session) ===============
+$ npx vitest run test/api/tt-backup.test.ts test/api/tt-migration.test.ts test/api/tt-api.test.ts test/api/restore.test.ts test/unit/backup.test.ts
+ Test Files  5 passed (5) · Tests 89 passed (89)
+ ✓ tt-backup > a v6 file with no timetable_slots restores: empty table, period_times from the file, no error   (schema_version 6 manifest through /api/restore/validate + execute chunk/commit)
+ ✓ tt-backup > R-14: an activity label of 40 emoji restores; 41 emoji or 41 plain characters are refused as invalid_backup   (422 invalid_backup, field label, data unchanged; uses 👍 = 1 code point)
+ ✓ tt-api > #5b labels count graphemes: emoji x41 -> 422 label_too_long (B-02)   (uses 🏕️ = 2 code points; PUT /api/timetable)
+ ✓ tt-migration (10 tests): CHECK/FK/PK/index on the in-test D1 (miniflare) incl. blank label and unknown kind rejections
+Limits of this evidence: PART B ran on vitest's own D1, NOT on the scratch DB of PART A; no wrangler dev server was started (no port assigned), so a v6 JSON file was not fed to a live app.
+ No existing test restores an 80-code-point (2-code-point emoji x40) label through /api/restore; the DB-level acceptance of 80 cp is PART A step 6, the 40-grapheme app rule for 2-cp emoji is the tt-api #5b test (41 refused).
+
+=============== RESULT ===============
+Counts per table PRE (schema 6, 7 migrations) = after restore from VACUUM INTO backup (schema 6, 7 migrations): identical (terms 1 · classes 3 · subjects 2 · students 40 · assignments 5 · attendance 160 · submissions 88 · settings 10 · assignment_classes 7 · attendance_sessions 5 · work_types 8 · meta 3).
+0008 migrate: schema 7, timetable_slots 0 rows, other counts unchanged. Writes: emoji(2cp)x40 = 80 cp / 40 graphemes accepted; 800 cp accepted; 801 cp, blank, class+label, unknown class (FK), duplicate PK rejected.
+Re-apply 0008 after restore: applied clean (schema 7, same counts). Manual rollback SQL from database.md: counts equal PRE, schema 6, no timetable objects, d1_migrations back to 7 rows; re-apply 0008 clean afterwards.

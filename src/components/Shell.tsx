@@ -1,6 +1,6 @@
 import { Dialog } from "./Dialog";
 import type { ComponentChildren } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { route, routeName } from "../router";
 import { Icon } from "./Icon";
 import { Toasts, ReloginOverlay, FailedPanel, EpochBanner, UpdateBanner, StartTermHost } from "./Overlays";
@@ -11,9 +11,12 @@ import { attDraftCount } from "../lib/attSync";
 import { useConfirm } from "./ConfirmDialog";
 
 interface NavItem { key: string; label: string; icon: string }
-// The eight pages (names kept, D22) in the order a teacher's day goes: today · in the room · after class · manage
+// The nine pages (names kept, D22; ตารางสอน added after หน้าหลัก) in the order a teacher's day goes: today · in the room · after class · manage
 export const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
-  { label: "วันนี้", items: [{ key: "home", label: "หน้าหลัก", icon: "home" }] },
+  { label: "วันนี้", items: [
+    { key: "home", label: "หน้าหลัก", icon: "home" },
+    { key: "timetable", label: "ตารางสอน", icon: "calendar-event" },
+  ] },
   { label: "ในห้องเรียน", items: [
     { key: "scan", label: "สแกน", icon: "scan" },
     { key: "attendance", label: "เช็คชื่อ", icon: "user-check" },
@@ -34,6 +37,7 @@ const NAV: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 const TABS = ["home", "attendance", "scan", "gradebook", "more"];
 // pages reached through the "more" sheet, under the same group headings as the rail
 const SHEET_GROUPS = [
+  { label: "วันนี้", keys: ["timetable"] },
   { label: "ในห้องเรียน", keys: ["random"] },
   { label: "ตรวจงาน", keys: ["reports"] },
   { label: "จัดการ", keys: ["students", "settings"] },
@@ -42,8 +46,8 @@ const SHEET = SHEET_GROUPS.flatMap((g) => g.keys);
 
 type Ask = ReturnType<typeof useConfirm>["ask"];
 
-/** Signing out with work still waiting on this device asks first (in a dialog, not window.confirm). */
-async function doLogout(ask: Ask) {
+/** Signing out with work still waiting on this device asks first (in a dialog, not window.confirm). false = the teacher stayed. */
+async function doLogout(ask: Ask): Promise<boolean> {
   const parts = [
     pendingCount.value > 0 && `คะแนน/การส่งงานรอส่ง ${pendingCount.value} รายการ`,
     failedCount.value > 0 && `ส่งไม่สำเร็จ ${failedCount.value} รายการ`,
@@ -55,16 +59,31 @@ async function doLogout(ask: Ask) {
       body: <><p style="margin:0 0 6px">ยังมีข้อมูลค้างในเครื่องนี้:</p><ul style="margin:0 0 6px;padding-left:1.2em">{parts.map((p) => <li>{p}</li>)}</ul><p style="margin:0">จะเก็บไว้และส่งให้เมื่อเข้าสู่ระบบใหม่</p></>,
       yes: "ออกจากระบบ", no: "อยู่ต่อ", danger: true,
     });
-    if (!go) return;
+    if (!go) return false;
   }
   await logout();
+  return true;
 }
 
 export function Shell({ children }: { children: ComponentChildren }) {
   const active = routeName();
   const [sheet, setSheet] = useState(false);
+  const moreBtn = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
+  const refocus = useRef(true);
+  // closing the sheet (Esc, tap outside, choosing an item) puts focus back on "เพิ่มเติม" even where a tap does not focus a button (Safari)
+  useEffect(() => {
+    if (wasOpen.current && !sheet && refocus.current) moreBtn.current?.focus();
+    wasOpen.current = sheet;
+    refocus.current = true;
+  }, [sheet]);
   const { ask, node: askNode } = useConfirm();
   void route.value; // subscribe
+  useEffect(() => { setSheet(false); }, [route.value]); // any navigation (e.g. the term-settings link inside the sheet) closes the modal sheet
+  // very large text on a short screen scrolls the rail: keep the open page in view
+  useEffect(() => {
+    document.querySelector<HTMLElement>(".rail .rail-item[aria-current=page]")?.scrollIntoView?.({ block: "nearest" });
+  }, [active]);
 
   return (
     <div class="shell">
@@ -96,11 +115,11 @@ export function Shell({ children }: { children: ComponentChildren }) {
         {TABS.map((t) => {
           if (t === "more") {
             return (
-              <button class={"tab-item" + (SHEET.includes(active) ? " on" : "")} onClick={() => setSheet(true)}
+              <button ref={moreBtn} class={"tab-item" + (SHEET.includes(active) ? " on" : "")} onClick={() => setSheet(true)}
                 aria-haspopup="dialog" aria-expanded={sheet} aria-controls="menu-sheet">
                 <span class="tab-pip" aria-hidden="true" />
                 <Icon name="menu-2" size={24} />
-                เมนู
+                เพิ่มเติม
               </button>
             );
           }
@@ -125,15 +144,15 @@ export function Shell({ children }: { children: ComponentChildren }) {
 
       {sheet && (
         <div class="sheet-overlay" onClick={(e) => { if (e.target === e.currentTarget) setSheet(false); }}>
-          <Dialog id="menu-sheet" class="menu-sheet" label="เมนู" onClose={() => setSheet(false)}>
+          <Dialog id="menu-sheet" class="menu-sheet" label="เพิ่มเติม" onClose={() => setSheet(false)}>
             <div class="sheet-grab" />
             <div class="sheet-term">
               <TermPicker />
               <SyncBadge />
             </div>
             {SHEET_GROUPS.map((g) => (
-              <>
-                <div class="sheet-gl">{g.label}</div>
+              <div role="group" aria-label={g.label}>
+                <div class="sheet-gl" aria-hidden="true">{g.label}</div>
                 <div class="sheet-grid">
                   {g.keys.map((k) => {
                     const n = NAV.find((x) => x.key === k)!;
@@ -144,9 +163,14 @@ export function Shell({ children }: { children: ComponentChildren }) {
                     );
                   })}
                 </div>
-              </>
+              </div>
             ))}
-            <button class="sheet-item sheet-out" onClick={() => { setSheet(false); doLogout(ask); }}>
+            <button class="sheet-item sheet-out" onClick={() => {
+              refocus.current = false;
+              setSheet(false);
+              // "อยู่ต่อ": put focus back on the button that opened the sheet (a tap does not focus a button on Safari)
+              void doLogout(ask).then((left) => { if (!left) setTimeout(() => moreBtn.current?.focus(), 0); });
+            }}>
               <Icon name="logout" size={20} /> ออกจากระบบ
             </button>
           </Dialog>

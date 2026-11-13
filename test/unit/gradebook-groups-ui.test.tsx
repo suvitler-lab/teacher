@@ -35,7 +35,7 @@ beforeEach(() => {
   pendingOps.value = new Map();
   localStorage.setItem("ngankrob.gb.groupMode.v2", "type");   // the grouped paths are tested by choosing "ตามประเภท"
   vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
-  route.value = "/gradebook?class=c1&subject=math";
+  route.value = "/gradebook?class=c1&subject=math&asg=w1"; // BR-34: without a link the LAST open work is picked; these tests are about the first
   terms.value = [{ id: "t1", year: 2569, term: 1, name: "1/2569", is_current: true, start_date: null, end_date: null, updated_at: 0 }];
   currentTermId.value = selectedTermId.value = "t1";
   classes.value = [{ id: "c1", name: "ป.6/1", grade: "ป.6", sort: 1, archived: false, year: 2569, updated_at: 0 }];
@@ -73,7 +73,7 @@ async function openFolded() {
   await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
 }
 const bodyRow = (n: number) => [...document.querySelectorAll("table.gb tbody tr")][n].querySelectorAll("td");
-const text = (n: number) => [...bodyRow(n)].map((c) => c.textContent);
+const text = (n: number) => [...bodyRow(n)].map((c) => { const k = c.cloneNode(true) as HTMLElement; k.querySelector(".tot-pct")?.remove(); return k.textContent; }); // the percent is its own line (BR-30)
 
 describe("grouped gradebook columns", () => {
   it("every group starts open (nothing folds by age); a group the teacher folds becomes one 'รวม' column holding the BR-05 total", async () => {

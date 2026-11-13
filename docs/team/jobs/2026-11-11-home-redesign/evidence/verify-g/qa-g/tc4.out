@@ -1,0 +1,4 @@
+TC-711 phone 0-kid room export menu: [":dis=false","โหมดฉายจอ:dis=true","พิมพ์:dis=true","ส่งออก Excel:dis=true"]
+TC-711 menu closes on Esc: true
+TC-712 phone room with kids menu: []
+exit 0

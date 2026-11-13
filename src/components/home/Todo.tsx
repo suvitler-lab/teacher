@@ -1,10 +1,11 @@
 import { Icon } from "../Icon";
-import { classById, currentTerm, settings, startTermOpen, viewingPastYear } from "../../store";
+import { classById, currentTerm, settings, viewingPastYear } from "../../store";
 import { navigate } from "../../router";
 import { dashboard } from "../../lib/dashboard";
 import { pendingCount, failedCount } from "../../lib/outbox";
 import { attDraftCount, attDrafts } from "../../lib/attSync";
 import { failedPanelOpen } from "../Overlays";
+import { startTermOrExplain } from "./model";
 import { todoRows, uncheckedRooms, type TodoRow } from "../../lib/homeLogic";
 import { bkkParts, bkkToday } from "@shared/time";
 
@@ -12,7 +13,7 @@ function run(r: TodoRow) {
   if (r.action === "failed") failedPanelOpen.value = true;
   // the roll-call that is waiting to be sent: open that room, not the room list
   else if (r.action === "queue") navigate(attDraftCount.value > 0 ? "/attendance" : "/gradebook", { class: attDrafts.value[0]?.ctx.classId });
-  else if (r.action === "term") startTermOpen.value = true;
+  else if (r.action === "term") startTermOrExplain();
   else if (r.action === "room") navigate("/attendance", { class: r.classId });
   else navigate("/settings", { section: "backup" });
 }

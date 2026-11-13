@@ -1,0 +1,12 @@
+test/unit/tt-store.test.ts(514,33): error TS2352: Conversion of type 'SaveResult' to type '{ removes: never[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ ok: false; code: string; message: string; issues?: (FrameIssue | SlotIssue)[] | undefined; count?: number | undefined; removes?: FrameRemove[] | undefined; }' is not comparable to type '{ removes: never[]; }'.
+    Types of property 'removes' are incompatible.
+      Type 'FrameRemove[] | undefined' is not comparable to type 'never[]'.
+        Type 'FrameRemove[]' is not comparable to type 'never[]'.
+          Type 'FrameRemove' is not comparable to type 'never'.
+test/unit/tt-store.test.ts(516,29): error TS2352: Conversion of type 'SaveResult' to type '{ removes: never[]; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ ok: false; code: string; message: string; issues?: (FrameIssue | SlotIssue)[] | undefined; count?: number | undefined; removes?: FrameRemove[] | undefined; }' is not comparable to type '{ removes: never[]; }'.
+    Types of property 'removes' are incompatible.
+      Type 'FrameRemove[] | undefined' is not comparable to type 'never[]'.
+        Type 'FrameRemove[]' is not comparable to type 'never[]'.
+          Type 'FrameRemove' is not comparable to type 'never'.

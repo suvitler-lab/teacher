@@ -114,7 +114,7 @@ describe("reports page", () => {
     render(<ReportsPage />);
     await screen.findByRole("table");
     fireEvent.click(screen.getByText("งานค้าง").closest("button, [role=button], .uc-stat") as HTMLElement);
-    expect(scroll).toHaveBeenCalled();
+    await waitFor(() => expect(scroll).toHaveBeenCalled());
     fireEvent.click(screen.getByText("มาเรียน").closest("button, [role=button], .uc-stat") as HTMLElement);
     expect(location.hash).toContain("/attendance");
   });

@@ -1,0 +1,7 @@
+  tt-a-warm-light-820x1180.png 462 KB
+  tt-a-warm-dark-820x1180.png 457 KB
+  tt-a-pro-light-820x1180.png 374 KB
+  tt-a-pro-dark-820x1180.png 346 KB
+  tt-a-playful-light-820x1180.png 392 KB
+  tt-a-playful-dark-820x1180.png 392 KB
+ERROR: tt-b-warm-light @ iPad ตั้ง: ready ไม่เป็นจริง (document.documentElement.dataset.skin==='warm'&&!!document.querySelector('.tt-page[data-tt-layout=b]'))

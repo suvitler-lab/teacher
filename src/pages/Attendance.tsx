@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import "../styles/attend.css";
 import { Icon } from "../components/Icon";
 import { PageHeader, ClassChips, Segmented, StackBar, NoClasses } from "../components/ui";
+import { AttHero } from "../components/attendance/AttHero";
+import { AttMonthCard } from "../components/attendance/AttMonthCard";
 import { activeClasses, activeSubjects, studentsByClass, settings, studentsById, revokedTokens, schoolYearStart, students as allStudents } from "../store";
 import type { AttendanceStatus, AttendanceDay, Student } from "@shared/types";
 import { api } from "../lib/api";
@@ -18,7 +20,7 @@ import {
   reviewResend, reviewDiscard, attDrafts, refreshAttDraftCount, withdrawRows, CLEARED,
   type AttCtx, type AttMethod, type AttWireStatus,
 } from "../lib/attSync";
-import { err, notify } from "../lib/notify";
+import { err, notify, dismiss } from "../lib/notify";
 import { failedCount } from "../lib/outbox";
 import { useConfirm } from "../components/ConfirmDialog";
 import { beep } from "../lib/sound";
@@ -26,7 +28,8 @@ import { routeParams, navigate } from "../router";
 import { attendanceLayout } from "../lib/pageCards";
 import { isHiddenCard } from "../lib/cardLayout";
 import { PageCardSettings } from "../components/cards/PageCardSettings";
-import { ATT_CARD_META, ATT_LOCKED } from "../components/cards/meta";
+import { ATT_CARD_META, ATT_LOCKED_TEXT } from "../components/cards/meta";
+import { hideSignal, setHide } from "../lib/hideNames";
 import { ProjectorButton, ProjectorShell } from "../components/Projector";
 import { projectorOn, pjSize, pjHideNames } from "../lib/projector";
 
@@ -45,6 +48,7 @@ const REVIEW_REASON: Record<string, string> = {
   before_school_year: "วันที่นี้อยู่ก่อนวันเปิดปีการศึกษาปัจจุบัน — เช็คชื่อก่อนวันนั้นแก้ไม่ได้",
 };
 const ST_ICON: Record<AttendanceStatus, string> = { present: "check", late: "clock", leave: "file-text", sick: "thermometer", absent: "x" };
+const NL = String.fromCharCode(10);
 const TH_DOW = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
 const TH_DOW_FULL = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
 const STACK_COLOR: Record<AttendanceStatus, string> = {
@@ -110,6 +114,12 @@ export function AttendancePage() {
   const [savedTick, setSavedTick] = useState(0);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [hit, setHit] = useState<string | null>(null);
+  const [live, setLive] = useState(""); // what the last tap did ("เลขที่ 7 สมหญิง — เปลี่ยนจาก ขาด เป็น มา"): shown under the status bar and announced once
+  const [month, setMonth] = useState<{ days: AttendanceDay[]; failed: boolean }>({ days: [], failed: false });
+  const [copied, setCopied] = useState(false);
+  // phone width: "มาทั้งห้อง" sits in the hero there (jsdom has no matchMedia, so this listens to the window size)
+  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.innerWidth <= 720);
+  useEffect(() => { const on = () => setPhone(window.innerWidth <= 720); on(); window.addEventListener("resize", on); return () => window.removeEventListener("resize", on); }, []);
   const { ask, node: askNode } = useConfirm();
   const [pickFrom, setPickFrom] = useState<Student[] | null>(null);
   const scanRef = useRef<HTMLInputElement>(null);
@@ -123,7 +133,21 @@ export function AttendancePage() {
     else if (wasTv.current) { wasTv.current = false; setMethod(beforeTv.current); }
   }, [projectorOn.value]);
   const layout = attendanceLayout.value;
-  const showCard = (k: "sum" | "week" | "scans" | "todo" | "away") => !isHiddenCard(layout, k);
+  // this page's own "hide names" switch (BR-18 / AC-101): per device; the TV follows only its own switch (pjHideNames)
+  const hide = hideSignal("attendance").value;
+  const hideNow = () => hideSignal("attendance").peek();
+  /** a child as the screen says it: "เลขที่ 7" while names are hidden, else the (short) name */
+  const nm = (st: Student, short = false) => (hideNow() ? `เลขที่ ${st.number ?? "-"}` : short ? shortName(st) : fullName(st));
+  // a line written with a name must not outlive the switch: the toasts that carry a name are taken down when names are hidden
+  const nameToasts = useRef<number[]>([]);
+  const nameNotify = (...a: Parameters<typeof notify>) => { const id = notify(...a); nameToasts.current.push(id); return id; };
+  useEffect(() => {
+    setLive(""); setScanMsg(null);
+    if (hide) { nameToasts.current.forEach((id) => dismiss(id)); nameToasts.current = []; }
+  }, [hide]);
+  const [focusIdx, setFocusIdx] = useState(0); // roving tabindex of the children grid: Tab enters and leaves it once
+  const gridRef = useRef<HTMLDivElement>(null);
+  const showCard = (k: "sum" | "week" | "month" | "scans" | "todo" | "away") => !isHiddenCard(layout, k);
   // the order the teacher chose in "ปรับการ์ด": the cards above the children (week, summary) and the cards beside them (last scans, to do, away)
   const rank = (k: string) => layout.order.indexOf(k as never);
   const byRank = <T extends string>(ks: T[]) => ks.slice().sort((a, b) => rank(a) - rank(b));
@@ -198,7 +222,7 @@ export function AttendancePage() {
     const seq = ++loadSeq.current;
     if (!classId) { clearedDuringLoad.current = null; setLoaded(true); setServer(new Map()); setDraft(undefined); return; }
     const myKey = key;
-    setLoaded(false); setSlow(false); setOffline(false); setServer(new Map()); setScanLog([]); tapTimes.current = new Map(); clearedDuringLoad.current = new Set();
+    setLive(""); setLoaded(false); setSlow(false); setOffline(false); setServer(new Map()); setScanLog([]); tapTimes.current = new Map(); clearedDuringLoad.current = new Set();
     const local = await draftGet(myKey); // instant and works offline
     if (seq !== loadSeq.current) return;
     setDraft(local);
@@ -255,8 +279,8 @@ export function AttendancePage() {
       });
       // another device edited these students AFTER this one's tap: the screen now shows the system's value — say so
       if (e.changedByOthers.length > 0) {
-        const names = e.changedByOthers.map((sid) => studentsById.value.get(sid)).filter((x): x is NonNullable<typeof x> => !!x).map((st) => fullName(st));
-        notify("info", `อีกเครื่องแก้ ${names.slice(0, 3).join(", ")}${names.length > 3 ? ` และอีก ${names.length - 3} คน` : ""} ไว้ใหม่กว่า — แสดงตามที่ระบบเก็บ`);
+        const names = e.changedByOthers.map((sid) => studentsById.value.get(sid)).filter((x): x is NonNullable<typeof x> => !!x).map((st) => nm(st));
+        nameNotify("info", `อีกเครื่องแก้ ${names.slice(0, 3).join(", ")}${names.length > 3 ? ` และอีก ${names.length - 3} คน` : ""} ไว้ใหม่กว่า — แสดงตามที่ระบบเก็บ`);
       }
     }
     refreshDraft(e.key);
@@ -276,7 +300,26 @@ export function AttendancePage() {
   }
   useEffect(() => { loadWeek(); }, [date, savedTick]);
 
-  useEffect(() => { if (method === "scan" && !projectorOn.value) scanRef.current?.focus(); }, [method, projectorOn.value]);
+  // "เดือนนี้" (BR-21): the 1st of the month on screen up to today (not before the start of the year), daily sessions of this room only
+  const monthSeq = useRef(0);
+  async function loadMonth() {
+    const seq = ++monthSeq.current;
+    const first = date.slice(0, 8) + "01";
+    const from = yearStart && first < yearStart ? yearStart : first;
+    const last = new Date(Date.UTC(Number(date.slice(0, 4)), Number(date.slice(5, 7)), 0)).toISOString().slice(0, 10);
+    const to = last < todayBkk() ? last : todayBkk();
+    if (!classId || from > to) { setMonth({ days: [], failed: false }); return; }
+    const url = `/api/attendance/days?from=${from}&to=${to}&class=${encodeURIComponent(classId)}`;
+    const hit = swrPeek<{ days: AttendanceDay[] }>(url);
+    if (hit) { setMonth({ days: hit.data.days, failed: false }); if (hit.fresh) return; }
+    try {
+      const res = await swrFetch(url, () => api.get<{ days: AttendanceDay[] }>(url));
+      if (seq === monthSeq.current) setMonth({ days: res.days, failed: false });
+    } catch { if (!hit && seq === monthSeq.current) setMonth({ days: [], failed: true }); }
+  }
+  useEffect(() => { loadMonth(); }, [date.slice(0, 7), savedTick, classId, yearStart]);
+
+  useEffect(() => { if (method === "scan" && !projectorOn.value && !(typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches)) scanRef.current?.focus(); }, [method, projectorOn.value]);
 
   function flash(sid: string) {
     setHit(sid);
@@ -321,9 +364,17 @@ export function AttendancePage() {
     if (!loaded) { notify("info", "กำลังโหลดรายชื่อ — รอสักครู่แล้วแตะอีกครั้ง"); return; }
     // the child already has the status that is selected: a second tap takes the mark back ("not checked yet")
     const cur = statusOf(studentId);
-    if (cur === brush) { void clearMark(studentId, cur); return; }
+    const st = studentsById.value.get(studentId);
+    const who = `เลขที่ ${st?.number ?? "-"}${st && !hideNow() ? ` ${shortName(st)}` : ""}`;
+    if (cur === brush) { void clearMark(studentId, cur); return; } // the toast announces a cancel (once)
     flash(studentId);
-    void applyEdits([{ sid: studentId, status: brush }], "grid");
+    // BR-23: an existing different status is named ("เปลี่ยนจาก ขาด เป็น มา"); an unchecked child just gets the new one
+    const at = ctx;
+    // said only once the tap is really stored (a day before the year start, or a device that can't write, must not announce "saved")
+    void applyEdits([{ sid: studentId, status: brush }], "grid").then((ok) => {
+      if (!ok || ctxKey(at) !== keyRef.current) return;
+      setLive(cur ? `${who} — เปลี่ยนจาก ${LABELS[cur]} เป็น ${LABELS[brush]}` : `${who} — ${LABELS[brush]}`);
+    });
   }
   // Take a mark back. The toast's "เลิกทำ" puts the previous status (and its time) back as an ordinary tap.
   async function clearMark(studentId: string, prev: AttendanceStatus) {
@@ -332,11 +383,11 @@ export function AttendancePage() {
     flash(studentId);
     const ops = await applyEdits([{ sid: studentId, status: CLEARED }], "grid");
     if (!ops) return;
-    notify("info", `ยกเลิกการเช็คของ ${st ? fullName(st) : "นักเรียน"} แล้ว`, { action: { label: "เลิกทำ", run: async () => {
+    nameNotify("info", `ยกเลิกการเช็คของ ${st ? nm(st) : "นักเรียน"} แล้ว · เลิกทำได้ 5 วินาที`, { action: { label: "เลิกทำ", run: async () => {
       // the room, day or period on screen changed since: the undo would build on another screen's data, so the teacher taps again
       if (ctxKey(at) !== keyRef.current) { err("เลิกทำไม่ได้แล้ว — กลับไปที่ห้อง/วันนั้นแล้วแตะเช็คใหม่"); return; }
       const back = await applyEdits([{ sid: studentId, status: prev, clientTs: prevTime }], "grid");
-      if (back) notify("info", `คืนค่า “${LABELS[prev]}” ให้ ${st ? fullName(st) : "นักเรียน"} แล้ว`);
+      if (back) nameNotify("info", `คืนค่า “${LABELS[prev]}” ให้ ${st ? nm(st) : "นักเรียน"} แล้ว`);
     } } });
   }
   // Runs AFTER the teacher said yes, so it judges who is still unchecked now (a child who got "สาย" by QR while the question
@@ -378,6 +429,20 @@ export function AttendancePage() {
       yes: `มาทั้งห้อง ${n} คน`,
     });
     if (yes) markAllPresent();
+  }
+  // arrows move between the children (the grid is one tab stop), Home/End jump to the ends
+  function gridKey(e: KeyboardEvent) {
+    const el = gridRef.current; if (!el) return;
+    const tiles = Array.from(el.querySelectorAll<HTMLButtonElement>(".att-tile"));
+    const cur = tiles.indexOf(document.activeElement as HTMLButtonElement);
+    if (cur < 0) return;
+    const cols = Math.max(1, getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+    const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : e.key === "ArrowDown" ? cols : e.key === "ArrowUp" ? -cols : 0;
+    let to = cur + step;
+    if (e.key === "Home") to = 0; else if (e.key === "End") to = tiles.length - 1; else if (!step) return;
+    e.preventDefault();
+    if (to < 0 || to >= tiles.length) return;
+    setFocusIdx(to); tiles[to].focus();
   }
   function brushKey(e: KeyboardEvent, i: number) {
     const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
@@ -425,13 +490,15 @@ export function AttendancePage() {
     const threshold = lateThreshold(scoped, period);
     if (scoped && threshold === null) { beep.err(); say("คาบนี้ยังไม่ได้ตั้งเวลา — กด “ตั้งเวลาคาบ” ด้านบน หรือแตะเลือกแทน", "bad"); return; }
     const late = date === todayBkk() && threshold !== null && nowMinutesBkk() > threshold;
+    const was = statusOf(st.id);
     void applyEdits([{ sid: st.id, status: late ? "late" : "present" }], "hid").then((saved) => {
       if (!saved) return;
       beep.ok();
       flash(st.id);
       const at = Date.now();
       setScanLog((l) => [{ id: st.id, late, at }, ...l].slice(0, 20));
-      say(`${shortName(st)} · ${late ? "สาย" : "มา"} ${formatThaiTimeMs(at)}`, late ? "warn" : "ok");
+      const now: AttendanceStatus = late ? "late" : "present";
+      say(`${nm(st, true)} · ${late ? "สาย" : "มา"} ${formatThaiTimeMs(at)}${was && was !== now ? ` · เปลี่ยนจาก ${LABELS[was]} เป็น ${LABELS[now]}` : ""}`, late ? "warn" : "ok");
     });
   }
 
@@ -444,7 +511,7 @@ export function AttendancePage() {
   async function discard(r: AttReviewRow) {
     // a set-aside tap is the teacher's own mark that was never sent: dropping it needs a yes
     const st = studentsById.value.get(r.studentId);
-    if (!(await ask({ title: "ทิ้งรายการนี้?", body: `${st ? fullName(st) : "นักเรียน"} — ข้อมูลที่เช็คไว้ในเครื่องนี้จะหายไป`, yes: "ทิ้ง", danger: true }))) return;
+    if (!(await ask({ title: "ทิ้งรายการนี้?", body: `${st ? nm(st) : "นักเรียน"} — ข้อมูลที่เช็คไว้ในเครื่องนี้จะหายไป`, yes: "ทิ้ง", danger: true }))) return;
     const d = await reviewDiscard(key, r.studentId); if (key === keyRef.current) { readSeq.current++; setDraft(d); }
   }
   function openDraft(c: AttCtx) {
@@ -509,8 +576,9 @@ export function AttendancePage() {
 
   // ---- cards: above the children (week, summary) and beside them (last scans, to do, away), in the teacher's order ----
   const periodTime = scoped ? periodTimes()[String(period)] : undefined;
-  const topCards = byRank((["week", "sum"] as const).filter((k) => showCard(k) && !(k === "week" && scoped)));
-  const sideCards = byRank((["scans", "todo", "away"] as const).filter((k) => showCard(k)));
+  // phone: the hero carries the numbers and the legend, so the summary card stays out of the way of the children
+  const topCards = byRank((["week", "sum"] as const).filter((k) => showCard(k) && !(k === "week" && scoped) && !(k === "sum" && phone)));
+  const sideCards = byRank((["scans", "todo", "away", "month"] as const).filter((k) => showCard(k) && !(k === "month" && scoped)));
 
   const weekCard = (
     <div class="att-week" role="group" aria-label="สัปดาห์นี้">
@@ -556,7 +624,8 @@ export function AttendancePage() {
     </section>
   );
 
-  const sideNode = (k: "scans" | "todo" | "away") => {
+  const sideNode = (k: "scans" | "todo" | "away" | "month") => {
+    if (k === "month") return <AttMonthCard days={month.days.filter((d) => d.classId === classId)} month={Number(date.slice(5, 7))} failed={month.failed} />;
     if (k === "scans") {
       if (method !== "scan" || scanLog.length === 0) return null;
       return (
@@ -565,7 +634,8 @@ export function AttendancePage() {
           {scanLog.slice(0, 5).map((r) => { const st = studentsById.value.get(r.id); return (
             <div class="att-rrow att-scanrow">
               <span class="att-no">{st?.number ?? "-"}</span>
-              <span class="nm">{st ? shortName(st) : r.id}</span>
+              {!hide && <span class="nm">{st ? shortName(st) : r.id}</span>}
+              <span class="att-meth" role="img" aria-label="สแกน QR"><Icon name="qrcode" size={14} /></span>
               <span class={"att-badge " + (r.late ? "late" : "present")}><Icon name={r.late ? "clock" : "check"} size={14} /> {r.late ? "สาย" : "มา"}</span>
               <span class="att-tip">{formatThaiTimeMs(r.at)}</span>
             </div>
@@ -581,64 +651,98 @@ export function AttendancePage() {
           {todo.length === 0 ? <div class="att-tip" style="color:var(--text-success);margin-top:4px">เช็คครบทุกคนแล้ว</div> : (
             <div class="att-numchips">
               {todo.map((st) => (
-                <button class="att-numchip" aria-label={`ไปที่เลขที่ ${st.number ?? "-"} ${shortName(st)}`} title={shortName(st)}
-                  onClick={() => { document.getElementById("att-t-" + st.id)?.scrollIntoView?.({ block: "center" }); flash(st.id); }}>{st.number ?? "-"}</button>
+                <button class="att-numchip" aria-label={`ไปที่เลขที่ ${st.number ?? "-"}${hide ? "" : " " + shortName(st)}`} title={hide ? undefined : shortName(st)}
+                  onClick={() => { const el = document.getElementById("att-t-" + st.id); el?.scrollIntoView?.({ block: "center" }); el?.focus({ preventScroll: true }); flash(st.id); }}>{st.number ?? "-"}</button>
               ))}
             </div>
           )}
         </section>
       );
     }
-    const away = students.filter((st) => { const x = statusOf(st.id); return x === "absent" || x === "leave" || x === "sick"; });
+    const GROUPS: AttendanceStatus[] = ["absent", "sick", "leave"];
+    const away = students.filter((st) => GROUPS.includes(statusOf(st.id) as AttendanceStatus));
+    const dayText = `${TH_DOW[dowOf(date)]} ${dayMonth(date)}`;
+    const copyList = async () => {
+      if (hide) return;
+      const lines = GROUPS.flatMap((g) => away.filter((st) => statusOf(st.id) === g)).map((st) => `${st.number ?? "-"}. ${fullName(st)} (${LABELS[statusOf(st.id) as AttendanceStatus]})`);
+      try { await navigator.clipboard.writeText(`รายชื่อไม่มาเรียน ${className} ${dayText}${NL}${lines.join(NL)}`); setCopied(true); window.setTimeout(() => setCopied(false), 2000); }
+      catch { err("คัดลอกไม่ได้ ลองอีกครั้ง"); }
+    };
     return (
       <section class="card att-card" aria-labelledby="att-away-h">
-        <h2 class="att-h" id="att-away-h"><Icon name="user-x" size={20} /> ขาดวันนี้</h2>
-        {away.length === 0 ? <div class="att-tip" style="margin-top:4px">ไม่มีใครขาด ลา หรือป่วย</div>
-          : away.map((st) => { const x = statusOf(st.id)!; return (
-            <div class="att-rrow">
-              <span class="att-no">{st.number ?? "-"}</span>
-              <a class="nm" href={`#/students?class=${encodeURIComponent(classId)}&student=${encodeURIComponent(st.id)}`} style="color:inherit;text-decoration:none">{fullName(st)}</a>
-              <span class={"att-badge " + BADGE_TONE[x]}><Icon name={ST_ICON[x]} size={14} /> {LABELS[x]}</span>
-            </div>
-          ); })}
+        <h2 class="att-h" id="att-away-h"><Icon name="user-x" size={20} /> ใครไม่มา <span class="att-n">{away.length}</span></h2>
+        {away.length === 0 ? <div class="att-tip" style="margin-top:4px">ไม่มีใครขาด ลา หรือป่วย</div> : (
+          <>
+            {GROUPS.map((g) => { const list = away.filter((st) => statusOf(st.id) === g); return list.length === 0 ? null : (
+              <div class="att-grp">
+                <h3 class={"att-gh " + g}><Icon name={ST_ICON[g]} size={16} /> {LABELS[g]} {list.length} คน</h3>
+                {list.map((st) => (
+                  <div class="att-rrow">
+                    {!hide && <span class="att-no">{st.number ?? "-"}</span>}
+                    <a class="nm" href={`#/students?class=${encodeURIComponent(classId)}&student=${encodeURIComponent(st.id)}`} style="color:inherit;text-decoration:none">{nm(st)}</a>
+                    <span class={"att-badge " + BADGE_TONE[g]}><Icon name={ST_ICON[g]} size={14} /> {LABELS[g]}</span>
+                  </div>
+                ))}
+              </div>
+            ); })}
+            <div class="att-copy"><button onClick={copyList} disabled={hide} title={hide ? "ซ่อนชื่ออยู่ — คัดลอกรายชื่อไม่ได้" : undefined}><Icon name={copied ? "check" : "copy"} size={18} /> <span aria-live="polite">{copied ? "คัดลอกแล้ว" : "คัดลอกรายชื่อ"}</span></button></div>
+          </>
+        )}
       </section>
     );
   };
-  const sideNodes = sideCards.map((k) => sideNode(k)).filter(Boolean);
+  // the unsent / needs-attention state also stands in the side column (it is never folded away)
+  const queueNode = (pending > 0 || review.length > 0 || conflicts.length > 0 || !!draft?.error || offline) ? (
+    <section class="card att-card att-queue" aria-labelledby="att-q-h">
+      <h2 class="att-h" id="att-q-h"><Icon name="cloud-upload" size={20} /> ร่าง / คิวรอส่ง</h2>
+      <div style="margin-top:6px"><SaveBadge busy={!!sync?.busy} pending={pending} review={review.length} conflicts={conflicts.length} error={draft?.error} retrying={(sync?.tries ?? 0) > 0} offline={offline} loaded={loaded} savedAt={savedAt} onRetry={() => retryDraft(key)} /></div>
+    </section>
+  ) : null;
+  // after a whole room is checked today (daily): the random-name page reads exactly these children (AC-102)
+  const came = counts[0] + counts[1];
+  const canRandom = !scoped && date === todayBkk() && loaded && marked > 0 && unmarked === 0 && heldN === 0 && !beforeYear;
+  // the random page reads the system once when it opens: wait until nothing of this room is still on this device (R-4301)
+  const sentToSystem = pending === 0 && !sync?.busy && !offline;
+  const randomNode = canRandom ? (
+    <section class="att-rand" aria-label="สุ่มชื่อ">
+      {sentToSystem
+        ? <a class="att-linkbtn" href={`#/random?class=${encodeURIComponent(classId)}`}><Icon name="dice-3" size={20} /> สุ่มชื่อเฉพาะคนที่มา ({came})</a>
+        : <button class="att-linkbtn" disabled aria-describedby="att-rand-why"><Icon name="dice-3" size={20} /> สุ่มชื่อเฉพาะคนที่มา ({came})</button>}
+      <div class="att-tip" id="att-rand-why">{sentToSystem ? "สุ่มชื่อใช้เช็คชื่อรายวันของวันนี้ — สุ่มเฉพาะคนที่มาและมาสาย" : "รอบันทึกขึ้นระบบให้เสร็จก่อน แล้วปุ่มสุ่มชื่อจะเปิดให้"}</div>
+    </section>
+  ) : null;
+  const todoN = students.filter((st) => !statusOf(st.id) && !heldIds.has(st.id)).length;
+  const awayN = students.filter((st) => ["absent", "sick", "leave"].includes(statusOf(st.id) as string)).length;
+  const foldTitle = { scans: "สแกนล่าสุด", todo: `ใครยังไม่เช็ค (${todoN})`, away: `ใครไม่มา (${awayN})`, month: "เดือนนี้" } as const;
+  // phone: the side cards fold to one line each (a queue that is stuck stays open, it is never folded)
+  const sideBox = (k: "scans" | "todo" | "away" | "month") => { const n = sideNode(k); return n && phone ? <details class="att-fold"><summary>{foldTitle[k]}</summary>{n}</details> : n; };
+  const sideNodes = [randomNode, ...sideCards.map((k) => sideBox(k)), queueNode].filter(Boolean);
+  const modeSegs = <>
+    <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} label="รายวันหรือรายคาบ" options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
+    <Segmented value={method} onChange={setMethod} label="วิธีเช็คชื่อ" options={[
+          { value: "tap", label: <><Icon name="hand-finger" size={18} /> แตะเลือก</> },
+          { value: "scan", label: <><Icon name="qrcode" size={18} /> สแกน QR</> },
+        ]} />
+  </>;
+  const allBtn = <button class="att-allp" onClick={askMarkAll} disabled={!loaded || slow || students.length === 0} title={!loaded ? "กำลังโหลดรายชื่อ…" : slow ? "รอโหลดข้อมูลจากระบบให้เสร็จก่อน" : undefined}><Icon name="checks" size={20} /> มาทั้งห้อง{unmarked > 0 && loaded ? ` · ${unmarked} คน` : ""}</button>;
   const hasAside = method === "scan" || sideNodes.length > 0;
 
   return (
     <div>
       <PageHeader icon="user-check" title="เช็คชื่อ"
         sub={<span>{className} · {TH_DOW_FULL[dowOf(date)]} {dayMonth(date)}</span>}
-        actions={<><button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><ProjectorButton /></>}
+        actions={<><button class="ghost att-hidebtn" aria-pressed={hide} onClick={() => setHide("attendance", !hide)} aria-label={hide ? "ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่อ" : "ซ่อนชื่อนักเรียน"}><Icon name={hide ? "eye-off" : "eye"} size={18} /> <span class="att-hide-sm">{hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button><button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><ProjectorButton /></>}
       />
       {askNode}
-      {prefsOpen && <PageCardSettings page="attendance" title="หน้าเช็คชื่อ" layout={layout} meta={ATT_CARD_META} locked={ATT_LOCKED} onClose={() => setPrefsOpen(false)} />}
-
-      <div class="att-toolbar">
-        <ClassChips items={classItems} value={classId} onPick={changeClass} />
-        <div class="att-datenav">
-          <button class="icon" aria-label="วันก่อนหน้า" onClick={() => setDate(addDays(date, -1))} disabled={!!yearStart && date <= yearStart}><Icon name="chevron-left" size={20} /></button>
-          <button class="att-today" onClick={() => setDate(todayBkk())}><Icon name="calendar" size={20} /> {date === todayBkk() ? "วันนี้ · " : ""}{TH_DOW[dowOf(date)]} {dayMonth(date)}</button>
-          <button class="icon" aria-label="วันถัดไป" onClick={() => setDate(addDays(date, 1))} disabled={date >= todayBkk()}><Icon name="chevron-right" size={20} /></button>
-        </div>
-        <Segmented value={method} onChange={setMethod} label="วิธีเช็คชื่อ" options={[
-          { value: "tap", label: <><Icon name="hand-finger" size={18} /> แตะเลือก</> },
-          { value: "scan", label: <><Icon name="qrcode" size={18} /> สแกน QR</> },
-        ]} />
-        <Segmented value={scoped ? "scoped" : "daily"} onChange={(v) => setScoped(v === "scoped")} label="รายวันหรือรายคาบ" options={[{ value: "daily", label: "รายวัน" }, { value: "scoped", label: "รายคาบ" }]} />
-      </div>
-
-      {scoped && (
-        <div class="att-periods" role="group" aria-label="เลือกคาบ">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((p) => <button class={"pill" + (p === period ? " on" : "")} aria-pressed={p === period} onClick={() => setPeriod(p)}>คาบ {p}</button>)}
-          <select aria-label="วิชาเช็คชื่อ" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
-            {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
-          </select>
-          {periodTime && <span class="att-tip">คาบ {period} เริ่ม {periodTime}</span>}
+      {hide && (
+        <div class="att-warn att-hidenote" role="status">
+          <Icon name="eye-off" size={20} />
+          <div class="grow">ซ่อนชื่อนักเรียนอยู่ · ทุกจุดแสดงเฉพาะเลขที่</div>
+          <button onClick={() => setHide("attendance", false)}>แสดงชื่อ</button>
         </div>
       )}
+      {prefsOpen && <PageCardSettings page="attendance" title="หน้าเช็คชื่อ" layout={layout} meta={ATT_CARD_META} locked={ATT_LOCKED_TEXT} onClose={() => setPrefsOpen(false)} />}
+
       {scoped && !periodTime && (
         <div class="att-warn" role="status">
           <Icon name="alert-triangle" size={20} />
@@ -651,12 +755,20 @@ export function AttendancePage() {
         <div class="att-warn" style="background:var(--bg-danger);color:var(--text-danger);border-color:var(--border-danger)" role="alert"><Icon name="alert-triangle" size={20} /> <div class="grow">วันที่ {formatThaiDate(date)} อยู่ก่อนวันเปิดปีการศึกษาปัจจุบัน ({formatThaiDate(yearStart)}) — เช็คชื่อก่อนวันนั้นไม่ได้ (ข้อมูลปีก่อนดูได้ที่หน้ารายงาน)</div></div>
       )}
 
+      {date < todayBkk() && !beforeYear && (
+        <div class="att-warn att-history" role="status">
+          <Icon name="history" size={20} />
+          <div class="grow"><b>กำลังดูวันที่ผ่านมา · {TH_DOW[dowOf(date)]} {dayMonth(date)}</b> — แก้ได้ตามปกติ · เช็คย้อนหลังไม่คิด “สาย” อัตโนมัติจากการสแกน</div>
+          <button onClick={() => setDate(todayBkk())}><Icon name="calendar" size={18} /> กลับเป็นวันนี้</button>
+        </div>
+      )}
+
       {conflicts.length > 0 && (
-        <section class="card att-card att-alert" role="region" aria-labelledby="att-cf-h">
+        <section class="card att-card att-alert" role="alert" aria-labelledby="att-cf-h">
           <h2 class="att-h" id="att-cf-h"><Icon name="alert-triangle" size={20} /> ข้อมูลชนกับอีกเครื่อง {conflicts.length} รายการ</h2>
           {conflicts.map((c) => { const st = studentsById.value.get(c.studentId); return (
             <div class="att-rrow">
-              <div class="nm">{st ? fullName(st) : c.studentId}
+              <div class="nm">{st ? nm(st) : c.studentId}
                 <small>เครื่องนี้: {statusLabel(draft?.rows[c.studentId]?.status ?? c.draft.status)} · ในระบบ: {statusLabel(c.server.status)}{c.server.deviceName ? ` (${c.server.deviceName})` : ""}</small>
               </div>
               <button onClick={() => pick(c, "server")}>ใช้ของระบบ</button>
@@ -667,11 +779,11 @@ export function AttendancePage() {
       )}
 
       {review.length > 0 && (
-        <section class="card att-card att-alert" role="region" aria-labelledby="att-rv-h">
+        <section class="card att-card att-alert" role="alert" aria-labelledby="att-rv-h">
           <h2 class="att-h" id="att-rv-h"><Icon name="alert-triangle" size={20} /> ต้องตรวจสอบ {review.length} รายการ — ยังไม่ได้ส่ง ไม่ถูกลบ</h2>
           {review.map((r) => { const st = studentsById.value.get(r.studentId); return (
             <div class="att-rrow">
-              <div class="nm">{st ? fullName(st) : r.studentId} · <b style="font-weight:500">{statusLabel(r.status)}</b>
+              <div class="nm">{st ? nm(st) : r.studentId} · <b style="font-weight:500">{statusLabel(r.status)}</b>
                 <small>{REVIEW_REASON[r.reason] ?? r.reason}</small>
               </div>
               <button onClick={() => resend(r)}>ส่งใหม่</button>
@@ -696,7 +808,35 @@ export function AttendancePage() {
         </section>
       )}
 
-      {topCards.map((k) => (k === "week" ? weekCard : sumCard))}
+      <AttHero room={className} dateText={`${TH_DOW[dowOf(date)]} ${dayMonth(date)}`} counts={counts} total={students.length} marked={marked} unmarked={unmarked} held={heldN} loading={!loaded} scoped={scoped} showLegend={isHiddenCard(layout, "sum") || phone}>
+        <span class="att-date" role="group" aria-label="เลือกวัน">
+          <button class="att-hp ico" aria-label="วันก่อนหน้า" onClick={() => setDate(addDays(date, -1))} disabled={!!yearStart && date <= yearStart}><Icon name="chevron-left" size={20} /></button>
+          <button class="att-hp att-today" onClick={() => setDate(todayBkk())}><Icon name="calendar" size={20} /> {date === todayBkk() ? "วันนี้ · " : ""}{TH_DOW[dowOf(date)]} {dayMonth(date)}</button>
+          <button class="att-hp ico" aria-label="วันถัดไป" onClick={() => setDate(addDays(date, 1))} disabled={date >= todayBkk()}><Icon name="chevron-right" size={20} /></button>
+        </span>
+        {!phone && modeSegs}
+        <span class="att-hp att-info"><SaveBadge busy={!!sync?.busy} pending={pending} review={review.length} conflicts={conflicts.length} error={draft?.error} retrying={(sync?.tries ?? 0) > 0} offline={offline} loaded={loaded} savedAt={savedAt} onRetry={() => retryDraft(key)} /></span>
+        {loaded && unmarked > 0 && <span class="att-hp att-info"><Icon name="circle-dashed" size={16} /> ยังไม่เช็ค {unmarked}</span>}
+        {phone && allBtn}
+      </AttHero>
+      {/* T-73 B-6: on a phone the two switches leave the hero (it stays <= 200px) and sit in their own row right under it */}
+      {phone && <div class="att-modes">{modeSegs}</div>}
+
+      <div class="att-toolbar">
+        <ClassChips items={classItems} value={classId} onPick={changeClass} />
+      </div>
+      {scoped && (
+        <div class="att-periods" role="group" aria-label="เลือกคาบ">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((p) => <button class={"pill" + (p === period ? " on" : "")} aria-pressed={p === period} onClick={() => setPeriod(p)}>คาบ {p}</button>)}
+          <select aria-label="วิชาเช็คชื่อ" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
+            {activeSubjects.value.map((s) => <option value={s.id}>{s.name}</option>)}
+          </select>
+          {periodTime && <span class="att-tip">คาบ {period} เริ่ม {periodTime}</span>}
+          <span class="att-tip att-randnote">รายคาบไม่มีผลกับหน้าสุ่มชื่อ (สุ่มชื่อใช้เช็คชื่อรายวันของวันนี้)</span>
+        </div>
+      )}
+
+      {topCards.length > 0 && <div class={"att-top" + (topCards.length > 1 ? " two" : "")}>{topCards.map((k) => (k === "week" ? weekCard : sumCard))}</div>}
 
       <div class={"att-body" + (hasAside ? " two" : "")}>
         {method === "scan" && (
@@ -714,7 +854,7 @@ export function AttendancePage() {
             {pickFrom && (
               <div class="att-pick">
                 {pickFrom.map((st) => (
-                  <button onClick={() => { setPickFrom(null); markScanned(st); }}><b style="font-weight:500">{fullName(st)}</b> <span class="muted">รหัส {st.code}</span></button>
+                  <button onClick={() => { setPickFrom(null); markScanned(st); }}><b style="font-weight:500">{nm(st)}</b> <span class="muted">รหัส {st.code}</span></button>
                 ))}
                 <button class="ghost" onClick={() => setPickFrom(null)}>ยกเลิก</button>
               </div>
@@ -734,27 +874,40 @@ export function AttendancePage() {
                   </button>
                 ))}
               </div>
-              <button class="att-allp" onClick={askMarkAll} disabled={!loaded || slow} title={!loaded ? "กำลังโหลดรายชื่อ…" : slow ? "รอโหลดข้อมูลจากระบบให้เสร็จก่อน" : undefined}><Icon name="checks" size={20} /> มาทั้งห้อง</button>
+              {!phone && allBtn}
             </div>
           </div>
 
+          <div class={"att-live" + (live ? "" : " none")} role="status" aria-live="polite" aria-atomic="true">{live}</div>
           {!loaded && <div class="att-note" role="status"><Icon name="loader-2" size={16} class="spin" /> กำลังโหลดรายชื่อ… (แตะตอนนี้ยังไม่ได้ รอสักครู่)</div>}
           {loaded && slow && <div class="att-note" role="status"><Icon name="cloud-off" size={16} /> เน็ตช้า — ยังโหลดข้อมูลจากระบบไม่เสร็จ แตะเช็คได้เลย ระบบจะตรวจซ้ำตอนส่ง</div>}
 
-          <div class={"att-tiles" + (loaded ? "" : " loading")} role="group" aria-label={`รายชื่อ ${className}`} aria-busy={!loaded}>
-            {students.map((st) => {
+          {students.length === 0 && loaded ? (
+            <div class="att-empty" role="status">
+              <Icon name="users" size={32} />
+              <h2 class="att-h">ห้องนี้ยังไม่มีนักเรียน</h2>
+              <p class="att-tip">นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน</p>
+              <button class="primary" onClick={() => navigate("/students")}><Icon name="upload" size={18} /> นำเข้านักเรียน</button>
+            </div>
+          ) : (
+          <div ref={gridRef} class={"att-tiles" + (loaded ? "" : " loading")} role="group" aria-label={`รายชื่อ ${className}`} aria-busy={!loaded} onKeyDown={gridKey}>
+            {students.map((st, i) => {
               const s = statusOf(st.id);
               const held = heldIds.has(st.id);
-              const t = s === "late" ? timeOf(st.id) : undefined;
+              const t = s ? timeOf(st.id) : undefined;
+              const word = held ? "รอเลือกข้อมูล" : s ? LABELS[s] : "ยังไม่เช็ค";
               return (
-                <button id={"att-t-" + st.id} class={"att-tile " + (held ? "held " : "") + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)} title={fullName(st)} aria-label={`เลขที่ ${st.number} ${fullName(st)} ${held ? "รอเลือกข้อมูล" : s ? LABELS[s] : "ยังไม่เช็ค"}`}>
+                <button id={"att-t-" + st.id} tabIndex={i === Math.min(focusIdx, students.length - 1) ? 0 : -1} onFocus={() => setFocusIdx(i)}
+                  class={"att-tile " + (held ? "held " : "") + (s ?? "") + (hit === st.id ? " hit" : "")} onClick={() => tap(st.id)}
+                  title={hide ? `เลขที่ ${st.number ?? "-"}` : fullName(st)} aria-label={hide ? `เลขที่ ${st.number ?? "-"} ${word}` : `เลขที่ ${st.number ?? "-"} ${fullName(st)} ${word}`}>
                   <span class="no">{st.number ?? "-"}</span>
-                  <span class="tx"><span class="nm">{shortName(st)}</span>
-                    <span class="stt">{held ? <><Icon name="alert-triangle" size={16} /> รอเลือก</> : s ? <><Icon name={ST_ICON[s]} size={16} /> {LABELS[s]}{t ? ` ${formatThaiTimeMs(t)}` : ""}</> : "แตะเพื่อเช็ค"}</span></span>
+                  <span class="tx">{!hide && <span class="nm">{shortName(st)}</span>}
+                    <span class="stt">{held ? <><Icon name="alert-triangle" size={16} /> รอเลือก</> : s ? <><Icon name={ST_ICON[s]} size={16} /> {LABELS[s]}{t ? <span class={s === "late" ? "" : "att-time"}>{` ${formatThaiTimeMs(t)}`}</span> : ""}</> : <><Icon name="circle-dashed" size={16} /> แตะเพื่อเช็ค</>}</span></span>
                 </button>
               );
             })}
           </div>
+          )}
         </div>
 
         <div class="att-cards">{sideNodes}</div>
@@ -763,7 +916,7 @@ export function AttendancePage() {
       <div class={"att-savebar" + (failedCount.value > 0 ? " has-fab" : "")}>
         <span role="status" aria-live="polite"><SaveBadge busy={!!sync?.busy} pending={pending} review={review.length} conflicts={conflicts.length} error={draft?.error} retrying={(sync?.tries ?? 0) > 0} offline={offline} loaded={loaded} savedAt={savedAt} onRetry={() => retryDraft(key)} /></span>
         <span class="att-hint">แตะแล้วบันทึกเอง ไม่ต้องกดบันทึก</span>
-        <span class="att-count">เช็คแล้ว {marked}/{students.length}</span>
+        <span class="att-count" aria-live="off">เช็คแล้ว {marked}/{students.length}</span>
       </div>
     </div>
   );

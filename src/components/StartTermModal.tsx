@@ -8,6 +8,8 @@ import { ok } from "../lib/notify";
 import { pendingCount } from "../lib/outbox";
 import { attDraftCount } from "../lib/attSync";
 import { DateField } from "./ui";
+import { online } from "../lib/outbox";
+import { projectorOn } from "../lib/projector";
 
 function todayBkk(): string {
   return new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
@@ -53,13 +55,18 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
   const problem = backwards ? "ภาคเรียนใหม่ต้องมาหลังภาคเรียนปัจจุบัน"
     : exists ? `มีภาคเรียน ${name} อยู่แล้ว — ตั้งเป็นปัจจุบันได้จากรายการภาคเรียน`
     : badDates ? (start ? "วันสิ้นสุดต้องไม่ก่อนวันเริ่ม" : "ใส่วันเริ่มภาคเรียน") : "";
-  const canStart = !busy && !problem && (!(newYear && cur) || sure);
+  // BR-59: no new term while projecting (read only, AC-248) or without a connection — read live so it follows the signals
+  const offline = !online.value;
+  const projecting = projectorOn.value;
+  const blocked = offline || projecting;
+  const canStart = !busy && !blocked && !problem && (!cur || sure);
 
   function toggle(id: string) {
     setKeep((k) => { const n = new Set(k); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   }
 
   async function go() {
+    if (!canStart) return; // the button is off until the tick; the handler holds the same line
     setErr(""); setBusy(true);
     try {
       const res = await api.post<{ termId: string; newYear: boolean; classes: { id: string }[]; finished: number }>("/api/terms/start", {
@@ -90,16 +97,17 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           <h2 style="font-size:1.2rem">เริ่มภาคเรียนใหม่</h2>
           <button class="icon ghost" aria-label="ปิด" onClick={onClose} disabled={busy}><Icon name="x" /></button>
         </div>
+        <div class="imp-warn" style="margin-bottom:8px"><Icon name="alert-triangle" size={15} /> เริ่มภาคเรียนใหม่แล้ว ย้อนกลับเองไม่ได้ — ตรวจให้แน่ใจก่อนกดยืนยัน</div>
         <div class="page-sub" style="margin-bottom:10px">
           ภาคเรียนปัจจุบัน: <b>{cur?.name ?? "ยังไม่มี"}</b> · สิ่งที่ทำไว้ในภาคเรียนเดิมไม่ถูกลบหรือแก้ — ดูย้อนหลังได้จากตัวเลือกเทอมด้านบน
         </div>
 
         <div class="modal-grid2">
           <label class="field"><span>ปีการศึกษา (พ.ศ.)</span>
-            <input type="number" value={year} onInput={(e) => setYear(Number((e.target as HTMLInputElement).value))} />
+            <input type="number" value={year} data-autofocus onInput={(e) => { setYear(Number((e.target as HTMLInputElement).value)); setSure(false); }} />
           </label>
           <label class="field"><span>ภาคเรียน</span>
-            <select value={term} onInput={(e) => setTerm(Number((e.target as HTMLSelectElement).value))}><option value={1}>1</option><option value={2}>2</option></select>
+            <select value={term} onInput={(e) => { setTerm(Number((e.target as HTMLSelectElement).value)); setSure(false); }}><option value={1}>1</option><option value={2}>2</option></select>
           </label>
         </div>
         <div class="modal-grid2">
@@ -146,10 +154,12 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           <div class="imp-warn"><Icon name="alert-triangle" size={15} /> เครื่องนี้ยังมีข้อมูลรอส่ง {unsent} รายการ — ควรรอให้ส่งเสร็จก่อน (รายการของห้องที่ปิดแล้วจะไปอยู่ในรายการ “ต้องตรวจสอบ”)</div>
         )}
 
-        {newYear && cur && (
+        {cur && (
           <label class="imp-confirm">
             <input type="checkbox" checked={sure} onChange={(e) => setSure((e.target as HTMLInputElement).checked)} />
-            <span>ตรวจแล้ว — เริ่มปีการศึกษา <b style="font-weight:500">{year}</b> ({formatThaiDate(start)}) ย้อนกลับเองไม่ได้ แต่ข้อมูลปี {cur.year} ไม่หายและดูได้ตลอด</span>
+            {newYear
+              ? <span>ตรวจแล้ว — เริ่มปีการศึกษา <b style="font-weight:500">{year}</b> ({formatThaiDate(start)}) ย้อนกลับเองไม่ได้ แต่ข้อมูลปี {cur.year} ไม่หายและดูได้ตลอด</span>
+              : <span>ตรวจแล้ว — เริ่มภาคเรียน <b style="font-weight:500">{name}</b> ({formatThaiDate(start)}) ย้อนกลับเองไม่ได้ แต่ข้อมูลภาคเรียนเดิมไม่หาย</span>}
           </label>
         )}
 
@@ -159,6 +169,7 @@ export function StartTermModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px">
+          {blocked && <span class="page-sub set-need-online">{projecting ? "ปิดอยู่ตอนฉายจอ" : "ต้องออนไลน์"}</span>}
           <button onClick={onClose} disabled={busy}>ยกเลิก</button>
           <button class="primary" onClick={go} disabled={!canStart}>
             {busy ? <Icon name="loader-2" class="spin" /> : <Icon name="calendar-plus" />} เริ่มภาคเรียน {name}

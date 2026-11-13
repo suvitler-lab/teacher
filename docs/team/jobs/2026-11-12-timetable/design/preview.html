@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตารางสอน · mockup Gate 2 · งานครบ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mitr:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Mali:wght@500;600;700&family=Anuphan:wght@400;500;600;700&display=swap">
+<style>
+/* =====================================================================
+   Hub chrome (not part of the app): direction / screen / skin / time / size
+   ===================================================================== */
+:root{--hub-bg:#1f1a16;--hub-fg:#f6ecdf;--hub-mut:#cdbca8;--hub-on:#f3cd9c;--hub-on-fg:#2a1f16;--hub-line:rgba(255,235,210,.16)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#d8d2c9;font-family:"Sarabun","Leelawadee UI",system-ui,sans-serif;color:#2a1f16;overflow-x:hidden}
+.hub{background:var(--hub-bg);color:var(--hub-fg);padding:8px 14px 10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:5}
+.hub-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hub-title{font:500 16px/1.3 "Mitr","Leelawadee UI",sans-serif;margin:0}
+.hub-sub{font-size:13px;color:var(--hub-mut)}
+.hub-grow{flex:1}
+.hub-tog{min-height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--hub-line);background:transparent;color:var(--hub-fg);font:inherit;font-size:14px;cursor:pointer}
+.hub-tog:hover{background:rgba(255,255,255,.08)}
+.hub-groups{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.hg{display:flex;align-items:center;gap:6px;min-width:0}
+.hg-l{font-size:13px;color:var(--hub-mut);white-space:nowrap}
+.hg-seg{display:flex;flex-wrap:wrap;gap:2px;padding:2px;background:rgba(255,255,255,.07);border-radius:10px}
+.hg-seg button{min-height:36px;padding:0 11px;border:0;border-radius:8px;background:transparent;color:var(--hub-fg);font:inherit;font-size:14px;cursor:pointer;white-space:nowrap}
+.hg-seg button:hover{background:rgba(255,255,255,.08)}
+.hg-seg button[aria-pressed="true"]{background:var(--hub-on);color:var(--hub-on-fg);font-weight:600}
+.hg select{display:none;width:100%;min-height:42px;border-radius:10px;border:1px solid var(--hub-line);background:#2c251f;color:var(--hub-fg);font:inherit;font-size:15px;padding:0 8px}
+.hub-info{font-size:14px;line-height:1.55;color:var(--hub-mut);margin:0}
+.hub-info b{color:var(--hub-fg);font-weight:600}
+.hub-info .good{color:#c9e3a6}.hub-info .weak{color:#f5c99a}
+.hub :focus-visible{outline:3px solid var(--hub-on);outline-offset:2px}
+.hub.min .hub-groups,.hub.min .hub-info{display:none}
+@media (max-width:760px){
+  .hub{padding:6px 10px 8px;gap:6px}
+  .hub-sub{display:none}
+  .hub-groups{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}
+  .hg{flex-direction:column;align-items:stretch;gap:0}
+  .hg-l{font-size:12px}
+  .hg-seg{display:none}
+  .hg select{display:block}
+  .hub-info{font-size:13px}
+}
+.stage{display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.stage.framed{padding:16px 0 8px}
+.scaler{position:relative;flex:none}
+.device{position:relative;overflow:hidden;transform-origin:0 0}
+.stage.framed .device{border-radius:20px;box-shadow:0 0 0 8px #2b2520,0 24px 60px rgba(0,0,0,.28)}
+.size-note{font-size:13px;color:#4a3c2f;margin:14px 8px 0;text-align:center}
+
+/* =====================================================================
+   App — tokens copied from src/styles/tokens.css (light) · 3 skins
+   ===================================================================== */
+.app{--tap:44px;--rail-w:96px;
+  --t-xs:13px;--t-sm:14px;--t-md:16px;--t-lg:18px;--t-xl:22px;--t-2xl:28px;--t-3xl:38px;--t-4xl:52px;
+  --tint-blue-bg:#e0edfc;--tint-blue-fg:#1a56b0;--tint-green-bg:#e7f3d7;--tint-green-fg:#4b7314;
+  --tint-orange-bg:#fce8d8;--tint-orange-fg:#9a4f0c;--tint-magenta-bg:#f8e2ee;--tint-magenta-fg:#9c2b63;
+  position:absolute;inset:0;container:app/inline-size;background:var(--surface-0);color:var(--text-primary);
+  font-family:var(--font-sans);font-size:16px;line-height:1.6;overflow:hidden}
+.app[data-skin="warm"],.sk-warm{--font-sans:"Sarabun","Leelawadee UI",system-ui,sans-serif;--font-display:"Mitr","Leelawadee UI",system-ui,sans-serif;--display-weight:500;--display-track:0;--font-num:"Mitr","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px;--radius-sm:12px;--radius:16px;--radius-lg:22px;--radius-btn:999px;--radius-hero:28px;--card-bw:1px;--btn-bw:1px;
+  --s1:4px;--s2:8px;--s3:13px;--s4:17px;--s5:25px;--s6:34px;
+  --surface-0:#f6efe4;--surface-1:#ede2d1;--surface-2:#fffaf2;--text-primary:#2a1f16;--text-secondary:#574535;--text-muted:#6b5846;
+  --border:rgba(90,60,30,.14);--border-strong:rgba(90,60,30,.24);--border-control:#9b8670;--card-border:rgba(90,60,30,.12);
+  --accent:#b4462a;--accent-hover:#983a22;--on-accent:#fff;--bg-accent:#f8e0d4;--text-accent:#9a3a22;--accent-2:#e9a23b;--on-accent-2:#2a1f16;
+  --hero-bg:#f3cd9c;--hero-fg:#2a1f16;--hero-muted:#5a3f26;--hero-chip:rgba(255,250,242,.55);
+  --bg-success:#e6f0d6;--text-success:#46661c;--fill-success:#6f9a33;--bg-warning:#fbecd0;--text-warning:#85520a;--fill-warning:#e9a23b;--bg-danger:#f9e0da;--text-danger:#a52a1c;--fill-danger:#cc4730;
+  --illo-1:#e9a23b;--illo-2:#b4462a;--illo-3:#6f9a33;--illo-4:#fffaf2;
+  --rail-bg:#2f241b;--rail-fg:#e8d8c4;--rail-active-bg:#f3cd9c;--rail-active-fg:#2a1f16;--rail-label:#b9a48c;--ink:#2a1f16;
+  --shadow-card:0 2px 0 rgba(90,60,30,.06),0 10px 24px rgba(90,60,30,.08);--shadow-pop:0 14px 34px rgba(90,60,30,.22);--now:#b4462a}
+.app[data-skin="pro"],.sk-pro{--font-sans:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;--font-display:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;--display-weight:700;--display-track:-.01em;--font-num:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:4px;--radius-sm:6px;--radius:10px;--radius-lg:14px;--radius-btn:8px;--radius-hero:16px;--card-bw:1px;--btn-bw:1px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+  --surface-0:#edf1f7;--surface-1:#e3e9f2;--surface-2:#fff;--text-primary:#0f1b2d;--text-secondary:#3f4c63;--text-muted:#56627a;
+  --border:rgba(15,35,71,.12);--border-strong:rgba(15,35,71,.22);--border-control:#8794ab;--card-border:rgba(15,35,71,.10);
+  --accent:#1f56d6;--accent-hover:#1946b3;--on-accent:#fff;--bg-accent:#e3ecfd;--text-accent:#1a4bbf;--accent-2:#22b8cf;--on-accent-2:#0f2347;
+  --hero-bg:#0f2347;--hero-fg:#fff;--hero-muted:#b9c7e0;--hero-chip:rgba(255,255,255,.12);
+  --bg-success:#dff5e9;--text-success:#11683b;--fill-success:#16a05d;--bg-warning:#fdf0d5;--text-warning:#865507;--fill-warning:#f0a422;--bg-danger:#fde4e4;--text-danger:#b01f1f;--fill-danger:#d83535;
+  --illo-1:#22b8cf;--illo-2:#fff;--illo-3:#5b8cff;--illo-4:#f0a422;
+  --rail-bg:#0f2347;--rail-fg:#c6d2e8;--rail-active-bg:#22b8cf;--rail-active-fg:#0f2347;--rail-label:#8ea0c2;--ink:#0f2347;
+  --shadow-card:0 1px 2px rgba(15,35,71,.06),0 6px 18px rgba(15,35,71,.07);--shadow-pop:0 12px 32px rgba(15,35,71,.22);--now:#d83535}
+.app[data-skin="playful"],.sk-playful{--font-sans:"Anuphan","Leelawadee UI",system-ui,sans-serif;--font-display:"Mali","Leelawadee UI",system-ui,sans-serif;--display-weight:700;--display-track:0;--font-num:"Mali","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px;--radius-sm:12px;--radius:16px;--radius-lg:20px;--radius-btn:14px;--radius-hero:24px;--card-bw:2px;--btn-bw:2px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+  --surface-0:#eaf3ff;--surface-1:#dceafc;--surface-2:#fff;--text-primary:#15142b;--text-secondary:#3b3a5c;--text-muted:#514f73;
+  --border:rgba(21,20,43,.14);--border-strong:rgba(21,20,43,.3);--border-control:#15142b;--card-border:#15142b;
+  --accent:#3b5bfd;--accent-hover:#2c48e0;--on-accent:#fff;--bg-accent:#e1e7ff;--text-accent:#2c48e0;--accent-2:#ffd43b;--on-accent-2:#15142b;
+  --hero-bg:#ffd43b;--hero-fg:#15142b;--hero-muted:#4d3f00;--hero-chip:rgba(255,255,255,.6);
+  --bg-success:#d4f7e6;--text-success:#0b6b45;--fill-success:#22c58b;--bg-warning:#fff1c2;--text-warning:#7a5400;--fill-warning:#ffb020;--bg-danger:#ffe0e6;--text-danger:#b3123c;--fill-danger:#ff4d6d;
+  --illo-1:#ff6fa8;--illo-2:#3b5bfd;--illo-3:#22c58b;--illo-4:#15142b;
+  --rail-bg:#15142b;--rail-fg:#dcdbf5;--rail-active-bg:#ffd43b;--rail-active-fg:#15142b;--rail-label:#9b99c9;--ink:#15142b;
+  --shadow-card:4px 4px 0 #15142b;--shadow-pop:6px 6px 0 #15142b;--now:#e0244f}
+
+
+/* ===== hub (mockup chrome) overrides ===== */
+@media (max-width:760px){ .hub .hg-l{font-size:13px} }
+.hub.min{position:fixed;right:12px;bottom:12px;padding:0;background:transparent;z-index:200}
+.hub.min .hub-top>:not(.hub-tog){display:none}
+.hub.min .hub-tog{background:var(--hub-bg);color:var(--hub-fg);min-height:44px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+@media (max-width:760px){ .hub.min{bottom:96px} }
+#print-root{display:none}
+
+/* ===== app base ===== */
+.app{--t-2xs:13px}
+.app.big{--t-2xs:18px;--t-xs:18px;--t-sm:20px;--t-md:24px;--t-lg:26px;--t-xl:30px;--t-2xl:34px;--tap:52px;font-size:24px}
+.app[data-skin="playful"],.sk-playful{--now:#c41a43}
+.app *{box-sizing:border-box}
+.app h1,.app h2,.app h3{font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-track);line-height:1.35;margin:0}
+.app p{margin:0}
+:where(.app) :is(button,input,select){font:inherit;color:inherit}
+.app button{cursor:pointer}
+.app :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;display:inline-block;vertical-align:middle}
+.grow{flex:1 1 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--text-secondary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:var(--tap);min-width:var(--tap);padding:6px 16px;border-radius:var(--radius-btn);
+  border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-size:var(--t-sm);font-weight:500;line-height:1.3;text-align:center;white-space:nowrap}
+.btn:hover{background:var(--surface-1)}
+.btn:active{background:var(--border-strong)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.pri:hover{background:var(--accent-hover)}
+.app[data-skin="playful"] .btn.pri{border-color:var(--ink)}
+.btn.pri.dz{background:var(--text-danger);border-color:var(--text-danger)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-1)}
+.btn.danger{color:var(--text-danger)}
+.btn.icon{padding:0;width:var(--tap)}
+.btn.sm-l{padding:6px 12px}
+.btn[aria-disabled="true"],.btn:disabled{background:var(--surface-1);color:var(--text-muted);border-style:dashed;border-color:var(--border-control);cursor:not-allowed}
+.card{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:calc(var(--radius-btn) + 3px);background:var(--surface-1);border:1px solid var(--border)}
+.seg button{min-height:44px;min-width:56px;padding:0 16px;border-radius:var(--radius-btn);border:0;background:transparent;color:var(--text-secondary);font-size:var(--t-sm);font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text-primary);font-weight:700;box-shadow:0 0 0 1px var(--border-control)}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:0 8px;border-radius:999px;font-size:var(--t-2xs);font-weight:700;line-height:1.6;white-space:nowrap;vertical-align:middle}
+.tag.now{background:var(--now);color:#fff}
+.tag.next{background:var(--surface-2);color:var(--text-accent);box-shadow:inset 0 0 0 1.5px var(--text-accent)}
+.tag.today{background:var(--ink);color:var(--surface-2)}
+.tag.act{background:var(--surface-1);color:var(--text-primary);box-shadow:inset 0 0 0 1px var(--border-control)}
+.tag.arch{background:var(--surface-2);color:var(--text-secondary);border:1.5px dashed var(--border-control)}
+.tag.new{background:var(--bg-warning);color:var(--text-warning);box-shadow:inset 0 0 0 1.5px var(--text-warning)}
+.tag.done{background:var(--surface-2);color:var(--text-secondary);box-shadow:inset 0 0 0 1px var(--border-strong)}
+.tag.off{background:var(--bg-warning);color:var(--text-warning)}
+.tag.ro{background:var(--surface-1);color:var(--text-primary)}
+.note{display:flex;gap:6px;align-items:center;font-size:var(--t-sm);color:var(--text-secondary);margin:0 0 12px}
+.hint{font-size:var(--t-xs);color:var(--text-secondary)}
+.sec-t{font-size:var(--t-lg);display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.sum{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:var(--t-sm);color:var(--text-secondary)}
+.sel{min-height:44px;padding:0 10px;border:1px solid var(--border-control);border-radius:var(--radius-sm);background:var(--surface-2);font-size:var(--t-sm);max-width:100%}
+
+/* ===== shell ===== */
+.shell{display:grid;grid-template-columns:var(--rail-w) minmax(0,1fr);height:100%;position:relative}
+.rail{background:var(--rail-bg);color:var(--rail-fg);display:flex;flex-direction:column;gap:2px;padding:8px 6px;height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.rail-logo{flex:none;width:42px;height:42px;border-radius:11px;margin:0 auto 4px;background:var(--rail-active-bg);color:var(--rail-active-fg);display:grid;place-items:center}
+.rail-gl{font-size:13px;color:var(--rail-label);text-align:center;white-space:nowrap;line-height:1.3;padding:4px 0 1px;margin-top:2px;border-top:1px solid color-mix(in srgb,var(--rail-label) 35%,transparent)}
+.rail-group:first-of-type .rail-gl{border-top:0;margin-top:0}
+.rail-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%;min-height:var(--tap);padding:3px 2px;
+  font-size:13px;line-height:1.25;white-space:nowrap;color:var(--rail-fg);border-radius:var(--radius-sm);border:0;background:transparent}
+.app.big .rail-item{min-height:44px}
+.rail-item:hover{background:color-mix(in srgb,var(--rail-fg) 14%,transparent)}
+.rail-item[aria-current="page"]{background:var(--rail-active-bg);color:var(--rail-active-fg);font-weight:600}
+.rail-spacer{flex:1}
+.rail-sync{display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;color:var(--rail-fg);padding:2px 0}
+.rail-sync i{width:8px;height:8px;border-radius:50%;background:var(--fill-success)}
+.rail-sync.off i{background:var(--fill-warning)}
+.main{height:100%;overflow-y:auto;overflow-x:hidden;padding:20px 24px 40px;position:relative}
+.tabbar{display:none}
+@container app (min-width:721px) and (max-width:999px){ .main{padding:16px 20px 32px} }
+@container app (max-width:720px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{display:none}
+  .main{padding:14px 14px 104px}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;position:absolute;left:0;right:0;bottom:0;z-index:30;background:var(--surface-2);border-top:1px solid var(--border);padding:6px 4px 10px}
+  .tab{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;color:var(--text-secondary);line-height:1.25;white-space:nowrap;background:transparent;border:0;padding:4px 0;min-height:var(--tap)}
+  .tab[aria-current="page"]{color:var(--text-accent);font-weight:700}
+  .tab-scan .bub{width:56px;height:56px;border-radius:50%;margin-top:-20px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;border:3px solid var(--surface-2);box-shadow:var(--shadow-pop)}
+}
+
+/* ===== page header ===== */
+.uh{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s4);flex-wrap:wrap}
+.uh-l{display:flex;align-items:center;gap:10px;min-width:0}
+.uh-ic{width:44px;height:44px;border-radius:12px;flex:none;background:var(--bg-accent);color:var(--text-accent);display:grid;place-items:center}
+.uh-title{font-size:var(--t-xl)}
+.uh-sub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:var(--t-sm);color:var(--text-secondary)}
+.uh-act{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ban{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:8px 8px 8px 14px;border-radius:var(--radius);margin-bottom:12px;font-size:var(--t-sm);font-weight:600}
+.ban.warn{background:var(--bg-warning);color:var(--text-warning);border:1px solid var(--text-warning)}
+.emp{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 18px;margin-bottom:14px}
+.emp-t{font-size:var(--t-lg)}
+.skel .sk-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:10px}
+.skel .sk-b{height:64px;border-radius:var(--radius-sm);background:var(--surface-1)}
+
+/* ===== shared period cell (PeriodChip) ===== */
+.cell{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;min-width:0;min-height:56px;padding:6px 8px;border-radius:var(--radius-sm);
+  background:var(--surface-2);border:1px solid var(--border-strong);font-size:var(--t-sm);line-height:1.4;overflow:hidden}
+.cell[data-a]{cursor:pointer}
+.cell[data-a]:hover{border-color:var(--text-primary)}
+.cell .ck,.row .ck{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%;font-weight:700;color:var(--text-primary)}
+.cell .ck b,.row .ck b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cell .sj,.row .sj{max-width:100%;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--t-xs)}
+.t-blue{--tb:var(--tint-blue-bg);--tf:var(--tint-blue-fg)}
+.t-green{--tb:var(--tint-green-bg);--tf:var(--tint-green-fg)}
+.t-orange{--tb:var(--tint-orange-bg);--tf:var(--tint-orange-fg)}
+.t-magenta{--tb:var(--tint-magenta-bg);--tf:var(--tint-magenta-fg)}
+.cell.cls{background:var(--tb);border-color:var(--tf);border-left-width:5px}
+.cell.cls .ck{color:var(--tf)}
+.cell.act{background:var(--surface-2);border:2px solid var(--border-control)}
+.cell.arch{background:var(--surface-2);border:2px dashed var(--border-control)}
+.cell.arch .ck{color:var(--text-secondary)}
+.cell.empty{align-items:center;justify-content:center;border:2px dashed var(--border-control);background:transparent;color:var(--text-secondary)}
+.cell.empty:hover{background:var(--bg-accent);color:var(--text-accent);border-color:var(--text-accent)}
+.cell.none{border:1px solid var(--border);background:transparent}
+.cell.now{box-shadow:0 0 0 3px var(--now)}
+.cell.new{box-shadow:0 0 0 3px var(--text-warning)}
+.app.big .cell .ck b,.app.big .row .ck b{white-space:normal}
+
+/* ===== ก paper grid ===== */
+.a-wrap{overflow-x:auto;padding:3px}
+.a-grid{display:grid;gap:4px;min-width:min-content}
+.a-grid [role="row"]{display:contents}
+.a-ch{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;border-radius:var(--radius-sm);background:var(--surface-1);font-size:var(--t-xs);line-height:1.35;color:var(--text-secondary);text-align:center}
+.a-ch b{font-size:var(--t-sm);color:var(--text-primary)}
+.a-ch.now{background:var(--now);color:#fff}
+.a-ch.now b{color:#fff}
+.a-dn{position:sticky;left:0;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2px;padding:4px;border-radius:var(--radius-sm);background:var(--surface-1);font-size:var(--t-sm);font-weight:700}
+.a-dn.today{background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--ink)}
+.a-brk{display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:repeating-linear-gradient(135deg,var(--surface-1) 0 6px,var(--surface-0) 6px 12px)}
+.a-brk span{writing-mode:vertical-rl;font-size:var(--t-xs);color:var(--text-secondary);font-weight:600;background:var(--surface-0);padding:6px 1px;border-radius:6px;white-space:nowrap}
+.m-grid .cell{min-height:48px;padding:4px 6px}
+.m-grid .cell.cls{border-left-width:4px}
+.m-grid .a-ch{padding:4px 2px}
+
+/* ===== day list (phone ก, ค, big text) ===== */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chipb{display:inline-flex;align-items:center;gap:4px;min-height:44px;min-width:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--border-control);background:var(--surface-2);font-size:var(--t-sm)}
+.chipb[aria-pressed="true"]{background:var(--ink);color:var(--surface-2);border-color:var(--ink);font-weight:700}
+.day-h{margin:14px 0 10px}
+.dl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.dl .row{display:grid;grid-template-columns:minmax(0,6.5em) minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;min-height:56px;padding:6px 12px;border-radius:var(--radius);
+  border:1px solid var(--border-strong);background:var(--surface-2);text-align:left;font-size:var(--t-sm);line-height:1.4}
+.dl button.row:hover{border-color:var(--text-primary)}
+.dl .row.cls{background:var(--tb);border-color:var(--tf);border-left-width:5px}
+.dl .row.cls .ck{color:var(--tf)}
+.dl .row.act{border:2px solid var(--border-control)}
+.dl .row.arch{background:var(--surface-2);border:2px dashed var(--border-control)}
+.dl .row.empty{border:2px dashed var(--border-control);background:transparent;color:var(--text-secondary)}
+.dl .row.past{background:var(--surface-1);border-left-width:1px}
+.dl .row.past .ck{color:var(--text-secondary)}
+.dl .row.now{box-shadow:0 0 0 3px var(--now)}
+.dl .rt{display:flex;flex-direction:column;font-size:var(--t-xs);color:var(--text-secondary)}
+.dl .rt b{font-size:var(--t-sm);color:var(--text-primary)}
+.dl .rb{display:flex;flex-direction:column;min-width:0}
+.dl .rx{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.dl .add{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--text-accent)}
+.dl .brk{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border-radius:var(--radius);font-size:var(--t-xs);font-weight:600;color:var(--text-secondary);
+  background:repeating-linear-gradient(135deg,var(--surface-1) 0 6px,var(--surface-0) 6px 12px)}
+.dl .brk span{background:var(--surface-0);padding:0 6px;border-radius:6px}
+
+/* ===== ข calendar ===== */
+.b-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.b-nav .sec-t{margin:0;justify-content:center}
+.b-wrap{border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);background:var(--surface-2);box-shadow:var(--shadow-card);overflow:hidden}
+.b-grid{display:grid;column-gap:6px;padding:0 8px 6px 0;position:relative}
+.b-grid [role="row"]{display:contents}
+.b-dh{display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--t-sm);font-weight:700;border-bottom:1px solid var(--border-strong)}
+.b-dh.today{box-shadow:inset 0 -3px 0 var(--ink)}
+.b-tl{display:flex;flex-direction:column;align-items:flex-end;padding:2px 8px 0 0;font-size:var(--t-xs);line-height:1.35;color:var(--text-secondary);border-top:1px solid var(--border)}
+.b-tl b{color:var(--text-primary);font-size:var(--t-xs)}
+.b-ln{border-top:1px solid var(--border);pointer-events:none}
+.b-brk{display:flex;align-items:center;padding:0 10px;font-size:var(--t-xs);font-weight:600;color:var(--text-secondary);background:repeating-linear-gradient(135deg,var(--surface-1) 0 6px,var(--surface-2) 6px 12px)}
+.b-brk span{background:var(--surface-2);padding:0 6px;border-radius:6px}
+.b-grid .cell{min-height:0;margin:3px 0}
+.b-nowl{align-self:start;height:0;position:relative;z-index:4;pointer-events:none}
+.b-nowl span{position:absolute;right:2px;top:-12px;background:var(--now);color:#fff;font-size:var(--t-xs);font-weight:700;line-height:24px;padding:0 6px;border-radius:999px;white-space:nowrap}
+.b-nowline{align-self:start;height:0;border-top:3px solid var(--now);position:relative;z-index:4;pointer-events:none}
+
+/* ===== ค today-first ===== */
+.c-wrap{display:grid;gap:16px;align-items:start}
+.c-wrap.two{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)}
+.c-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.c-now{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));overflow:hidden}
+.c-blk{padding:14px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.c-blk + .c-blk{border-left:1px solid var(--border)}
+.c-blk.main{background:var(--hero-bg);color:var(--hero-fg)}
+.c-k{font-size:var(--t-sm);color:var(--text-secondary)}
+.c-blk.main .c-k{color:var(--hero-muted)}
+.c-v{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-xl);line-height:1.35}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.c-today,.c-week{padding:14px}
+.c-week .chips{margin-bottom:10px}
+
+/* ===== dialogs ===== */
+.scrim{position:absolute;inset:0;z-index:50;background:rgba(20,14,8,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{width:min(440px,100%);max-height:calc(100% - 16px);display:flex;flex-direction:column;background:var(--surface-2);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);border:var(--card-bw) solid var(--card-border);overflow:hidden;margin:0}
+.dlg.wide{width:min(560px,100%)}
+.dlg.sm{width:min(420px,100%)}
+.dlg-h{display:flex;align-items:flex-start;gap:8px;padding:14px 12px 6px 20px}
+.dlg-h h2{font-size:var(--t-lg)}
+.dlg-h p{font-size:var(--t-sm);color:var(--text-secondary)}
+.dlg-b{padding:8px 20px 14px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.dlg-f{display:flex;align-items:center;gap:8px;padding:12px 20px 14px;border-top:1px solid var(--border);flex-wrap:wrap}
+@container app (max-width:720px){
+  .scrim{align-items:flex-end;padding:0}
+  .dlg,.dlg.wide,.dlg.sm{width:100%;max-height:90%;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+  .dlg.full{max-height:100%;height:100%;border-radius:0}
+}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld>label,.lg{font-size:var(--t-sm);font-weight:700}
+.inp{min-height:44px;border:1px solid var(--border-control);border-radius:var(--radius-sm);background:var(--surface-2);padding:6px 10px;font-size:var(--t-md);width:100%;min-width:0}
+.inp[aria-invalid="true"]{border:2px solid var(--text-danger)}
+.ferr{display:flex;gap:6px;align-items:center;font-size:var(--t-sm);color:var(--text-danger);font-weight:700}
+.warnt{display:flex;gap:6px;align-items:center;color:var(--text-warning);font-weight:600}
+.app fieldset{border:0;margin:0;padding:0;min-width:0}
+.app legend{font-size:var(--t-sm);font-weight:700;padding:0;margin-bottom:6px}
+.radios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rad{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 12px;border:1.5px solid var(--border-control);border-radius:var(--radius-sm);font-size:var(--t-sm);cursor:pointer}
+.rad:has(input:checked){border-color:var(--accent);background:var(--bg-accent);color:var(--text-accent);font-weight:700;box-shadow:inset 0 0 0 1px var(--accent)}
+.rad:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px}
+.rad input{width:20px;height:20px;accent-color:var(--accent);margin:0}
+.err-sum{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-danger);color:var(--text-danger);font-size:var(--t-sm);font-weight:700;border:1px solid var(--text-danger)}
+.cnt{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.cnt output{font-size:var(--t-xl);min-width:2ch;text-align:center;font-weight:700}
+.tp-list{display:flex;flex-direction:column;gap:6px}
+.tp-row{display:grid;grid-template-columns:4.5em minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;font-size:var(--t-sm)}
+.tp-row.hd{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.br-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;align-items:center;margin-bottom:6px}
+.days{display:flex;flex-wrap:wrap;gap:6px}
+.dayb{min-width:52px;min-height:44px;border-radius:999px;border:1.5px solid var(--border-control);background:var(--surface-2);display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:var(--t-sm);padding:0 12px}
+.dayb[aria-pressed="true"]{background:var(--ink);color:var(--surface-2);border-color:var(--ink);font-weight:700}
+@container app (max-width:720px){ .br-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px} .br-row .bn{grid-column:1/-1} }
+.mlist{gap:8px}
+.mi{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--surface-2);font-size:var(--t-md);text-align:left}
+.mi:hover{background:var(--surface-1)}
+.mi.dz{color:var(--text-danger)}
+.mi[aria-disabled="true"]{background:var(--surface-1);color:var(--text-muted);border-style:dashed;cursor:not-allowed}
+.cl{margin:0;padding-left:20px;font-size:var(--t-md)}
+.pk h3{font-size:var(--t-md);margin-bottom:6px}
+.toast{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 24px);padding:6px 6px 6px 16px;border-radius:var(--radius);background:var(--ink);color:var(--surface-2);font-size:var(--t-sm);box-shadow:var(--shadow-pop)}
+.toast .btn{background:var(--surface-2);color:var(--ink);border-color:var(--surface-2)}
+@container app (max-width:720px){ .toast{bottom:92px;width:calc(100% - 24px)} }
+
+/* ===== home ===== */
+.hero{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:14px 20px;border-radius:var(--radius-hero);background:var(--hero-bg);color:var(--hero-fg)}
+.hero h1{font-size:var(--t-xl)}
+.hero p{color:var(--hero-muted);font-size:var(--t-sm)}
+.strip{display:flex;align-items:center;gap:12px;min-height:56px;padding:5px 6px 5px 14px;margin-top:10px;border-radius:var(--radius);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-left:5px solid var(--now)}
+.strip-t{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;font-size:var(--t-sm);line-height:1.45}
+.strip-t .lk{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.strip-a{display:flex;gap:8px;flex:none}
+@container app (max-width:720px){ .strip{flex-direction:column;align-items:stretch;padding:8px 10px} .strip-a .btn{width:100%} .strip-a .sec{display:none} }
+.h-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;margin-top:12px;align-items:start}
+@container app (max-width:1000px){ .h-grid{grid-template-columns:minmax(0,1fr)} }
+.h-card{padding:12px 16px}
+.h-card h2{font-size:var(--t-lg);margin-bottom:4px}
+.h-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:12px}
+.h-room{border-top:5px solid var(--tf,var(--border))}
+.h-room h2{display:flex;align-items:center;gap:6px}
+.h-focus .h-fv{font-size:var(--t-lg);font-weight:700;margin:4px 0}
+.tl{list-style:none;margin:0;padding:0}
+.tli{display:grid;grid-template-columns:3.6em 34px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:50px;padding:3px 6px;border-bottom:1px solid var(--border);font-size:var(--t-sm)}
+.tli:last-child{border-bottom:0}
+.tli .tm{font-family:var(--font-num);font-weight:600}
+.tli .nd{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface-1);color:var(--text-primary)}
+.tli.per .nd{background:var(--tb,var(--surface-1));color:var(--tf,var(--text-primary));box-shadow:inset 0 0 0 1.5px var(--tf,var(--border-control))}
+.tli h3{font-family:var(--font-sans);font-size:var(--t-sm);font-weight:600;line-height:1.4;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.tli p{font-size:var(--t-xs);color:var(--text-secondary)}
+.tli.now{background:var(--bg-accent);border-radius:var(--radius-sm)}
+.tli.fold button,.tli.more button{justify-self:start}
+.tli.fold,.tli.more{grid-template-columns:minmax(0,1fr)}
+.stat{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:var(--t-sm)}
+.stat:last-child{border-bottom:0}
+.stat b{font-family:var(--font-num);font-size:var(--t-md)}
+
+/* ===== settings ===== */
+.set-sec{padding:16px 20px;display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.set-sec h2{font-size:var(--t-lg);display:flex;align-items:center;gap:8px}
+.opt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.opt{position:relative;display:flex;flex-direction:column;gap:6px;padding:12px;border:1.5px solid var(--border-control);border-radius:var(--radius);cursor:pointer;background:var(--surface-2);font-size:var(--t-sm)}
+.opt:has(input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.opt:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt .on{display:none}
+.opt:has(input:checked) .on{display:inline-flex}
+.opt-t{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.opt-t b{font-size:var(--t-md)}
+.opt-d{color:var(--text-secondary)}
+fieldset:disabled .opt{cursor:not-allowed;background:var(--surface-1)}
+.thumb{display:block;height:84px;border-radius:var(--radius-sm);background:var(--surface-0);border:1px solid var(--border);padding:7px;position:relative;overflow:hidden}
+.th-g{display:grid;gap:3px;height:100%}
+.th-g i{border-radius:3px;background:var(--surface-2);border:1px solid var(--border-strong)}
+.th-g i.f{background:var(--accent);border-color:var(--accent)}
+.th-g i.k{border:1.5px dashed var(--border-control);background:transparent}
+.th-l{position:absolute;left:7px;right:7px;top:46%;height:2px;background:var(--now)}
+.th-big{height:42%;border-radius:6px;background:var(--hero-bg);margin-bottom:5px}
+.th-row{height:12%;border-radius:4px;background:var(--surface-2);border:1px solid var(--border-strong);margin-bottom:4px}
+.th-row.f{background:var(--accent);border-color:var(--accent)}
+.sw3{display:flex;gap:4px;height:100%}
+.sw3 i{flex:1;border-radius:6px;border:1px solid var(--border-strong)}
+.switch{display:flex;align-items:center;gap:12px;min-height:52px;width:100%;padding:8px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);text-align:left;font-size:var(--t-sm)}
+.switch:disabled{background:var(--surface-1);cursor:not-allowed}
+.sw{width:52px;height:30px;border-radius:999px;background:var(--surface-1);border:2px solid var(--border-control);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--text-secondary)}
+.switch[aria-checked="true"] .sw{background:var(--accent);border-color:var(--accent)}
+.switch[aria-checked="true"] .sw::after{left:25px;background:var(--on-accent)}
+.sw-t{display:flex;flex-direction:column}
+.saved{display:flex;align-items:center;gap:6px;min-height:1.6em;font-size:var(--t-sm);color:var(--text-success);font-weight:700}
+.row-link{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid var(--border);font-size:var(--t-sm)}
+@container app (max-width:720px){ .opt-grid{grid-template-columns:minmax(0,1fr)} .opt{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:12px} .opt .thumb{grid-row:1/3;height:64px} }
+
+/* ===== print (S8) ===== */
+.paper-wrap{position:relative;overflow:hidden;border-radius:6px;box-shadow:var(--shadow-card);border:1px solid var(--border-strong);background:#fff}
+.paper{width:1123px;height:794px;transform-origin:0 0;background:#fff;color:#000;padding:45px}
+.pp{font-family:"Sarabun","Leelawadee UI",sans-serif;color:#000;line-height:1.35}
+.pp h1{font:600 17pt/1.3 "Sarabun","Leelawadee UI",sans-serif;margin:0}
+.pp .meta{font-size:11pt;margin:2pt 0 8pt}
+.pp table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11pt}
+.pp th,.pp td{border:1px solid #000;padding:4pt;vertical-align:middle;text-align:center;height:50pt}
+.pp thead th{height:auto;font-weight:700}
+.pp thead small{display:block;font-weight:400;font-size:11pt}
+.pp th.day{width:62pt;text-align:left}
+.pp .lun{width:24pt;padding:0;background:#e6e6e6}
+.pp .lun span{writing-mode:vertical-rl;font-size:11pt;white-space:nowrap}
+.pp td b{font-weight:700}
+.pp td i{font-style:italic}
+.pp .pp-f{display:flex;justify-content:space-between;margin-top:8pt;font-size:11pt}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  html,body{height:auto;background:#fff;overflow:visible}
+  body>*:not(#print-root){display:none!important}
+  #print-root{display:block!important}
+  #print-root .paper{width:auto;height:auto;padding:0;transform:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15.2l2 2 4-4"/></symbol>
+    <symbol id="i-calb" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5M4 12h16"/></symbol>
+    <symbol id="i-ucheck" viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 20.5c0-3.6 3.1-6.5 7-6.5 1.3 0 2.5.3 3.5.8M15 18l2 2 4-4.5"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12.5 8H16M12.5 12H16"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16M7.5 16v-5M12 16V7M16.5 16V8"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 19.5c.4-3 3.1-5 6.5-5s6.1 2 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.5c2.6 0 4.6 1.5 5 4"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M9.5 4h-3A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h3M15 8l4 4-4 4M19 12H9.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1.2-4.4L15.8 5a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.4 18.8zM13.5 7.3l3.2 3.2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-cr" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-cl" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.8"/><path d="M8.5 20.5 10 16M15.5 20.5 14 16M7 8.5h6M7 11.5h4"/></symbol>
+    <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3.5 11.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M9.5 8.5c0-1.4 1.4-1.6 1.4-3M13.5 8.5c0-1.4 1.4-1.6 1.4-3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.2a1.5 1.5 0 0 0 1.5 1.3h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9M7 17.5H5A1.5 1.5 0 0 1 3.5 16v-5.5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5V16a1.5 1.5 0 0 1-1.5 1.5h-2"/><rect x="7" y="14" width="10" height="6.5" rx="1"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="16" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-path" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7"/></symbol>
+    <symbol id="i-plusc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 8.5v7M8.5 12h7"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M3 12.5l4 4L16.5 7M11 16l.5.5L21 7"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.8" cy="6.5" r="1" fill="currentColor"/><circle cx="4.8" cy="12" r="1" fill="currentColor"/><circle cx="4.8" cy="17.5" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-chart2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 11V9a3 3 0 0 1 3-3h12M16 3l3 3-3 3M20 13v2a3 3 0 0 1-3 3H5M8 21l-3-3 3-3"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.8l2.5 5.1 5.6.8-4 3.9 1 5.6-5.1-2.7-5 2.7 1-5.6-4.1-3.9 5.6-.8z"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 5h17v4h-17zM5 9v10h14V9M10 13h4"/></symbol>
+    <symbol id="i-off" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 12.8a5 5 0 0 1 4-1.5M5 9.2a10 10 0 0 1 4-2.4M15.5 9.4a10 10 0 0 1 3.5 2M12 17.5h.01"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.5h.01"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></symbol>
+  </defs>
+</svg>
+
+<header class="hub" id="hub"></header>
+<main class="stage" id="stage"><div class="scaler" id="scaler"><div class="device" id="device"><div class="app" id="app" data-skin="warm"></div></div></div><p class="size-note" id="note" hidden></p></main>
+<div id="live" class="sr" aria-live="polite"></div>
+<div id="print-root" aria-hidden="true"></div>
+
+<script>
+/* ===== data: the school's paper timetable (design/reference/1.webp) — 7 periods x 60 min, lunch 11:30–12:30 ===== */
+const DAYS = [
+  { s: "จ", m: "จันทร์", sh: "จันทร์", date: 9 }, { s: "อ", m: "อังคาร", sh: "อังคาร", date: 10 }, { s: "พ", m: "พุธ", sh: "พุธ", date: 11 },
+  { s: "พฤ", m: "พฤหัสบดี", sh: "พฤหัส", date: 12 }, { s: "ศ", m: "ศุกร์", sh: "ศุกร์", date: 13 }, { s: "ส", m: "เสาร์", sh: "เสาร์", date: 14 }, { s: "อา", m: "อาทิตย์", sh: "อาทิตย์", date: 15 },
+];
+const ROOMS = { "ป.6/1": "blue", "ป.6/2": "green", "ป.6/3": "orange", "ป.6/4": "magenta" };
+const ROOMLIST = Object.keys(ROOMS);
+const SUBJECTS = ["คณิตศาสตร์", "ดนตรี"];
+const C = (room, subj) => ({ kind: "class", room, subj });
+const A = (name) => ({ kind: "act", name });
+const BASE = {
+  "0-2": C("ป.6/2", "คณิตศาสตร์"), "0-5": C("ป.6/4", "ดนตรี"), "0-7": A("PLC กลุ่มสาระ"),
+  "1-2": C("ป.6/1", "คณิตศาสตร์"), "1-6": C("ป.6/2", "คณิตศาสตร์"),
+  "2-2": C("ป.6/4", "คณิตศาสตร์"), "2-4": C("ป.6/3", "คณิตศาสตร์"),
+  "3-2": C("ป.6/3", "คณิตศาสตร์"), "3-6": A("ลูกเสือ"),
+  "4-3": C("ป.6/4", "คณิตศาสตร์"), "4-4": C("ป.6/1", "คณิตศาสตร์"), "4-5": A("ชุมนุม"), "4-6": A("สวดมนต์"), "4-7": A("PLC สายชั้น"),
+};
+const clone = (o) => JSON.parse(JSON.stringify(o));
+let TT = { periods: [[510, 570], [570, 630], [630, 690], [750, 810], [810, 870], [870, 930], [930, 990]], breaks: [{ name: "พักกลางวัน", s: 690, e: 750 }], days: [1, 1, 1, 1, 1, 0, 0], slots: clone(BASE) };
+const TERMS = [["2/2569", "ภาคเรียน 2/2569"], ["1/2569", "ภาคเรียน 1/2569"], ["2/2568", "ภาคเรียน 2/2568 (ปีที่ผ่านมา)"]];
+const TIMES = [["2-490", "พ 08:10"], ["2-590", "พ 09:50"], ["2-645", "พ 10:45"], ["2-730", "พ 12:10"], ["2-770", "พ 12:50"], ["2-1005", "พ 16:45"], ["3-900", "พฤ 15:00"], ["5-600", "ส 10:00"]];
+const STATES = [["ok", "ปกติ"], ["empty", "ยังไม่กรอก"], ["loading", "กำลังโหลด"], ["offline", "ออฟไลน์"], ["conflict", "ชนกันสองเครื่อง"], ["old", "ภาคเก่า ดูอย่างเดียว"], ["arch", "ห้องเก็บแล้ว"], ["fail", "บันทึกไม่ผ่าน"]];
+const TASKS = [
+  { t: -1, i: "alert", h: "งานค้าง: ใบงานที่ 4 สมการ", p: "ป.6/1 ยังไม่ส่ง 5 คน · เลยกำหนด 2 วัน" },
+  { t: 480, i: "ucheck", h: "เช็คชื่อเช้า ป.6/4", p: "ครูประจำชั้น · มา 31 จาก 32 คน" },
+  { t: 900, i: "scan", h: "สแกนรับงาน แบบฝึกหัดเศษส่วน ชุดที่ 3", p: "ครบกำหนด 15:00 · ป.6/3 ยังไม่ส่ง 6 คน" },
+  { t: 960, i: "book", h: "กรอกคะแนนสอบย่อย บทที่ 5", p: "ป.6/2 · 34 คน" },
+];
+
+/* ===== state ===== */
+const S = { dir: "A", page: "tt", skin: "warm", now: { d: 2, t: 590 }, st: "ok", big: false, size: "fit", hubMin: false, strips: { a: true, b: true, c: true }, hlay: "a", names: "ts", day: 2, bview: "week",
+  ov: null, draft: null, errs: {}, saving: false, saveErr: false, tdraft: null, terrs: {}, toast: null, undo: null, last: { room: "", subj: "คณิตศาสตร์" },
+  pastOpen: false, saved: "", focusCell: null, focusSel: null, dlgFocus: null, ret: null, retSel: null, gfocus: null, hubFocus: null, backup: null, _top: null };
+let I = null;
+
+/* ===== helpers ===== */
+const $ = (q) => document.querySelector(q);
+const pad = (n) => String(n).padStart(2, "0");
+const hm = (m) => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+const toM = (v) => { const [h, m] = String(v || "0:0").split(":").map(Number); return h * 60 + m; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const ic = (n, s = 20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const ro = () => S.st === "old";
+const off = () => S.st === "offline";
+const editable = () => !ro() && !off();
+const isArch = (r) => S.st === "arch" && r === "ป.6/1";
+const W = () => document.getElementById("app").clientWidth;
+const phone = () => W() <= 720;
+const wide = () => W() >= 1100;
+const days = () => TT.days.map((v, i) => (v ? i : -1)).filter((i) => i >= 0);
+const pAt = (p) => TT.periods[p - 1];
+function seq() {
+  const it = TT.periods.map((x, i) => ({ k: "p", p: i + 1, s: x[0], e: x[1] }));
+  TT.breaks.forEach((b) => it.push({ k: "b", name: b.name, s: b.s, e: b.e }));
+  return it.sort((a, b) => a.s - b.s || (a.k === "b" ? 1 : -1));
+}
+const slot = (d, p) => (p <= TT.periods.length && TT.days[d] ? TT.slots[`${d}-${p}`] || null : null);
+const lblFull = (s) => (s.kind === "class" ? `${s.subj ? s.subj + " " : ""}${s.room}` : `กิจกรรม ${s.name}`);
+function counts() {
+  let c = 0, a = 0, h = 0;
+  for (const k in TT.slots) { const [d, p] = k.split("-").map(Number); const s = slot(d, p); if (!s) continue; s.kind === "class" ? c++ : a++; h += pAt(p)[1] - pAt(p)[0]; }
+  return { c, a, n: c + a, h: h / 60 };
+}
+const sumText = () => { const k = counts(); return `สอน ${k.c} · กิจกรรม ${k.a} · รวม ${k.n} คาบ (${Number.isInteger(k.h) ? k.h : k.h.toFixed(1)} ชม.)`; };
+const nextSchool = (d) => { for (let k = 1; k <= 7; k++) if (TT.days[(d + k) % 7]) return (d + k) % 7; return 0; };
+const dDate = (d) => DAYS[d].date + (d < S.now.d ? 7 : 0);
+const dayName = (d, k) => (k === 1 ? `พรุ่งนี้ (${DAYS[d].sh})` : `วัน${DAYS[d].m}`);
+function announce(m) { const l = $("#live"); l.textContent = ""; setTimeout(() => (l.textContent = m), 30); }
+
+/* now / next (same function the home page uses) */
+function info() {
+  const { d, t } = S.now, sq = seq(), school = !!TT.days[d];
+  let phase = "off", cur = null, brk = null;
+  if (school && sq.length) {
+    const f = sq.find((x) => x.s <= t && t < x.e);
+    if (f) f.k === "b" ? ((phase = "break"), (brk = f)) : ((phase = "period"), (cur = f));
+    else phase = t < sq[0].s ? "before" : t >= sq[sq.length - 1].e ? "after" : "gap";
+  }
+  const curSlot = cur ? slot(d, cur.p) : null;
+  let next = null, room = null, why = null, roomDay = null;
+  for (let k = 0; k < 8 && !next; k++) { const dd = (d + k) % 7; if (!TT.days[dd]) continue; for (const x of sq) { if (x.k !== "p" || (k === 0 && x.s <= t)) continue; const s = slot(dd, x.p); if (s) { next = { ...x, d: dd, k, slot: s }; break; } } }
+  if (!ro()) {
+    if (curSlot && curSlot.kind === "class" && !isArch(curSlot.room)) { room = curSlot.room; why = "now"; }
+    else if (school) for (const x of sq) { if (x.k !== "p" || x.s <= t) continue; const s = slot(d, x.p); if (s && s.kind === "class" && !isArch(s.room)) { room = s.room; why = "next"; roomDay = d; break; } } // Gate 2 N3: today only, no button when no teaching period is left today
+  }
+  return { d, t, phase, cur, brk, curSlot, next, room, why, roomDay, hasAny: S.st !== "loading" && counts().n > 0 };
+}
+function nowParts() {
+  let now = null, note = null, next = null;
+  if (I.phase === "period") now = `คาบ ${I.cur.p} · ถึง ${hm(I.cur.e)} · ${I.curSlot ? lblFull(I.curSlot) : "ว่าง"}`;
+  else if (I.phase === "break") now = `${I.brk.name} · ถึง ${hm(I.brk.e)}`;
+  else if (I.phase === "off") note = "วันนี้ไม่มีเรียน";
+  else if (I.phase === "after") note = "วันนี้สอนครบแล้ว";
+  if (I.next) { const n = I.next; next = `${n.k ? dayName(n.d, n.k) + " · " : ""}คาบ ${n.p} · ${hm(n.s)} · ${lblFull(n.slot)}`; }
+  return { now, note, next };
+}
+function checkBtn(cls = "btn pri") {
+  if (!I.room) return "";
+  const why = I.why === "next" ? " (คาบต่อไป)" : "";
+  return `<button class="${cls}" data-a="go" data-v="att" data-room="${I.room}">${ic("ucheck", 18)}เช็คชื่อ ${I.room}${why}</button>`;
+}
+
+/* ===== shared period chip / cell ===== */
+function chip(s, mini) {
+  if (s.kind === "class") return `<span class="ck">${ic("board", mini ? 14 : 16)}<b>${s.room}</b>${isArch(s.room) ? '<span class="tag arch">เก็บแล้ว</span>' : ""}${s.isNew ? '<span class="tag new">ใหม่</span>' : ""}</span>${mini ? "" : `<span class="sj">${s.subj || "ไม่ระบุวิชา"}</span>`}`;
+  return `<span class="ck">${ic("star", mini ? 14 : 16)}<b>${esc(s.name)}</b></span>${mini ? "" : '<span class="sj"><span class="tag act">กิจกรรม</span></span>'}`;
+}
+function aLabel(d, x, s, now) {
+  let a = `วัน${DAYS[d].m} คาบ ${x.p} ${hm(x.s)} ถึง ${hm(x.e)} `;
+  if (!s) a += editable() ? "ว่าง ปุ่มเพิ่มคาบ" : "ว่าง";
+  else a += s.kind === "class" ? `${s.subj || ""} ${s.room}${isArch(s.room) ? " ห้องเก็บแล้ว" : ""}${s.isNew ? " เพิ่งเปลี่ยนจากเครื่องอื่น" : ""}` : `กิจกรรม ${s.name}`;
+  return (a + (now ? " กำลังเรียนอยู่ตอนนี้" : "")).replace(/\s+/g, " ").trim();
+}
+const cellCls = (s) => (!s ? (editable() ? "empty" : "none") : s.kind === "act" ? "act" : `cls t-${ROOMS[s.room]}${isArch(s.room) ? " arch" : ""}`);
+const isNow = (d, p) => I.phase === "period" && d === I.d && I.cur.p === p;
+function cell(d, x, o = {}) {
+  const s = slot(d, x.p), now = isNow(d, x.p), act = (s && !ro()) || (!s && editable());
+  return `<div role="gridcell" class="cell ${cellCls(s)}${now ? " now" : ""}${s && s.isNew ? " new" : ""}" tabindex="-1" data-d="${d}" data-p="${x.p}"${act ? ' data-a="cell"' : ""} aria-label="${esc(aLabel(d, x, s, now))}"${!s && editable() ? ' title="เพิ่มคาบ"' : ""} style="${o.style || ""}">${now && !o.noNow ? '<span class="tag now">ตอนนี้</span>' : ""}${s ? chip(s, o.mini) : editable() ? ic("plus", 22) : ""}</div>`;
+}
+
+/* ===== shell ===== */
+const NAV = [["วันนี้", [["home", "หน้าหลัก", "home"], ["tt", "ตารางสอน", "calb"]]], ["ในห้องเรียน", [["scan", "สแกน", "scan"], ["att", "เช็คชื่อ", "ucheck"], ["rand", "สุ่มชื่อ", "dice"]]],
+  ["ตรวจงาน", [["grade", "คะแนน", "book"], ["rep", "รายงาน", "chart"]]], ["จัดการ", [["stu", "นักเรียน", "users"], ["set", "ตั้งค่า", "gear"]]]];
+const cur = (k) => (S.page === k || (k === "tt" && S.page === "print") || (k === "home" && S.page === "hcust") ? ' aria-current="page"' : "");
+function rail() {
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="rail-logo">${ic("logo", 24)}</div>
+  ${NAV.map(([g, items]) => `<div class="rail-group" role="group" aria-label="${g}"><div class="rail-gl" aria-hidden="true">${g}</div>${items.map(([k, l, i]) => `<button class="rail-item"${cur(k)} data-a="nav" data-v="${k}">${ic(i, 22)}<span>${l}</span></button>`).join("")}</div>`).join("")}
+  <div class="rail-spacer"></div><div class="rail-sync${off() ? " off" : ""}"><i></i>${off() ? "ออฟไลน์" : "ออนไลน์"}</div></nav>`;
+}
+function tabbar() {
+  return `<nav class="tabbar" aria-label="เมนู"><button class="tab"${cur("home")} data-a="nav" data-v="home">${ic("home", 24)}หน้าหลัก</button><button class="tab" data-a="nav" data-v="att">${ic("ucheck", 24)}เช็คชื่อ</button>
+  <button class="tab tab-scan" data-a="nav" data-v="scan"><span class="bub">${ic("scan", 24)}</span>สแกน</button><button class="tab" data-a="nav" data-v="grade">${ic("book", 24)}คะแนน</button>
+  <button class="tab"${S.page === "tt" || S.page === "set" || S.page === "print" ? ' aria-current="page"' : ""} data-a="navmore" aria-haspopup="dialog">${ic("more", 24)}เพิ่มเติม</button></nav>`;
+}
+
+/* ===== ตารางสอน (S1–S3) ===== */
+function ttHeader() {
+  const ph = phone(), dis = off() ? ' aria-disabled="true"' : "", empty = !counts().n;
+  const badges = (off() ? `<span class="tag off">${ic("off", 14)}ออฟไลน์ · ข้อมูลเมื่อ 09:41</span>` : "") + (ro() ? `<span class="tag ro">${ic("lock", 14)}ปีการศึกษาที่ผ่านมา · ดูอย่างเดียว</span>` : "");
+  let acts = "";
+  if (S.dir === "B" && !ph && !S.big) acts += `<div class="seg" role="group" aria-label="มุมมอง"><button data-a="bview" data-v="day" aria-pressed="${S.bview === "day"}">วัน</button><button data-a="bview" data-v="week" aria-pressed="${S.bview === "week"}">สัปดาห์</button></div>`;
+  if (S.dir === "B" && !ro()) acts += `<button class="btn pri" data-a="pick"${dis}>${ic("plus", 18)}เพิ่มคาบ</button>`;
+  if (!ph) {
+    if (!ro()) acts += `<button class="btn" data-a="times"${dis}>${ic("clock", 18)}ตั้งเวลาคาบ</button>`;
+    acts += `<button class="btn" data-a="nav" data-v="print"${empty ? ' aria-disabled="true" data-why="ยังไม่มีคาบให้พิมพ์"' : ""}>${ic("print", 18)}พิมพ์ตาราง</button>`;
+  }
+  acts += `<button class="btn icon" data-a="more" aria-label="เมนูเพิ่มเติมของตารางสอน" aria-haspopup="dialog">${ic("more", 22)}</button>`;
+  return `<div class="uh"><div class="uh-l"><span class="uh-ic">${ic("calb", 24)}</span><div><h1 class="uh-title">ตารางสอน</h1><div class="uh-sub"><label class="sr" for="term">ภาคเรียน</label><select id="term" class="sel" data-c="term">${TERMS.map(([v, l]) => `<option value="${v}"${(ro() ? "2/2568" : "2/2569") === v ? " selected" : ""}>${l}</option>`).join("")}</select>${badges}${S.dir === "B" && !ph && !S.big ? `<span>${sumText()}</span>` : ""}</div></div></div><div class="uh-act">${acts}</div></div>
+  ${off() ? `<p class="note">${ic("off", 18)}ออฟไลน์ — แก้ตารางสอนได้เมื่อออนไลน์ (เช็คชื่อและสแกนจากตารางยังใช้ได้)</p>` : ""}`;
+}
+function banners() {
+  return S.st === "conflict" ? `<div class="ban warn" role="status">${ic("alert", 20)}<span class="grow">ตารางสอนถูกแก้จากเครื่องอื่น — โหลดฉบับล่าสุดแล้ว ลองแก้อีกครั้ง</span><button class="btn" data-a="st" data-v="ok">ตกลง</button></div>` : "";
+}
+function emptyBox() {
+  return `<section class="card emp" aria-labelledby="emp-t"><span class="uh-ic">${ic("calb", 24)}</span><div class="grow"><h2 id="emp-t" class="emp-t">ยังไม่มีตารางสอนภาคนี้</h2><p class="muted">แตะช่องใดก็ได้เพื่อเพิ่มคาบ หรือคัดลอกจากภาคก่อน</p></div>
+  <div class="uh-act"><button class="btn pri" data-a="copy">${ic("copy", 18)}คัดลอกจากภาค 1/2569 (14 คาบ)</button><button class="btn" data-a="times">${ic("clock", 18)}ตั้งเวลาคาบ</button></div></section>`;
+}
+function tt() {
+  const head = ttHeader();
+  if (S.st === "loading") return head + `<div class="skel" role="status" aria-label="กำลังโหลดตารางสอน"><p class="muted">กำลังโหลดตารางสอน…</p><div class="sk-grid" aria-hidden="true">${"<i class=sk-b></i>".repeat(24)}</div></div>`;
+  return head + banners() + (!counts().n && editable() ? emptyBox() : "") + (S.dir === "A" ? viewA() : S.dir === "B" ? viewB() : viewC());
+}
+function gridA(mini) {
+  const sq = seq(), ds = days(), n = ds.length, narrow = mini || W() < 1000;
+  const dc = mini ? 48 : narrow ? 64 : 96, bc = mini ? 26 : narrow ? 34 : 42, cm = mini ? "minmax(0,1fr)" : "minmax(88px,1fr)";
+  const rowH = mini ? 50 : n > 5 ? 60 : 72;
+  let h = `<div class="a-grid${mini ? " m-grid" : ""}" role="grid" data-ax="rows" aria-label="ตารางสอนทั้งสัปดาห์ แถวเป็นวัน คอลัมน์เป็นคาบ ใช้ลูกศรเลื่อนช่อง" style="grid-template-columns:${dc}px ${sq.map((x) => (x.k === "p" ? cm : bc + "px")).join(" ")};grid-template-rows:auto repeat(${n},minmax(${rowH}px,auto))">`;
+  h += `<div role="row"><div role="columnheader" class="a-corner" style="grid-row:1;grid-column:1"><span class="sr">วัน</span></div>`;
+  sq.forEach((x, i) => {
+    const c = i + 2;
+    if (x.k === "p") { const now = I.phase === "period" && I.cur.p === x.p; h += `<div role="columnheader" class="a-ch${now ? " now" : ""}" style="grid-row:1;grid-column:${c}"><b>${mini ? `<span class="sr">คาบ </span>${x.p}` : `คาบ ${x.p}`}</b><span>${mini ? hm(x.s) : `${hm(x.s)}–${hm(x.e)}`}</span>${now ? '<span class="sr">ตอนนี้</span>' : ""}</div>`; }
+    else h += `<div role="columnheader" style="grid-row:1;grid-column:${c}"><span class="sr">${x.name}</span></div>`;
+  });
+  h += "</div>";
+  ds.forEach((d, r) => {
+    const today = d === I.d;
+    h += `<div role="row"><div role="rowheader" class="a-dn${today ? " today" : ""}" style="grid-row:${r + 2};grid-column:1"><span${narrow ? ' aria-hidden="true"' : ""}>${narrow ? DAYS[d].s : DAYS[d].m}</span>${narrow ? `<span class="sr">${DAYS[d].m}</span>` : ""}${today && !mini ? '<span class="tag today">วันนี้</span>' : today ? '<span class="sr">วันนี้</span>' : ""}</div>`;
+    sq.forEach((x, i) => {
+      const c = i + 2;
+      if (x.k === "p") h += cell(d, x, { mini, style: `grid-row:${r + 2};grid-column:${c}` });
+      else if (r === 0) h += `<div role="gridcell" class="a-brk" style="grid-row:2 / span ${n};grid-column:${c}" aria-label="${x.name} ${hm(x.s)} ถึง ${hm(x.e)}"><span aria-hidden="true">${mini ? "พัก" : `${x.name} ${hm(x.s)}–${hm(x.e)}`}</span></div>`;
+    });
+    h += "</div>";
+  });
+  return h + "</div>";
+}
+function viewA() {
+  if (phone()) return dayView();
+  if (S.big) return allDays();
+  return `<div class="a-wrap">${gridA(false)}</div><p class="sum">${ic("list", 18)}${sumText()}</p>`;
+}
+function dayChips() {
+  return `<div class="chips" role="group" aria-label="เลือกวัน">${days().map((d) => `<button class="chipb" data-a="day" data-v="${d}" aria-pressed="${S.day === d}" aria-label="วัน${DAYS[d].m}${d === I.d ? " วันนี้" : ""}">${phone() ? DAYS[d].s : DAYS[d].sh}${d === I.d ? " · วันนี้" : ""}</button>`).join("")}</div>`;
+}
+function dayRows(d) {
+  let h = `<ul class="dl" aria-label="คาบของวัน${DAYS[d].m}">`;
+  seq().forEach((x) => {
+    if (x.k === "b") { h += `<li class="brk">${ic("bowl", 18)}<span>${x.name} ${hm(x.s)}–${hm(x.e)}</span></li>`; return; }
+    const s = slot(d, x.p), today = d === I.d, now = isNow(d, x.p), past = today && I.phase !== "off" && x.e <= I.t, nxt = I.next && I.next.d === d && I.next.p === x.p;
+    const act = (s && !ro()) || (!s && editable());
+    const inner = `<span class="rt"><b>คาบ ${x.p}</b><span>${hm(x.s)}–${hm(x.e)}</span></span><span class="rb">${s ? chip(s) : '<span class="ck">ว่าง</span>'}</span><span class="rx">${now ? '<span class="tag now">ตอนนี้</span>' : ""}${nxt ? '<span class="tag next">ต่อไป</span>' : ""}${past ? '<span class="tag done">เสร็จแล้ว</span>' : ""}${!s && editable() ? `<span class="add">${ic("plus", 18)}เพิ่ม</span>` : ""}</span>`;
+    const cls = `row ${cellCls(s)}${now ? " now" : ""}${past ? " past" : ""}`, lab = esc(aLabel(d, x, s, now) + (past ? " เสร็จแล้ว" : "") + (nxt ? " ต่อไป" : ""));
+    h += `<li>${act ? `<button class="${cls}" data-a="cell" data-d="${d}" data-p="${x.p}" aria-label="${lab}">${inner}</button>` : `<div class="${cls}" aria-label="${lab}" role="group">${inner}</div>`}</li>`;
+  });
+  return h + "</ul>";
+}
+const dayTitle = (d) => `วัน${DAYS[d].m} ${dDate(d)} พ.ย.${d === I.d ? ' <span class="tag today">วันนี้</span>' : ""}`;
+function dayView() { return `${dayChips()}<h2 class="sec-t day-h">${dayTitle(S.day)}</h2>${dayRows(S.day)}<p class="sum">${sumText()}</p>`; }
+function allDays() { return days().map((d) => `<h2 class="sec-t day-h">${dayTitle(d)}</h2>${dayRows(d)}`).join("") + `<p class="sum">${sumText()}</p>`; }
+
+function viewB() {
+  if (S.big) return allDays();
+  const ph = phone(), sq = seq(), dayMode = ph || S.bview === "day", ds = dayMode ? [S.day] : days(), narrow = W() < 1000;
+  const rows = sq.map((x) => (x.k === "p" ? Math.max(56, Math.round(((x.e - x.s) / 60) * 64)) : 28));
+  let h = dayMode ? `<div class="b-nav"><button class="btn icon" data-a="dstep" data-v="-1" aria-label="วันก่อนหน้า">${ic("cl", 22)}</button><h2 class="sec-t grow">${dayTitle(S.day)}</h2><button class="btn icon" data-a="dstep" data-v="1" aria-label="วันถัดไป">${ic("cr", 22)}</button></div>` : "";
+  h += `<div class="b-wrap"><div class="b-grid" role="grid" data-ax="cols" aria-label="ตารางสอนแบบปฏิทิน คอลัมน์เป็นวัน เรียงตามเวลา ใช้ลูกศรเลื่อนช่อง" style="grid-template-columns:88px repeat(${ds.length},minmax(0,1fr));grid-template-rows:44px ${rows.map((r) => r + "px").join(" ")}">`;
+  h += `<div aria-hidden="true" style="grid-row:1;grid-column:1"></div>`;
+  sq.forEach((x, i) => {
+    const r = i + 2;
+    if (x.k === "p") h += `<div class="b-tl" aria-hidden="true" style="grid-row:${r};grid-column:1"><b>คาบ ${x.p}</b><span>${hm(x.s)}</span></div><div class="b-ln" aria-hidden="true" style="grid-row:${r};grid-column:2/-1"></div>`;
+    else h += `<div class="b-brk" aria-hidden="true" style="grid-row:${r};grid-column:1/-1"><span>${x.name} ${hm(x.s)}–${hm(x.e)}</span></div>`;
+  });
+  ds.forEach((d, ci) => {
+    const c = ci + 2, today = d === I.d;
+    h += `<div role="row"><div role="rowheader" class="b-dh${today ? " today" : ""}" style="grid-row:1;grid-column:${c}"><span aria-hidden="true">${narrow && !dayMode ? DAYS[d].s : DAYS[d].m}</span><span class="sr">วัน${DAYS[d].m}</span>${today ? '<span class="tag today">วันนี้</span>' : ""}</div>`;
+    sq.forEach((x, i) => { if (x.k === "p") h += cell(d, x, { noNow: true, style: `grid-row:${i + 2};grid-column:${c}` }); });
+    h += "</div>";
+  });
+  const ci = ds.indexOf(I.d), i = sq.findIndex((x) => x.s <= I.t && I.t < x.e);
+  if (ci >= 0 && i >= 0 && (I.phase === "period" || I.phase === "break")) {
+    const x = sq[i], offp = Math.round(((I.t - x.s) / (x.e - x.s)) * rows[i]);
+    h += `<div class="b-nowl" aria-hidden="true" style="grid-row:${i + 2};grid-column:1;margin-top:${offp}px"><span>ตอนนี้ ${hm(I.t)}</span></div><div class="b-nowline" aria-hidden="true" style="grid-row:${i + 2};grid-column:${ci + 2};margin-top:${offp}px"></div>`;
+  }
+  return h + `</div></div>${ph || S.bview === "day" ? `<p class="sum">${sumText()}</p>` : ""}`;
+}
+
+function nowCard() {
+  if (!I.hasAny) return "";
+  const p = nowParts(), n = I.next;
+  const a = p.now ? `<div class="c-blk main"><span class="tag now">ตอนนี้</span><p class="c-v">${I.phase === "period" ? (I.curSlot ? lblFull(I.curSlot) : "ว่าง ไม่มีคาบสอน") : I.brk.name}</p><p class="c-k">${I.phase === "period" ? `คาบ ${I.cur.p} · ถึง ${hm(I.cur.e)}` : `ถึง ${hm(I.brk.e)}`}</p>${I.why === "now" ? `<div class="acts">${checkBtn()}<button class="btn" data-a="go" data-v="scan">${ic("scan", 18)}สแกนงาน</button></div>` : ""}</div>` : "";
+  const b = n ? `<div class="c-blk${a ? "" : " main"}"><span class="tag next">ต่อไป</span>${p.note ? `<p class="c-k">${p.note}</p>` : ""}<p class="c-v">${lblFull(n.slot)}</p><p class="c-k">${n.k ? dayName(n.d, n.k) + " · " : ""}คาบ ${n.p} · ${hm(n.s)}–${hm(n.e)}</p>${I.why !== "now" && I.room ? `<div class="acts">${checkBtn()}</div>` : ""}</div>` : "";
+  return `<section class="card c-now" aria-label="ตอนนี้และต่อไป">${a}${b}</section>`;
+}
+function viewC() {
+  const two = wide(), today = TT.days[I.d] ? I.d : nextSchool(I.d);
+  const left = `${nowCard()}<section class="card c-today" aria-labelledby="c-td"><h2 id="c-td" class="sec-t">${TT.days[I.d] ? "วันนี้" : "วันเรียนถัดไป"} · ${DAYS[today].sh} ${dDate(today)} พ.ย.</h2>${dayRows(today)}</section>`;
+  const right = two ? `<section class="card c-week" aria-labelledby="c-wk"><h2 id="c-wk" class="sec-t">ทั้งสัปดาห์ <span class="hint">แตะช่องเพื่อเพิ่ม/แก้</span></h2>${gridA(true)}</section>`
+    : `<section class="card c-week" aria-labelledby="c-wk"><h2 id="c-wk" class="sec-t">ทั้งสัปดาห์</h2>${dayChips()}${dayRows(S.day)}</section>`;
+  return `<div class="c-wrap${two ? " two" : ""}"><div class="c-col">${left}</div><div class="c-col">${right}</div></div><p class="sum">${ic("list", 18)}${sumText()}</p>`;
+}
+
+/* ===== หน้าหลัก (S6) — แถบ ตอนนี้/ต่อไป ทุกโครง · แถวคาบใน "ลำดับงานวันนี้" เฉพาะโครง ก (Gate 2 N1) ===== */
+function perRow(x, past) {
+  const s = x.sl, now = isNow(I.d, x.p);
+  return `<li class="tli per ${s.kind === "class" ? "t-" + ROOMS[s.room] : ""}${now ? " now" : ""}"><span class="tm">${hm(x.s)}</span><span class="nd">${ic(s.kind === "class" ? "board" : "star", 18)}</span>
+  <div><h3>คาบ ${x.p} · ${lblFull(s)}${now ? '<span class="tag now">ตอนนี้</span>' : ""}${s.kind === "act" ? '<span class="tag act">กิจกรรม</span>' : ""}${isArch(s.room) ? '<span class="tag arch">เก็บแล้ว</span>' : ""}${past ? '<span class="tag done">เสร็จแล้ว</span>' : ""}</h3></div>
+  ${s.kind === "class" && !past && !isArch(s.room) ? `<button class="btn sm-l" data-a="go" data-v="att" data-room="${s.room}" aria-label="เช็คชื่อ ${s.room}">${ic("ucheck", 18)}เช็คชื่อ</button>` : "<span></span>"}</li>`;
+}
+const taskRow = (t) => `<li class="tli"><span class="tm">${t.t < 0 ? "ค้าง" : hm(t.t)}</span><span class="nd">${ic(t.i, 18)}</span><div><h3>${t.h}${t.t >= 0 && t.t < I.t ? '<span class="tag done">เสร็จแล้ว</span>' : ""}</h3><p>${t.p}</p></div><span></span></li>`;
+function homeList() {
+  const per = [];
+  if (I.hasAny && TT.days[I.d]) seq().forEach((x) => { if (x.k === "p") { const sl = slot(I.d, x.p); if (sl) per.push({ ...x, sl }); } });
+  const past = per.filter((x) => x.e <= I.t), up = per.filter((x) => x.e > I.t), shown = up.slice(0, 5), more = up.length - shown.length;
+  const items = TASKS.filter((t) => t.t >= 0).map((t) => ({ t: t.t, h: taskRow(t) }));
+  if (past.length) items.push({ t: past[0].s, h: (S.pastOpen ? past.map((x) => perRow(x, true)).join("") : "") + `<li class="tli fold"><button class="btn ghost" data-a="pastfold" aria-expanded="${S.pastOpen}">${ic(S.pastOpen ? "cl" : "cr", 18)}คาบที่ผ่านแล้ว ${past.length} คาบ${S.pastOpen ? " · ซ่อน" : ""}</button></li>` });
+  shown.forEach((x) => items.push({ t: x.s, h: perRow(x, false) }));
+  items.sort((a, b) => a.t - b.t);
+  return `<ul class="tl">${TASKS.filter((t) => t.t < 0).map(taskRow).join("")}${items.map((i) => i.h).join("")}${more > 0 ? `<li class="tli more"><button class="btn ghost" data-a="nav" data-v="tt">ดูอีก ${more} คาบในตารางสอน ${ic("cr", 18)}</button></li>` : ""}</ul>`;
+}
+function home() {
+  const p = nowParts(), show = S.strips[S.hlay] && I.hasAny;
+  const greet = I.t < 600 ? "สวัสดีตอนเช้า" : I.t < 720 ? "สวัสดีตอนสาย" : I.t < 780 ? "สวัสดีตอนเที่ยง" : I.t < 960 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น";
+  const strip = show ? `<section class="strip" aria-label="ตารางสอนวันนี้"><p class="strip-t">${p.now ? `<span class="lk"><span class="tag now">ตอนนี้</span>${p.now}</span>` : p.note ? `<span class="lk"><span class="tag ro">${p.note}</span></span>` : ""}${p.next ? `<span class="lk"><span class="tag next">ต่อไป</span>${p.next}</span>` : ""}</p>
+    <div class="strip-a">${checkBtn()}${I.why === "now" ? `<button class="btn sec" data-a="go" data-v="scan">${ic("scan", 18)}สแกนงาน</button>` : ""}</div></section>` : "";
+  return `<section class="hero"><div class="grow"><h1>${greet} คุณครู</h1><p>วัน${DAYS[I.d].m}ที่ ${dDate(I.d)} พฤศจิกายน 2569 · ภาคเรียน 2/2569</p></div>${off() ? `<span class="tag off">${ic("off", 14)}ออฟไลน์ · ข้อมูลเมื่อ 09:41</span>` : ""}<button class="btn hero-btn" data-a="nav" data-v="hcust">${ic("gear", 18)}ปรับหน้าหลัก</button></section>${strip}
+  ${homeBody()}`;
+}
+const statCard = () => `<section class="card h-card" aria-labelledby="h-s"><h2 id="h-s">ภาพรวมวันนี้</h2><div class="stat"><span>มาเรียนวันนี้</span><b>118/124 คน</b></div><div class="stat"><span>งานรอตรวจ</span><b>23 ชิ้น</b></div><div class="stat"><span>ส่งงานครบสัปดาห์นี้</span><b>71%</b></div></section>`;
+function homeBody() {
+  if (S.hlay === "a") return `<div class="h-grid"><section class="card h-card" aria-labelledby="h-l"><h2 id="h-l">ลำดับงานวันนี้</h2>${homeList()}</section>${statCard()}</div>`;
+  if (S.hlay === "b") {
+    const RS = [["ป.6/1", "ส่งครบ 27/32 · ค้าง 5", "มา 31/32"], ["ป.6/2", "ส่งครบ 34/34", "มา 33/34"], ["ป.6/3", "ส่งครบ 24/30 · ค้าง 6", "มา 28/30"], ["ป.6/4", "ส่งครบ 25/28 · ค้าง 3", "มา 26/28"]];
+    return `<section class="card h-card" aria-labelledby="h-t"><h2 id="h-t">ต้องทำ</h2><ul class="tl">${TASKS.map(taskRow).join("")}</ul></section>
+    <div class="h-rooms">${RS.map(([r, a, b]) => `<section class="card h-card h-room t-${ROOMS[r]}" aria-label="ห้อง ${r}"><h2>${ic("board", 18)} ${r}</h2><div class="stat"><span>งาน</span><b>${a}</b></div><div class="stat"><span>วันนี้</span><b>${b}</b></div></section>`).join("")}</div>`;
+  }
+  const [f, ...rest] = TASKS;
+  return `<div class="h-grid"><div><section class="card h-card h-focus" aria-labelledby="h-f"><h2 id="h-f">ถัดไป · 1 จาก ${TASKS.length}</h2><p class="h-fv">${f.h}</p><p class="muted">${f.p}</p></section>
+  <section class="card h-card" aria-labelledby="h-n" style="margin-top:12px"><h2 id="h-n">ต่อจากนี้</h2><ul class="tl">${rest.map(taskRow).join("")}</ul></section></div>${statCard()}</div>`;
+}
+
+/* ===== ปรับหน้าหลัก — การ์ด timetable ต่อโครง (D53) ===== */
+const HLAY = { a: "ก วันนี้ของครู", b: "ข แผงรายห้อง", c: "ค โฟกัสงานถัดไป" };
+const HCARDS = { a: ["ลำดับงานวันนี้", "ภาพรวมวันนี้"], b: ["ต้องทำ", "แผงรายห้อง"], c: ["ถัดไป", "ต่อจากนี้", "ภาพรวมวันนี้"] };
+function homeCust() {
+  const dis = off() ? " disabled" : "", on = S.strips[S.hlay];
+  const sw = (a, on, t, d) => `<button class="switch" role="switch" aria-checked="${on}" data-a="${a}"${dis}><span class="sw" aria-hidden="true"></span><span class="sw-t"><b>${t}</b><span class="muted">${d}</span></span></button>`;
+  return `<div class="uh"><div class="uh-l"><button class="btn icon ghost" data-a="nav" data-v="home" aria-label="กลับไปหน้าหลัก">${ic("cl", 22)}</button><div><h1 class="uh-title">ปรับหน้าหลัก</h1><p class="uh-sub">โครง ${HLAY[S.hlay]} · แต่ละโครงตั้งแยกกัน เก็บกับบัญชี</p></div></div></div>
+  ${off() ? `<p class="note">${ic("off", 18)}ออฟไลน์ — ปรับหน้าหลักได้เมื่อออนไลน์</p>` : ""}
+  <section class="card set-sec" aria-labelledby="hc-c"><h2 id="hc-c">การ์ดในหน้าหลัก</h2>
+    ${sw("tcard", on, `ตารางสอน · แถบ ตอนนี้/ต่อไป <span class="tag new">ใหม่</span>`, `${on ? "เปิดอยู่" : "ปิดอยู่"} · ใต้หัวหน้าหลัก${S.hlay === "a" ? " · คาบสอนแทรกใน “ลำดับงานวันนี้” ด้วย" : ""}`)}
+    ${HCARDS[S.hlay].map((c) => sw("ocard", true, c, "เปิดอยู่")).join("")}
+    <p class="saved" role="status">${S.saved ? ic("check", 16) + S.saved : ""}</p>
+    <p class="hint">แถบตารางสอนของแต่ละโครง: ${Object.keys(HLAY).map((k) => `${HLAY[k].split(" ")[0]} ${S.strips[k] ? "เปิด" : "ปิด"}`).join(" · ")}</p></section>`;
+}
+
+/* ===== ตั้งค่า › หน้าตา (S7) ===== */
+function thumb(k) {
+  const pat = (r, c, fill, act) => Array.from({ length: r * c }, (_, i) => `<i class="${fill.includes(i) ? "f" : act.includes(i) ? "k" : ""}"></i>`).join("");
+  if (k === "A") return `<span class="th-g" style="grid-template-columns:repeat(6,1fr)">${pat(4, 6, [1, 4, 7, 11, 14, 20], [5, 17, 23])}</span>`;
+  if (k === "B") return `<span class="th-g" style="grid-template-columns:repeat(5,1fr)">${pat(4, 5, [0, 6, 12, 8], [19])}</span><span class="th-l"></span>`;
+  return `<span class="th-big" style="display:block"></span><span class="th-row f" style="display:block"></span><span class="th-row" style="display:block"></span><span class="th-row" style="display:block"></span>`;
+}
+function settings() {
+  const dis = off() ? " disabled" : "";
+  const SK = [["warm", "อบอุ่น", "สีครีม ตัวอักษร Sarabun/Mitr"], ["pro", "มืออาชีพ", "น้ำเงินสุภาพ IBM Plex Sans Thai"], ["playful", "สดใส", "สีสด ขอบหนา Anuphan/Mali"]];
+  const OP = [["A", "ก ตารางกระดาษ", "เหมือนตารางที่โรงเรียนแจก เห็นทั้งสัปดาห์"], ["B", "ข ปฏิทิน", "แกนเวลา เห็นว่าตอนนี้ถึงคาบไหน"], ["C", "ค วันนี้เป็นหลัก", "เห็นคาบถัดไปก่อน แก้ทีละวัน"]];
+  const opt = (name, k, t, d, th, chk) => `<label class="opt"><input type="radio" name="${name}" value="${k}" data-c="${name}"${chk ? " checked" : ""}><span class="thumb" aria-hidden="true">${th}</span><span class="opt-t"><b>${t}</b><span class="on tag today">${ic("check", 14)}เลือกอยู่</span></span><span class="opt-d">${d}</span></label>`;
+  return `<div class="uh"><div class="uh-l"><span class="uh-ic">${ic("gear", 24)}</span><div><h1 class="uh-title">ตั้งค่า</h1><p class="uh-sub">ตั้งค่า › หน้าตา · เก็บกับบัญชี ใช้ทุกเครื่อง</p></div></div></div>
+  ${off() ? `<p class="note">${ic("off", 18)}ออฟไลน์ — เปลี่ยนการตั้งค่าได้เมื่อออนไลน์</p>` : ""}
+  <section class="card set-sec" aria-labelledby="st-th"><h2 id="st-th">ธีม</h2><fieldset${dis}><legend class="sr">ธีม</legend><div class="opt-grid">${SK.map(([k, t, d]) => opt("skin", k, t, d, `<span class="sw3 sk-${k}"><i style="background:var(--hero-bg)"></i><i style="background:var(--accent)"></i><i style="background:var(--surface-0)"></i></span>`, S.skin === k)).join("")}</div></fieldset></section>
+  <section class="card set-sec" aria-labelledby="st-tt"><h2 id="st-tt">ตารางสอน <span class="tag new">ใหม่</span></h2>
+    <fieldset${dis}><legend>รูปแบบหน้าตารางสอน</legend><div class="opt-grid">${OP.map(([k, t, d]) => opt("dir", k, t, d, thumb(k), S.dir === k)).join("")}</div></fieldset>
+    <div class="row-link"><span>แถบ ตอนนี้/ต่อไป ในหน้าหลัก · เปิด/ปิดแยกตามโครงหน้าหลัก</span><button class="btn ghost" data-a="nav" data-v="hcust">ตั้งแถบตารางสอนในหน้าหลัก ${ic("cr", 18)}</button></div>
+    <p class="saved" role="status">${S.saved ? ic("check", 16) + S.saved : ""}</p>
+    <div class="row-link"><span>เวลาเรียน · ${TT.periods.length} คาบต่อวัน · ${hm(TT.periods[0][0])}–${hm(TT.periods[TT.periods.length - 1][1])}</span><button class="btn" data-a="times"${off() ? ' aria-disabled="true"' : ""}>${ic("clock", 18)}ตั้งเวลาคาบ</button></div></section>`;
+}
+
+/* ===== พิมพ์ (S8) ===== */
+function paper() {
+  const sq = seq(), ds = days();
+  return `<div class="pp"><h1>ตารางสอน ภาคเรียนที่ 2 ปีการศึกษา ${ro() ? 2568 : 2569}</h1><p class="meta">${[S.names.includes("t") ? "ครูสมใจ ตัวอย่าง" : "", S.names.includes("s") ? "โรงเรียนบ้านตัวอย่าง" : "", "พิมพ์เมื่อ 13 พ.ย. 2569"].filter(Boolean).join(" · ")}</p>
+  <table><thead><tr><th class="day" scope="col">วัน / คาบ</th>${sq.map((x) => (x.k === "p" ? `<th scope="col">คาบ ${x.p}<small>${hm(x.s)}–${hm(x.e)}</small></th>` : `<th class="lun" scope="col"><span>พัก</span></th>`)).join("")}</tr></thead>
+  <tbody>${ds.map((d, r) => `<tr><th scope="row" class="day">${DAYS[d].m}</th>${sq.map((x) => { if (x.k === "b") return r === 0 ? `<td class="lun" rowspan="${ds.length}"><span>${x.name} ${hm(x.s)}–${hm(x.e)}</span></td>` : ""; const s = slot(d, x.p); return `<td>${s ? (s.kind === "class" ? `<b>${s.subj || ""} ${s.room}</b>` : `<i>กิจกรรม: ${esc(s.name)}</i>`) : ""}</td>`; }).join("")}</tr>`).join("")}</tbody></table>
+  <div class="pp-f"><span>${sumText()}</span>${ro() ? "<span>ภาคปีที่ผ่านมา</span>" : ""}</div></div>`;
+}
+function printPage() {
+  const empty = !counts().n;
+  return `<div class="uh"><div class="uh-l"><button class="btn icon ghost" data-a="nav" data-v="tt" aria-label="กลับไปตารางสอน">${ic("cl", 22)}</button><div><h1 class="uh-title">พิมพ์ตาราง</h1><p class="uh-sub">A4 แนวนอน · ขาวดำ · หน้าตาแบบ ก เสมอ ไม่ขึ้นกับรูปแบบที่เลือก</p></div></div>
+  <div class="uh-act">${empty ? '<span class="note" style="margin:0">ยังไม่มีคาบให้พิมพ์</span>' : ""}<button class="btn pri" data-a="print"${empty ? ' aria-disabled="true" data-why="ยังไม่มีคาบให้พิมพ์"' : ""}>${ic("print", 18)}พิมพ์</button></div></div>
+  <div class="paper-wrap" id="pwrap"><div class="paper" id="paper">${paper()}</div></div><p class="hint" style="margin-top:8px">ตัวอย่างย่อให้พอดีจอ · ในกล่องพิมพ์เลือก “บันทึกเป็น PDF” ได้ · ไม่มีช่องลงชื่อผู้บริหาร ไม่มีชื่อนักเรียน</p>`;
+}
+
+/* ===== overlays: S4 / S5 / S9 / menus ===== */
+const xBtn = `<button type="button" class="btn icon ghost" data-a="close" aria-label="ปิด">${ic("x", 22)}</button>`;
+function usedActs() { const u = new Set(["PLC", "ลูกเสือ", "ชุมนุม", "สวดมนต์"]); Object.values(TT.slots).forEach((s) => s.kind === "act" && u.add(s.name)); return [...u]; }
+function periodSheet() {
+  const o = S.ov, x = pAt(o.p), D = S.draft, E = S.errs, arch = D.kind === "class" && D.room && isArch(D.room), n = [...D.name].length;
+  const roomOpts = `<option value="">— เลือกห้อง —</option>` + ROOMLIST.filter((r) => !isArch(r) || (r === D.origRoom && D.room === D.origRoom)).map((r) => `<option value="${r}"${D.room === r ? " selected" : ""}>${r}${isArch(r) ? " · เก็บแล้ว" : ""}</option>`).join("");
+  const desc = [E.room ? "e-room" : "", arch ? "n-arch" : ""].filter(Boolean).join(" ");
+  const cls = `<div class="fld"><label for="f-room">ห้อง <span aria-hidden="true">*</span></label><select id="f-room" class="inp" data-c="room"${E.room ? ' aria-invalid="true"' : ""}${desc ? ` aria-describedby="${desc}"` : ""}>${roomOpts}</select>
+    ${E.room ? `<p class="ferr" id="e-room">${ic("alert", 16)}${E.room}</p>` : ""}${arch ? `<p class="hint warnt" id="n-arch">${ic("box", 16)}ห้องนี้เก็บแล้ว เลือกห้องอื่นหรือนำห้องกลับในตั้งค่า</p>` : ""}</div>
+    <div class="fld"><label for="f-subj">วิชา <span class="muted">(ไม่ระบุก็ได้)</span></label><select id="f-subj" class="inp" data-c="subj"><option value="">ไม่ระบุ</option>${SUBJECTS.map((s) => `<option${D.subj === s ? " selected" : ""}>${s}</option>`).join("")}</select></div>`;
+  const act = `<div class="fld"><label for="f-name">ชื่อกิจกรรม <span aria-hidden="true">*</span></label><input id="f-name" class="inp" data-c="name" value="${esc(D.name)}" autocomplete="off" aria-describedby="c-name${E.name ? " e-name" : ""}"${E.name ? ' aria-invalid="true"' : ""}>
+    <span id="c-name" class="hint">${n > 40 ? `เกิน ${n - 40} ตัว` : `${n}/40`}</span>${E.name ? `<p class="ferr" id="e-name">${ic("alert", 16)}${E.name}</p>` : ""}</div>
+    <div class="fld"><span class="lg" id="used-l">ที่เคยใช้</span><div class="chips" role="group" aria-labelledby="used-l">${usedActs().map((a) => `<button type="button" class="chipb" data-a="useact" data-v="${esc(a)}">${esc(a)}</button>`).join("")}</div></div>`;
+  return `<form class="dlg" data-form="period" role="dialog" aria-modal="true" aria-labelledby="dt" novalidate><div class="dlg-h"><div class="grow"><h2 id="dt">${o.edit ? "แก้คาบ" : "เพิ่มคาบ"}</h2><p>วัน${DAYS[o.d].m} · คาบ ${o.p} · ${hm(x[0])}–${hm(x[1])}</p></div>${xBtn}</div>
+  <div class="dlg-b">${S.saveErr ? `<div class="err-sum" role="alert">${ic("alert", 20)}<span class="grow">บันทึกตารางสอนไม่สำเร็จ — ข้อมูลที่กรอกยังอยู่</span><button type="submit" class="btn">ลองอีกครั้ง</button></div>` : ""}
+  <fieldset><legend>ชนิดคาบ</legend><div class="radios"><label class="rad"><input type="radio" name="kind" value="class" data-c="kind"${D.kind === "class" ? " checked" : ""}>${ic("board", 20)}สอนห้อง</label><label class="rad"><input type="radio" name="kind" value="act" data-c="kind"${D.kind === "act" ? " checked" : ""}>${ic("star", 20)}กิจกรรม</label></div></fieldset>
+  ${D.kind === "class" ? cls : act}</div>
+  <div class="dlg-f">${o.edit ? `<button type="button" class="btn danger" data-a="delslot">${ic("trash", 18)}ลบคาบนี้</button>` : ""}<span class="grow"></span><button type="button" class="btn" data-a="close">ยกเลิก</button><button type="submit" class="btn pri"${S.saving ? " disabled" : ""}>${S.saving ? "กำลังบันทึก…" : "บันทึก"}</button></div></form>`;
+}
+function cellMenu() {
+  const o = S.ov, s = slot(o.d, o.p), x = pAt(o.p);
+  let b = "";
+  if (s.kind === "class") b += isArch(s.room) ? `<p class="note">${ic("box", 18)}ห้องนี้เก็บแล้ว — ไม่มีทางลัดเช็คชื่อ</p>` : `<button class="mi" data-a="go" data-v="att" data-room="${s.room}">${ic("ucheck", 22)}เช็คชื่อ ${s.room}</button><button class="mi" data-a="go" data-v="scan" data-room="${s.room}">${ic("scan", 22)}สแกนส่งงาน ${s.room}</button>`;
+  if (editable()) b += `<button class="mi" data-a="editslot">${ic("pen", 22)}แก้คาบนี้</button>`;
+  else if (off()) b += `<p class="note">${ic("off", 18)}ออฟไลน์ — แก้ตารางสอนได้เมื่อออนไลน์</p>`;
+  return `<div class="dlg sm" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="dlg-h"><div class="grow"><h2 id="dt">${esc(lblFull(s))}</h2><p>วัน${DAYS[o.d].m} · คาบ ${o.p} · ${hm(x[0])}–${hm(x[1])}</p></div>${xBtn}</div><div class="dlg-b mlist">${b}</div></div>`;
+}
+function timeSheet() {
+  const T = S.tdraft, E = S.terrs, nE = Object.keys(E).length, n = T.periods.length;
+  const er = (k, id) => (E[k] ? `<p class="ferr" id="${id}">${ic("alert", 16)}${E[k]}</p>` : "");
+  const inv = (k, id) => (E[k] ? ` aria-invalid="true" aria-describedby="${id}"` : "");
+  return `<form class="dlg wide${phone() ? " full" : ""}" data-form="times" role="dialog" aria-modal="true" aria-labelledby="dt" novalidate><div class="dlg-h"><div class="grow"><h2 id="dt">ตั้งเวลาคาบ</h2><p>ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย</p></div>${xBtn}</div>
+  <div class="dlg-b">${nE ? `<div class="err-sum" role="alert">${ic("alert", 20)}แก้ ${nE} จุดก่อนบันทึก</div>` : ""}
+  <div class="fld"><span class="lg" id="cnt-l">จำนวนคาบต่อวัน</span><div class="cnt"><button type="button" class="btn icon" data-a="pcount" data-v="-1" aria-label="ลดจำนวนคาบ"${n <= 1 ? " disabled" : ""}>${ic("minus", 22)}</button><output aria-labelledby="cnt-l" aria-live="polite">${n}</output><button type="button" class="btn icon" data-a="pcount" data-v="1" aria-label="เพิ่มจำนวนคาบ"${n >= 8 ? " disabled" : ""}>${ic("plus", 22)}</button><span class="hint">${n >= 8 ? "ตั้งได้ 1–8 คาบ" : "1–8 คาบ"}</span></div></div>
+  <fieldset><legend>เวลาแต่ละคาบ</legend><div class="tp-list"><div class="tp-row hd" aria-hidden="true"><span></span><span>เริ่ม</span><span>ถึง</span></div>${T.periods.map((x, i) => `<div class="tp-row"><span>คาบ ${i + 1}</span><input type="time" class="inp" aria-label="เวลาเริ่มคาบ ${i + 1}" data-c="pt" data-i="${i}" data-j="0" value="${hm(x[0])}"${inv("p" + i, "pe" + i)}><input type="time" class="inp" aria-label="เวลาจบคาบ ${i + 1}" data-c="pt" data-i="${i}" data-j="1" value="${hm(x[1])}"></div>${er("p" + i, "pe" + i)}`).join("")}</div></fieldset>
+  <fieldset><legend>ช่วงพัก (ไม่เกิน 3)</legend>${T.breaks.map((b, i) => `<div class="br-row"><input class="inp bn" aria-label="ชื่อช่วงพักที่ ${i + 1}" data-c="bn" data-i="${i}" value="${esc(b.name)}"><input type="time" class="inp" aria-label="เวลาเริ่มช่วงพักที่ ${i + 1}" data-c="bt" data-i="${i}" data-j="s" value="${hm(b.s)}"${inv("b" + i, "be" + i)}><input type="time" class="inp" aria-label="เวลาจบช่วงพักที่ ${i + 1}" data-c="bt" data-i="${i}" data-j="e" value="${hm(b.e)}"><button type="button" class="btn icon" data-a="delbrk" data-v="${i}" aria-label="ลบ ${esc(b.name)}">${ic("trash", 20)}</button></div>${er("b" + i, "be" + i)}`).join("")}
+  ${T.breaks.length < 3 ? `<button type="button" class="btn" data-a="addbrk">${ic("plus", 18)}เพิ่มช่วงพัก</button>` : ""}</fieldset>
+  <fieldset><legend>วันเรียน</legend><div class="days">${DAYS.map((d, i) => `<button type="button" class="dayb" data-a="tday" data-v="${i}" aria-pressed="${!!T.days[i]}" aria-label="วัน${d.m}">${T.days[i] ? ic("check", 16) : ""}${d.s}</button>`).join("")}</div>${er("days", "de")}</fieldset></div>
+  <div class="dlg-f"><span class="grow"></span><button type="button" class="btn" data-a="close">ยกเลิก</button><button type="submit" class="btn pri">บันทึก</button></div></form>`;
+}
+function confirmDlg() {
+  const o = S.ov; let t, b = "", ok, no = "ไม่";
+  if (o.kind === "lost") { t = `จะลบ ${o.lost.length} คาบที่อยู่นอกโครงเวลาใหม่`; b = `<ul class="cl">${o.lost.map((k) => { const [d, p] = k.split("-").map(Number); return `<li>${esc(lblFull(TT.slots[k]))} (${DAYS[d].m} คาบ ${p})</li>`; }).join("")}</ul><p class="muted">ลบจากทุกภาคของปีนี้</p>`; ok = "ลบและบันทึก"; no = "ยกเลิก"; }
+  if (o.kind === "clear") { t = `ลบทั้ง ${counts().n} คาบของภาค 2/2569?`; b = `<p class="muted">โครงเวลาไม่เปลี่ยน</p>`; ok = "ลบทั้งหมด"; }
+  if (o.kind === "replace") { t = `แทนที่ ${counts().n} คาบเดิมด้วย 14 คาบจากภาค 1/2569?`; b = `<p class="muted">คาบเดิมของภาคนี้จะถูกแทนที่ทั้งหมด</p>`; ok = "แทนที่"; }
+  return `<div class="dlg sm" role="alertdialog" aria-modal="true" aria-labelledby="dt" aria-describedby="dd"><div class="dlg-h"><h2 id="dt" class="grow">${t}</h2></div><div class="dlg-b" id="dd">${b}</div><div class="dlg-f"><span class="grow"></span><button class="btn" data-a="cno">${no}</button><button class="btn pri dz" data-a="cok">${ok}</button></div></div>`;
+}
+function moreMenu() {
+  const dis = off() ? ' aria-disabled="true" data-why="ออฟไลน์ — แก้ตารางสอนได้เมื่อออนไลน์"' : "", empty = !counts().n;
+  let b = "";
+  if (phone() && !ro()) b += `<button class="mi" data-a="times"${dis}>${ic("clock", 22)}ตั้งเวลาคาบ</button>`;
+  if (phone()) b += `<button class="mi" data-a="nav" data-v="print"${empty ? ' aria-disabled="true" data-why="ยังไม่มีคาบให้พิมพ์"' : ""}>${ic("print", 22)}พิมพ์ตาราง</button>`;
+  if (!ro()) b += `<button class="mi" data-a="copy"${dis}>${ic("copy", 22)}คัดลอกจากภาค 1/2569 (14 คาบ)</button><button class="mi dz" data-a="clear"${dis || (empty ? ' aria-disabled="true" data-why="ยังไม่มีคาบให้ล้าง"' : "")}>${ic("trash", 22)}ล้างตารางภาคนี้</button>`;
+  else b += `<p class="note">${ic("lock", 18)}ภาคปีที่ผ่านมา ดูและพิมพ์ได้อย่างเดียว</p>`;
+  if (off()) b += `<p class="note">${ic("off", 18)}ออฟไลน์ — แก้ตารางสอนได้เมื่อออนไลน์</p>`;
+  return `<div class="dlg sm" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="dlg-h"><h2 id="dt" class="grow">ตารางสอน</h2>${xBtn}</div><div class="dlg-b mlist">${b}</div></div>`;
+}
+function pickDlg() {
+  const body = days().map((d) => { const em = seq().filter((x) => x.k === "p" && !slot(d, x.p)); return em.length ? `<div class="pk"><h3>วัน${DAYS[d].m}</h3><div class="chips">${em.map((x) => `<button class="chipb" data-a="pickslot" data-d="${d}" data-p="${x.p}" aria-label="วัน${DAYS[d].m} คาบ ${x.p} ${hm(x.s)} ถึง ${hm(x.e)}">คาบ ${x.p} · ${hm(x.s)}</button>`).join("")}</div></div>` : ""; }).join("");
+  return `<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="dlg-h"><div class="grow"><h2 id="dt">เพิ่มคาบ — เลือกช่องว่าง</h2><p>เลือกวันและคาบก่อน แล้วกรอกในขั้นถัดไป</p></div>${xBtn}</div><div class="dlg-b">${body || '<p class="muted">ไม่มีช่องว่างเหลือ</p>'}</div></div>`;
+}
+function navMore() {
+  const it = (k, l, i) => `<button class="mi" data-a="nav" data-v="${k}"${cur(k)}>${ic(i, 22)}${l}</button>`;
+  return `<div class="dlg sm" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="dlg-h"><h2 id="dt" class="grow">เพิ่มเติม</h2>${xBtn}</div><div class="dlg-b mlist">${it("tt", "ตารางสอน", "calb")}${it("rand", "สุ่มชื่อ", "dice")}${it("rep", "รายงาน", "chart")}${it("stu", "นักเรียน", "users")}${it("set", "ตั้งค่า", "gear")}</div></div>`;
+}
+function overlay() {
+  const o = S.ov; if (!o) return "";
+  const m = { period: periodSheet, menu: cellMenu, times: timeSheet, confirm: confirmDlg, more: moreMenu, pick: pickDlg, navmore: navMore }[o.k];
+  return `<div class="scrim" data-a="scrim">${m()}</div>`;
+}
+
+/* ===== hub ===== */
+const SIZES = { m: [390, 844, "มือถือ 390×844"], pt: [820, 1180, "iPad ตั้ง 820×1180"], pl: [1180, 820, "iPad นอน 1180×820"], d: [1536, 729, "คอม 1536×729"] };
+const GROUPS = [
+  { k: "dir", l: "รูปแบบ", o: [["A", "ก ตารางกระดาษ"], ["B", "ข ปฏิทิน"], ["C", "ค วันนี้เป็นหลัก"]], v: () => S.dir },
+  { k: "page", l: "จอ", o: [["tt", "ตารางสอน"], ["home", "หน้าหลัก"], ["hcust", "ปรับหน้าหลัก"], ["set", "ตั้งค่า › หน้าตา"], ["print", "พิมพ์"]], v: () => S.page },
+  { k: "hlay", l: "โครงหน้าหลัก", o: [["a", "ก วันนี้ของครู"], ["b", "ข แผงรายห้อง"], ["c", "ค โฟกัสงานถัดไป"]], v: () => S.hlay },
+  { k: "names", l: "ชื่อครู/โรงเรียน", o: [["ts", "กรอกทั้งคู่"], ["t", "เฉพาะชื่อครู"], ["s", "เฉพาะโรงเรียน"], ["0", "ไม่กรอก"]], v: () => S.names },
+  { k: "skin", l: "ธีม", o: [["warm", "อบอุ่น"], ["pro", "มืออาชีพ"], ["playful", "สดใส"]], v: () => S.skin },
+  { k: "time", l: "เวลาจำลอง", o: TIMES, v: () => `${S.now.d}-${S.now.t}` },
+  { k: "st", l: "สถานะ", o: STATES, v: () => S.st },
+  { k: "big", l: "ตัวอักษร", o: [["0", "ปกติ"], ["1", "ใหญ่สุด"]], v: () => (S.big ? "1" : "0") },
+  { k: "size", l: "ขนาดจำลอง", o: [["fit", "พอดีหน้าต่าง"], ["m", "390"], ["pt", "820"], ["pl", "1180"], ["d", "1536"]], v: () => S.size },
+];
+function renderHub() {
+  const hub = $("#hub");
+  hub.className = "hub" + (S.hubMin ? " min" : "");
+  hub.innerHTML = `<div class="hub-top"><h1 class="hub-title">ตารางสอน · mockup Gate 2</h1><span class="hub-sub">แถบนี้ไม่ใช่ส่วนของแอป · ข้อมูลจากตารางกระดาษจริง 14 คาบ</span><span class="hub-grow"></span>
+    <button class="hub-tog" data-h="min" aria-expanded="${!S.hubMin}">${S.hubMin ? "ตัวเลือก mockup" : "ย่อแถบนี้"}</button></div>
+    <div class="hub-groups">${GROUPS.map((g) => `<div class="hg"><span class="hg-l" id="hl-${g.k}">${g.l}</span><div class="hg-seg" role="group" aria-labelledby="hl-${g.k}">${g.o.map(([v, l]) => `<button data-h="${g.k}" data-v="${v}" aria-pressed="${g.v() === v}">${l}</button>`).join("")}</div>
+      <select data-hs="${g.k}" aria-labelledby="hl-${g.k}">${g.o.map(([v, l]) => `<option value="${v}"${g.v() === v ? " selected" : ""}>${l}</option>`).join("")}</select></div>`).join("")}</div>
+    <p class="hub-info"><b>ลองกด:</b> ช่อง “+” เพื่อเพิ่มคาบ · คาบที่มี → แก้/ลบ แล้ว “เลิกทำ” · “ตั้งเวลาคาบ” ลดเหลือ 6 คาบ → ยืนยันคาบหลุด · ตั้งค่า › หน้าตา เปลี่ยนรูปแบบ · แป้นลูกศรเดินในตาราง</p>`;
+}
+function layout() {
+  const hub = $("#hub"), stage = $("#stage"), scaler = $("#scaler"), dev = $("#device"), note = $("#note");
+  const W0 = document.documentElement.clientWidth, H0 = Math.max(400, window.innerHeight - (S.hubMin ? 0 : hub.offsetHeight));
+  if (S.size === "fit") { stage.className = "stage"; note.hidden = true; scaler.style.cssText = `width:${W0}px;height:${H0}px`; dev.style.cssText = `width:${W0}px;height:${H0}px`; }
+  else {
+    const [w, h, name] = SIZES[S.size], s = Math.min(1, (W0 - 40) / w, (H0 - 72) / h);
+    stage.className = "stage framed"; note.hidden = false; note.textContent = `${name} · ย่อเหลือ ${Math.round(s * 100)}% ให้พอดีหน้าต่าง`;
+    scaler.style.cssText = `width:${w * s}px;height:${h * s}px`; dev.style.cssText = `width:${w}px;height:${h}px;transform:scale(${s})`;
+  }
+}
+
+/* ===== render ===== */
+function render() {
+  renderHub(); layout();
+  const app = $("#app"), m0 = app.querySelector(".main"), keep = m0 ? m0.scrollTop : 0, hadOv = !!app.querySelector(".scrim");
+  app.dataset.skin = S.skin; app.classList.toggle("big", S.big);
+  I = info();
+  const page = S.page === "home" ? home() : S.page === "hcust" ? homeCust() : S.page === "set" ? settings() : S.page === "print" ? printPage() : tt();
+  app.innerHTML = `<div class="shell">${rail()}<main class="main" id="main">${page}</main>${tabbar()}</div>${overlay()}${S.toast ? `<div class="toast" role="status" id="toast"><span>${S.toast.msg}</span>${S.toast.undo ? '<button class="btn" data-a="undo">เลิกทำ</button>' : ""}</div>` : ""}`;
+  const m = app.querySelector(".main"); m.scrollTop = S._top != null ? S._top : keep; S._top = null;
+  $("#print-root").innerHTML = `<div class="paper">${paper()}</div>`;
+  post(hadOv);
+}
+function post(hadOv) {
+  const app = $("#app");
+  app.querySelectorAll('[role="grid"]').forEach((g) => { const t = (S.gfocus && g.querySelector(`[role="gridcell"][data-d="${S.gfocus.d}"][data-p="${S.gfocus.p}"]`)) || g.querySelector('[role="gridcell"][data-d]'); if (t) t.tabIndex = 0; });
+  if (S.ov) {
+    const sel = S.dlgFocus; S.dlgFocus = null;
+    if (sel || !hadOv) { const t = (sel && app.querySelector(`.scrim :is(${sel})`)) || app.querySelector(".scrim .dlg :is(input:not([type=radio]),input:checked,select,button:not([disabled]))"); if (t) t.focus(); }
+  } else if (S.focusCell) {
+    const { d, p } = S.focusCell; S.focusCell = null;
+    const t = app.querySelector(`#main [data-d="${d}"][data-p="${p}"]`);
+    if (t) { if (t.getAttribute("role") === "gridcell") { t.closest('[role="grid"]').querySelectorAll('[role="gridcell"]').forEach((c) => (c.tabIndex = -1)); t.tabIndex = 0; } t.focus(); }
+  } else if (S.focusSel) { const t = app.querySelector(S.focusSel); S.focusSel = null; if (t) t.focus(); }
+  if (S.hubFocus) { const t = document.querySelector(S.hubFocus); S.hubFocus = null; if (t && t.offsetParent) t.focus(); }
+  const w = $("#pwrap"); if (w) { const s = Math.min(1, w.clientWidth / 1123); $("#paper").style.transform = `scale(${s})`; w.style.height = 794 * s + "px"; }
+  const ts = $("#toast"); if (ts) { ts.onmouseenter = ts.onfocusin = () => clearTimeout(tT); ts.onmouseleave = ts.onfocusout = arm; }
+}
+
+/* ===== actions ===== */
+let tT = null;
+function arm() { clearTimeout(tT); tT = setTimeout(() => { S.toast = null; S.undo = null; render(); }, 5000); }
+function toast(msg, undo) { S.toast = { msg, undo: !!undo }; render(); arm(); }
+function doUndo() { if (!S.undo) return; S.undo(); S.undo = null; S.toast = null; clearTimeout(tT); announce("เลิกทำแล้ว"); render(); }
+function closeOv() { const o = S.ov; S.ov = null; S.errs = {}; S.saveErr = false; S.saving = false; if (o && (o.k === "period" || o.k === "menu") && S.ret) S.focusCell = S.ret; else if (S.retSel) S.focusSel = S.retSel; render(); }
+function openPeriod(d, p) {
+  const s = TT.slots[`${d}-${p}`]; S.ret = { d, p }; S.errs = {}; S.saveErr = false; S.saving = false;
+  S.draft = s ? { kind: s.kind, room: s.room || S.last.room, subj: s.kind === "class" ? s.subj : S.last.subj, name: s.name || "", origRoom: s.room || null }
+    : { kind: "class", room: S.last.room, subj: S.last.subj, name: "", origRoom: null };
+  S.ov = { k: "period", d, p, edit: !!s }; S.dlgFocus = 'input[name="kind"]:checked';
+}
+function activate(d, p) {
+  const s = slot(d, p); S.gfocus = { d, p };
+  if (s) { if (ro()) return; S.ov = { k: "menu", d, p }; S.ret = { d, p }; render(); }
+  else if (editable()) { openPeriod(d, p); render(); }
+}
+function savePeriod() {
+  const D = S.draft, o = S.ov, E = {};
+  if (D.kind === "class" && !D.room) E.room = "เลือกห้อง";
+  if (D.kind === "act") { const n = [...D.name.trim()].length; if (!n) E.name = "ใส่ชื่อกิจกรรม"; else if (n > 40) E.name = "ไม่เกิน 40 ตัวอักษร"; }
+  S.errs = E;
+  if (Object.keys(E).length) { S.dlgFocus = E.room ? "#f-room" : "#f-name"; render(); return; }
+  if (S.st === "fail" && !S.saveErr) { S.saving = true; render(); setTimeout(() => { S.saving = false; S.saveErr = true; S.dlgFocus = ".err-sum .btn"; render(); }, 700); return; }
+  const k = `${o.d}-${o.p}`;
+  TT.slots[k] = D.kind === "class" ? { kind: "class", room: D.room, subj: D.subj } : { kind: "act", name: D.name.trim() };
+  if (D.kind === "class") S.last = { room: D.room, subj: D.subj };
+  S.ov = null; S.saveErr = false; S.focusCell = { d: o.d, p: o.p }; S.gfocus = { d: o.d, p: o.p };
+  announce("บันทึกคาบแล้ว"); render();
+}
+function deleteSlot(d, p) {
+  const k = `${d}-${p}`, prev = TT.slots[k]; if (!prev) return;
+  delete TT.slots[k]; S.ov = null; S.focusCell = { d, p }; S.gfocus = { d, p };
+  S.undo = () => { TT.slots[k] = prev; S.focusCell = { d, p }; };
+  toast(`ลบคาบ ${esc(lblFull(prev))} (${DAYS[d].m} คาบ ${p}) แล้ว`, true);
+}
+function saveTimes() {
+  const T = S.tdraft, E = {};
+  T.periods.forEach((x, i) => { if (!(x[1] > x[0])) E["p" + i] = "เวลาจบต้องหลังเวลาเริ่ม"; else if (i > 0 && x[0] < T.periods[i - 1][1]) E["p" + i] = `คาบ ${i + 1} ต้องเริ่มหลังคาบ ${i} จบ (${hm(T.periods[i - 1][1])})`; });
+  T.breaks.forEach((b, i) => { if (!(b.e > b.s)) E["b" + i] = "เวลาจบต้องหลังเวลาเริ่ม"; else { const j = T.periods.findIndex((x) => b.s < x[1] && x[0] < b.e); if (j >= 0) E["b" + i] = `พักทับคาบ ${j + 1} (${hm(T.periods[j][0])}–${hm(T.periods[j][1])})`; } });
+  if (!T.days.some(Boolean)) E.days = "เลือกวันเรียนอย่างน้อย 1 วัน";
+  S.terrs = E;
+  if (Object.keys(E).length) { S.dlgFocus = '[aria-invalid="true"],[data-a="tday"]'; render(); return; }
+  const lost = Object.keys(TT.slots).filter((k) => { const [d, p] = k.split("-").map(Number); return p > T.periods.length || !T.days[d]; });
+  if (lost.length) { S.ov = { k: "confirm", kind: "lost", lost }; render(); return; }
+  applyTimes([]);
+}
+function applyTimes(lost) {
+  const T = S.tdraft; lost.forEach((k) => delete TT.slots[k]);
+  TT.periods = T.periods; TT.breaks = T.breaks; TT.days = T.days; S.ov = null;
+  if (!TT.days[S.day]) S.day = days()[0];
+  S.focusSel = S.retSel; toast("บันทึกเวลาคาบแล้ว · เวลาเข้าเรียนในตั้งค่าเปลี่ยนตาม");
+}
+function doCopy() { const prev = TT.slots; TT.slots = clone(BASE); S.ov = null; S.undo = () => (TT.slots = prev); toast("คัดลอก 14 คาบแล้ว", true); }
+function setState(v) {
+  const prev = S.st; if (prev === v) return;
+  if (prev === "empty" && S.backup) { TT.slots = S.backup; S.backup = null; }
+  if (prev === "conflict") delete TT.slots["1-4"];
+  S.st = v; S.ov = null;
+  if (v === "empty") { S.backup = TT.slots; TT.slots = {}; }
+  if (v === "conflict") TT.slots["1-4"] = { kind: "class", room: "ป.6/3", subj: "คณิตศาสตร์", isNew: true };
+}
+function saved() { S.saved = "บันทึกแล้ว"; render(); setTimeout(() => { S.saved = ""; const e = $(".saved"); if (e) e.textContent = ""; }, 2500); }
+const PAGES = { scan: "สแกน", att: "เช็คชื่อ", rand: "สุ่มชื่อ", grade: "คะแนน", rep: "รายงาน", stu: "นักเรียน" };
+const ACT = {
+  nav(v) { S.ov = null; if (PAGES[v]) { toast(`ไปหน้า${PAGES[v]} (ตัวอย่าง — ไม่อยู่ใน mockup นี้)`); return; } S.page = v; S._top = 0; render(); },
+  navmore() { S.ov = { k: "navmore" }; S.retSel = '[data-a="navmore"]'; render(); },
+  cell(v, el) { activate(+el.dataset.d, +el.dataset.p); },
+  day(v) { S.day = +v; S.focusSel = `[data-a="day"][data-v="${v}"]`; render(); },
+  dstep(v) { const ds = days(); S.day = ds[(ds.indexOf(S.day) + +v + ds.length) % ds.length]; S.focusSel = `[data-a="dstep"][data-v="${v}"]`; render(); },
+  bview(v) { S.bview = v; S.focusSel = `[data-a="bview"][data-v="${v}"]`; render(); },
+  pick() { S.ov = { k: "pick" }; S.ret = null; S.retSel = '[data-a="pick"]'; render(); },
+  pickslot(v, el) { openPeriod(+el.dataset.d, +el.dataset.p); S.ret = null; render(); },
+  times() { S.tdraft = { periods: clone(TT.periods), breaks: clone(TT.breaks), days: [...TT.days] }; S.terrs = {}; S.retSel = S.page === "set" ? '[data-a="times"]' : '#main [data-a="times"], [data-a="more"]'; S.ov = { k: "times" }; S.dlgFocus = '[data-a="pcount"]:not([disabled])'; render(); },
+  more() { S.ov = { k: "more" }; S.retSel = '[data-a="more"]'; render(); },
+  close() { closeOv(); }, scrim() { closeOv(); },
+  useact(v) { S.draft.name = v; S.errs = {}; S.dlgFocus = "#f-name"; render(); },
+  delslot() { deleteSlot(S.ov.d, S.ov.p); },
+  editslot() { const o = S.ov; openPeriod(o.d, o.p); render(); },
+  go(v, el) { const r = el.dataset.room || ""; S.ov = null; toast(v === "att" ? `เปิดหน้าเช็คชื่อ ${r} ของวันนี้ (ตัวอย่าง)` : `เปิดหน้าสแกนส่งงาน ${r} (ตัวอย่าง)`); },
+  pcount(v) { const P = S.tdraft.periods; if (+v > 0 && P.length < 8) { const e = P[P.length - 1][1]; P.push([e, e + 60]); } else if (+v < 0 && P.length > 1) P.pop(); S.dlgFocus = `[data-a="pcount"][data-v="${v}"]:not([disabled]),[data-a="pcount"]:not([disabled])`; render(); },
+  addbrk() { const P = S.tdraft.periods, e = P[P.length - 1][1]; S.tdraft.breaks.push({ name: "พัก", s: e, e: e + 15 }); S.dlgFocus = `[data-c="bn"][data-i="${S.tdraft.breaks.length - 1}"]`; render(); },
+  delbrk(v) { S.tdraft.breaks.splice(+v, 1); S.dlgFocus = '[data-a="addbrk"]'; render(); },
+  tday(v) { S.tdraft.days[+v] = S.tdraft.days[+v] ? 0 : 1; S.dlgFocus = `[data-a="tday"][data-v="${v}"]`; render(); },
+  cok() { const o = S.ov; if (o.kind === "lost") applyTimes(o.lost); else if (o.kind === "clear") { const prev = TT.slots, n = counts().n; TT.slots = {}; S.ov = null; S.undo = () => (TT.slots = prev); toast(`ลบทั้ง ${n} คาบแล้ว`, true); } else doCopy(); },
+  cno() { if (S.ov.kind === "lost") { S.ov = { k: "times" }; S.dlgFocus = '[data-a="pcount"]'; render(); } else closeOv(); },
+  copy() { if (counts().n) { S.ov = { k: "confirm", kind: "replace" }; render(); } else doCopy(); },
+  clear() { S.ov = { k: "confirm", kind: "clear" }; render(); },
+  print() { window.print(); },
+  undo() { doUndo(); },
+  tcard() { S.strips[S.hlay] = !S.strips[S.hlay]; S.focusSel = '[data-a="tcard"]'; saved(); },
+  ocard() { toast("การ์ดนี้ใช้การปรับหน้าหลักเดิม (ไม่อยู่ใน mockup นี้)"); },
+  st(v) { setState(v); render(); },
+  pastfold() { S.pastOpen = !S.pastOpen; S.focusSel = '[data-a="pastfold"]'; render(); },
+};
+function hubAct(k, v) {
+  if (k === "min") { S.hubMin = !S.hubMin; S.hubFocus = '[data-h="min"]'; render(); return; }
+  if (k === "dir") S.dir = v; else if (k === "page") { S.page = v; S.ov = null; S._top = 0; } else if (k === "skin") S.skin = v; else if (k === "hlay") S.hlay = v; else if (k === "names") S.names = v;
+  else if (k === "time") { const [d, t] = v.split("-").map(Number); S.now = { d, t }; S.day = TT.days[d] ? d : nextSchool(d); }
+  else if (k === "st") setState(v); else if (k === "big") S.big = v === "1"; else if (k === "size") S.size = v;
+  S.hubFocus = `[data-h="${k}"][data-v="${v}"]`; render();
+}
+document.addEventListener("click", (e) => {
+  const h = e.target.closest("[data-h]"); if (h) { hubAct(h.dataset.h, h.dataset.v); return; }
+  const el = e.target.closest("#app [data-a]"); if (!el) return;
+  if (el.dataset.a === "scrim" && e.target !== el) return;
+  if (el.getAttribute("aria-disabled") === "true") { toast(el.dataset.why || "ออฟไลน์ — แก้ตารางสอนได้เมื่อออนไลน์"); return; }
+  if (el.closest("form") && el.type === "submit") return;
+  const f = ACT[el.dataset.a]; if (f) { e.preventDefault(); f(el.dataset.v, el, e); }
+});
+document.addEventListener("change", (e) => {
+  const el = e.target, c = el.dataset && el.dataset.c;
+  if (!c) { if (el.dataset && el.dataset.hs) hubAct(el.dataset.hs, el.value); return; }
+  if (c === "kind") { S.draft.kind = el.value; S.errs = {}; S.dlgFocus = el.value === "class" ? "#f-room" : "#f-name"; announce(el.value === "class" ? "ชนิดสอนห้อง" : "ชนิดกิจกรรม"); render(); }
+  else if (c === "room") { S.draft.room = el.value; S.errs = {}; S.dlgFocus = "#f-room"; render(); }
+  else if (c === "subj") S.draft.subj = el.value;
+  else if (c === "term") { setState(el.value === "2/2568" ? "old" : "ok"); S.focusSel = "#term"; render(); }
+  else if (c === "pt") S.tdraft.periods[+el.dataset.i][+el.dataset.j] = toM(el.value);
+  else if (c === "bt") S.tdraft.breaks[+el.dataset.i][el.dataset.j] = toM(el.value);
+  else if (c === "dir" || c === "skin") { S[c] = el.value; S.focusSel = `[data-c="${c}"][value="${el.value}"]`; saved(); }
+});
+document.addEventListener("input", (e) => {
+  const el = e.target, c = el.dataset && el.dataset.c;
+  if (c === "name") { S.draft.name = el.value; const n = [...el.value].length, cn = $("#c-name"); if (cn) cn.textContent = n > 40 ? `เกิน ${n - 40} ตัว` : `${n}/40`; }
+  if (c === "bn") S.tdraft.breaks[+el.dataset.i].name = el.value;
+});
+document.addEventListener("submit", (e) => { e.preventDefault(); const f = e.target.dataset.form; if (f === "period") savePeriod(); else if (f === "times") saveTimes(); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && S.ov) { e.preventDefault(); closeOv(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && S.undo && !/INPUT|SELECT/.test(e.target.tagName)) { e.preventDefault(); doUndo(); return; }
+  if (e.key === "Tab" && S.ov) {
+    const f = [...document.querySelectorAll(".scrim .dlg :is(button:not([disabled]),input,select)")].filter((x) => x.offsetParent && !(x.type === "radio" && !x.checked));
+    if (!f.length) return; const i = f.indexOf(document.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    return;
+  }
+  const c = e.target.closest && e.target.closest('[role="gridcell"][data-d]'); if (!c) return;
+  const g = c.closest('[role="grid"]'), cells = [...g.querySelectorAll('[role="gridcell"][data-d]')];
+  const d = +c.dataset.d, p = +c.dataset.p, rows = g.dataset.ax === "rows";
+  const ds = [...new Set(cells.map((x) => +x.dataset.d))], ps = [...new Set(cells.map((x) => +x.dataset.p))].sort((a, b) => a - b);
+  const di = ds.indexOf(d), pi = ps.indexOf(p), cl = (a, i) => a[Math.max(0, Math.min(a.length - 1, i))];
+  let nd = d, np = p; const k = e.key;
+  if (k === "ArrowRight") rows ? (np = cl(ps, pi + 1)) : (nd = cl(ds, di + 1));
+  else if (k === "ArrowLeft") rows ? (np = cl(ps, pi - 1)) : (nd = cl(ds, di - 1));
+  else if (k === "ArrowDown") rows ? (nd = cl(ds, di + 1)) : (np = cl(ps, pi + 1));
+  else if (k === "ArrowUp") rows ? (nd = cl(ds, di - 1)) : (np = cl(ps, pi - 1));
+  else if (k === "Home") { np = ps[0]; if (e.ctrlKey) nd = ds[0]; }
+  else if (k === "End") { np = ps[ps.length - 1]; if (e.ctrlKey) nd = ds[ds.length - 1]; }
+  else if (k === "Enter" || k === " ") { e.preventDefault(); if (c.dataset.a) activate(d, p); return; }
+  else if ((k === "Delete" || k === "Backspace") && editable() && slot(d, p)) { e.preventDefault(); deleteSlot(d, p); return; }
+  else return;
+  e.preventDefault();
+  const t = g.querySelector(`[role="gridcell"][data-d="${nd}"][data-p="${np}"]`);
+  if (t) { cells.forEach((x) => (x.tabIndex = -1)); t.tabIndex = 0; t.focus(); S.gfocus = { d: nd, p: np }; }
+});
+window.addEventListener("resize", () => render());
+render();
+</script>
+</body>
+</html>

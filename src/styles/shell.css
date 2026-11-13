@@ -43,45 +43,46 @@
 .shell { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); min-height: 100%; }
 
 .rail {
-  background: var(--surface-2);
-  border-right: 0.5px solid var(--border);
+  background: var(--rail-bg); color: var(--rail-fg); /* the dark menu column, in every skin and mode (mockup) */
   display: flex; flex-direction: column; gap: 2px;
-  padding: 10px 6px;
+  padding: 8px 6px;
   position: sticky; top: 0; height: 100vh; height: 100dvh;
   overflow-y: auto; overflow-x: hidden; /* a very large text size on a short screen scrolls the menu instead of clipping it */
   container: rail / size; scrollbar-width: thin;
 }
 .rail-logo {
-  flex: none; width: 2.67rem; height: 2.67rem; border-radius: 11px; margin: 0 auto 8px;
-  background: var(--accent); color: var(--on-accent);
+  flex: none; width: 2.67rem; height: 2.67rem; border-radius: 11px; margin: 0 auto 4px;
+  background: var(--rail-active-bg); color: var(--rail-active-fg);
   display: flex; align-items: center; justify-content: center;
 }
 /* the four groups of the day: today · in the room · after class · manage */
 .rail-gl {
-  font-size: var(--fs-xs); color: var(--text-muted); text-align: center; white-space: nowrap; line-height: 1.3;
-  padding: 8px 0 2px; margin-top: 4px; border-top: 0.5px solid var(--border);
+  font-size: var(--fs-xs); color: var(--rail-label); text-align: center; white-space: nowrap; line-height: 1.3;
+  padding: 5px 0 1px; margin-top: 3px; border-top: 0.5px solid color-mix(in srgb, var(--rail-label) 40%, transparent);
 }
 .rail-group:first-of-type .rail-gl { border-top: none; margin-top: 0; padding-top: 2px; }
 /* not enough height for the headings (large text on a short screen): keep the divider, drop the words */
-@container rail (max-height: calc(18rem + 426px)) {
+@container rail (max-height: calc(26rem + 240px)) {
   .rail-gl { height: 0; padding: 0; margin-top: 8px; overflow: hidden; } /* the divider stays (its border), the words are clipped */
 }
 .rail-item {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   width: 100%; min-height: var(--tap); height: auto; padding: 6px 2px; font-size: var(--fs-xs); line-height: 1.25; white-space: nowrap;
-  color: var(--text-secondary); text-align: center;
+  color: var(--rail-fg); text-align: center;
   border-radius: var(--radius-sm); border: none; background: transparent; cursor: pointer;
   text-decoration: none;
 }
-@media (pointer: fine) { .rail-item { min-height: 0; padding: 5px 2px; } }
+@media (pointer: fine) { .rail-item { min-height: 0; padding: 3px 2px; } }
 /* icons elsewhere grow with the text size; here they stay 24px, or the menu (9 items) is taller than an iPad in landscape at size 24 */
 .rail-item > i { font-size: min(1.6rem, var(--rail-icon)) !important; }
-.rail-item:hover { background: var(--surface-1); }
-/* the current page: tint + a 3px bar (the tint alone is only 1.15:1 against the rail) */
-.rail-item.on { background: var(--bg-accent); color: var(--text-accent); font-weight: 500; }
-.rail-item.on::before { content: ""; position: absolute; left: -6px; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: var(--accent); }
-.rail-spacer { flex: 1; }
-.rail-sync { display: flex; justify-content: center; padding: 4px 0 6px; }
+.rail :focus-visible { outline-color: var(--rail-active-bg); } /* the accent can disappear on the dark column */
+.rail-item:hover { background: color-mix(in srgb, var(--rail-fg) 14%, transparent); }
+/* the current page: a solid light tile (a shape, not only a colour) + a 3px bar on the edge */
+.rail-item.on { background: var(--rail-active-bg); color: var(--rail-active-fg); font-weight: 500; }
+.rail-item.on::before { content: ""; position: absolute; left: -6px; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: var(--rail-active-bg); }
+.rail > * { flex-shrink: 0; } /* a short screen scrolls the menu; items never squash into each other (AC-29) */
+.rail-spacer { flex: 1 0 0; }
+.rail-sync { display: flex; justify-content: center; padding: 2px 0 2px; }
 .rail-sync .sync { font-size: var(--fs-xs); padding: 2px 4px; flex-direction: column; gap: 0; white-space: normal; text-align: center; max-width: 100%; overflow-wrap: anywhere; }
 
 .main { min-width: 0; padding: 20px 24px 40px; }
@@ -159,7 +160,7 @@
 @media (max-width: 720px) { .toast-stack { bottom: calc(76px + env(safe-area-inset-bottom)); } }
 
 /* mobile bottom-sheet menu */
-.sheet-overlay { position: fixed; inset: 0; z-index: 160; background: rgba(10,14,22,0.45); display: flex; align-items: flex-end; }
+.sheet-overlay { position: fixed; inset: 0; z-index: 160; background: var(--scrim); display: flex; align-items: flex-end; }
 .menu-sheet {
   width: 100%; background: var(--surface-2); border-radius: 16px 16px 0 0;
   padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 2px;

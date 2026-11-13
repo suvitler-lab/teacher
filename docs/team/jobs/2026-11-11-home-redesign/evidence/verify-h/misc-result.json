@@ -1,0 +1,65 @@
+{
+ "7102": {
+  "swRegistrations": 1,
+  "file": "ตัวอย่างรายชื่อ.xlsx",
+  "bytes": 6794,
+  "zip": true
+ },
+ "7106": {
+  "failedBefore": 2,
+  "failedAfter": 2,
+  "fontPrefAfterClear": null,
+  "localKeysBefore": 7,
+  "sections": {
+   "backup": "ตั้งค่า | ตั้งค่า",
+   "worktypes": "ตั้งค่า | ตั้งค่า",
+   "catalog&tab=types": "ตั้งค่า | ตั้งค่า",
+   "devices": "ตั้งค่า | ตั้งค่า",
+   "danger": "ตั้งค่า | ตั้งค่า",
+   "nonsense": "ตั้งค่า | ตั้งค่า"
+  }
+ },
+ "7107.control(students, names shown)": 78,
+ "7107.hideBtn": "ซ่อนชื่อ",
+ "7107.after-hide": {
+  "home": 14,
+  "scan": 1,
+  "attendance": 78,
+  "random": 0,
+  "gradebook": 59,
+  "reports": 59,
+  "students": 1
+ },
+ "7304.print-hide": {
+  "attendance": {
+   "names": 78,
+   "chars": 1659
+  },
+  "gradebook": {
+   "names": 59,
+   "chars": 4690
+  },
+  "reports": {
+   "names": 59,
+   "chars": 4167
+  },
+  "students": {
+   "names": 1,
+   "chars": 2136
+  }
+ },
+ "7305.session": "[]",
+ "7305.opener": "เริ่มภาคเรียนใหม่",
+ "7305.modal(projector on)": {
+  "dialog": true,
+  "primary": [
+   "เริ่มภาคเรียน 2/2569:disabled=true"
+  ],
+  "active": "INPUT:number:autofocus=true",
+  "note": ""
+ },
+ "7305.after-close": {
+  "dialog": false,
+  "active": "BUTTON:เริ่มภาคเรียนใหม่"
+ }
+}

@@ -1,0 +1,120 @@
+{
+ "base": "http://127.0.0.1:6402",
+ "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);return 'ok'})()",
+ "devices": [
+  {
+   "name": "mobile",
+   "w": 390,
+   "h": 844,
+   "dpr": 3,
+   "touch": true
+  },
+  {
+   "name": "ipad-portrait",
+   "w": 820,
+   "h": 1180,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "ipad-landscape",
+   "w": 1180,
+   "h": 820,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "desktop",
+   "w": 1536,
+   "h": 729,
+   "dpr": 2,
+   "touch": false
+  }
+ ],
+ "pages": [
+  {
+   "name": "tt-a-warm-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','warm');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='warm'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-a-warm-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','warm');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='warm'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-a-pro-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','pro');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='pro'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-a-pro-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','pro');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='pro'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-a-playful-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','playful');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='playful'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-a-playful-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','playful');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','a');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='playful'&&!!document.querySelector('.tt-page[data-tt-layout=a]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-warm-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','warm');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='warm'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-warm-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','warm');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='warm'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-pro-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','pro');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='pro'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-pro-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','pro');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='pro'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-playful-light",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','playful');await w(500);pick('ap-mode','light');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='playful'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  },
+  {
+   "name": "tt-b-playful-dark",
+   "path": "/?now=2026-11-11T09:46#/timetable",
+   "setup": "(async()=>{const w=x=>new Promise(r=>setTimeout(r,x));const go=async h=>{location.hash=h;await w(900)};await go('#/settings?section=appearance');for(let i=0;i<60&&!document.querySelector('input[name=ap-skin]');i++)await w(100);const pick=(n,v)=>{const e=document.querySelector('input[name=\"'+n+'\"][value=\"'+v+'\"]');if(e&&!e.checked)e.click()};pick('ap-skin','playful');await w(500);pick('ap-mode','dark');await w(500);pick('ap-timetable','b');await w(500);pick('ap-layout','a');await w(1800);await go('#/timetable');return [document.documentElement.dataset.skin,document.querySelector('input[name=ap-timetable]:checked')?.value].join()})()",
+   "ready": "document.documentElement.dataset.skin==='playful'&&!!document.querySelector('.tt-page[data-tt-layout=b]')",
+   "wait": 7000
+  }
+ ]
+}

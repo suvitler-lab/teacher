@@ -1,18 +1,35 @@
 /* งานครบ · home page (menu + home redesign, round 1). Sizes in rem / var(--fs-*) so the text-size setting scales it all. */
-/* 600 is only for the four big numbers (400/500 come with base.css) */
-@import "@fontsource/ibm-plex-sans-thai/600.css";
+/* fonts come from the skin (lib/fonts.ts loads the weights each skin needs): no font file is imported here */
 
-/* header extras */
-.hm-sep::before { content: "·"; margin-right: 8px; }
 .hm-ell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hm .uh-act .hm-hide.on { background: var(--bg-warning); color: var(--text-warning); border-color: var(--border-warning); }
+.hm-greet { font-size: 1.27rem; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+
+/* the top bar: the same place in ก ข ค. date / term as text on the left, term picker + hide names + "ปรับหน้าหลัก" on the right */
+.hm-top { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; margin-bottom: 12px; min-height: var(--tap); }
+.hm-top-l { display: flex; align-items: center; gap: 4px 10px; flex-wrap: wrap; min-width: 0; font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
+.hm-top-l > span + span::before { content: "·"; margin-right: 10px; }
+.hm-top-l > .hm-chip::before { content: none; margin: 0; }
+.hm-top-act { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.hm-top-act button.ghost { min-height: var(--tap); min-width: var(--tap); }
+.hm-top-act .pill { min-height: var(--tap); }
+.hm-top .hm-hide.on { background: var(--bg-warning); color: var(--text-warning); border-color: var(--border-warning); }
 @media (max-width: 720px) {
   .hm-btn-t { display: none; }            /* phone: icon only (they keep their aria-label) */
-  .hm .uh-act button.ghost { width: 2.53rem; padding: 0; }
+  .hm-top-school, .hm-top-term { display: none; }
+  .hm-top-l > span + span::before { content: none; margin: 0; }
   /* term picker + two icon buttons stay on one line; the picker gives way */
-  .hm .uh-act { width: 100%; flex-wrap: nowrap; }
-  .hm .uh-act .pill { flex: 1 1 auto; min-width: 0; }
-  .hm .uh-act .pill select { min-width: 0; width: 100%; text-overflow: ellipsis; }
+  .hm-top { flex-wrap: nowrap; }
+  .hm-top-l { flex: 0 1 auto; }
+  .hm-top-act { flex: 1 1 auto; flex-wrap: nowrap; justify-content: flex-end; min-width: 0; }
+  .hm-top-act button.ghost { width: var(--tap); padding: 0; flex: none; }
+  .hm-top-act .pill { flex: 1 1 auto; min-width: 0; }
+  .hm-top-act .pill select { min-width: 0; width: 100%; text-overflow: ellipsis; }
+  /* T-73 B-7: the term chip (picker + gear) with the two icon buttons takes the first line so "ภาคเรียนที่ 2/2569" shows whole;
+     the date (one line, never broken) sits under it */
+  .hm-top { flex-wrap: wrap; gap: 4px 4px; }
+  .hm-top-act { order: 1; flex: 1 1 100%; gap: 4px; }
+  .hm-top-l { order: 2; flex: 1 1 100%; }
+  .hm-top-date { white-space: nowrap; }
 }
 
 /* status labels: icon + words */
@@ -63,7 +80,7 @@ button.hm-chipbtn.muted { color: var(--text-primary); }
 .hm-action .s { font-size: var(--fs-xs); color: var(--text-secondary); line-height: 1.3; }
 .hm-action.primary { background: var(--accent); border-color: transparent; color: var(--on-accent); }
 .hm-action.primary:hover { background: var(--accent-hover); }
-.hm-action.primary .ic { background: rgba(255, 255, 255, 0.18); color: var(--on-accent); }
+.hm-action.primary .ic { background: color-mix(in srgb, var(--on-accent) 18%, transparent); color: var(--on-accent); }
 .hm-action.primary .s { color: inherit; opacity: 1; }
 
 .hm-resume { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; margin-bottom: 12px; border-radius: var(--radius); background: var(--bg-accent); color: var(--text-accent); border: 0.5px solid var(--border-accent); }
@@ -143,3 +160,36 @@ button.hm-cls-main:hover { background: var(--surface-2); }
 .hm-skel { height: 1em; border-radius: 6px; margin: 6px 0; background: linear-gradient(90deg, var(--surface-1), var(--border), var(--surface-1)); }
 .hm-skel.big { height: 1.6em; }
 .hm-slow { text-align: center; padding: 12px 0; }
+/* the grey shape of each layout while loading (AC-11): hero + list + side cards (ก) · panels (ข) · focus + next (ค) */
+.hm-skel-hero { min-height: 8rem; margin-bottom: 12px; }
+.hm-skel-cols, .hm-skel-focus { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
+.hm-skel-panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.hm-skel-card { min-height: 6rem; }
+@media (min-width: 1100px) {
+  .hm-skel-cols { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+  .hm-skel-focus { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
+  .hm-skel-hero { margin-bottom: 0; }
+}
+@media (max-width: 820px) { .hm-skel-panels { grid-template-columns: minmax(0, 1fr); } }
+
+/* "ปรับหน้าหลัก": the layout choice (real radios) and the link to ตั้งค่า > หน้าตา */
+.hm-lay { border: 0; padding: 0; margin: 0 0 8px; min-width: 0; }
+.hm-lay-l { font-size: var(--fs-sm); color: var(--text-secondary); padding: 0; margin-bottom: 4px; }
+.hm-lay-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.hm-lay-opt { position: relative; display: flex; flex-direction: column; gap: 2px; min-height: var(--tap); padding: 8px 10px; border: 0.5px solid var(--border-control); border-radius: var(--radius); background: var(--surface-2); cursor: pointer; line-height: 1.5; min-width: 0; }
+.hm-lay-opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.hm-lay-opt .t { font-weight: 500; }
+.hm-lay-opt .s { font-size: var(--fs-xs); color: var(--text-secondary); overflow-wrap: anywhere; }
+.hm-lay-opt.on { border: 2px solid var(--text-accent); background: var(--bg-accent); padding: 7.5px 9.5px; }
+.hm-lay-opt:focus-within { outline: 3px solid var(--text-accent); outline-offset: 2px; }
+.hm-pref-link { margin-top: 8px; }
+.hm-pref-link .lk { font-size: var(--fs-sm); color: var(--text-accent); background: none; border: none; cursor: pointer; padding: 0 8px; margin-left: -8px; min-height: var(--tap); border-radius: 8px; text-align: left; }
+.hm-pref-link .lk:hover { background: var(--surface-1); }
+
+/* the "ปรับหน้าหลัก" panel is page content: every control is a 44 px target (AC-38); an end-of-list arrow stays focusable but looks off */
+.hm-pref .mv button.icon, .hm-pref .switch { min-width: var(--tap); min-height: var(--tap); }
+.hm-pref .mv button[aria-disabled="true"] { opacity: 0.4; cursor: default; }
+
+/* T-75 (R-4706): a very long work title takes two lines at most (CSS clamp, not a cut string: the DOM and screen readers keep the
+   whole title, the title attribute shows it on hover/long-press) */
+.hm-asg .ttl, .hma-due-h .ttl, .sc-asg .ttl { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; max-width: 100%; min-width: 0; }

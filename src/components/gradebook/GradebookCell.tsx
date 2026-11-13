@@ -2,7 +2,6 @@ import type { Assignment, Student } from "@shared/types";
 import type { WorkState } from "@shared/metrics";
 import { Icon } from "../Icon";
 import { WorkCell } from "../ui";
-import { fullName } from "../../lib/names";
 import { CellInput } from "./CellInput";
 import { memoShallow } from "./memo";
 import type { CellMark } from "./matrix";
@@ -43,17 +42,22 @@ export interface GradebookCellProps {
   isSel: boolean;
   /** the digit typed on the cell, handed to the input (only while editing) */
   seed: string | null;
+  /** who the cell is about, as spoken: the full name, or "เลขที่ 3" while names are hidden */
+  who: string;
+  /** why this device's edit was refused (Thai, from FAIL_REASON) */
+  reason?: string;
 }
 
 const STATE_TEXT: Record<WorkState, string> = { scored: "มีคะแนน", late: "ส่งช้า", awaiting: "รับงานแล้ว รอตรวจ", missing: "ค้างส่ง", pending: "ยังไม่ถึงกำหนด", excused: "ยกเว้น" };
 const MARK_TEXT: Record<"pend" | "fail" | "unsaved", string> = { pend: " · รอส่งขึ้นระบบ", fail: " · ส่งไม่สำเร็จ", unsaved: " · ยังไม่ได้บันทึก" };
 
-function CellView({ h, a, st, row, state, score, mark, isEditing, isFoc, showMore, isSel, seed }: GradebookCellProps) {
+function CellView({ h, a, st, row, state, score, mark, isEditing, isFoc, showMore, isSel, seed, who, reason }: GradebookCellProps) {
   const aid = a.id, sid = st.id;
-  const markText = mark ? MARK_TEXT[mark] : "";
+  const markText = (mark ? MARK_TEXT[mark] : "") + (mark === "fail" && reason ? `: ${reason}` : "");
   return (
     <td data-aid={aid} data-sid={sid} tabIndex={isEditing ? -1 : isFoc ? 0 : -1} onFocus={(e) => { if (e.target === e.currentTarget) h.current.focus(aid, sid); }}
-      aria-label={`${fullName(st)} · ${a.title} · ${a.publish_scores ? score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"} · ${STATE_TEXT[state]}${markText}`}
+      title={mark === "fail" && reason ? `ส่งไม่สำเร็จ: ${reason}` : undefined}
+      aria-label={`${who} · ${a.title} · ${a.publish_scores ? score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"} · ${STATE_TEXT[state]}${markText}`}
       onKeyDown={(e) => h.current.key(e, a, sid, row, isEditing)} class={"cell" + (isSel ? " sel" : "")}
       onPointerDown={(e) => h.current.pointerDown(e, aid, sid)} onPointerUp={() => h.current.endHold()} onPointerLeave={() => h.current.endHold()} onPointerCancel={() => h.current.endHold()}
       onClick={(e) => h.current.click(e, aid, sid, isEditing)}>

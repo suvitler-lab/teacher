@@ -1,0 +1,16 @@
+/* ธีมสดใส · fonts (Anuphan + Mali) + Phosphor fill. Loaded only when this skin is chosen (D45). */
+@import "@fontsource/anuphan/thai-400.css";
+@import "@fontsource/anuphan/latin-400.css";
+@import "@fontsource/anuphan/thai-500.css";
+@import "@fontsource/anuphan/latin-500.css";
+@import "@fontsource/anuphan/thai-600.css";
+@import "@fontsource/anuphan/latin-600.css";
+@import "@fontsource/anuphan/thai-700.css";
+@import "@fontsource/anuphan/latin-700.css";
+@import "@fontsource/mali/thai-500.css";
+@import "@fontsource/mali/latin-500.css";
+@import "@fontsource/mali/thai-600.css";
+@import "@fontsource/mali/latin-600.css";
+@import "@fontsource/mali/thai-700.css";
+@import "@fontsource/mali/latin-700.css";
+@import "@phosphor-icons/web/fill";

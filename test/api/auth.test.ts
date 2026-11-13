@@ -9,12 +9,12 @@ describe("auth & setup", () => {
   it("health works without auth", async () => {
     const res = await call("/api/health");
     expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ ok: true, schema: 6 });
+    expect(await res.json()).toMatchObject({ ok: true, schema: 7 });
   });
 
   it("health says whether the database is there and the secrets are set — never their values", async () => {
     const body = (await (await call("/api/health")).json()) as any;
-    expect(body).toMatchObject({ ok: true, db: { reachable: true, schema: 6, schemaOk: true }, config: { pepper: true, setupCode: true } });
+    expect(body).toMatchObject({ ok: true, db: { reachable: true, schema: 7, schemaOk: true }, config: { pepper: true, setupCode: true } });
     expect(JSON.stringify(body)).not.toContain("test-pepper");
     expect(JSON.stringify(body)).not.toContain("test-code");
   });

@@ -1,0 +1,766 @@
+{
+ "job": "2026-11-12-timetable",
+ "round": "final-v2",
+ "total": 148,
+ "viewed": 16,
+ "notViewed": 132,
+ "script_measures": {
+  "1536x729": {
+   "stripH": 54,
+   "pageScroll": false,
+   "smallFont": 0
+  },
+  "1180x820": {
+   "stripH": 54,
+   "pageScroll": false,
+   "smallFont": 0
+  },
+  "390x844": {
+   "stripH": 139,
+   "dotsMenuKeyboard": "Enter opens, focus first item, ArrowDown moves, Escape closes and refocuses dots",
+   "smallFont": 0
+  }
+ },
+ "images": [
+  {
+   "image": "home-a-playful-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-a-playful-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-playful-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-dark-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-a-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-pro-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-warm-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-warm-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-warm-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-warm-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-a-warm-light-1180x820.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-a-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-a-warm-light-390x844.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-a-warm-light-820x1180.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-b-playful-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-playful-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-pro-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-b-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-b-warm-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-playful-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-pro-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "home-c-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "home-c-warm-light-820x1180.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "homeclk-a-fri1540-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1540-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1540-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1540-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1730-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1730-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "homeclk-a-fri1730-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-fri1730-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-sat1000-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-sat1000-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-sat1000-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-sat1000-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-wed1200-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-wed1200-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "homeclk-a-wed1200-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-a-wed1200-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-b-fri1730-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-b-fri1730-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-b-fri1730-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-b-fri1730-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-c-fri1730-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-c-fri1730-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-c-fri1730-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "homeclk-c-fri1730-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-playful-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-playful-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-playful-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-playful-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-pro-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "settings-appearance-scroll-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-scroll-warm-light-820x1180.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "settings-appearance-top-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-top-warm-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-top-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-appearance-top-warm-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-playful-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-playful-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-playful-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-playful-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-pro-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "settings-time-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "settings-time-warm-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-playful-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-light-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-pro-light-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-dark-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-dark-1536x729.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-dark-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-dark-820x1180.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-light-1180x820.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-light-1536x729.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  },
+  {
+   "image": "tt-c-warm-light-390x844.png",
+   "viewed": false,
+   "verdict": "NOT viewed (turn budget) - no verdict"
+  },
+  {
+   "image": "tt-c-warm-light-820x1180.png",
+   "viewed": true,
+   "verdict": "viewed: no clipped/overlap seen; known low issues V-50/V-51"
+  }
+ ]
+}

@@ -1,0 +1,56 @@
+{
+ "LF24-tt-a-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-tt-c-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-frame-sheet-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-slot-sheet-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 80>1 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-home-a-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [
+   "span..r-only \"ตอนนี้ คาบ 2 ถึง 10:\" 788>1 clip",
+   "span..r-only \"เหลือ 3 อย่างที่ต้อง\" 252>1 clip",
+   "h3 \"คาบ 2 · คณิตศาสตร์ ป\" 26>19 clip"
+  ],
+  "small": [],
+  "contrastN": 0
+ },
+ "LF24-set-time-warm-light-390x844": {
+  "rootFont": "24px",
+  "hscroll": false,
+  "clip": [],
+  "small": [],
+  "contrastN": 0
+ }
+}

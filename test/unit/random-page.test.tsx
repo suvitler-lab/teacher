@@ -45,7 +45,7 @@ beforeEach(async () => {
   await kvSet(`random:c1:${bkkToday()}`, []); // the day's history lives in device storage between tests
 });
 
-const draw = async () => { await act(async () => { fireEvent.click(screen.getByRole("button", { name: /สุ่มเลย/ })); }); };
+const draw = async () => { await act(async () => { fireEvent.click(screen.getByRole("button", { name: /สุ่ม(เลย|คนต่อไป)/ })); }); };
 const body = () => document.body.textContent ?? "";
 
 describe("random-name page", () => {
@@ -53,7 +53,7 @@ describe("random-name page", () => {
     render(h(RandomPage, {}));
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
     await draw();
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), settle);
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), settle);
     const shown = document.querySelector(".rnd-name")!.textContent!;
     expect(shown).not.toContain("เด็ก4");              // the absent child is never drawn
   });
@@ -64,23 +64,23 @@ describe("random-name page", () => {
     expect(await screen.findByText(/วันนี้ยังไม่ได้เช็คชื่อห้องนี้/)).toBeTruthy();
     // the way on is in the reason bar AND in the empty stage
     expect(screen.getAllByRole("button", { name: "ไปเช็คชื่อ" }).length).toBe(2);
-    expect(screen.getByRole("button", { name: /สุ่มเลย/ }).hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button", { name: /สุ่ม(เลย|คนต่อไป)/ }).hasAttribute("disabled")).toBe(true);
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /ใช้ทั้งห้อง \(4\)/ })); });
-    await waitFor(() => expect(screen.getByRole("button", { name: /สุ่มเลย/ }).hasAttribute("disabled")).toBe(false));
+    await waitFor(() => expect(screen.getByRole("button", { name: /สุ่ม(เลย|คนต่อไป)/ }).hasAttribute("disabled")).toBe(false));
   });
 
   it("the extra cards (timer, skip, range, pair, group options) are off until the teacher turns them on", async () => {
     render(h(RandomPage, {}));
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
     for (const t of ["จับเวลาตอบ", "ข้ามคนนี้", "สุ่มเฉพาะเลขที่", "สุ่ม 2 คน"]) expect(body()).not.toContain(t);
-    expect(body()).toContain("เรียกแล้ว 0");          // the history and options cards are on by default
+    expect(body()).toContain("สุ่มแล้ว (0)");          // the history and options cards are on by default
     expect(body()).toContain("ไม่ซ้ำจนครบ");
   });
 
   it("the card drawer lists every card with a switch", async () => {
     render(h(RandomPage, {}));
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "ปรับการ์ด" })); });
-    for (const t of ["เรียกแล้ว", "ตัวเลือก", "จับเวลาตอบ", "ข้าม / เลิกทำ", "ช่วงเลขที่", "จับคู่", "ตัวเลือกกลุ่ม"]) {
+    for (const t of ["สุ่มแล้ว", "ยังไม่ถูกสุ่ม", "ตัวเลือก", "จับเวลาตอบ", "ข้าม / เลิกทำ", "ช่วงเลขที่", "จับคู่", "ตัวเลือกกลุ่ม"]) {
       expect(screen.getByRole("switch", { name: `แสดงการ์ด ${t}` })).toBeTruthy();
     }
     expect(screen.getByRole("switch", { name: "แสดงการ์ด จับเวลาตอบ" }).getAttribute("aria-checked")).toBe("false");
@@ -91,9 +91,9 @@ describe("random-name page", () => {
     render(h(RandomPage, {}));
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
     await draw();
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), settle);
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), settle);
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /เลิกทำครั้งล่าสุด/ })); });
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 0"));
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (0)"));
   });
 
   it("with pairs on, a draw shows two children as 'A คู่กับ B'", async () => {
@@ -105,7 +105,7 @@ describe("random-name page", () => {
     // two cards side by side with "คู่กับ" between them
     await waitFor(() => expect(document.querySelectorAll(".rnd-pair").length).toBe(2), settle);
     expect(document.querySelector(".rnd-pairs")!.textContent).toContain("คู่กับ");
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 2"));
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (2)"));
   });
 
   it("the number range keeps the draw to numbers x to y", async () => {
@@ -118,7 +118,7 @@ describe("random-name page", () => {
     // the children who came are numbers 1, 2 and 3: only 3 is inside the range
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (1)"));
     await draw();
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), settle);
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), settle);
     expect(document.querySelector(".rnd-name")!.textContent).toContain("เด็ก3");
   });
 
@@ -140,13 +140,13 @@ describe("random-name page", () => {
     render(h(RandomPage, {}));
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
     await draw();
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), settle);
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), settle);
     const who = document.querySelector(".rnd-name")!.textContent!;
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /ข้ามคนนี้/ })); });
     expect(document.querySelector(".rnd-name")!.textContent).toBe(`ข้าม ${who} แล้ว`);
     expect((screen.getByRole("button", { name: /ข้ามคนนี้/ }) as HTMLButtonElement).disabled).toBe(true);
     await waitFor(() => expect(document.querySelector(".rnd-name")!.textContent).not.toContain("ข้าม"), settle);
-    await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), settle);
+    await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), settle);
     expect(document.querySelector(".rnd-name")!.textContent).not.toBe(who); // "skip" really moves on to somebody else
   }, 25000); // two draws, each rolls for a few seconds
 
@@ -162,7 +162,7 @@ describe("random-name page", () => {
     for (const n of [1, 2, 3]) expect(text).toContain(`${n} `);
     expect(text).not.toMatch(/(^|\s)4 /);
     // the leader has a star AND the word for a screen reader (not a star character alone)
-    expect(groups[0].querySelector(".ti-star")).toBeTruthy();
+    expect(groups[0].querySelector("[data-icon=\"star\"]")).toBeTruthy();
     expect(groups[0].textContent).toContain("หัวหน้า");
   });
 
@@ -196,7 +196,7 @@ describe("random-name page · design", () => {
   it("the 'only those who came' chip on the stage is a button that switches to the whole room and back", async () => {
     render(h(RandomPage, {}));
     await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
-    const stage = within(document.querySelector(".rnd-stage") as HTMLElement);
+    const stage = within(document.querySelector(".rnd-hero") as HTMLElement);
     await act(async () => { fireEvent.click(stage.getByRole("button", { name: /เฉพาะคนที่มา \(3\)/, pressed: true })); });
     expect(stage.getByRole("button", { name: /ทั้งห้อง \(4\)/, pressed: false })).toBeTruthy();
   });
@@ -211,8 +211,8 @@ describe("random-name page · design", () => {
       const live = document.querySelector(".sr-only[role=status]")!;
       expect(live.textContent).toBe("");
       await draw();
-      await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), { timeout: 2000 });
-      expect(live.textContent).toMatch(/^สุ่มได้ เด็ก\d ทดสอบ/);
+      await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), { timeout: 2000 });
+      expect(live.textContent).toMatch(/^สุ่มได้ เลขที่ \d เด็ก\d ทดสอบ/);
     } finally { restore(); }
   });
 
@@ -223,10 +223,10 @@ describe("random-name page · design", () => {
       await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
       for (let i = 1; i <= 3; i++) {
         await draw();
-        await waitFor(() => expect(body()).toContain(`เรียกแล้ว ${i}`), { timeout: 2000 });
+        await waitFor(() => expect(body()).toContain(`สุ่มแล้ว (${i})`), { timeout: 2000 });
       }
-      expect(body()).toContain("เรียกครบทุกคนแล้ว (3) — สุ่มครั้งถัดไปเริ่มรอบใหม่");
-      expect(body()).toContain("เหลือ 0 คน");
+      expect(body()).toContain("สุ่มครบทุกคนแล้ว (3) — สุ่มครั้งถัดไปเริ่มรอบใหม่");
+      expect(body()).toContain("สุ่มแล้ว (3) · เหลือ 0");
     } finally { restore(); }
   });
 
@@ -256,11 +256,11 @@ describe("random-name page · design", () => {
       await waitFor(() => expect(body()).toContain("เฉพาะคนที่มา (3)"));
       await act(async () => { fireEvent.click(screen.getByRole("button", { name: "10 วิ" })); });
       await draw();
-      await waitFor(() => expect(body()).toContain("เรียกแล้ว 1"), { timeout: 2000 });
+      await waitFor(() => expect(body()).toContain("สุ่มแล้ว (1)"), { timeout: 2000 });
       await waitFor(() => expect(Number(screen.getByRole("timer").textContent!.replace(/\D/g, ""))).toBeLessThan(10), { timeout: 3500 });
-      expect(screen.getByRole("button", { name: /หยุด/ })).toBeTruthy(); // it is running
+      expect(screen.getAllByRole("button", { name: /หยุด/ }).length).toBeGreaterThan(0); // it is running (the card and the stage shortcut)
       // time is up after the ten seconds: a word, not only a colour
-      await waitFor(() => expect(screen.getByText("หมดเวลา")).toBeTruthy(), { timeout: 12000 });
+      await waitFor(() => expect(screen.getAllByText("หมดเวลา").length).toBeGreaterThan(0), { timeout: 12000 });
       expect(screen.getByRole("button", { name: /เริ่มจับเวลา/ })).toBeTruthy();
     } finally { restore(); }
   }, 25000);
@@ -280,7 +280,7 @@ describe("random-name page · design", () => {
     const follows = (a: string, b: string) => !!(document.getElementById(a)!.compareDocumentPosition(document.getElementById(b)!) & Node.DOCUMENT_POSITION_FOLLOWING);
     expect(follows("rnd-hist-h", "rnd-opts-h")).toBe(true);
     first.unmount();
-    l = moveLayoutCard(l, "opts", -1);
+    l = moveLayoutCard(moveLayoutCard(l, "opts", -1), "opts", -1); // default order is hist, left, opts: two steps up
     settings.value = baseSettings({ random_cards: serializeLayout(l) });
     render(h(RandomPage, {}));
     await waitFor(() => expect(document.getElementById("rnd-opts-h")).toBeTruthy());

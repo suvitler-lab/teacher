@@ -74,7 +74,7 @@ describe("gradebook column heads (A: tint head)", () => {
     const head = await screen.findByRole("columnheader", { name: /^ใบงาน: ใบงาน 1/ });
     const span = head.querySelector(".hs > span")!;
     expect(span.textContent).toBe("เต็ม 105 ม.ค.");   // full score 10, then the calendar icon, then "5 ม.ค."
-    expect(span.querySelector("i.ti-calendar-event")).toBeTruthy(); // the due day (5 Jan 2020) has passed: the icon says so
+    expect(span.querySelector("i[data-icon='calendar-event']")).toBeTruthy(); // the due day (5 Jan 2020) has passed: the icon says so
     expect(span.classList.contains("over")).toBe(true);
     expect(head.querySelector(".hs2")!.textContent).toMatch(/^ส่งแล้ว \d+\/\d+$/); // third line, shown on touch screens
     const none = screen.getByRole("columnheader", { name: /^แบบฝึกหัด: แบบฝึกหัด 1/ });
@@ -87,9 +87,9 @@ describe("gradebook column heads (A: tint head)", () => {
     const closed = screen.getByRole("columnheader", { name: /^แบบฝึกหัด: แบบฝึกหัด 1/ });
     expect(closed.classList.contains("closed")).toBe(true);
     expect(closed.classList.contains("x")).toBe(true);
-    expect(closed.querySelector(".hd-corner i.ti-lock")).toBeTruthy();
+    expect(closed.querySelector(".hd-corner i[data-icon='lock']")).toBeTruthy();
     expect(closed.querySelector(".hd-corner .hs-eye.off")).toBeTruthy();   // scores hidden -> crossed eye
-    expect(head.querySelector("i.ti-lock")).toBeNull();
+    expect(head.querySelector("i[data-icon='lock']")).toBeNull();
     expect(head.classList.contains("sel") && head.classList.contains("x")).toBe(true);   // the first column is the picked one: its eye shows
     fireEvent.click(closed);
     expect(head.classList.contains("sel") || head.classList.contains("x")).toBe(false);  // not picked, scores showing, open: nothing in the corner (the CSS keeps its eye hidden)

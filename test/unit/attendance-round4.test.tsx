@@ -18,7 +18,7 @@ import { route } from "@client/router";
 import { draftAll, draftUpdate } from "@client/lib/idb";
 import { stopAttSync } from "@client/lib/attSync";
 import { defaultPageLayout } from "@client/lib/pageCards";
-import { moveLayoutCard, serializeLayout, toggleLayoutCard, type CardLayout } from "@client/lib/cardLayout";
+import { moveLayoutCard, serializeLayout, type CardLayout } from "@client/lib/cardLayout";
 import { projectorOn } from "@client/lib/projector";
 
 const kid = (n: number): Student => ({
@@ -108,7 +108,7 @@ describe("the five status buttons", () => {
 describe("cards follow the order saved in 'ปรับการ์ด'", () => {
   it("the cards beside the children (to do / away) are drawn in the saved order", async () => {
     let l = defaultPageLayout("attendance") as never as CardLayout<string>;
-    l = toggleLayoutCard(toggleLayoutCard(l, "todo"), "away");
+    // T-43: todo and away are on from the start (AC-90/91)
     // default order: ... todo, away
     settings.value = baseSettings({ attendance_cards: serializeLayout(l) });
     const first = render(h(AttendancePage, {}));

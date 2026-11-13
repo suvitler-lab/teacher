@@ -70,17 +70,18 @@ describe("the save bar", () => {
     expect(bar()).toBeNull();
   });
 
-  it("the theme saves at once with an undo, and a failed save goes back to the old theme", async () => {
+  it("the light/dark choice lives in the appearance section (not in ทั่วไป): saved at once, and a failed save goes back to the old mode", async () => {
     render(<SettingsPage />);
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
-    fireEvent.click(screen.getByRole("button", { name: "มืด" }));
+    expect(screen.queryByRole("radio", { name: "มืด" })).toBeNull(); // AC-44: no duplicate in "ทั่วไป"
+    goTo("หน้าตา");
+    fireEvent.click(await screen.findByRole("radio", { name: "มืด" }));
     await waitFor(() => expect(put).toHaveBeenCalledWith("/api/settings", { theme: "dark" }));
     expect(bar()).toBeNull();
-    await waitFor(() => expect(notify).toHaveBeenCalledWith("success", "บันทึกแล้ว · ธีม: มืด", expect.anything()));
 
     put.mockRejectedValueOnce(new Error("offline"));
-    fireEvent.click(screen.getByRole("button", { name: "สว่าง" }));
-    await waitFor(() => expect(err).toHaveBeenCalledWith("บันทึกธีมไม่สำเร็จ — ยังเป็นค่าเดิม"));
+    fireEvent.click(screen.getByRole("radio", { name: "สว่าง" }));
+    await screen.findByText("บันทึกหน้าตาไม่สำเร็จ — ยังเป็นค่าเดิม");
     expect(settings.value!.theme).toBe("dark");
   });
 });
@@ -91,7 +92,7 @@ describe("wide-screen layout", () => {
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
     expect(document.querySelector(".set-page.pg")).not.toBeNull();
     const forms = document.querySelector(".set-forms")!;
-    expect(forms.querySelectorAll(":scope > section.card")).toHaveLength(2);
+    expect(forms.querySelectorAll(":scope > section.card")).toHaveLength(1); // the device card moved to ตรวจเครื่องและออฟไลน์ (T-55)
     expect(forms.querySelector(".set-savebar, .set-banner")).toBeNull();
   });
 });
@@ -100,27 +101,74 @@ describe("headings, labels and notices", () => {
   it("section titles are h2, the side menu is labelled and marks the current section", async () => {
     render(<SettingsPage />);
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
-    for (const n of ["ข้อมูลโรงเรียน", "การแสดงผลบนเครื่องนี้"]) expect(screen.getByRole("heading", { level: 2, name: new RegExp(n) })).toBeTruthy();
+    for (const n of ["ข้อมูลโรงเรียน"]) expect(screen.getByRole("heading", { level: 2, name: new RegExp(n) })).toBeTruthy();
     const nav = screen.getByRole("navigation", { name: "หมวดตั้งค่า" });
-    expect(within(nav).getAllByRole("button")).toHaveLength(7);
-    expect(within(nav).getByRole("button", { name: /ทั่วไป/ }).getAttribute("aria-current")).toBe("page");
+    expect(within(nav).getAllByRole("button")).toHaveLength(12); // 8 + ประเภทงาน (T-54) + ความเป็นส่วนตัวและเสียง, ตรวจเครื่องและออฟไลน์ (T-55) + เริ่มใหม่ (T-56)
+    expect(within(nav).getByRole("button", { name: "ประเภทงาน" })).toBeTruthy();
+    expect(within(nav).getByRole("button", { name: /ภาพรวม/ }).getAttribute("aria-current")).toBe("page");
+    expect(within(nav).getByRole("button", { name: "ห้องเรียน วิชา ภาคเรียน" })).toBeTruthy(); // AC-48 (was "ข้อมูลพื้นฐาน")
+    expect(within(nav).queryByRole("button", { name: /ข้อมูลพื้นฐาน/ })).toBeNull();
+    expect(screen.queryByRole("heading", { level: 2, name: /การแสดงผลบนเครื่องนี้/ })).toBeNull(); // moved out of the overview (T-55)
+    expect(within(nav).getByRole("button", { name: "ความเป็นส่วนตัวและเสียง" })).toBeTruthy();
+    expect(within(nav).getByRole("button", { name: "ตรวจเครื่องและออฟไลน์" })).toBeTruthy();
     goTo("เวลาเรียน");
     expect(within(nav).getByRole("button", { name: /เวลาเรียน/ }).getAttribute("aria-current")).toBe("page");
     expect(screen.getByRole("heading", { level: 2, name: /เวลาเรียน/ })).toBeTruthy();
     expect(screen.getByText("ทุกเครื่อง")).toBeTruthy();                           // the time section is synced to every device
   });
 
-  it("the backup section shows the personal-data notice, the stale warning with its button, and red clear-data buttons", async () => {
+  it("?section=catalog opens the catalog section, titled ห้องเรียน วิชา ภาคเรียน", async () => {
+    route.value = "/settings?section=catalog";
+    render(<SettingsPage />);
+    expect(await screen.findByRole("heading", { level: 2, name: /ห้องเรียน วิชา ภาคเรียน/ })).toBeTruthy();
+  });
+
+  it("an unknown ?section= falls back to ทั่วไป instead of an empty page (R-3203)", async () => {
+    route.value = "/settings?section=look";
+    render(<SettingsPage />);
+    expect(await screen.findByRole("heading", { level: 2, name: /ข้อมูลโรงเรียน/ })).toBeTruthy();
+    expect(within(screen.getByRole("navigation", { name: "หมวดตั้งค่า" })).getByRole("button", { name: /ภาพรวม/ }).getAttribute("aria-current")).toBe("page");
+  });
+
+  it("the link to หน้าตา is not under the 'เครื่องนี้เท่านั้น' card (R-3208)", async () => {
+    render(<SettingsPage />);
+    await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
+    const row = screen.getByRole("button", { name: /ย้ายไป หน้าตา/ });
+    expect(row.closest("section.card")).toBeNull();
+    expect(row.closest(".set-moved")).not.toBeNull();
+  });
+
+  it("ทั่วไป keeps a link to the look instead of the text-size control", async () => {
+    render(<SettingsPage />);
+    await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
+    expect(screen.queryByLabelText("เพิ่มขนาดตัวอักษร")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /ย้ายไป หน้าตา/ }));
+    expect(await screen.findByRole("heading", { level: 2, name: "หน้าตา" })).toBeTruthy();
+  });
+
+  it("the backup section shows the personal-data notice, the stale warning with its button, and NO clear-data buttons (they moved to the red section, AC-245)", async () => {
     settings.value = base({ last_backup_at: String(Date.now() - 20 * 86_400_000) });
     render(<SettingsPage />);
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
-    goTo("สำรองข้อมูล");
+    goTo("สำรองและกู้คืน");
     const note = await screen.findByRole("note");
     expect(note.textContent).toContain("ข้อมูลส่วนบุคคลของนักเรียน");
     expect(note.textContent).toContain("อย่าส่งทาง LINE");
     expect(screen.getByRole("button", { name: "สำรองเลย" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /ล้างข้อมูล/ }).className).toContain("dan");
-    expect(screen.getByRole("heading", { level: 2, name: /เริ่มใหม่/ })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /^(ล้างข้อมูล|ล้างทั้งหมด)/ })).toBeNull();
+    expect(screen.queryByRole("heading", { level: 2, name: /เริ่มใหม่/ })).toBeNull();
+  });
+
+  it("the red section is last and holds both clear buttons", async () => {
+    settings.value = base();
+    render(<SettingsPage />);
+    await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
+    const items = within(screen.getByRole("navigation", { name: "หมวดตั้งค่า" })).getAllByRole("button");
+    expect(items[items.length - 1].textContent).toContain("เริ่มใหม่");
+    goTo("เริ่มใหม่");
+    expect(await screen.findByRole("heading", { level: 2, name: /เริ่มใหม่/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /^ล้างข้อมูล/ }).className).toContain("dz-btn");
+    expect(screen.getByRole("button", { name: /ล้างทั้งหมด/ }).className).toContain("dz-btn");
   });
 
   it("the stale-backup dot has words for a screen reader", async () => {
@@ -134,9 +182,10 @@ describe("headings, labels and notices", () => {
   it("password fields have labels", async () => {
     render(<SettingsPage />);
     await screen.findByRole("heading", { level: 1, name: "ตั้งค่า" });
-    goTo("อุปกรณ์และรหัสผ่าน");
+    goTo("บัญชีและอุปกรณ์");
     fireEvent.click(await screen.findByRole("button", { name: /เปลี่ยนรหัสผ่าน/ }));
-    expect(screen.getByLabelText("รหัสเดิม")).toBeTruthy();
-    expect(screen.getByLabelText(/รหัสใหม่/)).toBeTruthy();
+    expect(screen.getByLabelText("รหัสผ่านเดิม")).toBeTruthy();
+    expect(screen.getByLabelText("รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)")).toBeTruthy();
+    expect(screen.getByLabelText("ยืนยันรหัสผ่านใหม่")).toBeTruthy();
   });
 });

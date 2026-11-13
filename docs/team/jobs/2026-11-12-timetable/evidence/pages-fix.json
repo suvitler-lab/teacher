@@ -1,0 +1,882 @@
+{
+ "_": "งาน 2026-11-12-timetable · QA เฟส 3 · หน้า/สถานะที่ถ่าย after × 4 อุปกรณ์ (context.md §อุปกรณ์เป้าหมาย: มือถือ 390x844 · iPad ตั้ง 820x1180 · iPad นอน 1180x820 · คอม 1536x729) · fixture: node scripts/fixture-server.cjs --timetable --port <พอร์ตที่ PM ให้> (มีแล้ว: ชุด F-T1+F-T4 · ชุด F-T0/T2–T3/T5–T11 ยังไม่มี → variant ที่ fixture อื่นรอ Build) · ข้อมูลสมมติเท่านั้น (fixtures.md) · pages = route จริงจาก src/app.tsx (#/timetable #/ · ตั้งค่า #/settings?section=…) — ยืนยันแล้วจากโค้ด 2026-11-13 · _variants = ชุดที่ต้องถ่ายเพิ่ม (shots.mjs ยังไม่อ่านฟิลด์นี้ Full-Stack เติม setup ตอน Build) · now = ค่า ?now= ของ fixture (G1) · ผลที่คาดของนาฬิกา K = test-plan.md §4",
+ "base": "http://127.0.0.1:5010",
+ "devices": [
+  {
+   "name": "mobile",
+   "w": 390,
+   "h": 844,
+   "dpr": 3,
+   "touch": true
+  },
+  {
+   "name": "ipad-portrait",
+   "w": 820,
+   "h": 1180,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "ipad-landscape",
+   "w": 1180,
+   "h": 820,
+   "dpr": 2,
+   "touch": true
+  },
+  {
+   "name": "desktop",
+   "w": 1536,
+   "h": 729,
+   "dpr": 2,
+   "touch": false
+  }
+ ],
+ "beforeAll": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));for(let i=0;i<100&&!document.querySelector('input[type=email]')&&!document.querySelector('nav');i++)await w(100);const e=document.querySelector('input[type=email]');if(!e)return 'already';const set=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));};set(e,'fixture@example.com');set(document.querySelector('input[type=password]'),'FixturePassword2026');await w(400);[...document.querySelectorAll('button')].find(b=>/^\\s*เข้าสู่ระบบ\\s*$/.test(b.textContent))?.click();for(let i=0;i<150&&document.querySelector('input[type=password]');i++)await w(100);return 'ok'})()",
+ "pages": [
+  {
+   "name": "tt-a-pro-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-a-pro-dark",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-pro-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"dark\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-a-warm-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-warm-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"warm\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-a-warm-dark",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-warm-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"warm\"]');await w(300);c('input[name=\"ap-mode\"][value=\"dark\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-a-playful-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-playful-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"playful\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-a-playful-dark",
+   "path": "/?now=2026-11-11T09:45&pg=tt-a-playful-dark#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"playful\"]');await w(300);c('input[name=\"ap-mode\"][value=\"dark\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-b-pro-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-b-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"b\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-c-pro-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-c-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"c\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n \n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-frame-pro-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-frame-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n const mb=[...document.querySelectorAll('button')].find(b=>/ตั้งเวลาคาบ/.test(b.textContent)&&b.offsetParent);if(mb)mb.click();else{document.querySelector('button[aria-label^=\"เมนูเพิ่มเติม\"]').click();await w(300);[...document.querySelectorAll('[role=menuitem]')].find(b=>/ตั้งเวลาคาบ/.test(b.textContent)).click();}await w(800);\n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  },
+  {
+   "name": "tt-menu-pro-light",
+   "path": "/?now=2026-11-11T09:45&pg=tt-menu-pro-light#/settings?section=appearance",
+   "setup": "(async()=>{const w=t=>new Promise(r=>setTimeout(r,t));location.hash=\"#/settings?section=appearance\";for(let i=0;i<100&&!document.querySelector('input[name=\"ap-skin\"]');i++)await w(100);\n const c=(s)=>{const e=document.querySelector(s);if(e&&!e.checked)e.click();};\n c('input[name=\"ap-skin\"][value=\"pro\"]');await w(300);c('input[name=\"ap-mode\"][value=\"light\"]');await w(300);c('input[name=\"ap-timetable\"][value=\"a\"]');await w(1500);\n location.hash=\"#/timetable\";for(let i=0;i<100&&!document.querySelector('.tt-page[data-tt-layout]');i++)await w(100);await w(500);\n document.querySelector('button[aria-label^=\"เมนูเพิ่มเติม\"]')?.click();await w(500);\n localStorage.removeItem('ngankrob-font-size');return true})()",
+   "ready": "!!document.querySelector('.tt-page')&&!document.querySelector('input[type=password]')",
+   "wait": 900
+  }
+ ],
+ "_variants": {
+  "timetable_layout_theme_mode": [
+   {
+    "name": "timetable-a-1-light",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-a-1-dark",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-a-2-light",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-a-2-dark",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-a-3-light",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-a-3-dark",
+    "page": "timetable",
+    "timetable": "ก ตารางกระดาษ",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-1-light",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-1-dark",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-2-light",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-2-dark",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-3-light",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-b-3-dark",
+    "page": "timetable",
+    "timetable": "ข ปฏิทินแกนเวลา",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-1-light",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-1-dark",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-2-light",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-2-dark",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-3-light",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   },
+   {
+    "name": "timetable-c-3-dark",
+    "page": "timetable",
+    "timetable": "ค วันนี้เป็นหลัก",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45"
+   }
+  ],
+  "home_layout_theme_mode": [
+   {
+    "name": "home-a-1-light",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-a-1-dark",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-a-2-light",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-a-2-dark",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-a-3-light",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-a-3-dark",
+    "page": "home",
+    "layout": "ก วันนี้ของครู",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-1-light",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-1-dark",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-2-light",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-2-dark",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-3-light",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-b-3-dark",
+    "page": "home",
+    "layout": "ข แผงรายห้อง",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-1-light",
+    "page": "home",
+    "layout": "ค",
+    "theme": "มืออาชีพ",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-1-dark",
+    "page": "home",
+    "layout": "ค",
+    "theme": "มืออาชีพ",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-2-light",
+    "page": "home",
+    "layout": "ค",
+    "theme": "อบอุ่น",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-2-dark",
+    "page": "home",
+    "layout": "ค",
+    "theme": "อบอุ่น",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-3-light",
+    "page": "home",
+    "layout": "ค",
+    "theme": "สดใส",
+    "mode": "สว่าง",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   },
+   {
+    "name": "home-c-3-dark",
+    "page": "home",
+    "layout": "ค",
+    "theme": "สดใส",
+    "mode": "มืด",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "open"
+   }
+  ],
+  "timetable_states": [
+   {
+    "name": "tt-empty",
+    "page": "timetable",
+    "fixture": "F-T0",
+    "state": "ว่าง AC-33ข/S1#1",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-no-term",
+    "page": "timetable",
+    "fixture": "F-T10ก",
+    "state": "ไม่มีภาคเรียน AC-10ก",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-no-room",
+    "page": "timetable",
+    "fixture": "F-T10ข",
+    "state": "ปีนี้ไม่มีห้อง AC-10ข",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-stress",
+    "page": "timetable",
+    "fixture": "F-T2",
+    "state": "56 คาบ ชื่อยาว AC-31 33",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-few",
+    "page": "timetable",
+    "fixture": "F-T3",
+    "state": "1 คาบ",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-offline",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ออฟไลน์ AC-43ก (ตัดเน็ตหลังโหลด)",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-save-error",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "บันทึกไม่ผ่าน AC-43ข (mock 500)",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-conflict-409",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ชนกันสองเครื่อง AC-41",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-epoch-409",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "กู้คืนข้อมูล AC-42",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-past-year",
+    "page": "timetable",
+    "fixture": "F-T4",
+    "state": "ภาค 2/2568 ดูอย่างเดียว AC-08",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-archived-room",
+    "page": "timetable",
+    "fixture": "F-T1-archR",
+    "state": "ห้องเก็บแล้ว AC-40",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-archived-subject",
+    "page": "timetable",
+    "fixture": "F-T1-archS",
+    "state": "วิชาเก็บแล้ว AC-40",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-copy-prev",
+    "page": "timetable",
+    "fixture": "F-T4",
+    "state": "กล่องคัดลอกจากภาคก่อน AC-37",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-copy-replace-confirm",
+    "page": "timetable",
+    "fixture": "F-T4",
+    "state": "ยืนยันแทนที่ AC-39",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-clear-confirm",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ยืนยันล้าง AC-07",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-saturday",
+    "page": "timetable",
+    "fixture": "F-T1+เสาร์",
+    "state": "วันเรียนเพิ่มเสาร์ AC-16",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "tt-8periods",
+    "page": "timetable",
+    "fixture": "F-T1+8คาบ",
+    "state": "8 คาบ + พักเช้า AC-13",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "period-sheet-add",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "แผ่นเพิ่มคาบ (ว่าง)",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "period-sheet-edit",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "แผ่นแก้คาบ",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "period-sheet-error",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "แผ่นกรอก ผิดตรวจ AC-04",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "time-sheet-default",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "แผ่นตั้งเวลา ค่าเริ่ม AC-11",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "time-sheet-legacy",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ค่าจาก period_times AC-12",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "time-sheet-error",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ผิดตรวจ 5 ข้อความ AC-14",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "time-sheet-reduce-confirm",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ลดคาบ/เอาวันออก AC-15",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "cell-menu-teach",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "เมนูช่องสอนห้อง AC-28",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "cell-menu-activity",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "เมนูช่องกิจกรรม AC-28",
+    "layouts": "ก ข ค"
+   },
+   {
+    "name": "undo-toast",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "state": "ลบ + เลิกทำ AC-06",
+    "layouts": "ก ข ค"
+   }
+  ],
+  "home_clock_states": [
+   {
+    "name": "home-k01",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:45",
+    "strip": "open",
+    "expect": "test-plan §4 K01"
+   },
+   {
+    "name": "home-k04",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T10:30:00",
+    "strip": "open",
+    "expect": "test-plan §4 K04"
+   },
+   {
+    "name": "home-k05",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T10:45",
+    "strip": "open",
+    "expect": "test-plan §4 K05"
+   },
+   {
+    "name": "home-k07",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T12:00",
+    "strip": "open",
+    "expect": "test-plan §4 K07"
+   },
+   {
+    "name": "home-k09",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T13:30:00",
+    "strip": "open",
+    "expect": "test-plan §4 K09"
+   },
+   {
+    "name": "home-k11",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-12T14:30:00",
+    "strip": "open",
+    "expect": "test-plan §4 K11"
+   },
+   {
+    "name": "home-k13",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-13T08:00",
+    "strip": "open",
+    "expect": "test-plan §4 K13"
+   },
+   {
+    "name": "home-k15",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-13T13:40",
+    "strip": "open",
+    "expect": "test-plan §4 K15"
+   },
+   {
+    "name": "home-k17",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-14T10:00",
+    "strip": "open",
+    "expect": "test-plan §4 K17"
+   },
+   {
+    "name": "home-k19",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-16T15:40",
+    "strip": "open",
+    "expect": "test-plan §4 K19"
+   },
+   {
+    "name": "home-k20",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2026-11-11T10:45 (ป.6/3 เก็บ)",
+    "strip": "open",
+    "expect": "test-plan §4 K20"
+   },
+   {
+    "name": "home-k23",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2027-03-12T16:40",
+    "strip": "open",
+    "expect": "test-plan §4 K23"
+   },
+   {
+    "name": "home-k24",
+    "page": "home",
+    "layout": "ก/ข/ค",
+    "fixture": "F-T1",
+    "now": "2027-04-05T10:00",
+    "strip": "open",
+    "expect": "test-plan §4 K24"
+   },
+   {
+    "name": "home-strip-off",
+    "page": "home",
+    "fixture": "F-T1",
+    "now": "2026-11-11T09:50",
+    "strip": "closed",
+    "expect": "AC-24ง AC-56"
+   }
+  ],
+  "print": [
+   {
+    "name": "print-real",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ+โรงเรียนบ้านตัวอย่าง",
+    "expect": "AC-60 1 หน้า"
+   },
+   {
+    "name": "print-56",
+    "page": "timetable",
+    "fixture": "F-T2",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ+โรงเรียนบ้านตัวอย่าง",
+    "expect": "AC-61ข 1 หน้า"
+   },
+   {
+    "name": "print-dark-theme",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ+โรงเรียนบ้านตัวอย่าง (ธีมมืด)",
+    "expect": "AC-61ก พื้นขาว"
+   },
+   {
+    "name": "print-archived",
+    "page": "timetable",
+    "fixture": "F-T1-archR",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ",
+    "expect": "AC-62ก (เก็บแล้ว)"
+   },
+   {
+    "name": "print-teacher-only",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ+ว่าง",
+    "expect": "AC-65ข"
+   },
+   {
+    "name": "print-school-only",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ว่าง+โรงเรียนบ้านตัวอย่าง",
+    "expect": "AC-65ค"
+   },
+   {
+    "name": "print-no-names",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ว่างทั้งคู่",
+    "expect": "AC-65ง"
+   },
+   {
+    "name": "print-offline",
+    "page": "timetable",
+    "fixture": "F-T1",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ+โรงเรียนบ้านตัวอย่าง (ออฟไลน์)",
+    "expect": "AC-62ค"
+   },
+   {
+    "name": "print-past-year",
+    "page": "timetable",
+    "fixture": "F-T4",
+    "media": "print A4 landscape 1123x794 (ไม่ใช่ 4 อุปกรณ์)",
+    "teacher_school": "ครูทดสอบ",
+    "expect": "AC-62ง"
+   }
+  ],
+  "font_24px": "ทุกหน้า timetable + home ก ข ค ที่ iPad ตั้ง/นอน ฟอนต์ 24px (AC-36) — ตั้ง localStorage 'ngankrob-font-size' ตามที่แอปกำหนด",
+  "extra_viewport": "iPad นอนตรวจเพิ่ม 1100x820 (ux.md)"
+ },
+ "_now": "นาฬิกา (src/lib/timetable/clock.ts): ?now= ใช้ได้เฉพาะ localhost/127.0.0.1/*.localhost/*.test · ใส่ได้ทั้ง query (/?now=2026-11-11T09:45#/timetable) หรือหลัง hash (#/timetable?now=…) · ไม่มี Z = เวลา Bangkok · มี Z/+07:00 = instant · เปลี่ยนกลางหน้า: window.__ttSetNow(\"2026-11-11T09:50\") แล้วรอ tick ≤60 วิ (หรือ visibilitychange) · __ttSetNow(null) = คืนเวลาจริง · pages ใช้ search ?now= เพื่อไม่ชน setup ที่เช็ค location.hash",
+ "_selectors": {
+  "settings_appearance": {
+   "timetable_style": "input[type=radio][name=\"ap-timetable\"][value=a|b|c] (fieldset role=radiogroup aria-label=\"รูปแบบตารางสอน\")",
+   "home_layout": "input[name=\"ap-layout\"][value=a|b|c]",
+   "skin": "input[name=\"ap-skin\"][value=pro|warm|playful]",
+   "mode": "input[name=\"ap-mode\"][value=system|light|dark] (aria-label สว่าง/มืด/ตามเครื่อง)",
+   "note": "ไม่มีปุ่มบันทึก (autosave ช้า ~SETTLE_MS) → รอ ≥1 วิ หลังคลิก"
+  },
+  "timetable_page": {
+   "page": ".tt-page[data-tt-layout=a|b|c]",
+   "cell": "[data-tt-cell=\"<weekday 1-7>:<period>\"] เช่น 3:4 = พุธ คาบ 4",
+   "states": "[data-tt-state=loading|empty|error|no-term|term-not-found]",
+   "summary": "[data-testid=tt-summary]",
+   "print": "[data-testid=tt-print] / button[aria-label=\"พิมพ์ตารางสอน\"]",
+   "term_select": "select[aria-label=\"ภาคเรียนที่แสดง\"]",
+   "more_menu": "button[aria-label^=\"เมนูเพิ่มเติม\"] → [role=menu][aria-label=\"ตารางสอน\"] [role=menuitem] (กรอบเวลา/คัดลอก/ล้าง อยู่ในเมนูนี้ — ยังไม่มี testid tt-copy/tt-clear/tt-timesheet/tt-layout-*; ใช้ role+ชื่อ)"
+  },
+  "home_strip": {
+   "strip": "section[data-tt-strip] (aria-label=\"ตารางสอนวันนี้\")",
+   "now_line": "[data-line=now]",
+   "next_line": "[data-line=next]",
+   "cells": "ol[aria-label=\"คาบของวันนี้\"] li.hmt-cell (live = aria-current=time)",
+   "buttons": ".hmt-btn (primary=เช็คชื่อ, ถัดมา=สแกน, ghost=ดูทั้งสัปดาห์)",
+   "live_region": "[role=status][aria-live=polite].sr-only"
+  },
+  "home_layout_a_rows": {
+   "row": "li[data-tt-row][data-kind=tt]",
+   "more": "li[data-kind=ttMore]",
+   "past": "li[data-kind=ttPast]"
+  },
+  "guess_until_built": "ปุ่ม/แผ่นเพิ่ม-แก้คาบ (SlotSheet) · แผ่นตั้งเวลา (FrameEditor ใช้ [data-f=count|periods.N.start|…]) · ConfirmBox · ฝั่งเค้าโครง ข/ค ในหน้าตาราง — ยังเดา จนกว่า T-19 เสร็จ"
+ }
+}

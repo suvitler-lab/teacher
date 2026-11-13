@@ -1,0 +1,35 @@
+PASS  signs in
+PASS  first visit: the shell and assets are kept on the device
+PASS  Settings says the device is ready for offline use
+PASS  device check (online): not 'not ready', the server and the offline files are reported fine  — ตรวจเครื่องนี้ เครื่องนี้เท่านั้น รันก่อนเข้าห้องทุกครั้งที่เปลี่ยนเครื่อง — ตรวจ HTTPS, เซิร์ฟเวอร์, การใช้ออฟไลน์, ที่เก็บข้อมูล, นาฬิกา และงานค้าง (ตรวจกล้องแบบละเอียดที่ การสแกน › ทดสอบกล้อง) ตรวจอีกครั้ง คัดลอกผลตรวจ ใช้ได้ แต่มีข้อควรดู เปิดผ่าน HTTPS http://127.0.0.1:4210 เครือข่ายและเซิร์ฟเวอร์ เซิร์ฟเวอร์พร้อม (ตอบใน 19 ms) ใช้ออฟไลน์ เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต (ไฟล์รุ่น 9283ca520465) ที่เก็บข้อมูลในเครื่อง เบราว์เซอร์อาจลบงานที่ยังไม่ได้ส่งถ้าไม่ได้เปิดเว็บนานราว 7 วัน (Safa
+PASS  device check: the clock of this device matches the server's (measured from the HTTP Date header)
+PASS  offline reload opens the app
+PASS  offline reload shows the saved data (students)
+PASS  the sync badge says offline  — ออฟไลน์
+PASS  …and no static file was fetched from the network — everything came from the device
+PASS  device check (network dead): says it is offline but that scanning still works, and the offline files are still 'ready'  — ตรวจเครื่องนี้ เครื่องนี้เท่านั้น รันก่อนเข้าห้องทุกครั้งที่เปลี่ยนเครื่อง — ตรวจ HTTPS, เซิร์ฟเวอร์, การใช้ออฟไลน์, ที่เก็บข้อมูล, นาฬิกา และงานค้าง (ตรวจกล้องแบบละเอียดที่ การสแกน › ทดสอบกล้อง) ตรวจอีกครั้ง คัดลอกผลตรวจ ใช้ได้ แต่มีข้อควรดู เปิดผ่าน HTTPS http://127.0.0.1:4210 เครือข่ายและเซิร์ฟเวอร์ เครื่องนี้ออฟไลน์อยู่ — สแกนและเช็คชื่อต่อได้ งานจะรอในเครื่องแล้วส่งเองเมื่อมีเน็ต (ตรวจเซิร์ฟเ
+PASS  scanning offline queues the work on the device  — ออฟไลน์ · รอส่ง 2
+PASS  nothing has reached the server yet
+PASS  back online: the queued scans land on the server
+PASS  the queue empties  — ออนไลน์
+PASS  (session test) one scan waits offline  — ออฟไลน์ · รอส่ง 1
+PASS  session ended: the sign-in prompt appears
+PASS  …and the waiting scan is still on the device  — ออนไลน์ · รอส่ง 1
+PASS  after signing in again the waiting scan lands
+PASS  closed and reopened offline: the app opens
+PASS  …with the waiting scan still there  — ออฟไลน์ · รอส่ง 1
+PASS  …having fetched no static file from the network
+PASS  …and it lands when the network is back
+PASS  a new release is offered (banner), not swapped in
+PASS  until accepted, the old version's files stay (open pages keep working)  — ngankrob-9283ca520465, ngankrob-9283ca520465-B
+PASS  after accepting: the page comes back on the new release  — 9283ca520465-B
+PASS  only the new version's files remain  — ngankrob-9283ca520465-B
+PASS  the waiting scan survived the update  — กำลังบันทึก · รอส่ง 1
+PASS  …and lands afterwards
+PASS  dead network: the app still opens from saved data  — 8s
+PASS  …within seconds, not minutes  — 8s
+PASS  when the server answers again the app switches to live data by itself
+PASS  no uncaught page errors
+
+32/32 checks passed
+EXIT 0

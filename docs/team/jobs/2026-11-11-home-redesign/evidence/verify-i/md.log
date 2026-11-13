@@ -1,0 +1,28 @@
+PASS  (ก) offline: nothing reached the server
+PASS  (ก) offline: tiles show the marks locally  — att-tile present | att-tile absent
+FAIL  (ก) offline scan queued (รอส่ง 2)  — ออฟไลน์ · รอส่ง 4
+PASS  (ก) offline: no submission on server yet
+PASS  (ก) online: attendance lands once each
+PASS  (ก) statuses right (present/absent)  — [[{"student_id":"stu_3","status":"present"}],[{"student_id":"stu_4","status":"absent"}]]
+PASS  (ก) scans land exactly 2, no duplicates  — [{"number":11,"status":"submitted"},{"number":12,"status":"submitted"}]
+PASS  (ก) queue empties  — ออนไลน์
+PASS  (ก) still exactly 2 submissions after settle
+PASS  (ก) B after refresh sees A's marks  — att-tile present | att-tile absent
+PASS  (ข) both edits land, neither overwrites  — [[{"student_id":"stu_5","status":"present"}],[{"student_id":"stu_6","status":"absent"}]]
+PASS  (ข) values: #5 present(A) / #6 absent(B)  — [[{"student_id":"stu_5","status":"present"}],[{"student_id":"stu_6","status":"absent"}]]
+PASS  (ค) A's edit saved first  — [{"student_id":"stu_7","status":"present"}]
+INFO (ค) server row: [{"student_id":"stu_7","status":"present"}] | B tile: att-tile held  | B notice:  ศุกร์ 13 พ.ย. ซ่อนชื่อ ปรับการ์ด โหมดฉายจอ ข้อมูลชนกับอีกเครื่อง 1 รายการ ด.ช.กันตภณ พูนผล เครื่องนี้: ขาด · ในระบบ: มา (Chrome · W | badge: ออนไลน์ · รอส่ง 1
+PASS  (ค) exactly one row for the child (no duplicate)
+PASS  (ค) resolve 'use this device': server = absent, still 1 row, queue clears  — [{"student_id":"stu_7","status":"absent"}] ออนไลน์
+PASS  (ค) A after refresh sees B's resolved value (absent)  — att-tile absent
+PASS  (ง) attendance: first response dropped
+PASS  (ง) attendance retry: exactly 1 row, present  — [{"student_id":"stu_8","status":"present"}]
+PASS  (ง) attendance retry: badge settles  — ออนไลน์
+PASS  (ง) scan: first response dropped
+PASS  (ง) scan retry: exactly 1 submission  — [{"number":13,"status":"submitted"}]
+PASS  (ง) scan retry: queue empties  — ออนไลน์
+PASS  (ค) scan same child from both devices: 1 row  — [{"number":14,"status":"submitted"}]
+PASS  page errors A/B = 0  — [[],[]]
+
+23/24 PASS
+exit 0

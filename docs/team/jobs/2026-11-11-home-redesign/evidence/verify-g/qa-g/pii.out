@@ -1,0 +1,10 @@
+control students hide=off: {"last":32,"first":32}
+hide toggled; btn label: ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่อ
+hide=on / ซ่อนชื่อนักเรียน {"last":0,"first":0}
+hide=on /students ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่ {"last":0,"first":0}
+hide=on /attendance ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่ {"last":0,"first":0}
+hide=on /gradebook ซ่อนชื่ออยู่ {"last":0,"first":0}
+hide=on /scan ซ่อนชื่อนักเรียน {"last":0,"first":0}
+hide=on /reports ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่ {"last":0,"first":0}
+hide=on /random ซ่อนชื่ออยู่ — แตะเพื่อแสดงชื่ {"last":0,"first":0}
+hide=on /settings no-button {"last":0,"first":0}

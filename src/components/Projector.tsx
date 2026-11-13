@@ -17,13 +17,13 @@ const PAGES = [
   { path: "/reports", title: "รายงาน", icon: "chart-bar" },
 ] as const;
 
-/** The button in a page header: choose the look, then start. */
-export function ProjectorButton() {
+/** The button in a page header: choose the look, then start. `disabled` (e.g. a read-only page while the TV is on, T-50) greys it out; the default changes nothing. */
+export function ProjectorButton({ disabled = false }: { disabled?: boolean; children?: ComponentChildren }) {
   const [open, setOpen] = useState(false);
   return (
     <span class="pj-pre-wrap" style="position:relative">
-      <button aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen((v) => !v)}><Icon name="presentation" size={18} /> <span class="att-hide-sm">โหมดฉายจอ</span></button>
-      {open && (
+      <button aria-haspopup="dialog" aria-expanded={open && !disabled} disabled={disabled} onClick={() => setOpen((v) => !v)}><Icon name="presentation" size={18} /> <span class="att-hide-sm">โหมดฉายจอ</span></button>
+      {open && !disabled && (
         <>
           <div style="position:fixed;inset:0;z-index:29" onClick={() => setOpen(false)} />
           <div class="gb-menu pjpre" role="dialog" aria-label="ตั้งค่าโหมดฉายจอ" style="right:0;left:auto;z-index:30">

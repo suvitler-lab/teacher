@@ -78,7 +78,7 @@ async function openFolded() {
   fireEvent.click(screen.getAllByRole("button").find((b) => b.getAttribute("aria-expanded") === "true" && /ใบงาน/.test(b.textContent ?? ""))!);
   await screen.findByRole("columnheader", { name: /รวม ใบงาน/ });
 }
-const lastCells = (row: number) => [...document.querySelectorAll("table.gb tbody tr")[row].querySelectorAll("td")].map((c) => c.textContent);
+const lastCells = (row: number) => [...document.querySelectorAll("table.gb tbody tr")[row].querySelectorAll("td")].map(((c) => { const k = c.cloneNode(true) as HTMLElement; k.querySelector(".tot-pct")?.remove(); return k.textContent; }));
 const trigger = () => screen.getByRole("button", { name: /^คอลัมน์ \(/ });
 const item = (name: RegExp) => screen.getByRole("checkbox", { name });
 

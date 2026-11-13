@@ -26,7 +26,8 @@ export function Dialog({ children, label, onClose, dismissible = true, class: cl
     // Child layout effects run before their parent's. Keep descendants on top even
     // when a parent and an already-open nested dialog mount in the same render.
     stack.sort((a, b) => a.contains(b) ? -1 : b.contains(a) ? 1 : 0);
-    if (stack.at(-1) === node) focusFirst();
+    // opening only: a surface may name the answer that gets the first focus (opt-in); focus-contain below keeps plain first-focusable
+    if (stack.at(-1) === node) (node.querySelector<HTMLElement>("[data-autofocus]:not([disabled])") ?? focusable()[0] ?? node).focus();
     const keydown = (e: KeyboardEvent) => {
       if (stack.at(-1) !== node) return;
       if (e.key === "Escape") {

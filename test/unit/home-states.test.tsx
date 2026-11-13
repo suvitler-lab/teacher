@@ -16,6 +16,7 @@ import { route } from "@client/router";
 import { dashboard } from "@client/lib/dashboard";
 import { failedCount } from "@client/lib/outbox";
 import { setHideNames } from "@client/lib/homePrefs";
+import { saveAppearance, resetAppearanceForTests } from "@client/lib/appearance";
 import type { DashboardPayload, Settings } from "@shared/types";
 import { asg, kid } from "./m1-05-fixture";
 
@@ -52,16 +53,25 @@ beforeEach(() => {
   dashboard.value = null;
   failedCount.value = 0;
   setHideNames(false);
+  resetAppearanceForTests();
   route.value = "/home";
 });
 afterEach(() => { cleanup(); vi.useRealTimers(); });
+
+/** the page in layout ข: the picked room's open work, where the scan button of a work lives */
+const openB = async () => {
+  await act(async () => { await saveAppearance({ layout: "b" }, { silent: true }); });
+  render(<Home />);
+  await waitFor(() => expect(document.querySelector(".hmb-asg")).not.toBeNull());
+};
+const scanBtn = { name: /สแกนรับ ใบงานใหม่ ป\.6\/1/ };
 
 describe("loading and empty states", () => {
   it("while the dashboard loads: the quick actions are there, grey blocks stand in for numbers, and the words wait", async () => {
     get.mockImplementation(() => new Promise(() => {}));
     const { container } = render(<Home />);
     expect(screen.getByRole("link", { name: /สแกนส่งงาน/ })).toBeTruthy();
-    expect(container.querySelectorAll(".hm-stats .uc-stat .hm-skel").length).toBeGreaterThan(4);
+    expect(container.querySelectorAll(".hm-skeleton .hm-skel").length).toBeGreaterThan(4);
     expect(container.querySelector(".hm-slow")).toBeNull();                        // not before three seconds
     expect(container.querySelector("[aria-busy=true] .sr-only")!.textContent).toBe("กำลังโหลดหน้าหลัก…");
   });
@@ -103,22 +113,20 @@ describe("loading and empty states", () => {
     expect(retry).toHaveBeenCalledTimes(1);
     rerender(<HomeError online={true} onRetry={retry} />);
     expect(screen.getByText("โหลดข้อมูลหน้าหลักไม่สำเร็จ")).toBeTruthy();
-    expect(document.querySelector(".ti-cloud-x")).toBeTruthy();
+    expect(document.querySelector("[data-icon=\"cloud-x\"]")).toBeTruthy();
   });
 });
 
-describe("the scan button on the work card", () => {
+describe("the scan button on the work card (ข: the picked room's work)", () => {
   it("is offered for open work with children who have not handed in, even when nothing is overdue", async () => {
-    render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    expect(within(document.querySelector(".hm-prog") as HTMLElement).getByRole("button", { name: /สแกนห้องนี้/ })).toBeTruthy();
+    await openB();
+    expect(within(document.querySelector(".hmb-asg") as HTMLElement).getByRole("button", scanBtn)).toBeTruthy();
   });
 
   it("is offered when children are overdue even if the counts leave no one 'not yet'", async () => {
     get.mockImplementation(async () => payload({ submitted: 8, scored: 8, missing: 2 }));
-    render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    expect(within(document.querySelector(".hm-prog") as HTMLElement).getByRole("button", { name: /สแกนห้องนี้/ })).toBeTruthy();
+    await openB();
+    expect(within(document.querySelector(".hmb-asg") as HTMLElement).getByRole("button", scanBtn)).toBeTruthy();
   });
 
   it("is not offered when the page shows an earlier year", async () => {
@@ -128,26 +136,26 @@ describe("the scan button on the work card", () => {
     ];
     classes.value = [{ id: "c1", name: "ป.6/1", grade: "ป.6", sort: 1, archived: true, year: 2568, updated_at: 0 }];
     selectedTermId.value = "t0";
-    render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    expect(screen.queryByRole("button", { name: /สแกนห้องนี้/ })).toBeNull();
+    await openB();
+    expect(screen.queryByRole("button", { name: /สแกนรับ/ })).toBeNull();
   });
 });
 
 describe("saving, progress bars, sign-out", () => {
   it("tells the teacher a card change was saved for every device", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
-    const dlg = await screen.findByRole("dialog", { name: "ปรับหน้าหลัก" });
+    const dlg = await screen.findByRole("dialog", { name: /^ปรับหน้าหลัก · โครง ก/ });
     fireEvent.click(within(dlg).getByRole("switch", { name: "แสดงการ์ด ห้องของฉัน" }));
-    await waitFor(() => expect(ok).toHaveBeenCalledWith("บันทึกแล้ว · ใช้ทุกเครื่อง"));
+    await waitFor(() => expect(ok).toHaveBeenCalledWith("บันทึกแล้ว · ใช้กับทุกเครื่อง"));
   });
 
   it("the bar of a class row is a progressbar with words", async () => {
+    get.mockImplementation(async () => payload({ missing: 2 }));          // BR-03: rate = handed in / (handed in + missing) = 6/8
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    const bar = screen.getByRole("progressbar", { name: /ป\.6\/1 ส่งแล้ว 6\/8/ });
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
+    const bar = screen.getByRole("progressbar", { name: /ป\.6\/1 ส่งงาน 75%/ });
     expect(bar.getAttribute("aria-valuenow")).toBe("75");
   });
 

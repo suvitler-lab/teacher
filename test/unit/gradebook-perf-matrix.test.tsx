@@ -112,7 +112,7 @@ describe("GradebookPage 44 x 14", () => {
     await act(async () => { await new Promise((r) => setTimeout(r, 50)); }); // let the flag render and observers settle
     expect(matrixStats.filled - filledBefore).toBe(1);                      // once, not once per render
     const cellsDrawn = drawn.n;
-    expect(cellsDrawn).toBe(N_KIDS * N_WORK + 9);            // every cell once (+ the 9 legend samples)
+    expect(cellsDrawn).toBe(N_KIDS * N_WORK);                // every cell once (the 9 legend samples now live in the closed drawer)
     const nodes = [...container.querySelectorAll("td.cell")];
     expect(container.querySelector(".gb-frame")?.className).toContain("can-r"); // the flag render did happen
 
@@ -141,7 +141,8 @@ describe("GradebookPage 44 x 14", () => {
     const totCell = container.querySelector("tbody tr:first-child td.tot-col") as HTMLElement;
     const visible = works.filter((w) => w.publish_scores);
     const sum = studentSummary(visible, (i) => { const r = bySub.get(`${visible[i].id}:k1`); return r ? { status: r.status, score: r.score, late: r.late } : undefined; }, today);
-    expect(totCell.textContent).toBe(`${sum.score}/${sum.fullScore}`);
+    const totText = (() => { const k = totCell.cloneNode(true) as HTMLElement; k.querySelector(".tot-pct")?.remove(); return k.textContent; })(); // the percent is its own line (BR-30)
+    expect(totText).toBe(`${sum.score}/${sum.fullScore}`);
     const strip = screen.getByRole("button", { name: /^ค้างส่ง \d+$/ });
     const missingAll = works.reduce((n, w) => n + refStates(w).filter((s) => s === "missing").length, 0);
     expect(strip.textContent).toBe(`ค้างส่ง ${missingAll}`);

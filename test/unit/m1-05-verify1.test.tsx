@@ -1,6 +1,6 @@
 // M1-05 Verify round 1: AC-09 (fraction over the same denominator), AC-10 (.5 rounds up), AC-11 (Excel "ยกเว้น").
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/preact";
+import { act, render, screen, waitFor } from "@testing-library/preact";
 
 const { get } = vi.hoisted(() => ({ get: vi.fn() }));
 vi.mock("@client/lib/api", async (orig) => ({ ...await orig<typeof import("@client/lib/api")>(), api: { get, post: vi.fn(), put: vi.fn() } }));
@@ -12,8 +12,9 @@ import {
 import { buildWorkbookBuffer } from "@client/lib/excel";
 import { computeReport, type ReportPayload } from "@client/lib/report";
 import { Home } from "@client/pages/Home";
+import { saveAppearance } from "@client/lib/appearance";
 import { ReportsPage } from "@client/pages/Reports";
-import { classes, currentTermId, selectedTermId, subjects, terms } from "@client/store";
+import { classes, currentTermId, selectedTermId, settings, subjects, terms } from "@client/store";
 import type { DashboardPayload } from "@shared/types";
 import { AC01_KIDS, AC01_SUBS, PAST_DUE, asg } from "./m1-05-fixture";
 
@@ -113,13 +114,16 @@ describe("AC-09 / AC-11 Excel", { timeout: 30_000 }, () => {
 describe("AC-09 / AC-11 screens", () => {
   it("Home shows 6/8 · ยกเว้น 2 beside the 75% bar", async () => {
     const d: DashboardPayload = {
-      date: TODAY, termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], dueSoon: [], absentToday: [], serverTime: 0, attendanceToday: [],
+      date: TODAY, termId: "t1", gradingAssignments: [], awaitingCount: 1, missingCount: 2, followUp: [], dueSoon: [], absentToday: [], serverTime: 0, attendanceToday: [{ date: TODAY, classId: "c1", present: 0, late: 0, leave: 0, sick: 0, absent: 0, marked: 0, total: 10 }],
       openAssignments: [{ assignment: asg("a1", PAST_DUE, "ใบงาน"), perClass: [{ classId: "c1", total: 10, submitted: 6, scored: 5, awaiting: 1, late: 1, missing: 2, excused: 2 }] }],
     };
     get.mockResolvedValue(d);
+    settings.value = { school_name: "", teacher_name: "", app_title: "", late_after: "08:30", theme: "light", accent: "", sound_enabled: false, accept_student_code_scan: false, parent_portal_enabled: false, onboarding_done: true, last_backup_at: "", period_times: "", home_cards: "", scan_cards: "", attendance_cards: "", random_cards: "", gradebook_cards: "", reports_cards: "", students_cards: "", settings_cards: "" };
+    await act(async () => { await saveAppearance({ layout: "b" }, { silent: true }); });   // layout ข lists the work with its fraction
     render(<Home />);
-    await screen.findByText("ใบงาน");
-    expect(document.querySelector(".hm-prog .num")!.textContent).toBe("6/8 · ยกเว้น 2");
+    await waitFor(() => expect(document.querySelector(".hmb-asg")).not.toBeNull());
+    expect(document.querySelector(".hmb-asg .nums")!.textContent).toContain("6/8 · ยกเว้น 2");
+    expect(document.querySelector(".hmb-panel")!.textContent).toContain("75");
   });
   it("Reports: the bar reads 6/8 · ยกเว้น 2 · 75% and the score card says what it counts", async () => {
     get.mockResolvedValue(ac01());

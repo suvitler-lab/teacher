@@ -27,7 +27,7 @@ export function PageCardSettings({ page, title, layout, meta, locked, onClose, r
       <div class="page-sub hm-lock"><Icon name="info-circle" size={16} /> ปิดไม่ได้ (เพื่อกันข้อมูลหาย): {locked}</div>
       {layout.order.map((k, i) => {
         const on = !isHiddenCard(layout, k);
-        const m = meta[k];
+        const m = meta[k] ?? { title: k, icon: "layout-grid", desc: "" }; // a card the list does not know: still drawn, never a crash
         const pin = pinned.includes(k);
         return (
           <div class={"hm-pref" + (on ? "" : " off")} key={k}>

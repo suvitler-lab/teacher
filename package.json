@@ -26,7 +26,7 @@
     "db:seed:local": "wrangler d1 execute kru-db-apac --local --file=./scripts/seed-demo.sql"
   },
   "dependencies": {
-    "@tabler/icons-webfont": "^3.48.0",
+    "@phosphor-icons/web": "^2.1.2",
     "hono": "^4.13.13",
     "zod": "^4.6.7"
   },
@@ -35,7 +35,11 @@
     "@cloudflare/vite-plugin": "^1.65.0",
     "@cloudflare/vitest-pool-workers": "^0.23.0",
     "@cloudflare/workers-types": "^5.20260928.1",
+    "@fontsource/anuphan": "^5.3.0",
     "@fontsource/ibm-plex-sans-thai": "^5.1.0",
+    "@fontsource/mali": "^5.3.0",
+    "@fontsource/mitr": "^5.3.0",
+    "@fontsource/sarabun": "^5.3.0",
     "@preact/preset-vite": "^2.10.6",
     "@preact/signals": "^2.0.1",
     "@testing-library/preact": "^3.2.4",

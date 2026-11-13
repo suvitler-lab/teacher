@@ -12,7 +12,7 @@ vi.mock("@client/lib/api", async (orig) => {
 import { webcrypto } from "node:crypto";
 import { runBackup, BackupInconsistentError, backupFileName } from "@client/lib/backup";
 
-const TABLES = 13;
+const TABLES = 14;
 
 /** A server whose fingerprint answers come from `prints` in order, and whose one big table has two pages. */
 function server(prints: string[]) {
@@ -99,6 +99,6 @@ describe("runBackup", () => {
     const calls = get.mock.calls.map((c) => c[0] as string);
     expect(calls[0]).toBe("/api/backup/fingerprint");
     expect(calls.at(-1)).toBe("/api/backup/fingerprint");
-    expect(calls.filter((p) => p.startsWith("/api/backup?"))).toHaveLength(TABLES + 1); // 13 tables, one has a second page
+    expect(calls.filter((p) => p.startsWith("/api/backup?"))).toHaveLength(TABLES + 1); // 14 tables, one has a second page
   });
 });

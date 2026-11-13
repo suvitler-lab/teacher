@@ -26,7 +26,7 @@ import { online, pendingCount, syncing } from "@client/lib/outbox";
 import { serverReachable, authRequired } from "@client/lib/session";
 import { projectorOn } from "@client/lib/projector";
 import { defaultPageLayout } from "@client/lib/pageCards";
-import { serializeLayout, toggleLayoutCard } from "@client/lib/cardLayout";
+import { serializeLayout } from "@client/lib/cardLayout";
 
 const kid = (n: number): Student => ({
   id: "s" + n, code: "10" + n, qr_token: "Q" + n, prefix: null, first_name: "เด็ก" + n, last_name: "ทดสอบ", nickname: "น้อง" + n,
@@ -91,7 +91,7 @@ describe("B-5: a clash that waits for the teacher is not shown as saved", () => 
 
   it("the tile says รอเลือก, the summary counts it as ต้องตรวจสอบ (not มา), and picking a side settles it", async () => {
     clash();
-    settings.value = { ...(baseSettings() as object), attendance_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("attendance"), "todo")) } as never;
+    settings.value = { ...(baseSettings() as object), attendance_cards: serializeLayout(defaultPageLayout("attendance")) } as never;
     mount();
     await ready();
     await act(async () => { fireEvent.click(tile(1)); });

@@ -94,15 +94,17 @@ describe("attendance page", () => {
     expect(screen.queryByText(/ยังไม่ได้เช็คชื่อ · 4 คน|มาเรียน \d+ จาก 4 คน/)).toBeNull();
   });
 
-  it("the 'who is not checked yet' card is off by default and lists the unchecked numbers when on", async () => {
+  it("the 'who is not checked yet' card is on by default (T-43) and lists the unchecked numbers when on", async () => {
     rows = [{ student_id: "s1", status: "present", updated_at: 1 }];
     const { unmount } = render(h(AttendancePage, {}));
     await waitFor(() => expect(tile(1).getAttribute("aria-label")).toContain("มา"));
-    expect(screen.queryByText(/ใครยังไม่เช็ค/)).toBeNull();
+    await waitFor(() => expect(document.body.textContent).toContain("ใครยังไม่เช็ค 3 คน"));
     unmount();
+    // and the teacher can still turn it off
     settings.value = baseSettings({ attendance_cards: serializeLayout(toggleLayoutCard(defaultPageLayout("attendance"), "todo")) });
     render(h(AttendancePage, {}));
-    await waitFor(() => expect(document.body.textContent).toContain("ใครยังไม่เช็ค 3 คน"));
+    await waitFor(() => expect(tile(1).getAttribute("aria-label")).toContain("มา"));
+    expect(document.getElementById("att-todo-h")).toBeNull();
   });
 
   it("a link with date, subject and period opens that period (1–8 are offered)", async () => {
@@ -118,6 +120,7 @@ describe("attendance page", () => {
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "ปรับการ์ด" })); });
     expect(screen.getByText(/ปิดไม่ได้ \(เพื่อกันข้อมูลหาย\)/)).toBeTruthy();
     expect(screen.getByRole("switch", { name: "แสดงการ์ด สรุปวันนี้" }).getAttribute("aria-checked")).toBe("true");
-    expect(screen.getByRole("switch", { name: "แสดงการ์ด ใครยังไม่เช็ค" }).getAttribute("aria-checked")).toBe("false");
+    expect(screen.getByRole("switch", { name: "แสดงการ์ด ใครยังไม่เช็ค" }).getAttribute("aria-checked")).toBe("true");
+    expect(screen.getByRole("switch", { name: "แสดงการ์ด เดือนนี้" }).getAttribute("aria-checked")).toBe("true");
   });
 });

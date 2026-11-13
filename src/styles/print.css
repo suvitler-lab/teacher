@@ -1,4 +1,5 @@
 /* งานครบ · print rules only (everything here is inside @media print) */
+/* hex below on purpose: printed output is always black on white, independent of the skin */
 @media print {
   /* only the QR-card sheet blanks the rest of the page (set via body.print-cards) */
   body.print-cards * { visibility: hidden; }

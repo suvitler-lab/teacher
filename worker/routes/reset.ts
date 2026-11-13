@@ -63,7 +63,7 @@ resetRoutes.post("/api/admin/reset", async (c) => {
   const stmts = [
     db.prepare("PRAGMA defer_foreign_keys = on"),
     // children first
-    ...["audit_logs", "attendance", "attendance_sessions", "submissions", "scan_sessions", "assignment_classes",
+    ...["audit_logs", "timetable_slots", "attendance", "attendance_sessions", "submissions", "scan_sessions", "assignment_classes",
       "assignments", "revoked_qr_tokens", "students", "subjects", "classes", "terms", "restore_staging", "restore_jobs"].map(del),
     // queued work on other devices belongs to the data that just went: hold it for review, don't apply it
     db.prepare("INSERT INTO meta (key, value) VALUES ('data_epoch', '2') ON CONFLICT(key) DO UPDATE SET value = CAST(value AS INTEGER) + 1"),

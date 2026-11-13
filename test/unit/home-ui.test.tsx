@@ -1,6 +1,6 @@
 // ui-redesign round 1: the home page's cards (choose / hide / reorder), the "do this now" card, hide-names, and the menu groups.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/preact";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/preact";
 
 const { get, put } = vi.hoisted(() => ({ get: vi.fn(), put: vi.fn() }));
 const { err } = vi.hoisted(() => ({ err: vi.fn() }));
@@ -15,7 +15,12 @@ import { route } from "@client/router";
 import { dashboard } from "@client/lib/dashboard";
 import { failedCount } from "@client/lib/outbox";
 import { setHideNames } from "@client/lib/homePrefs";
-import { serializeHomeCards, defaultHomeCards, moveCard, toggleCard, visibleOrder } from "@client/lib/homeCards";
+import { serializeHomeCards, defaultHomeCards } from "@client/lib/homeCards";
+import { LAYOUT_CARDS } from "@client/lib/homeLayout";
+import { saveAppearance, resetAppearanceForTests } from "@client/lib/appearance";
+
+/** home_cards text with the cards of layout a (the old whole-page fields stay, as the app writes them) */
+const withA = (a: { order: string[]; hidden: string[] }) => JSON.stringify({ ...JSON.parse(serializeHomeCards(defaultHomeCards())), a });
 import type { DashboardPayload, Settings } from "@shared/types";
 import { asg, kid } from "./m1-05-fixture";
 
@@ -56,96 +61,96 @@ beforeEach(() => {
   dashboard.value = null;
   failedCount.value = 0;
   setHideNames(false);
+  resetAppearanceForTests();
   route.value = "/home";
 });
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
+/** the page in another layout (ก is the default) */
+const useLayout = (layout: "a" | "b" | "c") => act(async () => { await saveAppearance({ layout }, { silent: true }); });
 const h2 = (name: string) => screen.queryByRole("heading", { level: 2, name });
 
-describe("home page cards", () => {
-  it("shows the five default cards and leaves the four that start off out", async () => {
+describe("home page cards (layout ก: its own five sub-cards, BR-12)", () => {
+  it("shows the four default sub-cards of layout ก and leaves 'ห้องของฉัน' off; the cards of the other layouts are not there", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    for (const n of ["เช็คชื่อวันนี้", "ต้องติดตาม", "ครบกำหนดวันนี้/พรุ่งนี้", "ใครไม่มาวันนี้"]) expect(h2(n)).toBeTruthy();
-    for (const n of ["ห้องของฉัน", "ค้างในเครื่องนี้", "สำรองข้อมูล", "ภาคเรียน"]) expect(h2(n)).toBeNull();
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
+    for (const n of ["ต้องติดตาม", "ครบกำหนด", "ไม่มาวันนี้"]) expect(h2(n)).toBeTruthy();
+    for (const n of ["ห้องของฉัน", "เช็คชื่อวันนี้", "ค้างในเครื่องนี้", "สำรองข้อมูล", "ภาคเรียน"]) expect(h2(n)).toBeNull();
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("สวัสดี ครูทดสอบ");
   });
 
-  it("follows the saved layout: a hidden card is gone, an enabled one appears, and the order is the saved order", async () => {
-    let p = toggleCard(toggleCard(defaultHomeCards(), "follow"), "classes");
-    p = moveCard(p, "att", -1);                                   // att before open
-    settings.value = baseSettings({ home_cards: serializeHomeCards(p) });
+  it("follows the saved list of the layout: a hidden card is gone, an enabled one appears, and the order is the saved order", async () => {
+    settings.value = baseSettings({ home_cards: withA({ order: ["due", "open", "absent", "follow", "classes"], hidden: ["follow"] }) });
     render(<Home />);
     await screen.findByRole("heading", { level: 2, name: "ห้องของฉัน" });
     expect(h2("ต้องติดตาม")).toBeNull();
-    // all the cards sit in the page columns (PageCols), in the saved order
-    const names = [...document.querySelectorAll(".pg-cols h2")].map((e) => e.textContent);
-    expect(names).toContain("เช็คชื่อวันนี้");
-    expect(names.indexOf("งานที่กำลังเก็บ")).toBeLessThan(names.indexOf("ห้องของฉัน")); // wide column order kept
+    const names = [...document.querySelectorAll(".hma-side h2")].map((e) => e.textContent);
+    expect(names.indexOf("ครบกำหนด")).toBeLessThan(names.indexOf("ความคืบหน้ารายห้อง"));
   });
 
-  it("wide-screen layout: one visible card = one column; a wide region spreads the cards over three, the first one top-left", async () => {
-    let only = defaultHomeCards();
-    for (const k of visibleOrder(only)) if (k !== "open") only = toggleCard(only, k);
-    settings.value = baseSettings({ home_cards: serializeHomeCards(only) });
+  it("one visible card = one card in ก's side column; the default shows the four cards in the saved order (ก lays them out in its own two-column grid)", async () => {
+    settings.value = baseSettings({ home_cards: withA({ order: [...LAYOUT_CARDS.a], hidden: LAYOUT_CARDS.a.filter((k) => k !== "open") }) });
     const { unmount } = render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
     expect(document.querySelector(".hm.pg")).not.toBeNull();
-    expect(document.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("1");
-    expect(document.querySelectorAll(".pg-col")).toHaveLength(1);
+    expect(document.querySelector(".hma-grid")).not.toBeNull();
+    expect(document.querySelectorAll(".hma-side > section")).toHaveLength(1);
+    expect([...document.querySelectorAll(".hma-side h2")].map((e) => e.textContent)).toEqual(["ความคืบหน้ารายห้อง"]);
     unmount();
 
-    // a 96rem-wide region (jsdom has no layout: report the width by hand)
-    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ width: 96 * 16, height: 100, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => ({}) });
     settings.value = baseSettings();
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    await waitFor(() => expect(document.querySelector(".pg-cols")!.getAttribute("data-n")).toBe("3"));
-    const cols = [...document.querySelectorAll(".pg-col")];
-    expect(cols).toHaveLength(3);
-    expect(cols[0].querySelector("h2")!.textContent).toContain("งานที่กำลังเก็บ");
-    rect.mockRestore();
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
+    const cards = [...document.querySelectorAll(".hma-side > section")];
+    expect(cards).toHaveLength(4);
+    expect(cards[0].querySelector("h2")!.textContent).toContain("ความคืบหน้ารายห้อง");
+    expect(cards.map((c) => c.querySelector("h2")!.textContent)).toEqual(["ความคืบหน้ารายห้อง", "ต้องติดตาม", "ไม่มาวันนี้", "ครบกำหนด"]);
   });
 
-  it("the settings panel lists all nine cards and saves every change at once (and tells the other devices through the settings)", async () => {
+  it("the panel is titled with the layout, lists only that layout's five cards, saves every change at once into that layout's field", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
-    const dlg = await screen.findByRole("dialog", { name: "ปรับหน้าหลัก" });
-    expect(within(dlg).getAllByRole("switch")).toHaveLength(9);
+    const dlg = await screen.findByRole("dialog", { name: /^ปรับหน้าหลัก · โครง ก/ });
+    expect(within(dlg).getAllByRole("switch")).toHaveLength(6); // the five sub-cards + the fixed timetable strip
+    expect(within(dlg).getAllByRole("radio")).toHaveLength(3);
+    expect(dlg.textContent).toContain("ปิดไม่ได้: ลำดับงานวันนี้ · ปุ่มลัด · ตัวเลขสรุป");
+    expect(dlg.textContent).toContain("เปลี่ยนโครง/ธีมที่ ตั้งค่า > หน้าตา");
 
     fireEvent.click(within(dlg).getByRole("switch", { name: "แสดงการ์ด ห้องของฉัน" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
     const [url, body] = put.mock.calls[0];
     expect(url).toBe("/api/settings");
-    expect(JSON.parse(body.home_cards).hidden).not.toContain("classes");
+    const saved = JSON.parse(body.home_cards);
+    expect(saved.a.hidden).not.toContain("classes");
+    expect(saved.order).toEqual(defaultHomeCards().order);               // the old fields stay for an app that was not updated
     await screen.findByRole("heading", { level: 2, name: "ห้องของฉัน" });   // shown at once, behind the panel
 
-    // reorder: the second card up
-    fireEvent.click(within(dlg).getByRole("button", { name: "เลื่อน เช็คชื่อวันนี้ ขึ้น" }));
+    fireEvent.click(within(dlg).getByRole("button", { name: "เลื่อน ต้องติดตาม ขึ้น" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(2));
-    expect(JSON.parse(put.mock.calls[1][1].home_cards).order.slice(0, 2)).toEqual(["att", "open"]);
-    expect(within(dlg).getByRole("status").textContent).toContain("ย้าย เช็คชื่อวันนี้ ไปลำดับ 1");
+    expect(JSON.parse(put.mock.calls[1][1].home_cards).a.order.slice(0, 3)).toEqual(["timetable", "follow", "open"]) // the fixed strip stays first;
+    expect(within(dlg).getByRole("status").textContent).toContain("ย้าย ต้องติดตาม ไปลำดับ 1");
   });
 
   it("a failed save puts the layout back and says so", async () => {
     put.mockRejectedValueOnce(new Error("offline"));
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" });
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
-    const dlg = await screen.findByRole("dialog", { name: "ปรับหน้าหลัก" });
+    const dlg = await screen.findByRole("dialog", { name: /^ปรับหน้าหลัก · โครง ก/ });
     fireEvent.click(within(dlg).getByRole("switch", { name: "แสดงการ์ด ห้องของฉัน" }));
     await waitFor(() => expect(err).toHaveBeenCalled());
     expect(settings.value!.home_cards).toBe("");                     // back to the saved layout
     await waitFor(() => expect(h2("ห้องของฉัน")).toBeNull());
   });
 
-  it("reset asks first, then restores the default layout", async () => {
-    settings.value = baseSettings({ home_cards: serializeHomeCards(toggleCard(defaultHomeCards(), "open")) });
+  it("reset asks first, then restores the default of this layout only", async () => {
+    settings.value = baseSettings({ home_cards: withA({ order: [...LAYOUT_CARDS.a], hidden: ["classes", "due"] }) });
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "เช็คชื่อวันนี้" });
+    await screen.findByRole("heading", { level: 2, name: "ต้องติดตาม" });
+    expect(h2("ครบกำหนด")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "ปรับหน้าหลัก" }));
-    const dlg = await screen.findByRole("dialog", { name: "ปรับหน้าหลัก" });
+    const dlg = await screen.findByRole("dialog", { name: /^ปรับหน้าหลัก · โครง ก/ });
     fireEvent.click(within(dlg).getByRole("button", { name: /คืนค่าเริ่มต้น/ }));
     expect(put).not.toHaveBeenCalled();                              // only asked so far
     fireEvent.click(within(dlg).getByRole("button", { name: "ใช่ คืนค่า" }));
@@ -154,34 +159,51 @@ describe("home page cards", () => {
   });
 });
 
-describe("the work card", () => {
-  it("separates 'ยังไม่ส่ง' and 'รอตรวจ' per class (each a button), and offers the scan for the class that still owes work", async () => {
+describe("the work card (ก: progress per room, ข: the picked room's work with numbers)", () => {
+  it("ก: a progressbar and the numbers per room; ข: 'ค้าง' and 'รอตรวจ' are buttons per work, with 6/8 · ยกเว้น 2 and the scan for the room that still owes work", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    const row = document.querySelector(".hm-prog")!;
-    expect(within(row as HTMLElement).getByRole("button", { name: /ยังไม่ส่ง 2/ })).toBeTruthy();
-    expect(within(row as HTMLElement).getByRole("button", { name: /รอตรวจ 1/ })).toBeTruthy();
-    expect(row.querySelector(".num")!.textContent).toBe("6/8 · ยกเว้น 2");
+    const room = (await screen.findByRole("heading", { level: 2, name: "ความคืบหน้ารายห้อง" })).closest("section")!.querySelector(".hma-room")!;
+    expect(within(room as HTMLElement).getByRole("progressbar", { name: /ป\.6\/1 ส่งงาน 75%/ })).toBeTruthy();
+    expect(room.textContent).toContain("รอตรวจ 1");
+    expect(room.textContent).toContain("ค้าง 2");
+    cleanup();
+
+    await useLayout("b");
+    render(<Home />);
+    await waitFor(() => expect(document.querySelector(".hmb-asg")).not.toBeNull());
+    const row = document.querySelector(".hmb-asg") as HTMLElement;
+    expect(within(row).getByRole("button", { name: /ค้าง 2/ })).toBeTruthy();
+    expect(within(row).getByRole("button", { name: /รอตรวจ 1/ })).toBeTruthy();
+    expect(row.querySelector(".nums")!.textContent).toContain("6/8 · ยกเว้น 2");
+    expect(within(row).getByRole("button", { name: "สแกนรับ ใบงานเก่า ป.6/1" })).toBeTruthy();
   });
 
-  it("the 'ควรปิดรับ' filter lists open work that is more than a week overdue and offers to close it", async () => {
+  it("an open work more than a week overdue is in the day's list with 'เลยกำหนด' and offers to close it", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    fireEvent.click(screen.getByRole("button", { name: /ควรปิดรับ \(1\)/ }));
-    expect(screen.getByRole("button", { name: /ปิดรับงาน/ })).toBeTruthy();
-    expect(document.body.textContent).toContain("เลยกำหนด");
+    await screen.findByRole("heading", { level: 2, name: "ลำดับงานวันนี้" });
+    const li = document.querySelector("li[data-kind=overdue]") as HTMLElement;
+    expect(li.textContent).toContain("เลย");
+    fireEvent.click(within(li).getByRole("button", { name: /ปิดรับงานนี้/ }));
+    expect(window.location.hash).toContain("#/gradebook");
   });
 });
 
 describe("due-soon and absent cards, and hiding names", () => {
-  it("due-soon: counts who has not handed in; names appear only when the list is opened", async () => {
+  it("due-soon: counts who has not handed in per room; no child's name is on the page, the names go out only through the copy-to-LINE button", async () => {
+    const write = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText: write }, onLine: true });
+    const base = payload();
+    get.mockImplementation(async () => ({ ...base,
+      openAssignments: [...base.openAssignments, { assignment: asg("a2", TODAY, "ใบงานเศษส่วน"), perClass: [{ classId: "c1", total: 10, submitted: 8, scored: 8, awaiting: 0, late: 0, missing: 0, excused: 0 }] }],
+      dueSoon: [{ assignmentId: "a2", classId: "c1", studentIds: ["s1", "s2"] }] }));
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "ครบกำหนดวันนี้/พรุ่งนี้" });
-    expect(screen.getByText("ยังไม่ส่ง 2 คน")).toBeTruthy();
-    expect(document.body.textContent).not.toContain("2 เด็ก1");
-    fireEvent.click(screen.getByRole("button", { name: /ดูรายชื่อ/ }));
-    expect(document.body.textContent).toContain("2 เด็ก1");
-    expect(document.body.textContent).toContain("3 เด็ก2");
+    const card = (await screen.findByRole("heading", { level: 2, name: "ครบกำหนด" })).closest("section")!;
+    expect(card.textContent).toContain("ป.6/1 ยังไม่ส่ง 2 คน");
+    expect(document.body.textContent).not.toContain("เด็ก1");
+    fireEvent.click(screen.getByRole("button", { name: /คัดลอกรายชื่อไป LINE · ป\.6\/1/ }));
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(write.mock.calls[0][0]).toContain("เด็ก1");
+    expect(write.mock.calls[0][0]).toContain("เด็ก2");
   });
 
   it("a dashboard saved before this update (no dueSoon / absentToday) still renders, with both cards empty", async () => {
@@ -189,24 +211,24 @@ describe("due-soon and absent cards, and hiding names", () => {
     delete old.dueSoon; delete old.absentToday;
     get.mockImplementation(async () => old);
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "ครบกำหนดวันนี้/พรุ่งนี้" });
-    expect(screen.getByText("ไม่มีงานครบกำหนดวันนี้หรือพรุ่งนี้")).toBeTruthy();
-    expect(screen.getByRole("heading", { level: 2, name: "ใครไม่มาวันนี้" }).closest("section")!.textContent).toContain("มาครบ");
+    await screen.findByRole("heading", { level: 2, name: "ครบกำหนด" });
+    expect(screen.getByText(/ไม่มีงานครบกำหนดวันนี้หรือพรุ่งนี้/)).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "ไม่มาวันนี้" }).closest("section")!.textContent).toContain("มาครบ");
   });
 
   it("absent card: groups today's absentees by status with their names", async () => {
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "ใครไม่มาวันนี้" });
-    const card = screen.getByRole("heading", { level: 2, name: "ใครไม่มาวันนี้" }).closest("section")!;
+    await screen.findByRole("heading", { level: 2, name: "ไม่มาวันนี้" });
+    const card = screen.getByRole("heading", { level: 2, name: "ไม่มาวันนี้" }).closest("section")!;
     expect(card.textContent).toContain("ขาด 1");
     expect(card.textContent).toContain("สาย 1");
-    expect(within(card as HTMLElement).getByRole("button", { name: "4 เด็ก3" })).toBeTruthy();
+    expect(within(card as HTMLElement).getByRole("button", { name: /เด็ก3/ })).toBeTruthy();
   });
 
   it("'ซ่อนชื่อ' removes every child's name from every card and shows counts instead; it is remembered on this device", async () => {
     render(<Home />);
     await screen.findByRole("heading", { level: 2, name: "ต้องติดตาม" });
-    expect(document.body.textContent).toContain("เด็ก0 ทดสอบ");           // the follow-up list names the child
+    expect(screen.getByRole("heading", { level: 2, name: "ต้องติดตาม" }).closest("section")!.textContent).toContain("เด็ก0");   // the follow-up list names the child
     fireEvent.click(screen.getByRole("button", { name: "ซ่อนชื่อนักเรียน" }));
     await waitFor(() => expect(screen.getByRole("status", { name: "" })).toBeTruthy());
     const text = document.querySelector(".hm")!.textContent!;
@@ -218,31 +240,39 @@ describe("due-soon and absent cards, and hiding names", () => {
   });
 });
 
-describe("the 'do this now' card", () => {
-  it("is gone when nothing needs doing", async () => {
+describe("the day's list in ก ('do this now')", () => {
+  it("is cleared when nothing needs doing: the big line says so and no row is left", async () => {
+    get.mockImplementation(async () => payload({ openAssignments: [], followUp: [], dueSoon: [], absentToday: [], awaitingCount: 0, missingCount: 0 }));
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
+    await screen.findByText("เคลียร์ครบแล้ว เยี่ยมมาก");
+    expect(document.querySelector("li[data-kind=clear]")).not.toBeNull();
+    expect(document.querySelector("li[data-kind=failed], li[data-kind=room], li[data-kind=overdue]")).toBeNull();
     expect(h2("ต้องทำตอนนี้")).toBeNull();
   });
 
   it("lists failed sends first and opens the failed list", async () => {
     failedCount.value = 2;
     render(<Home />);
-    const card = (await screen.findByRole("heading", { level: 2, name: "ต้องทำตอนนี้" })).closest("section")!;
-    expect(card.querySelector(".hm-todo-row")!.textContent).toContain("ส่งไม่สำเร็จ 2 รายการ");
-    expect(within(card as HTMLElement).getByRole("button", { name: "ดูรายการ" })).toBeTruthy();
+    await screen.findByRole("heading", { level: 2, name: "ลำดับงานวันนี้" });
+    const first = document.querySelector(".hma-tl > li")!;
+    expect(first.getAttribute("data-kind")).toBe("failed");
+    expect(first.textContent).toContain("ส่งไม่สำเร็จ 2 รายการ");
+    expect(within(first as HTMLElement).getByRole("button", { name: /ดูรายการ/ })).toBeTruthy();
   });
 
   it("warns about a room not checked yet only once the 'late' time has passed", async () => {
     get.mockImplementation(async () => payload({ attendanceToday: [{ date: TODAY, classId: "c1", present: 0, late: 0, leave: 0, sick: 0, absent: 0, marked: 0, total: 8 }], absentToday: [] }));
+    const roomRow = () => document.querySelector("li[data-kind=room]");
     render(<Home />);
-    await screen.findByText(/ป\.6\/1 ยังไม่ได้เช็คชื่อ/);                  // 11:00 > 08:30
+    await screen.findByRole("heading", { level: 2, name: "ลำดับงานวันนี้" });
+    expect(roomRow()!.textContent).toContain("ป.6/1");                       // 11:00 > 08:30
+    expect(roomRow()!.textContent).toContain("ยังไม่ได้เช็คชื่อ");
     cleanup();
     dashboard.value = null;
     vi.setSystemTime(Date.UTC(2026, 10, 4, 1, 0, 0));                    // 08:00 in Bangkok
     render(<Home />);
-    await screen.findByRole("heading", { level: 2, name: "งานที่กำลังเก็บ" });
-    expect(screen.queryByText(/ป\.6\/1 ยังไม่ได้เช็คชื่อ/)).toBeNull();
+    await screen.findByRole("heading", { level: 2, name: "ลำดับงานวันนี้" });
+    expect(roomRow()).toBeNull();
   });
 
   it("says when there has never been a backup, and stays quiet after a recent one", async () => {
@@ -253,19 +283,19 @@ describe("the 'do this now' card", () => {
 });
 
 describe("the menu", () => {
-  it("has four labelled groups holding the eight pages in the day's order, and marks the current page", () => {
+  it("has four labelled groups holding the nine pages in the day's order, and marks the current page", () => {
     route.value = "/attendance";
     render(<Shell><div /></Shell>);
     const rail = screen.getByRole("navigation", { name: "เมนูหลัก" });
     const groups = within(rail).getAllByRole("group").map((g) => [g.getAttribute("aria-label"), within(g).getAllByRole("link").map((a) => a.textContent)]);
     expect(groups).toEqual([
-      ["วันนี้", ["หน้าหลัก"]], ["ในห้องเรียน", ["สแกน", "เช็คชื่อ", "สุ่มชื่อ"]], ["ตรวจงาน", ["คะแนน", "รายงาน"]], ["จัดการ", ["นักเรียน", "ตั้งค่า"]],
+      ["วันนี้", ["หน้าหลัก", "ตารางสอน"]], ["ในห้องเรียน", ["สแกน", "เช็คชื่อ", "สุ่มชื่อ"]], ["ตรวจงาน", ["คะแนน", "รายงาน"]], ["จัดการ", ["นักเรียน", "ตั้งค่า"]],
     ]);
     const current = within(rail).getAllByRole("link").filter((a) => a.getAttribute("aria-current") === "page");
     expect(current.map((a) => a.textContent)).toEqual(["เช็คชื่อ"]);
-    expect(rail.querySelector(".ti-notebook")).toBeTruthy();         // the new icons (D22)
-    expect(rail.querySelector(".ti-users")).toBeTruthy();
-    expect(rail.querySelector(".ti-dice-3")).toBeTruthy();
+    expect(rail.querySelector("[data-icon=\"notebook\"]")).toBeTruthy();         // the new icons (D22)
+    expect(rail.querySelector("[data-icon=\"users\"]")).toBeTruthy();
+    expect(rail.querySelector("[data-icon=\"dice-3\"]")).toBeTruthy();
     expect(within(rail).getByRole("button", { name: "ออกจากระบบ" })).toBeTruthy();
   });
 
@@ -274,13 +304,13 @@ describe("the menu", () => {
     render(<Shell><div /></Shell>);
     const bar = screen.getByRole("navigation", { name: "เมนู" });
     expect(within(bar).getAllByRole("link").filter((a) => a.getAttribute("aria-current") === "page").map((a) => a.textContent)).toEqual(["หน้าหลัก"]);
-    const btn = within(bar).getByRole("button", { name: "เมนู" });
+    const btn = within(bar).getByRole("button", { name: "เพิ่มเติม" });
     expect(btn.getAttribute("aria-expanded")).toBe("false");
     fireEvent.click(btn);
-    const sheet = screen.getByRole("dialog", { name: "เมนู" });
+    const sheet = screen.getByRole("dialog", { name: "เพิ่มเติม" });
     expect(btn.getAttribute("aria-controls")).toBe(sheet.id);
     expect(btn.getAttribute("aria-expanded")).toBe("true");
-    expect([...sheet.querySelectorAll(".sheet-gl")].map((e) => e.textContent)).toEqual(["ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
-    expect(within(sheet).getAllByRole("link").map((a) => a.textContent!.trim())).toEqual(["สุ่มชื่อ", "รายงาน", "นักเรียน", "ตั้งค่า"]);
+    expect([...sheet.querySelectorAll(".sheet-gl")].map((e) => e.textContent)).toEqual(["วันนี้", "ในห้องเรียน", "ตรวจงาน", "จัดการ"]);
+    expect(within(sheet).getAllByRole("link").filter((a) => !a.classList.contains("tp-manage")).map((a) => a.textContent!.trim())).toEqual(["ตารางสอน", "สุ่มชื่อ", "รายงาน", "นักเรียน", "ตั้งค่า"]);
   });
 });

@@ -1,0 +1,202 @@
+{
+ "tt-a-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-b-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-c-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "frame-sheet-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "slot-sheet-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-a-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-b-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-c-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-appearance-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-time-pro-light-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-a-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-b-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "tt-c-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "frame-sheet-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "slot-sheet-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-a-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-b-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "home-c-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-appearance-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ },
+ "set-time-pro-dark-ipad-l": {
+  "minText": {
+   "r": 99
+  },
+  "minUi": {
+   "r": 99
+  },
+  "contrast": [],
+  "ui": []
+ }
+}

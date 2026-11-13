@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ร่างอ้างอิง ตารางสอน · งานครบ (Gate R)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mitr:wght@400;500;600&family=Sarabun:wght@400;500;600;700&family=Mali:wght@500;600;700&family=Anuphan:wght@400;500;600;700&display=swap">
+<style>
+/* =====================================================================
+   Hub chrome (not part of the app): direction / screen / skin / time / size
+   ===================================================================== */
+:root{--hub-bg:#1f1a16;--hub-fg:#f6ecdf;--hub-mut:#cdbca8;--hub-on:#f3cd9c;--hub-on-fg:#2a1f16;--hub-line:rgba(255,235,210,.16)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#d8d2c9;font-family:"Sarabun","Leelawadee UI",system-ui,sans-serif;color:#2a1f16;overflow-x:hidden}
+.hub{background:var(--hub-bg);color:var(--hub-fg);padding:8px 14px 10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:5}
+.hub-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hub-title{font:500 16px/1.3 "Mitr","Leelawadee UI",sans-serif;margin:0}
+.hub-sub{font-size:13px;color:var(--hub-mut)}
+.hub-grow{flex:1}
+.hub-tog{min-height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--hub-line);background:transparent;color:var(--hub-fg);font:inherit;font-size:14px;cursor:pointer}
+.hub-tog:hover{background:rgba(255,255,255,.08)}
+.hub-groups{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.hg{display:flex;align-items:center;gap:6px;min-width:0}
+.hg-l{font-size:13px;color:var(--hub-mut);white-space:nowrap}
+.hg-seg{display:flex;flex-wrap:wrap;gap:2px;padding:2px;background:rgba(255,255,255,.07);border-radius:10px}
+.hg-seg button{min-height:36px;padding:0 11px;border:0;border-radius:8px;background:transparent;color:var(--hub-fg);font:inherit;font-size:14px;cursor:pointer;white-space:nowrap}
+.hg-seg button:hover{background:rgba(255,255,255,.08)}
+.hg-seg button[aria-pressed="true"]{background:var(--hub-on);color:var(--hub-on-fg);font-weight:600}
+.hg select{display:none;width:100%;min-height:42px;border-radius:10px;border:1px solid var(--hub-line);background:#2c251f;color:var(--hub-fg);font:inherit;font-size:15px;padding:0 8px}
+.hub-info{font-size:14px;line-height:1.55;color:var(--hub-mut);margin:0}
+.hub-info b{color:var(--hub-fg);font-weight:600}
+.hub-info .good{color:#c9e3a6}.hub-info .weak{color:#f5c99a}
+.hub :focus-visible{outline:3px solid var(--hub-on);outline-offset:2px}
+.hub.min .hub-groups,.hub.min .hub-info{display:none}
+@media (max-width:760px){
+  .hub{padding:6px 10px 8px;gap:6px}
+  .hub-sub{display:none}
+  .hub-groups{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}
+  .hg{flex-direction:column;align-items:stretch;gap:0}
+  .hg-l{font-size:12px}
+  .hg-seg{display:none}
+  .hg select{display:block}
+  .hub-info{font-size:13px}
+}
+.stage{display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.stage.framed{padding:16px 0 8px}
+.scaler{position:relative;flex:none}
+.device{position:relative;overflow:hidden;transform-origin:0 0}
+.stage.framed .device{border-radius:20px;box-shadow:0 0 0 8px #2b2520,0 24px 60px rgba(0,0,0,.28)}
+.size-note{font-size:13px;color:#4a3c2f;margin:14px 8px 0;text-align:center}
+
+/* =====================================================================
+   App — tokens copied from src/styles/tokens.css (light) · 3 skins
+   ===================================================================== */
+.app{--tap:44px;--rail-w:96px;
+  --t-xs:13px;--t-sm:14px;--t-md:16px;--t-lg:18px;--t-xl:22px;--t-2xl:28px;--t-3xl:38px;--t-4xl:52px;
+  --tint-blue-bg:#e0edfc;--tint-blue-fg:#1a56b0;--tint-green-bg:#e7f3d7;--tint-green-fg:#4b7314;
+  --tint-orange-bg:#fce8d8;--tint-orange-fg:#9a4f0c;--tint-magenta-bg:#f8e2ee;--tint-magenta-fg:#9c2b63;
+  position:absolute;inset:0;container:app/inline-size;background:var(--surface-0);color:var(--text-primary);
+  font-family:var(--font-sans);font-size:16px;line-height:1.6;overflow:hidden}
+.app[data-skin="warm"]{--font-sans:"Sarabun","Leelawadee UI",system-ui,sans-serif;--font-display:"Mitr","Leelawadee UI",system-ui,sans-serif;--display-weight:500;--display-track:0;--font-num:"Mitr","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px;--radius-sm:12px;--radius:16px;--radius-lg:22px;--radius-btn:999px;--radius-hero:28px;--card-bw:1px;--btn-bw:1px;
+  --s1:4px;--s2:8px;--s3:13px;--s4:17px;--s5:25px;--s6:34px;
+  --surface-0:#f6efe4;--surface-1:#ede2d1;--surface-2:#fffaf2;--text-primary:#2a1f16;--text-secondary:#574535;--text-muted:#6b5846;
+  --border:rgba(90,60,30,.14);--border-strong:rgba(90,60,30,.24);--border-control:#9b8670;--card-border:rgba(90,60,30,.12);
+  --accent:#b4462a;--accent-hover:#983a22;--on-accent:#fff;--bg-accent:#f8e0d4;--text-accent:#9a3a22;--accent-2:#e9a23b;--on-accent-2:#2a1f16;
+  --hero-bg:#f3cd9c;--hero-fg:#2a1f16;--hero-muted:#5a3f26;--hero-chip:rgba(255,250,242,.55);
+  --bg-success:#e6f0d6;--text-success:#46661c;--fill-success:#6f9a33;--bg-warning:#fbecd0;--text-warning:#85520a;--fill-warning:#e9a23b;--bg-danger:#f9e0da;--text-danger:#a52a1c;--fill-danger:#cc4730;
+  --illo-1:#e9a23b;--illo-2:#b4462a;--illo-3:#6f9a33;--illo-4:#fffaf2;
+  --rail-bg:#2f241b;--rail-fg:#e8d8c4;--rail-active-bg:#f3cd9c;--rail-active-fg:#2a1f16;--rail-label:#b9a48c;--ink:#2a1f16;
+  --shadow-card:0 2px 0 rgba(90,60,30,.06),0 10px 24px rgba(90,60,30,.08);--shadow-pop:0 14px 34px rgba(90,60,30,.22);--now:#b4462a}
+.app[data-skin="pro"]{--font-sans:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;--font-display:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;--display-weight:700;--display-track:-.01em;--font-num:"IBM Plex Sans Thai","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:4px;--radius-sm:6px;--radius:10px;--radius-lg:14px;--radius-btn:8px;--radius-hero:16px;--card-bw:1px;--btn-bw:1px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+  --surface-0:#edf1f7;--surface-1:#e3e9f2;--surface-2:#fff;--text-primary:#0f1b2d;--text-secondary:#3f4c63;--text-muted:#56627a;
+  --border:rgba(15,35,71,.12);--border-strong:rgba(15,35,71,.22);--border-control:#8794ab;--card-border:rgba(15,35,71,.10);
+  --accent:#1f56d6;--accent-hover:#1946b3;--on-accent:#fff;--bg-accent:#e3ecfd;--text-accent:#1a4bbf;--accent-2:#22b8cf;--on-accent-2:#0f2347;
+  --hero-bg:#0f2347;--hero-fg:#fff;--hero-muted:#b9c7e0;--hero-chip:rgba(255,255,255,.12);
+  --bg-success:#dff5e9;--text-success:#11683b;--fill-success:#16a05d;--bg-warning:#fdf0d5;--text-warning:#865507;--fill-warning:#f0a422;--bg-danger:#fde4e4;--text-danger:#b01f1f;--fill-danger:#d83535;
+  --illo-1:#22b8cf;--illo-2:#fff;--illo-3:#5b8cff;--illo-4:#f0a422;
+  --rail-bg:#0f2347;--rail-fg:#c6d2e8;--rail-active-bg:#22b8cf;--rail-active-fg:#0f2347;--rail-label:#8ea0c2;--ink:#0f2347;
+  --shadow-card:0 1px 2px rgba(15,35,71,.06),0 6px 18px rgba(15,35,71,.07);--shadow-pop:0 12px 32px rgba(15,35,71,.22);--now:#d83535}
+.app[data-skin="playful"]{--font-sans:"Anuphan","Leelawadee UI",system-ui,sans-serif;--font-display:"Mali","Leelawadee UI",system-ui,sans-serif;--display-weight:700;--display-track:0;--font-num:"Mali","Leelawadee UI",system-ui,sans-serif;
+  --radius-xs:8px;--radius-sm:12px;--radius:16px;--radius-lg:20px;--radius-btn:14px;--radius-hero:24px;--card-bw:2px;--btn-bw:2px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+  --surface-0:#eaf3ff;--surface-1:#dceafc;--surface-2:#fff;--text-primary:#15142b;--text-secondary:#3b3a5c;--text-muted:#514f73;
+  --border:rgba(21,20,43,.14);--border-strong:rgba(21,20,43,.3);--border-control:#15142b;--card-border:#15142b;
+  --accent:#3b5bfd;--accent-hover:#2c48e0;--on-accent:#fff;--bg-accent:#e1e7ff;--text-accent:#2c48e0;--accent-2:#ffd43b;--on-accent-2:#15142b;
+  --hero-bg:#ffd43b;--hero-fg:#15142b;--hero-muted:#4d3f00;--hero-chip:rgba(255,255,255,.6);
+  --bg-success:#d4f7e6;--text-success:#0b6b45;--fill-success:#22c58b;--bg-warning:#fff1c2;--text-warning:#7a5400;--fill-warning:#ffb020;--bg-danger:#ffe0e6;--text-danger:#b3123c;--fill-danger:#ff4d6d;
+  --illo-1:#ff6fa8;--illo-2:#3b5bfd;--illo-3:#22c58b;--illo-4:#15142b;
+  --rail-bg:#15142b;--rail-fg:#dcdbf5;--rail-active-bg:#ffd43b;--rail-active-fg:#15142b;--rail-label:#9b99c9;--ink:#15142b;
+  --shadow-card:4px 4px 0 #15142b;--shadow-pop:6px 6px 0 #15142b;--now:#e0244f}
+
+/* ---------- base ---------- */
+.app *{box-sizing:border-box}
+.app h1,.app h2,.app h3{font-family:var(--font-display);font-weight:var(--display-weight);letter-spacing:var(--display-track);line-height:1.35;margin:0}
+.app p{margin:0}
+.app button,.app input,.app select{font:inherit;color:inherit}
+.app button{cursor:pointer}
+.app :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;display:inline-block;vertical-align:middle}
+.grow{flex:1 1 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--text-secondary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:var(--tap);min-width:var(--tap);padding:6px 16px;border-radius:var(--radius-btn);
+  border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);color:var(--text-primary);font-size:var(--t-sm);font-weight:500;line-height:1.3;text-align:center;white-space:nowrap}
+.btn:hover{background:var(--surface-1)}
+.btn:active{background:var(--border-strong)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.pri:hover{background:var(--accent-hover)}
+.app[data-skin="playful"] .btn.pri{border-color:var(--ink)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-1)}
+.btn.danger{color:var(--text-danger)}
+.btn.icon{padding:0;width:var(--tap)}
+.btn.sm-l{padding:6px 12px}
+.card{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:calc(var(--radius-btn) + 3px);background:var(--surface-1);border:1px solid var(--border)}
+.seg button{min-height:40px;padding:0 16px;border-radius:var(--radius-btn);border:0;background:transparent;color:var(--text-secondary);font-size:var(--t-sm);font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text-primary);box-shadow:0 0 0 1px var(--border-control)}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;line-height:1.5;white-space:nowrap}
+.tag.now{background:var(--now);color:#fff}
+
+/* ---------- shell: rail / main / phone tab bar ---------- */
+.shell{display:grid;grid-template-columns:var(--rail-w) minmax(0,1fr);height:100%;position:relative}
+.rail{background:var(--rail-bg);color:var(--rail-fg);display:flex;flex-direction:column;gap:2px;padding:8px 6px;height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.rail-logo{flex:none;width:42px;height:42px;border-radius:11px;margin:0 auto 4px;background:var(--rail-active-bg);color:var(--rail-active-fg);display:grid;place-items:center}
+.rail-gl{font-size:12px;color:var(--rail-label);text-align:center;white-space:nowrap;line-height:1.3;padding:5px 0 1px;margin-top:3px;border-top:1px solid color-mix(in srgb,var(--rail-label) 35%,transparent)}
+.rail-group:first-of-type .rail-gl{border-top:0;margin-top:0}
+.rail-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%;min-height:var(--tap);padding:4px 2px;
+  font-size:13px;line-height:1.25;white-space:nowrap;color:var(--rail-fg);border-radius:var(--radius-sm);border:0;background:transparent}
+.rail-item:hover{background:color-mix(in srgb,var(--rail-fg) 14%,transparent)}
+.rail-item[aria-current="page"]{background:var(--rail-active-bg);color:var(--rail-active-fg);font-weight:600}
+.rail-item[aria-current="page"]::before{content:"";position:absolute;left:-6px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--rail-active-bg)}
+.rail-item .nb{position:absolute;top:2px;right:2px;font-size:11px;line-height:1.35;padding:0 5px;border-radius:999px;background:var(--accent-2);color:var(--on-accent-2);font-weight:700}
+.app[data-skin="pro"] .rail-item .nb{background:#fff;color:#0f2347}
+.rail-spacer{flex:1}
+.rail-sync{display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;color:var(--rail-fg);padding:4px 0}
+.rail-sync i{width:8px;height:8px;border-radius:50%;background:var(--fill-success)}
+.main{height:100%;overflow-y:auto;overflow-x:hidden;padding:20px 24px 40px;container:main/inline-size;position:relative}
+.tabbar{display:none}
+@container app (min-width:721px) and (max-width:999px){ .main{padding:16px 20px 32px} }
+@container app (max-width:720px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{display:none}
+  .main{padding:14px 14px 104px}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;position:absolute;left:0;right:0;bottom:0;z-index:30;
+    background:var(--surface-2);border-top:1px solid var(--border);padding:6px 4px 10px}
+  .tab{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;color:var(--text-secondary);line-height:1.25;white-space:nowrap;
+    background:transparent;border:0;padding:4px 0;min-height:var(--tap)}
+  .tab .pip{position:absolute;left:50%;top:2px;width:48px;height:30px;margin-left:-24px;border-radius:15px}
+  .tab .ic{position:relative}
+  .tab[aria-current="page"]{color:var(--text-accent);font-weight:600}
+  .tab[aria-current="page"] .pip{background:var(--bg-accent)}
+  .tab-scan .bub{width:56px;height:56px;border-radius:50%;margin-top:-20px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;border:3px solid var(--surface-2);box-shadow:var(--shadow-pop)}
+}
+
+/* ---------- page header (ui.css .uh) ---------- */
+.uh{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s4);flex-wrap:wrap}
+.uh-l{display:flex;align-items:center;gap:10px;min-width:0}
+.uh-ic{width:44px;height:44px;border-radius:12px;flex:none;background:var(--bg-accent);color:var(--text-accent);display:grid;place-items:center}
+.uh-title{font-size:var(--t-xl)}
+.uh-sub{font-size:var(--t-sm);color:var(--text-secondary)}
+.uh-act{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.back{margin:0 0 var(--s2) -8px}
+
+/* ---------- slot chips: a room = tint + coloured bar + its name; an activity = dashed outline + flag ---------- */
+.t-blue{--tb:var(--tint-blue-bg);--tf:var(--tint-blue-fg)}
+.t-green{--tb:var(--tint-green-bg);--tf:var(--tint-green-fg)}
+.t-orange{--tb:var(--tint-orange-bg);--tf:var(--tint-orange-fg)}
+.t-magenta{--tb:var(--tint-magenta-bg);--tf:var(--tint-magenta-fg)}
+.slot{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:0;min-width:0;text-align:left;
+  background:var(--tb);color:var(--tf);border:0;border-left:5px solid var(--tf);border-radius:var(--radius-xs);padding:6px 8px 6px 9px;line-height:1.3}
+.slot .rm{font-family:var(--font-display);font-weight:600;font-size:var(--t-md);color:var(--tf);white-space:nowrap}
+.slot .sj{font-size:var(--t-xs);color:var(--text-primary);overflow-wrap:anywhere}
+.slot.act{background:var(--surface-2);color:var(--text-primary);border:1.5px dashed var(--border-control)}
+.slot.act .an{display:flex;align-items:flex-start;gap:4px;font-weight:600;font-size:var(--t-sm);overflow-wrap:anywhere}
+.slot.act .an .ic{margin-top:2px;color:var(--text-secondary)}
+.slot.act .sj{color:var(--text-secondary)}
+button.slot:hover{filter:brightness(.97)}
+
+/* =====================================================================
+   แบบ ก — ตารางกระดาษ
+   ===================================================================== */
+.a-now{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s4);padding:var(--s2) var(--s2) var(--s2) var(--s4);margin-bottom:var(--s4);border-radius:var(--radius);background:var(--surface-2);border:var(--card-bw) solid var(--card-border)}
+.a-now .seg-l{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;min-width:0;font-size:var(--t-sm)}
+.a-now .k{font-weight:700;color:var(--text-secondary);white-space:nowrap}
+.a-now b{font-size:var(--t-md)}
+.a-now .sep{width:1px;align-self:stretch;background:var(--border-strong)}
+.a-sheet{padding:var(--s3)}
+.a-grid{--dw:84px;--lw:46px;display:grid;gap:4px;grid-auto-rows:minmax(80px,auto)}
+.a-h{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px 8px;text-align:center;border-bottom:2px solid var(--border-strong);line-height:1.3}
+.a-h b{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-sm)}
+.a-h span{font-size:var(--t-xs);color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.a-h.now{border-bottom:3px solid var(--now)}
+.a-h .tag{margin-top:2px}
+.a-corner{display:flex;align-items:flex-end;font-size:var(--t-xs);color:var(--text-secondary);padding:0 4px 8px;border-bottom:2px solid var(--border-strong);line-height:1.3}
+.a-day{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:0 8px;font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-md);border-radius:var(--radius-xs);line-height:1.3}
+.a-day .short{display:none}
+.a-day.today{background:var(--accent);color:var(--on-accent)}
+.a-day.today small{font-family:var(--font-sans);font-size:12px;font-weight:600}
+.a-band{background:var(--bg-accent);border-radius:var(--radius-xs);margin:-2px}
+.a-cell{min-height:80px;width:100%;height:100%;position:relative}
+.a-empty{border:1.5px dashed transparent;border-radius:var(--radius-xs);background:transparent;color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.a-empty .ic{opacity:.5}
+.a-empty .lbl{font-size:12px;opacity:0}
+.a-empty:hover,.a-empty:focus-visible{border-color:var(--border-control);background:var(--surface-1)}
+.a-empty:hover .ic{opacity:1}
+.a-empty:hover .lbl,.a-empty:focus-visible .lbl{opacity:1}
+.a-cell.is-now{box-shadow:0 0 0 3px var(--now)}
+.a-cell .nowtag{position:absolute;top:-10px;right:6px}
+.a-lunch{display:flex;align-items:center;justify-content:center;border-radius:var(--radius-xs);background:repeating-linear-gradient(135deg,var(--surface-1) 0 8px,var(--surface-2) 8px 14px);border:1px solid var(--border)}
+.a-lunch span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:var(--t-sm);color:var(--text-secondary);font-weight:600;white-space:nowrap}
+.a-lunch.now{box-shadow:0 0 0 3px var(--now)}
+.a-leg{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2) var(--s4);margin-top:var(--s3);font-size:var(--t-sm);color:var(--text-secondary)}
+.a-leg .sw{display:inline-flex;align-items:center;gap:6px}
+.a-leg .sw i{width:18px;height:14px;border-radius:3px;background:var(--tb);border-left:4px solid var(--tf)}
+.a-leg .sw i.act{background:transparent;border:1.5px dashed var(--border-control)}
+.a-mob{display:none}
+@container main (max-width:900px){
+  .a-grid{--dw:58px;--lw:34px;grid-auto-rows:minmax(72px,auto)}
+  .a-day .full{display:none}.a-day .short{display:inline}
+  .a-day{padding:0 4px;font-size:var(--t-sm)}
+  .a-grid .slot{padding:5px 4px 5px 6px;border-left-width:4px}
+  .a-grid .slot .rm{font-size:var(--t-sm)}
+  .a-grid .slot.act{padding-left:5px}
+  .a-sheet{padding:var(--s2)}
+  .a-lunch span{font-size:12px}
+}
+@container main (max-width:600px){
+  .a-sheet,.a-leg.wide{display:none}
+  .a-mob{display:block}
+  .a-now{padding:var(--s3);flex-direction:column;align-items:stretch;gap:var(--s2)}
+  .a-now .sep{display:none}
+}
+.daytabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-bottom:var(--s3)}
+.daytabs button{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-radius:var(--radius-sm);border:var(--btn-bw) solid var(--border);background:var(--surface-2);font-size:var(--t-md);font-family:var(--font-display);line-height:1.2}
+.daytabs button small{font-family:var(--font-sans);font-size:12px;color:var(--text-secondary)}
+.daytabs button[aria-pressed="true"]{background:var(--text-primary);color:var(--surface-2);border-color:var(--text-primary)}
+.daytabs button[aria-pressed="true"] small{color:var(--surface-2)}
+.daylist{display:flex;flex-direction:column;gap:6px}
+.dl-row{display:grid;grid-template-columns:62px minmax(0,1fr);gap:var(--s2);align-items:stretch}
+.dl-t{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-size:var(--t-xs);color:var(--text-secondary);line-height:1.3;font-variant-numeric:tabular-nums}
+.dl-t b{font-size:var(--t-sm);color:var(--text-primary)}
+.dl-row .slot,.dl-row .dl-empty{min-height:60px;width:100%}
+.dl-row .slot{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px}
+.dl-row .slot .rm{font-size:var(--t-lg)}
+.dl-row .slot .sj{font-size:var(--t-sm)}
+.dl-empty{display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:var(--radius-xs);border:1.5px dashed var(--border-strong);background:transparent;color:var(--text-secondary);font-size:var(--t-sm)}
+.dl-lunch{display:flex;align-items:center;gap:8px;justify-content:center;min-height:40px;border-radius:var(--radius-xs);font-size:var(--t-sm);color:var(--text-secondary);background:repeating-linear-gradient(135deg,var(--surface-1) 0 8px,var(--surface-2) 8px 14px);border:1px solid var(--border)}
+.dl-row.is-now .slot,.dl-row.is-now .dl-empty{box-shadow:0 0 0 3px var(--now)}
+
+/* drawer (A) / dialog (B) / sheet (phone) */
+.scrim{position:absolute;inset:0;z-index:60;background:color-mix(in srgb,var(--ink) 40%,transparent);display:flex;justify-content:flex-end}
+.drawer{width:min(440px,100%);height:100%;background:var(--surface-2);border-left:var(--card-bw) solid var(--card-border);display:flex;flex-direction:column;box-shadow:var(--shadow-pop)}
+.dr-head{display:flex;align-items:flex-start;gap:var(--s2);padding:var(--s4) var(--s4) var(--s3);border-bottom:1px solid var(--border)}
+.dr-head h2{font-size:var(--t-xl)}
+.dr-head p{font-size:var(--t-sm);color:var(--text-secondary)}
+.dr-body{flex:1;overflow-y:auto;padding:var(--s4)}
+.dr-foot{display:flex;align-items:center;gap:var(--s2);padding:var(--s3) var(--s4);border-top:1px solid var(--border);background:var(--surface-2)}
+.scrim.center{justify-content:center;align-items:center;padding:24px}
+.dialog{width:min(520px,100%);max-height:100%;background:var(--surface-2);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);box-shadow:var(--shadow-pop);display:flex;flex-direction:column;overflow:hidden}
+@container app (max-width:720px){
+  .scrim{align-items:flex-end}
+  .drawer{width:100%;height:auto;max-height:92%;border-left:0;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+  .scrim.center{padding:0}
+  .dialog{width:100%;height:100%;max-height:none;border-radius:0;border:0}
+}
+
+/* the one-period form (shared by all three) */
+.fm{display:flex;flex-direction:column;gap:var(--s4)}
+.fm-row{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s2)}
+.fm-row > .fi{display:none}
+.fm-l{font-size:var(--t-sm);font-weight:600;color:var(--text-secondary)}
+.fm-type{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.fm-opt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:76px;padding:10px 12px;border-radius:var(--radius);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);text-align:left;line-height:1.35}
+.fm-opt b{display:flex;align-items:center;gap:6px;font-size:var(--t-md)}
+.fm-opt small{font-size:var(--t-xs);color:var(--text-secondary)}
+.fm-opt[aria-checked="true"]{border:2px solid var(--accent);background:var(--bg-accent);padding:9px 11px}
+.fm-opt[aria-checked="true"] b{color:var(--text-accent)}
+.fm-rooms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.fm-room{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:60px;padding:6px 8px 6px 13px;border-radius:var(--radius-sm);
+  border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);text-align:left;line-height:1.25;overflow:hidden}
+.fm-room::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--tf)}
+.fm-room b{font-family:var(--font-display);font-size:var(--t-md);color:var(--tf)}
+.fm-room small{font-size:12px;color:var(--text-secondary)}
+.fm-room .ic{position:absolute;top:6px;right:6px;color:var(--tf)}
+.fm-room[aria-checked="true"]{background:var(--tb);border:2px solid var(--tf)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:var(--tap);padding:0 14px;border-radius:999px;border:1px solid var(--border-control);background:var(--surface-2);font-size:var(--t-sm)}
+.chip:hover{background:var(--surface-1)}
+.chip[aria-pressed="true"]{background:var(--text-primary);color:var(--surface-2);border-color:var(--text-primary)}
+.inp{width:100%;min-height:var(--tap);border-radius:var(--radius-sm);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);padding:0 12px;font-size:var(--t-md)}
+.inp::placeholder{color:var(--text-muted)}
+.inp:focus{outline:3px solid color-mix(in srgb,var(--accent) 35%,transparent);border-color:var(--accent)}
+.fm-err{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-danger);color:var(--text-danger);font-size:var(--t-sm);font-weight:600}
+.fm-when{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:var(--t-sm);color:var(--text-secondary)}
+.fm-note{font-size:var(--t-xs);color:var(--text-secondary)}
+@container app (max-width:720px){ .fm-rooms{grid-template-columns:repeat(2,minmax(0,1fr))} }
+/* B: Google-Calendar style rows, icon in the left gutter */
+.fm.gcal .fm-row{grid-template-columns:28px minmax(0,1fr);column-gap:var(--s3)}
+.fm.gcal .fm-row > .fi{display:block;color:var(--text-secondary);padding-top:2px;grid-row:1 / span 4}
+.fm.gcal .fm-row > :not(.fi){grid-column:2}
+.fm-title{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-xl);line-height:1.35;padding:0 0 var(--s2) 40px;border-bottom:2px solid var(--accent)}
+.fm-title.ph{color:var(--text-muted)}
+
+/* time settings */
+.ts-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s2) 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ts-row .l{font-size:var(--t-md)}
+.ts-row .l small{display:block;font-size:var(--t-xs);color:var(--text-secondary)}
+.step{display:inline-flex;align-items:center;border:var(--btn-bw) solid var(--border-control);border-radius:var(--radius-btn);overflow:hidden;background:var(--surface-2)}
+.step button{width:var(--tap);min-height:var(--tap);border:0;background:transparent;display:grid;place-items:center;font-size:20px}
+.step button:hover{background:var(--surface-1)}
+.step output{min-width:86px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.ts-time{width:130px;min-height:var(--tap);border-radius:var(--radius-sm);border:var(--btn-bw) solid var(--border-control);background:var(--surface-2);padding:0 10px;font-size:var(--t-md)}
+.ts-prev{margin-top:var(--s4);display:grid;grid-template-columns:auto 1fr;gap:2px var(--s3);font-size:var(--t-sm);font-variant-numeric:tabular-nums;padding:var(--s3);border-radius:var(--radius);background:var(--surface-1)}
+.ts-prev .lu{grid-column:1 / -1;color:var(--text-secondary);display:flex;align-items:center;gap:6px;padding:2px 0}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:var(--s3);width:max-content;max-width:calc(100% - 24px);
+  padding:8px 8px 8px 16px;min-height:52px;border-radius:var(--radius);background:var(--text-primary);color:var(--surface-2);box-shadow:var(--shadow-pop);font-size:var(--t-sm)}
+.toast .btn{min-height:40px;background:transparent;color:var(--surface-2);border-color:color-mix(in srgb,var(--surface-2) 45%,transparent)}
+@container app (max-width:720px){ .toast{bottom:92px;width:calc(100% - 24px)} }
+
+/* =====================================================================
+   แบบ ข — ปฏิทินแบบ Google Calendar
+   ===================================================================== */
+.b-bar{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+.b-bar .date{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-lg);margin-left:4px}
+.b-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);align-items:start}
+.b-wrap.with-side{grid-template-columns:minmax(0,1fr) 300px}
+.only-phone{display:none}
+.b-cal{background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.b-head{display:grid;position:sticky;top:0;z-index:6;background:var(--surface-2);border-bottom:1px solid var(--border-strong);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.b-dh{display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 2px;border:0;background:transparent;line-height:1.2;min-height:var(--tap);border-radius:var(--radius-sm)}
+.b-dh small{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.b-dh .d{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;font-family:var(--font-num);font-size:var(--t-xl)}
+.b-dh.today small{color:var(--text-accent)}
+.b-dh.today .d{background:var(--accent);color:var(--on-accent)}
+.b-dh:hover .d{background:var(--surface-1)}
+.b-dh.today:hover .d{background:var(--accent-hover)}
+.b-ax-h{font-size:12px;color:var(--text-secondary);display:flex;align-items:flex-end;justify-content:flex-end;padding:0 8px 8px 0}
+.b-body{position:relative;display:grid;margin-bottom:6px}
+.b-axis{position:relative;border-right:1px solid var(--border)}
+.b-ax{position:absolute;left:0;right:8px;display:flex;flex-direction:column;align-items:flex-end;line-height:1.2}
+.b-ax b{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.b-ax span{font-size:12px;color:var(--text-secondary)}
+.b-line{position:absolute;left:64px;right:0;height:1px;background:var(--border)}
+.b-col{position:relative;border-left:1px solid var(--border)}
+.b-axis + .b-col{border-left:0}
+.b-col.today{background:color-mix(in srgb,var(--bg-accent) 45%,transparent)}
+.b-ev{position:absolute;left:4px;right:4px;overflow:hidden;justify-content:flex-start;padding-top:5px;z-index:2}
+.b-ev .cover{position:absolute;inset:0;border:0;background:transparent;border-radius:inherit;padding:0;z-index:1}
+.b-ev .txt{display:flex;flex-direction:column;min-width:0}
+.b-ev .chk{position:relative;z-index:2;margin-top:6px}
+.b-ev.row{flex-direction:row;align-items:center;gap:var(--s3);padding-top:6px}
+.b-ev.row .chk{margin:0 0 0 auto}
+.b-ev.row .rm{font-size:var(--t-lg)}
+.b-free{position:absolute;left:4px;right:4px;border:1.5px dashed transparent;border-radius:var(--radius-xs);background:transparent;display:flex;align-items:center;justify-content:center;gap:4px;color:var(--text-secondary);font-size:var(--t-xs);z-index:2}
+.b-free span,.b-free .ic{opacity:0}
+.b-free:hover,.b-free:focus-visible{border-color:var(--border-control);background:var(--surface-2)}
+.b-free:hover span,.b-free:hover .ic,.b-free:focus-visible span,.b-free:focus-visible .ic{opacity:1}
+.b-lunch{position:absolute;left:64px;right:0;display:flex;align-items:center;justify-content:center;gap:8px;font-size:var(--t-sm);font-weight:600;color:var(--text-secondary);
+  background:repeating-linear-gradient(135deg,var(--surface-1) 0 8px,var(--surface-2) 8px 14px);border-top:1px solid var(--border-strong);border-bottom:1px solid var(--border-strong);z-index:1}
+.b-lunch span{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);padding:0 10px;border-radius:999px}
+.b-now{position:absolute;height:0;border-top:2px solid var(--now);z-index:4;pointer-events:none}
+.b-now.main::before{content:"";position:absolute;left:-6px;top:-7px;width:12px;height:12px;border-radius:50%;background:var(--now)}
+.b-now.faint{border-top:1px dashed var(--now);opacity:.75}
+.b-axnow{position:absolute;left:2px;width:56px;text-align:right;z-index:5;pointer-events:none}
+.b-axnow span{font-size:12px;font-weight:700;color:#fff;background:var(--now);border-radius:6px;padding:1px 5px;font-variant-numeric:tabular-nums}
+.b-strip{display:none}
+.fab{position:absolute;right:20px;bottom:20px;z-index:25;display:inline-flex;align-items:center;gap:8px;min-height:56px;padding:0 20px 0 16px;border-radius:18px;border:var(--btn-bw) solid var(--card-border);
+  background:var(--surface-2);color:var(--text-accent);font-weight:600;font-size:var(--t-md);box-shadow:var(--shadow-pop)}
+.fab:hover{background:var(--bg-accent)}
+.side-card{padding:var(--s4)}
+.side-card h2{font-size:var(--t-lg);display:flex;align-items:center;gap:8px;margin-bottom:var(--s2)}
+.nn{display:flex;flex-direction:column;gap:2px;padding:var(--s3) 0;border-top:1px solid var(--border)}
+.nn:first-of-type{border-top:0}
+.nn .k{font-size:var(--t-xs);font-weight:700;color:var(--text-secondary)}
+.nn b{font-size:var(--t-lg);font-family:var(--font-display);font-weight:var(--display-weight)}
+.nn span{font-size:var(--t-sm);color:var(--text-secondary)}
+.nn .btn{align-self:flex-start;margin-top:6px}
+@container main (max-width:1000px){ .b-wrap.with-side{grid-template-columns:minmax(0,1fr)} .b-side{display:none} }
+@container main (max-width:600px){
+  .b-viewseg,.b-bar .date{display:none}
+  .only-wide{display:none}.only-phone{display:block}
+  .b-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin-bottom:var(--s3);background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-radius:var(--radius);padding:4px}
+  .b-strip .b-dh[aria-pressed="true"]{background:var(--surface-1);box-shadow:inset 0 -3px 0 var(--text-primary)}
+  .b-strip .b-dh[aria-pressed="true"] small{color:var(--text-primary)}
+  .b-cal .b-head{display:none}
+  .b-ev.row{flex-wrap:wrap;gap:4px 10px}
+}
+@container app (max-width:720px){ .fab{bottom:88px;right:14px} }
+
+/* =====================================================================
+   แบบ ค — วันนี้เป็นหลัก
+   ===================================================================== */
+.c-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);border-radius:var(--radius-hero);overflow:hidden;margin-bottom:var(--s4);background:var(--hero-bg);color:var(--hero-fg)}
+.app[data-skin="playful"] .c-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.c-now{padding:var(--s4) var(--s5);display:flex;flex-direction:column;gap:4px;justify-content:center}
+.c-k{font-size:var(--t-sm);font-weight:600;color:var(--hero-muted);display:flex;align-items:center;gap:6px}
+.c-now .v{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-xl);line-height:1.3}
+.c-now .s{font-size:var(--t-sm);color:var(--hero-muted)}
+.c-next{position:relative;padding:var(--s4) var(--s5) var(--s4) calc(var(--s5) + 8px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s2) var(--s4);align-items:center;background:var(--hero-chip)}
+.c-next[class*="t-"]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--tf)}
+.c-room{display:flex;align-items:baseline;gap:var(--s3);flex-wrap:wrap;line-height:1.15;margin:2px 0}
+.c-room .big{font-family:var(--font-num);font-weight:700;font-size:var(--t-4xl);letter-spacing:-.01em}
+.c-room .sj{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-xl)}
+.c-next .meta{font-size:var(--t-md)}
+.c-next .meta b{font-variant-numeric:tabular-nums}
+.c-next .acts{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.c-next .btn.pri{min-height:52px;font-size:var(--t-md);padding:6px 20px}
+.app[data-skin="pro"] .c-next .btn.pri{background:var(--accent-2);border-color:var(--accent-2);color:var(--on-accent-2)}
+.app[data-skin="playful"] .c-next .btn.pri{background:var(--ink);border-color:var(--ink);color:#fff}
+.c-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--s4);align-items:start}
+.c-list{padding:var(--s3) var(--s4)}
+.c-list h2{font-size:var(--t-lg);margin:var(--s1) 0 var(--s1)}
+.c-days{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:var(--s3)}
+.c-days .chip{padding:0 16px}
+.c-row{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding:10px 0;border-top:1px solid var(--border)}
+.c-list h2 + .c-row,.c-list h2 + .c-nowline + .c-row{border-top:0}
+.c-row .t{font-size:var(--t-xs);color:var(--text-secondary);line-height:1.3;font-variant-numeric:tabular-nums}
+.c-row .t b{display:block;font-size:var(--t-md);color:var(--text-primary)}
+.c-row .slot{flex-direction:row;align-items:center;gap:10px;min-height:52px;width:100%}
+.c-row .slot .rm{font-size:var(--t-lg)}
+.c-row .slot .sj{font-size:var(--t-sm)}
+.c-row .free{color:var(--text-secondary);font-size:var(--t-sm);padding:0 4px;min-height:40px;display:flex;align-items:center}
+.c-row.past .t b,.c-row.past .t{color:var(--text-muted)}
+.c-row.past .slot{background:var(--surface-1);border-left-color:var(--border-control)}
+.c-row.past .slot .rm{color:var(--text-secondary)}
+.c-row .st{font-size:var(--t-xs);color:var(--text-secondary);white-space:nowrap;display:flex;align-items:center;gap:4px}
+.c-row.cur .slot,.c-row.cur .free{box-shadow:0 0 0 3px var(--now);border-radius:var(--radius-xs)}
+.c-row.cur .free{padding:0 12px}
+.c-lunch{display:flex;align-items:center;gap:8px;padding:8px 0 8px 88px;border-top:1px solid var(--border);color:var(--text-secondary);font-size:var(--t-sm)}
+.c-nowline{position:relative;height:0;margin:0 0 0 88px}
+.c-nowline::before{content:"";position:absolute;left:0;right:0;top:-1px;border-top:2px solid var(--now)}
+.c-nowline::after{content:"";position:absolute;left:-6px;top:-6px;width:10px;height:10px;border-radius:50%;background:var(--now)}
+.c-nowline span{position:absolute;left:-88px;top:-11px;font-size:12px;font-weight:700;color:#fff;background:var(--now);border-radius:6px;padding:1px 6px;font-variant-numeric:tabular-nums}
+.c-side{display:flex;flex-direction:column;gap:var(--s4)}
+.c-side .c-row{grid-template-columns:62px minmax(0,1fr)}
+.mini{display:grid;gap:3px}
+.mini .r{display:grid;grid-template-columns:34px repeat(var(--n),minmax(0,1fr));gap:3px;align-items:stretch}
+.mini .dn{font-size:var(--t-xs);font-weight:600;color:var(--text-secondary);display:flex;align-items:center}
+.mini .dn.today{color:var(--text-accent);font-weight:700}
+.mini .c{min-height:30px;border-radius:5px;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--tb);color:var(--tf);border-left:3px solid var(--tf)}
+.mini .c.e{background:var(--surface-1);border-left:0}
+.mini .c.act{background:transparent;border:1.5px dashed var(--border-control);color:var(--text-secondary)}
+.mini .c.l{background:transparent;border:0;color:var(--text-muted);font-weight:400}
+.mini .hd{font-size:11px;color:var(--text-secondary);text-align:center;font-weight:600}
+.mini .r.today{background:var(--bg-accent);border-radius:6px;box-shadow:0 0 0 3px var(--bg-accent)}
+.cnt{display:flex;gap:var(--s4);margin-top:var(--s3);font-size:var(--t-sm);color:var(--text-secondary)}
+.cnt b{font-family:var(--font-num);font-size:var(--t-xl);color:var(--text-primary);margin-right:4px}
+@container main (max-width:900px){
+  .c-grid{grid-template-columns:minmax(0,1fr)}
+  .c-hero{grid-template-columns:minmax(0,1fr)}
+  .c-now{padding:var(--s3) var(--s4);flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 var(--s3)}
+  .c-now .v{font-size:var(--t-lg)}
+}
+@container main (max-width:600px){
+  .c-next{grid-template-columns:minmax(0,1fr);padding:var(--s3) var(--s4) var(--s4) calc(var(--s4) + 8px)}
+  .c-room .big{font-size:var(--t-3xl)}
+  .c-row{grid-template-columns:58px minmax(0,1fr);row-gap:6px}
+  .c-row .st{grid-column:2}
+  .c-row .st:empty{display:none}
+  .c-lunch{padding-left:70px}
+  .c-nowline{margin-left:70px}.c-nowline span{left:-70px}
+  .c-list{padding:var(--s2) var(--s3)}
+}
+/* C editor page */
+.ce-time{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:var(--s3) var(--s4);margin-bottom:var(--s4)}
+.ce-time .sum{flex:1 1 240px;font-size:var(--t-sm);color:var(--text-secondary)}
+.ce-time .sum b{display:block;color:var(--text-primary);font-size:var(--t-md)}
+.ce-body{display:grid;grid-template-columns:190px minmax(0,1fr);gap:var(--s4);align-items:start}
+.ce-days{display:flex;flex-direction:column;gap:4px;position:sticky;top:0}
+.ce-day{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;padding:0 14px;border-radius:var(--radius-sm);border:var(--btn-bw) solid transparent;background:transparent;font-family:var(--font-display);font-size:var(--t-md);text-align:left}
+.ce-day small{font-family:var(--font-sans);font-size:var(--t-xs);color:var(--text-secondary)}
+.ce-day:hover{background:var(--surface-1)}
+.ce-day[aria-pressed="true"]{background:var(--surface-2);border-color:var(--border-control);box-shadow:var(--shadow-card)}
+.ce-list{padding:var(--s2) var(--s4)}
+.ce-row{border-top:1px solid var(--border)}
+.ce-row:first-child{border-top:0}
+.ce-sum{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:var(--s3);align-items:center;width:100%;min-height:64px;padding:8px 0;border:0;background:transparent;text-align:left}
+.ce-sum:hover .go{background:var(--surface-1)}
+.ce-sum .t{font-size:var(--t-xs);color:var(--text-secondary);line-height:1.3;font-variant-numeric:tabular-nums}
+.ce-sum .t b{display:block;font-size:var(--t-md);color:var(--text-primary)}
+.ce-sum .slot{flex-direction:row;align-items:center;gap:10px;min-height:48px}
+.ce-sum .free{color:var(--text-secondary);font-size:var(--t-sm);display:flex;align-items:center;gap:6px}
+.ce-sum .go{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px;border-radius:var(--radius-btn);font-size:var(--t-sm);color:var(--text-accent);font-weight:600}
+.ce-open{padding:var(--s3) var(--s4) var(--s4);margin:0 calc(-1 * var(--s4)) var(--s2);background:var(--surface-1);border-top:2px solid var(--accent)}
+.ce-open .fm{gap:var(--s3)}
+.ce-open .dr-foot{background:transparent;border:0;padding:var(--s3) 0 0}
+.ce-lunch{display:flex;align-items:center;gap:8px;padding:10px 0 10px 108px;border-top:1px solid var(--border);color:var(--text-secondary);font-size:var(--t-sm)}
+.ce-tsbox{padding:var(--s4);margin-bottom:var(--s4)}
+.ce-tsbox h2{font-size:var(--t-lg);margin-bottom:var(--s2)}
+@container main (max-width:760px){
+  .ce-body{grid-template-columns:minmax(0,1fr)}
+  .ce-days{position:static;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+  .ce-day{flex-direction:column;justify-content:center;gap:0;padding:4px;text-align:center;min-height:56px;border-color:var(--border);background:var(--surface-2);line-height:1.25}
+  .ce-day .full{display:none}
+  .ce-day[aria-pressed="true"]{background:var(--text-primary);color:var(--surface-2);border-color:var(--text-primary)}
+  .ce-day[aria-pressed="true"] small{color:var(--surface-2)}
+  .ce-sum{grid-template-columns:62px minmax(0,1fr)}
+  .ce-sum .go{display:none}
+  .ce-lunch{padding-left:74px}
+  .ce-list{padding:var(--s1) var(--s3)}
+  .ce-open{margin:0 calc(-1 * var(--s3)) var(--s2);padding:var(--s3)}
+}
+@container main (min-width:761px){ .ce-day .short{display:none} }
+
+/* =====================================================================
+   หน้าหลัก โครง ก (simplified from the approved home mockup)
+   ===================================================================== */
+.h-top{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s3);font-size:var(--t-sm);color:var(--text-secondary);flex-wrap:wrap}
+.h-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4);align-items:center;background:var(--hero-bg);color:var(--hero-fg);border-radius:var(--radius-hero);padding:var(--s5) var(--s6);margin-bottom:var(--s4);overflow:hidden}
+.app[data-skin="playful"] .h-hero{border:2px solid var(--ink);box-shadow:var(--shadow-card)}
+.h-kick{font-size:var(--t-sm);color:var(--hero-muted)}
+.h-h1{font-size:var(--t-xl)}
+.h-big{display:flex;align-items:baseline;gap:var(--s3);margin-top:var(--s2);flex-wrap:wrap}
+.h-big .n{font-family:var(--font-num);font-size:var(--t-4xl);font-weight:700;line-height:1}
+.app[data-skin="pro"] .h-big .n{color:var(--accent-2)}
+.h-big .t{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-lg)}
+.h-pills{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s3)}
+.h-pill{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:4px 14px;border-radius:var(--radius-btn);background:var(--hero-chip);color:var(--hero-fg);border:1px solid color-mix(in srgb,var(--hero-fg) 22%,transparent);font-size:var(--t-sm);font-weight:500}
+.h-illo{width:150px}
+.h-next{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:270px;padding:var(--s4) var(--s4) var(--s3);border-radius:var(--radius-lg);background:var(--surface-2);color:var(--text-primary);border:var(--card-bw) solid var(--card-border);position:relative;overflow:hidden}
+.h-next[class*="t-"]{border-left:6px solid var(--tf)}
+.h-next .k{font-size:var(--t-xs);font-weight:700;color:var(--text-secondary);display:flex;align-items:center;gap:6px}
+.h-next .rm{display:flex;align-items:baseline;gap:10px;line-height:1.2;flex-wrap:wrap}
+.h-next .rm b{font-family:var(--font-num);font-size:var(--t-3xl);color:var(--tf,var(--text-primary))}
+.h-next .rm span{font-family:var(--font-display);font-size:var(--t-md)}
+.h-next .m{font-size:var(--t-sm);color:var(--text-secondary)}
+.h-next .btn.pri{margin-top:8px}
+.h-next .lk{justify-content:flex-start;padding-left:0;min-height:var(--tap);color:var(--text-accent);border:0;background:transparent;font-weight:600;font-size:var(--t-sm);text-align:left}
+/* A: strip under the hero */
+.h-strip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s3) var(--s4);align-items:center;padding:var(--s3) var(--s4);margin-bottom:var(--s4)}
+.h-strip .hd{display:flex;flex-direction:column;line-height:1.3}
+.h-strip .hd b{font-family:var(--font-display);font-weight:var(--display-weight);font-size:var(--t-md);white-space:nowrap}
+.h-strip .lk{font-size:var(--t-sm);color:var(--text-accent);font-weight:600;background:none;border:0;padding:0;text-align:left;min-height:var(--tap)}
+.track{display:grid;gap:4px;align-items:stretch;padding-top:8px}
+.tk{position:relative;min-height:48px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;font-size:12px;background:var(--surface-1);color:var(--text-secondary);padding:2px}
+.tk b{font-size:var(--t-sm);font-family:var(--font-display);font-weight:600}
+.tk em{font-style:normal}
+.tk.cls{background:var(--tb);color:var(--tf);border-bottom:4px solid var(--tf)}
+.tk.cls em{color:var(--text-primary)}
+.tk.act{background:transparent;border:1.5px dashed var(--border-control);color:var(--text-secondary)}
+.tk.past{opacity:.6}
+.tk.now{box-shadow:0 0 0 3px var(--now)}
+.tk .nt{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:11px;padding:0 6px;border-radius:999px;background:var(--now);color:#fff;font-weight:700;white-space:nowrap;line-height:1.6}
+.tk-l{border-radius:4px;background:repeating-linear-gradient(135deg,var(--surface-1) 0 5px,var(--surface-2) 5px 9px);border:1px solid var(--border)}
+.tk-l.now{box-shadow:0 0 0 3px var(--now)}
+.h-strip .nx{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;justify-content:flex-end}
+.h-strip .nx .txt{display:flex;flex-direction:column;line-height:1.35;text-align:right}
+.h-strip .nx .txt small{font-size:var(--t-xs);color:var(--text-secondary);font-weight:600}
+.h-strip .nx .txt b{font-size:var(--t-md)}
+.h-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);align-items:start}
+.h-qs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3)}
+.qa{display:flex;align-items:center;gap:var(--s3);min-height:72px;padding:var(--s3) var(--s4);border-radius:var(--radius-lg);border:var(--card-bw) solid var(--card-border);background:var(--surface-2);text-align:left;box-shadow:var(--shadow-card)}
+.qa .qi{width:44px;height:44px;border-radius:var(--radius);display:grid;place-items:center;flex:none;background:var(--bg-accent);color:var(--text-accent)}
+.qa b{display:block;font-size:var(--t-md);line-height:1.35}
+.qa small{display:block;font-size:var(--t-xs);color:var(--text-muted);line-height:1.35}
+.qa.main{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.qa.main small{color:var(--on-accent);opacity:.92}
+.qa.main .qi{background:color-mix(in srgb,var(--on-accent) 16%,transparent);color:var(--on-accent)}
+.app[data-skin="playful"] .qa{border-color:var(--ink)}
+.app[data-skin="playful"] .qa.main{background:var(--accent-2);color:var(--on-accent-2);border-color:var(--ink)}
+.app[data-skin="playful"] .qa.main small,.app[data-skin="playful"] .qa.main .qi{color:var(--on-accent-2)}
+.h-card{padding:var(--s4)}
+.cardhead{display:flex;align-items:center;gap:8px;margin-bottom:var(--s3);flex-wrap:wrap}
+.cardhead h2{font-size:var(--t-lg)}
+.cardhead .hi{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--bg-accent);color:var(--text-accent)}
+.cardhead .r{margin-left:auto;font-size:var(--t-xs);color:var(--text-secondary)}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:97px;top:16px;bottom:16px;width:3px;border-radius:3px;background:var(--border-strong)}
+.tli{display:grid;grid-template-columns:70px 34px minmax(0,1fr);gap:0 12px;padding:6px 0;position:relative}
+.tli .tm{text-align:right;font-size:var(--t-sm);font-weight:700;line-height:1.3;padding-top:8px;font-variant-numeric:tabular-nums}
+.tli .tm small{display:block;font-weight:400;font-size:12px;color:var(--text-secondary)}
+.tli .nd{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:3px solid var(--node,var(--fill-warning));z-index:1;margin-top:4px}
+.tli .bd{min-width:0;background:var(--surface-2);border:var(--card-bw) solid var(--card-border);border-left:5px solid var(--node,var(--fill-warning));border-radius:var(--radius);padding:10px 14px;box-shadow:var(--shadow-card)}
+.tli .bd h3{font-size:var(--t-md)}
+.tli .bd p{font-size:var(--t-sm);color:var(--text-secondary)}
+.tli .bd .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.tli.cls{--node:var(--tf)}
+.tli.cls .bd{background:var(--tb);box-shadow:none}
+.tli.cls .bd h3 b{color:var(--tf)}
+.tli.cls.actv{--node:var(--border-control)}
+.tli.cls.actv .bd{background:var(--surface-2);border-style:dashed}
+.tli.cls.past{--node:var(--border-control)}
+.tli.cls.past .bd{background:var(--surface-1)}
+.tli.cls.past .bd h3 b{color:var(--text-secondary)}
+.tl-now{display:grid;grid-template-columns:70px 34px minmax(0,1fr);gap:0 12px;align-items:center;padding:4px 0}
+.tl-now .l{text-align:right;font-size:12px;font-weight:700;color:var(--text-accent)}
+.tl-now .d{width:14px;height:14px;border-radius:50%;background:var(--now);justify-self:center;z-index:1}
+.tl-now .ln{height:2px;background:var(--now)}
+.h-side{display:grid;gap:var(--s4)}
+.rp{display:grid;grid-template-columns:56px minmax(0,1fr) 48px;gap:var(--s3);align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:var(--t-sm)}
+.rp:first-of-type{border-top:0}
+.rp b{font-family:var(--font-display);font-weight:var(--display-weight)}
+.rp .bar{height:8px;border-radius:4px;background:var(--surface-1);overflow:hidden}
+.rp .bar i{display:block;height:100%;background:var(--fill-success);border-radius:4px}
+.rp .p{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+@container main (min-width:1000px){
+  .h-grid{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-areas:"tl qs" "tl sd";gap:var(--s4) var(--s5)}
+  .h-qs{grid-area:qs;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .h-grid > .h-tl{grid-area:tl}
+  .h-side{grid-area:sd}
+}
+@container main (max-width:999px){
+  .h-strip{grid-template-columns:minmax(0,1fr) auto}
+  .h-strip .track{grid-column:1 / -1;grid-row:2}
+}
+@container main (max-width:760px){
+  .h-hero{grid-template-columns:minmax(0,1fr);padding:var(--s4)}
+  .h-illo{display:none}
+  .h-next{min-width:0}
+  .h-qs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@container main (max-width:600px){
+  .h-big .n{font-size:var(--t-3xl)}
+  .h-strip{grid-template-columns:minmax(0,1fr);padding:var(--s3)}
+  .h-strip .track{grid-row:auto}
+  .h-strip .nx{justify-content:space-between}
+  .h-strip .nx .txt{text-align:left}
+  .h-strip .nx .btn{width:100%}
+  .tk{min-height:44px}
+  .tk em{display:none}
+  .tl::before{left:16px}
+  .tli{grid-template-columns:34px minmax(0,1fr);grid-template-areas:"nd tm" "nd bd"}
+  .tli .tm{grid-area:tm;text-align:left;padding:0 0 4px}
+  .tli .tm small{display:inline;margin-left:6px}
+  .tli .nd{grid-area:nd}
+  .tli .bd{grid-area:bd}
+  .tl-now{grid-template-columns:34px minmax(0,1fr);grid-template-areas:"d l" "d ln"}
+  .tl-now .l{grid-area:l;text-align:left}.tl-now .d{grid-area:d}.tl-now .ln{grid-area:ln}
+}
+
+/* more sheet (phone) */
+.sheet{width:100%;background:var(--surface-2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:8px 16px 20px;display:flex;flex-direction:column;gap:6px}
+.sheet .grab{width:44px;height:4px;border-radius:2px;background:var(--border-strong);margin:4px auto 8px}
+.sheet-gl{font-size:var(--t-xs);color:var(--text-secondary);padding:6px 4px 0}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sheet-item{display:flex;align-items:center;gap:12px;min-height:56px;padding:0 14px;border:1px solid var(--border);background:var(--surface-2);border-radius:var(--radius);font-size:var(--t-md);font-weight:500;text-align:left}
+.sheet-item[aria-current="page"]{background:var(--bg-accent);color:var(--text-accent);border-color:var(--accent)}
+.sheet-item .nb{margin-left:auto;font-size:11px;padding:0 6px;border-radius:999px;background:var(--accent-2);color:var(--on-accent-2);font-weight:700}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15.2l2 2 4-4"/></symbol>
+    <symbol id="i-calb" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5M4 12h16"/></symbol>
+    <symbol id="i-ucheck" viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 20.5c0-3.6 3.1-6.5 7-6.5 1.3 0 2.5.3 3.5.8M15 18l2 2 4-4.5"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12.5 8H16M12.5 12H16"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16M7.5 16v-5M12 16V7M16.5 16V8"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 19.5c.4-3 3.1-5 6.5-5s6.1 2 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.5c2.6 0 4.6 1.5 5 4"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.6"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M9.5 4h-3A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h3M15 8l4 4-4 4M19 12H9.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1.2-4.4L15.8 5a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.4 18.8zM13.5 7.3l3.2 3.2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-cr" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-cl" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.8"/><path d="M8.5 20.5 10 16M15.5 20.5 14 16M7 8.5h6M7 11.5h4"/></symbol>
+    <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3.5 11.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M9.5 8.5c0-1.4 1.4-1.6 1.4-3M13.5 8.5c0-1.4 1.4-1.6 1.4-3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.2a1.5 1.5 0 0 0 1.5 1.3h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9M7 17.5H5A1.5 1.5 0 0 1 3.5 16v-5.5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5V16a1.5 1.5 0 0 1-1.5 1.5h-2"/><rect x="7" y="14" width="10" height="6.5" rx="1"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="16" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-path" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7"/></symbol>
+    <symbol id="i-plusc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 8.5v7M8.5 12h7"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M3 12.5l4 4L16.5 7M11 16l.5.5L21 7"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.8" cy="6.5" r="1" fill="currentColor"/><circle cx="4.8" cy="12" r="1" fill="currentColor"/><circle cx="4.8" cy="17.5" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-chart2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 11V9a3 3 0 0 1 3-3h12M16 3l3 3-3 3M20 13v2a3 3 0 0 1-3 3H5M8 21l-3-3 3-3"/></symbol>
+  </defs>
+</svg>
+
+<header class="hub" id="hub"></header>
+<main class="stage" id="stage"><div class="scaler" id="scaler"><div class="device" id="device"><div class="app" id="app" data-skin="warm"></div></div></div><p class="size-note" id="note" hidden></p></main>
+
+<script>
+/* ===== data: the school's paper timetable (design/reference/1.webp) — 7 periods x 60 min, lunch after period 3 ===== */
+const DAYS = [
+  { s: "จ", m: "จันทร์", sh: "จันทร์", date: 9 },
+  { s: "อ", m: "อังคาร", sh: "อังคาร", date: 10 },
+  { s: "พ", m: "พุธ", sh: "พุธ", date: 11 },
+  { s: "พฤ", m: "พฤหัสบดี", sh: "พฤหัส", date: 12 },
+  { s: "ศ", m: "ศุกร์", sh: "ศุกร์", date: 13 },
+];
+const TODAY = 2; // วันพุธ 11 พ.ย. 2569
+const ROOMS = { "ป.6/1": "blue", "ป.6/2": "green", "ป.6/3": "orange", "ป.6/4": "magenta" };
+const HOMEROOM = "ป.6/4";
+const SUBJECTS = ["คณิตศาสตร์", "ดนตรี"];
+const ACTS = ["PLC กลุ่มสาระ", "PLC สายชั้น", "ลูกเสือ", "ชุมนุม", "สวดมนต์"];
+const C = (room, subj) => ({ kind: "class", room, subj });
+const A = (name) => ({ kind: "act", name });
+const SL = {
+  "0-2": C("ป.6/2", "คณิตศาสตร์"), "0-5": C("ป.6/4", "ดนตรี"), "0-7": A("PLC กลุ่มสาระ"),
+  "1-2": C("ป.6/1", "คณิตศาสตร์"), "1-6": C("ป.6/2", "คณิตศาสตร์"),
+  "2-2": C("ป.6/4", "คณิตศาสตร์"), "2-4": C("ป.6/3", "คณิตศาสตร์"),
+  "3-2": C("ป.6/3", "คณิตศาสตร์"), "3-6": A("ลูกเสือ"),
+  "4-3": C("ป.6/4", "คณิตศาสตร์"), "4-4": C("ป.6/1", "คณิตศาสตร์"), "4-5": A("ชุมนุม"), "4-6": A("สวดมนต์"), "4-7": A("PLC สายชั้น"),
+};
+const TS = { start: 510, len: 60, count: 7, lunchAfter: 3, lunchLen: 60 };
+
+/* ===== state ===== */
+const S = { dir: "A", page: "tt", skin: "warm", size: "fit", time: 645, day: TODAY, bview: "week",
+  edit: null, draft: null, err: "", times: false, more: false, toast: null, undo: null, hubMin: false, _top: null, focusRow: false };
+
+/* ===== helpers ===== */
+const pad = (n) => String(n).padStart(2, "0");
+const hm = (m) => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+const dur = (m) => { const h = Math.floor(m / 60), r = m % 60; return h ? `${h} ชม.${r ? ` ${r} นาที` : ""}` : `${r} นาที`; };
+const ic = (n, s = 20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const slot = (d, p) => (p <= TS.count ? SL[`${d}-${p}`] || null : null);
+const tone = (s) => (s && s.kind === "class" ? "t-" + ROOMS[s.room] : "");
+const label = (s) => (s.kind === "class" ? `${s.subj} ${s.room}` : s.name);
+const dayName = (d) => (d === TODAY + 1 ? "พรุ่งนี้" : "วัน" + DAYS[d].m);
+function pers() {
+  const ps = []; let t = TS.start, lunch = null;
+  for (let p = 1; p <= TS.count; p++) {
+    ps.push({ p, s: t, e: t + TS.len }); t += TS.len;
+    if (p === TS.lunchAfter && p < TS.count) { lunch = { s: t, e: t + TS.lunchLen }; t += TS.lunchLen; }
+  }
+  return { ps, lunch };
+}
+function status() {
+  const { ps, lunch } = pers(), t = S.time, d = TODAY;
+  let phase, cur = null;
+  if (t < ps[0].s) phase = "before";
+  else if (t >= ps[ps.length - 1].e) phase = "after";
+  else if (lunch && t >= lunch.s && t < lunch.e) phase = "lunch";
+  else { cur = ps.find((x) => x.s <= t && t < x.e); phase = "period"; }
+  const curSlot = cur ? slot(d, cur.p) : null;
+  let next = null;
+  for (const x of ps) if (x.s > t && slot(d, x.p)) { next = { ...x, d, slot: slot(d, x.p) }; break; }
+  for (let dd = d + 1; dd < 5 && !next; dd++) for (const x of ps) if (slot(dd, x.p)) { next = { ...x, d: dd, slot: slot(dd, x.p), later: true }; break; }
+  const room = curSlot && curSlot.kind === "class" ? curSlot.room : next && !next.later && next.slot.kind === "class" ? next.slot.room : null;
+  return { phase, cur, curSlot, next, lunch, ps, room, t };
+}
+function nowText(st) {
+  if (st.phase === "before") return { k: "ยังไม่เข้าเรียน", v: "ยังไม่ถึงคาบแรก", s: `คาบแรกเริ่ม ${hm(st.ps[0].s)}` };
+  if (st.phase === "after") return { k: "เลิกเรียนแล้ว", v: "หมดคาบของวันนี้", s: "พรุ่งนี้ดูได้ที่ “ต่อไป”" };
+  if (st.phase === "lunch") return { k: "พักกลางวัน", v: "พักกลางวัน", s: `ถึง ${hm(st.lunch.e)}` };
+  if (st.curSlot) return { k: `คาบ ${st.cur.p} · กำลังสอน`, v: label(st.curSlot), s: `เหลือ ${dur(st.cur.e - st.t)} (ถึง ${hm(st.cur.e)})` };
+  return { k: `คาบ ${st.cur.p} · ว่าง`, v: "ว่าง ไม่มีคาบสอน", s: `คาบ ${st.cur.p} ถึง ${hm(st.cur.e)}` };
+}
+function nextWhen(n, st) {
+  if (!n) return "ไม่มีคาบเหลือในสัปดาห์นี้";
+  if (n.later) return `${dayName(n.d)} · คาบ ${n.p} · ${hm(n.s)}`;
+  return `คาบ ${n.p} · ${hm(n.s)} · อีก ${dur(n.s - st.t)}`;
+}
+function countKinds() { let c = 0, a = 0; for (const k in SL) { if (+k.split("-")[1] > TS.count) continue; SL[k].kind === "class" ? c++ : a++; } return { c, a }; }
+const greet = (t) => (t < 600 ? "สวัสดีตอนเช้า" : t < 720 ? "สวัสดีตอนสาย" : t < 780 ? "สวัสดีตอนเที่ยง" : t < 960 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น");
+const checkBtn = (room, cls = "btn pri") => (room ? `<button class="${cls}" data-a="check" data-v="${room}">${ic("ucheck", 18)}เช็คชื่อ ${room}</button>` : "");
+function slotInner(s, time) {
+  if (s.kind === "class") return `<span class="rm">${s.room}</span><span class="sj">${s.subj}${time ? ` · ${time}` : ""}</span>`;
+  return `<span class="an">${ic("flag", 16)}<span>${s.name}</span></span><span class="sj">กิจกรรม${time ? ` · ${time}` : ""}</span>`;
+}
+const slotCls = (s) => "slot " + (s.kind === "class" ? tone(s) : "act");
+const aria = (d, x, s) => `วัน${DAYS[d].m} คาบ ${x.p} ${hm(x.s)} ถึง ${hm(x.e)} ${s ? label(s) + (s.kind === "act" ? " (กิจกรรม)" : "") + " แตะเพื่อแก้" : "ว่าง แตะเพื่อเพิ่มคาบ"}`;
+
+/* ===== shell ===== */
+const NAV = [
+  ["วันนี้", [["home", "หน้าหลัก", "home"], ["tt", "ตารางสอน", "cal", true]]],
+  ["ในห้องเรียน", [["scan", "สแกน", "scan"], ["att", "เช็คชื่อ", "ucheck"], ["rand", "สุ่มชื่อ", "dice"]]],
+  ["ตรวจงาน", [["grade", "คะแนน", "book"], ["rep", "รายงาน", "chart"]]],
+  ["จัดการ", [["stu", "นักเรียน", "users"], ["set", "ตั้งค่า", "gear"]]],
+];
+const isTT = () => S.page === "tt" || S.page === "ttedit";
+function rail() {
+  return `<nav class="rail" aria-label="เมนูหลัก"><div class="rail-logo">${ic("logo", 24)}</div>
+  ${NAV.map(([g, items]) => `<div class="rail-group" role="group" aria-label="${g}"><div class="rail-gl" aria-hidden="true">${g}</div>
+    ${items.map(([k, l, i, nw]) => `<button class="rail-item" ${(k === "tt" && isTT()) || k === S.page ? 'aria-current="page"' : ""} data-a="nav" data-v="${k}">${ic(i, 24)}<span>${l}</span>${nw ? '<span class="nb">ใหม่</span>' : ""}</button>`).join("")}</div>`).join("")}
+  <div class="rail-spacer"></div><div class="rail-sync"><i></i>ออนไลน์</div>
+  <button class="rail-item" data-a="toast" data-v="ออกจากระบบ (ตัวอย่าง)">${ic("out", 24)}<span>ออกจากระบบ</span></button></nav>`;
+}
+function tabbar() {
+  const cur = (k) => (S.page === k ? 'aria-current="page"' : "");
+  return `<nav class="tabbar" aria-label="เมนู">
+    <button class="tab" ${cur("home")} data-a="nav" data-v="home"><span class="pip"></span>${ic("home", 24)}หน้าหลัก</button>
+    <button class="tab" ${cur("att")} data-a="nav" data-v="att"><span class="pip"></span>${ic("ucheck", 24)}เช็คชื่อ</button>
+    <button class="tab tab-scan" data-a="nav" data-v="scan"><span class="bub">${ic("scan", 24)}</span>สแกน</button>
+    <button class="tab" ${cur("grade")} data-a="nav" data-v="grade"><span class="pip"></span>${ic("book", 24)}คะแนน</button>
+    <button class="tab" ${isTT() ? 'aria-current="page"' : ""} data-a="more" aria-haspopup="dialog"><span class="pip"></span>${ic("more", 24)}เพิ่มเติม</button></nav>`;
+}
+function moreSheet() {
+  const it = (k, l, i, nw) => `<button class="sheet-item" ${k === "tt" && isTT() ? 'aria-current="page"' : ""} data-a="nav" data-v="${k}">${ic(i, 24)}${l}${nw ? '<span class="nb">ใหม่</span>' : ""}</button>`;
+  return `<div class="scrim" data-a="close-more" data-self="1"><div class="sheet" role="dialog" aria-modal="true" aria-label="เพิ่มเติม"><div class="grab"></div>
+    <div class="sheet-gl">วันนี้ · ในห้องเรียน</div><div class="sheet-grid">${it("tt", "ตารางสอน", "cal", true)}${it("rand", "สุ่มชื่อ", "dice")}</div>
+    <div class="sheet-gl">ตรวจงาน · จัดการ</div><div class="sheet-grid">${it("rep", "รายงาน", "chart")}${it("stu", "นักเรียน", "users")}${it("set", "ตั้งค่า", "gear")}</div></div></div>`;
+}
+function ttHeader(extra = "") {
+  const k = countKinds();
+  return `<div class="uh"><div class="uh-l"><span class="uh-ic">${ic("cal", 24)}</span><div><h1 class="uh-title">ตารางสอน</h1>
+    <p class="uh-sub">ภาคเรียน 2/2569 · สอน ${k.c} คาบ · กิจกรรม ${k.a} คาบ ต่อสัปดาห์</p></div></div><div class="uh-act">${extra}</div></div>`;
+}
+
+/* ===== แบบ ก : ตารางกระดาษ ===== */
+function aNow(st) {
+  const n = nowText(st), nx = st.next;
+  return `<section class="a-now" aria-label="ตอนนี้และคาบต่อไป">
+    <div class="seg-l"><span class="k">ตอนนี้ ${hm(st.t)}</span><b>${n.v}</b><span class="muted">${n.s}</span></div>
+    <span class="sep" aria-hidden="true"></span>
+    <div class="seg-l"><span class="k">ต่อไป</span>${nx ? `<b>${label(nx.slot)}</b><span class="muted">${nextWhen(nx, st)}</span>` : "<b>ไม่มีคาบเหลือ</b>"}</div>
+    <span class="grow"></span>${checkBtn(st.room)}</section>`;
+}
+function aGrid(st) {
+  const { ps, lunch } = pers(), L = lunch ? TS.lunchAfter : TS.count;
+  const col = (p) => (p <= L ? p + 1 : p + 2);
+  const cols = `var(--dw) repeat(${L},minmax(0,1fr))${lunch ? ` var(--lw) repeat(${TS.count - L},minmax(0,1fr))` : ""}`;
+  let h = `<div class="a-corner" style="grid-row:1;grid-column:1">วัน / คาบ</div>`;
+  for (const x of ps) {
+    const now = st.phase === "period" && st.cur.p === x.p;
+    h += `<div class="a-h ${now ? "now" : ""}" style="grid-row:1;grid-column:${col(x.p)}"><b>คาบ ${x.p}</b><span>${hm(x.s)}–${hm(x.e)}</span>${now ? '<span class="tag now">ตอนนี้</span>' : ""}</div>`;
+  }
+  h += `<div class="a-band" style="grid-row:${TODAY + 2};grid-column:1 / -1" aria-hidden="true"></div>`;
+  if (lunch) {
+    h += `<div class="a-h ${st.phase === "lunch" ? "now" : ""}" style="grid-row:1;grid-column:${L + 2}" title="พักกลางวัน">${ic("bowl", 20)}<span class="sr">พักกลางวัน</span>${st.phase === "lunch" ? '<span class="tag now">ตอนนี้</span>' : ""}</div>`;
+    h += `<div class="a-lunch ${st.phase === "lunch" ? "now" : ""}" style="grid-row:2 / span 5;grid-column:${L + 2}"><span>พักรับประทานอาหารกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}</span></div>`;
+  }
+  DAYS.forEach((D, d) => {
+    h += `<div class="a-day ${d === TODAY ? "today" : ""}" style="grid-row:${d + 2};grid-column:1"><span class="full">${D.m}</span><span class="short">${D.sh}</span>${d === TODAY ? "<small>วันนี้</small>" : ""}</div>`;
+    for (const x of ps) {
+      const s = slot(d, x.p), isNow = d === TODAY && st.phase === "period" && st.cur.p === x.p;
+      const pos = `style="grid-row:${d + 2};grid-column:${col(x.p)}"`, nt = isNow ? '<span class="tag now nowtag">ตอนนี้</span>' : "";
+      h += s
+        ? `<button class="a-cell ${slotCls(s)} ${isNow ? "is-now" : ""}" ${pos} data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, s)}">${slotInner(s)}${nt}</button>`
+        : `<button class="a-cell a-empty ${isNow ? "is-now" : ""}" ${pos} data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, null)}">${ic("plus", 20)}<span class="lbl">เพิ่มคาบ</span>${nt}</button>`;
+    }
+  });
+  return `<section class="card a-sheet" aria-label="ตารางสอนทั้งสัปดาห์"><div class="a-grid" style="grid-template-columns:${cols}">${h}</div></section>`;
+}
+function dayList(d, st) {
+  const { ps, lunch } = pers(); let h = "";
+  for (const x of ps) {
+    const s = slot(d, x.p), isNow = d === TODAY && st.phase === "period" && st.cur.p === x.p;
+    h += `<div class="dl-row ${isNow ? "is-now" : ""}"><div class="dl-t"><b>${hm(x.s)}</b>คาบ ${x.p}${isNow ? '<span class="tag now">ตอนนี้</span>' : ""}</div>
+      ${s ? `<button class="${slotCls(s)}" data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, s)}">${slotInner(s)}</button>`
+          : `<button class="dl-empty" data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, null)}">${ic("plus", 18)}ว่าง · แตะเพื่อเพิ่มคาบ</button>`}</div>`;
+    if (lunch && x.p === TS.lunchAfter) h += `<div class="dl-lunch">${ic("bowl", 18)}พักกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}${d === TODAY && st.phase === "lunch" ? ' <span class="tag now">ตอนนี้</span>' : ""}</div>`;
+  }
+  return `<div class="daylist">${h}</div>`;
+}
+const dayTabs = (sel) => `<div class="daytabs" role="group" aria-label="เลือกวัน">${DAYS.map((D, d) => `<button aria-pressed="${sel === d}" data-a="day" data-v="${d}">${D.s}<small>${d === TODAY ? "วันนี้" : D.date + " พ.ย."}</small></button>`).join("")}</div>`;
+function legend(cls = "") {
+  return `<div class="a-leg ${cls}">${Object.entries(ROOMS).map(([r, t]) => `<span class="sw t-${t}"><i></i>${r}${r === HOMEROOM ? " (ประจำชั้น)" : ""}</span>`).join("")}
+    <span class="sw"><i class="act"></i>กิจกรรม (ไม่มีห้อง)</span><span class="grow"></span><span>แตะช่องเพื่อเพิ่มหรือแก้</span></div>`;
+}
+function viewA() {
+  const st = status();
+  return `${ttHeader(`<button class="btn ghost" data-a="times">${ic("clock")}ตั้งเวลาคาบ</button><button class="btn ghost" data-a="toast" data-v="พิมพ์ตารางสอน (ตัวอย่าง)">${ic("print")}พิมพ์</button>`)}
+    ${aNow(st)}${aGrid(st)}${legend("wide")}
+    <div class="a-mob">${dayTabs(S.day)}${dayList(S.day, st)}</div>`;
+}
+
+/* ===== แบบ ข : ปฏิทินแบบ Google Calendar ===== */
+function bCal(days, k, wide) {
+  const { ps, lunch } = pers(), st = status(), t0 = ps[0].s, t1 = ps[ps.length - 1].e, H = (t1 - t0) * k + 4, AX = 64, n = days.length;
+  const cols = `${AX}px repeat(${n},minmax(0,1fr))`;
+  const head = `<div class="b-head" style="grid-template-columns:${cols}"><div class="b-ax-h">เวลา</div>${days.map((d) => `<button class="b-dh ${d === TODAY ? "today" : ""}" data-a="bday" data-v="${d}" aria-label="ดูวัน${DAYS[d].m} ${DAYS[d].date} พ.ย.${d === TODAY ? " (วันนี้)" : ""}"><small>${n === 1 ? DAYS[d].m : DAYS[d].s}</small><span class="d">${DAYS[d].date}</span></button>`).join("")}</div>`;
+  let lines = "", axis = "";
+  for (const x of ps) { lines += `<div class="b-line" style="top:${(x.s - t0) * k}px"></div>`; axis += `<div class="b-ax" style="top:${(x.s - t0) * k + 3}px"><b>${hm(x.s)}</b><span>คาบ ${x.p}</span></div>`; }
+  lines += `<div class="b-line" style="top:${(t1 - t0) * k}px"></div>`;
+  const lunchBand = lunch ? `<div class="b-lunch" style="top:${(lunch.s - t0) * k}px;height:${(lunch.e - lunch.s) * k}px"><span>${ic("bowl", 18)}พักกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}</span></div>` : "";
+  const colsH = days.map((d) => {
+    let ev = "";
+    for (const x of ps) {
+      const s = slot(d, x.p), pos = `style="top:${(x.s - t0) * k + 2}px;height:${(x.e - x.s) * k - 4}px"`;
+      if (s) {
+        const isCur = d === TODAY && st.phase === "period" && st.cur.p === x.p, isNext = d === TODAY && st.next && !st.next.later && st.next.p === x.p;
+        const chk = wide && s.kind === "class" && (isCur || isNext) ? `<span class="chk">${checkBtn(s.room, isCur || isNext ? "btn pri sm-l" : "btn sm-l")}</span>` : "";
+        ev += `<div class="b-ev ${slotCls(s)} ${wide ? "row" : ""}" ${pos}><button class="cover" data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, s)}"></button>
+          <span class="txt">${slotInner(s, wide ? `${hm(x.s)}–${hm(x.e)}` : "")}</span>${chk}</div>`;
+      } else ev += `<button class="b-free" ${pos} data-a="open" data-d="${d}" data-p="${x.p}" aria-label="${aria(d, x, null)}">${ic("plus", 16)}<span>เพิ่มคาบ</span></button>`;
+    }
+    return `<div class="b-col ${d === TODAY ? "today" : ""}">${ev}</div>`;
+  }).join("");
+  let now = "";
+  if (st.t >= t0 && st.t <= t1 && days.includes(TODAY)) {
+    const y = (st.t - t0) * k, i = days.indexOf(TODAY);
+    now = `<div class="b-axnow" style="top:${y - 10}px"><span>${hm(st.t)}</span></div>` +
+      (n > 1 ? `<div class="b-now faint" style="top:${y}px;left:${AX}px;right:0"></div>` : "") +
+      `<div class="b-now main" style="top:${y}px;left:calc(${AX}px + (100% - ${AX}px) * ${i} / ${n});right:calc((100% - ${AX}px) * ${n - i - 1} / ${n})"></div>`;
+  }
+  return `<section class="b-cal" aria-label="ตารางสอนแบบปฏิทิน">${head}<div class="b-body" style="grid-template-columns:${cols};height:${H}px">
+    <div class="b-axis">${axis}</div>${colsH}${lines}${lunchBand}${now}</div></section>`;
+}
+function viewB() {
+  const st = status(), week = S.bview === "week", nt = nowText(st), nx = st.next;
+  const strip = `<div class="b-strip" role="group" aria-label="เลือกวัน">${DAYS.map((D, d) => `<button class="b-dh ${d === TODAY ? "today" : ""}" aria-pressed="${S.day === d}" data-a="day" data-v="${d}"><small>${d === TODAY ? "วันนี้" : D.s}</small><span class="d">${D.date}</span></button>`).join("")}</div>`;
+  const bar = `<div class="b-bar"><button class="btn" data-a="today">วันนี้</button>
+    <button class="btn ghost icon" data-a="prev" aria-label="${week ? "สัปดาห์ก่อน" : "วันก่อน"}">${ic("cl")}</button><button class="btn ghost icon" data-a="next" aria-label="${week ? "สัปดาห์ถัดไป" : "วันถัดไป"}">${ic("cr")}</button>
+    <span class="date">${week ? "9–13 พ.ย. 2569" : `วัน${DAYS[S.day].m} ${DAYS[S.day].date} พ.ย. 2569`}</span><span class="grow"></span>
+    <div class="seg b-viewseg" role="group" aria-label="มุมมอง"><button aria-pressed="${!week}" data-a="bview" data-v="day">วัน</button><button aria-pressed="${week}" data-a="bview" data-v="week">สัปดาห์</button></div></div>`;
+  const side = `<aside class="b-side"><section class="card side-card"><h2>${ic("clock")}วันนี้</h2>
+      <div class="nn"><span class="k">ตอนนี้ ${hm(st.t)} · ${nt.k}</span><b>${nt.v}</b><span>${nt.s}</span></div>
+      <div class="nn"><span class="k">ต่อไป</span>${nx ? `<b>${label(nx.slot)}</b><span>${nextWhen(nx, st)}</span>` : "<b>ไม่มีคาบเหลือ</b>"}${checkBtn(st.room)}</div></section></aside>`;
+  const dayCal = bCal([S.day], 1.3, true);
+  return `${ttHeader(`<button class="btn ghost" data-a="times">${ic("clock")}ตั้งเวลาคาบ</button>`)}${bar}${strip}
+    ${week ? `<div class="b-wrap"><div class="only-wide">${bCal([0, 1, 2, 3, 4], 1.15, false)}</div><div class="only-phone">${dayCal}</div></div>`
+           : `<div class="b-wrap with-side"><div>${dayCal}</div>${side}</div>`}`;
+}
+
+/* ===== แบบ ค : วันนี้เป็นหลัก ===== */
+function cHeroBlock(st) {
+  const nt = nowText(st), teaching = st.curSlot, f = teaching ? { ...st.cur, slot: st.curSlot, d: TODAY } : st.next;
+  const room = f && f.slot.kind === "class";
+  const fk = teaching ? `กำลังสอน · คาบ ${st.cur.p}` : f ? (f.later ? dayName(f.d) : "ต่อไป") : "ต่อไป";
+  const meta = !f ? "" : teaching ? `ถึง <b>${hm(st.cur.e)}</b> · เหลือ ${dur(st.cur.e - st.t)}` : f.later ? `คาบ ${f.p} · <b>${hm(f.s)}–${hm(f.e)}</b>` : `คาบ ${f.p} · <b>${hm(f.s)}–${hm(f.e)}</b> · อีก ${dur(f.s - st.t)}`;
+  return `<section class="c-hero" aria-label="ตอนนี้และคาบต่อไป">
+    <div class="c-now"><span class="c-k">${ic("clock", 18)}ตอนนี้ ${hm(st.t)} น.</span><span class="v">${teaching ? "กำลังสอนอยู่" : nt.v}</span><span class="s">${teaching ? nt.s : nt.s}</span></div>
+    <div class="c-next ${room ? tone(f.slot) : ""}">${f ? `<div><span class="c-k">${fk}</span>
+        <div class="c-room">${room ? `<span class="big">${f.slot.room}</span><span class="sj">${f.slot.subj}</span>` : `<span class="big" style="font-size:var(--t-3xl)">${f.slot.name}</span><span class="sj">กิจกรรม</span>`}</div>
+        <p class="meta">${meta}</p></div><div class="acts">${room && !f.later ? checkBtn(f.slot.room) : ""}</div>`
+      : `<div><span class="c-k">ต่อไป</span><div class="c-room"><span class="sj">ไม่มีคาบเหลือในสัปดาห์นี้</span></div></div>`}</div></section>`;
+}
+function cDayList(d, st) {
+  const { ps, lunch } = pers(), isToday = d === TODAY; let h = "", placed = !isToday;
+  const nowLine = () => `<div class="c-nowline" aria-label="ตอนนี้ ${hm(st.t)}"><span>${hm(st.t)}</span></div>`;
+  for (const x of ps) {
+    const s = slot(d, x.p), past = isToday && st.t >= x.e, cur = isToday && st.phase === "period" && st.cur.p === x.p;
+    if (!placed && st.t < x.s && !cur) { h += nowLine(); placed = true; }
+    const isNext = isToday && s && st.next && !st.next.later && st.next.p === x.p;
+    h += `<div class="c-row ${past ? "past" : ""} ${cur ? "cur" : ""}"><div class="t"><b>${hm(x.s)}</b>คาบ ${x.p}</div>
+      ${s ? `<div class="${slotCls(s)}">${slotInner(s)}</div>` : `<div class="free">ว่าง</div>`}
+      <div class="st">${cur ? '<span class="tag now">ตอนนี้</span>' : ""}${past && s ? `${ic("check", 16)}ผ่านแล้ว` : ""}${(cur || isNext) && s && s.kind === "class" ? checkBtn(s.room, "btn sm-l") : ""}</div></div>`;
+    if (lunch && x.p === TS.lunchAfter) {
+      const lnow = isToday && st.phase === "lunch";
+      h += `<div class="c-lunch">${ic("bowl", 18)}พักกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}${lnow ? ' <span class="tag now">ตอนนี้</span>' : ""}</div>`;
+      if (lnow) placed = true;
+    }
+  }
+  if (!placed && st.phase === "after") h += nowLine();
+  return h;
+}
+function miniWeek() {
+  const { ps, lunch } = pers(), L = lunch ? TS.lunchAfter : 99, n = TS.count + (lunch ? 1 : 0);
+  let h = `<div class="r" style="--n:${n}" aria-hidden="true"><span></span>${ps.map((x) => `<span class="hd">${x.p}</span>${x.p === L ? "<span></span>" : ""}`).join("")}</div>`;
+  DAYS.forEach((D, d) => {
+    h += `<div class="r ${d === TODAY ? "today" : ""}" style="--n:${n}"><span class="dn ${d === TODAY ? "today" : ""}">${D.s}</span>${ps.map((x) => {
+      const s = slot(d, x.p);
+      const c = s ? (s.kind === "class" ? `<span class="c ${tone(s)}" title="${label(s)}">${s.room.replace("ป.", "")}</span>` : `<span class="c act" title="${s.name}">${ic("flag", 14)}</span>`) : `<span class="c e"></span>`;
+      return c + (x.p === L ? `<span class="c l">${ic("bowl", 12)}</span>` : "");
+    }).join("")}</div>`;
+  });
+  return `<div class="mini" role="img" aria-label="ภาพรวมทั้งสัปดาห์ ${DAYS.map((D, d) => `วัน${D.m}: ${ps.filter((x) => slot(d, x.p)).map((x) => `คาบ ${x.p} ${label(slot(d, x.p))}`).join(", ") || "ว่าง"}`).join(" · ")}">${h}</div>`;
+}
+function viewC() {
+  const st = status(), d = S.day, k = countKinds(), tm = TODAY + 1, { ps } = pers();
+  const tlist = ps.filter((x) => slot(tm, x.p)).map((x) => { const s = slot(tm, x.p); return `<div class="c-row"><div class="t"><b>${hm(x.s)}</b>คาบ ${x.p}</div><div class="${slotCls(s)}">${slotInner(s)}</div></div>`; }).join("");
+  return `<div class="uh"><div class="uh-l"><span class="uh-ic">${ic("cal", 24)}</span><div><h1 class="uh-title">ตารางสอน</h1><p class="uh-sub">วัน${DAYS[TODAY].m} ${DAYS[TODAY].date} พ.ย. 2569 · ภาคเรียน 2/2569</p></div></div>
+    <div class="uh-act"><button class="btn" data-a="nav" data-v="ttedit">${ic("pen")}แก้ตารางทั้งสัปดาห์</button></div></div>
+    ${cHeroBlock(st)}
+    <div class="c-grid"><section class="card c-list" aria-label="คาบของวัน${DAYS[d].m}">
+      <div class="c-days" role="group" aria-label="ดูวันอื่น">${DAYS.map((D, i) => `<button class="chip" aria-pressed="${d === i}" data-a="day" data-v="${i}">${i === TODAY ? "วันนี้" : D.sh}</button>`).join("")}</div>
+      <h2>${d === TODAY ? "วันนี้ · " : ""}วัน${DAYS[d].m}</h2>${cDayList(d, st)}</section>
+      <aside class="c-side">
+        <section class="card side-card"><h2>${ic("calb")}พรุ่งนี้ · วัน${DAYS[tm].m}</h2>${tlist || '<p class="muted">ไม่มีคาบ</p>'}</section>
+        <section class="card side-card"><h2>${ic("list")}ทั้งสัปดาห์</h2>${miniWeek()}
+          <div class="cnt"><span><b>${k.c}</b>คาบสอน</span><span><b>${k.a}</b>กิจกรรม</span></div>
+          <button class="btn" style="margin-top:var(--s3);width:100%" data-a="nav" data-v="ttedit">${ic("pen")}แก้ตารางทั้งสัปดาห์</button></section>
+      </aside></div>`;
+}
+function cEdit() {
+  const { ps, lunch } = pers(), d = S.day, cnt = (i) => ps.filter((x) => slot(i, x.p)).length;
+  let rows = "";
+  for (const x of ps) {
+    const s = slot(d, x.p), open = S.edit && S.edit.d === d && S.edit.p === x.p;
+    rows += `<div class="ce-row"><button class="ce-sum" data-a="${open ? "cancel" : "open"}" data-d="${d}" data-p="${x.p}" aria-expanded="${open}" aria-label="${aria(d, x, s)}">
+        <span class="t"><b>คาบ ${x.p}</b>${hm(x.s)}–${hm(x.e)}</span>
+        ${s ? `<span class="${slotCls(s)}">${slotInner(s)}</span>` : `<span class="free">${ic("plusc", 20)}ว่าง · เพิ่มคาบ</span>`}
+        <span class="go">${open ? "ปิด" : s ? "แก้" : "เพิ่ม"}${ic(open ? "x" : "cr", 16)}</span></button>
+      ${open ? `<div class="ce-open">${formHTML("c")}${formFoot()}</div>` : ""}</div>`;
+    if (lunch && x.p === TS.lunchAfter) rows += `<div class="ce-lunch">${ic("bowl", 18)}พักกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}</div>`;
+  }
+  return `<button class="btn ghost back" data-a="nav" data-v="tt">${ic("cl")}กลับไปตารางวันนี้</button>
+    <div class="uh"><div class="uh-l"><span class="uh-ic">${ic("pen", 24)}</span><div><h1 class="uh-title">แก้ตารางสอน</h1><p class="uh-sub">ตารางนี้ใช้ซ้ำทุกสัปดาห์ ตลอดภาคเรียน 2/2569</p></div></div></div>
+    ${S.times ? `<section class="card ce-tsbox"><h2>ตั้งเวลาคาบ</h2>${timeForm()}<div class="dr-foot" style="padding:var(--s3) 0 0;border:0"><span class="grow"></span><button class="btn pri" data-a="times-close">${ic("check", 18)}เสร็จ</button></div></section>`
+      : `<section class="card ce-time"><span class="uh-ic">${ic("clock", 22)}</span><p class="sum"><b>เวลาเรียน</b>${TS.count} คาบ · คาบละ ${TS.len} นาที · เริ่ม ${hm(TS.start)} · พักกลางวันหลังคาบ ${TS.lunchAfter}</p><button class="btn" data-a="times">ตั้งเวลาคาบ</button></section>`}
+    <div class="ce-body"><div class="ce-days" role="group" aria-label="เลือกวันที่จะแก้">${DAYS.map((D, i) => `<button class="ce-day" aria-pressed="${d === i}" data-a="day" data-v="${i}"><span><span class="full">${D.m}</span><span class="short">${D.s}</span></span><small>${cnt(i)} คาบ</small></button>`).join("")}</div>
+      <section class="card ce-list" aria-label="คาบของวัน${DAYS[d].m}">${rows}</section></div>`;
+}
+
+/* ===== the one-period form (all three) ===== */
+function formHTML(v) {
+  const { d, p } = S.edit, x = pers().ps.find((q) => q.p === p), dr = S.draft, g = v === "b";
+  const opt = (k, i, t, s) => `<button type="button" class="fm-opt" role="radio" aria-checked="${dr.kind === k}" data-a="kind" data-v="${k}"><b>${ic(i, 20)}${t}</b><small>${s}</small></button>`;
+  const rooms = Object.keys(ROOMS).map((r) => `<button type="button" role="radio" aria-checked="${dr.room === r}" class="fm-room t-${ROOMS[r]}" data-a="room" data-v="${r}"><b>${r}</b><small>${r === HOMEROOM ? "ห้องประจำชั้น" : "&nbsp;"}</small>${dr.room === r ? ic("check", 18) : ""}</button>`).join("");
+  const subjChips = SUBJECTS.map((s) => `<button type="button" class="chip" aria-pressed="${dr.subj === s}" data-a="subj" data-v="${s}">${s}</button>`).join("");
+  const actChips = ACTS.map((s) => `<button type="button" class="chip" aria-pressed="${dr.name === s}" data-a="actname" data-v="${s}">${s}</button>`).join("");
+  const title = g ? `<div class="fm-title ${(dr.kind === "class" ? dr.room : dr.name) ? "" : "ph"}">${dr.kind === "class" ? (dr.room ? `${dr.subj} ${dr.room}` : "เลือกห้องที่สอน") : dr.name || "ชื่อกิจกรรม"}</div>` : "";
+  return `<div class="fm ${g ? "gcal" : ""}">${title}
+    ${g ? `<div class="fm-row"><span class="fi">${ic("clock")}</span><div class="fm-when"><b style="color:var(--text-primary)">วัน${DAYS[d].m} · คาบ ${p} · ${hm(x.s)}–${hm(x.e)}</b></div><div class="fm-when">${ic("repeat", 16)}ทุกสัปดาห์ ตลอดภาคเรียน</div></div>` : ""}
+    <div class="fm-row"><span class="fi">${ic("list")}</span><span class="fm-l" id="lb-kind">คาบนี้เป็น</span><div class="fm-type" role="radiogroup" aria-labelledby="lb-kind">${opt("class", "board", "สอนห้อง", "เลือกห้องและวิชา เช็คชื่อได้")}${opt("act", "flag", "กิจกรรม", "ไม่มีห้อง เช่น PLC ลูกเสือ ชุมนุม")}</div></div>
+    ${dr.kind === "class" ? `
+      <div class="fm-row"><span class="fi">${ic("users")}</span><span class="fm-l" id="lb-room">ห้อง</span><div class="fm-rooms" role="radiogroup" aria-labelledby="lb-room">${rooms}</div></div>
+      <div class="fm-row"><span class="fi">${ic("book")}</span><label class="fm-l" for="in-subj">วิชา</label><div class="chips">${subjChips}</div><input class="inp" id="in-subj" data-in="subj" value="${SUBJECTS.includes(dr.subj) ? "" : dr.subj}" placeholder="หรือพิมพ์ชื่อวิชาอื่น" autocomplete="off"></div>`
+    : `
+      <div class="fm-row"><span class="fi">${ic("flag")}</span><label class="fm-l" for="in-name">ชื่อกิจกรรม</label><input class="inp" id="in-name" data-in="name" value="${dr.name}" placeholder="เช่น PLC สายชั้น" autocomplete="off"><div class="chips">${actChips}</div>
+      <p class="fm-note">คาบกิจกรรมไม่มีรายชื่อนักเรียน จึงไม่มีปุ่มเช็คชื่อ</p></div>`}
+    ${S.err ? `<p class="fm-err" role="alert">${ic("x", 18)}${S.err}</p>` : ""}
+    ${g ? "" : `<p class="fm-when">${ic("repeat", 16)}ใช้ซ้ำทุกวัน${DAYS[d].m} ตลอดภาคเรียน</p>`}</div>`;
+}
+function formFoot() {
+  const isNew = !slot(S.edit.d, S.edit.p);
+  return `<div class="dr-foot">${isNew ? "" : `<button class="btn ghost danger" data-a="del">${ic("trash", 18)}ลบคาบนี้</button>`}<span class="grow"></span>
+    <button class="btn" data-a="cancel">ยกเลิก</button><button class="btn pri" data-a="save">${ic("check", 18)}บันทึก</button></div>`;
+}
+function editorOverlay() {
+  const { d, p } = S.edit, x = pers().ps.find((q) => q.p === p), isNew = !slot(d, p);
+  if (S.dir === "A") return `<div class="scrim" data-a="cancel" data-self="1"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="ed-h">
+    <div class="dr-head"><div class="grow"><h2 id="ed-h" tabindex="-1">${isNew ? "เพิ่มคาบ" : "แก้คาบ"} · วัน${DAYS[d].m} คาบ ${p}</h2><p>${hm(x.s)}–${hm(x.e)} น.</p></div><button class="btn ghost icon" data-a="cancel" aria-label="ปิด">${ic("x")}</button></div>
+    <div class="dr-body">${formHTML("a")}</div>${formFoot()}</div></div>`;
+  return `<div class="scrim center" data-a="cancel" data-self="1"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="ed-h">
+    <div class="dr-head" style="align-items:center"><button class="btn ghost icon" data-a="cancel" aria-label="ปิด">${ic("x")}</button><h2 id="ed-h" tabindex="-1" class="grow" style="font-size:var(--t-lg)">${isNew ? "เพิ่มคาบ" : "แก้คาบ"}</h2><button class="btn pri" data-a="save">บันทึก</button></div>
+    <div class="dr-body">${formHTML("b")}</div>${isNew ? "" : `<div class="dr-foot"><button class="btn ghost danger" data-a="del">${ic("trash", 18)}ลบคาบนี้</button></div>`}</div></div>`;
+}
+function timeForm() {
+  const { ps, lunch } = pers();
+  const step = (f, val, unit, name) => `<span class="step"><button data-a="ts" data-f="${f}" data-v="-1" aria-label="ลด${name}">−</button><output>${val} ${unit}</output><button data-a="ts" data-f="${f}" data-v="1" aria-label="เพิ่ม${name}">+</button></span>`;
+  return `<div class="ts-row"><span class="l">คาบแรกเริ่ม</span><input class="ts-time" type="time" data-in="start" value="${hm(TS.start)}" aria-label="เวลาเริ่มคาบแรก"></div>
+    <div class="ts-row"><span class="l">คาบละ</span>${step("len", TS.len, "นาที", "ความยาวคาบ")}</div>
+    <div class="ts-row"><span class="l">จำนวนคาบต่อวัน</span>${step("count", TS.count, "คาบ", "จำนวนคาบ")}</div>
+    <div class="ts-row"><span class="l">พักกลางวันหลังคาบ<small>ใส่ 0 ถ้าไม่มีพักกลางวัน</small></span>${step("lunchAfter", TS.lunchAfter, "", "คาบก่อนพัก")}</div>
+    <div class="ts-row"><span class="l">พักนาน</span>${step("lunchLen", TS.lunchLen, "นาที", "เวลาพัก")}</div>
+    <div class="ts-prev" aria-label="เวลาของแต่ละคาบ">${ps.map((x) => `<span>คาบ ${x.p}</span><span>${hm(x.s)}–${hm(x.e)}</span>${lunch && x.p === TS.lunchAfter ? `<span class="lu">${ic("bowl", 16)}พักกลางวัน ${hm(lunch.s)}–${hm(lunch.e)}</span>` : ""}`).join("")}</div>
+    <p class="fm-note" style="margin-top:var(--s2)">ใช้เวลาเดียวกันทุกวัน จันทร์–ศุกร์ · คาบที่กรอกไว้ไม่หาย</p>`;
+}
+function timesOverlay() {
+  return `<div class="scrim" data-a="times-close" data-self="1"><div class="drawer" role="dialog" aria-modal="true" aria-labelledby="ts-h">
+    <div class="dr-head"><div class="grow"><h2 id="ts-h" tabindex="-1">ตั้งเวลาคาบ</h2><p>เวลาของแต่ละคาบและช่วงพัก</p></div><button class="btn ghost icon" data-a="times-close" aria-label="ปิด">${ic("x")}</button></div>
+    <div class="dr-body">${timeForm()}</div><div class="dr-foot"><span class="grow"></span><button class="btn pri" data-a="times-close">${ic("check", 18)}เสร็จ</button></div></div></div>`;
+}
+
+/* ===== หน้าหลัก โครง ก + แถว ตอนนี้/ต่อไป ===== */
+function illo() {
+  return `<svg class="h-illo" viewBox="0 0 160 110" aria-hidden="true"><circle cx="118" cy="30" r="20" fill="var(--illo-1)"/>
+    <path d="M118 2v6M118 52v6M90 30h6M140 30h6M98 10l4 4M134 46l4 4M98 50l4-4M134 14l4-4" stroke="var(--illo-1)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M0 110V86c30-16 60-20 90-14s50 4 70-6v44z" fill="var(--illo-3)"/>
+    <rect x="34" y="58" width="44" height="34" rx="2" fill="var(--illo-4)" stroke="var(--ink)" stroke-width="2"/><path d="M28 60l28-24 28 24z" fill="var(--illo-2)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="50" y="72" width="12" height="20" fill="var(--illo-2)" stroke="var(--ink)" stroke-width="2"/></svg>`;
+}
+function homeStripA(st) {
+  const { ps, lunch } = pers(), nx = st.next;
+  const tk = ps.map((x) => {
+    const s = slot(TODAY, x.p), past = st.t >= x.e, now = st.phase === "period" && st.cur.p === x.p;
+    const cls = s ? (s.kind === "class" ? `cls ${tone(s)}` : "act") : "";
+    const inner = s ? (s.kind === "class" ? `<b>${s.room.replace("ป.", "")}</b>` : ic("flag", 16)) : "ว่าง";
+    return `<div class="tk ${cls} ${past ? "past" : ""} ${now ? "now" : ""}">${now ? '<span class="nt">ตอนนี้</span>' : ""}${inner}<em>${hm(x.s)}</em></div>` +
+      (lunch && x.p === TS.lunchAfter ? `<div class="tk-l ${st.phase === "lunch" ? "now" : ""}"></div>` : "");
+  }).join("");
+  const gcols = lunch ? `repeat(${TS.lunchAfter},minmax(0,1fr)) 14px repeat(${TS.count - TS.lunchAfter},minmax(0,1fr))` : `repeat(${TS.count},minmax(0,1fr))`;
+  return `<section class="card h-strip" aria-label="ตารางสอนวันนี้">
+    <div class="hd"><b>ตารางสอนวันนี้</b><button class="lk" data-a="nav" data-v="tt">ดูทั้งสัปดาห์ ›</button></div>
+    <div class="track" role="img" aria-label="วันนี้ ${ps.map((x) => `คาบ ${x.p} ${slot(TODAY, x.p) ? label(slot(TODAY, x.p)) : "ว่าง"}`).join(", ")}" style="grid-template-columns:${gcols}">${tk}</div>
+    <div class="nx"><div class="txt">${st.curSlot ? `<small>ตอนนี้ · ${nowText(st).s}</small><b>${label(st.curSlot)}</b>` : `<small>ต่อไป · ${nextWhen(nx, st)}</small><b>${nx ? label(nx.slot) : "ไม่มีคาบเหลือ"}</b>`}</div>${checkBtn(st.room)}</div></section>`;
+}
+function heroNextC(st) {
+  const teaching = st.curSlot, f = teaching ? { ...st.cur, slot: st.curSlot } : st.next;
+  if (!f) return `<div class="h-next"><span class="k">${ic("cal", 16)}ตารางสอน</span><b>ไม่มีคาบเหลือในสัปดาห์นี้</b></div>`;
+  const room = f.slot.kind === "class";
+  const k = teaching ? `กำลังสอน · คาบ ${f.p}` : f.later ? `${dayName(f.d)} · คาบ ${f.p}` : `ต่อไป · คาบ ${f.p}`;
+  return `<div class="h-next ${room ? tone(f.slot) : ""}"><span class="k">${ic("cal", 16)}${k}</span>
+    <div class="rm"><b>${room ? f.slot.room : f.slot.name}</b><span>${room ? f.slot.subj : "กิจกรรม"}</span></div>
+    <span class="m">${teaching ? `ถึง ${hm(f.e)} · เหลือ ${dur(f.e - st.t)}` : f.later ? `${hm(f.s)}–${hm(f.e)}` : `${hm(f.s)}–${hm(f.e)} · อีก ${dur(f.s - st.t)}`}</span>
+    ${room && !f.later ? checkBtn(f.slot.room) : ""}<button class="lk" data-a="nav" data-v="tt">ดูตารางสอนวันนี้ ›</button></div>`;
+}
+function homeTimeline(st) {
+  const items = [
+    { t: 480, html: `<li class="tli"><div class="tm">08:00<small>เข้าแถว</small></div><div class="nd">${ic("ucheck", 18)}</div><div class="bd"><h3>เช็คชื่อ ป.6/4 (ห้องประจำชั้น)</h3><p>ยังไม่ได้เช็ค 36 คน</p><div class="acts"><button class="btn pri" data-a="check" data-v="ป.6/4">${ic("ucheck", 18)}เริ่มเช็คชื่อ</button></div></div></li>` },
+    { t: 990, html: `<li class="tli" style="--node:var(--fill-danger)"><div class="tm">16:30<small>ครบกำหนด</small></div><div class="nd">${ic("scan", 18)}</div><div class="bd"><h3>แบบฝึกหัดเศษส่วน ชุดที่ 3</h3><p>ป.6/3 ยังไม่ส่ง 6 คน · ป.6/1 ยังไม่ส่ง 4 คน</p><div class="acts"><button class="btn" data-a="toast" data-v="ไปหน้าสแกน">${ic("scan", 18)}สแกนรับงาน</button></div></div></li>` },
+  ];
+  if (S.dir === "B") {
+    for (const x of pers().ps) {
+      const s = slot(TODAY, x.p); if (!s) continue;
+      const past = st.t >= x.e, cur = st.phase === "period" && st.cur.p === x.p, isNext = st.next && !st.next.later && st.next.p === x.p;
+      items.push({ t: x.s, html: `<li class="tli cls ${s.kind === "class" ? tone(s) : "actv"} ${past ? "past" : ""}"><div class="tm">${hm(x.s)}<small>คาบ ${x.p}</small></div><div class="nd">${ic(s.kind === "class" ? "board" : "flag", 18)}</div>
+        <div class="bd"><h3>${s.kind === "class" ? `<b>${s.room}</b> ${s.subj}` : s.name}</h3><p>${past ? "สอนแล้ว" : cur ? `กำลังสอน · ถึง ${hm(x.e)}` : `${hm(x.s)}–${hm(x.e)} · อีก ${dur(x.s - st.t)}`} · จากตารางสอน</p>
+        ${(cur || isNext) && s.kind === "class" ? `<div class="acts">${checkBtn(s.room, "btn pri")}</div>` : ""}</div></li>` });
+    }
+  }
+  items.push({ t: st.t + 0.5, html: `<li class="tl-now"><span class="l">ตอนนี้ ${hm(st.t)}</span><span class="d" aria-hidden="true"></span><span class="ln" aria-hidden="true"></span></li>` });
+  items.sort((a, b) => a.t - b.t);
+  return `<section class="card h-card h-tl" aria-labelledby="tl-h"><div class="cardhead"><span class="hi">${ic("path", 20)}</span><h2 id="tl-h">ลำดับงานวันนี้</h2><span class="r">${S.dir === "B" ? "รวมคาบสอนจากตารางสอนตามเวลา" : "รายการหายเองเมื่อทำเสร็จ"}</span></div><ol class="tl">${items.map((i) => i.html).join("")}</ol></section>`;
+}
+function home() {
+  const st = status();
+  const pills = [["ucheck", "เช็คชื่อแล้ว 0/1 ห้อง"], ["calb", "ครบกำหนดวันนี้ 1 งาน"], ["book", "รอตรวจ 30"], ["flag", "ค้างส่ง 22"]];
+  return `<div class="h-top">${ic("calb", 18)}<span>พุธ 11 พ.ย. 2569 · ภาคเรียน 2/2569</span><span class="grow"></span><button class="btn ghost icon" aria-label="ซ่อนชื่อนักเรียน" data-a="toast" data-v="ซ่อนชื่อนักเรียน (ตัวอย่าง)">${ic("eye")}</button></div>
+    <section class="h-hero"><div><p class="h-kick">${greet(st.t)} · ${hm(st.t)} น.</p><h1 class="h-h1">ครูอรอุมา วันนี้มีงานรออยู่</h1>
+      <div class="h-big"><span class="n">5</span><span class="t">อย่างที่ต้องทำวันนี้</span></div>
+      <div class="h-pills">${pills.map(([i, t]) => `<button class="h-pill" data-a="toast" data-v="${t}">${ic(i, 18)}${t}</button>`).join("")}</div></div>
+      ${S.dir === "C" ? heroNextC(st) : illo()}</section>
+    ${S.dir === "A" ? homeStripA(st) : ""}
+    <div class="h-grid"><div class="h-qs" role="group" aria-label="ปุ่มลัดในห้องเรียน">
+        <button class="qa main" data-a="toast" data-v="ไปหน้าสแกน"><span class="qi">${ic("scan", 24)}</span><span><b>สแกนส่งงาน</b><small>กล้องหรือเครื่องอ่าน QR</small></span></button>
+        <button class="qa" data-a="check" data-v="ป.6/4"><span class="qi">${ic("ucheck", 24)}</span><span><b>เช็คชื่อ</b><small>ยังเหลือ 1 ห้อง</small></span></button>
+        <button class="qa" data-a="toast" data-v="ไปหน้าสุ่มชื่อ"><span class="qi">${ic("dice", 24)}</span><span><b>สุ่มชื่อ</b><small>เฉพาะคนที่มาเรียน</small></span></button>
+        <button class="qa" data-a="toast" data-v="สร้างงาน (ตัวอย่าง)"><span class="qi">${ic("plusc", 24)}</span><span><b>สร้างงาน</b><small>หลายห้องพร้อมกัน</small></span></button></div>
+      ${homeTimeline(st)}
+      <aside class="h-side"><section class="card h-card"><div class="cardhead"><span class="hi">${ic("chart2", 20)}</span><h2>ความคืบหน้ารายห้อง</h2></div>
+        ${[["ป.6/1", 88], ["ป.6/2", 94], ["ป.6/3", 79], ["ป.6/4", 91]].map(([r, p]) => `<div class="rp"><b>${r}</b><span class="bar"><i style="width:${p}%"></i></span><span class="p">${p}%</span></div>`).join("")}</section></aside></div>`;
+}
+function stub() {
+  const names = { scan: "สแกน", att: "เช็คชื่อ", rand: "สุ่มชื่อ", grade: "คะแนน", rep: "รายงาน", stu: "นักเรียน", set: "ตั้งค่า" };
+  return `<div class="uh"><div class="uh-l"><span class="uh-ic">${ic("list", 24)}</span><div><h1 class="uh-title">${names[S.page] || ""}</h1><p class="uh-sub">หน้านี้มีอยู่แล้วในแอป — ร่างนี้ไม่ได้ออกแบบใหม่</p></div></div></div>
+    <button class="btn pri" data-a="nav" data-v="tt">${ic("cal")}ไปตารางสอน</button>`;
+}
+
+/* ===== hub + render ===== */
+const DIR_INFO = {
+  A: { t: "ก ตารางกระดาษ", c: "หน้าตาเหมือนตารางที่โรงเรียนแจก แถว = วัน คอลัมน์ = คาบ มีแถบพักกลางวัน เห็นทั้งสัปดาห์ในจอเดียว แตะช่องเพื่อกรอก · มือถือดูทีละวัน · หน้าหลักมีแถบ “ตารางสอนวันนี้” ใต้หัว",
+       g: "ครูคุ้นตาที่สุด กรอกทั้งสัปดาห์เร็วบนคอม/iPad", w: "iPad ตั้งช่องแคบ ตัวหนังสือในช่องเล็กลง · มือถือไม่เห็นทั้งสัปดาห์" },
+  B: { t: "ข แบบปฏิทิน (Google Calendar)", c: "แกนเวลาแนวตั้ง มีเส้น “ตอนนี้” สลับ วัน/สัปดาห์ได้ แตะที่ว่างหรือปุ่ม “เพิ่มคาบ” เพื่อเพิ่ม · มือถือดูทีละวัน เลือกวันแถบบน · หน้าหลักแทรกคาบสอนลงใน “ลำดับงานวันนี้” ตามเวลา",
+       g: "เห็นเวลาจริงและช่วงว่างชัด คนใช้ปฏิทินคุ้นมือ", w: "คอมจอเตี้ยต้องเลื่อนดูคาบบ่าย · ช่องว่างไม่เห็นจนกว่าจะชี้/แตะ" },
+  C: { t: "ค วันนี้เป็นหลัก", c: "เปิดมาเห็น “ต่อไปสอนห้องไหน” ตัวใหญ่ + รายการคาบของวันนี้ · แก้ตารางทั้งสัปดาห์อยู่อีกจอ (ทีละวัน ทีละคาบ) · หน้าหลักมีการ์ด “ต่อไป” ในหัวแทนภาพประกอบ",
+       g: "มือถือดีที่สุด ตอบคำถามที่ครูถามบ่อยที่สุดทันที", w: "ไม่เห็นทั้งสัปดาห์แบบตาราง · กรอกครั้งแรก 15 คาบต้องกดหลายครั้ง" },
+};
+const SIZES = { m: [390, 844, "มือถือ 390×844"], pt: [820, 1180, "iPad ตั้ง 820×1180"], pl: [1180, 820, "iPad นอน 1180×820"], d: [1536, 729, "คอม 1536×729"] };
+const scrOf = () => (S.page === "home" ? "home" : S.edit || S.page === "ttedit" ? "edit" : "view");
+const GROUPS = [
+  { k: "dir", l: "แบบ", o: [["A", "ก ตารางกระดาษ"], ["B", "ข แบบปฏิทิน"], ["C", "ค วันนี้เป็นหลัก"]], v: () => S.dir },
+  { k: "scr", l: "จอ", o: [["view", "1 ดูตาราง"], ["edit", "2 กรอก/แก้ 1 คาบ"], ["home", "3 หน้าหลัก"]], v: scrOf },
+  { k: "skin", l: "ธีม", o: [["warm", "อบอุ่น"], ["pro", "มืออาชีพ"], ["playful", "สดใส"]], v: () => S.skin },
+  { k: "time", l: "เวลาจำลอง (วันพุธ)", o: [["490", "08:10"], ["590", "09:50"], ["645", "10:45"], ["730", "12:10"], ["770", "12:50"], ["1005", "16:45"]], v: () => String(S.time) },
+  { k: "size", l: "ขนาดจำลอง", o: [["fit", "พอดีหน้าต่าง"], ["m", "มือถือ 390"], ["pt", "iPad ตั้ง 820"], ["pl", "iPad นอน 1180"], ["d", "คอม 1536"]], v: () => S.size },
+];
+function renderHub() {
+  const hub = document.getElementById("hub"), info = DIR_INFO[S.dir];
+  hub.className = "hub" + (S.hubMin ? " min" : "");
+  hub.innerHTML = `<div class="hub-top"><h1 class="hub-title">ร่างอ้างอิง · ตารางสอน</h1><span class="hub-sub">Gate R · 3 แบบ · ข้อมูลจากตารางกระดาษจริง · กดได้ทุกจุด</span><span class="hub-grow"></span>
+    <button class="hub-tog" data-h="min" aria-expanded="${!S.hubMin}">${S.hubMin ? "แสดงตัวเลือก" : "ย่อแถบนี้"}</button></div>
+    <div class="hub-groups">${GROUPS.map((g) => `<div class="hg"><span class="hg-l" id="hl-${g.k}">${g.l}</span>
+      <div class="hg-seg" role="group" aria-labelledby="hl-${g.k}">${g.o.map(([v, l]) => `<button data-h="${g.k}" data-v="${v}" aria-pressed="${g.v() === v}">${l}</button>`).join("")}</div>
+      <select data-hs="${g.k}" aria-labelledby="hl-${g.k}">${g.o.map(([v, l]) => `<option value="${v}" ${g.v() === v ? "selected" : ""}>${l}</option>`).join("")}</select></div>`).join("")}</div>
+    <p class="hub-info"><b>${info.t}</b> — ${info.c}<br><span class="good">ดี: ${info.g}</span> · <span class="weak">ข้อด้อย: ${info.w}</span></p>`;
+}
+function layout() {
+  const hub = document.getElementById("hub"), stage = document.getElementById("stage"), scaler = document.getElementById("scaler"), dev = document.getElementById("device"), note = document.getElementById("note");
+  const W0 = document.documentElement.clientWidth, H0 = Math.max(420, window.innerHeight - hub.offsetHeight);
+  if (S.size === "fit") {
+    stage.className = "stage"; note.hidden = true;
+    scaler.style.cssText = `width:${W0}px;height:${H0}px`; dev.style.cssText = `width:${W0}px;height:${H0}px`;
+  } else {
+    const [W, H, name] = SIZES[S.size], s = Math.min(1, (W0 - 40) / W, (H0 - 72) / H);
+    stage.className = "stage framed"; note.hidden = false;
+    note.textContent = `${name} · ย่อเหลือ ${Math.round(s * 100)}% ให้พอดีหน้าต่าง`;
+    scaler.style.cssText = `width:${W * s}px;height:${H * s}px`; dev.style.cssText = `width:${W}px;height:${H}px;transform:scale(${s})`;
+  }
+}
+function render() {
+  renderHub(); layout();
+  const app = document.getElementById("app"), main0 = app.querySelector(".main"), keep = main0 ? main0.scrollTop : 0, hadOverlay = !!app.querySelector(".scrim");
+  app.dataset.skin = S.skin;
+  let page;
+  if (S.page === "home") page = home();
+  else if (S.page === "ttedit" && S.dir === "C") page = cEdit();
+  else if (isTT()) page = S.dir === "A" ? viewA() : S.dir === "B" ? viewB() : viewC();
+  else page = stub();
+  let over = "";
+  if (S.edit && S.dir !== "C") over = editorOverlay();
+  else if (S.times && S.dir !== "C") over = timesOverlay();
+  else if (S.more) over = moreSheet();
+  const fab = S.dir === "B" && S.page === "tt" ? `<button class="fab" data-a="fab">${ic("plus", 22)}เพิ่มคาบ</button>` : "";
+  app.innerHTML = `<div class="shell">${rail()}<main class="main">${page}</main>${fab}${tabbar()}</div>${over}
+    ${S.toast ? `<div class="toast" role="status"><span>${S.toast}</span>${S.undo ? `<button class="btn" data-a="undo">เลิกทำ</button>` : ""}</div>` : ""}`;
+  const m2 = app.querySelector(".main"); m2.scrollTop = S._top != null ? S._top : keep; S._top = null;
+  if (over && !hadOverlay) { const h = app.querySelector(".scrim [tabindex='-1']") || app.querySelector(".scrim button"); if (h) h.focus(); }
+  if (S.focusRow) { const r = app.querySelector(".ce-open"); if (r) r.scrollIntoView({ block: "nearest" }); S.focusRow = false; }
+}
+
+/* ===== actions ===== */
+let toastTimer;
+function toast(msg, undo) { S.toast = msg; S.undo = undo || null; clearTimeout(toastTimer); toastTimer = setTimeout(() => { S.toast = null; S.undo = null; render(); }, undo ? 6000 : 3200); }
+function openEdit(d, p) {
+  const s = slot(d, p);
+  S.edit = { d, p }; S.err = ""; S.times = false;
+  S.draft = s ? { kind: s.kind, room: s.room || null, subj: s.subj || "คณิตศาสตร์", name: s.name || "" } : { kind: "class", room: null, subj: "คณิตศาสตร์", name: "" };
+}
+const isPhone = () => document.getElementById("app").clientWidth <= 720;
+const ACT = {
+  nav(v) { S.edit = null; S.times = false; S.more = false; S._top = 0; if (v === "ttedit" && S.dir !== "C") v = "tt"; S.page = v; },
+  open(_, el) {
+    const d = +el.dataset.d, p = +el.dataset.p;
+    if (S.dir === "C" && S.page !== "ttedit") { S.page = "ttedit"; S.day = d; S._top = 0; }
+    openEdit(d, p); if (S.dir === "C") S.focusRow = true;
+  },
+  kind(v) { S.draft.kind = v; S.err = ""; },
+  room(v) { S.draft.room = v; S.err = ""; },
+  subj(v) { S.draft.subj = v; },
+  actname(v) { S.draft.name = v; S.err = ""; },
+  save() {
+    const dr = S.draft, { d, p } = S.edit;
+    if (dr.kind === "class" && !dr.room) { S.err = "เลือกห้องก่อน แล้วกดบันทึกอีกครั้ง"; return; }
+    if (dr.kind === "act" && !dr.name.trim()) { S.err = "พิมพ์ชื่อกิจกรรม หรือเลือกจากรายการก่อน"; return; }
+    SL[`${d}-${p}`] = dr.kind === "class" ? C(dr.room, dr.subj.trim() || "คณิตศาสตร์") : A(dr.name.trim());
+    S.edit = null; toast(`บันทึกคาบ ${p} วัน${DAYS[d].m}แล้ว`);
+  },
+  cancel() { S.edit = null; S.err = ""; },
+  del() { const { d, p } = S.edit, k = `${d}-${p}`, old = SL[k]; delete SL[k]; S.edit = null; toast(`ลบคาบ ${p} วัน${DAYS[d].m}แล้ว`, { k, old }); },
+  undo() { if (S.undo) SL[S.undo.k] = S.undo.old; toast("คืนคาบเดิมแล้ว"); },
+  times() { S.times = true; S.edit = null; },
+  "times-close"() { S.times = false; },
+  ts(v, el) {
+    const f = el.dataset.f, dv = +v;
+    if (f === "len") TS.len = Math.min(90, Math.max(30, TS.len + dv * 5));
+    if (f === "count") { TS.count = Math.min(9, Math.max(4, TS.count + dv)); TS.lunchAfter = Math.min(TS.lunchAfter, TS.count - 1); }
+    if (f === "lunchAfter") TS.lunchAfter = Math.min(TS.count - 1, Math.max(0, TS.lunchAfter + dv));
+    if (f === "lunchLen") TS.lunchLen = Math.min(90, Math.max(20, TS.lunchLen + dv * 5));
+  },
+  day(v) { S.day = +v; S.edit = null; },
+  bday(v) { S.day = +v; S.bview = "day"; },
+  bview(v) { S.bview = v; },
+  today() { S.day = TODAY; },
+  prev() { if (S.bview === "day" || isPhone()) S.day = Math.max(0, S.day - 1); else toast("ทุกสัปดาห์ใช้ตารางเดียวกันตลอดภาคเรียน"); },
+  next() { if (S.bview === "day" || isPhone()) S.day = Math.min(4, S.day + 1); else toast("ทุกสัปดาห์ใช้ตารางเดียวกันตลอดภาคเรียน"); },
+  fab() { const { ps } = pers(), d = S.bview === "week" && !isPhone() ? TODAY : S.day; const e = ps.find((x) => !slot(d, x.p) && (d !== TODAY || x.e > S.time)) || ps.find((x) => !slot(d, x.p)); openEdit(d, e ? e.p : 1); },
+  check(v) { toast(`ไปหน้าเช็คชื่อ เปิดห้อง ${v} ให้เลย (ทางลัด)`); },
+  toast(v) { toast(v); },
+  more() { S.more = true; },
+  "close-more"() { S.more = false; },
+};
+function hubSet(k, v) {
+  if (k === "dir") { S.dir = v; S.edit = null; S.times = false; if (S.page === "ttedit" && v !== "C") S.page = "tt"; }
+  if (k === "skin") S.skin = v;
+  if (k === "time") S.time = +v;
+  if (k === "size") S.size = v;
+  if (k === "scr") {
+    S.more = false; S.times = false; S._top = 0;
+    if (v === "home") { S.page = "home"; S.edit = null; }
+    if (v === "view") { S.page = "tt"; S.edit = null; }
+    if (v === "edit") { S.page = S.dir === "C" ? "ttedit" : "tt"; S.day = TODAY; openEdit(TODAY, 4); if (S.dir === "C") S.focusRow = true; }
+  }
+}
+document.addEventListener("click", (e) => {
+  const h = e.target.closest("[data-h]");
+  if (h) { if (h.dataset.h === "min") S.hubMin = !S.hubMin; else hubSet(h.dataset.h, h.dataset.v); render(); return; }
+  const el = e.target.closest("[data-a]"); if (!el || !document.getElementById("app").contains(el)) return;
+  if (el.dataset.self && e.target !== el) return;
+  const f = ACT[el.dataset.a]; if (!f) return;
+  f(el.dataset.v, el); render();
+});
+document.addEventListener("change", (e) => {
+  const s = e.target.closest("[data-hs]"); if (s) { hubSet(s.dataset.hs, s.value); render(); return; }
+  if (e.target.dataset.in === "start") { const [h, m] = e.target.value.split(":").map(Number); if (!isNaN(h)) { TS.start = h * 60 + (m || 0); render(); } }
+});
+document.addEventListener("input", (e) => {
+  const k = e.target.dataset.in; if (!k || !S.draft) return;
+  if (k === "subj") { S.draft.subj = e.target.value || "คณิตศาสตร์"; document.querySelectorAll('[data-a="subj"]').forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === S.draft.subj))); }
+  if (k === "name") { S.draft.name = e.target.value; document.querySelectorAll('[data-a="actname"]').forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === S.draft.name))); }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (S.edit) S.edit = null; else if (S.times) S.times = false; else if (S.more) S.more = false; else return;
+  render();
+});
+window.addEventListener("resize", layout);
+new ResizeObserver(layout).observe(document.getElementById("hub"));
+render();
+</script>
+</body>
+</html>

@@ -19,6 +19,7 @@ import { reportRoutes } from "./routes/reports";
 import { auditRoutes } from "./routes/audit";
 import { backupRoutes } from "./routes/backup";
 import { resetRoutes } from "./routes/reset";
+import { timetableRoutes } from "./routes/timetable";
 
 export function createApp() {
   const api = new Hono<{ Bindings: Env; Variables: Vars }>();
@@ -124,6 +125,7 @@ export function createApp() {
   api.route("/", auditRoutes);
   api.route("/", backupRoutes);
   api.route("/", resetRoutes);
+  api.route("/", timetableRoutes);
 
   api.onError((err, c) => {
     if (err instanceof ApiError) {

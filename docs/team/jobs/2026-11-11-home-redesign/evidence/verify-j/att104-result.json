@@ -1,0 +1,50 @@
+{
+ "desk": {
+  "vh": 729,
+  "tiles": 44,
+  "visibleFully": 24,
+  "cols": 6,
+  "minTileH": 56,
+  "minTileW": 139,
+  "hero": 94,
+  "hOverflow": false,
+  "pageH": 1039,
+  "nameFs": "17.6px"
+ },
+ "ipadL": {
+  "vh": 820,
+  "tiles": 44,
+  "visibleFully": 20,
+  "cols": 5,
+  "minTileH": 57,
+  "minTileW": 137,
+  "hero": 156,
+  "hOverflow": false,
+  "pageH": 1193,
+  "nameFs": "19.8px"
+ },
+ "ipadP": {
+  "vh": 1180,
+  "tiles": 44,
+  "visibleFully": 36,
+  "cols": 4,
+  "minTileH": 57,
+  "minTileW": 163,
+  "hero": 142,
+  "hOverflow": false,
+  "pageH": 1798,
+  "nameFs": "19.8px"
+ },
+ "phone": {
+  "vh": 844,
+  "tiles": 44,
+  "visibleFully": 10,
+  "cols": 2,
+  "minTileH": 56,
+  "minTileW": 177,
+  "hero": 191,
+  "hOverflow": false,
+  "pageH": 2409,
+  "nameFs": "19.8px"
+ }
+}

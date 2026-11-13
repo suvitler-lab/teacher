@@ -12,22 +12,25 @@ export const SCAN_LOCKED = "ช่องสแกน · ผังเลขที
 export const ATT_CARD_META: Record<string, CardMeta> = {
   sum: { title: "สรุปวันนี้", icon: "chart-bar", desc: "มา x จาก y คน แถบสี และตัวเลขแต่ละสถานะ" },
   week: { title: "แถบสัปดาห์", icon: "calendar", desc: "จันทร์–ศุกร์ ห้องนี้เช็คแล้วหรือยัง" },
+  
+  month: { title: "เดือนนี้", icon: "calendar", desc: "มาเรียนรวมทั้งเดือน และแท่งรายวัน (เฉพาะรายวัน)", fresh: true },
   scans: { title: "สแกนล่าสุด", icon: "qrcode", desc: "แสดงเฉพาะตอนใช้โหมดสแกน QR" },
   todo: { title: "ใครยังไม่เช็ค", icon: "user-off", desc: "รายเลขที่ แตะแล้วเลื่อนไปช่องนั้น", fresh: true },
-  away: { title: "ขาดวันนี้", icon: "user-x", desc: "ขาด ลา ป่วย รายชื่อ (ใช้ตอนยืนหน้าห้อง)", fresh: true },
+  away: { title: "ใครไม่มา", icon: "user-x", desc: "ขาด ลา ป่วย รายชื่อ (ใช้ตอนยืนหน้าห้อง)", fresh: true },
 };
-export const ATT_LOCKED = "ปุ่มสถานะ · ช่องรายชื่อ · แถบบันทึก · รายการชนกัน/ต้องตรวจสอบ";
+export const ATT_LOCKED_TEXT = "hero · ปุ่มสถานะ · ช่องรายชื่อ · แถบบันทึก · รายการชนกัน/ต้องตรวจสอบ";
 
 export const RANDOM_CARD_META: Record<string, CardMeta> = {
-  hist: { title: "เรียกแล้ว", icon: "users", desc: "ชิปคนที่ถูกเรียก เหลือกี่คนในรอบนี้ เริ่มรอบใหม่" },
-  opts: { title: "ตัวเลือก", icon: "list-numbers", desc: "ไม่ซ้ำจนครบ · จำนวนคน/กลุ่มละ" },
+  hist: { title: "สุ่มแล้ว", icon: "user-check", desc: "ชิปคนที่ถูกสุ่มแล้ว สุ่มแล้ว n · เหลือ m เริ่มรอบใหม่" },
+  left: { title: "ยังไม่ถูกสุ่ม", icon: "users", desc: "ชิปคนที่ยังไม่ถูกสุ่มในรอบนี้ และจำนวนที่ไม่อยู่ในรอบ", fresh: true },
+  opts: { title: "ตัวเลือก", icon: "list-numbers", desc: "ไม่ซ้ำจนครบ · จำนวนคน/กลุ่มละ · เสียงติ๊งตอนได้ชื่อ" },
   timer: { title: "จับเวลาตอบ", icon: "stopwatch", desc: "นับถอยหลัง 10/30/60 วินาทีหลังสุ่ม", fresh: true },
-  pass: { title: "ข้าม / เลิกทำ", icon: "arrow-back-up", desc: "ข้ามคนนี้ (ไม่นับว่าเรียกแล้ว) หรือเลิกทำครั้งล่าสุด", fresh: true },
+  pass: { title: "ข้าม / เลิกทำ", icon: "arrow-back-up", desc: "ปุ่มใต้ปุ่มสุ่ม: ข้ามคนนี้ (ไม่นับว่าสุ่มแล้ว) หรือเลิกทำครั้งล่าสุด", fresh: true },
   range: { title: "ช่วงเลขที่", icon: "selector", desc: "สุ่มเฉพาะเลขที่ x ถึง y", fresh: true },
   pair: { title: "จับคู่", icon: "users-group", desc: "สุ่ม 2 คน แสดงเป็นคู่ \"A คู่กับ B\"", fresh: true },
   gopts: { title: "ตัวเลือกกลุ่ม", icon: "crown", desc: "เลือกจำนวนกลุ่ม · หัวหน้ากลุ่ม · คัดลอก", fresh: true },
 };
-export const RANDOM_LOCKED = "ชิปห้อง · แถบเหตุผล · เวทีแสดงชื่อ · ปุ่มสุ่ม/จับกลุ่ม";
+export const RANDOM_LOCKED = "hero · ชิปห้อง · แถบเหตุผล · เวที · ปุ่มสุ่ม/จับกลุ่ม";
 
 export const SETTINGS_CARD_META: Record<string, CardMeta> = {
   status: { title: "เครื่องนี้", icon: "device-mobile-check", desc: "ออนไลน์ไหม มีงานค้างส่งกี่รายการ เก็บข้อมูลถาวรและใช้ออฟไลน์ได้ไหม", fresh: true },
@@ -56,10 +59,11 @@ export const REPORTS_CARD_META: Record<string, CardMeta> = {
   att: { title: "การมาเรียน", icon: "user-check", desc: "มา สาย ลา ป่วย ขาด รวมเท่าไร", fresh: true },
   follow: { title: "ต้องติดตาม", icon: "flag", desc: "ใครค้างอะไร คัดลอกไป LINE ได้", fresh: true },
   hist: { title: "การกระจายคะแนนสะสม", icon: "chart-histogram", desc: "คะแนนสะสมกระจายเป็นช่วง", fresh: true },
+  absent: { title: "ขาดบ่อย", icon: "user-x", desc: "ใครขาดเรียน 3 ครั้งขึ้นไปในช่วงนี้ แตะเพื่อดูรายละเอียด", fresh: true },
 };
 export const REPORTS_LOCKED = "ตัวกรอง · ตาราง \"รายบุคคล\" (เนื้อหาหลักของหน้า) · ปุ่มพิมพ์/ส่งออก Excel";
 /** Weight of each report card when the cards are spread over columns (S = 1, M = 2, L = 4; static, so a card never jumps while it loads) */
-export const REPORTS_WEIGHT: Record<string, number> = { stats: W.S, works: W.L, att: W.S, follow: W.L, hist: W.M };
+export const REPORTS_WEIGHT: Record<string, number> = { stats: W.S, works: W.L, att: W.S, follow: W.L, hist: W.M, absent: W.M };
 
 export const STUDENTS_CARD_META: Record<string, CardMeta> = {
   sum: { title: "สรุปห้อง", icon: "chart-bar", desc: "ส่งงานครบกี่คน มีงานค้างกี่คน มาเรียนเฉลี่ย", fresh: true },

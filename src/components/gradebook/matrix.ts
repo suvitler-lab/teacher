@@ -3,7 +3,7 @@ import type { Assignment, SubmissionOp } from "@shared/types";
 import { pairKey } from "../../lib/outbox";
 
 /** One cell of the grid as the server (or this device's newer edit) says it is. */
-export interface Sub { status: string; score: number | null; late: boolean; submittedAt?: number | null }
+export interface Sub { status: string; score: number | null; late: boolean; submittedAt?: number | null; method?: string | null; updatedAt?: number | null }
 export type CellMark = "pend" | "fail" | "unsaved" | null;
 /** A score the device could not even store (kept on screen, outlined red). */
 export interface UnsavedScore { score: number | null }
@@ -32,13 +32,13 @@ export const receivedNoon = (d: string | null | undefined): number | null => (d 
  * edit wins, so reloading or switching class never shows 3 again while 9 is still in the queue.
  */
 function resolveSub(server: Sub | undefined, unsavedScore: UnsavedScore | undefined, op: SubmissionOp | undefined): Sub | undefined {
-  if (unsavedScore) return { status: "submitted", score: unsavedScore.score, late: server?.late ?? false, submittedAt: server?.submittedAt };
+  if (unsavedScore) return { ...server, status: "submitted", score: unsavedScore.score, late: server?.late ?? false, submittedAt: server?.submittedAt };
   if (!op) return server;
   if (op.status === "void") return undefined;
   if (op.status === "excused") return { status: "excused", score: null, late: server?.late ?? false };
   // a queued re-date shows its day at once (12:00 of that day is what the server will store)
   const at = op.dateOnly || op.receivedDate ? receivedNoon(op.receivedDate) ?? server?.submittedAt : server?.submittedAt;
-  return { status: "submitted", score: op.score, late: server?.late ?? false, submittedAt: at };
+  return { status: "submitted", score: op.score, late: server?.late ?? false, submittedAt: at, method: op.method, updatedAt: op.clientTs };
 }
 
 /** Test hook: how many matrices were built, and how many of them had at least one cell. */

@@ -1,5 +1,6 @@
 /* งานครบ · QR sticker sheet, screen preview. Sizes are fixed on purpose: they mirror the printed sticker (mm), not the app text size. */
 /* sticker sheet (screen preview + print) */
+/* paper: fixed colours on purpose, the sticker sheet is printed (not a theme colour) */
 .sheet { background: #fff; color: #1f2328; }
 .sticker-grid { display: grid; gap: 8px; }
 .sticker-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }

@@ -7,16 +7,18 @@ import { useLoadGuard, type LoadStatus } from "../lib/loader";
 import {
   viewClasses, rosterCount, classById, activeSubjects, activeWorkTypes, studentsByClass, workTypeById, selectedTermId,
   viewingPastYear, upsertAssignment, dropAssignment, captureAssignmentContext, assignmentContextCurrent,
-  startClass, startSubject, rememberClass, rememberSubject,
+  startClass, startSubject, rememberClass, rememberSubject, terms,
 } from "../store";
 import type { Assignment, Student } from "@shared/types";
 import { api, ApiError } from "../lib/api";
-import { enqueueSubmission, onResult, pendingOps, failedPairKeys, flush, online } from "../lib/outbox";
+import { enqueueSubmission, onResult, pendingOps, failedPairKeys, flush, online, listFailed, pairKey, failedCount, syncing } from "../lib/outbox";
+import { FAIL_REASON } from "../lib/failReasons";
+import { hideSignal, setHide } from "../lib/hideNames";
 import { exportTermExcel } from "../lib/reportExport";
 import { actionTime } from "../lib/clock";
 import { ulid } from "@shared/ids";
 import { decideCellCommit } from "@shared/grade";
-import { groupScoreTotal, countWorkStates, assignmentRate, assignmentFraction, classSubmitRate, type WorkState } from "@shared/metrics";
+import { groupScoreTotal, countWorkStates, assignmentRate, assignmentFraction, classSubmitRate, scorePercent, type WorkState } from "@shared/metrics";
 import { bkkToday } from "@shared/time";
 import { checkReceivedDate } from "@shared/received-date";
 import { fullName } from "../lib/names";
@@ -24,15 +26,17 @@ import { formatThaiDate, monthOptions, currentMonthIso } from "../lib/dates";
 import { notify, ok, err, withToast } from "../lib/notify";
 import { AssignmentModal } from "../components/AssignmentModal";
 import { Dialog } from "../components/Dialog";
-import { CellEditor, receivedDayOf, dateLine, type CellChange } from "../components/CellEditor";
+import { CellEditor, receivedDayOf, dateLine, receivedByLine, type CellChange } from "../components/CellEditor";
 import { useConfirm } from "../components/ConfirmDialog";
-import { GradebookStrip, GradebookBottom } from "../components/gradebook/GradebookCards";
+import { GradebookDrawer, drawerLists } from "../components/gradebook/GradebookCards";
+import { GradebookHero } from "../components/gradebook/GradebookHero";
 import { GradebookCell, type CellHandlers } from "../components/gradebook/GradebookCell";
 import { CellInput } from "../components/gradebook/CellInput";
 import { buildMatrix, receivedNoon, type Sub } from "../components/gradebook/matrix";
 import { PageCardSettings } from "../components/cards/PageCardSettings";
 import { GRADEBOOK_CARD_META, GRADEBOOK_LOCKED } from "../components/cards/meta";
 import { gradebookLayout } from "../lib/pageCards";
+import { visibleCards } from "../lib/cardLayout";
 import {
   buildGroups, isCollapsed, loadGroupMode, saveGroupMode, type GroupMode, type Group,
 } from "../lib/gbGroups";
@@ -55,6 +59,12 @@ const TINT_FG: Record<string, string> = {
   green: "var(--tint-green-fg)", blue: "var(--tint-blue-fg)", magenta: "var(--tint-magenta-fg)", red: "var(--tint-red-fg)",
 };
 
+/** BR-34: the work picked on arrival = the LAST open one in column order; none open → the last work. */
+export function defaultSelection(list: { id: string; status: string }[]): string | null {
+  for (let i = list.length - 1; i >= 0; i--) if (list[i].status === "open") return list[i].id;
+  return list.length ? list[list.length - 1].id : null;
+}
+
 /** How many cells "clear" will really change: handed-in ones only — never void (nothing there) or excused (BR-07). */
 export function clearableCount(cells: ({ status: string } | undefined)[]): number {
   return cells.filter((s) => s && s.status !== "void" && s.status !== "excused").length;
@@ -76,6 +86,11 @@ export function bulkAffectedCount(action: BulkAction, cells: ({ status: string; 
 /** The menu button that opened the confirm box was unmounted with its menu: give the keyboard its place back. */
 function refocusBulkTrigger() {
   setTimeout(() => (document.querySelector("[data-bulk-trigger]") as HTMLElement | null)?.focus(), 0);
+}
+
+/** The drawer closed: Esc / ✕ give the keyboard back to the pill that opened it (AC-149). */
+function refocusPill() {
+  setTimeout(() => (document.querySelector(".gbh-pill") as HTMLElement | null)?.focus(), 0);
 }
 
 /** Give the keyboard a cell back (the input that held it was torn down). */
@@ -117,14 +132,30 @@ export function GradebookPage() {
   const [editAsg, setEditAsg] = useState<Assignment | null>(null);
   const [copyAsg, setCopyAsg] = useState<Assignment | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawer, setDrawer] = useState(false); // the side drawer (every card of the page)
+  const [pinned, setPinned] = useState(false); // AC-149: docked beside the table, only on a wide mouse screen; every visit starts unpinned
+  const canPin = !phone && typeof matchMedia === "function" && matchMedia("(min-width: 1100px) and (hover: hover) and (pointer: fine)").matches;
+  const hide = hideSignal("gradebook").value; // this page's own "hide names" switch (per device)
+  const [announce, setAnnounce] = useState(""); // polite "บันทึก 9 · เลขที่ 3" (replaces the last one, never queued)
+  const [failReasons, setFailReasons] = useState<Map<string, string>>(new Map()); // BR-35: why a refused edit was refused, in Thai
   const [bulkMenu, setBulkMenu] = useState(false);
   const [exporting, setExporting] = useState(false); // building the Excel file
+  const exportBtn = useRef<HTMLButtonElement>(null);
+  const [exportDone, setExportDone] = useState(0);
+  // the button is disabled while the file is built; when it is enabled again focus comes back to it (AC-145)
+  useEffect(() => {
+    if (exportDone === 0) return;
+    // never take focus from a score cell / editor the teacher has moved on to meanwhile (R-4703): only when focus was left on nothing or on the button
+    const a = document.activeElement;
+    if (!a || a === document.body || a === exportBtn.current) exportBtn.current?.focus();
+  }, [exportDone]);
   const [bulkAsk, setBulkAsk] = useState<{ action: BulkAction; count: number } | null>(null);
   const longPress = useRef<{ timer: number; fired: boolean }>({ timer: 0, fired: false }); // a held cell opens the editor
   const startHold = (aid: string, sid: string) => { clearTimeout(longPress.current.timer); longPress.current.fired = false; longPress.current.timer = window.setTimeout(() => { longPress.current.fired = true; setEditing(null); setCellPanel({ aid, sid }); }, 450); };
   const endHold = () => clearTimeout(longPress.current.timer);
   const [cellPanel, setCellPanelState] = useState<{ aid: string; sid: string } | null>(null); // the cell editor (status · score · received day)
   const [focCell, setFocCell] = useState<{ aid: string; sid: string } | null>(null); // roving tabindex: the one cell Tab stops on
+  const [focHead, setFocHead] = useState<string | null>(null); // AC-152: …or, when the keyboard last rested on a column head, that head (the table stays ONE Tab stop)
   const [editSeed, setEditSeed] = useState<string | null>(null); // the digit typed on a focused cell opens the quick input with it
   const setCellPanel = (v: { aid: string; sid: string } | null) => { if (v) setEditSeed(null); else if (cellPanelRef.current) focusCell(cellPanelRef.current.aid, cellPanelRef.current.sid); setCellPanelState(v); };
   const cellPanelRef = useRef<{ aid: string; sid: string } | null>(null);
@@ -153,6 +184,10 @@ export function GradebookPage() {
   const unsavedRef = useRef(unsaved); // the toast's "retry" outlives the render that made it
   unsavedRef.current = unsaved;
   const today = bkkToday();
+  const noOf = (st: Student, i = 0) => `เลขที่ ${st.number ?? i + 1}`;
+  /** the name as drawn: hidden = the number only, on every surface (titles, labels, editor, confirm, drawer, toast) */
+  const nameOf = (st: Student) => (hide ? noOf(st) : fullName(st));
+  const whoOf = (st: Student) => (hide ? noOf(st) : `${noOf(st)} ${fullName(st)}`);
   useEffect(() => { if (!msg) return; const t = setTimeout(() => setMsg(""), 5000); return () => clearTimeout(t); }, [msg]); // a wrong score is said once, beside the screen, and never pushes the table around
 
   // the rows come from the server's roster for this class in this term (an earlier year shows its own
@@ -183,10 +218,10 @@ export function GradebookPage() {
       if (res.students) setRoster(res.students);
       setAssignments(res.assignments);
       const m = new Map<SubKey, Sub>();
-      for (const s of res.submissions) m.set(`${s.assignment_id}:${s.student_id}`, { status: s.status, score: s.score, late: s.late, submittedAt: s.submitted_at ?? null });
+      for (const s of res.submissions) m.set(`${s.assignment_id}:${s.student_id}`, { status: s.status, score: s.score, late: s.late, submittedAt: s.submitted_at ?? null, method: s.method ?? null, updatedAt: s.updated_at ?? null });
       setSubs(m);
       const wanted = settleWanted(res.assignments);
-      if (wanted === "none" && res.assignments.length && !res.assignments.find((a) => a.id === selCol)) setSelCol(res.assignments[0].id);
+      if (wanted === "none" && res.assignments.length && !res.assignments.find((a) => a.id === selCol)) { const d = defaultSelection(res.assignments); setSelCol(d); if (d && !keep) revealId.current = d; }
       setStatus("ready");
     } catch {
       if (!fresh()) return;
@@ -221,10 +256,30 @@ export function GradebookPage() {
     // ok / duplicate / superseded all come with the row the SERVER now holds — adopt it
     if ((r.result !== "ok" && r.result !== "duplicate" && r.result !== "superseded" && r.result !== "already_submitted") || !r.submission) return;
     const sub = r.submission;
-    setSubs((prev) => new Map(prev).set(`${op.assignmentId}:${op.studentId}`, { status: sub.status, score: sub.score, late: sub.late, submittedAt: sub.submitted_at ?? null }));
+    setSubs((prev) => new Map(prev).set(`${op.assignmentId}:${op.studentId}`, { status: sub.status, score: sub.score, late: sub.late, submittedAt: sub.submitted_at ?? null, method: sub.method ?? null, updatedAt: sub.updated_at ?? null }));
   }), []);
 
   const selAsg = assignments.find((a) => a.id === selCol) ?? null;
+  const failedSig = failedPairKeys.value, failedN = failedCount.value, syncingNow = syncing.value; // any change of the failed store re-reads the reasons (a retry may fail for a NEW reason)
+  useEffect(() => {
+    let live = true;
+    if (failedSig.size === 0) { setFailReasons((m) => (m.size ? new Map() : m)); return; }
+    listFailed().then((list) => {
+      if (!live) return;
+      const m = new Map<string, string>();
+      // the same set the red mark uses (outbox.ts): superseded / already_submitted never count; the newest failure of a cell wins
+      const newest = new Map<string, number>();
+      for (const f of list) {
+        if (f.reason === "superseded" || f.reason === "already_submitted") continue;
+        const k = pairKey(f.payload);
+        if ((newest.get(k) ?? -1) > f.failedAt) continue;
+        newest.set(k, f.failedAt);
+        m.set(k, FAIL_REASON[f.reason] ?? "ข้อมูลไม่ถูกต้อง");
+      }
+      setFailReasons(m);
+    }, () => {});
+    return () => { live = false; };
+  }, [failedSig, failedN, syncingNow]);
 
   // What a cell shows = the server's value, unless this device has a newer edit still
   // waiting to be sent — then that edit wins, so reloading or switching class never
@@ -283,7 +338,8 @@ export function GradebookPage() {
     const k = `${aid}:${sid}`;
     const ts = actionTime();
     setLocal(aid, sid, { status: "submitted", score, late: cur?.late ?? false });
-    if (await saveScore(aid, sid, score, a.full_score, ts)) { clearUnsaved(k); return; }
+    const stu = students.find((x) => x.id === sid);
+    if (await saveScore(aid, sid, score, a.full_score, ts)) { clearUnsaved(k); setAnnounce(`บันทึก ${score ?? "ล้างคะแนน"} · เลขที่ ${stu?.number ?? "–"}`); return; }
     // The value stays on screen so the teacher sees what they typed — but it is flagged, not shown as saved.
     setUnsaved((prev) => new Map(prev).set(k, { aid, sid, score, full: a.full_score, ts }));
     notify("error", "บันทึกลงเครื่องไม่ได้ — ช่องที่ขอบแดงยังไม่ถูกบันทึก", { sticky: true, action: { label: "ลองใหม่", run: retryUnsaved } });
@@ -429,6 +485,7 @@ export function GradebookPage() {
   }
 
   async function toggleAllScores() {
+    setMenuOpen(false);
     if (act.anyBusy || assignments.length === 0) return;
     // A mixed table hides the remaining visible columns; a fully hidden table shows them all.
     const publish = assignments.every((a) => !a.publish_scores);
@@ -511,11 +568,12 @@ export function GradebookPage() {
   const scrollSig = dgroups.map((x) => `${x.group.key}:${folded(x.group) ? "f" : x.shown.length}`).join("|") + `|${colPrefs.showTotal}|${colPrefs.showBars}|${shownStudents.length}`;
   const scrollFlags = useScrollFlags(scrollRef, hasTable, scrollSig);
   // Desktop (mouse): size the table to the room left on screen, so the TABLE is the one thing that scrolls up/down
-  // and the page itself does not (two stacked vertical scrollbars were confusing). Touch screens keep the CSS height.
+  // and the page itself does not (two stacked vertical scrollbars were confusing). Tablets (iPad, >= 721px wide) fit the same way
+  // (AC-150: the frame used to hang 200-360px below the screen); a phone has no table, so it keeps the CSS height.
   useEffect(() => {
     const sc = scrollRef.current;
     if (!sc || !hasTable) return;
-    const mq = typeof matchMedia === "function" ? matchMedia("(hover: hover) and (pointer: fine)") : null;
+    const mq = typeof matchMedia === "function" ? matchMedia("(hover: hover) and (pointer: fine), (min-width: 721px)") : null;
     const fit = () => {
       if (!mq?.matches) { sc.style.maxHeight = ""; return; }
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
@@ -529,7 +587,7 @@ export function GradebookPage() {
       const top = frame.getBoundingClientRect().top + window.scrollY;
       const pad = parseFloat(getComputedStyle(document.querySelector(".main") ?? document.body).paddingBottom || "0")
         + (parseFloat(getComputedStyle(frame.parentElement as HTMLElement).marginBottom || "0") || 0);
-      sc.style.maxHeight = `${Math.max(12 * rem, window.innerHeight - top - below - pad - 4)}px`;
+      sc.style.maxHeight = `${Math.max(12 * rem, window.innerHeight - top - below - pad - 2)}px`;
     };
     fit();
     window.addEventListener("resize", fit);
@@ -619,6 +677,9 @@ export function GradebookPage() {
   const waitingHere = pendHere + failHere + unsavedHere;
   const nFilters = (typeId ? 1 : 0) + (period !== "term" ? 1 : 0) + (groupMode !== "none" ? 1 : 0) + hiddenTypes.size + (colPrefs.showTotal ? 0 : 1) + (colPrefs.showBars ? 0 : 1);
   const selCounts = (selAsg && matrix.counts(selAsg.id)) || countWorkStates([]);
+  const lists = useMemo(() => drawerLists({ assignments, students, stateOf, today }), [assignments, students, matrix, today]);
+  const shownCards = visibleCards(gradebookLayout.value) as string[]; // the pill counts only what the drawer will show (R-4805)
+  const narrow = phone || (typeof matchMedia === "function" && matchMedia("(max-width: 900px)").matches); // the drawer is a sheet from the bottom
   const scoresOf = useMemo(() => (aid: string) => students.map((st) => matrix.sub(aid, st.id)).filter((x): x is Sub => !!x && x.status === "submitted" && x.score != null).map((x) => x.score as number), [students, matrix]);
   const pickWork = (aid: string) => { setSelCol(aid); scrollToAsg(aid); };
   async function closeWork(aid: string) {
@@ -634,6 +695,8 @@ export function GradebookPage() {
 
   // roving tabindex: Tab stops on ONE cell of the table (the last one used, else the first); the arrows move between cells
   const colIds = dgroups.flatMap(({ group: g, shown: cols }) => (folded(g) ? [] : cols.map((c) => c.id)));
+  const headIds = dgroups.flatMap(({ group: g, shown: cols }) => (folded(g) ? ["g:" + g.key] : cols.map((c) => c.id))); // every head the keyboard can rest on (a folded group's total head too)
+  const activeHead = focHead && headIds.includes(focHead) ? focHead : null; // a head that left the table (filter) is no Tab stop
   const firstCell = colIds.length && shownStudents.length ? { aid: colIds[0], sid: shownStudents[0].id } : null;
   const [focusIn, setFocusIn] = useState<{ aid: string; sid: string } | null>(null);
   useEffect(() => {
@@ -647,6 +710,50 @@ export function GradebookPage() {
     sc.addEventListener("focusin", on); sc.addEventListener("focusout", on);
     return () => { sc.removeEventListener("focusin", on); sc.removeEventListener("focusout", on); };
   }, [hasTable, scrollSig]);
+  /** Move the keyboard onto a work's column head (↑ from the first row). */
+  function focusHead(aid: string) {
+    const th = scrollRef.current?.querySelector(aid.startsWith("g:") ? `th[data-gkey="${aid.slice(2)}"]` : `th[data-aid="${aid}"]`) as HTMLElement | null;
+    if (!th) return;
+    setFocHead(aid);
+    th.focus({ preventScroll: true });
+    th.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+  }
+  /** Keys on a focused column head: Enter/Space pick the work, ← → move between heads, ↓ goes down into the column, Home/End first/last head. */
+  function onHeadKey(e: KeyboardEvent, a: Assignment) {
+    if (e.target !== e.currentTarget) return;
+    const ci = headIds.indexOf(a.id);
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelCol(a.id); return; }
+    const toHead = (c: number) => { const id = headIds[Math.max(0, Math.min(headIds.length - 1, c))]; if (id) { e.preventDefault(); focusHead(id); } };
+    if (e.key === "ArrowRight") toHead(ci + 1); else if (e.key === "ArrowLeft") toHead(ci - 1);
+    else if (e.key === "Home") toHead(0); else if (e.key === "End") toHead(headIds.length - 1);
+    else if (e.key === "ArrowUp" && !flat) { // grouped: the group's own bar sits above (its button is not a Tab stop)
+      const g = groups.find((x) => x.items.includes(a));
+      const b = g && (scrollRef.current?.querySelector(`.gh-btn[data-gkey="${g.key}"]`) as HTMLElement | null);
+      if (b) { e.preventDefault(); b.focus({ preventScroll: true }); }
+    } else if (e.key === "ArrowDown" && shownStudents.length) {
+      e.preventDefault();
+      setFocHead(null); setFocCell({ aid: a.id, sid: shownStudents[0].id });
+      const el = scrollRef.current?.querySelector(`td[data-aid="${a.id}"][data-sid="${shownStudents[0].id}"]`) as HTMLElement | null;
+      el?.focus({ preventScroll: true }); el?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+    }
+  }
+  /** Keys on a folded group's total head: Enter/Space unfold it, ← → move between heads, ↓ goes down onto its totals. */
+  function onGroupHeadKey(e: KeyboardEvent, g: Group<Assignment>) {
+    if (e.target !== e.currentTarget) return;
+    const ci = headIds.indexOf("g:" + g.key);
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleGroup(g.key); return; }
+    const toHead = (c: number) => { const id = headIds[Math.max(0, Math.min(headIds.length - 1, c))]; if (id) { e.preventDefault(); focusHead(id); } };
+    if (e.key === "ArrowRight") toHead(ci + 1); else if (e.key === "ArrowLeft") toHead(ci - 1);
+    else if (e.key === "Home") toHead(0); else if (e.key === "End") toHead(headIds.length - 1);
+    else if (e.key === "ArrowUp") { const b = scrollRef.current?.querySelector(`.gh-btn[data-gkey="${g.key}"]`) as HTMLElement | null; if (b) { e.preventDefault(); b.focus({ preventScroll: true }); } }
+    else if (e.key === "ArrowDown") { const t = scrollRef.current?.querySelector(`td.sumc[data-gkey="${g.key}"]`) as HTMLElement | null; if (t) { e.preventDefault(); t.focus({ preventScroll: true }); } }
+  }
+  /** On a group's bar button: ↓ goes to the first head under it. */
+  function onGroupBtnKey(e: KeyboardEvent, g: Group<Assignment>) {
+    if (e.key !== "ArrowDown") return;
+    const id = folded(g) ? "g:" + g.key : g.items.map((x) => x.id).find((x) => colIds.includes(x));
+    if (id) { e.preventDefault(); focusHead(id); }
+  }
   function onCellKey(e: KeyboardEvent, a: Assignment, sid: string, row: number, sub: Sub | undefined, isEditing: boolean) {
     if (e.target !== e.currentTarget || isEditing) return;
     const open = () => setCellPanel({ aid: a.id, sid });
@@ -673,7 +780,8 @@ export function GradebookPage() {
       el?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
     };
     if (e.key === "ArrowRight") to(ci + 1, row); else if (e.key === "ArrowLeft") to(ci - 1, row);
-    else if (e.key === "ArrowDown") to(ci, row + 1); else if (e.key === "ArrowUp") to(ci, row - 1);
+    else if (e.key === "ArrowDown") to(ci, row + 1);
+    else if (e.key === "ArrowUp") { if (row === 0) { e.preventDefault(); focusHead(a.id); } else to(ci, row - 1); }
     else if (e.key === "Home") to(0, row); else if (e.key === "End") to(colIds.length - 1, row);
     else if (e.key === "PageDown") to(ci, row + 10); else if (e.key === "PageUp") to(ci, row - 10);
   }
@@ -681,7 +789,7 @@ export function GradebookPage() {
   // what a memoised cell may ask of the page; refreshed on every render so a cell that was not redrawn still calls the newest code
   const cellH = useRef<CellHandlers>(null as unknown as CellHandlers);
   cellH.current = {
-    focus: (aid, sid) => setFocCell((prev) => (prev && prev.aid === aid && prev.sid === sid ? prev : { aid, sid })),
+    focus: (aid, sid) => { setFocHead((h) => (h === null ? h : null)); setFocCell((prev) => (prev && prev.aid === aid && prev.sid === sid ? prev : { aid, sid })); },
     key: (e, a, sid, row, isEditing) => onCellKey(e, a, sid, row, matrix.sub(a.id, sid), isEditing),
     pointerDown: (e, aid, sid) => { const t = (e.target as HTMLElement).tagName; if (t !== "INPUT" && t !== "BUTTON" && e.pointerType !== "mouse") startHold(aid, sid); },
     endHold,
@@ -705,11 +813,12 @@ export function GradebookPage() {
     setExporting(true);
     try {
       await exportTermExcel(classId, subjectId, selectedTermId.value);
-      ok("ดาวน์โหลด Excel แล้ว");
+      // AC-145: names are hidden on screen but the file keeps them — say so, never ask
+      ok(hide ? "ดาวน์โหลด Excel แล้ว · ไฟล์ Excel มีชื่อนักเรียน" : "ดาวน์โหลด Excel แล้ว");
     } catch { err("สร้างไฟล์ Excel ไม่สำเร็จ — ลองอีกครั้ง"); }
-    finally { setExporting(false); }
+    finally { setExporting(false); setExportDone((n) => n + 1); }
   }
-  const exportTitle = !classId ? "ยังไม่มีห้อง — เลือกห้องก่อนส่งออก" : !online.value ? "ต้องออนไลน์จึงส่งออก Excel ได้" : exporting ? "กำลังสร้างไฟล์ Excel…" : "ส่งออกคะแนนทั้งเทอมเป็น Excel (ไฟล์เดียวกับหน้ารายงานสรุป)";
+  const exportTitle = !classId ? "ยังไม่มีห้อง — เลือกห้องก่อนส่งออก" : !online.value ? "ต้องออนไลน์จึงส่งออก Excel ได้" : exporting ? "กำลังสร้างไฟล์ Excel…" : "ส่งออกคะแนนทั้งเทอมเป็น Excel (ไฟล์เดียวกับหน้ารายงานสรุป)" + (hide ? " · ไฟล์ Excel มีชื่อนักเรียน" : "");
 
   const filterSheet = phone || (typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches); // touch: the filter is a sheet from the bottom, with a mouse a popover
   function resetFilters() {
@@ -717,14 +826,30 @@ export function GradebookPage() {
   }
 
   return (
-    <div class="gb-page">
+    <div class={"gb-page" + (drawer && pinned && canPin ? " gb-pinned" : "")}>
       <PageHeader icon="table" title="สมุดคะแนน"
         sub={<>{classById(classId)?.name} · {activeSubjects.value.find((s) => s.id === subjectId)?.name ?? "ทุกวิชา"}</>}
-        actions={<><TermPicker /><button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" /> สร้างงาน</button></>}
+        actions={<><TermPicker />
+          <button type="button" class="ghost hide-btn" aria-pressed={hide} onClick={() => setHide("gradebook", !hide)} title={hide ? "แสดงชื่อนักเรียน" : "ซ่อนชื่อนักเรียนบนหน้านี้ (เมื่อฉายจอ)"}><Icon name={hide ? "eye-off" : "eye"} size={18} /> <span class="att-hide-sm">{hide ? "ซ่อนชื่ออยู่" : "ซ่อนชื่อ"}</span></button>
+          <button class="ghost" onClick={() => setPrefsOpen(true)} aria-label="ปรับการ์ด"><Icon name="layout-grid" size={18} /> <span class="att-hide-sm">ปรับการ์ด</span></button><button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" /> สร้างงาน</button></>}
       />
 
       <div class="gb-chips" style="margin-bottom:8px"><ClassChips items={classItems} value={classId} onPick={setClassId} /></div>
       <YearBanner />
+      {hide && <div class="imp-warn gb-hidebar" role="status"><Icon name="eye-off" size={18} /><span class="grow">ซ่อนชื่อนักเรียนอยู่ · แสดงเฉพาะเลขที่ · ไฟล์ Excel ยังมีชื่อนักเรียน</span></div>}
+      {status === "ready" && waitingHere > 0 && (
+        <div class="imp-warn" role="status" style="margin:0 0 8px">
+          <Icon name="cloud-upload" size={20} />
+          <span class="grow"><b style="font-weight:500">ค้างในเครื่องนี้</b> · รอส่งขึ้นระบบ {pendHere} · ส่งไม่สำเร็จ {failHere} · ยังไม่ได้บันทึก {unsavedHere}</span>
+          <button onClick={() => { void flush(); void retryUnsaved(); }}>ลองใหม่</button>
+        </div>
+      )}
+      {!!classId && status !== "error" && (
+        <GradebookHero className={classById(classId)?.name ?? ""} subjectName={activeSubjects.value.find((s) => s.id === subjectId)?.name ?? "ทุกวิชา"}
+          termName={terms.value.find((t) => t.id === selectedTermId.value)?.name ?? ""} workCount={assignments.length} counts={tot} submitRate={submitRate}
+          rowFilter={rowFilter} onRows={setRowFilter} pill={{ awaiting: shownCards.includes("awaiting") ? lists.awaitingBy.length : null, close: shownCards.includes("close") ? lists.closable.length : null, follow: shownCards.includes("follow") ? lists.missingAll.length : null }}
+          onDrawer={() => setDrawer(true)} drawerOpen={drawer} offline={!online.value} noData={status !== "ready" || assignments.length === 0} />
+      )}
 
       <div class="gb-toolbar">
         <select aria-label="วิชา" value={subjectId} onInput={(e) => setSubjectId((e.target as HTMLSelectElement).value)}>
@@ -792,22 +917,16 @@ export function GradebookPage() {
           { value: "awaiting", label: `รอตรวจ ${totAwaiting}` },
         ]} />
         {hasTable && <GradebookNav sig={scrollSig} segments={segments} jumps={jumps} onJump={jumpToType} scrollRef={scrollRef} />}
-        <button type="button" class="gb-export" onClick={exportExcel} disabled={!classId || !online.value || exporting} aria-busy={exporting} aria-label="ส่งออก Excel" title={exportTitle}>
+        <span class="gb-export-wrap">
+          {/* AC-145: what the file holds, beside the button — the same file whatever the filters say; names stay in it even when hidden on screen */}
+          {classId && (hide
+            ? <span class="gb-export-scope warn" role="note"><Icon name="alert-triangle" size={15} /> ไฟล์ Excel มีชื่อนักเรียน</span>
+            : <span class="gb-export-scope" role="note">Excel: ห้อง+วิชาบนจอ · ทั้งเทอม</span>)}
+        <button type="button" class="gb-export" ref={exportBtn} onClick={exportExcel} disabled={!classId || !online.value || exporting} aria-busy={exporting} aria-label="ส่งออก Excel" title={exportTitle}>
           <Icon name={exporting ? "loader-2" : "file-spreadsheet"} size={20} class={exporting ? "spin" : undefined} /> <span class="gb-export-lbl">{exporting ? "กำลังสร้าง…" : "ส่งออก Excel"}</span>
         </button>
+        </span>
       </div>
-
-      {status === "ready" && waitingHere > 0 && (
-        <div class="imp-warn" role="status" style="margin:0 0 8px">
-          <Icon name="cloud-upload" size={20} />
-          <span class="grow"><b style="font-weight:500">ค้างในเครื่องนี้</b> · รอส่งขึ้นระบบ {pendHere} · ส่งไม่สำเร็จ {failHere} · ยังไม่ได้บันทึก {unsavedHere}</span>
-          <button onClick={() => { void flush(); void retryUnsaved(); }}>ลองใหม่</button>
-        </div>
-      )}
-      {assignments.length > 0 && (
-        <GradebookStrip assignments={assignments} selAsg={selAsg} students={students} counts={tot} stateOf={stateOf} today={today} submitRate={submitRate}
-          scoresOf={scoresOf} onPick={cardFns.onPick} onRows={cardFns.onRows} onCloseWork={cardFns.onCloseWork} />
-      )}
 
       {!phone && assignments.length > 0 && (selAsg ? (() => {
         const tt = workTypeById(selAsg.type_id), due = dueChip(selAsg, today), busy = act.isBusy(`asg:${selAsg.id}`);
@@ -831,8 +950,8 @@ export function GradebookPage() {
             </div>
             <div class="gb-wb">
               <div style="position:relative">
-                <button data-bulk-trigger aria-haspopup="menu" aria-expanded={bulkMenu} aria-disabled={act.isBusy("bulk")} onClick={() => { if (!act.isBusy("bulk")) setBulkMenu((v) => !v); }}>
-                  {act.isBusy("bulk") ? <Icon name="loader-2" size={18} class="spin" /> : <Icon name="list-check" size={20} />} ทำทั้งห้อง <Icon name="chevron-down" size={16} />
+                <button data-bulk-trigger aria-label="ทำทั้งห้อง" title="ทำทั้งห้อง" aria-haspopup="menu" aria-expanded={bulkMenu} aria-disabled={act.isBusy("bulk")} onClick={() => { if (!act.isBusy("bulk")) setBulkMenu((v) => !v); }}>
+                  {act.isBusy("bulk") ? <Icon name="loader-2" size={18} class="spin" /> : <Icon name="list-check" size={20} />} <span class="gb-bl">ทำทั้งห้อง</span> <Icon name="chevron-down" size={16} />
                 </button>
                 {bulkMenu && (
                   <>
@@ -846,8 +965,9 @@ export function GradebookPage() {
                   </>
                 )}
               </div>
-              <button class="gb-closebtn" disabled={busy} onClick={toggleOpen}>
-                <Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={18} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}
+              <button type="button" class="gb-closebtn" aria-label="คัดลอกงาน" title="คัดลอกงาน" onClick={() => setCopyAsg(selAsg)}><Icon name="copy" size={18} /> <span class="gb-bl">คัดลอกงาน</span></button>
+              <button class="gb-closebtn" aria-label={selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"} disabled={busy || !online.value} title={!online.value ? "ต้องออนไลน์จึงปิดรับ/เปิดรับงานได้" : selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"} onClick={toggleOpen}>
+                <Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={18} /> <span class="gb-bl">{selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</span>
               </button>
               <button class={"icon" + (selAsg.publish_scores ? " ghost" : " on")} aria-pressed={!selAsg.publish_scores} disabled={busy}
                 aria-label={selAsg.publish_scores ? "ซ่อนคะแนนบนจอ" : "แสดงคะแนนบนจอ"} title={selAsg.publish_scores ? "ซ่อนคะแนนบนจอ" : "แสดงคะแนนบนจอ"}
@@ -861,8 +981,8 @@ export function GradebookPage() {
                     <div style="position:fixed;inset:0;z-index:39" onClick={() => setMenuOpen(false)} />
                     <div class="gb-menu" role="menu" aria-label="จัดการงาน" ref={focusFirstItem} onKeyDown={menuKeys(() => { setMenuOpen(false); refocusMore(); })}>
                       <button role="menuitem" onClick={() => { setMenuOpen(false); setEditAsg(selAsg); }}><Icon name="edit" size={18} /> แก้ไข</button>
-                      <button role="menuitem" onClick={() => { setMenuOpen(false); setCopyAsg(selAsg); }}><Icon name="copy" size={18} /> คัดลอกงาน</button>
-                      <button role="menuitem" class="gb-only-narrow" disabled={busy} onClick={toggleOpen}>
+                      <button role="menuitem" class="gb-only-narrow" onClick={() => { setMenuOpen(false); setCopyAsg(selAsg); }}><Icon name="copy" size={18} /> คัดลอกงาน</button>
+                      <button role="menuitem" class="gb-only-narrow" disabled={busy || !online.value} title={!online.value ? "ต้องออนไลน์จึงปิดรับ/เปิดรับงานได้" : undefined} onClick={toggleOpen}>
                         <Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={18} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}
                       </button>
                       <button role="menuitem" disabled={act.anyBusy}
@@ -885,11 +1005,15 @@ export function GradebookPage() {
       {!classId ? <NoClasses /> : status === "error" ? (
         <LoadError onRetry={() => load()} />
       ) : assignments.length === 0 ? (
-        <div class="card">{status === "loading" ? <EmptyState icon="loader-2" text="กำลังโหลด…" /> : <EmptyState icon="clipboard-off" text="ยังไม่มีงานในเงื่อนไขนี้" action={<button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" size={16} /> สร้างงาน</button>} />}</div>
+        <div class="card">{status === "loading" ? <TableSkeleton /> : <EmptyState icon="clipboard-off" text={nFilters > 0 ? `ยังไม่มีงานในเงื่อนไขนี้ · ตัวกรอง ${nFilters} รายการ` : "ยังไม่มีงานในเงื่อนไขนี้"} action={<div class="row" style="justify-content:center;gap:8px"><button class="primary" onClick={() => setShowCreate(true)}><Icon name="plus" size={16} /> สร้างงาน</button>{nFilters > 0 && <button onClick={resetFilters}><Icon name="history" size={16} /> คืนค่าตัวกรอง</button>}</div>} />}</div>
+      ) : status === "ready" && students.length === 0 ? (
+        <div class="card"><EmptyState icon="users" text={<><b>ห้องนี้ยังไม่มีนักเรียน</b><div class="page-sub">นำเข้ารายชื่อจาก Excel หรือเพิ่มทีละคน</div></>} action={<button class="primary" onClick={() => navigate("/students")}><Icon name="users" size={16} /> นำเข้านักเรียน</button>} /></div>
+      ) : rowFilter !== "all" && shownStudents.length === 0 ? (
+        <div class="card"><EmptyState icon="circle-check" text={rowFilter === "missing" ? "ไม่มีใครค้างส่งในงานที่แสดง" : "ไม่มีงานรอตรวจในงานที่แสดง"} action={<button onClick={() => setRowFilter("all")}>ดูทุกคน</button>} /></div>
       ) : phone ? (
         <GradebookMobile assignments={assignments} selAsg={selAsg} setSelCol={setSelCol} students={shownStudents}
           subOf={subOf} markOf={markOf} stateOf={stateOf} editing={editing} setEditing={setEditing} commitScore={commitScore} refuseScore={refuseScore} bulk={bulk} openPanel={(aid, sid) => setCellPanel({ aid, sid })}
-          manage={{
+          nameOf={nameOf} manage={{
             edit: () => setEditAsg(selAsg!),
             copy: () => setCopyAsg(selAsg!),
             toggleStatus: toggleOpen,
@@ -898,6 +1022,9 @@ export function GradebookPage() {
           }} />
       ) : (
         <>
+        {rowFilter !== "all" && (
+          <div class="gb-fnote" role="status">แสดง {shownStudents.length} คนที่{rowFilter === "missing" ? "ค้างส่ง" : "รอตรวจ"} · ซ่อน {students.length - shownStudents.length} คน <button type="button" onClick={() => setRowFilter("all")}>ดูทุกคน</button></div>
+        )}
         <div class={"gb-frame" + edgeClassOf(scrollFlags) + (colPrefs.showTotal ? "" : " no-tot")}>
         <div class="gb-scroll" ref={scrollRef} role="region" aria-label="ตารางคะแนน">
           <table class={"gb" + (flat ? "" : " grouped")} style={`--gb-n:${dgroups.reduce((n, x) => n + (folded(x.group) ? 1 : x.shown.length), 0)}`}>
@@ -906,7 +1033,7 @@ export function GradebookPage() {
               {!flat && (
                 <tr class="gh">
                   <th class="name-col gh-corner">
-                    <button type="button" class="gh-all" onClick={toggleFoldAll}>
+                    <button type="button" tabIndex={-1} class="gh-all" onClick={toggleFoldAll}>
                       <Icon name={allFolded ? "arrows-diagonal" : "arrows-diagonal-minimize-2"} size={14} /> {allFolded ? "กางทั้งหมด" : "พับทั้งหมด"}
                     </button>
                   </th>
@@ -914,7 +1041,7 @@ export function GradebookPage() {
                     const closed = folded(g);
                     return (
                       <th colSpan={closed ? 1 : cols.length} class={"gh-cell" + (closed || cols.length === 1 ? " nar" : "")} style={`background:var(--tint-${g.color}-bg);color:var(--tint-${g.color}-fg)`}>
-                        <button type="button" class="gh-btn" aria-expanded={!closed} title={`${g.label} · ${g.items.length} งาน`} onClick={() => toggleGroup(g.key)}>
+                        <button type="button" tabIndex={-1} data-gkey={g.key} onKeyDown={(e) => onGroupBtnKey(e, g)} class="gh-btn" aria-expanded={!closed} title={`${g.label} · ${g.items.length} งาน`} onClick={() => toggleGroup(g.key)}>
                           <Icon name={closed ? "chevron-right" : "chevron-down"} size={14} />
                           {groupMode === "type" && <TypeShape color={g.color} />}
                           <span class="gh-label">{g.label}</span><span class="gh-cnt"> · {g.items.length} งาน</span>
@@ -928,8 +1055,8 @@ export function GradebookPage() {
               <tr class="hd">
                 <th scope="col" class="name-col">ชื่อ - สกุล</th>
                 {dgroups.map(({ group: g, shown: cols }) => folded(g) ? (
-                  <th scope="col" tabIndex={0} data-gkey={g.key} class="col-w sumcol" style={`border-top-color:${TINT_FG[g.color]}`} title={`รวม${g.label} · ${g.items.length} งาน · แตะเพื่อกางกลุ่ม`}
-                    onClick={() => toggleGroup(g.key)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleGroup(g.key); } }}>
+                  <th scope="col" tabIndex={activeHead === "g:" + g.key ? 0 : -1} onFocus={(e) => { if (e.target === e.currentTarget) setFocHead("g:" + g.key); }} data-gkey={g.key} class="col-w sumcol" style={`border-top-color:${TINT_FG[g.color]}`} title={`รวม${g.label} · ${g.items.length} งาน · แตะเพื่อกางกลุ่ม`}
+                    onClick={() => toggleGroup(g.key)} onKeyDown={(e) => onGroupHeadKey(e, g)}>
                     <div class="ht">รวม {g.label}</div>
                     <div class="hs">{g.items.length} งาน</div>
                   </th>
@@ -942,7 +1069,7 @@ export function GradebookPage() {
                   const sel = a.id === selCol;
                   const eyeShown = sel || !a.publish_scores;   // the eye of a column that shows its scores appears only on the picked column
                   return (
-                    <th scope="col" tabIndex={0} data-aid={a.id} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); setSelCol(a.id); } }}
+                    <th scope="col" tabIndex={activeHead === a.id ? 0 : -1} data-aid={a.id} onKeyDown={(e) => onHeadKey(e, a)} onFocus={(e) => { if (e.target === e.currentTarget) setFocHead(a.id); }}
                       class={"col-w" + (sel ? " sel" : "") + (closedWork ? " closed" : "") + (closedWork || eyeShown ? " x" : "")} style={tintVars(tl.color)} aria-label={`${tl.name}: ${a.title} · เต็ม ${a.full_score}${closedWork ? " · ปิดรับ" : ""}${a.publish_scores ? "" : " · ซ่อนคะแนน"} · ส่งแล้ว ${pct}%`}
                       title={`${tl.name}: ${a.title} · เต็ม ${a.full_score}${closedWork ? " · ปิดรับ" : ""}${a.publish_scores ? "" : " · ซ่อนคะแนน"} · ส่งแล้ว ${pct}%`} onClick={() => setSelCol(a.id)}>
                       <div class="ttl">
@@ -955,7 +1082,7 @@ export function GradebookPage() {
                       <div class="hs2">ส่งแล้ว {cnt.submitted}/{cnt.counted}</div>
                       <div class="hd-corner">
                         {closedWork && <Icon name="lock" size={14} title="ปิดรับงานแล้ว" class="hd-lock" />}
-                        <button type="button" class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
+                        <button type="button" tabIndex={-1} class={"hs-eye" + (a.publish_scores ? "" : " off")} aria-busy={act.isBusy(`asg:${a.id}`)} aria-label={a.publish_scores ? "ซ่อนคะแนนของงานนี้" : "แสดงคะแนนของงานนี้"}
                           disabled={act.isBusy("publish-all") || act.isBusy(`asg:${a.id}`)}
                           title={a.publish_scores ? "คะแนนแสดงอยู่ — กดเพื่อซ่อน" : "ซ่อนคะแนนอยู่ — กดเพื่อแสดง"}
                           onClick={(e) => { e.stopPropagation(); saveAsgPatch({ publish_scores: !a.publish_scores }, a.publish_scores ? "ซ่อนคะแนนบนจอแล้ว" : "แสดงคะแนนบนจอแล้ว", a); }}>
@@ -975,9 +1102,9 @@ export function GradebookPage() {
                 const sum = matrix.summary(st.id)!;
                 return (
                   <tr>
-                    <td class="name-col" title={fullName(st)}>
-                      {matrix.missing(st.id) && <span class="gb-reddot" />}
-                      <span class="muted" style="margin-right:6px">{st.number ?? i + 1}</span>{fullName(st)}
+                    <td class="name-col" role="rowheader" title={nameOf(st)}>
+                      {matrix.missing(st.id) && <span class="gb-reddot" title="มีงานค้างส่ง" />}
+                      <span class="muted" style="margin-right:6px">{st.number ?? i + 1}</span>{hide ? "" : fullName(st)}
                     </td>
                     {dgroups.map(({ group: g, shown: cols }) => {
                       if (folded(g)) {
@@ -991,7 +1118,7 @@ export function GradebookPage() {
                           openAndEdit(g, st.id, first);
                         };
                         return (
-                          <td class="sumc" tabIndex={0} data-gkey={g.key} aria-label={`รวม ${g.label} · ${fullName(st)} · ${shown.length === 0 ? "ซ่อนคะแนน" : tot ? `${tot.score}/${tot.fullScore}` : "ยังไม่มีคะแนน"} · แตะเพื่อกางและแก้คะแนน`}
+                          <td class="sumc" tabIndex={-1} data-gkey={g.key} aria-label={`รวม ${g.label} · ${nameOf(st)} · ${shown.length === 0 ? "ซ่อนคะแนน" : tot ? `${tot.score}/${tot.fullScore}` : "ยังไม่มีคะแนน"} · แตะเพื่อกางและแก้คะแนน`}
                             title={"แตะเพื่อกางและแก้คะแนน" + (shown.length === 0 ? " · ซ่อนคะแนนทุกงานในกลุ่มนี้" : shown.length < g.items.length ? ` · ไม่รวมงานที่ซ่อนคะแนน (${g.items.length - shown.length} งาน)` : "")}
                             onClick={goEdit} onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); goEdit(); } }}>
                             {shown.length === 0 ? "•••" : tot ? <>{tot.score}<span class="muted">/{tot.fullScore}</span></> : <span class="muted">–</span>}{shown.length > 0 && shown.length < g.items.length ? "*" : ""}
@@ -1001,14 +1128,19 @@ export function GradebookPage() {
                       return cols.map((a) => {
                         const c = matrix.cell(a.id, st.id);
                         const isEditing = editing?.aid === a.id && editing?.sid === st.id;
-                        const isFoc = focCell ? focCell.aid === a.id && focCell.sid === st.id : firstCell?.aid === a.id && firstCell?.sid === st.id;
+                        const isFoc = activeHead ? false : focCell ? focCell.aid === a.id && focCell.sid === st.id : firstCell?.aid === a.id && firstCell?.sid === st.id;
                         return (
                           <GradebookCell key={a.id} h={cellH} a={a} st={st} row={i} state={c ? c.state : matrix.state(a.id, st.id, a)} score={c?.sub?.score} mark={c ? c.mark : matrix.mark(a.id, st.id)}
-                            isEditing={isEditing} isFoc={isFoc} showMore={isEditing || (isFoc && focusIn?.aid === a.id && focusIn?.sid === st.id)} isSel={a.id === selCol} seed={isEditing ? editSeed : null} />
+                            who={nameOf(st)} reason={c?.mark === "fail" ? failReasons.get(pairKey({ assignmentId: a.id, studentId: st.id })) : undefined} isEditing={isEditing} isFoc={isFoc} showMore={isEditing || (isFoc && focusIn?.aid === a.id && focusIn?.sid === st.id)} isSel={a.id === selCol} seed={isEditing ? editSeed : null} />
                         );
                       });
                     })}
-                    {colPrefs.showTotal && <td class="tot-col" style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}>{allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span></>}</td>}
+                    {colPrefs.showTotal && (() => {
+                      const pct = allHidden ? null : scorePercent(sum.score, sum.fullScore); // null when the full mark is 0: no percent at all (BR-30)
+                      return <td class="tot-col" style="font-size:var(--fs-xs)" title={allHidden ? "ซ่อนคะแนนทุกงานอยู่" : hiddenCount > 0 ? `ไม่รวมงานที่ซ่อนคะแนน (${hiddenCount} งาน)` : undefined}
+                        aria-label={allHidden ? "สะสม ซ่อนคะแนน" : `สะสม ${sum.score} จาก ${sum.fullScore}${pct != null ? ` · ${pct} เปอร์เซ็นต์` : ""}`}>
+                        {allHidden ? "•••" : <>{sum.score}<span class="muted">/{sum.fullScore}</span>{pct != null && <small class="tot-pct">{pct}%</small>}</>}</td>;
+                    })()}
                   </tr>
                 );
               })}
@@ -1028,10 +1160,13 @@ export function GradebookPage() {
         </>
       )}
 
-      {status === "ready" && !!classId && (
-        <GradebookBottom assignments={assignments} selAsg={selAsg} students={students} counts={tot} stateOf={stateOf} today={today} submitRate={submitRate}
-          scoresOf={scoresOf} onPick={cardFns.onPick} onRows={cardFns.onRows} onCloseWork={cardFns.onCloseWork} />
+      {drawer && (
+        <GradebookDrawer assignments={assignments} selAsg={selAsg} students={students} stateOf={stateOf} today={today} scoresOf={scoresOf}
+          onPick={cardFns.onPick} onRows={cardFns.onRows} onCloseWork={cardFns.onCloseWork} onEdit={() => selAsg && setEditAsg(selAsg)}
+          hide={hide} nameOf={nameOf} copyHead={`${classById(classId)?.name ?? ""} · ${activeSubjects.value.find((x) => x.id === subjectId)?.name ?? "ทุกวิชา"} · ค้างส่ง`}
+          onClose={() => { setDrawer(false); setPinned(false); refocusPill(); }} sheet={narrow} pinnable={canPin} pinned={pinned} onPin={() => setPinned((v) => !v)} />
       )}
+      <div class="sr-only" role="status" aria-live="polite">{announce}</div>
 
       {bulkAsk && selAsg && (
         <BulkConfirm ask={bulkAsk} asg={selAsg} className={classById(classId)?.name ?? ""}
@@ -1045,13 +1180,25 @@ export function GradebookPage() {
         const a = assignments.find((x) => x.id === cellPanel.aid), st = students.find((x) => x.id === cellPanel.sid);
         if (!a || !st) return null;
         const cur = subOf(a.id, st.id);
-        return <CellEditor key={a.id + st.id} studentName={fullName(st)} title={a.title} fullScore={a.full_score} assignedDate={a.assigned_date} dueDate={a.due_date}
+        return <CellEditor key={a.id + st.id} studentName={nameOf(st)} lead={whoOf(st)} receivedBy={cur?.status === "submitted" ? receivedByLine(cur.method, cur.updatedAt, today) : undefined}
+          failReason={matrix.mark(a.id, st.id) === "fail" ? failReasons.get(pairKey({ assignmentId: a.id, studentId: st.id })) : undefined} title={a.title} fullScore={a.full_score} assignedDate={a.assigned_date} dueDate={a.due_date}
           now={cur ? { status: cur.status as "submitted" | "excused" | "void", score: cur.score, late: cur.late, submittedAt: cur.submittedAt ?? null } : undefined}
           onClose={() => setCellPanel(null)} onSave={(ch) => { setCellPanel(null); void applyCell(a.id, st.id, ch); }} />;
       })()}
       {showCreate && <AssignmentModal defaultClassId={classId} defaultSubjectId={subjectId} onClose={() => setShowCreate(false)} onSaved={() => { setShowCreate(false); load(true); }} />}
       {editAsg && <AssignmentModal existing={editAsg} onReload={() => loadRef.current(true)} onClose={() => setEditAsg(null)} onSaved={() => { setEditAsg(null); load(true); }} />}
       {copyAsg && <AssignmentModal copyFrom={copyAsg} defaultClassId={classId} onClose={() => setCopyAsg(null)} onSaved={() => { setCopyAsg(null); load(true); }} />}
+    </div>
+  );
+}
+
+/** ST-04: while the first load runs — a faint table frame (header + dashed rows), never last room's numbers */
+function TableSkeleton() {
+  return (
+    <div class="gb-skel" aria-busy="true" role="status">
+      <div class="gb-skel-head"><i /><i /><i /><i /></div>
+      {[0, 1, 2, 3, 4, 5].map((r) => <div class="gb-skel-row" key={r}><i /><i /><i /><i /></div>)}
+      <div class="gb-skel-msg"><Icon name="loader-2" size={16} class="spin" /> กำลังโหลด…</div>
     </div>
   );
 }
@@ -1092,7 +1239,7 @@ function BulkConfirm({ ask, asg, className, onCancel, onConfirm }: {
           </div>
         )}
         <div class="row" style="justify-content:flex-end;gap:8px;margin-top:12px">
-          <button type="button" onClick={onCancel}>ยกเลิก</button>
+          <button type="button" data-autofocus onClick={onCancel}>ยกเลิก</button>
           <button type="button" class={t.danger ? "" : "primary"} style={t.danger ? "background:var(--fill-danger);color:var(--on-danger);border-color:var(--fill-danger)" : undefined} disabled={ask.count === 0 || !!dayProblem || (ask.action === "all-submitted" && asg.status === "closed")} onClick={() => onConfirm(ask.action === "all-submitted" ? day : null)}>{t.go(ask.count)}</button>
         </div>
       </Dialog>
@@ -1105,7 +1252,8 @@ function nextCell(students: any[], i: number, aid: string) {
   return null;
 }
 
-function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, markOf, stateOf, editing, setEditing, commitScore, refuseScore, bulk, manage, openPanel }: {
+function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, markOf, stateOf, editing, setEditing, commitScore, refuseScore, bulk, manage, openPanel, nameOf }: {
+  nameOf: (st: Student) => string;
   assignments: Assignment[]; selAsg: Assignment | null; setSelCol: (id: string) => void;
   students: any[]; subOf: (aid: string, sid: string) => Sub | undefined; markOf: (aid: string, sid: string) => "pend" | "fail" | "unsaved" | null; stateOf: (aid: string, sid: string, a: Assignment) => WorkState;
   editing: { aid: string; sid: string } | null; setEditing: (v: { aid: string; sid: string } | null) => void;
@@ -1129,6 +1277,12 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
       </div>
       {/* the tabs above cut long titles short: the work picked is always named in full here */}
       <div style="font-weight:500;overflow-wrap:anywhere;margin-bottom:2px">{selAsg.title}</div>
+      <div class="gb-mbtns">
+        <button type="button" class="gb-mcopy" onClick={manage.copy}><Icon name="copy" size={18} /> คัดลอกงาน</button>
+        <button type="button" class="gb-mclose" disabled={!online.value} title={!online.value ? "ต้องออนไลน์จึงปิดรับ/เปิดรับงานได้" : undefined} onClick={manage.toggleStatus}>
+          <Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={18} /> {selAsg.status === "open" ? "ปิดรับ" : "เปิดรับ"}
+        </button>
+      </div>
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <span class="page-sub">เต็ม {selAsg.full_score} · ส่งแล้ว {assignmentFraction(counts)}</span>
         <div style="position:relative">
@@ -1142,7 +1296,7 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
               <div class="gb-menu-sep" role="separator" />
               <button role="menuitem" onClick={() => { setMenu(false); manage.edit(); }}><Icon name="edit" size={15} /> แก้ไขงาน</button>
               <button role="menuitem" onClick={() => { setMenu(false); manage.copy(); }}><Icon name="copy" size={15} /> คัดลอกงาน</button>
-              <button role="menuitem" onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
+              <button role="menuitem" disabled={!online.value} title={!online.value ? "ต้องออนไลน์จึงปิดรับ/เปิดรับงานได้" : undefined} onClick={() => { setMenu(false); manage.toggleStatus(); }}><Icon name={selAsg.status === "open" ? "lock" : "lock-open"} size={15} /> {selAsg.status === "open" ? "ปิดรับงาน" : "เปิดรับงาน"}</button>
               {manage.togglePublish && <button role="menuitem" onClick={() => { setMenu(false); manage.togglePublish!(); }}><Icon name={selAsg.publish_scores ? "eye" : "eye-off"} size={15} /> {selAsg.publish_scores ? "ซ่อนคะแนนบนจอ" : "แสดงคะแนนบนจอ"}</button>}
               <button role="menuitem" onClick={() => { setMenu(false); manage.remove(); }} style="color:var(--text-danger)"><Icon name="trash" size={15} /> ลบงาน</button>
             </div>
@@ -1155,12 +1309,12 @@ function GradebookMobile({ assignments, selAsg, setSelCol, students, subOf, mark
         return (
           <div class="gb-mrow">
             <span class="no">{st.number ?? i + 1}</span>
-            <span class="grow" title={fullName(st)} style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{fullName(st)}</span>
+            <span class="grow" title={nameOf(st)} style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{nameOf(st)}</span>
             {isEditing ? (
               <CellInput initial={sub?.score != null ? String(sub.score) : ""}
                 onCommit={(initial, v, next) => { if (next && refuseScore(selAsg.id, st.id, initial, v)) return false; commitScore(selAsg.id, st.id, initial, v); setEditing(null); }} onCancel={() => setEditing(null)} />
             ) : (
-              <button aria-label={`กรอกคะแนน ${fullName(st)} · ${selAsg.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} style="background:transparent;border:none;padding:0" onClick={() => openPanel(selAsg.id, st.id)}>
+              <button aria-label={`กรอกคะแนน ${nameOf(st)} · ${selAsg.publish_scores ? sub?.score ?? "ยังไม่มีคะแนน" : "ซ่อนคะแนน"}`} style="background:transparent;border:none;padding:0" onClick={() => openPanel(selAsg.id, st.id)}>
                 <WorkCell state={stateOf(selAsg.id, st.id, selAsg)} score={sub?.score} mark={markOf(selAsg.id, st.id)} hidden={!selAsg.publish_scores} />
               </button>
             )}

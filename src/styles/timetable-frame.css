@@ -1,0 +1,64 @@
+/* S5 time sheet + S9-b confirm (timetable T-16). Tokens only; no motion. Scoped under .tf-* so nothing else changes. */
+.tf-ov { align-items: center; padding: 16px; z-index: 110; }
+.tf-ov-confirm { z-index: 120; }
+.tf-dlg { padding: 0; max-width: 560px; max-height: calc(100dvh - 32px); margin: auto; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-2); box-shadow: var(--shadow-pop); }
+.tf-head { display: flex; align-items: flex-start; gap: 8px; padding: 14px 12px 6px 20px; }
+.tf-head h2 { font-size: var(--t-lg); }
+.tf-grow { flex: 1 1 auto; min-width: 0; }
+.tf-form { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+.tf-body { padding: 8px 20px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+.tf-foot { display: flex; align-items: center; gap: 8px; padding: 12px 20px 14px; border-top: 1px solid var(--border); flex-wrap: wrap; background: var(--surface-2); }
+.tf-foot button { min-height: var(--tap); min-width: var(--tap); }
+.tf-off { display: flex; align-items: center; gap: 6px; margin: 0; font-size: var(--t-sm); color: var(--text-secondary); flex: 1 1 100%; }
+
+.tf-form fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.tf-form legend, .tf-lg { font-size: var(--t-sm); font-weight: 700; padding: 0; margin-bottom: 6px; display: block; }
+.tf-hint { font-size: var(--t-sm); color: var(--text-secondary); margin: 0; }
+.tf-note { margin: 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--bg-accent); color: var(--text-accent); font-size: var(--t-sm); font-weight: 700; }
+
+.tf-form input { min-height: var(--tap); border: 1px solid var(--border-control); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text-primary); padding: 6px 10px; font-size: var(--t-md); width: 100%; min-width: 0; box-sizing: border-box; }
+.tf-form input[aria-invalid="true"] { border: 2px solid var(--text-danger); }
+/* time fields: tight side padding + a small picker icon so "08:30 AM" (12-hour locales) is never clipped; stored value stays HH:MM */
+.tf-form input[type="time"] { padding: 6px 4px 6px 8px; font-variant-numeric: tabular-nums; text-overflow: clip; }
+.tf-form input[type="time"]::-webkit-calendar-picker-indicator { margin: 0 0 0 2px; padding: 0; }
+/* close (X) and delete-break: at least one tap target, even on a fine pointer */
+.tf-head button.icon, .tf-brow button.icon, .tf-cnt button.icon { width: var(--tap); height: var(--tap); min-width: var(--tap); min-height: var(--tap); }
+
+.tf-cnt { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.tf-cnt button { min-width: var(--tap); min-height: var(--tap); }
+.tf-num { font-size: var(--t-xl); min-width: max(2.4ch, var(--tap)); text-align: center; font-weight: 700; border-radius: var(--radius-sm); padding: 4px 6px; min-height: var(--tap); box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+.tf-num[aria-invalid="true"] { outline: 2px solid var(--text-danger); }
+
+.tf-list { display: flex; flex-direction: column; gap: 6px; }
+.tf-prow { display: grid; grid-template-columns: 4.5em minmax(0, 1fr) minmax(0, 1fr); gap: 8px; align-items: center; font-size: var(--t-sm); }
+.tf-prow.tf-hd { font-size: var(--t-xs); color: var(--text-secondary); font-weight: 600; }
+.tf-pn { font-size: var(--t-md); white-space: nowrap; }
+.tf-brow { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr) var(--tap); gap: 8px; align-items: center; }
+.tf-add { align-self: flex-start; min-height: var(--tap); }
+
+.tf-ferr { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; font-size: var(--t-sm); color: var(--text-danger); font-weight: 700; }
+.tf-ferr p { display: flex; gap: 6px; align-items: flex-start; margin: 0; }
+.tf-sum { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--bg-danger); color: var(--text-danger); font-size: var(--t-sm); font-weight: 700; border: 1px solid var(--text-danger); }
+
+.tf-days { display: flex; flex-wrap: wrap; gap: 6px; }
+.tf-day { min-width: 52px; min-height: var(--tap); border-radius: 999px; border: 1.5px solid var(--border-control); background: var(--surface-2); gap: 4px; font-size: var(--t-sm); padding: 0 12px; }
+.tf-day[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+
+.tf-confirm { max-width: 440px; display: flex; flex-direction: column; gap: 10px; margin: auto; }
+.tf-ctitle { font-size: var(--t-lg); }
+.tf-csum { margin: 0; font-size: var(--t-md); line-height: 1.6; overflow-wrap: anywhere; }
+.tf-cfoot { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.tf-cfoot button { min-height: var(--tap); }
+
+/* phone: full screen, save pinned at the bottom, break name on its own line */
+@media (max-width: 600px) {
+  .tf-ov { padding: 0; align-items: stretch; }
+  .tf-dlg { max-width: none; width: 100%; height: 100dvh; max-height: none; border-radius: 0; margin: 0; }
+  .tf-body { padding: 8px 16px 14px; flex: 1 1 auto; }
+  .tf-foot { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .tf-foot .primary { flex: 1 1 auto; }
+  .tf-brow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--tap); }
+  .tf-brow .tf-bn { grid-column: 1 / -1; }
+  .tf-ov-confirm { align-items: flex-end; }
+  .tf-confirm { max-width: none; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin: 0; }
+}

@@ -1,0 +1,4 @@
+## 2026-11-12 ก่อน takeover b1→b2
+**ขั้นถัดไป:** ช่วง 1ก ครบ (T-29 T-30 T-31 T-32 T-65 T-66 + รอบแก้ review ทุกตัว) · PM รันชุดตรวจหลักแล้ว PASS → **รอเจ้าของงานอนุญาต commit checkpoint ช่วง 1ก** → สั่ง T-33 (ลบ @import Plex home.css:3 · hex home.css:66 · toast "ใช้กับทุกเครื่อง" ใน homePrefs.ts:27 pageCards.ts:76 home-states.test:144 · pageCards race แบบ R-03 · pack + อ่านเพิ่ม api-contract.part-2.md) → T-34 ∥ T-35 ∥ T-36 → Reviewer ต่อ task → เฟส 5 Verify (QA ถ่ายธีมอื่น×ทุกหน้า ใช้ fixture --set accent=) · known issue รอตัดสิน: R-06 ชื่อไอคอนจาก DB ที่ Phosphor ไม่มี → ว่าง · R-04 เปิดครั้งแรกไอคอนว่างชั่วครู่ · ถาม Gate V: R-3209 ปุ่ม "เลิกทำ" ตอนเปลี่ยนธีม, Q-1 Q-4 Q-5 · ถาม SA: AC-20 งานไม่มีกำหนดขึ้นชิปไหม · ownership: hook ไม่อ่าน shared → แพตช์ dev-notes/T-xx.md + evidence/** หลัง ownership build ทุกครั้ง · reviewer เขียนได้ที่ code-review*.md · ตัว python เขียนไฟล์ต้องใช้ newline='' (ไม่งั้นได้ CRLF)
+
+## 2026-11-12 11:55 (b2) ก่อนย่อ

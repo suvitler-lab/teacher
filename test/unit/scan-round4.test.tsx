@@ -46,27 +46,32 @@ describe("card order (▲▼ in ปรับการ์ด)", () => {
   };
   it("draws the visible cards in the saved order", () => {
     live();
-    withOrder(["hint", "recent", "hid"], []);
+    withOrder(["hint", "recent", "hid", "unsent"], ["unsent"]); // T-38: "ยังไม่ส่ง" is a fourth card (hidden here so this test keeps reading the first three)
     const { container } = render(h(ScanPage, {}));
     const zone = container.querySelector(".sc-zone")!;
     const kinds = [...zone.children].map((e) => e.classList.contains("sc-hint") ? "hint" : e.classList.contains("sc-recent") ? "recent" : e.classList.contains("sc-hidbar") ? "hid" : "?");
     expect(kinds).toEqual(["hint", "recent", "hid"]);
     cleanup(); live();
-    withOrder(["recent", "hid", "hint"], ["hint"]);
+    withOrder(["recent", "hid", "hint", "unsent"], ["hint", "unsent"]);
     const again = render(h(ScanPage, {}));
     expect([...again.container.querySelector(".sc-zone")!.children].map((e) => e.classList.contains("sc-recent") ? "recent" : e.classList.contains("sc-hidbar") ? "hid" : "?")).toEqual(["recent", "hid"]);
   });
 });
 
 describe("undo toast", () => {
-  it("counts down from 5 in its own label and goes after 5 seconds", async () => {
+  it("says 'เลิกทำได้ 5 วินาที' once (label stays 'เลิกทำ', R-3803) and goes after 5 seconds", async () => {
     vi.useFakeTimers();
     live();
     __scan.commitStudent(kid(1, "กิตติ"), "manual");
     __scan.undo("s1");
-    expect(toasts.value.find((t) => t.action)?.action?.label).toBe("เลิกทำ (5)");
+    const t0 = toasts.value.find((t) => t.action)!;
+    expect(t0.action?.label).toBe("เลิกทำ");
+    expect(t0.message).toContain("เลิกทำได้ 5 วินาที");
+    expect(t0.ms).toBe(5000);
     await act(async () => { vi.advanceTimersByTime(2000); });
-    expect(toasts.value.find((t) => t.action)?.action?.label).toBe("เลิกทำ (3)");
+    const t1 = toasts.value.find((t) => t.action)!;
+    expect(t1.action?.label).toBe("เลิกทำ"); // nothing in the live region changes while it counts
+    expect(t1.message).toBe(t0.message);
     await act(async () => { vi.advanceTimersByTime(3000); });
     expect(toasts.value.find((t) => t.action)).toBeUndefined();
   });

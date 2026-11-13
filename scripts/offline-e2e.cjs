@@ -11,8 +11,8 @@ const { execSync } = require("node:child_process");
 const { startFixtureServer } = require("./fixture-server.cjs");
 
 const root = path.resolve(__dirname, "..");
-const dist = path.join(root, "dist/client/client");
-const PORT = 5195;
+const dist = process.env.QA_ASSETS || path.join(root, "dist/client/client"); // QA_ASSETS: a frozen copy of the build (the real dist/ gets rebuilt while others work)
+const PORT = Number(process.env.QA_PORT || 5195);
 
 let playwright;
 try {
@@ -95,13 +95,17 @@ async function until(fn, timeout = 30000, step = 250) {
       return !!(await (await caches.open(key)).match("/__shell"));
     }, null, { timeout: 60000 }).then(() => true, () => false);
     check("first visit: the shell and assets are kept on the device", prepared);
-    await go(page, "#/settings");
+    // (the offline row now lives in Settings ▸ "ตรวจเครื่องและออฟไลน์" (section=device), no longer in the overview)
+    const openDeviceTab = async () => {
+      await go(page, "#/settings");
+      await page.locator(".set-nav button, .set-nav-chips button.pill, .set-nav a, .set-nav-chips a", { hasText: "ตรวจเครื่องและออฟไลน์" }).locator("visible=true").first().click(); // the tab, as a teacher would
+    };
+    await openDeviceTab();
     check("Settings says the device is ready for offline use", await until(async () => /เปิดแอปและสแกนได้แม้ไม่มีอินเทอร์เน็ต/.test(await page.locator("body").innerText()), 15000));
 
     // Settings ▸ Devices ▸ "check this device" — on a device that is fine
     const runDeviceCheck = async () => {
-      await go(page, "#/settings");
-      await page.locator(".set-nav button, .set-nav-chips button.pill", { hasText: "อุปกรณ์และรหัสผ่าน" }).locator("visible=true").first().click(); // the tab, as a teacher would
+      await openDeviceTab();
       await page.getByRole("button", { name: /ตรวจเครื่องนี้|ตรวจอีกครั้ง/ }).first().click();
       await until(async () => /พร้อมใช้งาน|ใช้ได้ แต่มีข้อควรดู|ยังไม่พร้อม/.test(await page.locator("body").innerText()), 20000);
       return (await page.locator("body").innerText()).replace(/\s+/g, " ");
@@ -129,22 +133,22 @@ async function until(fn, timeout = 30000, step = 250) {
     await page.getByRole("button", { name: /เริ่มสแกน/ }).click();
     const input = page.locator('input[aria-label="รหัสนักเรียน"]');
     for (const n of ["5", "6"]) { await input.fill(n); await input.press("Enter"); await sleep(400); }
-    check("scanning offline queues the work on the device", await until(async () => /ค้าง 2/.test(await badge(page)), 10000), await badge(page));
+    check("scanning offline queues the work on the device", await until(async () => /รอส่ง 2/.test(await badge(page)), 10000), await badge(page));
     check("nothing has reached the server yet", (await landed([5, 6])) === 0);
 
     // 4 ─ back online: the queue is sent by itself
     await offline(false);
     check("back online: the queued scans land on the server", await until(async () => (await landed([5, 6])) === 2, 40000));
-    check("the queue empties", await until(async () => !/ค้าง/.test(await badge(page)), 20000), await badge(page));
+    check("the queue empties", await until(async () => !/รอส่ง/.test(await badge(page)), 20000), await badge(page));
 
     // 5 ─ the session ends while offline: sign in again, nothing is lost
     await goDark();
     await input.fill("7"); await input.press("Enter"); await sleep(400);
-    check("(session test) one scan waits offline", await until(async () => /ค้าง 1/.test(await badge(page)), 10000), await badge(page));
+    check("(session test) one scan waits offline", await until(async () => /รอส่ง 1/.test(await badge(page)), 10000), await badge(page));
     await server.DB.prepare("DELETE FROM sessions").run();
     await offline(false);
     check("session ended: the sign-in prompt appears", await page.locator("input[type=password]").first().waitFor({ timeout: 40000 }).then(() => true, () => false));
-    check("…and the waiting scan is still on the device", /ค้าง 1/.test(await badge(page)) || (await page.locator("body").innerText()).includes("ค้าง"), await badge(page));
+    check("…and the waiting scan is still on the device", /รอส่ง 1/.test(await badge(page)) || (await page.locator("body").innerText()).includes("รอส่ง"), await badge(page));
     await page.locator("input[type=password]").first().fill(server.password);
     await page.locator("input[type=password]").first().press("Enter");
     check("after signing in again the waiting scan lands", await until(async () => (await landed([7])) === 1, 40000));
@@ -157,7 +161,7 @@ async function until(fn, timeout = 30000, step = 250) {
     watch(page);
     await page.goto(server.url, { waitUntil: "domcontentloaded" });
     check("closed and reopened offline: the app opens", await shellUp(page));
-    check("…with the waiting scan still there", await until(async () => /ค้าง 1/.test(await badge(page)), 15000), await badge(page));
+    check("…with the waiting scan still there", await until(async () => /รอส่ง 1/.test(await badge(page)), 15000), await badge(page));
     check("…having fetched no static file from the network", staticLeaks().length === 0, staticLeaks().join(", "));
     await offline(false);
     check("…and it lands when the network is back", await until(async () => (await landed([8])) === 1, 40000));
@@ -191,7 +195,7 @@ async function until(fn, timeout = 30000, step = 250) {
     check("after accepting: the page comes back on the new release", !!nowVersion, String(nowVersion));
     const after = await cacheNames(page);
     check("only the new version's files remain", after.length === 1 && after[0].endsWith("-B"), after.join(", "));
-    check("the waiting scan survived the update", await until(async () => /ค้าง 1/.test(await badge(page)), 20000), await badge(page));
+    check("the waiting scan survived the update", await until(async () => /รอส่ง 1/.test(await badge(page)), 20000), await badge(page));
     await context.unroute("**/api/submissions/batch");
     check("…and lands afterwards", await until(async () => (await landed([9])) === 1, 40000));
 

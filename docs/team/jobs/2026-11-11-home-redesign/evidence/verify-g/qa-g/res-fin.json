@@ -1,0 +1,313 @@
+{
+ "long|home|375": {
+  "sh": 8784,
+  "sw": 375,
+  "iw": 375,
+  "n": 22,
+  "ttlH": [
+   58,
+   58,
+   58
+  ],
+  "lh": 28.8,
+  "cardH": 260,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 200
+ },
+ "long|scan|375": {
+  "sh": 1478,
+  "sw": 375,
+  "iw": 375,
+  "n": 5,
+  "ttlH": [
+   24,
+   24,
+   24
+  ],
+  "lh": 24.3,
+  "cardH": 98,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 15
+ },
+ "long|home|820": {
+  "sh": 6424,
+  "sw": 820,
+  "iw": 820,
+  "n": 22,
+  "ttlH": [
+   58,
+   58,
+   58
+  ],
+  "lh": 28.8,
+  "cardH": 202,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 200
+ },
+ "long|scan|820": {
+  "sh": 1180,
+  "sw": 820,
+  "iw": 820,
+  "n": 5,
+  "ttlH": [
+   24,
+   24,
+   24
+  ],
+  "lh": 24.3,
+  "cardH": 98,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 15
+ },
+ "long|home|1536": {
+  "sh": 5682,
+  "sw": 1521,
+  "iw": 1536,
+  "n": 22,
+  "ttlH": [
+   51,
+   51,
+   51
+  ],
+  "lh": 25.6,
+  "cardH": 191,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 200
+ },
+ "long|scan|1536": {
+  "sh": 844,
+  "sw": 1521,
+  "iw": 1536,
+  "n": 5,
+  "ttlH": [
+   22,
+   22,
+   22
+  ],
+  "lh": 21.6,
+  "cardH": 92,
+  "tsel": "ttl",
+  "clamp": "2",
+  "title": 1,
+  "len": 15
+ },
+ "hdr|scan|744": {
+  "h": 112,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|reports|744": {
+  "h": 54,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|students|744": {
+  "h": 112,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|attendance|744": {
+  "h": 54,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|gradebook|744": {
+  "h": 57,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|home|744": {
+  "h": 80,
+  "sw": 744,
+  "iw": 744
+ },
+ "hdr|scan|768": {
+  "h": 112,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|reports|768": {
+  "h": 54,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|students|768": {
+  "h": 112,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|attendance|768": {
+  "h": 54,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|gradebook|768": {
+  "h": 57,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|home|768": {
+  "h": 80,
+  "sw": 768,
+  "iw": 768
+ },
+ "hdr|scan|800": {
+  "h": 112,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|reports|800": {
+  "h": 54,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|students|800": {
+  "h": 112,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|attendance|800": {
+  "h": 54,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|gradebook|800": {
+  "h": 57,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|home|800": {
+  "h": 80,
+  "sw": 800,
+  "iw": 800
+ },
+ "hdr|scan|820": {
+  "h": 112,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|reports|820": {
+  "h": 54,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|students|820": {
+  "h": 112,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|attendance|820": {
+  "h": 54,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|gradebook|820": {
+  "h": 46,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|home|820": {
+  "h": 80,
+  "sw": 820,
+  "iw": 820
+ },
+ "hdr|scan|1180": {
+  "h": 54,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|reports|1180": {
+  "h": 54,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|students|1180": {
+  "h": 112,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|attendance|1180": {
+  "h": 54,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|gradebook|1180": {
+  "h": 0,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|home|1180": {
+  "h": 46,
+  "sw": 1180,
+  "iw": 1180
+ },
+ "hdr|scan|1536": {
+  "h": 48,
+  "sw": 1521,
+  "iw": 1536
+ },
+ "hdr|reports|1536": {
+  "h": 48,
+  "sw": 1521,
+  "iw": 1536
+ },
+ "hdr|students|1536": {
+  "h": 48,
+  "sw": 1521,
+  "iw": 1536
+ },
+ "hdr|attendance|1536": {
+  "h": 48,
+  "sw": 1521,
+  "iw": 1536
+ },
+ "hdr|gradebook|1536": {
+  "h": 0,
+  "sw": 1536,
+  "iw": 1536
+ },
+ "hdr|home|1536": {
+  "h": 44,
+  "sw": 1521,
+  "iw": 1536
+ },
+ "dis|pro|light|att": [],
+ "dis|pro|light|stu": [],
+ "dis|pro|dark|att": [],
+ "dis|pro|dark|stu": [],
+ "dis|warm|light|att": [],
+ "dis|warm|light|stu": [],
+ "dis|warm|dark|att": [],
+ "dis|warm|dark|stu": [],
+ "dis|playful|light|att": [],
+ "dis|playful|light|stu": [],
+ "dis|playful|dark|att": [],
+ "dis|playful|dark|stu": [
+  {
+   "sel": ".stu-tile:disabled",
+   "op": 0.72,
+   "bs": "solid",
+   "txt": [
+    [
+     "tl",
+     5.84
+    ],
+    [
+     "tv ok",
+     5.95
+    ]
+   ],
+   "own2": false
+  }
+ ]
+}

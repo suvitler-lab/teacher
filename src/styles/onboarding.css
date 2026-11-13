@@ -21,7 +21,7 @@
 .ob-chip { display: inline-flex; align-items: center; gap: 2px; padding: 4px 4px 4px 12px; border-radius: 999px; background: var(--bg-accent); color: var(--text-accent); font-size: var(--fs-sm); }
 .ob-x { height: 1.47rem; width: 1.47rem; padding: 0; border: none; background: transparent; color: inherit; border-radius: 50%; }
 .ob-nav { display: flex; gap: 8px; align-items: center; margin-top: 18px; flex-wrap: wrap; }
-.ob-done { text-align: center; color: var(--fill-success, #1a9d5a); margin: 6px 0 4px; }
+.ob-done { text-align: center; color: var(--text-success); margin: 6px 0 4px; }
 .ob-next { display: grid; gap: 8px; margin-top: 16px; }
 .ob-next button { height: 3.07rem; }
 @media (max-width: 560px) { .ob-wrap { padding: 12px 0 32px; } .ob-card { border-radius: 0; border-left: none; border-right: none; padding: 18px 16px; } .ob-steps .lbl { font-size: var(--fs-xs); } }

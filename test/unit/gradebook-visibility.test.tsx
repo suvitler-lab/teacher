@@ -49,24 +49,33 @@ async function openTable() {
   // "ซ่อน/แสดงคะแนนทั้งหมด" lives in the ⋮ menu of the picked work (round 3); it stays open while the columns are saved
   fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" }));
 }
-const hideAll = () => screen.getByRole("menuitem", { name: "ซ่อนคะแนนทั้งหมด" }) as HTMLButtonElement;
-const showAll = () => screen.getByRole("menuitem", { name: "แสดงคะแนนทั้งหมด" }) as HTMLButtonElement;
+// the menu closes after the action (B-73c), so reopen it when a helper needs the item again
+const reopen = () => { if (!screen.queryByRole("menu")) fireEvent.click(screen.getByRole("button", { name: "จัดการงาน" })); };
+const hideAll = () => (reopen(), screen.getByRole("menuitem", { name: "ซ่อนคะแนนทั้งหมด" })) as HTMLButtonElement;
+const showAll = () => (reopen(), screen.getByRole("menuitem", { name: "แสดงคะแนนทั้งหมด" })) as HTMLButtonElement;
 const cells = () => within(screen.getByRole("table")).getAllByRole("row")[1].querySelectorAll("td");
+const scoreText = (c: Element) => { const k = c.cloneNode(true) as HTMLElement; k.querySelector(".tot-pct")?.remove(); return k.textContent; }; // the percent is its own line (BR-30)
 
 describe("gradebook score visibility", () => {
+  it("closes the menu after hide/show all (B-73c)", async () => {
+    await openTable();
+    fireEvent.click(hideAll());
+    expect(screen.queryByRole("menu")).toBeNull();
+  });
+
   it("hides and shows every displayed column, including fractions, and updates totals and averages", async () => {
     await openTable();
     fireEvent.click(hideAll());
     await waitFor(() => expect(showAll().disabled).toBe(false));
     expect(post.mock.calls.map(([, b]) => [b.id, b.publish_scores])).toEqual([["geometry", false], ["fractions", false]]);
-    expect([...cells()].slice(1).map((c) => c.textContent)).toEqual(["•••", "•••", "•••"]);
+    expect([...cells()].slice(1).map(scoreText)).toEqual(["•••", "•••", "•••"]);
     expect(document.querySelectorAll("tr.avg td")[1].textContent).toContain("•••");
     expect(document.querySelectorAll("tr.avg td")[2].textContent).toContain("•••");
     expect(assignments.value.find((a) => a.id === "outside")?.publish_scores).toBe(true);
 
     fireEvent.click(showAll());
     await waitFor(() => expect(hideAll().disabled).toBe(false));
-    expect([...cells()].slice(1).map((c) => c.textContent)).toEqual(["7", "8", "15/20"]);
+    expect([...cells()].slice(1).map(scoreText)).toEqual(["7", "8", "15/20"]);
     expect(post.mock.calls.slice(2).map(([, b]) => [b.id, b.publish_scores])).toEqual([["geometry", true], ["fractions", true]]);
   });
 
@@ -87,7 +96,7 @@ describe("gradebook score visibility", () => {
     await waitFor(() => expect(ok).toHaveBeenCalledWith("ซ่อนคะแนนบนจอแล้ว"));
     expect(post).toHaveBeenCalledTimes(1);
     expect(post.mock.calls[0][1]).toMatchObject({ id: "fractions", publish_scores: false });
-    expect([...cells()].slice(1).map((c) => c.textContent)).toEqual(["7", "•••", "7/10"]);
+    expect([...cells()].slice(1).map(scoreText)).toEqual(["7", "•••", "7/10"]);
   });
 
   it("disables competing visibility actions while all columns are being saved", async () => {
@@ -116,6 +125,6 @@ describe("gradebook score visibility", () => {
     await waitFor(() => expect(hideAll().disabled).toBe(false));
     expect(err).toHaveBeenCalledWith("บันทึกไม่สำเร็จ");
     expect(ok).not.toHaveBeenCalled();
-    expect([...cells()].slice(1).map((c) => c.textContent)).toEqual(["•••", "8", "8/10"]);
+    expect([...cells()].slice(1).map(scoreText)).toEqual(["•••", "8", "8/10"]);
   });
 });

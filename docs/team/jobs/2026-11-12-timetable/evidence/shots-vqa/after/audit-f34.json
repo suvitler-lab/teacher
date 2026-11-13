@@ -1,0 +1,897 @@
+{
+ "f3-broken-banner-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-sheet-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-warm-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    24 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-warm-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-light-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 34x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-warm-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-light-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 34x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-warm-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 30x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-warm-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-sheet-warm-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    30 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-warm-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-warm-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-dark-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 34x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 70>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-warm-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-dark-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 34x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-warm-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-warm-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 30x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-warm-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-sheet-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-pro-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    29 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    26 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-sheet-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-pro-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    25 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 76>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 61>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-pro-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 54>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-playful-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    28 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-sheet-playful-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    21 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-playful-light-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    23 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-playful-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-light-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-light-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-playful-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-light-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-light-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-playful-light-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-light-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-light-1536x729": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n"
+ },
+ "f3-broken-banner-playful-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    6 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\"r"
+ },
+ "f3-broken-sheet-playful-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    10 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f4-clear-confirm-playful-dark-390x844": {
+  "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav') to be visible\u001b[22m\n\u001b[2m    23 × locator resolved to 2 elements. Proceeding with the first one: <nav class=\""
+ },
+ "f3-broken-banner-playful-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-dark-820x1180": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-dark-820x1180": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>70 ellipsis",
+   "span.ttp-l2 \"คณิตศาสตร์\" 73>68 ellipsis"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-playful-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-dark-1180x820": {
+  "hscroll": false,
+  "small": [
+   "div.tf-num 36x48 \"7\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-dark-1180x820": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 60>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ },
+ "f3-broken-banner-playful-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ"
+  ]
+ },
+ "f3-broken-sheet-playful-dark-1536x729": {
+  "hscroll": false,
+  "small": [
+   "button.icon gho.t 40x40 \"ปิด\"",
+   "div.tf-num 32x44 \"7\"",
+   "button.icon 40x40 \"ลบ พักกลางวัน\""
+  ],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "โครงเวลาที่บันทึกไว้อ่านไม่ได้ — ตั้งเวลาคาบใหม่ | ตั้งเวลาคาบ",
+   "ตั้งเวลาคาบ | จำนวนคาบต่อวัน | 7 | 1–8 คาบ | เวลาแต่ละคาบ | เริ่ม | ถึง | คาบ 1 | คาบ 2 | คาบ 3 | คาบ 4 | คาบ 5 | คาบ 6 | คาบ 7 | ช่วงพัก (ไม่เกิน 3) | เพิ่มช่วงพัก | วันเรียน | จ | อ | พ | พฤ | ศ | ส | อา | ใช้กับทุกภาคเรียน · เวลาเริ่มคาบใช้ตัดสิน “สาย” ด้วย | ยกเลิก | บันทึก"
+  ]
+ },
+ "f4-clear-confirm-playful-dark-1536x729": {
+  "hscroll": false,
+  "small": [],
+  "tiny": 0,
+  "clip": [
+   "span.tth-.r \"ภาคเรียน\" 53>1 clip"
+  ],
+  "contrast": [],
+  "ui": [],
+  "contrastN": 0,
+  "txt": [
+   "ลบทั้ง 14 คาบของภาค 2/2569? โครงเวลาไม่เปลี่ยน | ไม่ | ลบทั้งหมด"
+  ]
+ }
+}

@@ -132,16 +132,21 @@ th.on .rp-sortbtn { font-weight: 500; }
   color: var(--text-accent); text-decoration: underline dotted; text-underline-offset: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rp-mini { display: inline-block; width: 2.75rem; height: 6px; border-radius: 3px; background: var(--border); vertical-align: middle; margin-right: 6px; overflow: hidden; }
 .rp-mini > i { display: block; height: 100%; border-radius: 3px; }
-/* a mouse screen: shorter rows (36 children fit better); a touch screen keeps its 44px rows below */
-@media (pointer: fine) { table.rp-table td { height: 2.2rem; } }
+/* one row height for every screen (AC-250 / D43): 44px, one line */
+table.rp-table td { height: 44px; padding-top: 0; padding-bottom: 0; }
 @media (pointer: coarse) {
   .rp-sortbtn, .rp-namebtn, .rp-thplain, .rp-sel { min-height: 44px; }
   .rp-work { min-height: 44px; }
-  table.rp-table td { height: max(44px, 2.45rem); }
 }
-/* narrow card: the "มา" column and the little bar go (both are in the drawer) */
+/* narrow card in the stacked / phone body only: the "มา" column and the little bar go, the same number rides under the name (.rp-sub).
+   In the two-column body (.lg) the column stays and the row stays one line (AC-250). */
 @container rp (max-width: 34rem) {
-  table.rp-table .c-att, table.rp-table .rp-mini { display: none; }
+  .rp-body:not(.lg) table.rp-table .c-att, .rp-body:not(.lg) table.rp-table .rp-mini { display: none; }
+}
+/* a phone-wide table: the score column goes too, its number rides in the line under the name (AC-172) so the name keeps >= 8 letters */
+@container rp (max-width: 26rem) {
+  .rp-body:not(.lg) table.rp-table .c-sc { display: none; }
+  .rp-body:not(.lg) .rp-namebtn { min-height: 32px; }
 }
 
 /* the A4 preview in the page */
@@ -149,6 +154,7 @@ th.on .rp-sortbtn { font-weight: 500; }
 .rp-printbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; padding: 8px 12px; border-radius: var(--radius); background: var(--bg-accent); color: var(--text-accent); border: 0.5px solid var(--border-accent); font-size: var(--fs-sm); }
 .rp-printbar > .grow { flex: 1 1 12rem; min-width: 0; }
 .rp-printbar label { color: inherit; display: inline-flex; align-items: center; gap: 6px; min-height: 2.27rem; cursor: pointer; }
+/* paper sheet: fixed black-on-white like the printout it previews (not a theme colour) */
 .rp-sheet { background: #fff; color: #111; border: 0.5px solid var(--border-strong); border-radius: 6px; padding: 1.5rem; box-shadow: var(--shadow-card); }
 .rp-sheet h1 { font-size: 1.3rem; margin: 0 0 2px; }
 .rp-sheet h2 { font-size: 1rem; margin: 14px 0 4px; }
@@ -175,3 +181,127 @@ table.rp-sheet-table tr { break-inside: avoid; }
 .rp-pj-line { display: flex; align-items: baseline; justify-content: space-between; gap: calc(var(--pj-u) * 12); min-width: 0; }
 .rp-pj-title { font-size: calc(var(--pj-u) * 30); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .rp-pj-frac { font-size: calc(var(--pj-u) * 30); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; flex: none; }
+
+/* ===== T-49 redesign: hero band, one-DOM-order body (grid areas), folding cards, states ===== */
+.rp-alerts { display: flex; flex-direction: column; gap: 6px; }
+.rp-alerts:empty { display: none; }
+.rp-alerts > * { margin: 0; }
+.rp-why { font-size: var(--fs-xs); font-weight: 600; color: var(--text-secondary); }
+.rp-attgrp { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rp-status .rp-range { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 0; }
+.rp-hidebtn[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-2); }
+
+/* hero: one band of four tiles (2 x 2 on a narrow screen) — the band colours come from the theme's hero tokens */
+.rp-hero { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px; min-width: 0; background: var(--hero-bg); color: var(--hero-fg); border-radius: var(--radius-hero); }
+.rp-k { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 0; min-height: 5.2rem; padding: 6px 12px; text-align: left; font: inherit; color: inherit;
+  background: var(--hero-bg); border: 1.5px solid color-mix(in srgb, var(--hero-fg) 35%, transparent); border-radius: var(--radius); height: auto; }
+button.rp-k { cursor: pointer; }
+button.rp-k:hover { border-color: var(--hero-fg); }
+.rp-k:focus-visible { outline: 3px solid var(--hero-fg); outline-offset: 2px; }
+.rp-k .l { display: flex; align-items: center; gap: 4px; width: 100%; font-size: var(--fs-xs); font-weight: 700; white-space: nowrap; }
+.rp-k .l .go { margin-left: auto; }
+.rp-k .v { font-family: var(--font-num, inherit); font-size: 1.75rem; font-weight: 700; line-height: 1.15; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rp-k .v small { font-size: var(--fs-sm); font-weight: 700; margin-left: 4px; font-family: var(--font-sans, inherit); }
+.rp-k .s { font-size: var(--fs-xs); font-weight: 600; color: var(--hero-muted); max-width: 100%; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; line-height: 1.35; }
+.rp-k .sht { display: none; }
+@media (max-width: 1000px) { .rp-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); } .rp-k .lng { display: none; } .rp-k .sht { display: -webkit-box; } }
+@media (max-width: 720px) {
+  .rp-k { min-height: 4.4rem; padding: 5px 10px; } .rp-k .v { font-size: 1.5rem; } .rp-k .l .go { display: none; }
+}
+
+/* loading skeleton (ST-R01) */
+.rp-skel { display: flex; flex-direction: column; gap: 8px; }
+.rp-skhero, .rp-skbody { border-radius: var(--radius-hero); background: var(--surface-1); }
+.rp-skhero { height: 5.6rem; } .rp-skbody { height: 14rem; border-radius: var(--radius); }
+@media (prefers-reduced-motion: no-preference) { .rp-skhero, .rp-skbody { animation: rp-pulse 1.4s ease-in-out 3; } }
+@keyframes rp-pulse { 50% { opacity: 0.55; } }
+
+/* body: DOM order is always table -> cards; the grid areas put the cards above the table on a narrow body */
+.rp-body { display: grid; gap: 12px; align-items: start; grid-template-columns: minmax(0, 1fr); grid-template-areas: "cards" "tbl"; }
+.rp-body > .pg-main, .rp-body > .pg-solo { grid-area: tbl; min-width: 0; }
+.rp-body > .pg-aside { grid-area: cards; min-width: 0; }
+.rp-body > .rp-alloff { grid-area: cards; margin: 0; font-size: var(--fs-sm); color: var(--text-secondary); }
+.rp-body.lg { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); grid-template-areas: "tbl cards"; }
+.rp-body > .pg-solo { max-width: 64rem; }
+.rp-people .rp-scroll { overflow: auto; max-height: calc(100dvh - 14rem); min-height: 0; }
+.rp-sub { display: none; font-size: var(--fs-xs); color: var(--text-secondary); }
+@container rp (max-width: 34rem) { .rp-body:not(.lg) .rp-sub { display: block; } }
+
+/* card heads fold (A19) */
+.rp-ch h2 { flex: 1 1 8rem; min-width: 0; margin: 0; }
+.rp-fold { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 44px; padding: 0 4px; border: none; background: transparent; color: inherit; font: inherit; font-weight: 600; text-align: left; cursor: pointer; border-radius: 8px; }
+.rp-fold .tt { flex: 1; min-width: 0; }
+.rp-fold:hover { background: var(--surface-1); }
+.rp-cb { display: flex; flex-direction: column; gap: 6px; }
+.rp-cb[hidden] { display: none; }
+.rp-copywrap { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rp-note { font-size: var(--fs-xs); color: var(--text-secondary); }
+.rp-dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: 6px; margin: 0; }
+.rp-dl > div { background: var(--surface-1); border-radius: 8px; padding: 6px 10px; }
+.rp-dl dt { font-size: var(--fs-xs); color: var(--text-secondary); }
+.rp-dl dd { margin: 0; font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.rp-all { width: 100%; }
+/* works: the average rides on its own line under the bar row */
+.rp-work { min-height: 3.2rem; grid-template-areas: "lbl track num pct" "avg avg avg avg"; row-gap: 0; }
+.rp-work .lbl { grid-area: lbl; } .rp-work .track { grid-area: track; } .rp-work .num { grid-area: num; } .rp-work .pct { grid-area: pct; }
+.rp-work .avg { grid-area: avg; font-size: var(--fs-xs); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.rp-work .avg.soft { color: var(--text-secondary); }
+.rp-work .due { display: inline-block; margin-left: 6px; font-size: var(--fs-xs); color: var(--text-secondary); }
+@container rp (max-width: 25rem) { .rp-work { grid-template-areas: "lbl pct" "track num" "avg avg"; } }
+@media (prefers-reduced-motion: reduce) { .rp-page .spin { animation: none; } }
+/* the "งานค้าง" tile is a button: base.css paints .danger buttons red — keep the band's own chip colour and mark it with a danger-coloured border instead */
+button.rp-k.danger { background: var(--hero-bg); color: inherit; font-weight: inherit; border-color: var(--hero-fg); }
+.rp-work .lbl { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; line-height: 1.25; }
+.rp-work .lbl .due { margin-left: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+
+.rp-skmsg { font-size: var(--fs-sm); color: var(--text-secondary); }
+.rp-actions { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* Excel: what the file covers, said before the tap; the warning when names are hidden but the file keeps them (AC-166) */
+.rp-xl { display: inline-flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; font-size: var(--fs-xs); color: var(--text-secondary); }
+.rp-xl > span { display: inline-flex; align-items: center; gap: 5px; }
+.rp-xl .rp-xl-warn { color: var(--text-warning); font-weight: 600; }
+
+/* ===== T-50: the row budget (AC-171 / AC-250 / D43). Desktop and iPad landscape: hero <= 96px, one tool row, the table card without a head row ===== */
+@media (min-width: 1001px) {
+  .rp-page { gap: 6px; }
+  .rp-hero { padding: 6px; gap: 6px; }
+  .rp-k { min-height: 0; padding: 3px 12px; gap: 0; }
+  .rp-k .l { line-height: 1.2; }
+  /* a mouse screen: the column heads are 32px (a touch screen keeps 44px below) */
+  @media (pointer: fine) { .rp-sortbtn, .rp-thplain { min-height: 32px; } }
+  .rp-k .v { font-size: 1.6rem; line-height: 1.1; }
+  .rp-k .s { -webkit-line-clamp: 1; line-clamp: 1; line-height: 1.3; }
+  .rp-bar { flex-wrap: nowrap; }
+  .rp-bar > .rp-tb { flex-wrap: nowrap; margin-left: auto; }
+  .rp-attlbl { display: none; }
+  .rp-why-tb { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .rp-actions .rp-lbl.rp-quiet { display: none; }
+  .rp-status { min-height: 0; }
+  .rp-status .hm-chip { min-height: 1.5rem; }
+  .rp-body.lg { gap: 10px; }
+  /* the people card: no head row (its words ride in the caption; the table's own head says how to sort) */
+  .rp-body.lg .rp-people { padding-top: 4px; }
+  .rp-body.lg .rp-people-head { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* hero 2 x 2 (iPad portrait <= 140px, phone <= 132px): label and number share the first line, the sub line is the second */
+@media (max-width: 1000px) {
+  .rp-hero { padding: 6px; gap: 6px; }
+  .rp-k { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "l v" "s s"; align-items: center; column-gap: 6px; row-gap: 0; min-height: 0; padding: 3px 10px; }
+  .rp-k .l { grid-area: l; line-height: 1.2; min-width: 0; overflow: hidden; }
+  .rp-k .v { grid-area: v; font-size: 1.5rem; line-height: 1.15; justify-self: end; }
+  .rp-k .s { grid-area: s; -webkit-line-clamp: 1; line-clamp: 1; line-height: 1.3; }
+  .rp-k .l .ic { flex: none; }
+}
+@media (max-width: 480px) { .rp-k .l > .ic { display: none; } .rp-k .v { font-size: 1.4rem; } }
+
+/* phone: the two buttons that open the sheets, the sheet body, the 56px row (AC-172) */
+.rp-mob { display: flex; gap: 8px; width: 100%; }
+.rp-mob > button { flex: 1; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.rp-sheetbody { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.rp-sheetbody > button, .rp-sheetbody .rp-sel { min-height: 44px; }
+@container rp (max-width: 26rem) { .rp-body:not(.lg) table.rp-table td { height: 56px; } .rp-body:not(.lg) .rp-namebtn { min-height: 32px; } }
+/* T-73 B-73b: on a touch screen the name button keeps the full tap size inside the phone card too (declared after the container rules so it wins) */
+@media (pointer: coarse) { .rp-body:not(.lg) .rp-namebtn { min-height: var(--tap); } }
+.rp-mob > button { border: 1px solid var(--border-strong); background: var(--surface-2); border-radius: var(--radius); }
