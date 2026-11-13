@@ -1,7 +1,7 @@
 # Brief: ตารางสอน (งาน C จาก home-redesign · T-61–T-63)
 
 - งาน: `2026-11-12-timetable` · branch: `team/2026-11-12-timetable` (แตกจาก checkpoint 87fe5b8 ของ home-redesign, 2026-11-13) · เริ่ม: 2026-11-12
-- สถานะ: เฟส 5 Verify จบ — Gate V ผ่าน (known gap) 2026-11-13 · รอเจ้าของงานสั่ง commit/merge
+- สถานะ: ปิดแล้ว (known gap) — ปล่อยขึ้นระบบจริง 2026-11-13 · Gate V ผ่านโดยเจ้าของงาน · ดู report.md
 - ขนาด: L · ธง: 🖥 ♿ 🔄 🗑
 - เจ้าของงาน (Product Owner): ผู้ใช้ · โปรแกรม: —
 

@@ -1,6 +1,6 @@
 # Board: 2026-11-12-timetable
 
-**ขั้นถัดไป:** โค้ดนิ่ง (tree 8bf9b841) · PM: tsc/build ผ่าน, vitest 224 ไฟล์/2867 ผ่านหมด · แก้ครบ V-01..V-62, R-01..R-21(ส่วนใหญ่), B-01/02 · **รอ Gate V** (เจ้าของงานลองกด http://localhost:5720 · ล็อกอิน fixture) · quality-gate FAIL 72 = หลักฐานเก่ากว่าโค้ดสุดท้าย ~70 รายการ + ยังไม่มี visual-owner-approved → ต้องเลือก: (ก) บันทึกหลักฐานใหม่อีกรอบ หรือ (ข) ปิดแบบมี known gap · ช่องว่าง: ภาพส่วนใหญ่ QA เปิดดูไม่ครบ, Q-5407/5410/5411 NOT RUN, WebKit/iPad/VoiceOver/เครื่องพิมพ์จริง ตรวจไม่ได้ · ค้างตัดสิน: hono S-01 (งานแยก) · ยังไม่ commit
+**ขั้นถัดไป:** ปิดแล้ว (known gap) — merge เข้า main + deploy production 2026-11-13 (commit dcface5, Worker 355da053, migration 0008) · ค้างตามเจ้าของงาน: ทดสอบเครื่องจริง iPad/Safari/VoiceOver/เครื่องพิมพ์, หลักฐานภาพ QA, รอผลทดลองใช้โดยครู
 
 session: `timetable-20261112-a1` (ใช้กับ job-lock --session) · เฟสปัจจุบัน: 2 Design จบ (Gate 2 อนุมัติ) — รอคำสั่งเฟส 3 · รอบแก้ (Verify): 0/3 · เรียก agent แล้ว: 6 ครั้ง (คาดอีก ~0–1)
 ภาพ: before ✗ after ✗ Gate V ✗ · กล่องสถานะล่าสุดโพสต์เมื่อ: 2026-11-12 · อัปเดต board: 2026-11-12
