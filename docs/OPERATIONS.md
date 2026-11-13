@@ -19,6 +19,10 @@
 - **ย้อนรุ่น:** รุ่นนี้มี migration จึง **อย่าย้อนโค้ดอย่างเดียว** (จะ `schema_mismatch`) — แก้ไปข้างหน้า หรือกู้จากไฟล์สำรอง/Time Travel ตามหัวข้อ 4–5 · ไฟล์สำรองรุ่นเก่า (schema 6) ยังกู้ได้ (ตารางสอนว่าง) · ยังไม่ได้ทดสอบการย้อนบนระบบจริง
 - **ที่ยังไม่ได้ทดสอบ:** iPad/Safari/VoiceOver/เครื่องพิมพ์จริง · หลักฐานภาพของ QA เปิดดูไม่ครบ (ดู `team/jobs/2026-11-12-timetable/report.md` และ `team/jobs/2026-11-11-home-redesign/report.md`)
 
+### แพตช์ต่อมาวันเดียวกัน (13 พ.ย. 2569) — อัปเกรด hono
+
+- hono 4.13.13 → 4.13.18 (ปิด advisory ระดับปานกลาง 5 ข้อ, `npm audit` = 0) · Worker เวอร์ชัน `36cd0491-44f4-42c2-8943-aba24a51c73d` · tag `release-2026-11-13b` · **ไม่มี migration** จึงย้อนโค้ดได้ตรง ๆ (`npx wrangler rollback`)
+
 ### รุ่นก่อนหน้า (4 พ.ย. 2569)
 
 - commits `f405a43`, `4dea5b8`, `2780f8b` · ไม่มี migration (schema v6) · API contract v9
